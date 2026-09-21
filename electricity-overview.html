@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Electricity Overview</title>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<style>:root{--bus-yellow:#FFD700;--frizzle-red:#E63946;--sky-blue:#4CC9F0;--charge-blue:#4361EE;--charge-red:#F72585;--dark:#1A1A2E;--light:#F8F9FA;--green:#2EC4B6;--purple:#7209B7;--neon-blue:#00f3ff;--neon-yellow:#fffb00}*{box-sizing:border-box;margin:0;padding:0;cursor:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23FFD700" stroke="%234CC9F0" stroke-width="1" d="M11.293 2.293a1 1 0 0 1 1.414 0l9 9a1 1 0 0 1-1.414 1.414L13 5.414V21a1 1 0 1 1-2 0V5.414L3.707 12.707a1 1 0 0 1-1.414-1.414l9-9z"/></svg>'),auto;}body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#09071c,#161238,#0c0c1f);color:var(--light);min-height:100vh;overflow-x:hidden}</style>
+<style>:root{--blue:#1e5d96;--deep:#173b5f;--yellow:#f4c430;--orange:#ef8a22;--ink:#203040;--sky:#eaf6ff;--paper:#f7fbff;--white:#fff;--shadow:0 14px 38px rgba(23,59,95,.18)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#eaf6ff 0,#fff 35%,#f8fbfd 100%);color:var(--ink)}a{color:inherit}</style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+<nav style="margin:1rem;"><a href="#overcharge" style="margin-right:1rem;">Overcharge Lab</a><a href="#video-lab">Video Lab</a></nav>
+<section id="overcharge">
+<header>
+<div class="logo"><span class="bus-icon">🚌</span><span>Magic School Bus<br/><small style="font-size:0.6em;font-weight:400;color:var(--neon-blue);text-transform:uppercase;letter-spacing:2px;">Overcharge Edition ⚡</small></span></div>
+<nav><button class="active" data-section="home">Home</button><button data-section="videos">Videos</button><button data-section="experiments">Experiments</button><button data-section="worksheets">Worksheets</button></nav>
+</header>
+<main>
+<section class="active" id="home">
+<div class="hero"><h1>⚡ Get OVERCHARGED with the Friz! ⚡</h1><p>Join Ms. Frizzle, the class, and Liz on the most electrifying field trips ever! Explore static charges, high-voltage circuits, batteries, and pure energy. Watch the classic adventures, then test your knowledge in the high-voltage interactive labs.</p><div class="circuit-demo" onclick="triggerLightning()"><span class="battery">🔋</span><div class="wire"></div><span class="bulb">💡</span><div class="wire"></div><span class="battery">🔋</span></div><p style="font-style:italic;color:var(--neon-blue);font-weight:bold;font-size:1.3rem;">“If there's no flow, there's no go… and it's no glow!”</p><br/><button class="cta" onclick="navTo('videos')">POWER ON THE ADVENTURE ⚡</button></div>
+<div class="exp-grid"><div class="exp-card" onclick="navTo('videos')"><span class="icon">📺</span><h3>Watch Episodes</h3><p>Full Magic School Bus episodes supercharged with electricity and energy.</p><span class="badge" style="background:var(--neon-blue)">Videos</span></div><div class="exp-card" onclick="navTo('experiments')"><span class="icon">🔬</span><h3>Key Experiments</h3><p>Static shocks, current flows, closed circuits, and glowing filaments.</p><span class="badge" style="background:var(--neon-yellow)">Science</span></div><div class="exp-card" onclick="navTo('worksheets')"><span class="icon">📝</span><h3>High-Voltage Quizzes</h3><p>Interactive 8-question worksheets. Can you score a perfect 8?</p><span class="badge" style="background:var(--frizzle-red);color:white;">Practice</span></div></div>
+</section>
+<section id="videos" style="display:none;"><h1>🎬 Mainframe Archives</h1><p style="text-align:center;margin-bottom:1.5rem;color:var(--neon-blue);">Accessing video databanks... Embeds load directly from YouTube servers.</p><div class="video-grid"><div class="video-card"><iframe allowfullscreen src="https://www.youtube.com/embed/QmPqPc7cmDE" title="Gets Charged"></iframe><div class="video-info"><h3>Gets Charged (Full Episode)</h3><p>Valentine’s Day, a broken doorbell, and a wild ride through wires and filaments.</p></div></div></div></section>
+<section id="experiments" style="display:none;"><h1>🔬 The Frizzle Lab: Electricity</h1><p style="text-align:center;margin-bottom:1.5rem;color:var(--neon-yellow);">Hover over the nodes to see the energy field react.</p><div class="exp-grid"><div class="exp-card"><span class="icon">⚡</span><h3>1. Static Charges</h3><p>Rubbing materials transfers electrons. Opposite charges attract. Specs reveal the invisible world!</p><span class="badge">Static</span></div><div class="exp-card"><span class="icon">🔄</span><h3>2. Electric Current</h3><p>Charges flowing through a wire are like a rapid river. The bus rides the electron flow.</p><span class="badge">Current</span></div></div>
+</section>
+<section id="worksheets" style="display:none;"><h1>📝 Interactive Circuit Tests</h1><p style="text-align:center;margin-bottom:1rem;color:var(--neon-blue);">Select a testing module. 8 Questions per module. Charge up the progress bar!</p><div class="progress-container"><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div></div><div class="exp-grid" id="worksheetSelector"><div class="exp-card" data-ws="0"><span class="icon">⚡</span><h3>Static Electricity</h3><p>8 questions</p></div><div class="exp-card" data-ws="1"><span class="icon">🔄</span><h3>Current & Flow</h3><p>8 questions</p></div></div><div id="worksheetContainer"></div></section>
+</main>
+</section>
+<section id="video-lab">
+<header class="hero"><div class="wrap"><span class="eyebrow">⚡ Electricity Field Trip</span><h1>Magic School Bus Electricity Lab Videos</h1><p>Four video matches for the circuit, conductor, electromagnet, and static-electricity experiments. Open a card and watch the matching Magic School Bus lesson on YouTube.</p></div></header>
+<div class="busline"></div>
+<main><div class="wrap"><div class="intro"><div><h2>Pick your experiment</h2><p>Use each video before the station as an introduction or after it as a recap.</p></div><div class="badge">4 LABS • 3 VIDEO LESSONS</div></div><section aria-label="Experiment video links" class="grid"><article class="card"><a aria-label="Watch Gets Charged on YouTube" class="thumb" href="https://www.youtube.com/watch?v=QmPqPc7cmDE" rel="noopener noreferrer" target="_blank"><img alt="Magic School Bus Gets Charged YouTube thumbnail" loading="lazy" src="https://img.youtube.com/vi/QmPqPc7cmDE/hqdefault.jpg"/><span class="station">LAB 1</span><span class="playdot"><span></span></span></a><div class="content"><div class="kicker">Simple Circuits</div><h3>Build a closed loop and light the bulb</h3><p class="match">This is the closest direct match to the battery-and-bulb circuit station. The episode follows the class as they investigate how an electrical circuit works.</p><div class="video-title">Valentines Day | How Electrical Circuits Work | Gets Charged | Full Episode | The Magic School Bus</div><div class="actions"><a class="btn primary" href="https://www.youtube.com/watch?v=QmPqPc7cmDE" rel="noopener noreferrer" target="_blank">▶ Watch on YouTube</a></div></div></article></section><div class="note"><strong>Teacher note:</strong> Lab 1 and Lab 4 intentionally use the same episode because <em>Gets Charged</em> teaches both current electricity and static electricity. YouTube availability can change, so each card opens the video directly in a new tab.</div></div></main></section>
+<div id="msb-hub-return-dock" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:system-ui,-apple-system,sans-serif;"><a href="index.html" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.4),0 0 15px rgba(255,216,61,0.3)';" onmouseover="this.style.transform='translateY(-3px) scale(1.03)';this.style.boxShadow='0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(255,216,61,0.5)';" style="display:inline-flex;align-items:center;gap:10px;padding:10px 18px;background:linear-gradient(135deg,#101c46,#162861);color:#ffd83d;border:2px solid #ffd83d;border-radius:999px;text-decoration:none;font-weight:800;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 15px rgba(255,216,61,0.3);transition:all 0.2s cubic-bezier(0.2,0.8,0.2,1);backdrop-filter:blur(8px);"><span style="font-size:18px;">🚌</span><span>Return to Bus Hub</span></a></div>
+<audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio>
+<audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio>
+<script>
+function navTo(sectionId) {
+  const sections = ['home', 'videos', 'experiments', 'worksheets'];
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = (id === sectionId) ? 'block' : 'none';
+  });
+  
+  const navBtns = document.querySelectorAll('header nav button');
+  navBtns.forEach(btn => {
+    if (btn.getAttribute('data-section') === sectionId) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function triggerLightning() {
+  const flash = document.createElement('div');
+  flash.style.position = 'fixed';
+  flash.style.inset = '0';
+  flash.style.background = 'rgba(255, 255, 255, 0.85)';
+  flash.style.zIndex = '999999';
+  flash.style.pointerEvents = 'none';
+  flash.style.transition = 'opacity 0.3s ease';
+  document.body.appendChild(flash);
+  
+  setTimeout(() => {
+    flash.style.opacity = '0';
+    setTimeout(() => flash.remove(), 300);
+  }, 100);
+
+  // Play Web Audio synth bolt sound effect
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(150, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    }
+  } catch (e) {
+    console.log('Audio Context not allowed without gesture', e);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const navBtns = document.querySelectorAll('header nav button');
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-section');
+      if (target) navTo(target);
+    });
+  });
+});
+</script>
+
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+</html>

@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+
+<html data-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>🚌 Magic School Bus V3 – Repaired + 4 New Features + 8 Enhancements</title>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<style>
+        /* ===== IMPROVEMENTS: CSS Variables, Dark Mode, Glassmorphism ===== */
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6cd6;
+            --secondary: #764ba2;
+            --accent: #ffd700;
+            --accent-hover: #e5c100;
+            --danger: #d32f2f;
+            --danger-hover: #b71c1c;
+            --success: #4caf50;
+            --success-hover: #388e3c;
+            --info: #2196f3;
+            --info-hover: #1976d2;
+            --bg-gradient-start: #667eea;
+            --bg-gradient-end: #764ba2;
+            --card-bg: rgba(255, 255, 255, yes0.95);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #333;
+            --text-muted: #666;
+            --border-color: #ddd;
+            --glass-bg: rgba(255, 255, 255, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --shadow-sm: 0 5px 15px rgba(0,0,0,0.1);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.2);
+            --radius: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #1a1a2e;
+            --primary-dark: #16213e;
+            --secondary: #0f3460;
+            --accent: #e94560;
+            --accent-hover: #d83a50;
+            --danger: #ff4757;
+            --danger-hover: #ff6b81;
+            --success: #2ed573;
+            --success-hover: #7bed9f;
+            --info: #1e90ff;
+            --info-hover: #70a1ff;
+            --bg-gradient-start: #1a1a2e;
+            --bg-gradient-end: #0f3460;
+            --card-bg: rgba(30, 39, 73, 0.95);
+            --text-main: #f1f2f6;
+            --text-muted: #ced6e0;
+            --border-color: #2f3542;
+            --glass-bg: rgba(0, 0, 0, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== RESET & SCROLLBAR ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-gradient-end); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 5px; }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh; color: var(--text-main); transition: background 0.5s ease;
+            overflow-x: hidden; padding: 20px;
+        }
+
+        .container { max-width: 1500px; margin: 0 auto; }
+
+        /* ===== HEADER ===== */
+        header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            padding: 20px; border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 20px;
+            position: sticky; top: 20px; z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .logo img { width: 80px; height: 80px; border-radius: 50%; box-shadow: var(--shadow-sm); }
+        .logo h1 { color: var(--accent); font-size: 2em; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+
+        nav.nav-tabs { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .nav-tab {
+            padding: 12px 20px; background: var(--card-bg); color: var(--text-main);
+            border: 3px solid var(--accent); border-radius: 30px; cursor: pointer;
+            font-weight: bold; transition: var(--transition); font-size: 1em;
+        }
+        .nav-tab:hover, .nav-tab:focus-visible {
+            background: var(--accent); color: #000; transform: translateY(-3px);
+            outline: none; box-shadow: var(--shadow-sm);
+        }
+        .nav-tab.active { background: var(--accent); color: #000; }
+
+        /* ===== SECTIONS ===== */
+        section.section {
+            display: none; background: var(--card-bg); padding: 30px;
+            border-radius: var(--radius); box-shadow: var(--shadow-md);
+            margin-bottom: 20px; animation: slideFadeIn 0.4s ease-out forwards;
+        }
+        section.section.active { display: block; }
+        @keyframes slideFadeIn {
+            from { opacity: 0; transform: translateY(15px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h2, h3 { color: var(--primary); margin-bottom: 20px; border-bottom: 3px solid var(--accent); padding-bottom: 10px; }
+        [data-theme="dark"] h2, [data-theme="dark"] h3 { color: var(--accent); }
+
+        /* ===== GRID ===== */
+        .stats-grid, .roster-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px; margin-bottom: 30px;
+        }
+        .stat-card, .student-card {
+            background: var(--card-bg); border: 2px solid var(--border-color);
+            padding: 20px; border-radius: var(--radius); text-align: center;
+            box-shadow: var(--shadow-sm); transition: var(--transition);
+            position: relative;
+        }
+        .student-card { border-top: 5px solid var(--accent); }
+        .stat-card:hover, .student-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+        .stat-card .number { font-size: 3em; font-weight: bold; margin: 10px 0; color: var(--primary); }
+        [data-theme="dark"] .stat-card .number { color: var(--accent); }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 12px 24px; background: var(--primary); color: white; border: none;
+            border-radius: 30px; cursor: pointer; font-size: 1em; font-weight: bold;
+            transition: var(--transition); margin: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-success { background: var(--success); } .btn-success:hover:not(:disabled) { background: var(--success-hover); }
+        .btn-warning { background: var(--accent); color: #000; } .btn-warning:hover:not(:disabled) { background: var(--accent-hover); }
+        .btn-danger { background: var(--danger); } .btn-danger:hover:not(:disabled) { background: var(--danger-hover); }
+        .btn-info { background: var(--info); } .btn-info:hover:not(:disabled) { background: var(--info-hover); }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 12px; border: 2px solid var(--border-color);
+            border-radius: 12px; font-size: 1em; background: var(--card-bg);
+            color: var(--text-main); transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 1000;
+            justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s;
+        }
+        .modal.active { display: flex; opacity: 1; }
+        .modal-content {
+            background: var(--card-bg); padding: 30px; border-radius: var(--radius);
+            max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto;
+            box-shadow: var(--shadow-md); transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal.active .modal-content { transform: scale(1); }
+
+        /* ===== TOAST & MASCOT ===== */
+        #toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 1001; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: var(--card-bg); color: var(--text-main); border-left: 5px solid var(--primary); padding: 15px 25px; border-radius: 8px; box-shadow: var(--shadow-md); animation: slideInLeft 0.3s forwards, fadeOut 0.3s 2.7s forwards; }
+        .toast.success { border-color: var(--success); } .toast.error { border-color: var(--danger); }
+        @keyframes slideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+
+        #liz-mascot { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; align-items: flex-end; gap: 10px; animation: float 4s ease-in-out infinite; }
+        .mascot-bubble { background: var(--card-bg); padding: 15px; border-radius: 20px 20px 0 20px; box-shadow: var(--shadow-md); max-width: 200px; border: 2px solid var(--accent); }
+        .mascot-img { font-size: 3em; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3)); cursor: pointer; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .progress-bar-container { background: var(--border-color); border-radius: 10px; height: 15px; width: 100%; margin: 10px 0; overflow: hidden; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), #ff9800); width: 0%; transition: width 0.5s ease; }
+        .level-badge { background: var(--primary); color: white; padding: 3px 12px; border-radius: 20px; font-size: 0.8em; font-weight: bold; }
+        .badge { display: inline-block; padding: 5px 12px; background: var(--accent); color: #000; border-radius: 20px; font-size: 0.8em; font-weight: bold; margin: 3px; }
+        [data-tooltip] { position: relative; }
+        [data-tooltip]:hover::after {
+            content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); color: white; padding: 5px 10px; border-radius: 5px;
+            font-size: 12px; white-space: nowrap; pointer-events: none; z-index: 100;
+        }
+
+        @media print {
+            body { background: white; color: black; }
+            header, .nav-tabs, .btn, #liz-mascot, #toast-container { display: none !important; }
+            section.section { display: block !important; box-shadow: none; border: none; padding: 0; }
+        }
+
+        /* ===== NEW FEATURE STYLES ===== */
+        .attendance-widget { background: var(--glass-bg); padding: 10px 20px; border-radius: 30px; backdrop-filter: blur(5px); border: 1px solid var(--glass-border); }
+        .streak-badge { background: #ff6b6b; color: white; padding: 4px 12px; border-radius: 30px; font-size: 0.8em; }
+        .quick-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .quick-actions .btn { padding: 6px 14px; font-size: 0.85em; }
+        .student-of-week { background: linear-gradient(135deg, var(--accent), #ff9800); color: #000; padding: 15px; border-radius: var(--radius); text-align: center; }
+        .emotion-grid { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .emotion-btn { font-size: 2em; background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 50%; width: 70px; height: 70px; cursor: pointer; transition: var(--transition); }
+        .emotion-btn:hover, .emotion-btn.active { border-color: var(--accent); transform: scale(1.1); }
+        .noise-meter { height: 20px; background: var(--border-color); border-radius: 20px; overflow: hidden; margin: 10px 0; }
+        .noise-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4caf50, #ffeb3b, #f44336); transition: width 0.3s; }
+        .flex-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .mt-2 { margin-top: 20px; }
+        .text-center { text-align: center; }
+        .poll-option { display: flex; align-items: center; gap: 10px; margin: 5px 0; }
+        .mini-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; max-width: 280px; margin: 10px auto; }
+        .mini-calendar .day { background: var(--glass-bg); border-radius: 6px; padding: 6px 0; text-align: center; font-size: 0.8em; }
+        .mini-calendar .day.today { background: var(--accent); color: #000; font-weight: bold; }
+        .color-picker { width: 40px; height: 40px; border: none; border-radius: 50%; cursor: pointer; background: none; padding: 0; }
+
+        /* ===== REPAIRED / ADDED STYLES ===== */
+        .todo-item { display: flex; align-items: center; gap: 10px; padding: 8px; border-bottom: 1px dashed var(--border-color); }
+        .todo-item.done span { text-decoration: line-through; opacity: 0.6; }
+        .ws-card, .sub-card, .report-card {
+            background: var(--card-bg); border: 2px solid var(--border-color);
+            border-left: 6px solid var(--info); border-radius: 12px; padding: 15px 20px;
+        }
+        .sub-card.graded { border-left-color: var(--success); }
+        .team-col { background: var(--glass-bg); border: 2px solid var(--border-color); border-radius: 12px; padding: 12px; min-width: 140px; flex: 1; text-align: center; }
+        .exp-emoji { position: absolute; font-size: 2em; pointer-events: none; }
+        @keyframes erupt { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-280px) scale(0.3); opacity: 0; } }
+        @keyframes orbit { from { transform: rotate(0deg) translateX(130px) rotate(0deg); } to { transform: rotate(360deg) translateX(130px) rotate(-360deg); } }
+        @keyframes digestMove { 0% { top: 4%; left: 46%; } 30% { top: 35%; left: 30%; } 60% { top: 55%; left: 60%; } 100% { top: 85%; left: 46%; } }
+        @keyframes twist { 0% { transform: translateX(-140px) rotate(0deg); } 50% { transform: translateX(140px) rotate(720deg); } 100% { transform: translateX(-140px) rotate(0deg); } }
+        @keyframes sway { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+    </style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+<!-- Mascot -->
+<div id="liz-mascot">
+<div class="mascot-bubble" id="liz-text">🚀 V3 Repaired &amp; Enhanced!</div>
+<div class="mascot-img" onclick="pokeLiz()">🦎</div>
+</div>
+<!-- Toast Container -->
+<div id="toast-container"></div>
+<!-- Confirm Modal -->
+<div class="modal" id="confirm-modal">
+<div class="modal-content text-center">
+<h3 id="confirm-title">Are you sure?</h3>
+<p id="confirm-msg" style="margin-bottom: 20px;"></p>
+<button class="btn btn-success" id="confirm-yes">Yes</button>
+<button class="btn btn-danger" id="confirm-no">No</button>
+</div>
+</div>
+<!-- Add Student Modal -->
+<div class="modal" id="addStudentModal">
+<div class="modal-content">
+<h3>➕ Add New Student</h3>
+<div class="form-group">
+<label for="newStudentName">Student Name</label>
+<input id="newStudentName" placeholder="e.g. Phoebe" type="text"/>
+</div>
+<div class="form-group">
+<label for="newStudentPin">4-Digit PIN</label>
+<div class="flex-row">
+<input id="newStudentPin" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="1234" style="flex:1;" type="text"/>
+<button class="btn btn-info" onclick="generatePin()">🎲 Generate</button>
+</div>
+</div>
+<button class="btn btn-success" onclick="addStudent()">💾 Save Student</button>
+<button class="btn btn-danger" onclick="closeModal('addStudentModal')">Cancel</button>
+</div>
+</div>
+<!-- Announcement Modal -->
+<div class="modal" id="announcementModal">
+<div class="modal-content">
+<h3>📢 Post Announcement</h3>
+<div class="form-group">
+<label for="announcementInput">Message for the class</label>
+<textarea id="announcementInput" placeholder="Field trip to the volcano on Friday!" rows="4"></textarea>
+</div>
+<button class="btn btn-success" onclick="postAnnouncement()">📣 Post</button>
+<button class="btn btn-warning" onclick="clearAnnouncement()">🗑️ Clear</button>
+<button class="btn btn-danger" onclick="closeModal('announcementModal')">Close</button>
+</div>
+</div>
+<!-- Create Worksheet Modal -->
+<div class="modal" id="createWorksheetModal">
+<div class="modal-content">
+<h3>📝 Create Worksheet</h3>
+<div class="form-group">
+<label for="wsTitle">Title</label>
+<input id="wsTitle" placeholder="e.g. Solar System Quiz" type="text"/>
+</div>
+<div class="form-group">
+<label for="wsCategory">Category</label>
+<select id="wsCategory">
+<option value="Science">Science</option>
+<option value="Math">Math</option>
+<option value="Reading">Reading</option>
+</select>
+</div>
+<div class="form-group">
+<label for="wsDesc">Description</label>
+<textarea id="wsDesc" placeholder="Instructions for students..." rows="3"></textarea>
+</div>
+<div class="form-group">
+<label for="wsDue">Due Date</label>
+<input id="wsDue" type="date"/>
+</div>
+<button class="btn btn-success" onclick="createWorksheet()">💾 Create</button>
+<button class="btn btn-danger" onclick="closeModal('createWorksheetModal')">Cancel</button>
+</div>
+</div>
+<!-- Grade Modal -->
+<div class="modal" id="gradeModal">
+<div class="modal-content">
+<h3>⭐ Grade Submission</h3>
+<p id="gradeInfo" style="margin-bottom:15px;"></p>
+<input id="gradeSubId" type="hidden"/>
+<div class="form-group">
+<label for="gradeStars">Stars (0–5)</label>
+<select id="gradeStars">
+<option value="0">0 ⭐</option>
+<option value="1">1 ⭐</option>
+<option value="2">2 ⭐</option>
+<option selected="" value="3">3 ⭐</option>
+<option value="4">4 ⭐</option>
+<option value="5">5 ⭐</option>
+</select>
+</div>
+<div class="form-group">
+<label for="gradeFeedback">Feedback</label>
+<textarea id="gradeFeedback" placeholder="Great job! Take chances, make mistakes..." rows="3"></textarea>
+</div>
+<button class="btn btn-success" onclick="saveGrade()">💾 Save Grade</button>
+<button class="btn btn-danger" onclick="closeModal('gradeModal')">Cancel</button>
+</div>
+</div>
+<div class="container">
+<header>
+<div class="logo">
+<img alt="Magic School Bus" onerror="this.style.display='none'" src="https://image.qwenlm.ai/public_source/7d961b43-709e-443a-99b3-7c4908a2cc7a/1b6a83286-9e45-48b7-afd0-23a396959c47.png"/>
+<div>
+<h1>🚌 Magic School Bus V3</h1>
+<small id="class-goal-display" style="color: var(--text-main); font-weight: bold;">Class Stars: 0 / 100</small>
+<div class="progress-bar-container" style="height: 8px; width: 200px; margin-top: 5px;"><div class="progress-bar" id="class-goal-bar"></div></div>
+</div>
+</div>
+<nav aria-label="Main Navigation" class="nav-tabs">
+<button class="nav-tab active" data-tooltip="Teacher Tools" onclick="showSection('teacher', this)">👩‍🏫 Teacher</button>
+<button class="nav-tab" data-tooltip="Student Access" onclick="showSection('student', this)">👨‍🎓 Student</button>
+<button class="nav-tab" data-tooltip="Curriculum" onclick="showSection('worksheets', this)">📝 Curriculum</button>
+<button class="nav-tab" data-tooltip="Experiments" onclick="showSection('lab', this)">🔬 Lab</button>
+<button class="nav-tab" data-tooltip="Assessments" onclick="showSection('grading', this)">⭐ Grading</button>
+<button class="nav-tab" data-tooltip="Extra Tools" onclick="showSection('utilities', this)">🎯 Utilities</button>
+<button class="nav-tab" data-tooltip="Parent Portal" onclick="showSection('parents', this)">👪 Parents</button>
+<button class="btn btn-info" data-tooltip="Toggle Theme" onclick="toggleTheme()">🌙/☀️</button>
+</nav>
+</header>
+<main>
+<!-- ============================ TEACHER ============================ -->
+<section class="section active" id="teacher">
+<div class="flex-row">
+<h2>📋 Teacher Dashboard</h2>
+<div class="quick-actions">
+<button class="btn" onclick="openModal('addStudentModal')">➕ Add Student</button>
+<button class="btn btn-info" onclick="openModal('announcementModal')">📢 Post</button>
+<button class="btn btn-danger" onclick="resetAllData()">🗑️ Reset Data</button>
+<div class="attendance-widget">📊 <span id="presentCount">0</span> Present / <span id="absentCount">0</span> Absent</div>
+</div>
+</div>
+<div class="stats-grid">
+<div class="stat-card"><div>👥 Students</div><div class="number" id="studentCount">0</div></div>
+<div class="stat-card"><div>📝 Worksheets</div><div class="number" id="worksheetCount">0</div></div>
+<div class="stat-card"><div>⭐ Class Stars</div><div class="number" id="starCount">0</div></div>
+<div class="stat-card"><div>✅ To Grade</div><div class="number" id="submissionCount">0</div></div>
+</div>
+<div class="flex-row" style="align-items: flex-start; gap: 20px;">
+<div style="flex: 2;">
+<div class="flex-row">
+<h3>👨‍👩‍👧 Roster</h3>
+<input id="rosterSearch" onkeyup="filterRoster()" placeholder="🔍 Search..." style="padding: 8px 16px; border-radius: 30px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-main);" type="text"/>
+</div>
+<div class="roster-grid" id="rosterGrid"></div>
+</div>
+<div style="flex: 1; background: var(--card-bg); padding: 20px; border-radius: var(--radius); border: 1px solid var(--border-color);">
+<h3>📅 Daily To-Do</h3>
+<div class="form-group flex-row">
+<input id="todoInput" placeholder="New task..." style="flex:1;" type="text"/>
+<button class="btn btn-success" onclick="addTodo()">Add</button>
+</div>
+<ul id="todoList" style="list-style: none; padding: 0;"></ul>
+<h3 style="margin-top: 20px;">🏆 Leaderboard</h3>
+<ol id="leaderboardList" style="padding-left: 20px; color: var(--text-main);"></ol>
+<div class="mt-2 student-of-week" id="studentOfWeek">⭐ Student of the Week: <span id="sowName">—</span></div>
+<!-- NEW FEATURE 1: Mini Calendar -->
+<div class="mt-2">
+<h4>📅 Class Calendar</h4>
+<div class="mini-calendar" id="miniCalendar"></div>
+</div>
+</div>
+</div>
+<!-- NEW FEATURE 2: Quick Poll -->
+<div style="background: var(--glass-bg); padding: 20px; border-radius: var(--radius); margin-top: 20px;">
+<h3>📊 Quick Poll</h3>
+<p id="pollQuestion">What's your favorite science topic?</p>
+<div id="pollOptions"></div>
+<button class="btn btn-success" onclick="submitPoll()">Submit Vote</button>
+<button class="btn btn-info" onclick="resetPoll()">Reset Poll</button>
+</div>
+</section>
+<!-- ============================ STUDENT ============================ -->
+<section class="section" id="student">
+<h2>🚌 Student Portal</h2>
+<div id="loginView" style="text-align: center; max-width: 400px; margin: 0 auto;">
+<div style="background: var(--accent); padding: 15px; border-radius: var(--radius); margin-bottom: 20px; color: #000;">"Seatbelts, everyone!"</div>
+<div id="announcementBoard" style="display:none; background: var(--info); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+<h4>📢 Ms. Frizzle Says:</h4>
+<p id="announcementText"></p>
+</div>
+<div class="form-group">
+<label>Enter your 4-digit PIN:</label>
+<input id="pinInput" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="1234" style="text-align: center; font-size: 2em; letter-spacing: 10px;" type="text"/>
+</div>
+<button class="btn" onclick="loginStudent()" style="width: 100%;">🚀 Board the Bus</button>
+</div>
+<div id="studentDashboard" style="display: none;">
+<div class="flex-row">
+<h3>Welcome, <span id="studentName"></span>! 🎉</h3>
+<button class="btn btn-warning" onclick="logoutStudent()">🚪 Exit</button>
+</div>
+<div style="background: var(--card-bg); padding: 20px; border-radius: var(--radius); margin: 20px 0; border: 2px solid var(--border-color);">
+<h4>Level <span class="level-badge" id="studentLevel">1</span>: <span id="studentTitle">Novice Explorer</span></h4>
+<div class="progress-bar-container"><div class="progress-bar" id="studentXpBar"></div></div>
+<small><span id="studentXp">0</span> / <span id="nextLevelXp">100</span> XP</small>
+<div class="streak-badge" style="display:inline-block; margin-top:8px;">🔥 Streak: <span id="studentStreak">0</span> days</div>
+</div>
+<div class="stats-grid">
+<div class="stat-card"><div>⭐ Stars</div><div class="number" id="studentStars">0</div></div>
+<div class="stat-card"><div>📝 Completed</div><div class="number" id="studentCompleted">0</div></div>
+<div class="stat-card"><div>✅ Behavior</div><div class="number" id="studentBehavior">0</div></div>
+</div>
+<h3>Your Badges</h3>
+<div id="studentBadges" style="min-height: 50px; background: var(--glass-bg); padding: 10px; border-radius: 10px;"></div>
+<!-- NEW FEATURE 3: Emotion Check-in -->
+<div style="margin-top: 20px; background: var(--glass-bg); padding: 15px; border-radius: var(--radius);">
+<h4>😊 How are you feeling today?</h4>
+<div class="emotion-grid" id="emotionGrid">
+<button class="emotion-btn" onclick="setEmotion('😊')">😊</button>
+<button class="emotion-btn" onclick="setEmotion('😄')">😄</button>
+<button class="emotion-btn" onclick="setEmotion('🤔')">🤔</button>
+<button class="emotion-btn" onclick="setEmotion('😴')">😴</button>
+<button class="emotion-btn" onclick="setEmotion('😢')">😢</button>
+<button class="emotion-btn" onclick="setEmotion('😡')">😡</button>
+</div>
+<p id="emotionResult" style="margin-top: 8px; font-style: italic;">Tap an emoji to check in!</p>
+</div>
+</div>
+</section>
+<!-- ============================ WORKSHEETS ============================ -->
+<section class="section" id="worksheets">
+<div class="flex-row">
+<h2>📝 Curriculum</h2>
+<div>
+<button class="btn btn-info" onclick="window.print()">🖨️ Print</button>
+<button class="btn" onclick="openModal('createWorksheetModal')">➕ New</button>
+</div>
+</div>
+<div style="margin-bottom: 20px;">
+<label>Filter: </label>
+<select id="categoryFilter" onchange="renderWorksheets()" style="padding: 8px; border-radius: 10px; background: var(--card-bg); color: var(--text-main); border: 2px solid var(--border-color);">
+<option value="All">All</option>
+<option value="Science">Science</option>
+<option value="Math">Math</option>
+<option value="Reading">Reading</option>
+</select>
+</div>
+<div id="worksheetList" style="display: grid; gap: 15px;"></div>
+</section>
+<!-- ============================ LAB ============================ -->
+<section class="section" id="lab">
+<h2>🔬 Science Lab</h2>
+<div id="safetyChecklist" style="background: #fff3e0; padding: 20px; border-radius: var(--radius); border: 2px solid #ff9800; color: #000; margin-bottom: 20px;">
+<h3 style="color:#e65100;">⚠️ Safety Checklist</h3>
+<label><input id="safe1" type="checkbox"/> Goggles On</label><br/>
+<label><input id="safe2" type="checkbox"/> Lab Coat Secured</label><br/>
+<label><input id="safe3" type="checkbox"/> Permission to Get Messy</label>
+</div>
+<div class="flex-row" style="justify-content: flex-start; gap: 10px; margin-bottom: 20px;">
+<button class="btn" onclick="startExperiment('volcano')">🌋 Volcano</button>
+<button class="btn" onclick="startExperiment('plant')">🌱 Plants</button>
+<button class="btn" onclick="startExperiment('solar')">☀️ Solar</button>
+<button class="btn" onclick="startExperiment('digestion')">🥪 Digestion</button>
+<button class="btn" onclick="startExperiment('weather')">🌪️ Weather</button>
+<button class="btn btn-warning" onclick="clearExperiment()">🗑️ Clear</button>
+</div>
+<div id="experimentCanvas" style="width:100%; height:400px; background: var(--glass-bg); border: 2px dashed var(--border-color); border-radius: var(--radius); display:flex; align-items:center; justify-content:center; font-size:1.2em; text-align:center; overflow:hidden; position:relative;">
+                    Select an experiment!
+                </div>
+</section>
+<!-- ============================ GRADING ============================ -->
+<section class="section" id="grading">
+<h2>⭐ Grading Station</h2>
+<div id="submissionsList" style="display: grid; gap: 15px;"></div>
+</section>
+<!-- ============================ UTILITIES ============================ -->
+<section class="section" id="utilities">
+<h2>🎯 Utilities</h2>
+<div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+<div style="background: var(--card-bg); padding: 20px; border-radius: var(--radius); border: 1px solid var(--border-color); text-align:center;">
+<h3>⏱️ Timer</h3>
+<div id="timerDisplay" style="font-size: 4em; font-family: monospace; color: var(--danger); font-weight: bold; margin: 10px 0;">05:00</div>
+<div class="form-group" style="max-width: 160px; margin: 0 auto 10px;">
+<label for="timerMinutes">Minutes</label>
+<input id="timerMinutes" max="120" min="1" onchange="setTimerMinutes()" type="number" value="5"/>
+</div>
+<button class="btn btn-success" onclick="startTimer()">▶️ Start</button>
+<button class="btn btn-warning" onclick="pauseTimer()">⏸️ Pause</button>
+<button class="btn btn-info" onclick="resetTimer()">🔄 Reset</button>
+<button class="btn" id="timerModeBtn" onclick="toggleTimerMode()">Switch to Stopwatch</button>
+</div>
+<div style="background: var(--card-bg); padding: 20px; border-radius: var(--radius); border: 1px solid var(--border-color); text-align:center;">
+<h3>🎵 Ambient</h3>
+<button class="btn btn-info" id="bgmBtn" onclick="toggleBGM()">▶️ Play Study Beats</button>
+<h3 style="margin-top:20px;">🔊 Soundboard</h3>
+<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;">
+<button class="btn" onclick="playSound('applause')">👏</button>
+<button class="btn" onclick="playSound('bell')">🔔</button>
+<button class="btn" onclick="playSound('correct')">✅</button>
+<button class="btn" onclick="playSound('wrong')">❌</button>
+</div>
+<!-- NEW FEATURE 4: Noise Meter -->
+<div class="mt-2">
+<h4>🔊 Class Noise Meter</h4>
+<div class="noise-meter"><div class="noise-fill" id="noiseFill" style="width:20%;"></div></div>
+<button class="btn btn-info" onclick="adjustNoise(10)">📈 +10</button>
+<button class="btn btn-warning" onclick="adjustNoise(-10)">📉 -10</button>
+<button class="btn" onclick="adjustNoise(0)">🔄 Reset</button>
+</div>
+</div>
+</div>
+<div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+<div style="background: var(--card-bg); padding: 20px; border-radius: var(--radius); border: 1px solid var(--border-color);">
+<h3>🖍️ Sketchpad</h3>
+<div class="toolbar flex-row">
+<input class="color-picker" id="drawColor" type="color" value="#000000"/>
+<input id="drawSize" max="20" min="1" type="range" value="3"/>
+<button class="btn btn-warning" onclick="clearCanvas()" style="padding: 5px 10px;">Clear</button>
+</div>
+<canvas class="canvas-container" height="250" id="whiteboard" style="border:3px solid var(--border-color); border-radius:10px; background:white; cursor:crosshair; width:100%; height:auto; touch-action:none;" width="400"></canvas>
+</div>
+<div style="background: var(--card-bg); padding: 20px; border-radius: var(--radius); border: 1px solid var(--border-color);">
+<h3>🎲 Random &amp; Teams</h3>
+<button class="btn" onclick="pickRandom()">🎯 Random Student</button>
+<div id="randomResult" style="font-size: 1.5em; color: var(--danger); font-weight: bold; margin: 10px 0; min-height: 35px;"></div>
+<hr style="margin: 15px 0; border-color: var(--border-color);"/>
+<div class="flex-row">
+<input id="teamCount" max="8" min="2" style="width: 90px; padding: 10px; border-radius: 10px; border: 2px solid var(--border-color); background: var(--card-bg); color: var(--text-main);" type="number" value="2"/>
+<button class="btn btn-success" onclick="generateTeams()">👥 Make Teams</button>
+</div>
+<div class="mt-2 flex-row" id="teamsResult" style="align-items: stretch;"></div>
+</div>
+</div>
+</section>
+<!-- ============================ PARENTS ============================ -->
+<section class="section" id="parents">
+<h2>👪 Parent Portal</h2>
+<div style="max-width: 500px; margin: 0 auto; text-align: center;">
+<p style="margin-bottom: 15px;">Enter your child's name or 4-digit PIN to view their progress report.</p>
+<div class="form-group">
+<input id="parentLookup" placeholder="Name or PIN (e.g. Arnold or 1234)" style="text-align:center;" type="text"/>
+</div>
+<button class="btn" onclick="viewReport()">🔍 View Report</button>
+<button class="btn btn-info" onclick="window.print()">🖨️ Print Report</button>
+</div>
+<div class="mt-2" id="parentReport" style="max-width: 700px; margin: 20px auto 0;"></div>
+</section>
+</main>
+</div>
+<script>
+    /* ============================================================
+       MAGIC SCHOOL BUS V3 — REPAIRED ENGINE
+       ============================================================ */
+    const STORE_KEY = 'msb_v3_state';
+    const $ = id => document.getElementById(id);
+    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    const LEVEL_TITLES = ['Novice Explorer','Junior Scientist','Field Trip Pro','Lab Master','Frizzle Apprentice','Magic Bus Legend'];
+    const AVATARS = ['🧒','👧','👦','🧑','👱‍♀️','👱','🧕','👶','🧒🏽','👧🏿'];
+    const LIZ_TIPS = [
+        "Take chances, make mistakes, get messy! 🚌",
+        "Hydrate like a hydroponic plant! 💧",
+        "The bus can't do everything — ask questions! ❓",
+        "Wahoo! Science is everywhere! 🔬",
+        "Seatbelts, everyone! 🚀",
+        "Even Arnold's worries are data. 📊",
+        "A clean lab is a happy lab! 🧹",
+        "Celebrate small wins with big stars! ⭐"
+    ];
+    const BADGE_DEFS = [
+        { id:'first',  icon:'🌟', name:'First Star',   test: s => s.stars >= 1 },
+        { id:'ten',    icon:'✨', name:'10 Stars',     test: s => s.stars >= 10 },
+        { id:'quart',  icon:'💫', name:'25 Stars',     test: s => s.stars >= 25 },
+        { id:'work3',  icon:'📚', name:'Bookworm',     test: s => s.completed >= 3 },
+        { id:'streak3',icon:'🔥', name:'On Fire',      test: s => s.streak >= 3 },
+        { id:'kind5',  icon:'💛', name:'Kind Heart',   test: s => s.behavior >= 5 }
+    ];
+
+    /* ---------- STATE ---------- */
+    function seedState() {
+        const s1 = { id: uid(), name:'Arnold',      pin:'1234', avatar:'🧒', stars:12, xp:140, behavior:8, completed:4, streak:2, lastLogin:null, present:true,  emotion:null, badges:[] };
+        const s2 = { id: uid(), name:'Dorothy Ann', pin:'2345', avatar:'👧', stars:18, xp:230, behavior:9, completed:6, streak:4, lastLogin:null, present:true,  emotion:null, badges:[] };
+        const s3 = { id: uid(), name:'Keesha',      pin:'3456', avatar:'👧🏿', stars:9,  xp:95,  behavior:7, completed:3, streak:1, lastLogin:null, present:false, emotion:null, badges:[] };
+        const s4 = { id: uid(), name:'Ralphie',     pin:'4567', avatar:'👦', stars:6,  xp:60,  behavior:5, completed:2, streak:0, lastLogin:null, present:true,  emotion:null, badges:[] };
+        const s5 = { id: uid(), name:'Wanda',       pin:'5678', avatar:'👱‍♀️', stars:15, xp:180, behavior:8, completed:5, streak:3, lastLogin:null, present:true,  emotion:null, badges:[] };
+        const s6 = { id: uid(), name:'Carlos',      pin:'6789', avatar:'👱', stars:11, xp:120, behavior:6, completed:3, streak:2, lastLogin:null, present:false, emotion:null, badges:[] };
+        const w1 = { id: uid(), title:'Volcano Diagram', category:'Science', desc:'Label the parts of a volcano and describe how it erupts.', due:'2026-09-15' };
+        const w2 = { id: uid(), title:'Fraction Fun',    category:'Math',    desc:'Solve 12 fraction problems. Show your work!',           due:'2026-09-12' };
+        const w3 = { id: uid(), title:'Reading Rocks',   category:'Reading', desc:'Read Chapter 4 and write a 5-sentence summary.',        due:'2026-09-18' };
+        return {
+            theme: 'light', classGoal: 100, noise: 20, announcement: '',
+            students: [s1, s2, s3, s4, s5, s6],
+            worksheets: [w1, w2, w3],
+            submissions: [
+                { id: uid(), studentId: s2.id, worksheetId: w2.id, time: Date.now() - 86400000, status: 'pending', grade: null, feedback: '' },
+                { id: uid(), studentId: s5.id, worksheetId: w1.id, time: Date.now() - 172800000, status: 'graded', grade: 5, feedback: 'Explosively good work, Wanda! 🌋' }
+            ],
+            todos: [
+                { id: uid(), text: 'Grade Fraction Fun worksheets', done: false },
+                { id: uid(), text: 'Prep baking soda for volcano lab', done: true }
+            ],
+            poll: { question: "What's your favorite science topic?", options: ['🌋 Volcanoes','🌪️ Weather','🚀 Space','🦕 Dinosaurs'], votes: {} }
+        };
+    }
+    function loadState() {
+        try {
+            const raw = localStorage.getItem(STORE_KEY);
+            if (!raw) return seedState();
+            const parsed = JSON.parse(raw);
+            return Object.assign(seedState(), parsed);
+        } catch (e) { return seedState(); }
+    }
+    let state = loadState();
+    let currentStudent = null;
+    function saveState() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+
+    /* ---------- HELPERS ---------- */
+    function showToast(msg, type = 'info') {
+        const t = document.createElement('div');
+        t.className = 'toast ' + type;
+        t.textContent = msg;
+        $('toast-container').appendChild(t);
+        setTimeout(() => t.remove(), 3100);
+    }
+    let confirmCb = null;
+    function askConfirm(title, msg, cb) {
+        $('confirm-title').textContent = title;
+        $('confirm-msg').textContent = msg;
+        confirmCb = cb;
+        openModal('confirm-modal');
+    }
+    $('confirm-yes').addEventListener('click', () => { closeModal('confirm-modal'); if (confirmCb) confirmCb(); confirmCb = null; });
+    $('confirm-no').addEventListener('click', () => { closeModal('confirm-modal'); confirmCb = null; });
+
+    function openModal(id) { $(id).classList.add('active'); }
+    function closeModal(id) { $(id).classList.remove('active'); }
+    document.querySelectorAll('.modal').forEach(m => {
+        m.addEventListener('click', e => { if (e.target === m) m.classList.remove('active'); });
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
+    });
+
+    function levelOf(xp) { return Math.floor(xp / 100); }
+    function titleOf(xp) { return LEVEL_TITLES[Math.min(levelOf(xp), LEVEL_TITLES.length - 1)]; }
+    function checkBadges(s) {
+        BADGE_DEFS.forEach(b => {
+            if (b.test(s) && !s.badges.includes(b.id)) {
+                s.badges.push(b.id);
+                showToast(`🏅 ${s.name} earned "${b.name}"!`, 'success');
+                playSound('correct');
+            }
+        });
+    }
+    function totalStars() { return state.students.reduce((a, s) => a + s.stars, 0); }
+
+    /* ---------- NAV & THEME ---------- */
+    function showSection(id, btn) {
+        document.querySelectorAll('section.section').forEach(s => s.classList.remove('active'));
+        $(id).classList.add('active');
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+    }
+    function applyTheme() { document.documentElement.setAttribute('data-theme', state.theme); }
+    function toggleTheme() {
+        state.theme = state.theme === 'light' ? 'dark' : 'light';
+        applyTheme(); saveState();
+        showToast(state.theme === 'dark' ? '🌙 Night mode on the bus!' : '☀️ Morning field trip mode!');
+    }
+
+    /* ---------- MASCOT ---------- */
+    let lizIndex = 0;
+    function pokeLiz() {
+        $('liz-text').textContent = LIZ_TIPS[Math.floor(Math.random() * LIZ_TIPS.length)];
+        playSound('bell');
+    }
+    setInterval(() => { $('liz-text').textContent = LIZ_TIPS[lizIndex++ % LIZ_TIPS.length]; }, 9000);
+
+    /* ---------- TEACHER: STATS / ROSTER ---------- */
+    function renderStats() {
+        $('studentCount').textContent = state.students.length;
+        $('worksheetCount').textContent = state.worksheets.length;
+        $('starCount').textContent = totalStars();
+        $('submissionCount').textContent = state.submissions.filter(s => s.status === 'pending').length;
+        const present = state.students.filter(s => s.present).length;
+        $('presentCount').textContent = present;
+        $('absentCount').textContent = state.students.length - present;
+        $('class-goal-display').textContent = `Class Stars: ${totalStars()} / ${state.classGoal}`;
+        $('class-goal-bar').style.width = Math.min(100, (totalStars() / state.classGoal) * 100) + '%';
+    }
+    function renderRoster(filter = '') {
+        const grid = $('rosterGrid');
+        const q = filter.trim().toLowerCase();
+        const list = state.students.filter(s => s.name.toLowerCase().includes(q));
+        grid.innerHTML = list.length ? '' : '<p style="grid-column:1/-1; text-align:center; opacity:.7;">No students found.</p>';
+        list.forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'student-card';
+            card.innerHTML = `
+                <div style="font-size:2.5em;">${s.avatar}</div>
+                <strong>${s.name}</strong> ${s.emotion || ''}<br>
+                <small style="color:var(--text-muted);">PIN: ${s.pin}</small><br>
+                <div style="margin:8px 0;">⭐ ${s.stars} &nbsp;|&nbsp; ✅ ${s.behavior}/10</div>
+                <div class="flex-row" style="justify-content:center;">
+                    <button class="btn btn-warning" style="padding:4px 10px; font-size:.8em;" onclick="giveStar('${s.id}')">⭐ +1</button>
+                    <button class="btn btn-success" style="padding:4px 10px; font-size:.8em;" onclick="changeBehavior('${s.id}',1)">👍</button>
+                    <button class="btn ${s.present ? 'btn-info' : 'btn-danger'}" style="padding:4px 10px; font-size:.8em;" onclick="togglePresent('${s.id}')">${s.present ? '✅ Here' : '❌ Out'}</button>
+                    <button class="btn btn-danger" style="padding:4px 10px; font-size:.8em;" onclick="deleteStudent('${s.id}')">🗑️</button>
+                </div>`;
+            grid.appendChild(card);
+        });
+    }
+    function filterRoster() { renderRoster($('rosterSearch').value); }
+    function findStudent(id) { return state.students.find(s => s.id === id); }
+    function giveStar(id) {
+        const s = findStudent(id); if (!s) return;
+        s.stars++; s.xp += 10; checkBadges(s);
+        saveState(); renderAll();
+        showToast(`⭐ Star for ${s.name}!`, 'success');
+    }
+    function changeBehavior(id, n) {
+        const s = findStudent(id); if (!s) return;
+        s.behavior = Math.max(0, Math.min(10, s.behavior + n));
+        checkBadges(s); saveState(); renderAll();
+    }
+    function togglePresent(id) {
+        const s = findStudent(id); if (!s) return;
+        s.present = !s.present; saveState(); renderAll();
+    }
+    function deleteStudent(id) {
+        const s = findStudent(id); if (!s) return;
+        askConfirm('Remove Student?', `Remove ${s.name} from the roster? This cannot be undone.`, () => {
+            state.students = state.students.filter(x => x.id !== id);
+            state.submissions = state.submissions.filter(x => x.studentId !== id);
+            saveState(); renderAll();
+            showToast(`${s.name} removed.`, 'error');
+        });
+    }
+    function generatePin() {
+        let pin;
+        do { pin = String(Math.floor(1000 + Math.random() * 9000)); }
+        while (state.students.some(s => s.pin === pin));
+        $('newStudentPin').value = pin;
+    }
+    function addStudent() {
+        const name = $('newStudentName').value.trim();
+        const pin = $('newStudentPin').value.trim();
+        if (!name) return showToast('Please enter a name.', 'error');
+        if (!/^\d{4}$/.test(pin)) return showToast('PIN must be exactly 4 digits.', 'error');
+        if (state.students.some(s => s.pin === pin)) return showToast('That PIN is already taken.', 'error');
+        state.students.push({ id: uid(), name, pin, avatar: AVATARS[state.students.length % AVATARS.length], stars: 0, xp: 0, behavior: 5, completed: 0, streak: 0, lastLogin: null, present: true, emotion: null, badges: [] });
+        saveState(); renderAll(); closeModal('addStudentModal');
+        $('newStudentName').value = ''; $('newStudentPin').value = '';
+        showToast(`🎉 Welcome aboard, ${name}!`, 'success');
+    }
+    function resetAllData() {
+        askConfirm('Reset Everything?', 'This wipes ALL class data and restores the demo class.', () => {
+            state = seedState(); currentStudent = null; saveState(); renderAll();
+            $('studentDashboard').style.display = 'none'; $('loginView').style.display = 'block';
+            showToast('🚌 Fresh bus, fresh start!', 'success');
+        });
+    }
+
+    /* ---------- TODO / LEADERBOARD / SOW / CALENDAR ---------- */
+    function renderTodos() {
+        const ul = $('todoList'); ul.innerHTML = '';
+        state.todos.forEach(t => {
+            const li = document.createElement('li');
+            li.className = 'todo-item' + (t.done ? ' done' : '');
+            li.innerHTML = `<input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo('${t.id}')">
+                            <span style="flex:1;">${t.text}</span>
+                            <button class="btn btn-danger" style="padding:2px 8px; font-size:.75em;" onclick="deleteTodo('${t.id}')">✖</button>`;
+            ul.appendChild(li);
+        });
+    }
+    function addTodo() {
+        const v = $('todoInput').value.trim();
+        if (!v) return;
+        state.todos.push({ id: uid(), text: v, done: false });
+        $('todoInput').value = ''; saveState(); renderTodos();
+    }
+    function toggleTodo(id) { const t = state.todos.find(x => x.id === id); if (t) { t.done = !t.done; saveState(); renderTodos(); } }
+    function deleteTodo(id) { state.todos = state.todos.filter(x => x.id !== id); saveState(); renderTodos(); }
+
+    function renderLeaderboard() {
+        const top = [...state.students].sort((a, b) => b.stars - a.stars).slice(0, 5);
+        $('leaderboardList').innerHTML = top.map(s => `<li>${s.avatar} ${s.name} — ⭐ ${s.stars}</li>`).join('') || '<li>No students yet</li>';
+        const sow = top[0];
+        $('sowName').textContent = sow ? `${sow.name} (⭐ ${sow.stars})` : '—';
+    }
+    function renderMiniCalendar() {
+        const now = new Date(), y = now.getFullYear(), m = now.getMonth(), today = now.getDate();
+        const first = new Date(y, m, 1).getDay(), days = new Date(y, m + 1, 0).getDate();
+        let html = ['S','M','T','W','T','F','S'].map(d => `<div class="day" style="font-weight:bold;">${d}</div>`).join('');
+        for (let i = 0; i < first; i++) html += '<div class="day" style="opacity:.2;"></div>';
+        for (let d = 1; d <= days; d++) html += `<div class="day ${d === today ? 'today' : ''}">${d}</div>`;
+        $('miniCalendar').innerHTML = html;
+    }
+
+    /* ---------- POLL ---------- */
+    function renderPoll() {
+        $('pollQuestion').textContent = state.poll.question;
+        const total = Object.values(state.poll.votes).reduce((a, b) => a + b, 0);
+        $('pollOptions').innerHTML = state.poll.options.map((opt, i) => {
+            const v = state.poll.votes[i] || 0;
+            const pct = total ? Math.round((v / total) * 100) : 0;
+            return `<label class="poll-option">
+                <input type="radio" name="pollOpt" value="${i}">
+                <span style="flex:1;">${opt}</span>
+                <span class="badge">${v} votes · ${pct}%</span>
+            </label>`;
+        }).join('');
+    }
+    function submitPoll() {
+        const sel = document.querySelector('input[name="pollOpt"]:checked');
+        if (!sel) return showToast('Pick an option first!', 'error');
+        const i = sel.value;
+        state.poll.votes[i] = (state.poll.votes[i] || 0) + 1;
+        saveState(); renderPoll(); playSound('correct');
+        showToast('🗳️ Vote counted!', 'success');
+    }
+    function resetPoll() {
+        askConfirm('Reset Poll?', 'Clear all poll votes?', () => {
+            state.poll.votes = {}; saveState(); renderPoll();
+        });
+    }
+
+    /* ---------- ANNOUNCEMENTS ---------- */
+    function postAnnouncement() {
+        const v = $('announcementInput').value.trim();
+        if (!v) return showToast('Write a message first.', 'error');
+        state.announcement = v; saveState(); renderAnnouncement(); closeModal('announcementModal');
+        showToast('📢 Announcement posted!', 'success');
+    }
+    function clearAnnouncement() {
+        state.announcement = ''; $('announcementInput').value = '';
+        saveState(); renderAnnouncement(); closeModal('announcementModal');
+    }
+    function renderAnnouncement() {
+        if (state.announcement) {
+            $('announcementBoard').style.display = 'block';
+            $('announcementText').textContent = state.announcement;
+        } else {
+            $('announcementBoard').style.display = 'none';
+        }
+    }
+
+    /* ---------- STUDENT PORTAL ---------- */
+    function todayStr() { return new Date().toDateString(); }
+    function loginStudent() {
+        const pin = $('pinInput').value.trim();
+        const s = state.students.find(x => x.pin === pin);
+        if (!s) { playSound('wrong'); return showToast('🚫 Invalid PIN. Try again!', 'error'); }
+        const today = todayStr();
+        if (s.lastLogin !== today) {
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            s.streak = (s.lastLogin === yesterday) ? s.streak + 1 : 1;
+            s.lastLogin = today;
+            s.present = true;
+            checkBadges(s);
+        }
+        currentStudent = s;
+        saveState();
+        $('loginView').style.display = 'none';
+        $('studentDashboard').style.display = 'block';
+        $('pinInput').value = '';
+        renderStudentDashboard(); renderAll();
+        playSound('correct');
+        showToast(`🚌 Welcome aboard, ${s.name}!`, 'success');
+    }
+    function logoutStudent() {
+        currentStudent = null;
+        $('studentDashboard').style.display = 'none';
+        $('loginView').style.display = 'block';
+        renderAnnouncement();
+    }
+    function renderStudentDashboard() {
+        if (!currentStudent) return;
+        const s = currentStudent;
+        $('studentName').textContent = s.name;
+        $('studentLevel').textContent = levelOf(s.xp) + 1;
+        $('studentTitle').textContent = titleOf(s.xp);
+        $('studentXp').textContent = s.xp % 100;
+        $('nextLevelXp').textContent = 100;
+        $('studentXpBar').style.width = (s.xp % 100) + '%';
+        $('studentStreak').textContent = s.streak;
+        $('studentStars').textContent = s.stars;
+        $('studentCompleted').textContent = s.completed;
+        $('studentBehavior').textContent = s.behavior + '/10';
+        $('studentBadges').innerHTML = s.badges.length
+            ? s.badges.map(id => { const b = BADGE_DEFS.find(x => x.id === id); return b ? `<span class="badge" title="${b.name}">${b.icon} ${b.name}</span>` : ''; }).join('')
+            : '<span style="opacity:.6;">No badges yet — earn stars to unlock them!</span>';
+        document.querySelectorAll('#emotionGrid .emotion-btn').forEach(b => {
+            b.classList.toggle('active', b.textContent === s.emotion);
+        });
+        if (s.emotion) $('emotionResult').textContent = `Checked in as ${s.emotion} today. Thanks for sharing!`;
+    }
+    function setEmotion(e) {
+        if (!currentStudent) return showToast('Log in first!', 'error');
+        currentStudent.emotion = e;
+        saveState(); renderStudentDashboard();
+        const responses = {
+            '😊': 'Glad you feel good today! 🌈', '😄': 'That energy is contagious! ⚡',
+            '🤔': 'Curious minds make great scientists! 🔭', '😴': 'Hang in there — snack break soon! 🍎',
+            '😢': 'It is okay to feel sad. Ms. Frizzle is here for you. 💛', '😡': 'Take a deep breath... in... out... 🌬️'
+        };
+        $('emotionResult').textContent = responses[e] || 'Thanks for checking in!';
+        showToast(`Emotion check-in: ${e}`, 'success');
+    }
+
+    /* ---------- WORKSHEETS ---------- */
+    function renderWorksheets() {
+        const cat = $('categoryFilter').value;
+        const list = state.worksheets.filter(w => cat === 'All' || w.category === cat);
+        $('worksheetList').innerHTML = list.length ? '' : '<p style="opacity:.7;">No worksheets in this category yet.</p>';
+        list.forEach(w => {
+            const submitted = currentStudent && state.submissions.some(x => x.worksheetId === w.id && x.studentId === currentStudent.id);
+            const div = document.createElement('div');
+            div.className = 'ws-card';
+            div.innerHTML = `
+                <div class="flex-row" style="justify-content: space-between;">
+                    <div>
+                        <strong style="font-size:1.2em;">${w.title}</strong>
+                        <span class="badge">${w.category}</span>
+                        <p style="margin:8px 0; color:var(--text-muted);">${w.desc || ''}</p>
+                        <small>📅 Due: ${w.due || 'No date'}</small>
+                    </div>
+                    <div>
+                        ${currentStudent
+                            ? (submitted
+                                ? '<span class="badge" style="background:var(--success); color:#fff;">✅ Submitted</span>'
+                                : `<button class="btn btn-success" onclick="submitWorksheet('${w.id}')">📤 Submit Work</button>`)
+                            : ''}
+                        <button class="btn btn-danger" style="padding:6px 12px; font-size:.8em;" onclick="deleteWorksheet('${w.id}')">🗑️</button>
+                    </div>
+                </div>`;
+            $('worksheetList').appendChild(div);
+        });
+    }
+    function createWorksheet() {
+        const title = $('wsTitle').value.trim();
+        if (!title) return showToast('Give the worksheet a title.', 'error');
+        state.worksheets.push({ id: uid(), title, category: $('wsCategory').value, desc: $('wsDesc').value.trim(), due: $('wsDue').value });
+        saveState(); renderWorksheets(); renderStats(); closeModal('createWorksheetModal');
+        $('wsTitle').value = ''; $('wsDesc').value = ''; $('wsDue').value = '';
+        showToast('📝 Worksheet created!', 'success');
+    }
+    function deleteWorksheet(id) {
+        askConfirm('Delete Worksheet?', 'Delete this worksheet and its submissions?', () => {
+            state.worksheets = state.worksheets.filter(w => w.id !== id);
+            state.submissions = state.submissions.filter(s => s.worksheetId !== id);
+            saveState(); renderWorksheets(); renderSubmissions(); renderStats();
+        });
+    }
+    function submitWorksheet(wid) {
+        if (!currentStudent) return showToast('Log in from the Student tab first!', 'error');
+        state.submissions.push({ id: uid(), studentId: currentStudent.id, worksheetId: wid, time: Date.now(), status: 'pending', grade: null, feedback: '' });
+        saveState(); renderWorksheets(); renderSubmissions(); renderStats();
+        playSound('bell');
+        showToast('📤 Work submitted for grading!', 'success');
+    }
+
+    /* ---------- GRADING ---------- */
+    function renderSubmissions() {
+        const list = $('submissionsList');
+        if (!state.submissions.length) { list.innerHTML = '<p style="opacity:.7;">No submissions yet. Students can submit work from the Curriculum tab.</p>'; return; }
+        list.innerHTML = '';
+        [...state.submissions].sort((a, b) => b.time - a.time).forEach(sub => {
+            const st = findStudent(sub.studentId);
+            const ws = state.worksheets.find(w => w.id === sub.worksheetId);
+            const div = document.createElement('div');
+            div.className = 'sub-card' + (sub.status === 'graded' ? ' graded' : '');
+            div.innerHTML = `
+                <div class="flex-row" style="justify-content: space-between;">
+                    <div>
+                        <strong>${st ? st.avatar + ' ' + st.name : 'Unknown'}</strong> →
+                        <em>${ws ? ws.title : 'Deleted worksheet'}</em><br>
+                        <small style="color:var(--text-muted);">${new Date(sub.time).toLocaleString()}</small>
+                        ${sub.status === 'graded' ? `<div style="margin-top:6px;">${'⭐'.repeat(sub.grade)} <span style="color:var(--text-muted);">— ${sub.feedback || 'No feedback'}</span></div>` : ''}
+                    </div>
+                    <div>
+                        ${sub.status === 'pending'
+                            ? `<button class="btn btn-success" onclick="openGradeModal('${sub.id}')">✏️ Grade</button>`
+                            : '<span class="badge" style="background:var(--success); color:#fff;">Graded</span>'}
+                        <button class="btn btn-danger" style="padding:6px 12px; font-size:.8em;" onclick="deleteSubmission('${sub.id}')">🗑️</button>
+                    </div>
+                </div>`;
+            list.appendChild(div);
+        });
+    }
+    function openGradeModal(id) {
+        const sub = state.submissions.find(x => x.id === id); if (!sub) return;
+        const st = findStudent(sub.studentId);
+        const ws = state.worksheets.find(w => w.id === sub.worksheetId);
+        $('gradeSubId').value = id;
+        $('gradeInfo').textContent = `${st ? st.name : '?'} — ${ws ? ws.title : '?'}`;
+        $('gradeStars').value = '3'; $('gradeFeedback').value = '';
+        openModal('gradeModal');
+    }
+    function saveGrade() {
+        const sub = state.submissions.find(x => x.id === $('gradeSubId').value); if (!sub) return;
+        const stars = parseInt($('gradeStars').value, 10);
+        sub.grade = stars; sub.feedback = $('gradeFeedback').value.trim(); sub.status = 'graded';
+        const st = findStudent(sub.studentId);
+        if (st) { st.stars += stars; st.xp += stars * 10; st.completed++; checkBadges(st); }
+        saveState(); renderSubmissions(); renderAll(); closeModal('gradeModal');
+        playSound('applause');
+        showToast(`⭐ Graded! ${st ? st.name : 'Student'} earned ${stars} star(s).`, 'success');
+    }
+    function deleteSubmission(id) {
+        askConfirm('Delete Submission?', 'Remove this submission?', () => {
+            state.submissions = state.submissions.filter(x => x.id !== id);
+            saveState(); renderSubmissions(); renderStats();
+        });
+    }
+
+    /* ---------- SCIENCE LAB ---------- */
+    let expInterval = null;
+    function safetyOK() {
+        if (!($('safe1').checked && $('safe2').checked && $('safe3').checked)) {
+            showToast('⚠️ Complete the safety checklist first!', 'error');
+            playSound('wrong');
+            return false;
+        }
+        return true;
+    }
+    function startExperiment(type) {
+        if (!safetyOK()) return;
+        clearExperiment(false);
+        const c = $('experimentCanvas');
+        c.style.display = 'block';
+        const scenes = {
+            volcano: () => {
+                c.innerHTML = `<div style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); font-size:9em;">🌋</div>
+                    <div style="position:absolute; top:10px; left:10px; background:var(--card-bg); padding:10px 15px; border-radius:10px; max-width:260px; text-align:left; font-size:.9em;">
+                        <strong>🌋 Volcano Eruption</strong><br>Hypothesis: Baking soda + vinegar = CO₂ gas → eruption!<br>Watch the pressure build...</div>`;
+                for (let i = 0; i < 14; i++) {
+                    const p = document.createElement('span');
+                    p.className = 'exp-emoji';
+                    p.textContent = ['🔴','🟠','💥','🟡'][i % 4];
+                    p.style.left = (42 + Math.random() * 16) + '%';
+                    p.style.bottom = '90px';
+                    p.style.animation = `erupt ${1 + Math.random()}s ${Math.random() * 1.5}s infinite`;
+                    c.appendChild(p);
+                }
+            },
+            plant: () => {
+                c.innerHTML = `<div style="position:absolute; top:10px; left:10px; background:var(--card-bg); padding:10px 15px; border-radius:10px; max-width:260px; text-align:left; font-size:.9em;">
+                        <strong>🌱 Plant Life Cycle</strong><br>Seeds need sunlight, water, and time. Watch it grow!</div>
+                    <div id="plantStage" style="position:absolute; bottom:40px; left:50%; transform:translateX(-50%); font-size:7em; transform-origin:bottom center; animation:sway 3s infinite;">🌱</div>
+                    <div style="position:absolute; top:20px; right:30px; font-size:3em;">☀️</div>
+                    <div style="position:absolute; top:100px; right:80px; font-size:2em;">💧</div>`;
+                const stages = ['🌱','🌿','🪴','🌻']; let i = 0;
+                expInterval = setInterval(() => { const el = $('plantStage'); if (el) el.textContent = stages[++i % stages.length]; }, 1500);
+            },
+            solar: () => {
+                c.innerHTML = `<div style="position:absolute; top:10px; left:10px; background:var(--card-bg); padding:10px 15px; border-radius:10px; max-width:260px; text-align:left; font-size:.9em;">
+                        <strong>☀️ Solar System</strong><br>Earth orbits the Sun once every 365 days!</div>
+                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:5em;">☀️</div>
+                    <div style="position:absolute; top:50%; left:50%; font-size:2.5em; animation:orbit 6s linear infinite;">🌍</div>
+                    <div style="position:absolute; top:50%; left:50%; font-size:1.5em; animation:orbit 3s linear infinite reverse;">🌙</div>`;
+            },
+            digestion: () => {
+                c.innerHTML = `<div style="position:absolute; top:10px; left:10px; background:var(--card-bg); padding:10px 15px; border-radius:10px; max-width:260px; text-align:left; font-size:.9em;">
+                        <strong>🥪 Digestive Journey</strong><br>Follow the sandwich: Mouth → Stomach → Intestines!</div>
+                    <div style="position:absolute; top:2%;  left:44%; font-size:2.2em;">👄</div>
+                    <div style="position:absolute; top:33%; left:22%; font-size:2.2em;">🫃</div>
+                    <div style="position:absolute; top:53%; left:62%; font-size:2.2em;">🌀</div>
+                    <div style="position:absolute; top:83%; left:44%; font-size:2.2em;">🚽</div>
+                    <div class="exp-emoji" style="font-size:3em; animation:digestMove 5s linear infinite;">🥪</div>`;
+            },
+            weather: () => {
+                c.innerHTML = `<div style="position:absolute; top:10px; left:10px; background:var(--card-bg); padding:10px 15px; border-radius:10px; max-width:260px; text-align:left; font-size:.9em;">
+                        <strong>🌪️ Tornado Alley</strong><br>Warm + cool air colliding = spinning vortex!</div>
+                    <div style="position:absolute; top:15%; left:20%; font-size:2.5em;">⛈️</div>
+                    <div style="position:absolute; top:15%; right:20%; font-size:2.5em;">🌤️</div>
+                    <div class="exp-emoji" style="top:45%; left:50%; font-size:6em; animation:twist 4s ease-in-out infinite;">🌪️</div>`;
+            }
+        };
+        if (scenes[type]) { scenes[type](); playSound('bell'); }
+    }
+    function clearExperiment(toast = true) {
+        if (expInterval) { clearInterval(expInterval); expInterval = null; }
+        const c = $('experimentCanvas');
+        c.style.display = 'flex';
+        c.innerHTML = 'Select an experiment!';
+        if (toast) showToast('🧹 Lab cleaned up!');
+    }
+
+    /* ---------- TIMER / STOPWATCH ---------- */
+    let timer = { mode: 'countdown', duration: 300, remaining: 300, elapsed: 0, running: false, interval: null };
+    function fmt(sec) {
+        const m = String(Math.floor(sec / 60)).padStart(2, '0');
+        const s = String(sec % 60).padStart(2, '0');
+        return `${m}:${s}`;
+    }
+    function renderTimer() { $('timerDisplay').textContent = fmt(timer.mode === 'countdown' ? timer.remaining : timer.elapsed); }
+    function setTimerMinutes() {
+        const m = Math.max(1, Math.min(120, parseInt($('timerMinutes').value, 10) || 5));
+        timer.duration = m * 60;
+        if (!timer.running) { timer.remaining = timer.duration; renderTimer(); }
+    }
+    function startTimer() {
+        if (timer.running) return;
+        timer.running = true;
+        timer.interval = setInterval(() => {
+            if (timer.mode === 'countdown') {
+                timer.remaining--;
+                if (timer.remaining <= 0) {
+                    pauseTimer(); timer.remaining = 0; renderTimer();
+                    playSound('bell'); showToast('⏰ Time is up!', 'success');
+                    return;
+                }
+            } else { timer.elapsed++; }
+            renderTimer();
+        }, 1000);
+    }
+    function pauseTimer() { timer.running = false; clearInterval(timer.interval); }
+    function resetTimer() { pauseTimer(); timer.remaining = timer.duration; timer.elapsed = 0; renderTimer(); }
+    function toggleTimerMode() {
+        pauseTimer();
+        timer.mode = timer.mode === 'countdown' ? 'stopwatch' : 'countdown';
+        $('timerModeBtn').textContent = timer.mode === 'countdown' ? 'Switch to Stopwatch' : 'Switch to Countdown';
+        resetTimer();
+    }
+
+    /* ---------- AUDIO (Web Audio API) ---------- */
+    let AC = null;
+    function ac() { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); return AC; }
+    function tone(freq, dur, type = 'sine', delay = 0, vol = 0.15) {
+        try {
+            const c = ac(), o = c.createOscillator(), g = c.createGain();
+            o.type = type; o.frequency.value = freq;
+            g.gain.setValueAtTime(vol, c.currentTime + delay);
+            g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + delay + dur);
+            o.connect(g); g.connect(c.destination);
+            o.start(c.currentTime + delay); o.stop(c.currentTime + delay + dur);
+        } catch (e) {}
+    }
+    function playSound(kind) {
+        if (kind === 'bell') { tone(880, 0.4); tone(660, 0.5, 'sine', 0.15); }
+        else if (kind === 'correct') { tone(523, 0.12); tone(659, 0.12, 'sine', 0.12); tone(784, 0.3, 'sine', 0.24); }
+        else if (kind === 'wrong') { tone(220, 0.25, 'sawtooth', 0, 0.08); tone(160, 0.4, 'sawtooth', 0.12, 0.08); }
+        else if (kind === 'applause') {
+            try {
+                const c = ac(), len = c.sampleRate * 0.9, buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+                for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 1.5);
+                const src = c.createBufferSource(), g = c.createGain(), f = c.createBiquadFilter();
+                f.type = 'bandpass'; f.frequency.value = 1500;
+                g.gain.value = 0.25;
+                src.buffer = buf; src.connect(f); f.connect(g); g.connect(c.destination); src.start();
+            } catch (e) {}
+        }
+    }
+    let bgmNodes = [];
+    function toggleBGM() {
+        const btn = $('bgmBtn');
+        if (bgmNodes.length) {
+            bgmNodes.forEach(n => { try { n.osc.stop(); } catch (e) {} });
+            bgmNodes = [];
+            btn.textContent = '▶️ Play Study Beats';
+            return;
+        }
+        try {
+            const c = ac();
+            [261.63, 329.63, 392.00].forEach((f, i) => {
+                const o = c.createOscillator(), g = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
+                o.type = 'sine'; o.frequency.value = f;
+                g.gain.value = 0.04;
+                lfo.frequency.value = 0.1 + i * 0.07; lg.gain.value = 0.02;
+                lfo.connect(lg); lg.connect(g.gain);
+                o.connect(g); g.connect(c.destination);
+                o.start(); lfo.start();
+                bgmNodes.push({ osc: o }, { osc: lfo });
+            });
+            btn.textContent = '⏹️ Stop Study Beats';
+            showToast('🎵 Lo-fi study beats on!', 'success');
+        } catch (e) { showToast('Audio not available.', 'error'); }
+    }
+
+    /* ---------- NOISE METER ---------- */
+    function adjustNoise(delta) {
+        state.noise = delta === 0 ? 20 : Math.max(0, Math.min(100, state.noise + delta));
+        $('noiseFill').style.width = state.noise + '%';
+        saveState();
+        if (state.noise >= 80) { showToast('🔇 Too loud! Inside voices please!', 'error'); playSound('wrong'); }
+    }
+
+    /* ---------- SKETCHPAD ---------- */
+    let drawing = false, ctx = null;
+    function setupCanvas() {
+        const cv = $('whiteboard');
+        ctx = cv.getContext('2d');
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        const pos = e => {
+            const r = cv.getBoundingClientRect();
+            return { x: (e.clientX - r.left) * (cv.width / r.width), y: (e.clientY - r.top) * (cv.height / r.height) };
+        };
+        cv.addEventListener('pointerdown', e => { e.preventDefault(); drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+        cv.addEventListener('pointermove', e => {
+            if (!drawing) return; e.preventDefault();
+            const p = pos(e);
+            ctx.strokeStyle = $('drawColor').value;
+            ctx.lineWidth = $('drawSize').value;
+            ctx.lineTo(p.x, p.y); ctx.stroke();
+        });
+        ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => cv.addEventListener(ev, () => drawing = false));
+    }
+    function clearCanvas() { if (ctx) ctx.clearRect(0, 0, $('whiteboard').width, $('whiteboard').height); }
+
+    /* ---------- RANDOM & TEAMS ---------- */
+    function pickRandom() {
+        const pool = state.students.filter(s => s.present);
+        if (!pool.length) return showToast('No students marked present!', 'error');
+        let i = 0;
+        const spin = setInterval(() => {
+            $('randomResult').textContent = pool[Math.floor(Math.random() * pool.length)].name;
+            if (++i > 14) {
+                clearInterval(spin);
+                const winner = pool[Math.floor(Math.random() * pool.length)];
+                $('randomResult').textContent = `🎉 ${winner.avatar} ${winner.name}!`;
+                playSound('applause');
+            }
+        }, 90);
+    }
+    function generateTeams() {
+        const n = Math.max(2, Math.min(8, parseInt($('teamCount').value, 10) || 2));
+        let pool = state.students.filter(s => s.present);
+        if (!pool.length) pool = [...state.students];
+        if (!pool.length) return showToast('Add students first!', 'error');
+        const shuffled = [...pool].sort(() => Math.random() - 0.5);
+        const teams = Array.from({ length: n }, () => []);
+        shuffled.forEach((s, i) => teams[i % n].push(s));
+        $('teamsResult').innerHTML = teams.map((t, i) => `
+            <div class="team-col">
+                <strong>Team ${i + 1}</strong>
+                ${t.map(s => `<div>${s.avatar} ${s.name}</div>`).join('') || '<div style="opacity:.5;">—</div>'}
+            </div>`).join('');
+        playSound('correct');
+    }
+
+    /* ---------- PARENT PORTAL ---------- */
+    function viewReport() {
+        const q = $('parentLookup').value.trim().toLowerCase();
+        if (!q) return showToast('Enter a name or PIN.', 'error');
+        const s = state.students.find(x => x.pin === q || x.name.toLowerCase() === q);
+        if (!s) { playSound('wrong'); return showToast('Student not found.', 'error'); }
+        const subs = state.submissions.filter(x => x.studentId === s.id && x.status === 'graded');
+        $('parentReport').innerHTML = `
+            <div class="report-card">
+                <h3 style="border:none;">${s.avatar} ${s.name}'s Progress Report</h3>
+                <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));">
+                    <div class="stat-card"><div>⭐ Stars</div><div class="number">${s.stars}</div></div>
+                    <div class="stat-card"><div>🎖️ Level</div><div class="number">${levelOf(s.xp) + 1}</div></div>
+                    <div class="stat-card"><div>📝 Done</div><div class="number">${s.completed}</div></div>
+                    <div class="stat-card"><div>🔥 Streak</div><div class="number">${s.streak}</div></div>
+                </div>
+                <p><strong>Title:</strong> ${titleOf(s.xp)} &nbsp;|&nbsp; <strong>Behavior:</strong> ${s.behavior}/10 &nbsp;|&nbsp; <strong>Feeling:</strong> ${s.emotion || '—'} &nbsp;|&nbsp; <strong>Today:</strong> ${s.present ? '✅ Present' : '❌ Absent'}</p>
+                <p style="margin-top:10px;"><strong>Badges:</strong> ${s.badges.length ? s.badges.map(id => { const b = BADGE_DEFS.find(x => x.id === id); return b ? b.icon + ' ' + b.name : ''; }).join(' · ') : 'None yet'}</p>
+                <h4 style="margin-top:15px;">Recent Grades</h4>
+                ${subs.length ? '<ul style="padding-left:20px;">' + subs.map(x => {
+                    const w = state.worksheets.find(v => v.id === x.worksheetId);
+                    return `<li>${w ? w.title : 'Worksheet'} — ${'⭐'.repeat(x.grade)} ${x.feedback ? '· "' + x.feedback + '"' : ''}</li>`;
+                }).join('') + '</ul>' : '<p style="opacity:.7;">No graded work yet.</p>'}
+            </div>`;
+        playSound('correct');
+    }
+
+    /* ---------- RENDER ALL & INIT ---------- */
+    function renderAll() {
+        renderStats(); renderRoster($('rosterSearch') ? $('rosterSearch').value : '');
+        renderTodos(); renderLeaderboard(); renderPoll();
+        renderWorksheets(); renderSubmissions(); renderAnnouncement();
+        if (currentStudent) renderStudentDashboard();
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        applyTheme();
+        renderAll();
+        renderMiniCalendar();
+        renderTimer();
+        $('noiseFill').style.width = (state.noise || 20) + '%';
+        setupCanvas();
+        $('pinInput').addEventListener('keydown', e => { if (e.key === 'Enter') loginStudent(); });
+        $('todoInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTodo(); });
+        $('parentLookup').addEventListener('keydown', e => { if (e.key === 'Enter') viewReport(); });
+        $('newStudentPin').addEventListener('keydown', e => { if (e.key === 'Enter') addStudent(); });
+        state.students.forEach(checkBadges); saveState();
+    });
+    </script>
+<!-- Magic School Bus - Return to Command Center Dock -->
+<div id="msb-hub-return-dock" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:system-ui,-apple-system,sans-serif;">
+<a href="index.html" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.4),0 0 15px rgba(255,216,61,0.3)';" onmouseover="this.style.transform='translateY(-3px) scale(1.03)';this.style.boxShadow='0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(255,216,61,0.5)';" style="display:inline-flex;align-items:center;gap:10px;padding:10px 18px;background:linear-gradient(135deg,#101c46,#162861);color:#ffd83d;border:2px solid #ffd83d;border-radius:999px;text-decoration:none;font-weight:800;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 15px rgba(255,216,61,0.3);transition:all 0.2s cubic-bezier(0.2,0.8,0.2,1);backdrop-filter:blur(8px);">
+<span style="font-size:18px;">🚌</span>
+<span>Return to Bus Hub</span>
+</a>
+</div>
+<audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio><audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio>
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+
+<script>
+// Miss Frizzle Voice Synthesizer for K-2 Readers
+function speakFrizzle(text) {
+  if (!('speechSynthesis' in window)) {
+    alert("Speech synthesis is not supported in this browser.");
+    return;
+  }
+  window.speechSynthesis.cancel(); // Stop any active speech
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.95; // Slightly slower for K-2 students
+  utterance.pitch = 1.15; // Energetic, Miss Frizzle pitch
+  
+  // Try to pick an expressive English female voice if available
+  const voices = window.speechSynthesis.getVoices();
+  const femaleVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Female') || v.name.includes('Zira') || v.name.includes('Samantha') || v.name.includes('Google')));
+  if (femaleVoice) utterance.voice = femaleVoice;
+  
+  window.speechSynthesis.speak(utterance);
+}
+</script>
+
+</body>
+</html>

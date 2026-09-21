@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Frizz Files | A Magic School Bus Science Hub for Teachers</title>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&amp;family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet"/>
+<style>
+/* ============ FOUNDATION ============ */
+:root{
+  --bus:#FFC61A; --bus-dark:#E8A800;
+  --purple:#5B2A86; --purple-lt:#EFE6FF;
+  --teal:#00A6A6; --teal-lt:#DDF6F4;
+  --coral:#FF5A5F; --coral-lt:#FFE7E8;
+  --sky:#3FA7D6; --sky-lt:#E3F4FD;
+  --mint:#DFF6E4; --peach:#FFF0DC;
+  --cream:#FFF6E3; --ink:#2B2140;
+  --shadow:6px 6px 0 var(--ink);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Nunito',sans-serif;color:var(--ink);line-height:1.6;
+  background:var(--cream);
+  background-image:radial-gradient(#efe3ff 2.2px, transparent 2.6px);
+  background-size:34px 34px;
+}
+h1,h2,h3,h4{font-family:'Baloo 2',cursive;line-height:1.15}
+img{max-width:100%}
+.wrap{width:min(1180px,92%);margin:0 auto}
+section[id]{scroll-margin-top:96px}
+.section{padding:42px 0}
+.panel{
+  background:#fff;border:3px solid var(--ink);border-radius:26px;
+  box-shadow:8px 8px 0 rgba(43,33,64,.9);
+  padding:clamp(22px,4vw,46px);
+}
+.kicker{
+  display:inline-block;background:var(--ink);color:var(--bus);
+  font-weight:800;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:6px 14px;border-radius:999px;margin-bottom:12px;
+}
+.section-head h2{font-size:clamp(1.7rem,3.4vw,2.5rem);margin-bottom:8px}
+.section-head p{max-width:64ch;font-size:1.02rem}
+.section-head{margin-bottom:26px}
+.btn{
+  display:inline-block;font-family:'Baloo 2',cursive;font-weight:700;font-size:1rem;
+  background:var(--bus);color:var(--ink);border:3px solid var(--ink);border-radius:14px;
+  padding:12px 22px;cursor:pointer;box-shadow:var(--shadow);text-decoration:none;
+  transition:transform .15s, box-shadow .15s;
+}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.btn.alt{background:#fff}
+.btn.purple{background:var(--purple);color:#fff}
+.btn.small{padding:8px 16px;font-size:.9rem;box-shadow:4px 4px 0 var(--ink)}
+.chip{
+  border:2.5px solid var(--ink);border-radius:999px;padding:7px 15px;background:#fff;
+  font-weight:800;font-size:.85rem;cursor:pointer;box-shadow:3px 3px 0 var(--ink);
+  transition:transform .12s, box-shadow .12s, background .12s;font-family:'Nunito',sans-serif;
+}
+.chip:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.chip.active{background:var(--purple);color:#fff}
+.tag{
+  display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.04em;
+  color:#fff;background:var(--tag,#666);border:2px solid var(--ink);
+  border-radius:999px;padding:3px 10px;text-transform:uppercase;
+}
+.grade-pill{font-size:.75rem;font-weight:800;background:var(--sky-lt);border:2px solid var(--ink);border-radius:999px;padding:3px 10px}
+
+/* ============ HEADER ============ */
+header{
+  position:sticky;top:0;z-index:100;background:var(--bus);
+  border-bottom:4px solid var(--ink);
+}
+.nav-bar{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Baloo 2',cursive;font-weight:800;font-size:1.35rem;text-decoration:none;color:var(--ink)}
+.logo .bus-emoji{font-size:1.7rem;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.25))}
+.logo small{display:block;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-family:'Nunito',sans-serif;font-weight:800}
+nav ul{display:flex;gap:4px;list-style:none}
+nav a{
+  text-decoration:none;color:var(--ink);font-weight:800;font-size:.92rem;
+  padding:8px 13px;border-radius:10px;border:2.5px solid transparent;transition:.15s;
+}
+nav a:hover{background:rgba(255,255,255,.55)}
+nav a.active{background:var(--ink);color:var(--bus)}
+#navToggle{
+  display:none;background:#fff;border:3px solid var(--ink);border-radius:10px;
+  font-size:1.3rem;padding:4px 12px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);
+}
+@media(max-width:940px){
+  #navToggle{display:block}
+  nav{position:absolute;top:68px;left:0;right:0;background:var(--bus);border-bottom:4px solid var(--ink);display:none}
+  nav.open{display:block}
+  nav ul{flex-direction:column;padding:12px 4%}
+  nav a{display:block;border-color:var(--ink);background:#fff;margin-bottom:6px}
+}
+
+/* ============ TICKER ============ */
+.ticker{background:var(--ink);color:#fff;overflow:hidden;border-bottom:4px solid var(--ink)}
+.ticker-track{display:flex;width:max-content;animation:tick 38s linear infinite}
+.ticker-group{display:flex;gap:0}
+.ticker span{padding:8px 26px;font-weight:700;font-size:.85rem;white-space:nowrap}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ============ HERO ============ */
+.hero{background:linear-gradient(160deg,#a5dcf5 0%,#d9f1fd 55%,#f3e9ff 100%);position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(2.2rem,5vw,3.6rem)}
+.hero h1 .hl{background:var(--bus);padding:0 12px;border-radius:12px;border:3px solid var(--ink);display:inline-block;transform:rotate(-1.5deg)}
+.hero p.lede{font-size:1.12rem;margin:16px 0 22px;max-width:52ch}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.quote-box{
+  margin-top:26px;background:#fff;border:3px solid var(--ink);border-radius:16px;
+  box-shadow:var(--shadow);padding:16px 20px;max-width:460px;position:relative;
+}
+.quote-box::before{content:"🦎";position:absolute;top:-18px;right:16px;font-size:1.8rem}
+.quote-box p{font-family:'Baloo 2',cursive;font-size:1.15rem;transition:opacity .4s}
+.quote-box small{font-weight:800;color:var(--purple)}
+.doodad{position:absolute;font-size:2rem;opacity:.85;animation:floaty 5s ease-in-out infinite;pointer-events:none}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(6deg)}}
+
+/* Bus scene */
+.bus-scene{
+  position:relative;height:250px;border:3px solid var(--ink);border-radius:20px;
+  background:linear-gradient(#8ed4f2 0%,#cfeeff 70%,#b9e7c3 70%,#9fd9a8 100%);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.cloud{position:absolute;background:#fff;border-radius:999px;opacity:.9;animation:drift 14s linear infinite}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud{width:70px;height:22px}
+.cloud::before{width:30px;height:30px;top:-14px;left:10px}
+.cloud::after{width:22px;height:22px;top:-9px;right:12px}
+.c1{top:30px;animation-duration:16s}
+.c2{top:70px;animation-duration:22s;animation-delay:-8s;transform:scale(.7)}
+.c3{top:16px;animation-duration:26s;animation-delay:-15s;transform:scale(1.2)}
+@keyframes drift{from{left:-90px}to{left:110%}}
+.road{position:absolute;bottom:0;left:0;right:0;height:34px;background:#4a4a55;border-top:3px solid var(--ink)}
+.road::before{content:"";position:absolute;top:14px;left:0;right:0;height:4px;background:repeating-linear-gradient(90deg,#ffd233 0 26px,transparent 26px 52px)}
+.bus{position:absolute;bottom:26px;left:-250px;width:190px;height:96px;animation:drive 12s linear infinite,bob .55s ease-in-out infinite alternate}
+@keyframes drive{from{left:-250px}to{left:112%}}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+.bus-body{position:absolute;bottom:16px;width:190px;height:66px;background:var(--bus);border:3px solid var(--ink);border-radius:16px 26px 10px 10px}
+.bus-stripe{position:absolute;top:38px;left:0;right:0;height:9px;background:var(--coral);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.bus-windows{position:absolute;top:9px;left:12px;display:flex;gap:6px}
+.bus-windows span{width:22px;height:20px;background:#cfeeff;border:2.5px solid var(--ink);border-radius:5px}
+.bus-face{position:absolute;top:6px;right:8px;width:34px;height:26px;background:#cfeeff;border:2.5px solid var(--ink);border-radius:8px 12px 6px 6px;display:flex;align-items:center;justify-content:center;gap:4px}
+.bus-face i{width:11px;height:11px;background:#fff;border:2px solid var(--ink);border-radius:50%;position:relative}
+.bus-face i::after{content:"";position:absolute;width:4px;height:4px;background:var(--ink);border-radius:50%;top:3px;left:3px}
+.bus-sign{position:absolute;top:-14px;left:40px;background:#fff;border:2.5px solid var(--ink);border-radius:6px;font-size:.5rem;font-weight:800;padding:1px 7px;letter-spacing:.08em}
+.bus-light{position:absolute;bottom:8px;right:-3px;width:9px;height:9px;background:#fff8c9;border:2px solid var(--ink);border-radius:50%}
+.wheel{position:absolute;bottom:0;width:36px;height:36px;border-radius:50%;border:3px solid var(--ink);
+  background:
+    radial-gradient(circle at center,#ffd233 0 5px,transparent 5px),
+    linear-gradient(0deg,transparent 44%,#222 44% 56%,transparent 56%),
+    linear-gradient(90deg,transparent 44%,#222 44% 56%,transparent 56%),
+    #5c5c6b;
+  animation:spin .9s linear infinite;
+}
+.w1{left:26px}.w2{right:26px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Stats band */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-top:34px}
+.stat{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:14px;text-align:center}
+.stat b{display:block;font-family:'Baloo 2',cursive;font-size:1.9rem;color:var(--purple)}
+.stat span{font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+
+/* ============ EPISODES ============ */
+.filter-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.search-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+#epSearch{
+  flex:1;min-width:240px;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;
+  padding:12px 18px;border:3px solid var(--ink);border-radius:14px;background:#fff;box-shadow:4px 4px 0 var(--ink);
+}
+#epSearch:focus{outline:3px solid var(--teal)}
+#epCount{font-weight:800;color:var(--purple)}
+.ep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.ep-card{
+  background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);
+  padding:18px;display:flex;flex-direction:column;gap:8px;transition:transform .15s, box-shadow .15s;
+}
+.ep-card:hover{transform:translateY(-4px) rotate(-.4deg);box-shadow:7px 9px 0 var(--ink)}
+.ep-top{display:flex;justify-content:space-between;align-items:center}
+.ep-num{font-weight:800;font-size:.8rem;background:var(--bus);border:2px solid var(--ink);border-radius:8px;padding:2px 9px}
+.ep-card h3{font-size:1.18rem}
+.ep-sum{font-size:.92rem}
+.ep-q{font-size:.86rem;background:var(--purple-lt);border:2px dashed var(--purple);border-radius:12px;padding:9px 12px;margin-top:auto}
+.ep-foot{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.empty-state{grid-column:1/-1;text-align:center;padding:40px;font-family:'Baloo 2',cursive;font-size:1.3rem}
+
+/* ============ LESSON PLANS ============ */
+.acc-item{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);margin-bottom:16px;overflow:hidden}
+.acc-head{
+  width:100%;background:#fff;border:none;cursor:pointer;padding:18px 22px;text-align:left;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-family:'Nunito',sans-serif;
+}
+.acc-head h3{font-size:1.25rem;flex:1;min-width:200px}
+.acc-head .arrow{font-size:1.3rem;transition:transform .25s;font-weight:800}
+.acc-item.open .acc-head .arrow{transform:rotate(90deg)}
+.acc-head:hover{background:var(--sky-lt)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.acc-body-inner{padding:6px 22px 26px;border-top:3px dashed var(--ink)}
+.acc-body h4{margin:18px 0 8px;color:var(--purple);font-size:1.05rem;text-transform:uppercase;letter-spacing:.05em}
+.acc-body ul,.acc-body ol{margin-left:22px;display:grid;gap:5px}
+.vocab{display:flex;flex-wrap:wrap;gap:8px}
+.vocab span{background:var(--teal-lt);border:2px solid var(--teal);border-radius:999px;padding:3px 12px;font-weight:800;font-size:.82rem}
+.standards{background:var(--peach);border:2px solid var(--bus-dark);border-radius:12px;padding:10px 14px;font-size:.88rem;margin-top:14px}
+.e5{display:grid;gap:10px}
+.e5 div{background:var(--purple-lt);border-left:6px solid var(--purple);border-radius:10px;padding:10px 14px}
+.e5 b{color:var(--purple)}
+
+/* ============ EXPERIMENTS ============ */
+.exp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px}
+.exp-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:20px;display:flex;flex-direction:column;gap:10px}
+.exp-card h3{font-size:1.25rem}
+.exp-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mess{font-size:.8rem;font-weight:800;background:var(--coral-lt);border:2px solid var(--coral);border-radius:999px;padding:3px 10px}
+.mats{display:flex;flex-wrap:wrap;gap:6px}
+.mats span{background:#f2eee9;border:2px solid #c9c2b4;border-radius:8px;padding:2px 9px;font-size:.78rem;font-weight:700}
+.exp-card ol{margin-left:20px;display:grid;gap:6px;font-size:.92rem}
+.sci-note{background:var(--mint);border:2px solid #3d9970;border-radius:12px;padding:10px 14px;font-size:.88rem}
+.sci-note b{color:#237a52}
+.safety{font-size:.8rem;font-weight:700;color:#a03a3e}
+
+/* ============ PRINTABLES ============ */
+.tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+.pane{display:none}
+.pane.active{display:block}
+.worksheet{
+  background:#fff;border:3px solid var(--ink);border-radius:14px;padding:34px;
+  max-width:820px;margin:0 auto;
+}
+.ws-head{text-align:center;border-bottom:3px solid var(--ink);padding-bottom:14px;margin-bottom:18px}
+.ws-head h3{font-size:1.6rem}
+.ws-head .sub{font-family:'Baloo 2',cursive;color:var(--purple)}
+.ws-fields{display:flex;gap:26px;flex-wrap:wrap;margin:14px 0}
+.ws-fields span{flex:1;min-width:150px;border-bottom:2px solid var(--ink);font-weight:700;padding-bottom:2px}
+.line{height:36px;border-bottom:2px dotted #9a8fb8}
+.kwl{width:100%;border-collapse:collapse}
+.kwl th{background:var(--bus);border:2.5px solid var(--ink);padding:10px;font-family:'Baloo 2',cursive;font-size:1.05rem}
+.kwl td{border:2.5px solid var(--ink);height:300px;vertical-align:top;padding:8px}
+.draw-box{border:2.5px dashed var(--purple);border-radius:12px;height:220px;margin:12px 0;position:relative}
+.draw-box em{position:absolute;top:8px;left:12px;color:#9a8fb8;font-size:.85rem}
+.ws-label{font-weight:800;color:var(--purple);margin-top:14px}
+.frayer{display:grid;grid-template-columns:1fr 1fr;gap:0;border:3px solid var(--ink);border-radius:14px;overflow:hidden;margin-top:14px}
+.frayer div{border:1.5px solid var(--ink);min-height:150px;padding:10px}
+.frayer b{display:block;font-family:'Baloo 2',cursive;color:var(--purple)}
+.frayer .center{grid-column:1/-1;text-align:center;background:var(--bus);min-height:auto;font-family:'Baloo 2',cursive;font-size:1.1rem}
+.exit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.exit-grid div{border:2.5px solid var(--ink);border-radius:12px;padding:12px;min-height:180px}
+.exit-grid b{font-family:'Baloo 2',cursive;font-size:1.4rem;color:var(--coral)}
+.slip{border:3px dashed var(--purple);border-radius:14px;padding:26px;background:var(--purple-lt)}
+.slip h4{font-size:1.3rem;text-align:center;margin-bottom:10px}
+.slip label{display:block;margin:8px 0;font-weight:700}
+.sig-row{display:flex;gap:30px;margin-top:26px;flex-wrap:wrap}
+.sig-row span{flex:1;min-width:180px;border-bottom:2px solid var(--ink);padding-bottom:2px;font-weight:700}
+@media(max-width:640px){.exit-grid{grid-template-columns:1fr}.frayer{grid-template-columns:1fr}}
+
+/* ============ QUIZ ============ */
+.quiz-controls{display:flex;gap:14px;flex-wrap:wrap;align-items:end;margin-bottom:22px}
+.quiz-controls label{font-weight:800;font-size:.85rem;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.quiz-controls select{
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;padding:11px 16px;
+  border:3px solid var(--ink);border-radius:12px;background:#fff;box-shadow:4px 4px 0 var(--ink);cursor:pointer;
+}
+#quizOut{margin-top:8px}
+.quiz-paper{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:34px;max-width:820px;margin:0 auto}
+.quiz-paper h3{text-align:center;font-size:1.5rem;border-bottom:3px solid var(--ink);padding-bottom:12px;margin-bottom:6px}
+.quiz-q{margin:18px 0}
+.q-text{font-weight:800}
+.q-opts{margin:6px 0 0 30px}
+.q-opts li{margin:3px 0}
+.answer-key{margin-top:22px;background:var(--teal-lt);border:2.5px solid var(--teal);border-radius:12px;padding:16px 20px}
+.answer-key h4{margin-bottom:8px}
+.quiz-actions{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+
+/* ============ FIELD TRIP ============ */
+.trip-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+@media(max-width:860px){.trip-grid{grid-template-columns:1fr}}
+.check-card,.spin-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:24px}
+.progress{height:22px;border:2.5px solid var(--ink);border-radius:999px;overflow:hidden;background:#fff;margin:14px 0 18px}
+.progress i{display:block;height:100%;width:0;background:repeating-linear-gradient(45deg,var(--bus) 0 12px,var(--bus-dark) 12px 24px);transition:width .3s}
+.trip-item{display:flex;gap:12px;align-items:flex-start;padding:9px 4px;border-bottom:2px dotted #d9d2e8;font-weight:700}
+.trip-item input{width:20px;height:20px;accent-color:var(--purple);margin-top:3px;cursor:pointer}
+.trip-item input:checked + span{text-decoration:line-through;opacity:.55}
+#tripResult{margin-top:18px;background:var(--sky-lt);border:3px solid var(--sky);border-radius:14px;padding:18px;min-height:150px}
+#tripResult h4{font-size:1.15rem;margin-bottom:8px}
+#tripResult.pop{animation:pop .4s ease}
+@keyframes pop{0%{transform:scale(.92) rotate(-1deg)}60%{transform:scale(1.03) rotate(1deg)}100%{transform:scale(1)}}
+#tripResult p{margin:6px 0;font-size:.94rem}
+
+/* ============ FRIZZLE METHOD ============ */
+.frizzle-banner{
+  background:var(--purple);color:#fff;border:3px solid var(--ink);border-radius:20px;
+  box-shadow:var(--shadow);padding:26px;text-align:center;margin-bottom:26px;
+}
+.frizzle-banner h3{font-size:clamp(1.4rem,3vw,2rem);color:var(--bus)}
+.tip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.tip-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:22px}
+.tip-card .emoji{font-size:2rem}
+.tip-card h3{margin:8px 0 6px;font-size:1.2rem}
+.tip-card .try{background:var(--bus);border:2px solid var(--ink);border-radius:10px;padding:8px 12px;font-size:.86rem;font-weight:700;margin-top:10px}
+
+/* ============ FOOTER ============ */
+footer{background:var(--ink);color:#e8e2f5;margin-top:50px;border-top:6px solid var(--bus)}
+footer .wrap{padding:40px 0 30px;text-align:center}
+footer h3{color:var(--bus);font-size:1.4rem;margin-bottom:8px}
+footer p{max-width:70ch;margin:8px auto;font-size:.9rem}
+footer .fine{font-size:.78rem;opacity:.75;margin-top:18px}
+
+/* Back to top */
+#toTop{
+  position:fixed;bottom:22px;right:22px;width:52px;height:52px;border-radius:50%;
+  background:var(--bus);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);
+  font-size:1.3rem;cursor:pointer;display:none;z-index:90;
+}
+#toTop.show{display:block}
+
+/* ============ PRINT ============ */
+@media print{
+  @page{margin:12mm}
+  body{background:#fff !important;background-image:none !important}
+  body.print-mode *{visibility:hidden !important}
+  body.print-mode .print-target,body.print-mode .print-target *{visibility:visible !important}
+  body.print-mode .print-target{
+    position:absolute;left:0;top:0;width:100%;box-shadow:none !important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+}
+</style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+<!-- ================= HEADER ================= -->
+<header>
+<div class="wrap nav-bar">
+<a class="logo" href="#home">
+<span class="bus-emoji">🚌</span>
+<span>The Frizz Files<small>A Magic School Bus Teacher Hub</small></span>
+</a>
+<button aria-label="Toggle menu" id="navToggle">☰</button>
+<nav id="mainNav">
+<ul>
+<li><a data-nav="home" href="#home">Home</a></li>
+<li><a data-nav="episodes" href="#episodes">Episode Guide</a></li>
+<li><a data-nav="lessons" href="#lessons">Lesson Plans</a></li>
+<li><a data-nav="experiments" href="#experiments">Experiments</a></li>
+<li><a data-nav="printables" href="#printables">Printables</a></li>
+<li><a data-nav="quiz" href="#quiz">Quiz Builder</a></li>
+<li><a data-nav="fieldtrip" href="#fieldtrip">Field Trips</a></li>
+<li><a data-nav="frizzle" href="#frizzle">The Frizzle Method</a></li>
+</ul>
+</nav>
+</div>
+</header>
+<div aria-hidden="true" class="ticker">
+<div class="ticker-track">
+<div class="ticker-group">
+<span>🚌 Seatbelts, everyone!</span><span>🌋 Next stop: inside a volcano</span>
+<span>🔬 Take chances, make mistakes, get messy!</span><span>🦋 Today's lunch special: photosynthesis</span>
+<span>🪐 Field trip permission slips due Friday</span><span>⚡ Wahoo!</span>
+<span>🐝 Please do not shrink the substitute teacher</span><span>🌈 Look for connections!</span>
+</div>
+<div class="ticker-group">
+<span>🚌 Seatbelts, everyone!</span><span>🌋 Next stop: inside a volcano</span>
+<span>🔬 Take chances, make mistakes, get messy!</span><span>🦋 Today's lunch special: photosynthesis</span>
+<span>🪐 Field trip permission slips due Friday</span><span>⚡ Wahoo!</span>
+<span>🐝 Please do not shrink the substitute teacher</span><span>🌈 Look for connections!</span>
+</div>
+</div>
+</div>
+<main>
+<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+<span class="doodad" style="top:8%;left:4%">🪐</span>
+<span class="doodad" style="top:14%;right:6%;animation-delay:-2s">🔬</span>
+<span class="doodad" style="bottom:12%;left:8%;animation-delay:-1s">🦋</span>
+<span class="doodad" style="bottom:20%;right:4%;animation-delay:-3s">🌋</span>
+<div class="wrap section">
+<div class="hero-grid">
+<div>
+<span class="kicker">Walkerville Elementary · Room 101</span>
+<h1>Science lessons worth <span class="hl">shrinking down</span> for.</h1>
+<p class="lede">A complete classroom companion for teaching with everyone's favorite magic bus: all 52 original episodes indexed by topic, ready-to-teach 5E lesson plans, hands-on experiments, printable worksheets, a quiz builder, and field trip tools — all in one place.</p>
+<div class="hero-ctas">
+<a class="btn" href="#episodes">🚌 Browse the Episode Guide</a>
+<a class="btn alt" href="#quiz">⚡ Build a Quiz</a>
+</div>
+<div class="quote-box">
+<p id="quoteText">"Take chances, make mistakes, get messy!"</p>
+<small>— Ms. Frizzle (probably right now, somewhere inside a raindrop)</small>
+</div>
+</div>
+<div>
+<div aria-hidden="true" class="bus-scene">
+<div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+<div class="bus">
+<div class="bus-body">
+<div class="bus-sign">WALKERVILLE</div>
+<div class="bus-windows"><span></span><span></span><span></span><span></span></div>
+<div class="bus-face"><i></i><i></i></div>
+<div class="bus-stripe"></div>
+<div class="bus-light"></div>
+</div>
+<div class="wheel w1"></div><div class="wheel w2"></div>
+</div>
+<div class="road"></div>
+</div>
+<div class="stats">
+<div class="stat"><b>52</b><span>Episodes</span></div>
+<div class="stat"><b>14</b><span>Topics</span></div>
+<div class="stat"><b>6</b><span>Lesson Plans</span></div>
+<div class="stat"><b>10</b><span>Experiments</span></div>
+<div class="stat"><b>60</b><span>Quiz Questions</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= EPISODE GUIDE ================= -->
+<section class="section" id="episodes">
+<div class="wrap">
+<div class="panel">
+<div class="section-head">
+<span class="kicker">The Complete Route Map</span>
+<h2>Episode Guide &amp; Topic Finder</h2>
+<p>Every episode of the original series (1994–1997), indexed by science topic. Filter by unit, search by keyword, and steal the "bus-stop question" on each card for morning meetings, journals, or exit tickets.</p>
+</div>
+<div class="search-row">
+<input aria-label="Search episodes" id="epSearch" placeholder="🔍 Search episodes… (try 'volcano' or 'heart')" type="search"/>
+<span id="epCount"></span>
+</div>
+<div aria-label="Filter by topic" class="filter-bar" id="topicChips" role="group"></div>
+<div class="ep-grid" id="epGrid"></div>
+</div>
+</div>
+</section>
+<!-- ================= LESSON PLANS ================= -->
+<section class="section" id="lessons">
+<div class="wrap">
+<div class="panel" style="background:var(--purple-lt)">
+<div class="section-head">
+<span class="kicker">Planned by the Frizz herself*</span>
+<h2>Ready-to-Teach 5E Lesson Plans</h2>
+<p>Full inquiry-based lesson plans in the Engage → Explore → Explain → Elaborate → Evaluate format. Each pairs with an episode, an experiment from the lab shelf, and a printable. (*Disclaimer: the Frizz would never plan this much. That's your job. She'd just drive.)</p>
+</div>
+<div id="lessonList">
+<div class="acc-item">
+<button class="acc-head"><span class="tag" style="--tag:#e4572e">Human Body</span><h3>1 · Inside the Human Machine: Digestion</h3><span class="grade-pill">Grades 3–5</span><span class="grade-pill">2 × 45 min</span><span class="arrow">▶</span></button>
+<div class="acc-body"><div class="acc-body-inner">
+<p><b>Big Idea:</b> The digestive system is a one-way processing plant that turns food into usable energy and building materials.</p>
+<h4>Objectives</h4>
+<ul><li>Sequence the organs of the digestive system in order.</li><li>Distinguish mechanical from chemical digestion.</li><li>Model how nutrients move from food into the bloodstream.</li></ul>
+<h4>Materials</h4>
+<ul><li>Episode: "For Lunch" (S1E2)</li><li>Crackers, zip bags, water, orange juice, paper towels (per pair)</li><li>Body-outline poster, organ cards, yarn "esophagus"</li><li>Printable: Get Messy Lab Report</li></ul>
+<h4>Vocabulary</h4>
+<div class="vocab"><span>esophagus</span><span>stomach</span><span>small intestine</span><span>enzyme</span><span>nutrient</span><span>peristalsis</span></div>
+<h4>The 5 Es</h4>
+<div class="e5">
+<div><b>Engage (10 min):</b> Eat a cracker slowly. Ask: "It started salty… why is it sweet now?" Collect theories on the Wonder Wall.</div>
+<div><b>Explore (25 min):</b> Run the Cracker Digestion Demo (see Experiments). Students record each "organ stage" on the lab report.</div>
+<div><b>Explain (20 min):</b> Watch "For Lunch." Pause at each organ; students move organ cards onto the body outline and narrate what happens there.</div>
+<div><b>Elaborate (20 min):</b> Teams build a working "digestion conveyor" from tubes and funnels, then pitch it as a ride at "Digestionland."</div>
+<div><b>Evaluate (15 min):</b> Exit ticket: "Trace a bite of pizza from mouth to bloodstream in 5 steps." Rubric in Assessment section below.</div>
+</div>
+<h4>Assessment</h4>
+<ul><li>Exit ticket scored 0–2 per step (10 pts).</li><li>Lab report observations for accuracy of mechanical vs. chemical labeling.</li></ul>
+<h4>Home Connection</h4>
+<p>Students interview a family member: "Where do YOU think food goes?" and diagram the answer together.</p>
+<div class="standards"><b>Standards alignment:</b> NGSS 4-LS1-1 (structure &amp; function); CCSS.ELA RI.4.3 (sequencing). Adapt to your state framework as needed.</div>
+</div></div>
+</div>
+<div class="acc-item">
+<button class="acc-head"><span class="tag" style="--tag:#3FA7D6">Weather &amp; Water</span><h3>2 · Water Cycle Road Trip</h3><span class="grade-pill">Grades 2–4</span><span class="grade-pill">3 × 40 min + observation week</span><span class="arrow">▶</span></button>
+<div class="acc-body"><div class="acc-body-inner">
+<p><b>Big Idea:</b> Water moves endlessly between Earth's surface and sky, driven by energy from the Sun.</p>
+<h4>Objectives</h4>
+<ul><li>Define evaporation, condensation, precipitation, and collection.</li><li>Model the water cycle and explain the Sun's role.</li><li>Track a "personal raindrop" through a narrative journey.</li></ul>
+<h4>Materials</h4>
+<ul><li>Episode: "Wet All Over" (S2E6)</li><li>Zip bags, blue food coloring, tape, sunny window</li><li>Ice cubes, metal tray, kettle or warm water (teacher demo)</li><li>Printable: Bus Log observation journal</li></ul>
+<h4>Vocabulary</h4>
+<div class="vocab"><span>evaporation</span><span>condensation</span><span>precipitation</span><span>collection</span><span>water vapor</span></div>
+<h4>The 5 Es</h4>
+<div class="e5">
+<div><b>Engage:</b> Hold a cold tray over warm water — droplets appear "from nowhere." Where did they come from?</div>
+<div><b>Explore:</b> Build Water Cycle in a Bag (see Experiments). Hang on the window; observe daily for a week in the Bus Log.</div>
+<div><b>Explain:</b> Watch "Wet All Over." Students label the four stages directly on their bags with dry-erase marker.</div>
+<div><b>Elaborate:</b> Write "The Autobiography of Drippy," a first-person raindrop story that must use all four vocabulary words correctly.</div>
+<div><b>Evaluate:</b> Label a blank water-cycle diagram; quiz-builder topic "Weather &amp; Water."</div>
+</div>
+<h4>Assessment</h4>
+<ul><li>Diagram labeling (8 pts).</li><li>Raindrop narrative rubric: vocabulary accuracy + cause/effect clarity.</li></ul>
+<h4>Home Connection</h4>
+<p>Family challenge: find three places water collects around your home after rain.</p>
+<div class="standards"><b>Standards alignment:</b> NGSS 5-ESS2-1, MS-ESS2-4; CCSS.ELA W.3.3 (narrative).</div>
+</div></div>
+</div>
+<div class="acc-item">
+<button class="acc-head"><span class="tag" style="--tag:#B3402A">Earth Science</span><h3>3 · Eruption! Volcanoes &amp; a Changing Earth</h3><span class="grade-pill">Grades 3–5</span><span class="grade-pill">2 × 50 min</span><span class="arrow">▶</span></button>
+<div class="acc-body"><div class="acc-body-inner">
+<p><b>Big Idea:</b> Earth's surface changes both slowly (erosion, deposition) and quickly (eruptions) — and the same forces build up and wear away land.</p>
+<h4>Objectives</h4>
+<ul><li>Explain how volcanic eruptions create new land.</li><li>Model an eruption and map where "lava" flows.</li><li>Compare fast and slow changes to Earth's surface.</li></ul>
+<h4>Materials</h4>
+<ul><li>Episodes: "Blows Its Top" (S2E1) and "Rocks and Rolls" (S3E12)</li><li>Volcano Island kit (see Experiments), trays</li><li>World map or volcano-location cards</li><li>Printable: KWL Chart</li></ul>
+<h4>Vocabulary</h4>
+<div class="vocab"><span>magma</span><span>lava</span><span>crust</span><span>eruption</span><span>erosion</span><span>deposition</span></div>
+<h4>The 5 Es</h4>
+<div class="e5">
+<div><b>Engage:</b> Show a photo of a brand-new volcanic island. "This island is younger than you. How?"</div>
+<div><b>Explore:</b> Volcano Island eruptions in teams; students sketch lava flow paths and compare two eruptions.</div>
+<div><b>Explain:</b> Watch "Blows Its Top." Build the class consensus model: pressure → eruption → new rock → erosion begins.</div>
+<div><b>Elaborate:</b> Debate: "Volcanoes: builders or destroyers?" Teams must argue BOTH sides with evidence.</div>
+<div><b>Evaluate:</b> KWL final column + quick-write: "One fast change and one slow change to Earth's surface, with examples."
+</div>
+<h4>Assessment</h4>
+<ul><li>Quick-write rubric (claim, evidence, vocabulary).</li><li>Team debate notes for evidence use.</li></ul>
+<h4>Home Connection</h4>
+<p>Students hunt for erosion evidence (cracked sidewalks, muddy gutters) and photograph or sketch one example.</p>
+<div class="standards"><b>Standards alignment:</b> NGSS 4-ESS1-1, 4-ESS2-1, MS-ESS2-2.</div>
+</div></div>
+</div>
+<div class="acc-item">
+<button class="acc-head"><span class="tag" style="--tag:#3d9970">Plants</span><h3>4 · Pollinator Power</h3><span class="grade-pill">Grades K–2</span><span class="grade-pill">2 × 35 min</span><span class="arrow">▶</span></button>
+<div class="acc-body"><div class="acc-body-inner">
+<p><b>Big Idea:</b> Plants and pollinators need each other — flowers make food for insects, and insects help flowers make seeds.</p>
+<h4>Objectives</h4>
+<ul><li>Identify flower parts: petal, stem, leaf, root.</li><li>Describe how pollen moves between flowers.</li><li>Model pollination with a hands-on simulation.</li></ul>
+<h4>Materials</h4>
+<ul><li>Episode: "Goes to Seed" (S1E11)</li><li>Cheetos or cheese powder (the "pollen"), paper flowers, pipe-cleaner "bees"</li><li>Real flowers or magnified photos, magnifying glasses</li><li>Printable: Vocabulary Window</li></ul>
+<h4>Vocabulary</h4>
+<div class="vocab"><span>pollen</span><span>pollinate</span><span>seed</span><span>nectar</span><span>flower</span></div>
+<h4>The 5 Es</h4>
+<div class="e5">
+<div><b>Engage:</b> Pass around cheese-dust "pollen" — touch one paper flower, then another. Look at the dust trail you left!</div>
+<div><b>Explore:</b> Bee-hand simulation: students "buzz" between flowers and track pollen transfer with tally marks.</div>
+<div><b>Explain:</b> Watch "Goes to Seed." Examine real flowers with magnifiers and match parts to a labeled diagram.</div>
+<div><b>Elaborate:</b> Design a "dream flower" that would attract a specific pollinator; defend the design choices.</div>
+<div><b>Evaluate:</b> Draw-and-label: flower with arrows showing where pollen travels.</div>
+</div>
+<h4>Assessment</h4>
+<ul><li>Labeled drawing (5 pts).</li><li>Observation of simulation participation and tally accuracy.</li></ul>
+<h4>Home Connection</h4>
+<p>Send home a "pollinator spotter" mini-book: count bees, butterflies, or hummingbirds seen in a week.</p>
+<div class="standards"><b>Standards alignment:</b> NGSS 2-LS2-2, K-LS1-1.</div>
+</div></div>
+</div>
+<div class="acc-item">
+<button class="acc-head"><span class="tag" style="--tag:#E8A800">Energy &amp; Electricity</span><h3>5 · Circuit City</h3><span class="grade-pill">Grades 4–6</span><span class="grade-pill">2 × 50 min</span><span class="arrow">▶</span></button>
+<div class="acc-body"><div class="acc-body-inner">
+<p><b>Big Idea:</b> Electricity needs a complete loop. Conductors, insulators, and switches control whether energy flows.</p>
+<h4>Objectives</h4>
+<ul><li>Build a complete circuit that lights a bulb.</li><li>Classify materials as conductors or insulators.</li><li>Draw a circuit using standard symbols.</li></ul>
+<h4>Materials</h4>
+<ul><li>Episode: "Gets Charged" (S4E10)</li><li>D-cell batteries, mini bulbs or LEDs, insulated wire, tape, switches (or paperclip+brad switches)</li><li>Test items: keys, erasers, foil, pencils, coins, plastic spoons</li><li>Printable: Get Messy Lab Report</li></ul>
+<h4>Vocabulary</h4>
+<div class="vocab"><span>circuit</span><span>conductor</span><span>insulator</span><span>switch</span><span>current</span><span>battery</span></div>
+<h4>The 5 Es</h4>
+<div class="e5">
+<div><b>Engage:</b> Hand each team a battery, bulb, and ONE wire. No instructions. "Make it light." (They will. Eventually. Gloriously.)</div>
+<div><b>Explore:</b> Free circuit building; then a conductor/insulator testing station with a class results chart.</div>
+<div><b>Explain:</b> Watch "Gets Charged." Introduce circuit symbols; students redraw their working circuit as a diagram.</div>
+<div><b>Elaborate:</b> Engineering challenge: build a "quiz buzzer" — a circuit with a switch that lights only when both teammates press.</div>
+<div><b>Evaluate:</b> Diagram check + quiz-builder topic "Energy &amp; Electricity."</div>
+</div>
+<h4>Assessment</h4>
+<ul><li>Circuit diagram accuracy (symbols, closed loop).</li><li>Buzzer challenge: works + explained in writing.</li></ul>
+<h4>Home Connection</h4>
+<p>Home energy audit: count the switches in one room and trace what each one controls.</p>
+<div class="standards"><b>Standards alignment:</b> NGSS 4-PS3-2, 3-5-ETS1-1.</div>
+</div></div>
+</div>
+<div class="acc-item">
+<button class="acc-head"><span class="tag" style="--tag:#5B2A86">Forces &amp; Motion</span><h3>6 · The Great Buoyancy Regatta</h3><span class="grade-pill">Grades 3–5</span><span class="grade-pill">2 × 45 min</span><span class="arrow">▶</span></button>
+<div class="acc-body"><div class="acc-body-inner">
+<p><b>Big Idea:</b> Whether something floats depends on its density — how much stuff is packed into its space — not just its weight.</p>
+<h4>Objectives</h4>
+<ul><li>Predict and test which objects sink or float.</li><li>Explain floating using density and displaced water.</li><li>Engineer a foil boat that carries maximum cargo.</li></ul>
+<h4>Materials</h4>
+<ul><li>Episode: "Ups and Downs" (S2E13)</li><li>Tubs of water, test objects (marble, cork, apple, can of diet vs. regular soda), aluminum foil sheets, pennies as cargo</li><li>Printable: 3-2-1 Exit Ticket</li></ul>
+<h4>Vocabulary</h4>
+<div class="vocab"><span>buoyancy</span><span>density</span><span>float</span><span>sink</span><span>displace</span></div>
+<h4>The 5 Es</h4>
+<div class="e5">
+<div><b>Engage:</b> Drop a tiny pebble (sinks) and show a photo of a giant steel ship (floats). "Explain THAT."</div>
+<div><b>Explore:</b> Sink/float prediction station; the diet-vs-regular soda can test blows minds every year.</div>
+<div><b>Explain:</b> Watch "Ups and Downs." Introduce density with the "same box, different stuff inside" analogy.</div>
+<div><b>Elaborate:</b> Regatta day! Each team gets one foil sheet: build a boat, load pennies until it sinks. Record and graph results.</div>
+<div><b>Evaluate:</b> 3-2-1 Exit Ticket + written answer: "Why did the winning boat hold more?"</div>
+</div>
+<h4>Assessment</h4>
+<ul><li>Exit ticket + explanation scored on use of "density" and "displace."</li><li>Regatta data table completeness.</li></ul>
+<h4>Home Connection</h4>
+<p>Bathtub lab (with permission): find three surprising floaters or sinkers at home.</p>
+<div class="standards"><b>Standards alignment:</b> NGSS 3-PS2-1, 5-PS1-1, 3-5-ETS1-2.</div>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div></section>
+<!-- ================= EXPERIMENTS ================= -->
+<section class="section" id="experiments">
+<div class="wrap">
+<div class="panel" style="background:var(--mint)">
+<div class="section-head">
+<span class="kicker">The Lab Shelf</span>
+<h2>Get-Messy Experiments</h2>
+<p>Ten classroom-tested investigations. The Mess Meter (🧪) tells you exactly how much cleanup to budget — one drop is "wipe the table," three drops is "warn the custodian, lovingly."</p>
+</div>
+<div class="exp-grid" id="expGrid"></div>
+</div>
+</div>
+</section>
+<!-- ================= PRINTABLES ================= -->
+<section class="section" id="printables">
+<div class="wrap">
+<div class="panel">
+<div class="section-head">
+<span class="kicker">Copy Machine Approved</span>
+<h2>Printable Worksheets</h2>
+<p>Six ready-to-print classroom documents. Pick a tab, hit print, and your sub folder just got significantly more magical.</p>
+</div>
+<div class="tabs" role="tablist">
+<button class="chip tab-btn active" data-pane="pane-kwl">📋 KWL Chart</button>
+<button class="chip tab-btn" data-pane="pane-buslog">🚌 Bus Log</button>
+<button class="chip tab-btn" data-pane="pane-lab">🧪 Lab Report</button>
+<button class="chip tab-btn" data-pane="pane-exit">🎟️ 3-2-1 Exit Ticket</button>
+<button class="chip tab-btn" data-pane="pane-frayer">🪟 Vocabulary Window</button>
+<button class="chip tab-btn" data-pane="pane-slip">✍️ Permission Slip</button>
+</div>
+<div style="text-align:center;margin-bottom:18px">
+<button class="btn purple" id="printWs">🖨️ Print This Worksheet</button>
+</div>
+<div class="pane active" id="pane-kwl">
+<div class="worksheet">
+<div class="ws-head"><h3>KWL Chart</h3><div class="sub">Before the Bus Leaves…</div></div>
+<div class="ws-fields"><span>Name:</span><span>Date:</span><span>Topic:</span></div>
+<table class="kwl">
+<thead><tr><th>What I KNOW</th><th>What I WONDER</th><th>What I LEARNED</th></tr></thead>
+<tbody><tr><td></td><td></td><td></td></tr></tbody>
+</table>
+</div>
+</div>
+<div class="pane" id="pane-buslog">
+<div class="worksheet">
+<div class="ws-head"><h3>Field Trip Bus Log</h3><div class="sub">Official Observation Journal · Walkerville Elementary</div></div>
+<div class="ws-fields"><span>Name:</span><span>Date:</span></div>
+<div class="ws-fields"><span>Today's destination:</span><span>Bus scale: ☐ tiny ☐ huge ☐ normal</span></div>
+<p class="ws-label">What I observed (use your senses!):</p>
+<div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+<p class="ws-label">Sketch what you saw:</p>
+<div class="draw-box"><em>Draw here — scientists draw!</em></div>
+<p class="ws-label">One question I still have:</p>
+<div class="line"></div><div class="line"></div>
+</div>
+</div>
+<div class="pane" id="pane-lab">
+<div class="worksheet">
+<div class="ws-head"><h3>The Get-Messy Lab Report</h3><div class="sub">Take chances. Make mistakes. Write them ALL down.</div></div>
+<div class="ws-fields"><span>Name:</span><span>Date:</span><span>Team:</span></div>
+<p class="ws-label">Our question:</p><div class="line"></div>
+<p class="ws-label">Our hypothesis (we predict…):</p><div class="line"></div><div class="line"></div>
+<p class="ws-label">Materials:</p><div class="line"></div>
+<p class="ws-label">Procedure (numbered steps):</p><div class="line"></div><div class="line"></div><div class="line"></div>
+<p class="ws-label">Observations &amp; data:</p><div class="line"></div><div class="line"></div><div class="line"></div>
+<p class="ws-label">Conclusion (were we right? why or why not?):</p><div class="line"></div><div class="line"></div>
+<p class="ws-label">Mess level (color it in): ⚪ tidy   ⚪ splashy   ⚪ full Frizzle</p>
+</div>
+</div>
+<div class="pane" id="pane-exit">
+<div class="worksheet">
+<div class="ws-head"><h3>3 · 2 · 1 Exit Ticket</h3><div class="sub">Before you leave the bus…</div></div>
+<div class="ws-fields"><span>Name:</span><span>Date:</span></div>
+<div class="exit-grid">
+<div><b>3</b><p>things I learned today</p></div>
+<div><b>2</b><p>questions I still have</p></div>
+<div><b>1</b><p>thing I'll tell someone at home</p></div>
+</div>
+</div>
+</div>
+<div class="pane" id="pane-frayer">
+<div class="worksheet">
+<div class="ws-head"><h3>Vocabulary Window</h3><div class="sub">Four ways to see one word</div></div>
+<div class="ws-fields"><span>Name:</span><span>Date:</span></div>
+<div class="frayer">
+<div class="center">MY WORD: ______________________</div>
+<div><b>Definition (in my own words)</b></div>
+<div><b>Picture / Symbol</b></div>
+<div><b>Examples</b></div>
+<div><b>Non-examples</b></div>
+</div>
+</div>
+</div>
+<div class="pane" id="pane-slip">
+<div class="worksheet">
+<div class="slip">
+<h4>🚌 Official Field Trip Permission Slip 🚌</h4>
+<p style="text-align:center;font-weight:700">Walkerville Elementary · Ms. Frizzle's Class</p>
+<p style="margin:14px 0">I give permission for my student to travel via magic bus on today's field trip. I understand the bus may shrink, fly, transform, travel through time, or enter a household appliance. Normal bus rules apply: seatbelts on, questions welcome, mess guaranteed.</p>
+<p><b>Today's destination:</b> ____________________________________</p>
+<label>☐ Yes, my student may get messy.</label>
+<label>☐ Yes, my student may ask "what if" questions. (No take-backs.)</label>
+<label>☐ Please send extra paper towels. We know how this goes.</label>
+<div class="sig-row"><span>Guardian signature:</span><span>Date:</span></div>
+<p style="margin-top:14px;font-size:.8rem;font-style:italic">*Novelty slip for classroom fun — pair with your school's real permission form for actual trips!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= QUIZ BUILDER ================= -->
+<section class="section" id="quiz">
+<div class="wrap">
+<div class="panel" style="background:var(--peach)">
+<div class="section-head">
+<span class="kicker">Assessment, Frizzle-Style</span>
+<h2>Quiz Builder</h2>
+<p>Sixty questions across twelve topics. Pick a unit, pick a length, generate, print. Toggle the answer key before printing if you want the teacher copy.</p>
+</div>
+<div class="quiz-controls">
+<div><label for="quizTopic">Topic</label><select id="quizTopic"></select></div>
+<div><label for="quizCount">Questions</label>
+<select id="quizCount"><option value="5">5</option><option selected="" value="10">10</option><option value="15">15</option></select>
+</div>
+<button class="btn" id="quizGen">⚡ Generate Quiz</button>
+</div>
+<div id="quizOut"><p style="text-align:center;font-weight:700;color:var(--purple)">Choose a topic and hit Generate — the bus does the rest. 🚌</p></div>
+</div>
+</div>
+</section>
+<!-- ================= FIELD TRIP PLANNER ================= -->
+<section class="section" id="fieldtrip">
+<div class="wrap">
+<div class="panel" style="background:var(--sky-lt)">
+<div class="section-head">
+<span class="kicker">Adventure Logistics</span>
+<h2>Field Trip Command Center</h2>
+<p>Half checklist, half chaos machine. Check off your prep (it saves automatically), then spin the bus for a surprise episode + experiment pairing when you need Friday-afternoon inspiration.</p>
+</div>
+<div class="trip-grid">
+<div class="check-card">
+<h3>✅ Pre-Trip Checklist</h3>
+<div aria-label="Checklist progress" class="progress"><i id="tripProgress"></i></div>
+<div id="tripList"></div>
+</div>
+<div class="spin-card">
+<h3>🎰 Spin the Bus</h3>
+<p style="margin:8px 0 14px">One click = one instant, ridiculous, standards-adjacent field trip plan.</p>
+<button class="btn" id="spinBtn">WAHOO! Spin it!</button>
+<div id="tripResult">
+<h4>Your itinerary will appear here…</h4>
+<p>The bus is idling. Liz is buckled in. Arnold is nervous.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= FRIZZLE METHOD ================= -->
+<section class="section" id="frizzle">
+<div class="wrap">
+<div class="panel" style="background:var(--bus)">
+<div class="section-head">
+<span class="kicker">Teaching Philosophy</span>
+<h2>The Frizzle Method</h2>
+<p>Six field-tested principles behind the magic — each with a concrete move you can use tomorrow, no shrinking required.</p>
+</div>
+<div class="frizzle-banner"><h3>"Take chances. Make mistakes. Get messy."</h3><p>It's not a catchphrase. It's a scope and sequence.</p></div>
+<div class="tip-grid">
+<div class="tip-card"><span class="emoji">🎲</span><h3>1 · Take Chances</h3><p>Say yes to the weird question. Student curiosity is a compass — follow it off the map sometimes.</p><div class="try">Try it: Keep a "Wonder Wall" parking lot. Chase ONE student question per week into a 15-minute mini-investigation.</div></div>
+<div class="tip-card"><span class="emoji">💥</span><h3>2 · Make Mistakes</h3><p>Wrong answers are data. A class that hides mistakes can't do science; a class that examines them can.</p><div class="try">Try it: Start a "Favorite Mistake" board. Grade revisions and reflections, not just first attempts.</div></div>
+<div class="tip-card"><span class="emoji">🖐️</span><h3>3 · Get Messy</h3><p>Hands first, worksheet second. Understanding sticks to fingers that have touched the phenomenon.</p><div class="try">Try it: Every unit gets one build-day or demo-day BEFORE any notes. Prep a "mess kit" (wipes, trays, aprons) so mess is cheap.</div></div>
+<div class="tip-card"><span class="emoji">💺</span><h3>4 · Seatbelts, Everyone</h3><p>Adventure needs structure. Routines and safety rituals are what make bold lessons possible.</p><div class="try">Try it: Assign rotating job badges (Materials Manager, Safety Officer, Timekeeper) so chaos has a chassis.</div></div>
+<div class="tip-card"><span class="emoji">❓</span><h3>5 · Ask Questions First</h3><p>Answers are the caboose, not the engine. Start with a phenomenon and let the questions pile up.</p><div class="try">Try it: Open each unit with one strange demo + 10 silent minutes of "I notice / I wonder" before explaining anything.</div></div>
+<div class="tip-card"><span class="emoji">🕸️</span><h3>6 · Look for Connections</h3><p>Everything connects to everything — science to stories, math, art, and recess.</p><div class="try">Try it: End units with a giant concept web on butcher paper connecting the science to two other subjects.</div></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- ================= FOOTER ================= -->
+<footer>
+<div class="wrap">
+<h3>🚌 The Frizz Files</h3>
+<p>Built with love (and a respectable amount of mess) for teachers everywhere. Episode references correspond to the original 1994–1997 animated series.</p>
+<p class="fine">Unofficial fan-made educational resource. The Magic School Bus, Ms. Frizzle, and related characters are trademarks of Scholastic Inc. This site is not affiliated with, sponsored, or endorsed by Scholastic. All worksheets and original content here are free to copy for classroom use. · <span id="year"></span></p>
+</div>
+</footer>
+<button aria-label="Back to top" id="toTop">⬆</button>
+<script>
+/* ================= DATA ================= */
+const TOPIC_COLORS = {
+  "Space":"#5B2A86","Human Body":"#e4572e","Animals":"#3d9970","Plants":"#2e8b3a",
+  "Ecosystems":"#0f7b6c","Weather & Water":"#3FA7D6","Earth Science":"#B3402A",
+  "Forces & Motion":"#6C5CE7","Chemistry":"#D6336C","Light & Sound":"#E8A800",
+  "Energy & Electricity":"#f08c00","Engineering & Tech":"#5468ff",
+  "Microbes & Cells":"#8e44ad","Scientific Inquiry":"#607d8b"
+};
+
+const EPISODES = [
+{n:"S1 · E1",t:"Gets Lost in Space",g:"K–5",c:"Space",d:"Arnold's field-trip nerves hit maximum when the bus blasts off for a tour of every planet in the solar system.",q:"If you could visit one planet, which would you choose — and what would you pack?"},
+{n:"S1 · E2",t:"For Lunch",g:"K–5",c:"Human Body",d:"The class shrinks down and takes a wild ride through Arnold's digestive system.",q:"Trace a sandwich's journey from first bite to finish."},
+{n:"S1 · E3",t:"Inside Ralphie",g:"K–5",c:"Human Body",d:"The bus dives into Ralphie's bloodstream to discover why germs make us sick — and how the body fights back.",q:"What are three ways your body defends itself from germs?"},
+{n:"S1 · E4",t:"Gets Eaten",g:"K–5",c:"Ecosystems",d:"A forgotten beach trip turns into a lesson on food chains as the class gets smaller and smaller.",q:"Build a food chain that includes you. Who eats what?"},
+{n:"S1 · E5",t:"Hops Home",g:"K–2",c:"Animals",d:"Wanda's pet frog leads the class into the pond to learn what every animal needs in its habitat.",q:"What four things does every habitat provide?"},
+{n:"S1 · E6",t:"Meets the Rot Squad",g:"K–5",c:"Ecosystems",d:"A fallen log becomes a bustling neighborhood of decomposers hard at work.",q:"Why are decomposers the unsung heroes of an ecosystem?"},
+{n:"S1 · E7",t:"All Dried Up",g:"K–5",c:"Animals",d:"Phoebe vows to rescue desert animals — until the class learns how brilliantly they're adapted to survive.",q:"Compare a desert adaptation to one you'd need in the Arctic."},
+{n:"S1 · E8",t:"In the Haunted House",g:"K–5",c:"Light & Sound",d:"A spooky mansion turns out to be a sound laboratory full of vibrations.",q:"What is sound,q:"What is sound, and how does it travel to your ear?"},
+{n:"S1 · E9",t:"Gets Ready, Set, Dough",g:"K–5",c:"Chemistry",d:"A birthday-cake emergency shrinks the class into a batch of dough to explore mixtures and chemical reactions.",q:"Which cake ingredients cause a chemical change when baked?"},
+{n:"S1 · E10",t:"Plays Ball",g:"K–5",c:"Forces & Motion",d:"A book about friction whisks the class onto a frictionless baseball field — where nothing can stop, grip, or slide.",q:"What would recess be like with zero friction?"},
+{n:"S1 · E11",t:"Goes to Seed",g:"K–2",c:"Plants",d:"The class hitches a ride with bees to learn how flowers get pollinated and seeds get made.",q:"How do flowers and bees help each other?"},
+{n:"S1 · E12",t:"Gets Ants in Its Pants",g:"K–5",c:"Animals",d:"The class shrinks to ant size to study colony teamwork for their school play.",q:"How is an ant colony like a classroom?"},
+{n:"S1 · E13",t:"Kicks Up a Storm",g:"K–5",c:"Weather & Water",d:"Ralphie becomes a superhero weatherman as the bus rides rising warm air into a thunderstorm.",q:"What ingredients does a storm need to form?"},
+{n:"S2 · E1",t:"Blows Its Top",g:"K–5",c:"Earth Science",d:"An underwater volcano erupts and builds a brand-new island before the class's eyes.",q:"How can an eruption create new land?"},
+{n:"S2 · E2",t:"Flexes Its Muscles",g:"K–5",c:"Human Body",d:"A body-building contest sends the class inside a muscle to learn how muscles and bones work together.",q:"Why do muscles always work in pairs?"},
+{n:"S2 · E3",t:"The Busasaurus",g:"K–5",c:"Earth Science",d:"The bus time-travels 67 million years to meet dinosaurs and dig into how fossils form.",q:"What can a fossil tell us that a drawing can't?"},
+{n:"S2 · E4",t:"Going Batty",g:"K–5",c:"Animals",d:"A spooky parent night turns into a lesson on bats, echolocation, and nocturnal life.",q:"How do bats 'see' in total darkness?"},
+{n:"S2 · E5",t:"Butterfly and the Bog Beast",g:"K–5",c:"Animals",d:"The class becomes butterflies to learn how camouflage and mimicry help animals survive.",q:"How does camouflage help an animal survive?"},
+{n:"S2 · E6",t:"Wet All Over",g:"K–5",c:"Weather & Water",d:"The class becomes water droplets and rides the entire water cycle — evaporation to rainstorm.",q:"Where has the water in your cup been before?"},
+{n:"S2 · E7",t:"In a Pickle",g:"3–5",c:"Microbes & Cells",d:"Keesha's missing cucumber becomes a mystery about microbes, fermentation, and decomposition.",q:"Are all microbes bad? Defend your answer."},
+{n:"S2 · E8",t:"Revving Up",g:"3–5",c:"Engineering & Tech",d:"The class shrinks and travels inside the bus's engine to learn how machines turn fuel into motion.",q:"What does an engine actually do with fuel?"},
+{n:"S2 · E9",t:"Taking Flight",g:"K–5",c:"Forces & Motion",d:"The bus becomes an airplane as the class discovers lift, thrust, drag, and gravity.",q:"What four forces act on a plane in flight?"},
+{n:"S2 · E10",t:"Getting Energized",g:"3–5",c:"Energy & Electricity",d:"A broken Ferris wheel sends the class hunting for energy sources: water, wind, and sun.",q:"Name three ways to make electricity without a power plant."},
+{n:"S2 · E11",t:"Out of This World",g:"K–5",c:"Space",d:"The class intercepts an asteroid and sorts out comets, meteors, and near misses.",q:"How is a comet different from an asteroid?"},
+{n:"S2 · E12",t:"Cold Feet",g:"K–5",c:"Animals",d:"Liz goes missing and the class learns the difference between warm-blooded and cold-blooded animals.",q:"Why do cold-blooded animals bask in the sun?"},
+{n:"S2 · E13",t:"Ups and Downs",g:"3–5",c:"Forces & Motion",d:"A floating talk-show stunt sinks, and the class investigates buoyancy and density to save it.",q:"Why does a huge ship float while a tiny pebble sinks?"},
+{n:"S3 · E1",t:"In a Beehive",g:"K–5",c:"Animals",d:"The class becomes bees and learns hive jobs, honey-making, and the waggle dance.",q:"What jobs keep a beehive running?"},
+{n:"S3 · E2",t:"In the Arctic",g:"K–5",c:"Animals",d:"The bus freezes solid while the class learns how blubber, fur, and feathers trap heat.",q:"How do Arctic animals hold onto their body heat?"},
+{n:"S3 · E3",t:"Spins a Web",g:"K–5",c:"Animals",d:"Trapped in a spider's web, the class learns how spiders build, hunt, and avoid sticking.",q:"Why don't spiders stick to their own webs?"},
+{n:"S3 · E4",t:"Under Construction",g:"3–5",c:"Engineering & Tech",d:"Wanda's little brother gets stuck in a shrinking construction site of bridges, beams, and arches.",q:"What shapes make structures strongest?"},
+{n:"S3 · E5",t:"Gets a Bright Idea",g:"K–5",c:"Light & Sound",d:"A light-show showdown teaches the class how light travels, reflects, and makes shadows.",q:"How does light travel, and what makes a shadow?"},
+{n:"S3 · E6",t:"Shows and Tells",g:"3–5",c:"Scientific Inquiry",d:"Show-and-tell becomes an archaeology dig: observations vs. inferences about mysterious artifacts.",q:"What's the difference between an observation and an inference?"},
+{n:"S3 · E7",t:"Makes a Rainbow",g:"K–5",c:"Light & Sound",d:"A pinball-machine contest reveals how prisms split white light into a rainbow of colors.",q:"Where do the colors in a rainbow come from?"},
+{n:"S3 · E8",t:"Goes Upstream",g:"3–5",c:"Ecosystems",d:"The class migrates with salmon to learn about life cycles and river ecosystems.",q:"Why do salmon swim upstream?"},
+{n:"S3 · E9",t:"Works Out",g:"3–5",c:"Human Body",d:"A Teacherathlon sends the class inside Ms. Frizzle's muscles, lungs, and heart mid-workout.",q:"What happens inside your body when you exercise?"},
+{n:"S3 · E10",t:"Gets Planted",g:"K–5",c:"Plants",d:"The class shrinks into a stem and rides photosynthesis from root to leaf.",q:"How does a plant make its own food?"},
+{n:"S3 · E11",t:"In the Rainforest",g:"3–5",c:"Ecosystems",d:"A missing cocoa bean leads to a lesson on rainforest interdependence.",q:"How do rainforest species depend on one another?"},
+{n:"S3 · E12",t:"Rocks and Rolls",g:"3–5",c:"Earth Science",d:"A statue of the Frizz gets eroded as the class watches water carve canyons in fast-forward.",q:"How does water carve rock without any tools?"},
+{n:"S3 · E13",t:"Holiday Special",g:"K–5",c:"Ecosystems",d:"A trip to the recycling plant shows where trash goes and why materials matter.",q:"What happens to a plastic bottle after the recycling bin?"},
+{n:"S4 · E1",t:"Meets Molly Cule",g:"3–5",c:"Chemistry",d:"Wanda's favorite singer helps the class shrink to molecule size to clean a car, atom by atom.",q:"What is everything in the universe made of?"},
+{n:"S4 · E2",t:"Cracks a Yolk",g:"K–5",c:"Animals",d:"The class replaces a mother chicken and learns how an egg feeds and protects a growing chick.",q:"How does an egg protect and feed a growing chick?"},
+{n:"S4 · E3",t:"Goes to Mussel Beach",g:"3–5",c:"Ecosystems",d:"The class becomes mussels and barnacles to survive the pounding intertidal zone.",q:"How do tide-pool creatures survive crashing waves?"},
+{n:"S4 · E4",t:"Goes on Air",g:"3–5",c:"Engineering & Tech",d:"A radio-show prize depends on the class discovering that air is real, and it pushes.",q:"How can invisible air push things around?"},
+{n:"S4 · E5",t:"Gets Swamped",g:"3–5",c:"Ecosystems",d:"The class debates turning a swamp into a mall — until they learn what wetlands do for a city.",q:"Why are wetlands worth protecting?"},
+{n:"S4 · E6",t:"Goes Cellular",g:"3–5",c:"Microbes & Cells",d:"Arnold's skin cells become the field trip as the class explores the building blocks of life.",q:"Why are cells called the building blocks of life?"},
+{n:"S4 · E7",t:"Sees Stars",g:"3–5",c:"Space",d:"A birthday star purchase sends the class across the galaxy to learn how stars are born and die.",q:"Are stars born? Do they die? Explain."},
+{n:"S4 · E8",t:"Gains Weight",g:"3–5",c:"Space",d:"Phoebe's slam-dunk demo requires turning off gravity — with chaotic results.",q:"Why would you weigh less on the Moon?"},
+{n:"S4 · E9",t:"Makes a Stink",g:"3–5",c:"Chemistry",d:"A smell-off against a rival school reveals how odor molecules travel through air to your nose.",q:"How does a smell travel from the trash to your nose?"},
+{n:"S4 · E10",t:"Gets Charged",g:"3–5",c:"Energy & Electricity",d:"A Valentine's blackout sends the class into the wires to learn how electric circuits work.",q:"What does electricity need in order to flow?"},
+{n:"S4 · E11",t:"Gets Programmed",g:"3–5",c:"Engineering & Tech",d:"The class shrinks into a computer to follow instructions, code, and Mr. Rhule's new system.",q:"How does a computer follow instructions?"},
+{n:"S4 · E12",t:"In the City",g:"3–5",c:"Animals",d:"The class becomes city critters to study how wildlife adapts to urban habitats.",q:"How do wild animals adapt to city life?"},
+{n:"S4 · E13",t:"Takes a Dive",g:"3–5",c:"Ecosystems",d:"The bus becomes a submarine over a coral reef for a lesson in symbiosis and partnership.",q:"What is symbiosis? Find one reef example."}
+];
+
+const EXPERIMENTS = [
+{t:"Volcano Island Eruption",c:"Earth Science",g:"3–5",time:"45 min",mess:3,
+ mats:["Baking soda","Vinegar","Dish soap","Red food coloring","Small cup","Play sand or foil tray"],
+ steps:["Set the cup in the tray and mold sand or foil around it into a volcano shape.","Add 2 spoonfuls of baking soda, a squirt of soap, and food coloring to the cup.","Pour in vinegar and step back — eruption!","Sketch the lava flow path. Erupt again and compare.","Discuss: how does real lava build new land?"],
+ sci:"Vinegar (an acid) reacts with baking soda (a base) to release carbon dioxide gas. The gas bubbles carry the 'lava' up and out — like pressure pushing magma through a volcano's vent.",
+ safe:"Do outdoors or on trays. No tasting the lava."},
+{t:"Water Cycle in a Bag",c:"Weather & Water",g:"2–4",time:"20 min + 1 week",mess:1,
+ mats:["Zip-top bag","Water","Blue food coloring","Tape","Sunny window"],
+ steps:["Draw a sun at the top of the bag and waves at the bottom.","Add colored water (about 1/4 cup) and seal tightly.","Tape the bag to a sunny window.","Observe daily: droplets form up top (condensation), then 'rain' runs back down.","Log changes in the Bus Log each day for a week."],
+ sci:"Sunlight warms the water, turning it to vapor (evaporation). The vapor cools on the bag's surface into droplets (condensation), which fall back down (precipitation) — the whole cycle in miniature.",
+ safe:"Seal bags well; use painter's tape on windows."},
+{t:"Cracker Digestion Demo",c:"Human Body",g:"3–5",time:"30 min",mess:2,
+ mats:["Saltine crackers","Zip bags","Water","Orange juice","Paper towels","Cups"],
+ steps:["Chew a cracker slowly — notice it turns sweet (saliva = chemical digestion begins).","Mash a cracker in a bag with a little water: that's the stomach churning.","Add a splash of orange juice (stomach 'acid') and mash again.","Squeeze the mush through a paper towel into a cup: nutrients 'absorbing' into the bloodstream.","Label each stage: mouth, stomach, small intestine."],
+ sci:"Digestion is both mechanical (chewing, churning) and chemical (saliva, stomach acid, enzymes). The paper towel models the small intestine's job: letting tiny nutrients pass into the blood.",
+ safe:"Allergy check first. Hands washed, no sharing bites."},
+{t:"Dancing Raisins",c:"Chemistry",g:"K–3",time:"15 min",mess:1,
+ mats:["Clear cup","Clear soda (seltzer or lemon-lime)","Raisins"],
+ steps:["Fill the cup with clear soda.","Drop in 3–4 raisins and watch closely.","Raisins sink, gather bubbles, rise, release bubbles, and sink again — dancing!","Try other small objects: pasta, corn kernels, paper clips. Predict first!"],
+ sci:"Raisins are denser than soda, so they sink. Carbon dioxide bubbles stick to their wrinkly surface and act like tiny life jackets, lifting them up. At the surface the bubbles pop, and down they go again.",
+ safe:"No drinking the experiment afterward."},
+{t:"Balloon Rocket",c:"Forces & Motion",g:"3–5",time:"30 min",mess:1,
+ mats:["Balloons","String (3–4 m)","Straw","Tape","Two chairs"],
+ steps:["Thread string through the straw and tie it tight between two chairs.","Inflate a balloon (don't tie it) and tape it to the straw.","Let go! Measure how far it travels.","Test variables: more air? Bigger balloon? Angled string?","Record results and race teams."],
+ sci:"Air rushing out one way pushes the balloon the other way — Newton's third law: every action has an equal and opposite reaction. Real rockets work exactly like this, just with much hotter gas.",
+ safe:"Watch for latex allergies; keep balloons away from faces."},
+{t:"Oobleck: Solid or Liquid?",c:"Chemistry",g:"K–5",time:"30 min",mess:3,
+ mats:["Cornstarch (2 cups)","Water (1 cup)","Bowl","Food coloring (optional)","Newspaper to cover tables"],
+ steps:["Mix cornstarch and water in the bowl until it feels strange.","Punch it fast: solid! Rest your hand on it: you sink.","Roll it into a ball, then stop moving — it melts.","Vote: solid, liquid, or something else? Defend your vote.","Write your claim with evidence in the Lab Report."],
+ sci:"Oobleck is a non-Newtonian fluid: its viscosity changes with pressure. Quick force makes the starch particles jam together (solid-like); gentle pressure lets them slide (liquid-like).",
+ safe:"Never pour down the drain — trash can only. Cover the floor!"},
+{t:"Static Butterfly",c:"Energy & Electricity",g:"K–3",time:"20 min",mess:1,
+ mats:["Balloon","Tissue paper","Wool sweater or hair","Marker"],
+ steps:["Cut a butterfly from tissue paper and decorate it.","Rub the balloon on wool or hair for 20 seconds.","Hold the balloon near the butterfly — its wings lift and flap!","Try other materials: paper scraps, your hair, salt grains.","Draw what the invisible 'force' seems to do."],
+ sci:"Rubbing moves electrons onto the balloon, giving it a static charge. The charged balloon attracts the light tissue paper — the same invisible force behind lightning, just friendlier.",
+ safe:"Works best on dry days. No balloons near faces."},
+{t:"Seed Germination Greenhouse",c:"Plants",g:"K–3",time:"15 min + 2 weeks",mess:1,
+ mats:["Clear cup","Paper towel","Bean seeds","Water","Tape"],
+ steps:["Line the cup with a damp paper towel.","Wedge 2–3 bean seeds between the towel and the cup wall.","Keep the towel damp and the cup in light.","Observe daily: which emerges first, root or shoot?","Measure growth and graph it in the Bus Log."],
+ sci:"Seeds carry a baby plant plus packed food. Water wakes the seed up; the root always grows down first (gravity-sensing!), then the shoot heads for light to start photosynthesis.",
+ safe:"Beans are for science, not snacking."},
+{t:"Solar Oven S'mores",c:"Energy & Electricity",g:"3–5",time:"60 min",mess:2,
+ mats:["Pizza box","Aluminum foil","Plastic wrap","Black paper","Tape","Graham crackers, chocolate, marshmallows","Sunny day"],
+ steps:["Cut a flap in the box lid; cover the flap's underside with foil.","Seal the opening with plastic wrap to make a window.","Line the box bottom with black paper.","Place s'mores inside, prop the foil flap to reflect sun in.","Wait 30–60 min. Track the temperature if you have a thermometer!"],
+ sci:"Three kinds of heat transfer team up: radiation (sunlight in), conduction (black paper absorbing), and the plastic wrap traps warm air (the greenhouse effect). Dessert as data.",
+ safe:"Boxes get hot — adult handles retrieval. Then eat the evidence."},
+{t:"Sound Sandwich Kazoo",c:"Light & Sound",g:"K–3",time:"20 min",mess:1,
+ mats:["2 craft sticks","1 wide rubber band","2 small rubber bands","Drinking straw"],
+ steps:["Stretch the wide band lengthwise around one stick.","Cut two tiny straw pieces; place them under the band, near each end.","Sandwich the second stick on top.","Wrap a small rubber band around each end of the 'sandwich.'","Hum through the gap — buzzing! Press the sticks to change pitch."],
+ sci:"Your breath makes the rubber band vibrate, and vibrating material makes sound waves. Tighter or shorter vibrations = higher pitch. Every instrument is just a controlled vibration machine.",
+ safe:"Craft sticks only — nothing sharp. Wash hands before humming."}
+];
+
+const QUIZ_BANK = {
+"Space":[
+ {q:"Which planet is closest to the Sun?",o:["Venus","Mercury","Mars","Earth"],a:1},
+ {q:"What force keeps planets in orbit around the Sun?",o:["Magnetism","Friction","Gravity","Wind"],a:2},
+ {q:"Why would you weigh less on the Moon than on Earth?",o:["The Moon has less gravity","The Moon is colder","Space suits are heavy","The Moon spins faster"],a:0},
+ {q:"A comet is mostly made of…",o:["Rock and metal","Ice, dust, and gas","Lava","Pure light"],a:1},
+ {q:"Stars are born inside huge clouds of gas and dust called…",o:["Craters","Nebulae","Oceans","Rings"],a:1}],
+"Human Body":[
+ {q:"Where does chemical digestion begin?",o:["Stomach","Small intestine","Mouth","Esophagus"],a:2},
+ {q:"Which organ absorbs most nutrients into the blood?",o:["Stomach","Small intestine","Large intestine","Liver"],a:1},
+ {q:"Which blood cells help fight germs?",o:["Red cells","White cells","Platelets","Plasma"],a:1},
+ {q:"Muscles can only…",o:["Push","Pull","Stretch","Twist"],a:1},
+ {q:"What happens to your heart rate when you exercise?",o:["It stops","It slows down","It speeds up","Nothing"],a:2}],
+"Animals":[
+ {q:"Bats find food in the dark using…",o:["Smell","Echolocation","Night vision","Taste"],a:1},
+ {q:"A cold-blooded animal warms up by…",o:["Shivering","Basking in the sun","Growing fur","Running"],a:1},
+ {q:"Camouflage helps animals by…",o:["Making them faster","Hiding them from predators","Helping them fly","Keeping them warm"],a:1},
+ {q:"In a beehive, worker bees communicate by…",o:["Singing","Dancing","Blinking","Humming"],a:1},
+ {q:"Salmon swim upstream in order to…",o:["Find colder water","Lay their eggs","Escape whales","Sleep"],a:1}],
+"Plants":[
+ {q:"Plants make their own food using…",o:["Photosynthesis","Digestion","Fermentation","Hibernation"],a:0},
+ {q:"Which part of the plant takes in water from the soil?",o:["Leaf","Flower","Root","Petal"],a:2},
+ {q:"Pollination happens when pollen moves from…",o:["Root to leaf","Flower to flower","Seed to soil","Bee to hive"],a:1},
+ {q:"What gas do plants take in for photosynthesis?",o:["Oxygen","Carbon dioxide","Nitrogen","Helium"],a:1},
+ {q:"When a seed germinates, what grows first?",o:["The flower","The leaves","The root","The fruit"],a:2}],
+"Ecosystems":[
+ {q:"A food chain always starts with…",o:["A predator","A producer like a plant","A decomposer","Rain"],a:1},
+ {q:"Decomposers are important because they…",o:["Eat other animals","Recycle nutrients back into soil","Make noise","Block sunlight"],a:1},
+ {q:"Wetlands help cities by…",o:["Soaking up floodwater","Growing parking lots","Making trash","Heating the air"],a:0},
+ {q:"Symbiosis means…",o:["Animals fighting","Species living closely together","Plants sleeping","Rocks eroding"],a:1},
+ {q:"Which is an example of a habitat?",o:["A pond","A sandwich","A shoe","A cloud"],a:0}],
+"Weather & Water":[
+ {q:"Evaporation happens when water is…",o:["Frozen","Heated by the Sun","Stirred","Salted"],a:1},
+ {q:"Clouds form when water vapor…",o:["Condenses into droplets","Disappears","Turns to rock","Freezes solid instantly"],a:0},
+ {q:"Rain, snow, sleet, and hail are all forms of…",o:["Condensation","Evaporation","Precipitation","Collection"],a:2},
+ {q:"What powers the entire water cycle?",o:["Wind","The Moon","The Sun","Volcanoes"],a:2},
+ {q:"A thunderstorm needs warm, moist air that is…",o:["Sinking","Rising","Frozen","Still"],a:1}],
+"Earth Science":[
+ {q:"Magma that reaches Earth's surface is called…",o:["Lava","Sediment","Ore","Clay"],a:0},
+ {q:"Volcanic eruptions can…",o:["Only destroy land","Build brand-new land","Stop earthquakes","Create oceans"],a:1},
+ {q:"Erosion is the process of…",o:["Building mountains","Wearing away and moving rock and soil","Melting glaciers","Forming clouds"],a:1},
+ {q:"Fossils are usually found in which rock type?",o:["Igneous","Sedimentary","Metamorphic","Volcanic glass"],a:1},
+ {q:"A canyon carved by a river is evidence of…",o:["Eruption","Erosion over a long time","Earthquakes only","Gravity failing"],a:1}],
+"Forces & Motion":[
+ {q:"Friction is a force that…",o:["Speeds things up","Slows or stops moving objects","Creates light","Heats water"],a:1},
+ {q:"A balloon rocket moves because…",o:["Air pushes it backward","Air escaping pushes it forward","String pulls it","Gravity lifts it"],a:1},
+ {q:"The four forces of flight are lift, thrust, drag, and…",o:["Friction","Gravity","Magnetism","Sound"],a:1},
+ {q:"An object floats when it is…",o:["Heavier than water","Less dense than the water it displaces","Magnetic","Very small"],a:1},
+ {q:"Newton's third law says every action has…",o:["A reaction equal and opposite","No effect","A sound","A shadow"],a:0}],
+"Chemistry":[
+ {q:"Baking a cake is an example of a…",o:["Physical change","Chemical change","Mixture","Magnet"],a:1},
+ {q:"Everything in the universe is made of…",o:["Cells","Atoms and molecules","Dust","Light"],a:1},
+ {q:"Oobleck is strange because it…",o:["Is always solid","Acts like a solid AND a liquid","Glows","Never gets wet"],a:1},
+ {q:"Smells travel to your nose as…",o:["Tiny molecules moving through air","Sound waves","Light beams","Radio signals"],a:0},
+ {q:"Mixing vinegar and baking soda produces…",o:["Oxygen","Carbon dioxide gas","Hydrogen","Steam"],a:1}],
+"Light & Sound":[
+ {q:"Sound is made by…",o:["Light beams","Vibrations","Magnets","Shadows"],a:1},
+ {q:"A shadow forms when light is…",o:["Reflected","Blocked by an object","Absorbed by air","Split by a prism"],a:1},
+ {q:"A prism splits white light into…",o:["Heat","A rainbow of colors","Sound","Static"],a:1},
+ {q:"Light travels in…",o:["Circles","Wiggly curves","Straight lines","Spirals"],a:2},
+ {q:"A higher-pitched sound comes from vibrations that are…",o:["Slower","Faster","Louder","Softer"],a:1}],
+"Energy & Electricity":[
+ {q:"Electricity flows only through a…",o:["Open gap","Complete circuit","Rubber glove","Wooden spoon"],a:1},
+ {q:"Which material is a good conductor?",o:["Rubber","Plastic","Copper wire","Wood"],a:2},
+ {q:"An insulator…",o:["Speeds up electricity","Blocks the flow of electricity","Creates batteries","Makes light"],a:1},
+ {q:"A switch works by…",o:["Opening or closing the circuit","Heating the bulb","Storing power","Making magnets"],a:0},
+ {q:"Which is a renewable energy source?",o:["Coal","Oil","Wind","Gasoline"],a:2}],
+"Microbes & Cells":[
+ {q:"Cells are called…",o:["The building blocks of life","Tiny planets","Mini computers","Food groups"],a:0},
+ {q:"All microbes are harmful.",o:["True","False — many are helpful","Only on Mondays","Only in winter"],a:1},
+ {q:"Pickles and yogurt are made with the help of…",o:["Viruses","Helpful bacteria","Sunlight","Salt only"],a:1},
+ {q:"Your body fights germs mainly with…",o:["Hair","White blood cells","Bones","Tears"],a:1},
+ {q:"You can see most microbes with…",o:["Your bare eyes","A microscope","Binoculars","A mirror"],a:1}]
+};
+
+const TRIP_CHECKLIST = [
+"Book the bus (magic or otherwise) and confirm the date",
+"Send permission slips home — chase the stragglers",
+"Collect emergency contacts and medical notes",
+"Confirm chaperones (1 per 5 students for big adventures)",
+"Pack the first-aid kit and check expiration dates",
+"Charge the camera / iPad for documentation",
+"Print name tags and bus buddy lists",
+"Prep the Bus Log observation journals",
+"Check the weather — pack ponchos just in case",
+"Arrange lunch plan and allergy-safe snacks",
+"Review behavior expectations with the class",
+"Do a headcount system (count off, buddy check)",
+"Pack extra paper towels. Trust us on this one.",
+"Tell Liz where you're going. She worries."
+];
+
+const SPIN_TRANSFORM = ["shrinks to the size of a raindrop","turns into a submarine","blasts off like a rocket","becomes a time machine","transforms into a giant bee","converts into a deep-sea rover","turns invisible (mostly)","grows wheels AND wings","becomes a molecule-sized hovercraft","turns into a hot-air balloon"];
+const SPIN_PLACE = ["inside a thundercloud","at the bottom of a tide pool","on the surface of Mars","inside a loaf of rising bread","in the middle of a beehive","deep inside a volcano vent","on a glacier in the Arctic","inside a circuit board","at a coral reef at dawn","in a puddle behind the school"];
+const SPIN_SNACK = ["freeze-dried astronaut ice cream","cheese-dust 'pollen' puffs","volcano-red fruit punch","raindrop-shaped crackers","mystery trail mix","definitely-not-expired juice boxes","edible soil cups (pudding + cookie crumbs)","orbit-shaped pretzels"];
+
+/* ================= QUOTES ================= */
+const QUOTES = [
+"Take chances, make mistakes, get messy!",
+"Seatbelts, everyone!",
+"Wahoo!",
+"As I always say: look for connections!",
+"To the bus!",
+"Never say never, class!",
+"If you keep asking questions, you'll keep getting answers.",
+"There's no such thing as a boring field trip — only boring seatbelts!",
+"According to my research... which I just made up...",
+"Class, today we ARE the lesson."
+];
+let qi = 0;
+setInterval(()=>{
+  const el = document.getElementById("quoteText");
+  el.style.opacity = 0;
+  setTimeout(()=>{ qi = (qi+1) % QUOTES.length; el.textContent = '"' + QUOTES[qi] + '"'; el.style.opacity = 1; }, 400);
+}, 5000);
+
+/* ================= EPISODE GUIDE ================= */
+const topics = ["All", ...Object.keys(TOPIC_COLORS)];
+let activeTopic = "All";
+const chipsEl = document.getElementById("topicChips");
+topics.forEach(t=>{
+  const b = document.createElement("button");
+  b.className = "chip" + (t==="All" ? " active" : "");
+  b.textContent = t;
+  b.onclick = ()=>{ activeTopic = t; document.querySelectorAll("#topicChips .chip").forEach(c=>c.classList.toggle("active", c===b)); renderEpisodes(); };
+  chipsEl.appendChild(b);
+});
+document.getElementById("epSearch").addEventListener("input", renderEpisodes);
+
+function renderEpisodes(){
+  const q = document.getElementById("epSearch").value.trim().toLowerCase();
+  const grid = document.getElementById("epGrid");
+  const list = EPISODES.filter(e =>
+    (activeTopic==="All" || e.c===activeTopic) &&
+    (!q || (e.t+" "+e.d+" "+e.q+" "+e.c).toLowerCase().includes(q))
+  );
+  document.getElementById("epCount").textContent = list.length + " of " + EPISODES.length + " episodes";
+  if(!list.length){ grid.innerHTML = '<div class="empty-state">🚌 The bus found nothing! Try another search.</div>'; return; }
+  grid.innerHTML = list.map(e=>
+    '<article class="ep-card">' +
+      '<div class="ep-top"><span class="ep-num">' + e.n + '</span><span class="tag" style="--tag:' + TOPIC_COLORS[e.c] + '">' + e.c + '</span></div>' +
+      '<h3>' + e.t + '</h3>' +
+      '<p class="ep-sum">' + e.d + '</p>' +
+      '<p class="ep-q"><b>🛑 Bus-stop question:</b> ' + e.q + '</p>' +
+      '<div class="ep-foot"><span class="grade-pill">Grades ' + e.g + '</span><span>🦎</span></div>' +
+    '</article>'
+  ).join("");
+}
+renderEpisodes();
+
+/* ================= EXPERIMENTS ================= */
+document.getElementById("expGrid").innerHTML = EXPERIMENTS.map(x=>
+  '<article class="exp-card">' +
+    '<div class="exp-meta"><span class="tag" style="--tag:' + TOPIC_COLORS[x.c] + '">' + x.c + '</span><span class="grade-pill">Grades ' + x.g + '</span><span class="grade-pill">⏱ ' + x.time + '</span><span class="mess">Mess ' + "🧪".repeat(x.mess) + '</span></div>' +
+    '<h3>' + x.t + '</h3>' +
+    '<div class="mats">' + x.mats.map(m=>'<span>'+m+'</span>').join("") + '</div>' +
+    '<ol>' + x.steps.map(s=>'<li>'+s+'</li>').join("") + '</ol>' +
+    '<div class="sci-note"><b>🔬 The science:</b> ' + x.sci + '</div>' +
+    '<p class="safety">⚠️ ' + x.safe + '</p>' +
+  '</article>'
+).join("");
+
+/* ================= ACCORDION ================= */
+document.querySelectorAll(".acc-head").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const item = btn.parentElement, body = item.querySelector(".acc-body");
+    const open = item.classList.toggle("open");
+    body.style.maxHeight = open ? body.scrollHeight + "px" : "0";
+  });
+});
+
+/* ================= PRINTABLES TABS + PRINT ================= */
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".pane").forEach(p=>p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.pane).classList.add("active");
+  });
+});
+function printEl(el){
+  document.querySelectorAll(".print-target").forEach(e=>e.classList.remove("print-target"));
+  el.classList.add("print-target");
+  document.body.classList.add("print-mode");
+  window.print();
+}
+window.addEventListener("afterprint", ()=>{
+  document.body.classList.remove("print-mode");
+  document.querySelectorAll(".print-target").forEach(e=>e.classList.remove("print-target"));
+});
+document.getElementById("printWs").addEventListener("click", ()=>{
+  printEl(document.querySelector(".pane.active .worksheet"));
+});
+
+/* ================= QUIZ BUILDER ================= */
+const quizTopicSel = document.getElementById("quizTopic");
+Object.keys(QUIZ_BANK).forEach(t=>{
+  const o = document.createElement("option"); o.value = t; o.textContent = t; quizTopicSel.appendChild(o);
+});
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+document.getElementById("quizGen").addEventListener("click", ()=>{
+  const topic = quizTopicSel.value;
+  const count = Math.min(parseInt(document.getElementById("quizCount").value), QUIZ_BANK[topic].length);
+  const qs = shuffle([...QUIZ_BANK[topic]]).slice(0, count);
+  const letters = ["A","B","C","D"];
+  let html = '<div class="quiz-paper">' +
+    '<h3>🚌 Magic Bus Quiz: ' + topic + '</h3>' +
+    '<div class="ws-fields"><span>Name:</span><span>Date:</span><span>Score: ___ / ' + count + '</span></div>';
+  qs.forEach((it,i)=>{
+    html += '<div class="quiz-q"><p class="q-text">' + (i+1) + '. ' + it.q + '</p><ol class="q-opts" type="A">' +
+      it.o.map(op=>'<li>'+op+'</li>').join("") + '</ol></div>';
+  });
+  html += '<div class="answer-key" id="answerKey" style="display:none"><h4>🔑 Answer Key (teacher eyes only)</h4><ol>' +
+    qs.map(it=>'<li><b>' + letters[it.a] + '</b> — ' + it.o[it.a] + '</li>').join("") + '</ol></div></div>' +
+    '<div class="quiz-actions"><button class="btn purple" id="quizPrint">🖨️ Print Quiz</button>' +
+    '<button class="btn alt" id="keyToggle">🔑 Show / Hide Answer Key</button></div>';
+  document.getElementById("quizOut").innerHTML = html;
+  document.getElementById("quizPrint").onclick = ()=>printEl(document.querySelector("#quizOut .quiz-paper"));
+  document.getElementById("keyToggle").onclick = ()=>{
+    const k = document.getElementById("answerKey");
+    k.style.display = k.style.display === "none" ? "block" : "none";
+  };
+});
+
+/* ================= FIELD TRIP ================= */
+const tripListEl = document.getElementById("tripList");
+const saved = JSON.parse(localStorage.getItem("frizzChecklist") || "[]");
+TRIP_CHECKLIST.forEach((item,i)=>{
+  const row = document.createElement("label");
+  row.className = "trip-item";
+  row.innerHTML = '<input type="checkbox" data-i="' + i + '"' + (saved.includes(i) ? " checked" : "") + '><span>' + item + '</span>';
+  tripListEl.appendChild(row);
+});
+function updateTripProgress(){
+  const boxes = [...tripListEl.querySelectorAll("input")];
+  const done = boxes.filter(b=>b.checked).map(b=>+b.dataset.i);
+  localStorage.setItem("frizzChecklist", JSON.stringify(done));
+  document.getElementById("tripProgress").style.width = Math.round(done.length / boxes.length * 100) + "%";
+}
+tripListEl.addEventListener("change", updateTripProgress);
+updateTripProgress();
+
+document.getElementById("spinBtn").addEventListener("click", ()=>{
+  const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+  const ep = pick(EPISODES), ex = pick(EXPERIMENTS);
+  const res = document.getElementById("tripResult");
+  res.innerHTML =
+    '<h4>🚌 Today the bus ' + pick(SPIN_TRANSFORM) + '…</h4>' +
+    '<p><b>📍 Destination:</b> ' + pick(SPIN_PLACE) + '</p>' +
+    '<p><b>📺 Pair with:</b> "' + ep.t + '" (' + ep.n + ', ' + ep.c + ')</p>' +
+    '<p><b>🧪 Hands-on:</b> ' + ex.t + ' — Grades ' + ex.g + ', ' + ex.time + '</p>' +
+    '<p><b>🛑 Bus-stop question:</b> ' + ep.q + '</p>' +
+    '<p><b>🍎 Bus snack:</b> ' + pick(SPIN_SNACK) + '</p>';
+  res.classList.remove("pop"); void res.offsetWidth; res.classList.add("pop");
+});
+
+/* ================= NAV / SCROLLSPY / MISC ================= */
+const nav = document.getElementById("mainNav");
+document.getElementById("navToggle").addEventListener("click", ()=>nav.classList.toggle("open"));
+nav.addEventListener("click", e=>{ if(e.target.tagName==="A") nav.classList.remove("open"); });
+
+const spy = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("active", a.dataset.nav === en.target.id));
+    }
+  });
+},{rootMargin:"-40% 0px -55% 0px"});
+document.querySelectorAll("section[id]").forEach(s=>spy.observe(s));
+
+const toTop = document.getElementById("toTop");
+window.addEventListener("scroll", ()=>toTop.classList.toggle("show", window.scrollY > 600));
+toTop.addEventListener("click", ()=>window.scrollTo({top:0, behavior:"smooth"}));
+
+document.getElementById("year").textContent = "© " + new Date().getFullYear() + " The Frizz Files";
+</script>
+<!-- Magic School Bus - Return to Command Center Dock -->
+<div id="msb-hub-return-dock" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:system-ui,-apple-system,sans-serif;">
+<a href="index.html" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.4),0 0 15px rgba(255,216,61,0.3)';" onmouseover="this.style.transform='translateY(-3px) scale(1.03)';this.style.boxShadow='0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(255,216,61,0.5)';" style="display:inline-flex;align-items:center;gap:10px;padding:10px 18px;background:linear-gradient(135deg,#101c46,#162861);color:#ffd83d;border:2px solid #ffd83d;border-radius:999px;text-decoration:none;font-weight:800;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 15px rgba(255,216,61,0.3);transition:all 0.2s cubic-bezier(0.2,0.8,0.2,1);backdrop-filter:blur(8px);">
+<span style="font-size:18px;">🚌</span>
+<span>Return to Bus Hub</span>
+</a>
+</div>
+<audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio><audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio>
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+</html>

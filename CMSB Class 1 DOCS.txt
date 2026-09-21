@@ -1,0 +1,17 @@
+VOCABULARY:
+------------------------------------
+
+STATIC
+
+ELECTRICITY
+
+FRICTION
+
+ELECTRONS
+
+HEAT
+
+TRANSFER
+
+
+

@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic School Bus Science Labs</title>
+    
+    <!-- SVG Favicon (Beaker) - 17. Improved SVG quality via crisp Base64 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICA8cGF0aCBkPSJNMzAsODAgQzMwLDkwIDQwLDEwMCA1MCwxMDAgQzYwLDEwMCA3MCw5MCA3MCw4MCBMNjUsMzAgTDY1LDEwIEwzNSwxMCBMMzUsMzAgWiIgZmlsbD0iIzAwNTZBMyIvPgogIDxwYXRoIGQ9Ik0zMCw4MCBDMzAsOTAgNDAsMTAwIDUwLDEwMCBDNjAsMTAwIDcwLDkwIDcwLDgwIEw2NSw1MCBMMzUsNTAgWiIgZmlsbD0iI0ZGRDEwMCIvPgo8L3N2Zz4=">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+        
+        :root {
+            --primary: #FFD100;
+            --secondary: #0056A3;
+            --accent: #E32636;
+            --bg: #f4f4f9;
+            --text: #333;
+            --sheet-bg: #ffffff;
+            --sheet-shadow: rgba(0,0,0,0.2);
+            --sidebar-bg: #0056A3;
+            --sidebar-text: #ffffff;
+            --pill-bg: #eef5fa;
+            --pill-border: #0056A3;
+            --frizzle-bg: #fffcf0;
+            --frizzle-border: #FFD100;
+            --drawing-border: #0056A3;
+            --drawing-bg: #fafafa;
+            --input-bg: #ffffff;
+            --input-border: #ccc;
+            --btn-bg: #ffffff;
+            --btn-text: #0056A3;
+            --btn-border: #FFD100;
+            --header-line: #000;
+        }
+
+        body.dark-mode {
+            --primary: #FFD100;
+            --secondary: #60a5fa;
+            --accent: #f87171;
+            --bg: #0f172a;
+            --text: #e2e8f0;
+            --sheet-bg: #1e293b;
+            --sheet-shadow: rgba(0,0,0,0.5);
+            --sidebar-bg: #0b1120;
+            --sidebar-text: #e2e8f0;
+            --pill-bg: #334155; /* 4. Dark mode contrast tweaks */
+            --pill-border: #60a5fa;
+            --frizzle-bg: #334155;
+            --frizzle-border: #60a5fa;
+            --drawing-border: #60a5fa;
+            --drawing-bg: #0f172a;
+            --input-bg: #1e293b;
+            --input-border: #475569;
+            --btn-bg: #1e293b;
+            --btn-text: #e2e8f0;
+            --btn-border: #475569;
+            --header-line: #e2e8f0;
+        }
+
+        /* 6. Focus rings */
+        :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+        /* 3. Custom scrollbars */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+        ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 5px; border: 2px solid var(--bg); }
+
+        body {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 0;
+            color: var(--text);
+            overflow-x: hidden;
+            background-image: radial-gradient(var(--input-border) 1px, transparent 1px);
+            background-size: 20px 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Sidebar Styles */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 1rem 20px 20px 20px;
+            overflow: hidden;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* 1. Animation sidebar */
+            box-sizing: border-box;
+            border-right: 2px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        #sidebar h1 {
+            color: var(--primary);
+            text-shadow: 2px 2px 0px #000;
+            text-align: center;
+            font-size: 24px;
+            margin-top: 0;
+            line-height: 1.2;
+            flex-shrink: 0;
+        }
+
+        .sidebar-actions { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; flex-shrink: 0; }
+        
+        .action-btn {
+            background: var(--accent); color: white; border: none; padding: 10px; font-size: 14px;
+            font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase;
+            font-family: inherit; transition: all 0.2s ease-in-out; text-align: center; /* 2. unified hover states */
+            width: 100%; box-sizing: border-box;
+        }
+        .action-btn:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .action-btn:active { transform: translateY(0); box-shadow: none; }
+        .action-btn.secondary { background: #444; }
+        .action-btn.success { background: #28a745; }
+        .action-btn.info { background: #17a2b8; }
+        
+        .theme-toggle-btn { background: #333; color: var(--primary); }
+        body.dark-mode .theme-toggle-btn { background: #f4f4f9; color: #000; }
+
+        #scenario-search {
+            width: 100%; padding: 10px; border-radius: 6px; border: 2px solid var(--input-border);
+            background: var(--input-bg); color: var(--text); margin: 0.75rem 0;
+            font-family: inherit; font-size: 14px; box-sizing: border-box; flex-shrink: 0;
+        }
+
+        #scenario-buttons {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 5px;
+        }
+
+        .scenario-btn {
+            display: block; width: 100%; background: var(--btn-bg); color: var(--btn-text);
+            border: 2px solid var(--btn-border); padding: 12px; margin-bottom: 10px;
+            border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: bold;
+            cursor: pointer; transition: all 0.2s; text-align: left; box-sizing: border-box;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .scenario-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .scenario-btn.active {
+            background: var(--primary); color: #000; border-color: #e6bc00;
+            transform: scale(1.02); box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border-left: 6px solid #e6bc00;
+        }
+
+        /* Document Container */
+        #document-container {
+            margin-left: 280px; padding: 40px 20px; display: flex; flex-direction: column;
+            align-items: center; min-height: 100vh;
+        }
+
+        /* Printable Sheet Architecture */
+        .sheet {
+            background: var(--sheet-bg);
+            color: var(--text);
+            width: 8.5in;
+            height: 11in;
+            min-height: 11in;
+            max-height: 11in;
+            margin: 0 auto 40px auto;
+            padding: 0.75in 0.75in 1.25in 0.75in;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px var(--sheet-shadow);
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dynamic Running Footers and Headers */
+        .sheet-header {
+            position: absolute; top: 0.5in; left: 0.75in; right: 0.75in;
+            text-align: center; border-bottom: 4px solid var(--primary); padding-bottom: 10px;
+        }
+        .sheet-header h2 { margin: 0; color: var(--secondary); font-size: clamp(20pt, 3vw, 24pt); text-transform: uppercase; } /* 8. clamp */
+        .sheet-header h3 { margin: 5px 0 0 0; color: var(--accent); font-size: clamp(14pt, 2vw, 16pt); }
+
+        .sheet-content { margin-top: 1.25in; height: 8.2in; overflow: hidden; position: relative; }
+
+        .sheet-footer {
+            position: absolute; bottom: 0.5in; left: 0.75in; right: 0.75in;
+            display: flex; justify-content: space-between; font-size: 10pt; color: #888;
+            border-top: 1px solid var(--input-border); padding-top: 10px; font-family: sans-serif;
+        }
+
+        /* Page 1 Details */
+        .metadata-pills {
+            display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; align-items: center; /* 24. x-axis alignment */
+        }
+        .pill {
+            background: var(--pill-bg); border: 2px solid var(--pill-border); color: var(--text);
+            padding: 8px 15px; border-radius: 20px; font-size: 12pt; font-weight: bold;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .pill strong { color: var(--accent); }
+
+        .frizzle-callout {
+            border: 3px solid var(--frizzle-border); border-radius: 25px; background: var(--frizzle-bg);
+            padding: 25px 25px 25px 65px; margin-bottom: 25px; position: relative;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+        .frizzle-callout::before {
+            content: "💬"; font-size: 35pt; position: absolute; top: 15px; left: -10px;
+            background: var(--sheet-bg); border-radius: 50%; width: 50px; height: 50px;
+            display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary);
+        }
+        .frizzle-callout h4 { color: var(--accent); margin-top: 0; font-size: 16pt; text-transform: uppercase; }
+        .frizzle-script { font-size: 14pt; line-height: 1.5; font-style: italic; margin: 0; }
+
+        /* Page 2 Details */
+        .reading-title { font-size: 26pt; color: var(--secondary); text-align: center; margin: 10px 0 20px; }
+        .reading-text { font-size: 16pt; line-height: 2.0; margin-bottom: 30px; text-align: justify; } /* 18. Line height */
+        .big-takeaway {
+            background: var(--primary); border: 4px solid var(--secondary); padding: 25px;
+            border-radius: 15px; text-align: center; color: #000;
+        }
+        .big-takeaway-label { font-size: 14pt; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 10px; color: var(--secondary); }
+        .big-takeaway-text { font-size: 18pt; font-weight: bold; }
+
+        /* Page 3 Details */
+        .name-date-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; font-size: 14pt; font-weight: bold; }
+        .header-field { border-bottom: 2px solid var(--header-line); padding-bottom: 2px; }
+        .field-value { color: var(--secondary); font-family: inherit; margin-left: 10px; }
+        
+        .notebook-prompt { font-size: 14pt; color: var(--secondary); font-weight: bold; margin-bottom: 5px; margin-top: 15px; }
+        .notebook-lines {
+            background-image: repeating-linear-gradient(transparent, transparent 31px, var(--drawing-border) 31px, var(--drawing-border) 32px);
+            line-height: 32px; font-size: 14pt; min-height: 128px; padding-top: 5px;
+        }
+        .notebook-lines.primary-lines {
+            background-image: repeating-linear-gradient(
+                to bottom,
+                var(--drawing-border) 0, var(--drawing-border) 1px,
+                transparent 1px, transparent 15px,
+                #94a3b8 15px, #94a3b8 16px,
+                transparent 16px, transparent 31px,
+                var(--drawing-border) 31px, var(--drawing-border) 32px
+            ); /* 22. Spacing tweak in gradient limits above */
+            background-size: 100% 32px;
+        }
+
+        /* Page 4 Details */
+        .drawing-boxes-container { display: flex; flex-direction: column; gap: 15px; height: 100%; }
+        .drawing-box-wrapper { flex: none; display: flex; flex-direction: column; }
+        .drawing-box-title { font-size: 14pt; font-weight: bold; color: var(--secondary); background: var(--pill-bg); padding: 5px 10px; border-radius: 5px; display: inline-block;  margin-bottom: 0.5rem; }
+        .drawing-box-prompt { font-size: 12pt; margin: 0 0 10px; font-style: italic; }
+        .drawing-frame {
+            height: 260px; min-height: 240px; max-height: 280px; box-sizing: border-box;
+            border: 3px dashed var(--drawing-border); border-radius: 10px; position: relative; background: var(--drawing-bg);
+            display: flex; justify-content: center; align-items: center; overflow: hidden;
+        }
+        .drawing-frame::after {
+            content: "✏️"; font-size: 40pt; opacity: 0.15; position: absolute; pointer-events: none;
+            left: 50%; top: 50%; transform: translate(-50%, -50%);
+        }
+
+        /* G. Graphing Grid toggle styling */
+        .graph-grid {
+            background-image: 
+                linear-gradient(to right, rgba(0,86,163,0.15) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0,86,163,0.15) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: center;
+        }
+
+        /* Page 5 Details */
+        .checklist-instructions { background: var(--pill-bg); border: 2px solid var(--secondary); padding: 20px; border-radius: 10px; margin-bottom: 15px; } /* 21. Uniform padding */
+        .checklist-instructions ul { list-style-type: none; padding-left: 0; font-size: 14pt; line-height: 1.6; margin: 0; }
+        .checklist-instructions li::before { content: "[ ] "; font-family: monospace; font-weight: bold; color: var(--accent); white-space: pre;}
+        .activity-frame {
+            border: 6px solid var(--primary); border-radius: 15px; flex: 1; position: relative;
+            display: flex; justify-content: center; align-items: center; min-height: 350px;
+        }
+        .activity-frame::before {
+            content: ""; position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px; border: 2px dashed var(--secondary); border-radius: 10px;
+        }
+        .bus-watermark { font-size: 80pt; opacity: 0.10; transform: rotate(-10deg); } /* 23. watermark opacity */
+
+        /* A. Assessment Rubric Table (Page 6) */
+        .rubric-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13pt; }
+        .rubric-table th, .rubric-table td { border: 2px solid var(--input-border); padding: 12px; text-align: left; }
+        .rubric-table th { background: var(--pill-bg); color: var(--secondary); }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center;
+            z-index: 3000; backdrop-filter: blur(5px); /* 13. Modal blur */
+        }
+        .modal {
+            background: var(--sheet-bg); color: var(--text); padding: 30px; border-radius: 12px;
+            width: 90%; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;
+        }
+        .modal h2 { margin-top: 0; color: var(--secondary); border-bottom: 2px solid var(--primary); padding-bottom:10px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 10px; border: 2px solid var(--input-border); border-radius: 6px;
+            font-family: inherit; box-sizing: border-box; font-size: 14px; background: var(--input-bg); color: var(--text);
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--secondary); outline: none; }
+        .form-group textarea { resize: vertical; min-height: 60px; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
+        .checkbox-group { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .checkbox-group input { width: auto; transform: scale(1.2); }
+
+        /* Print Settings & Settings Grid (7. Grid CSS) */
+        .print-grid, .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .print-item { background: var(--pill-bg); padding: 10px; border-radius: 8px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--input-border); }
+        
+        /* Mobile */
+        @media (max-width: 900px) {
+            #sidebar { transform: translateX(-100%); }
+            #sidebar.open { transform: translateX(0); }
+            #document-container { margin-left: 0; padding: 20px 10px; }
+            .sheet { width: 100%; max-width: 8.5in; height: auto; min-height: 11in; padding: 0.5in; margin-bottom: 20px; }
+            .sheet-content { height: auto; margin-top: 1.2in; margin-bottom: 0.5in; }
+            .sheet-footer { position: relative; bottom: 0; left: 0; right: 0; margin-top: 20px; }
+        }
+
+        /* Print Media Queries */
+        @page { size: letter; margin: 0; }
+        @media print {
+            :root {
+                --bg: #ffffff; --text: #000000; --sheet-bg: #ffffff;
+                --sidebar-bg: #ffffff; --sidebar-text: #000000;
+                --pill-bg: transparent; --pill-border: #000000;
+                --frizzle-bg: transparent; --frizzle-border: #000000;
+                --drawing-border: #000000; --drawing-bg: transparent;
+                --primary: transparent; --secondary: #000000; --accent: #000000;
+                --header-line: #000000;
+            }
+            body { background: white !important; color: black !important; overflow: visible !important; }
+            #sidebar, .modal-overlay, .no-print { display: none !important; }
+            #document-container { margin: 0; padding: 0; background: none; display: block; }
+            .sheet { 
+                box-shadow: none; margin: 0; padding: 0.75in 0.75in 1.25in 0.75in; 
+                width: 8.5in; height: 11in; border-radius: 0; 
+                page-break-after: always; break-after: page; overflow: hidden;
+            }
+            .sheet:last-of-type { page-break-after: auto; break-after: auto; }
+            .big-takeaway { border: 4px solid black; background: transparent; color: black; } /* 20. darkened print borders */
+            .big-takeaway-label { color: black; }
+            .activity-frame { border: 2px dashed black; }
+            .activity-frame::before { display: none; }
+            .pill { border: 1px solid black; color: black; }
+        }
+    </style>
+
+<style>
+/* K-2 Worksheet Tracing & Print Enhancements */
+.k2-tracing-text {
+  font-family: 'Comic Sans MS', 'Trebuchet MS', cursive, sans-serif;
+  letter-spacing: 3px;
+  color: #94a3b8;
+  border-bottom: 2px dashed #cbd5e1;
+  padding-bottom: 4px;
+  display: inline-block;
+}
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  #msb-hub-return-dock, #global-fs-btn, .no-print, header nav, .msb-header {
+    display: none !important;
+  }
+  .worksheet-page, .print-sheet, #worksheet-dom {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    page-break-after: always;
+  }
+}
+</style>
+
+</head>
+<body>
+    <div id="sidebar" class="no-print">
+        <h1>🚍 The Frizzle Hub<br><span style="font-size: 14px; font-weight:normal;">Lab Packet Generator</span></h1>
+        
+        <div class="sidebar-actions">
+            <button class="action-btn" onclick="openPrintModal()">🖨️ Print Settings</button>
+            <button class="action-btn info" onclick="openEditModal()">✏️ Edit Scenario</button>
+            <button class="action-btn success" onclick="openScenarioModal()">➕ New Scenario</button>
+            <button class="action-btn secondary" onclick="openSettingsModal()">⚙️ Global Settings</button>
+            <button class="action-btn theme-toggle-btn" onclick="toggleTheme()" id="theme-btn">🌙 Dark Mode</button>
+            <div style="display:flex; gap:10px;">
+                <button class="action-btn secondary" style="flex:1; font-size:12px;" onclick="exportScenarios()">📤 Export</button>
+                <button class="action-btn secondary" style="flex:1; font-size:12px;" onclick="document.getElementById('import-file').click()">📥 Import</button>
+                <input type="file" id="import-file" style="display:none;" accept=".json" onchange="importScenarios(event)">
+            </div>
+            <button class="action-btn secondary" style="font-size:12px; background:#888;" onclick="resetScenarios()">🔄 Reset Defaults</button>
+        </div>
+
+        <input type="text" id="scenario-search" placeholder="🔍 Search Scenarios..." oninput="filterScenarios()">
+        <div style="font-size:12px; margin-bottom:5px; opacity:0.8; text-transform:uppercase; font-weight:bold;">Saved Scenarios</div>
+        <div id="scenario-buttons"></div>
+    </div>
+
+    <div id="document-container">
+        <!-- Pages injected by JS -->
+    </div>
+
+    <!-- Modals -->
+    <!-- Global Settings -->
+    <div id="settings-modal" class="modal-overlay no-print">
+        <div class="modal">
+            <h2>⚙️ Global Settings</h2>
+            <div class="settings-grid"> <!-- 7. Grid for settings -->
+                <div class="form-group">
+                    <label>Teacher Name</label>
+                    <input type="text" id="setting-teacher">
+                </div>
+                <div class="form-group">
+                    <label>School Name</label>
+                    <input type="text" id="setting-school">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Date (Optional)</label>
+                <input type="text" id="setting-date">
+            </div>
+            <div class="checkbox-group form-group">
+                <input type="checkbox" id="setting-primary-lines">
+                <label style="margin:0;">Use K-2 Primary Handwriting Lines (Page 3)</label>
+            </div>
+            <div class="checkbox-group form-group">
+                <input type="checkbox" id="setting-graph-grid">
+                <label style="margin:0;">Use Graphing Grid for 'After' Journal Box (Page 4)</label>
+            </div>
+            <div class="modal-actions">
+                <button class="action-btn secondary" style="width:auto;" onclick="closeModals()">Cancel</button>
+                <button class="action-btn success" style="width:auto;" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Settings -->
+    <div id="print-modal" class="modal-overlay no-print">
+        <div class="modal">
+            <h2>🖨️ Print Settings</h2>
+            <p style="margin-top:0;">Select which pages to include in the printed packet:</p>
+            <div class="print-grid">
+                <label class="print-item"><input type="checkbox" id="print-p1" checked> Page 1: Educator Guide</label>
+                <label class="print-item"><input type="checkbox" id="print-p2" checked> Page 2: Science Reading</label>
+                <label class="print-item"><input type="checkbox" id="print-p3" checked> Page 3: Lab Notebook</label>
+                <label class="print-item"><input type="checkbox" id="print-p4" checked> Page 4: Science Journal</label>
+                <label class="print-item"><input type="checkbox" id="print-p5" checked> Page 5: Activity Area</label>
+                <label class="print-item"><input type="checkbox" id="print-p6" checked> Page 6: Assessment Rubric</label>
+            </div>
+            <div style="display:flex; gap:10px; margin-bottom: 20px;">
+                <button class="action-btn secondary" style="font-size:12px; padding:5px;" onclick="checkAllPrint(true)">Select All</button>
+                <button class="action-btn secondary" style="font-size:12px; padding:5px;" onclick="checkAllPrint(false)">Select None</button>
+            </div>
+            <div class="modal-actions">
+                <button class="action-btn secondary" style="width:auto;" onclick="closeModals()">Cancel</button>
+                <button class="action-btn success" style="width:auto;" onclick="executePrint()">🖨️ Print Selected</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scenario Editor (New/Edit) -->
+    <div id="scenario-modal" class="modal-overlay no-print">
+        <div class="modal">
+            <h2 id="scenario-modal-title">✏️ Edit Scenario</h2>
+            <div class="form-group"><label>Scenario Title</label><input type="text" id="edit-title"></div>
+            <div class="print-grid">
+                <div class="form-group"><label>Core Focus</label><input type="text" id="edit-focus"></div>
+                <div class="form-group"><label>Target Grade</label><input type="text" id="edit-grade"></div>
+                <div class="form-group"><label>Duration</label><input type="text" id="edit-duration"></div>
+                <div class="form-group"><label>Skills</label><input type="text" id="edit-skills"></div>
+            </div>
+            <div class="print-grid">
+                <div class="form-group"><label>Assigned Roles (Comma separated)</label><input type="text" id="edit-roles" placeholder="e.g. Lead, Recorder"></div>
+                <div class="form-group"><label>Vocabulary (Comma separated)</label><input type="text" id="edit-vocab" placeholder="e.g. Circuit, Battery"></div>
+            </div>
+            <div class="form-group"><label>Ms. Frizzle's Script</label><textarea id="edit-script"></textarea></div>
+            <div class="form-group"><label>Procedure (One step per line)</label><textarea id="edit-procedure"></textarea></div>
+            <div class="form-group"><label>Big Question</label><input type="text" id="edit-question"></div>
+            <div class="form-group"><label>Reading Text (HTML allowed)</label><textarea id="edit-reading"></textarea></div>
+            <div class="form-group"><label>The Big Takeaway</label><input type="text" id="edit-takeaway"></div>
+            
+            <h3 style="margin-bottom:10px; font-size:16px; border-bottom:1px solid var(--input-border); padding-bottom:5px;">Worksheet Prompts</h3>
+            <div class="print-grid">
+                <div class="form-group"><label>Hypothesis (Before)</label><input type="text" id="edit-w-before" maxlength="100"></div> <!-- 10. char limits -->
+                <div class="form-group"><label>Observation (During)</label><input type="text" id="edit-w-during" maxlength="100"></div>
+                <div class="form-group"><label>Conclusion (After)</label><input type="text" id="edit-w-after" maxlength="100"></div>
+                <div class="form-group"><label>Journal Box 1</label><input type="text" id="edit-j1" maxlength="100"></div>
+                <div class="form-group"><label>Journal Box 2</label><input type="text" id="edit-j2" maxlength="100"></div>
+                <div class="form-group"><label>Coloring Directive</label><input type="text" id="edit-color" maxlength="100"></div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="action-btn secondary" style="width:auto;" onclick="closeModals()">Cancel</button>
+                <button class="action-btn success" style="width:auto;" onclick="saveScenarioForm()">💾 Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Dynamic Rules Container -->
+    <style id="dynamic-print-rules"></style>
+
+    <script>
+        const defaultScenarios = [
+            {
+                id: 13,
+                title: "Scenario 13: Getting Energized",
+                focus: "Simple & Parallel Circuits",
+                grade: "2-4",
+                duration: "45 Minutes",
+                skills: "Circuit Building, Problem Solving",
+                script: "Seatbelts, everyone! Today we're diving into the shocking world of electricity! We'll build simple circuits with switches and discover the magic of parallel circuits. Let's get energized!",
+                procedure: [
+                    "Introduce the concept of a closed circuit and the flow of electricity.",
+                    "Have students build a simple circuit with a battery, wire, and bulb.",
+                    "Add a switch to the simple circuit and test its function.",
+                    "Guide students to build a parallel circuit with two bulbs.",
+                    "Observe what happens to the second bulb when the first is disconnected."
+                ],
+                bigQuestion: "How does electricity flow through different types of circuits?",
+                readingText: "Electricity flows in a continuous loop called a circuit. A simple circuit has one path for electricity to follow. If you break the path with a switch, the electricity stops flowing, and the light goes out!<br><br>In a parallel circuit, there are multiple paths for electricity. If one path is broken, the electricity can still flow through the other paths, keeping the other lights shining bright!",
+                takeaway: "Electricity needs a closed loop to flow. Parallel circuits provide multiple paths, so one broken path doesn't stop the whole circuit!",
+                worksheet1: {
+                    before: "Draw what you think a simple circuit looks like.",
+                    during: "What happens when you open the switch?",
+                    after: "Why did the second bulb stay on in the parallel circuit?"
+                },
+                journalBox1: "Simple Circuit",
+                journalBox2: "Parallel Circuit",
+                colorDirective: "Color the battery and highlight the wire paths in bright colors!"
+            },
+            {
+                id: 1,
+                title: "Scenario 1: The Sinking Beaver Dam",
+                focus: "Nature's Engineers & Soil Integrity",
+                grade: "K-2",
+                duration: "45 Minutes",
+                skills: "Observation, Prediction, Material Properties",
+                script: "Class, buckle up! Today, we are taking a trip down to Walkerville Creek! The local beavers are trying to build a dam, but their sticks keep washing away. We need to find out what holds a dam together! Seatbelts, everyone!",
+                procedure: [
+                    "Lay out two plastic bins or trays for each group.",
+                    "In tray 1, have students build a dam using ONLY sticks.",
+                    "In tray 2, have students mix mud (soil and water) and build a dam using mud AND sticks.",
+                    "Carefully pour a cup of water down the 'river' in both trays.",
+                    "Observe which dam holds the water back and which one washes away!"
+                ],
+                bigQuestion: "How Do Beavers Build Strong Dams?",
+                readingText: "Beavers are nature's engineers! They don't just use wood to build their homes. If they only used sticks, the water would rush right through the holes.<br><br>To make their dams strong, beavers pack mud, rocks, and grass into the spaces between the wood. The mud acts like glue! When it dries, it holds everything together so the water can't get past.",
+                takeaway: "Mud is the secret glue that holds the dam together!",
+                worksheet1: {
+                    before: "Look at your sticks and mud. Which dam do you think will hold the water back? Why?",
+                    during: "What is happening to the plain stick dam when you pour the water?",
+                    after: "Why did the plain mud wash away? How do the sticks and mud work together?"
+                },
+                journalBox1: "Draw what happens to the plain stick dam when the water hits it.",
+                journalBox2: "Draw your strong dam packed tightly with twigs, rocks, and mud!",
+                colorDirective: "Color the heavy rain clouds dropping water into the river! Draw yourself helping the beavers!"
+            },
+            {
+                id: 2,
+                title: "Scenario 2: The Solar Array Blackout",
+                focus: "Light Absorption & The Albedo Effect",
+                grade: "K-2",
+                duration: "45 Minutes",
+                skills: "Temperature Reading, Light Properties, Charting",
+                script: "It's freezing in Walkerville! The solar panels aren't working because they are covered in bright white snow. Why does color matter when we want to catch the sun's heat? Let's take a sunny field trip to find out!",
+                procedure: [
+                    "Place one piece of black construction paper and one piece of white paper in direct sunlight.",
+                    "Place an ice cube in the center of each piece of paper.",
+                    "Start a timer for 10 minutes.",
+                    "Check back and observe which ice cube is melting faster.",
+                    "Touch the black paper and the white paper to feel the temperature difference."
+                ],
+                bigQuestion: "Why Do Dark Colors Get So Hot?",
+                readingText: "Have you ever worn a black shirt on a really sunny day? You probably got very hot! That's because dark colors absorb (pull in) the light from the sun and turn it into heat.<br><br>Light colors, like white, act like a mirror. They reflect (bounce away) the sunlight! That's why snow stays cold and why solar panels are dark to catch all the energy!",
+                takeaway: "Dark colors absorb heat, light colors reflect it!",
+                worksheet1: {
+                    before: "Which ice cube do you predict will melt first? The one on the white paper or black paper?",
+                    during: "Touch the black paper. How does it feel compared to the white paper?",
+                    after: "Why did the ice cube on the black paper melt faster?"
+                },
+                journalBox1: "Draw the ice cube sitting on the white paper bouncing the sun's rays away.",
+                journalBox2: "Draw the ice cube on the black paper soaking up all the sun's hot rays!",
+                colorDirective: "Color the sun bright yellow and orange! Make sure to color the black paper super dark!"
+            },
+            {
+                id: 3,
+                title: "Scenario 3: The Great Barrier Reef Bleaching Mystery",
+                focus: "Ocean Acidification & Calcium Carbonate",
+                grade: "K-2",
+                duration: "2 Days (Observation)",
+                skills: "Chemical Reactions, Patience, Environmental Science",
+                script: "Class, grab your scuba gear! We are shrinking down to visit the coral reefs. But wait... the colorful corals are turning white and getting weak! We need to test the water to see what is happening to their homes!",
+                procedure: [
+                    "Take two clear cups. Fill Cup A with plain water and Cup B with white vinegar (representing an acidic ocean).",
+                    "Place a piece of chalk or a raw egg in each cup. (The chalk/eggshell acts like the coral skeleton).",
+                    "Watch closely for bubbles forming in the vinegar cup right away!",
+                    "Leave the cups overnight.",
+                    "The next day, inspect the chalk/egg to see how the acid dissolved the hard structure."
+                ],
+                bigQuestion: "What is Happening to the Coral Reefs?",
+                readingText: "Corals are tiny animals that build hard, rocky homes to live in. Those homes are made of something called calcium.<br><br>When the ocean gets too much pollution, the water turns slightly sour, or acidic. This acid eats away at the hard coral homes, making them weak and turn white! We call this coral bleaching.",
+                takeaway: "Acidic water breaks down the hard homes of ocean creatures!",
+                worksheet1: {
+                    before: "What do you think will happen to the chalk when we put it in the sour vinegar?",
+                    during: "Do you see bubbles? What are the bubbles doing to the chalk?",
+                    after: "How did the chalk in the water look different from the chalk in the vinegar the next day?"
+                },
+                journalBox1: "Draw a happy, colorful coral reef in clean ocean water.",
+                journalBox2: "Draw what happened to the chalk in the vinegar cup with lots of bubbles!",
+                colorDirective: "Color your healthy coral reef with your brightest markers! Give the fish happy faces."
+            },
+            {
+                id: 4,
+                title: "Scenario 4: The Midnight Sun Compass Twist",
+                focus: "Polarity & Magnetic Fields",
+                grade: "K-2",
+                duration: "40 Minutes",
+                skills: "Magnetism, Navigation, Earth Science",
+                script: "We are lost in the Arctic, class! And to make matters worse, our bus compass is spinning out of control! We need to understand how magnets work so we can build our own compass and find our way home!",
+                procedure: [
+                    "Fill a bowl with water.",
+                    "Take a small sewing needle and rub a strong magnet along it in ONE direction 50 times.",
+                    "Carefully place a small slice of cork floating on the water.",
+                    "Gently lay the magnetized needle on top of the cork.",
+                    "Watch as the needle magically spins to point North!"
+                ],
+                bigQuestion: "How Does a Compass Know Where North Is?",
+                readingText: "Did you know that the Earth is a giant magnet? It has a magnetic North Pole at the top and a South Pole at the bottom.<br><br>Magnets have invisible forces that pull on certain metals. When we turn a needle into a magnet and let it float freely on the water, the giant Earth magnet pulls on it, making it point North every single time!",
+                takeaway: "The Earth is a giant magnet, and magnets always point North!",
+                worksheet1: {
+                    before: "What do you think will happen to the needle when we rub the magnet on it?",
+                    during: "What happened when we put the cork and needle in the water? Did it stay still?",
+                    after: "If you turn the bowl around, what does the needle do?"
+                },
+                journalBox1: "Draw you and your friends rubbing the magnet on the tiny needle.",
+                journalBox2: "Draw your floating compass pointing to the big 'N' for North!",
+                colorDirective: "Color the Earth as a giant magnet! Make the North pole red and the South pole blue."
+            },
+            {
+                id: 5,
+                title: "Scenario 5: The Deep Sea Submarine Emergency",
+                focus: "Buoyancy & Water Density",
+                grade: "K-2",
+                duration: "40 Minutes",
+                skills: "Density concepts, Sinking vs Floating",
+                script: "Oh no! The Magic School Bus is stuck underwater in submarine mode and we can't float up! We need to figure out how salt changes the water so we can rise back to the surface. To the science station!",
+                procedure: [
+                    "Fill two tall clear glasses halfway with warm water.",
+                    "In Glass 1, leave the water plain.",
+                    "In Glass 2, stir in 4 tablespoons of salt until it dissolves.",
+                    "Gently drop a raw egg into Glass 1. (It will sink).",
+                    "Gently drop a raw egg into Glass 2. (It will float!)."
+                ],
+                bigQuestion: "Why Do Things Float Better in the Ocean?",
+                readingText: "Have you ever tried floating in a swimming pool? It takes a little work! But floating in the ocean is much easier.<br><br>That's because ocean water is packed full of salt. All that salt makes the water heavier and thicker (we call this density). Because the salty water is so thick, it pushes objects, like our submarine or an egg, up to the top!",
+                takeaway: "Salt makes water heavy, which pushes things up so they float!",
+                worksheet1: {
+                    before: "Do you think the heavy egg will sink or float in the plain water?",
+                    during: "What happened to the egg when we dropped it in the super salty water?",
+                    after: "How did the salt change the water to help the egg float?"
+                },
+                journalBox1: "Draw the egg resting on the very bottom of the plain water glass.",
+                journalBox2: "Draw the egg floating happily at the top of the salty water glass!",
+                colorDirective: "Color the salty water extra blue and draw salt crystals floating around!"
+            },
+            {
+                id: 6,
+                title: "Scenario 6: The Amazon Canopy Collapse",
+                focus: "Capillary Action & Plant Biology",
+                grade: "K-2",
+                duration: "Overnight",
+                skills: "Biology, Plant systems, Observation",
+                script: "Class, the giant trees in the Amazon rainforest look thirsty! But how does water from the ground get all the way up to the very top leaves? It's time to shrink down and travel inside a plant's stem!",
+                procedure: [
+                    "Fill three cups with water.",
+                    "Put 10 drops of red food coloring in Cup 1, and 10 drops of blue in Cup 2.",
+                    "Take stalks of celery with leaves on top and cut the very bottom off.",
+                    "Place a celery stalk into each cup and leave them overnight.",
+                    "The next day, observe the colorful leaves! Cut the celery in half to see the colored 'pipes' inside."
+                ],
+                bigQuestion: "How Do Plants Drink Water?",
+                readingText: "Plants don't have mouths to drink like we do! Instead, they use their roots to suck up water from the dirt.<br><br>Inside the stem of a plant are tiny, microscopic tubes, almost like drinking straws! The water climbs up these tiny straws all by itself through a magic trick called 'capillary action', traveling all the way up to the leaves.",
+                takeaway: "Plants have tiny straws inside them to pull water up to their leaves!",
+                worksheet1: {
+                    before: "What do you think will happen to the celery when it sits in the blue water?",
+                    during: "Look closely at the bottom of the freshly cut celery. What do you see inside?",
+                    after: "How did the food coloring prove that the water moves UP the plant?"
+                },
+                journalBox1: "Draw the celery on the first day, sitting in the colored water.",
+                journalBox2: "Draw the celery the next day with its bright, colorful leaves!",
+                colorDirective: "Use red and blue crayons to show the water traveling up the tiny straws in the celery!"
+            },
+             {
+                id: 7,
+                title: "Scenario 7: The Frozen Mountain Rescue",
+                focus: "Thermal Physics & Insulation",
+                grade: "K-2",
+                duration: "45 Minutes",
+                skills: "Temperature tracking, Material testing",
+                script: "Brrr! We're stuck on top of Mount Everest and we need to stay warm! Which materials are the best at trapping heat? Let's use our ice cube test subjects to find out how insulation works. Take chances, make mistakes!",
+                procedure: [
+                    "Get three ice cubes of the same size.",
+                    "Place Ice Cube 1 on a plate (Control).",
+                    "Wrap Ice Cube 2 in a piece of aluminum foil.",
+                    "Wrap Ice Cube 3 tightly in a piece of wool, felt, or a thick sock.",
+                    "Wait 20 minutes, then unwrap to see which ice cube melted the least."
+                ],
+                bigQuestion: "How Do Coats Keep Us Warm?",
+                readingText: "When you go outside in the cold, your body is hot, but the air is freezing. A thick coat doesn't actually make you hot; it traps your body's heat so it can't escape!<br><br>This is called insulation. Fluffy materials like wool trap lots of tiny air bubbles. These bubbles build a wall that stops heat from leaving, keeping our ice cube (or you!) perfectly protected from the outside air.",
+                takeaway: "Fluffy materials trap air to stop heat from escaping!",
+                worksheet1: {
+                    before: "Which ice cube do you think will melt the fastest? The wrapped or unwrapped one?",
+                    during: "Feel the outside of the wool sock and the foil. Do they feel hot or cold?",
+                    after: "Why did the ice cube inside the thick sock stay frozen the longest?"
+                },
+                journalBox1: "Draw the plain ice cube melting away into a big puddle.",
+                journalBox2: "Draw the ice cube snuggled up in its cozy winter sock staying frozen!",
+                colorDirective: "Color the winter sock with your favorite crazy pattern!"
+            },
+            {
+                id: 8,
+                title: "Scenario 8: The Deflated Birthday Cake",
+                focus: "Chemical Reactions & Gas Expansion",
+                grade: "K-2",
+                duration: "30 Minutes",
+                skills: "Chemistry, Gases, Safe mixing",
+                script: "It's Arnold's birthday, but his cake is flat as a pancake! The recipe is missing a chemical reaction to create bubbles! Let's mix up a powerful potion to trap some invisible gas and learn how cakes rise!",
+                procedure: [
+                    "Use a funnel to pour 2 tablespoons of baking soda into a deflated balloon.",
+                    "Pour 1/2 cup of white vinegar into an empty plastic water bottle.",
+                    "Carefully stretch the neck of the balloon over the top of the bottle (don't dump the powder yet!).",
+                    "When ready, lift the balloon to let the baking soda fall into the vinegar.",
+                    "Watch the reaction create gas and blow up the balloon!"
+                ],
+                bigQuestion: "How Do We Catch Invisible Gas?",
+                readingText: "Everything around us is made of chemicals. When we mix two special chemicals together—like sour vinegar and powdery baking soda—they get very excited!<br><br>They change into a brand new thing: a gas called Carbon Dioxide. Gas needs a lot of space, so it expands and pushes outward, which is exactly how our balloon gets blown up without us using our mouths!",
+                takeaway: "Mixing liquids and solids can create powerful, expanding gases!",
+                worksheet1: {
+                    before: "What do you think will happen when the powder hits the sour liquid?",
+                    during: "What did the liquid look like when the powder fell in? Did it bubble?",
+                    after: "What is inside the balloon making it stretch? Is it air or something else?"
+                },
+                journalBox1: "Draw the bottle and the droopy balloon before we mixed the chemicals.",
+                journalBox2: "Draw the big bubbly mess in the bottle blowing the balloon up huge!",
+                colorDirective: "Color the balloon your favorite birthday color and add some confetti around it!"
+            },
+            {
+                id: 9,
+                title: "Scenario 9: The Engine's Core",
+                focus: "Heat Transfer & Molecule Movement",
+                grade: "K-2",
+                duration: "25 Minutes",
+                skills: "Observation, Thermodynamics",
+                script: "The Magic School Bus engine is acting funny! It's super hot! We need to understand how heat changes the way things move inside water. Time to drop in some color and watch the molecule dance!",
+                procedure: [
+                    "Fill one clear glass with ice-cold water.",
+                    "Fill a second clear glass with very hot (steaming) water.",
+                    "Wait for the water in both glasses to become perfectly still.",
+                    "At the exact same time, drop one drop of food coloring into both glasses.",
+                    "Observe! Do not stir! Watch how fast the color spreads in the hot water compared to the cold."
+                ],
+                bigQuestion: "Why Does Hot Water Move So Fast?",
+                readingText: "Everything is made of tiny building blocks called molecules. In cold water, these tiny blocks are shivering and moving very, very slowly.<br><br>But when water gets HOT, it's full of energy! The molecules start jumping, dancing, and zooming all around. Because they are moving so fast, they bump into the food coloring and spread it around instantly!",
+                takeaway: "Heat is energy! Hot water molecules move much faster than cold ones.",
+                worksheet1: {
+                    before: "Which glass of water do you predict will mix the color fastest?",
+                    during: "Look at the cold water. How is the color moving? Is it fast or slow?",
+                    after: "Why did the hot water glass look like a colorful explosion?"
+                },
+                journalBox1: "Draw the cold water glass with the color sinking slowly in a straight line.",
+                journalBox2: "Draw the hot water glass with the color exploding and dancing everywhere!",
+                colorDirective: "Use blue for the slow, cold glass and red for the zooming, hot glass!"
+            },
+            {
+                id: 10,
+                title: "Scenario 10: The Bio-Dome Crisis",
+                focus: "Photosynthesis & Oxygen",
+                grade: "K-2",
+                duration: "2 Hours",
+                skills: "Botany, Gas exchange, Patience",
+                script: "Oh my! We're trapped inside a sealed glass dome and we are running out of fresh air to breathe! Thankfully we have lots of green plants. We need to catch them in the act of making oxygen!",
+                procedure: [
+                    "Pick a fresh, green leaf from a tree or plant outside (it must be freshly picked).",
+                    "Place the leaf in a glass bowl filled with water.",
+                    "Place a small rock on the leaf so it stays completely underwater.",
+                    "Set the bowl in bright, direct sunlight for 1 to 2 hours.",
+                    "Look very closely at the edges of the leaf to see tiny bubbles forming!"
+                ],
+                bigQuestion: "How Do Plants Make Air for Us?",
+                readingText: "Did you know that plants 'breathe' just like we do? But they do it backwards! Plants breathe IN the yucky air that we breathe out.<br><br>When the sun shines on their green leaves, they use that sunlight to cook up food. When they are done cooking, they puff out fresh, clean Oxygen! The tiny bubbles you see on the leaf underwater are the plant breathing out fresh air!",
+                takeaway: "Plants use sunshine to make food and breathe out fresh oxygen!",
+                worksheet1: {
+                    before: "What do you think will appear on the leaf after it sits in the sun?",
+                    during: "Look super closely at the edges of the underwater leaf. What do you see?",
+                    after: "Where did those tiny bubbles come from?"
+                },
+                journalBox1: "Draw the plain leaf underwater with the rock on it right when we started.",
+                journalBox2: "Draw the leaf in the sunshine covered in hundreds of tiny oxygen bubbles!",
+                colorDirective: "Make the sunshine huge and yellow! Make the leaf bright, healthy green."
+            },
+            {
+                id: 11,
+                title: "Scenario 11: The Meteorite Impact",
+                focus: "Earth Science & Geology",
+                grade: "K-2",
+                duration: "30 Minutes",
+                skills: "Measuring, Force, Space Science",
+                script: "Watch out above! We're studying the moon, and giant space rocks are flying everywhere! We need to understand how heavy rocks change the ground when they crash from high up in the sky. Get your safety goggles on!",
+                procedure: [
+                    "Fill a wide baking pan with 2 inches of flour. Smooth it out flat.",
+                    "Sprinkle a thin layer of cocoa powder entirely over the top of the flour.",
+                    "Take a marble (small meteor) and drop it from your knee height into the pan.",
+                    "Take a heavy golf ball (large meteor) and drop it from your shoulder height.",
+                    "Carefully remove the balls and look at the craters (holes) they left behind!"
+                ],
+                bigQuestion: "How Do Craters Form on the Moon?",
+                readingText: "Space is filled with zooming rocks called meteors. Sometimes, these space rocks crash into planets or the moon!<br><br>When a heavy rock hits the dusty ground going very fast, it smashes into the dirt and pushes it outward in a big circle. The hole it leaves behind is called a crater. The heavier the rock and the faster it falls, the bigger the crater will be!",
+                takeaway: "Big, fast objects hit the ground hard and push dirt away to make craters!",
+                worksheet1: {
+                    before: "Which ball do you think will make the biggest hole in the dirt?",
+                    during: "Look at the white flour splashing up through the brown cocoa! What does it look like?",
+                    after: "Why did the golf ball dropped from high up make a bigger splash?"
+                },
+                journalBox1: "Draw the tiny hole the small marble made from dropping it low.",
+                journalBox2: "Draw the gigantic, splashing crater the heavy golf ball made!",
+                colorDirective: "Use brown and grey to color the dusty, crater-filled surface of the moon."
+            },
+            {
+                id: 12,
+                title: "Scenario 12: Make an Electromagnet",
+                focus: "Electromagnetism & Circuits",
+                grade: "K-2",
+                duration: "40 Minutes",
+                skills: "Circuit building, Magnetism",
+                script: "Class, the Walkerville junkyard crane is broken, and it can't pick up the scrap metal! We have to build a super-magnet that we can turn on and off using electricity! As I always say, get out there and explore!",
+                procedure: [
+                    "Take a long piece of copper wire and wrap it tightly around a large iron nail at least 20 times.",
+                    "Leave two long tails of wire unwrapped at both ends.",
+                    "Tape one exposed end of the wire to the positive (+) side of a D-battery.",
+                    "Tape the other end of the wire to the negative (-) side.",
+                    "Hover the nail over some paper clips and watch it pick them up magically!"
+                ],
+                bigQuestion: "How Can Electricity Make a Magnet?",
+                readingText: "Electricity is a powerful force! It flows through wires like water flowing through a hose.<br><br>When we wrap a wire around a piece of metal (like a nail) and send electricity shooting through it, a magical thing happens. The electricity creates a magnetic field around the metal! This is called an electromagnet, and the best part is we can turn the magnet off just by disconnecting the battery!",
+                takeaway: "Electricity flowing through a wrapped wire turns a plain nail into a magnet!",
+                worksheet1: {
+                    before: "Can a plain, unwrapped nail pick up the paperclips on its own?",
+                    during: "What happens to the paperclips when the wires are touching the battery?",
+                    after: "What happens to the paperclips if we pull the wire off the battery? Why?"
+                },
+                journalBox1: "Draw the battery connected to the nail picking up a giant chain of paperclips!",
+                journalBox2: "Draw what happens when the battery is disconnected (the paperclips fall down).",
+                colorDirective: "Color the battery terminals and wire path! Draw zapping energy lines around the nail!"
+            }
+        ];
+
+        let scenarios = [];
+        let currentScenarioIndex = 0;
+        let isEditMode = false;
+        let globalSettings = {
+            teacher: "", school: "Walkerville Elementary", date: "", primaryLines: false, theme: "light", useGraphGrid: false
+        };
+
+        // 11. Keyboard shortcuts
+        window.addEventListener('keydown', e => {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                if (document.getElementById('scenario-modal').style.display === 'flex') {
+                    saveScenarioForm();
+                } else if (document.getElementById('settings-modal').style.display === 'flex') {
+                    saveSettings();
+                }
+            }
+        });
+
+        function init() {
+            const savedSettings = localStorage.getItem('msb_settings');
+            if (savedSettings) globalSettings = {...globalSettings, ...JSON.parse(savedSettings)};
+            applyTheme();
+
+            const savedScenarios = localStorage.getItem('msb_scenarios');
+            if (savedScenarios) {
+                scenarios = JSON.parse(savedScenarios);
+                if (!scenarios.find(s => s.id === 13)) {
+                    scenarios.unshift(defaultScenarios.find(s => s.id === 13));
+                    saveScenarios();
+                }
+            } else {
+                scenarios = JSON.parse(JSON.stringify(defaultScenarios));
+            }
+
+            renderSidebar();
+            loadScenario(0);
+        }
+
+        // Theme
+        function toggleTheme() {
+            globalSettings.theme = globalSettings.theme === 'dark' ? 'light' : 'dark';
+            saveSettingsSilently();
+            applyTheme();
+        }
+        function applyTheme() {
+            const btn = document.getElementById('theme-btn');
+            if(globalSettings.theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                btn.innerHTML = '☀️ Light Mode';
+            } else {
+                document.body.classList.remove('dark-mode');
+                btn.innerHTML = '🌙 Dark Mode';
+            }
+        }
+
+        // Sidebar & Search (15. Alphabetical Sorting)
+        function renderSidebar(filterText = "") {
+            const btnContainer = document.getElementById('scenario-buttons');
+            btnContainer.innerHTML = '';
+            
+            let sorted = scenarios.map((s, i) => ({...s, originalIndex: i}));
+            sorted.sort((a,b) => {
+                const getNum = (t) => { const m = t.match(/Scenario\s*(\d+)/i); return m ? parseInt(m[1], 10) : 9999; };
+                const nA = getNum(a.title);
+                const nB = getNum(b.title);
+                if (nA !== nB) return nA - nB;
+                return a.title.localeCompare(b.title);
+            });
+
+            let matchCount = 0;
+            sorted.forEach((s) => {
+                const searchStr = (s.title + " " + (s.focus||"") + " " + (s.skills||"")).toLowerCase();
+                if(filterText && !searchStr.includes(filterText.toLowerCase())) return;
+                matchCount++;
+
+                const btn = document.createElement('button');
+                btn.className = 'scenario-btn';
+                if(s.originalIndex === currentScenarioIndex) btn.classList.add('active');
+                
+                let titleParts = s.title.split(': ');
+                btn.innerHTML = `${titleParts[0]}<br><span style="font-size:12px; font-weight:normal;">${titleParts[1] || ''}</span>`;
+                btn.onclick = () => loadScenario(s.originalIndex);
+                btnContainer.appendChild(btn);
+            });
+
+            // 5. Empty state styling
+            if(matchCount === 0) {
+                btnContainer.innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text); opacity: 0.6; font-style: italic;">No scenarios found.</div>';
+            }
+        }
+
+        function filterScenarios() {
+            renderSidebar(document.getElementById('scenario-search').value);
+        }
+
+        // Data Management (12. LocalStorage warning)
+        function saveScenarios() { 
+            const str = JSON.stringify(scenarios);
+            if (str.length > 4000000) alert('Warning: Storage limit approaching. Consider exporting old scenarios.');
+            localStorage.setItem('msb_scenarios', str); 
+        }
+        function saveSettingsSilently() { localStorage.setItem('msb_settings', JSON.stringify(globalSettings)); }
+        function resetScenarios() {
+            if(confirm("Are you sure you want to reset to the default scenarios? All custom labs will be lost.")) {
+                scenarios = JSON.parse(JSON.stringify(defaultScenarios));
+                saveScenarios();
+                document.getElementById('scenario-search').value = "";
+                loadScenario(0);
+            }
+        }
+
+        function loadScenario(index) {
+            currentScenarioIndex = index;
+            renderSidebar(document.getElementById('scenario-search').value);
+            document.getElementById('document-container').innerHTML = generatePacketHTML(scenarios[index]);
+            window.scrollTo(0,0);
+        }
+
+        // Print Selection
+        function openPrintModal() { document.getElementById('print-modal').style.display = 'flex'; }
+        function checkAllPrint(val) {
+            for(let i=1; i<=6; i++) document.getElementById('print-p'+i).checked = val;
+        }
+        function executePrint() {
+            let rules = "";
+            for(let i=1; i<=6; i++) {
+                if(!document.getElementById('print-p'+i).checked) {
+                    rules += `#page-${i} { display: none !important; }\n`;
+                }
+            }
+            document.getElementById('dynamic-print-rules').innerHTML = rules;
+            closeModals();
+            window.print();
+            setTimeout(() => { document.getElementById('dynamic-print-rules').innerHTML = ""; }, 1000);
+        }
+
+        // Settings Modal
+        function openSettingsModal() {
+            document.getElementById('setting-teacher').value = globalSettings.teacher;
+            document.getElementById('setting-school').value = globalSettings.school;
+            document.getElementById('setting-date').value = globalSettings.date;
+            document.getElementById('setting-primary-lines').checked = globalSettings.primaryLines;
+            document.getElementById('setting-graph-grid').checked = globalSettings.useGraphGrid;
+            document.getElementById('settings-modal').style.display = 'flex';
+        }
+        function saveSettings() {
+            globalSettings.teacher = document.getElementById('setting-teacher').value;
+            globalSettings.school = document.getElementById('setting-school').value;
+            globalSettings.date = document.getElementById('setting-date').value;
+            globalSettings.primaryLines = document.getElementById('setting-primary-lines').checked;
+            globalSettings.useGraphGrid = document.getElementById('setting-graph-grid').checked;
+            saveSettingsSilently();
+            closeModals();
+            loadScenario(currentScenarioIndex);
+        }
+
+        // Scenario Editor Modal (14. Auto-populate placeholders)
+        function openScenarioModal() {
+            isEditMode = false;
+            document.getElementById('scenario-modal-title').innerText = "➕ Create New Scenario";
+            clearEditForm();
+            document.getElementById('scenario-modal').style.display = 'flex';
+        }
+        function openEditModal() {
+            isEditMode = true;
+            document.getElementById('scenario-modal-title').innerText = "✏️ Edit Scenario";
+            const s = scenarios[currentScenarioIndex];
+            document.getElementById('edit-title').value = s.title || "";
+            document.getElementById('edit-focus').value = s.focus || "";
+            document.getElementById('edit-grade').value = s.grade || "";
+            document.getElementById('edit-duration').value = s.duration || "";
+            document.getElementById('edit-skills').value = s.skills || "";
+            document.getElementById('edit-script').value = s.script || "";
+            document.getElementById('edit-procedure').value = Array.isArray(s.procedure) ? s.procedure.join('\n') : (s.procedure || "");
+            document.getElementById('edit-question').value = s.bigQuestion || "";
+            document.getElementById('edit-reading').value = s.readingText || "";
+            document.getElementById('edit-takeaway').value = s.takeaway || "";
+            document.getElementById('edit-w-before').value = s.worksheet1?.before || "";
+            document.getElementById('edit-w-during').value = s.worksheet1?.during || "";
+            document.getElementById('edit-w-after').value = s.worksheet1?.after || "";
+            document.getElementById('edit-j1').value = s.journalBox1 || "";
+            document.getElementById('edit-j2').value = s.journalBox2 || "";
+            document.getElementById('edit-color').value = s.colorDirective || "";
+            document.getElementById('edit-roles').value = s.roles || "";
+            document.getElementById('edit-vocab').value = s.vocab || "";
+            document.getElementById('scenario-modal').style.display = 'flex';
+        }
+        function clearEditForm() {
+            const inputs = document.querySelectorAll('#scenario-modal input, #scenario-modal textarea');
+            inputs.forEach(i => i.value = "");
+            document.getElementById('edit-title').value = "Scenario X: New Adventure";
+            document.getElementById('edit-grade').value = "K-2";
+            document.getElementById('edit-duration').value = "45 Minutes";
+            document.getElementById('edit-roles').value = "Principal Investigator, Data Recorder, Materials Manager";
+        }
+        function saveScenarioForm() {
+            const s = {
+                id: isEditMode ? scenarios[currentScenarioIndex].id : Date.now(),
+                title: document.getElementById('edit-title').value || "Untitled Scenario",
+                focus: document.getElementById('edit-focus').value,
+                grade: document.getElementById('edit-grade').value,
+                duration: document.getElementById('edit-duration').value,
+                skills: document.getElementById('edit-skills').value,
+                script: document.getElementById('edit-script').value,
+                procedure: document.getElementById('edit-procedure').value.split('\n').filter(l => l.trim()), // 16. Sort array via textarea easily
+                bigQuestion: document.getElementById('edit-question').value,
+                readingText: document.getElementById('edit-reading').value,
+                takeaway: document.getElementById('edit-takeaway').value,
+                worksheet1: {
+                    before: document.getElementById('edit-w-before').value,
+                    during: document.getElementById('edit-w-during').value,
+                    after: document.getElementById('edit-w-after').value
+                },
+                journalBox1: document.getElementById('edit-j1').value,
+                journalBox2: document.getElementById('edit-j2').value,
+                colorDirective: document.getElementById('edit-color').value,
+                roles: document.getElementById('edit-roles').value,
+                vocab: document.getElementById('edit-vocab').value
+            };
+            
+            if(isEditMode) {
+                scenarios[currentScenarioIndex] = s;
+            } else {
+                scenarios.push(s);
+                currentScenarioIndex = scenarios.length - 1;
+            }
+            saveScenarios();
+            closeModals();
+            loadScenario(currentScenarioIndex);
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+        }
+
+        // Import/Export (9. Validation)
+        function exportScenarios() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(scenarios, null, 2));
+            const dlNode = document.createElement('a');
+            dlNode.setAttribute("href", dataStr);
+            dlNode.setAttribute("download", "msb_scenarios.json");
+            document.body.appendChild(dlNode); dlNode.click(); dlNode.remove();
+        }
+        function importScenarios(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if(Array.isArray(imported) && imported.length > 0 && imported[0].hasOwnProperty('title')) {
+                        scenarios = imported;
+                        saveScenarios();
+                        loadScenario(0);
+                        alert("Scenarios imported successfully!");
+                    } else { throw new Error("Invalid schema"); }
+                } catch (err) { alert("Import Failed: Invalid file format. Please upload a valid MSB scenarios JSON file."); }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // HTML Generator
+        function generatePacketHTML(scenario) {
+            const sName = globalSettings.school || "Walkerville Elementary";
+            const tName = globalSettings.teacher ? ` - ${globalSettings.teacher}` : "";
+            const headerTitle = `${sName} Science Lab Pack${tName}`;
+            const printDate = new Date().toLocaleDateString(); // 19. Date Stamp
+            
+            let procHTML = '';
+            if(Array.isArray(scenario.procedure)) {
+                procHTML = scenario.procedure.map(step => `<li>${step}</li>`).join('');
+            } else if (typeof scenario.procedure === 'string') {
+                procHTML = `<li>${scenario.procedure}</li>`;
+            }
+
+            const linesClass = globalSettings.primaryLines ? "notebook-lines primary-lines" : "notebook-lines";
+            
+            const HeaderTpl = (page) => `
+                <div class="sheet-header">
+                    <h2>The Magic School Bus</h2>
+                    <h3>${headerTitle}</h3>
+                </div>
+                <div class="sheet-footer">
+                    <span>${sName} Science Pack</span>
+                    <span>Printed: ${printDate}</span>
+                    <span>Page ${page} of 6</span>
+                </div>
+            `;
+
+            return `
+                <!-- Page 1: Educator Guide -->
+                <div class="sheet" id="page-1">
+                    ${HeaderTpl(1)}
+                    <div class="sheet-content">
+                        <div class="metadata-pills">
+                            <div class="pill">📚 Grade: <strong>${scenario.grade || ''}</strong></div>
+                            <div class="pill">🎯 Focus: <strong>${scenario.focus || ''}</strong></div>
+                            <div class="pill">⏱️ Time: <strong>${scenario.duration || '45 Min'}</strong></div>
+                            <div class="pill">🧠 Skills: <strong>${scenario.skills || 'Observation'}</strong></div>
+                        </div>
+
+                        ${scenario.roles ? `<div style="text-align:center; font-style:italic; margin-bottom: 15px; color: var(--secondary);"><strong>Assigned Roles:</strong> ${scenario.roles}</div>` : ''}
+
+                        <h3 style="font-size: 20pt; margin: 20px 0; text-align: center;">${scenario.title || ''}</h3>
+
+                        <div class="frizzle-callout">
+                            <h4>Ms. Frizzle's Setup Script:</h4>
+                            <p class="frizzle-script">"${scenario.script || ''}"</p>
+                        </div>
+
+                        <div style="font-size: 16pt; margin-bottom: 10px; border-bottom: 2px solid var(--input-border); padding-bottom: 5px; color: var(--secondary); font-weight:bold;">Step-By-Step Procedure</div>
+                        <ol style="font-size: 13pt; line-height: 1.6; padding-left: 25px; margin: 0;">
+                            ${procHTML}
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Page 2: Science Reading -->
+                <div class="sheet" id="page-2">
+                    ${HeaderTpl(2)}
+                    <div class="sheet-content">
+                        <h1 class="reading-title">${scenario.bigQuestion || ''}</h1>
+                        <div class="reading-text">${scenario.readingText || 'Add reading text here.'}</div>
+                        
+                        ${scenario.vocab ? `
+                            <div style="margin-bottom: 20px;">
+                                <strong style="color:var(--secondary); font-size: 14pt;">Vocabulary Words:</strong>
+                                <ul style="line-height: 2.0; font-size: 14pt; list-style-type: none; padding-left: 10px;">
+                                    ${scenario.vocab.split(',').map(v => `<li><strong>${v.trim()}</strong>: _________________________________________</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+
+                        <div class="big-takeaway">
+                            <span class="big-takeaway-label">The Big Takeaway</span>
+                            <span class="big-takeaway-text">${scenario.takeaway || ''}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 3: Lab Notebook -->
+                <div class="sheet" id="page-3">
+                    ${HeaderTpl(3)}
+                    <div class="sheet-content">
+                        <div class="name-date-header">
+                            <div class="header-field" style="width: 60%;">Name: <span class="field-value"></span></div>
+                            <div class="header-field" style="width: 35%;">Date: <span class="field-value">${globalSettings.date}</span></div>
+                        </div>
+
+                        <div style="margin-bottom: 25px;">
+                            <div class="notebook-prompt">Hypothesis / Prediction:</div>
+                            <div style="font-size:12pt; margin-bottom:5px;">${scenario.worksheet1?.before || ''}</div>
+                            <div class="${linesClass}"></div>
+                        </div>
+
+                        <div style="margin-bottom: 25px;">
+                            <div class="notebook-prompt">Observation:</div>
+                            <div style="font-size:12pt; margin-bottom:5px;">${scenario.worksheet1?.during || ''}</div>
+                            <div class="${linesClass}"></div>
+                        </div>
+
+                        <div style="margin-bottom: 25px;">
+                            <div class="notebook-prompt">Conclusion:</div>
+                            <div style="font-size:12pt; margin-bottom:5px;">${scenario.worksheet1?.after || ''}</div>
+                            <div class="${linesClass}"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 4: Science Journal -->
+                <div class="sheet" id="page-4">
+                    ${HeaderTpl(4)}
+                    <div class="sheet-content">
+                        <div class="name-date-header">
+                            <div class="header-field" style="width: 60%;">Name: <span class="field-value"></span></div>
+                            <div class="header-field" style="width: 35%;">Date: <span class="field-value">${globalSettings.date}</span></div>
+                        </div>
+                        <div class="drawing-boxes-container">
+                            <div class="drawing-box-wrapper">
+                                <div><span class="drawing-box-title">Before / Control</span></div>
+                                <p class="drawing-box-prompt">${scenario.journalBox1 || ''}</p>
+                                <div class="drawing-frame"></div>
+                            </div>
+                            <div class="drawing-box-wrapper">
+                                <div><span class="drawing-box-title" style="background:var(--frizzle-bg); color:var(--accent);">After / Variable</span></div>
+                                <p class="drawing-box-prompt">${scenario.journalBox2 || ''}</p>
+                                <div class="drawing-frame ${globalSettings.useGraphGrid ? 'graph-grid' : ''}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page 5: Activity -->
+                <div class="sheet" id="page-5">
+                    ${HeaderTpl(5)}
+                    <div class="sheet-content" style="display:flex; flex-direction:column;">
+                        <div class="name-date-header">
+                            <div class="header-field" style="width: 60%;">Name: <span class="field-value"></span></div>
+                            <div class="header-field" style="width: 35%;">Date: <span class="field-value">${globalSettings.date}</span></div>
+                        </div>
+
+                        <div class="checklist-instructions">
+                            <h2 style="margin-top:0; color:var(--secondary); text-align:center;">🎨 Creativity Checklist</h2>
+                            <ul>
+                                <li>Review your drawings on page 4!</li>
+                                <li>${scenario.colorDirective || 'Add colorful details!'}</li>
+                                <li>Use your brightest scientist colors!</li>
+                                <li>Share your drawing with a lab partner.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="activity-frame">
+                            <div class="bus-watermark">🚌</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 6: Assessment Rubric -->
+                <div class="sheet" id="page-6">
+                    ${HeaderTpl(6)}
+                    <div class="sheet-content">
+                        <div class="name-date-header">
+                            <div class="header-field" style="width: 100%;">Student Name: <span class="field-value"></span></div>
+                        </div>
+                        <h1 style="text-align:center; color: var(--secondary);">Laboratory Assessment Rubric</h1>
+                        
+                        <table class="rubric-table">
+                            <thead>
+                                <tr>
+                                    <th>Criteria</th>
+                                    <th>Needs Work (1-2)</th>
+                                    <th>Good (3)</th>
+                                    <th>Excellent (4)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Participation</strong></td>
+                                    <td>Did not engage with group</td>
+                                    <td>Helped with the lab</td>
+                                    <td>Actively led and encouraged others</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Observation Skills</strong></td>
+                                    <td>Missed key details</td>
+                                    <td>Noted main changes</td>
+                                    <td>Highly detailed, labeled observations</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Scientific Thinking</strong></td>
+                                    <td>Hypothesis unrelated to lab</td>
+                                    <td>Logical hypothesis & conclusion</td>
+                                    <td>Exceptional connections to reading</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Creativity (Journal)</strong></td>
+                                    <td>Incomplete drawings</td>
+                                    <td>Basic illustrations</td>
+                                    <td>Vivid, colorful, accurate drawings</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div style="margin-top: 40px; border: 2px solid var(--input-border); padding: 20px; border-radius: 8px;">
+                            <strong>Teacher Comments:</strong><br><br><br><br>
+                        </div>
+                        <div style="text-align: right; margin-top: 20px; font-size: 18pt;">
+                            <strong>Total Score:</strong> _____ / 16
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.onload = init;
+    </script>
+
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+
+<div id="msb-hub-return-dock" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:'Trebuchet MS',system-ui,sans-serif;">
+  <a href="index.html" style="display:inline-flex;align-items:center;gap:10px;padding:12px 20px;background:linear-gradient(135deg,#101c46,#162861);color:#ffd83d;border:2.5px solid #ffd83d;border-radius:999px;text-decoration:none;font-weight:900;font-size:15px;box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 18px rgba(255,216,61,0.3);transition:all 0.2s ease;" onmouseover="this.style.transform='translateY(-3px) scale(1.04)';" onmouseout="this.style.transform='none';">
+    <span style="font-size:20px;">🚌</span>
+    <span>Bus Command Center</span>
+  </a>
+</div>
+
+</body>
+</html>

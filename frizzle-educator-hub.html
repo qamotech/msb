@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Frizzle Hub | Science Educator Resources</title>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<!-- Google Fonts: Playful heading (Fredoka), readable body (Nunito) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- FontAwesome for Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<!-- Tailwind CSS (CDN) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Tailwind Configuration integrated with CSS Variables -->
+<script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        theme_primary: 'var(--primary)',
+                        theme_primary_dark: 'var(--primary-dark)',
+                        theme_secondary: 'var(--secondary)',
+                        theme_bg: 'var(--bg-color)',
+                        theme_surface: 'var(--surface)',
+                        theme_text_main: 'var(--text-main)',
+                        theme_text_muted: 'var(--text-muted)',
+                        theme_accent: 'var(--accent)',
+                        theme_border: 'var(--border-color)',
+                    },
+                    fontFamily: {
+                        heading: ['Fredoka', 'sans-serif'],
+                        body: ['Nunito', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'float': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Base Theming System */
+        :root {
+            /* Default: Standard School Bus Theme */
+            --primary: #FBBF24; /* Bus Yellow */
+            --primary-dark: #D97706; /* Darker Yellow */
+            --secondary: #EF4444; /* Stop Sign Red */
+            --bg-color: #FFFBEB; /* Light Yellow-White */
+            --surface: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #4B5563;
+            --accent: #3B82F6; /* Sky Blue */
+            --border-color: #FDE68A;
+            --hero-bg: radial-gradient(circle, #FDE68A 0%, #FFFBEB 100%);
+        }
+
+        /* Submarine Theme */
+        body.theme-submarine {
+            --primary: #06B6D4; /* Cyan */
+            --primary-dark: #0891B2; 
+            --secondary: #F59E0B; /* Orange */
+            --bg-color: #ECFEFF;
+            --surface: #FFFFFF;
+            --text-main: #083344;
+            --text-muted: #164E63;
+            --accent: #3B82F6; /* Deep Blue */
+            --border-color: #A5F3FC;
+            --hero-bg: radial-gradient(circle, #CFFAFE 0%, #ECFEFF 100%);
+        }
+
+        /* Spaceship Theme (Dark Mode Equivalent) */
+        body.theme-spaceship {
+            --primary: #8B5CF6; /* Violet */
+            --primary-dark: #6D28D9;
+            --secondary: #10B981; /* Emerald */
+            --bg-color: #0F172A; /* Space Slate */
+            --surface: #1E293B;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --accent: #F472B6; /* Pink/Neon */
+            --border-color: #334155;
+            --hero-bg: radial-gradient(circle, #1E1B4B 0%, #0F172A 100%);
+        }
+
+        /* Global Transitions for smooth theme switching */
+        body {
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        .theme-transition {
+            transition: all 0.4s ease;
+        }
+
+        /* Custom Animations */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .animate-pulse-ring {
+            animation: pulse-ring 2s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+        }
+        
+        /* Hero Pattern Background */
+        .hero-pattern {
+            background-image: var(--hero-bg);
+        }
+    </style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body class="font-body bg-theme_bg text-theme_text_main antialiased selection:bg-theme_secondary selection:text-white">
+<!-- Navigation -->
+<nav class="sticky top-0 z-50 bg-theme_surface border-b border-theme_border shadow-sm theme-transition">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-20">
+<!-- Logo Area -->
+<div class="flex items-center space-x-3 cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-theme_primary flex items-center justify-center text-white shadow-md theme-transition">
+<i class="fa-solid fa-bus text-2xl" id="nav-icon"></i>
+</div>
+<div>
+<h1 class="font-heading font-bold text-2xl tracking-wide text-theme_text_main theme-transition">The Frizzle Hub</h1>
+<p class="text-xs font-semibold text-theme_secondary uppercase tracking-widest theme-transition">Educator Portal</p>
+</div>
+</div>
+<!-- Theme Transformer Toggles -->
+<div class="hidden md:flex items-center space-x-4 bg-theme_bg p-1.5 rounded-full border border-theme_border">
+<span class="text-xs font-bold text-theme_text_muted uppercase pl-3 pr-1">Transformer:</span>
+<button aria-label="Bus Theme" class="w-10 h-10 rounded-full bg-yellow-400 text-yellow-900 flex items-center justify-center hover:scale-110 transition-transform shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500" onclick="setTheme('bus')" title="Standard Bus">
+<i class="fa-solid fa-bus"></i>
+</button>
+<button aria-label="Submarine Theme" class="w-10 h-10 rounded-full bg-cyan-500 text-cyan-900 flex items-center justify-center hover:scale-110 transition-transform shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-600" onclick="setTheme('submarine')" title="Deep Sea Submarine">
+<i class="fa-solid fa-water"></i>
+</button>
+<button aria-label="Spaceship Theme" class="w-10 h-10 rounded-full bg-purple-600 text-purple-100 flex items-center justify-center hover:scale-110 transition-transform shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500" onclick="setTheme('spaceship')" title="Space Explorer">
+<i class="fa-solid fa-rocket"></i>
+</button>
+</div>
+<!-- Mobile Menu Icon (Visual Only for Demo) -->
+<div class="md:hidden flex items-center">
+<button class="text-theme_text_main hover:text-theme_primary focus:outline-none">
+<i class="fa-solid fa-bars text-2xl"></i>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<!-- Hero Section (The Bus Depot) -->
+<header class="hero-pattern theme-transition relative overflow-hidden py-16 lg:py-24 border-b border-theme_border">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+<span class="inline-block py-1 px-3 rounded-full bg-theme_primary text-white font-bold text-sm uppercase tracking-wider mb-6 shadow-sm theme-transition">
+                Seatbelts, Everyone!
+            </span>
+<h2 class="font-heading text-4xl sm:text-5xl lg:text-7xl font-bold text-theme_text_main mb-6 theme-transition">
+                Take Chances, Make Mistakes, <br class="hidden lg:block"/> and <span class="text-theme_secondary theme-transition relative inline-block">Get Messy!
+                    <svg class="absolute -bottom-2 left-0 w-full h-3 text-theme_primary" preserveaspectratio="none" viewbox="0 0 100 20"><path d="M0 10 Q 25 20, 50 10 T 100 10" fill="none" stroke="currentColor" stroke-width="4"></path></svg>
+</span>
+</h2>
+<p class="mt-4 text-xl text-theme_text_muted max-w-2xl mx-auto font-medium theme-transition">
+                The ultimate resource hub for extraordinary science teachers. Access highly engaging, immersive STEM lessons disguised as epic field trips.
+            </p>
+<div class="mt-10 flex justify-center gap-4">
+<button class="px-8 py-4 bg-theme_secondary text-white rounded-full font-bold text-lg hover:bg-opacity-90 shadow-lg hover:-translate-y-1 transition-all theme-transition">
+                    Start a New Lesson <i class="fa-solid fa-arrow-right ml-2"></i>
+</button>
+<button class="px-8 py-4 bg-theme_surface text-theme_text_main border-2 border-theme_border rounded-full font-bold text-lg hover:border-theme_primary shadow-sm hover:-translate-y-1 transition-all theme-transition">
+                    Browse Curriculum
+                </button>
+</div>
+</div>
+</header>
+<!-- The "Frizzle" Dashboard -->
+<section class="py-12 bg-theme_bg theme-transition">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between">
+<div>
+<h3 class="font-heading text-3xl font-bold text-theme_text_main theme-transition">
+<i class="fa-solid fa-chalkboard-user text-theme_primary mr-2 theme-transition"></i> My Dashboard
+                    </h3>
+<p class="text-theme_text_muted mt-1 theme-transition">Welcome back, Educator! Here is your daily mission.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Activity Card -->
+<div class="bg-theme_surface p-6 rounded-2xl shadow-float border border-theme_border theme-transition flex flex-col justify-between">
+<div>
+<h4 class="font-heading text-xl font-semibold text-theme_text_main mb-4 theme-transition">Up Next: Period 3</h4>
+<div class="flex items-center space-x-4 mb-4">
+<div class="w-16 h-16 rounded-xl bg-theme_primary bg-opacity-20 flex items-center justify-center text-theme_primary theme-transition">
+<i class="fa-solid fa-heart-pulse text-2xl"></i>
+</div>
+<div>
+<h5 class="font-bold text-lg text-theme_text_main theme-transition">Inside the Human Body</h5>
+<p class="text-sm text-theme_text_muted theme-transition">Module: Circulatory System</p>
+</div>
+</div>
+<ul class="text-sm space-y-2 text-theme_text_muted theme-transition">
+<li><i class="fa-solid fa-check text-green-500 mr-2"></i> Prep worksheets printed</li>
+<li><i class="fa-solid fa-check text-green-500 mr-2"></i> White blood cell props ready</li>
+<li><i class="fa-regular fa-circle text-gray-400 mr-2"></i> Launch interactive simulation</li>
+</ul>
+</div>
+<button class="mt-6 w-full py-2 bg-theme_bg border border-theme_border rounded-lg text-theme_text_main font-bold hover:bg-theme_primary hover:text-white transition-colors theme-transition">
+                        View Lesson Plan
+                    </button>
+</div>
+<!-- Stats Card -->
+<div class="bg-theme_surface p-6 rounded-2xl shadow-float border border-theme_border theme-transition flex flex-col justify-between">
+<div>
+<h4 class="font-heading text-xl font-semibold text-theme_text_main mb-4 theme-transition">Classroom Stats</h4>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-theme_bg p-4 rounded-xl text-center border border-theme_border theme-transition">
+<span class="block text-3xl font-bold text-theme_primary theme-transition">14</span>
+<span class="text-xs text-theme_text_muted uppercase font-bold tracking-wide theme-transition">Trips Taken</span>
+</div>
+<div class="bg-theme_bg p-4 rounded-xl text-center border border-theme_border theme-transition">
+<span class="block text-3xl font-bold text-theme_secondary theme-transition">1,240</span>
+<span class="text-xs text-theme_text_muted uppercase font-bold tracking-wide theme-transition">Questions Asked</span>
+</div>
+<div class="bg-theme_bg p-4 rounded-xl text-center border border-theme_border theme-transition col-span-2">
+<span class="block text-xl font-bold text-theme_accent theme-transition">Biology, Physics, Geology</span>
+<span class="text-xs text-theme_text_muted uppercase font-bold tracking-wide theme-transition">Top Subjects</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Launch -->
+<div class="bg-theme_surface p-6 rounded-2xl shadow-float border border-theme_border theme-transition flex flex-col items-center justify-center text-center">
+<h4 class="font-heading text-xl font-semibold text-theme_text_main mb-2 theme-transition">Daily Interactive Experiment</h4>
+<p class="text-theme_text_muted text-sm mb-6 theme-transition">Launch the 3D Red Blood Cell interactive viewer for your smartboard.</p>
+<button class="relative group focus:outline-none">
+<!-- Pulse effect -->
+<div class="absolute inset-0 rounded-full bg-theme_secondary animate-pulse-ring theme-transition"></div>
+<!-- Actual Button -->
+<div class="relative w-24 h-24 bg-theme_secondary rounded-full flex flex-col items-center justify-center shadow-lg text-white group-hover:bg-opacity-90 transition-all theme-transition">
+<i class="fa-solid fa-power-off text-3xl mb-1"></i>
+<span class="text-xs font-bold uppercase tracking-wider">Launch</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive "Field Trip" Lesson Hub -->
+<section class="py-16 bg-theme_surface border-t border-theme_border theme-transition">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-12">
+<h3 class="font-heading text-4xl font-bold text-theme_text_main theme-transition">The Field Trip Hub</h3>
+<p class="text-theme_text_muted mt-4 text-lg theme-transition">Select a destination. Engaging curriculum modules mapped to NGSS standards.</p>
+</div>
+<!-- Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Lesson Module 1 -->
+<div class="group bg-theme_bg rounded-2xl overflow-hidden border border-theme_border shadow-sm card-hover theme-transition transition-all duration-300">
+<div class="h-48 bg-gradient-to-br from-red-500 to-pink-600 relative overflow-hidden flex items-center justify-center">
+<i class="fa-solid fa-lungs text-6xl text-white opacity-90 group-hover:scale-110 transition-transform duration-500"></i>
+<span class="absolute top-4 right-4 bg-white bg-opacity-20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">Biology</span>
+</div>
+<div class="p-6">
+<h4 class="font-heading text-2xl font-bold text-theme_text_main mb-2 theme-transition">Inside the Human Body</h4>
+<p class="text-theme_text_muted text-sm mb-4 line-clamp-2 theme-transition">Journey through the digestive system and bloodstream. Learn how white blood cells fight off infections.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-solid fa-graduation-cap text-theme_primary mr-1"></i> Grades 4-6</span>
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-regular fa-clock text-theme_secondary mr-1"></i> 60 Mins</span>
+</div>
+<button class="w-full text-center py-2.5 bg-theme_primary text-white rounded-xl font-bold hover:bg-theme_primary_dark transition-colors shadow-sm theme-transition">
+                            Explore Module
+                        </button>
+</div>
+</div>
+<!-- Lesson Module 2 -->
+<div class="group bg-theme_bg rounded-2xl overflow-hidden border border-theme_border shadow-sm card-hover theme-transition transition-all duration-300">
+<div class="h-48 bg-gradient-to-br from-purple-700 to-indigo-900 relative overflow-hidden flex items-center justify-center">
+<i class="fa-solid fa-meteor text-6xl text-white opacity-90 group-hover:scale-110 transition-transform duration-500"></i>
+<span class="absolute top-4 right-4 bg-white bg-opacity-20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">Astronomy</span>
+</div>
+<div class="p-6">
+<h4 class="font-heading text-2xl font-bold text-theme_text_main mb-2 theme-transition">Lost in the Solar System</h4>
+<p class="text-theme_text_muted text-sm mb-4 line-clamp-2 theme-transition">Navigate asteroid belts and explore the atmosphere of Jupiter. Gravity, orbits, and planetary science.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-solid fa-graduation-cap text-theme_primary mr-1"></i> Grades 3-5</span>
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-regular fa-clock text-theme_secondary mr-1"></i> 90 Mins</span>
+</div>
+<button class="w-full text-center py-2.5 bg-theme_primary text-white rounded-xl font-bold hover:bg-theme_primary_dark transition-colors shadow-sm theme-transition">
+                            Explore Module
+                        </button>
+</div>
+</div>
+<!-- Lesson Module 3 -->
+<div class="group bg-theme_bg rounded-2xl overflow-hidden border border-theme_border shadow-sm card-hover theme-transition transition-all duration-300">
+<div class="h-48 bg-gradient-to-br from-cyan-500 to-blue-700 relative overflow-hidden flex items-center justify-center">
+<i class="fa-solid fa-fish-fins text-6xl text-white opacity-90 group-hover:scale-110 transition-transform duration-500"></i>
+<span class="absolute top-4 right-4 bg-white bg-opacity-20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">Marine Biology</span>
+</div>
+<div class="p-6">
+<h4 class="font-heading text-2xl font-bold text-theme_text_main mb-2 theme-transition">Under the Ocean</h4>
+<p class="text-theme_text_muted text-sm mb-4 line-clamp-2 theme-transition">Dive deep to discover coral reef ecosystems, oceanic pressure, and bioluminescent deep-sea creatures.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-solid fa-graduation-cap text-theme_primary mr-1"></i> Grades 5-7</span>
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-regular fa-clock text-theme_secondary mr-1"></i> 45 Mins</span>
+</div>
+<button class="w-full text-center py-2.5 bg-theme_primary text-white rounded-xl font-bold hover:bg-theme_primary_dark transition-colors shadow-sm theme-transition">
+                            Explore Module
+                        </button>
+</div>
+</div>
+<!-- Lesson Module 4 -->
+<div class="group bg-theme_bg rounded-2xl overflow-hidden border border-theme_border shadow-sm card-hover theme-transition transition-all duration-300">
+<div class="h-48 bg-gradient-to-br from-orange-400 to-orange-600 relative overflow-hidden flex items-center justify-center">
+<i class="fa-solid fa-volcano text-6xl text-white opacity-90 group-hover:scale-110 transition-transform duration-500"></i>
+<span class="absolute top-4 right-4 bg-white bg-opacity-20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">Geology</span>
+</div>
+<div class="p-6">
+<h4 class="font-heading text-2xl font-bold text-theme_text_main mb-2 theme-transition">Blows Its Top</h4>
+<p class="text-theme_text_muted text-sm mb-4 line-clamp-2 theme-transition">Venture into the magma chamber of an active volcano to learn about plate tectonics and igneous rock formation.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-solid fa-graduation-cap text-theme_primary mr-1"></i> Grades 4-6</span>
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-regular fa-clock text-theme_secondary mr-1"></i> 55 Mins</span>
+</div>
+<button class="w-full text-center py-2.5 bg-theme_surface border border-theme_primary text-theme_primary rounded-xl font-bold hover:bg-theme_primary hover:text-white transition-colors shadow-sm theme-transition">
+                            Unlock Module
+                        </button>
+</div>
+</div>
+<!-- Lesson Module 5 -->
+<div class="group bg-theme_bg rounded-2xl overflow-hidden border border-theme_border shadow-sm card-hover theme-transition transition-all duration-300">
+<div class="h-48 bg-gradient-to-br from-green-400 to-green-600 relative overflow-hidden flex items-center justify-center">
+<i class="fa-solid fa-bug text-6xl text-white opacity-90 group-hover:scale-110 transition-transform duration-500"></i>
+<span class="absolute top-4 right-4 bg-white bg-opacity-20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">Microbiology</span>
+</div>
+<div class="p-6">
+<h4 class="font-heading text-2xl font-bold text-theme_text_main mb-2 theme-transition">In a Pickle</h4>
+<p class="text-theme_text_muted text-sm mb-4 line-clamp-2 theme-transition">Shrink down to microscopic size to discover the hidden world of bacteria, microbes, and food preservation.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-solid fa-graduation-cap text-theme_primary mr-1"></i> Grades 3-5</span>
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-regular fa-clock text-theme_secondary mr-1"></i> 40 Mins</span>
+</div>
+<button class="w-full text-center py-2.5 bg-theme_surface border border-theme_primary text-theme_primary rounded-xl font-bold hover:bg-theme_primary hover:text-white transition-colors shadow-sm theme-transition">
+                            Unlock Module
+                        </button>
+</div>
+</div>
+<!-- Lesson Module 6 -->
+<div class="group bg-theme_bg rounded-2xl overflow-hidden border border-theme_border shadow-sm card-hover theme-transition transition-all duration-300">
+<div class="h-48 bg-gradient-to-br from-blue-400 to-blue-300 relative overflow-hidden flex items-center justify-center">
+<i class="fa-solid fa-cloud-rain text-6xl text-white opacity-90 group-hover:scale-110 transition-transform duration-500"></i>
+<span class="absolute top-4 right-4 bg-white bg-opacity-20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">Earth Science</span>
+</div>
+<div class="p-6">
+<h4 class="font-heading text-2xl font-bold text-theme_text_main mb-2 theme-transition">The Waterworks</h4>
+<p class="text-theme_text_muted text-sm mb-4 line-clamp-2 theme-transition">Ride the water cycle from evaporation to precipitation. Learn how municipal water purification systems function.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-solid fa-graduation-cap text-theme_primary mr-1"></i> Grades 2-4</span>
+<span class="text-xs bg-theme_surface border border-theme_border text-theme_text_main px-2 py-1 rounded-md font-semibold"><i class="fa-regular fa-clock text-theme_secondary mr-1"></i> 50 Mins</span>
+</div>
+<button class="w-full text-center py-2.5 bg-theme_surface border border-theme_primary text-theme_primary rounded-xl font-bold hover:bg-theme_primary hover:text-white transition-colors shadow-sm theme-transition">
+                            Unlock Module
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Teacher Resource Library -->
+<section class="py-16 bg-theme_bg border-t border-theme_border theme-transition">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center space-x-4 mb-8 border-b-2 border-theme_border pb-4 theme-transition">
+<i class="fa-solid fa-folder-open text-4xl text-theme_primary theme-transition"></i>
+<div>
+<h3 class="font-heading text-3xl font-bold text-theme_text_main theme-transition">Resource Library</h3>
+<p class="text-theme_text_muted theme-transition">Printables, assessments, and permission slips.</p>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Resource Item -->
+<div class="flex items-center justify-between p-4 bg-theme_surface border border-theme_border rounded-xl shadow-sm hover:shadow-md transition-shadow theme-transition">
+<div class="flex items-center space-x-4">
+<div class="w-10 h-10 rounded-lg bg-red-100 text-red-600 flex items-center justify-center">
+<i class="fa-solid fa-file-pdf text-xl"></i>
+</div>
+<div>
+<h5 class="font-bold text-theme_text_main theme-transition">Parent Permission Slip: Virtual Volcano Entry</h5>
+<p class="text-xs text-theme_text_muted theme-transition">PDF Document • 1.2 MB • Updated 2 days ago</p>
+</div>
+</div>
+<button aria-label="Download Document" class="p-2 text-theme_primary hover:text-theme_primary_dark focus:outline-none transition-colors">
+<i class="fa-solid fa-download text-xl"></i>
+</button>
+</div>
+<!-- Resource Item -->
+<div class="flex items-center justify-between p-4 bg-theme_surface border border-theme_border rounded-xl shadow-sm hover:shadow-md transition-shadow theme-transition">
+<div class="flex items-center space-x-4">
+<div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
+<i class="fa-solid fa-file-word text-xl"></i>
+</div>
+<div>
+<h5 class="font-bold text-theme_text_main theme-transition">Worksheet: Digestion Mapping (Fill-in-the-blank)</h5>
+<p class="text-xs text-theme_text_muted theme-transition">Word Doc • 840 KB • Graded Rubric Included</p>
+</div>
+</div>
+<button aria-label="Download Document" class="p-2 text-theme_primary hover:text-theme_primary_dark focus:outline-none transition-colors">
+<i class="fa-solid fa-download text-xl"></i>
+</button>
+</div>
+<!-- Resource Item -->
+<div class="flex items-center justify-between p-4 bg-theme_surface border border-theme_border rounded-xl shadow-sm hover:shadow-md transition-shadow theme-transition">
+<div class="flex items-center space-x-4">
+<div class="w-10 h-10 rounded-lg bg-green-100 text-green-600 flex items-center justify-center">
+<i class="fa-solid fa-file-excel text-xl"></i>
+</div>
+<div>
+<h5 class="font-bold text-theme_text_main theme-transition">Student Progress Tracker &amp; Assessment Matrix</h5>
+<p class="text-xs text-theme_text_muted theme-transition">Spreadsheet • 45 KB • NGSS Aligned</p>
+</div>
+</div>
+<button aria-label="Download Document" class="p-2 text-theme_primary hover:text-theme_primary_dark focus:outline-none transition-colors">
+<i class="fa-solid fa-download text-xl"></i>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-theme_surface border-t border-theme_border py-10 theme-transition">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+<div class="flex items-center space-x-2 mb-4 md:mb-0">
+<i class="fa-solid fa-bus text-theme_primary text-2xl theme-transition"></i>
+<span class="font-heading font-bold text-lg text-theme_text_main theme-transition">The Frizzle Hub © 2024</span>
+</div>
+<div class="flex space-x-6">
+<a class="text-theme_text_muted hover:text-theme_primary font-semibold transition-colors theme-transition" href="#">Help Desk</a>
+<a class="text-theme_text_muted hover:text-theme_primary font-semibold transition-colors theme-transition" href="#">Accessibility</a>
+<a class="text-theme_text_muted hover:text-theme_primary font-semibold transition-colors theme-transition" href="#">Privacy Policy</a>
+</div>
+</div>
+</footer>
+<!-- Interactive JS -->
+<script>
+        /**
+         * The "Bus Transformer" JS Feature
+         * Toggles the entire site's color scheme and icons based on the vehicle selected.
+         */
+        function setTheme(themeName) {
+            const body = document.body;
+            const navIcon = document.getElementById('nav-icon');
+            
+            // Remove existing theme classes
+            body.classList.remove('theme-bus', 'theme-submarine', 'theme-spaceship');
+            
+            // Apply new theme class (empty for default 'bus' since vars are in :root)
+            if (themeName !== 'bus') {
+                body.classList.add(`theme-${themeName}`);
+            }
+
+            // Animate Nav Icon Out
+            navIcon.style.transform = 'scale(0)';
+            navIcon.style.transition = 'transform 0.3s ease';
+
+            setTimeout(() => {
+                // Change Icon based on theme
+                navIcon.className = '';
+                if (themeName === 'bus') {
+                    navIcon.className = 'fa-solid fa-bus text-2xl';
+                } else if (themeName === 'submarine') {
+                    navIcon.className = 'fa-solid fa-water text-2xl';
+                } else if (themeName === 'spaceship') {
+                    navIcon.className = 'fa-solid fa-rocket text-2xl';
+                }
+                
+                // Animate Nav Icon In
+                navIcon.style.transform = 'scale(1)';
+            }, 300);
+
+            // Save preference to localStorage (optional standard practice)
+            localStorage.setItem('frizzle_theme', themeName);
+        }
+
+        // Check for saved theme on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('frizzle_theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            }
+        });
+    </script>
+<!-- Magic School Bus - Return to Command Center Dock -->
+<div id="msb-hub-return-dock" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:system-ui,-apple-system,sans-serif;">
+<a href="index.html" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.4),0 0 15px rgba(255,216,61,0.3)';" onmouseover="this.style.transform='translateY(-3px) scale(1.03)';this.style.boxShadow='0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(255,216,61,0.5)';" style="display:inline-flex;align-items:center;gap:10px;padding:10px 18px;background:linear-gradient(135deg,#101c46,#162861);color:#ffd83d;border:2px solid #ffd83d;border-radius:999px;text-decoration:none;font-weight:800;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 15px rgba(255,216,61,0.3);transition:all 0.2s cubic-bezier(0.2,0.8,0.2,1);backdrop-filter:blur(8px);">
+<span style="font-size:18px;">🚌</span>
+<span>Return to Bus Hub</span>
+</a>
+</div>
+<audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio><audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio>
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+
+<script>
+// Miss Frizzle Voice Synthesizer for K-2 Readers
+function speakFrizzle(text) {
+  if (!('speechSynthesis' in window)) {
+    alert("Speech synthesis is not supported in this browser.");
+    return;
+  }
+  window.speechSynthesis.cancel(); // Stop any active speech
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.95; // Slightly slower for K-2 students
+  utterance.pitch = 1.15; // Energetic, Miss Frizzle pitch
+  
+  // Try to pick an expressive English female voice if available
+  const voices = window.speechSynthesis.getVoices();
+  const femaleVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Female') || v.name.includes('Zira') || v.name.includes('Samantha') || v.name.includes('Google')));
+  if (femaleVoice) utterance.voice = femaleVoice;
+  
+  window.speechSynthesis.speak(utterance);
+}
+</script>
+
+</body>
+</html>

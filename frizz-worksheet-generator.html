@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Magic School Bus Worksheet Generator</title>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&amp;family=Nunito:wght@400;600;700;800&amp;family=Playpen+Sans:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* ============ CSS VARIABLES ============ */
+        :root {
+            --bus-yellow: #FFC61A;
+            --bus-dark: #E8A800;
+            --purple: #5B2A86;
+            --purple-lt: #EFE6FF;
+            --teal: #00A6A6;
+            --ink: #2B2140;
+            --cream: #FFF6E3;
+            --shadow: 4px 4px 0 var(--ink);
+            --bg-pattern: radial-gradient(#efe3ff 2px, transparent 2px);
+        }
+
+        /* ============ GLOBAL STYLES ============ */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            color: var(--ink);
+            background-color: var(--cream);
+            background-image: var(--bg-pattern);
+            background-size: 30px 30px;
+            display: flex;
+            min-height: 100vh;
+        }
+        h1, h2, h3 { font-family: 'Baloo 2', cursive; line-height: 1.2; }
+        button { cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; }
+
+        /* ============ APP LAYOUT ============ */
+        .app-container {
+            display: flex;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ============ CONFIG PANEL (NO PRINT) ============ */
+        .config-panel {
+            width: 400px;
+            background: white;
+            border-right: 4px solid var(--ink);
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .config-panel h1 {
+            color: var(--purple);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group {
+            background: var(--purple-lt);
+            border: 2px solid var(--ink);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .control-group h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--ink);
+            border-bottom: 2px dashed var(--purple);
+            padding-bottom: 5px;
+        }
+
+        .input-row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+        }
+
+        .input-row label {
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        input[type="text"], select, textarea {
+            padding: 8px 12px;
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: var(--teal);
+            box-shadow: 2px 2px 0 var(--teal);
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .btn {
+            background: var(--bus-yellow);
+            color: var(--ink);
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            box-shadow: 3px 3px 0 var(--ink);
+            transition: transform 0.1s, box-shadow 0.1s;
+            width: 100%;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); }
+        .btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+        .btn.primary { background: var(--teal); color: white; border-color: var(--ink); }
+        .btn.primary:hover { box-shadow: 5px 5px 0 var(--ink); }
+        .btn.danger { background: #FF5A5F; color: white; width: auto; padding: 4px 8px; font-size: 0.8rem; box-shadow: 2px 2px 0 var(--ink); }
+
+        .vocab-builder-item {
+            background: white;
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .vocab-builder-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        .option-row input[type="radio"] { cursor: pointer; }
+        .option-row input[type="text"] { flex: 1; padding: 4px 8px; font-size: 0.85rem; }
+
+        /* ============ PRINT PREVIEW AREA ============ */
+        .preview-area {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .worksheet-paper {
+            background: white;
+            width: 8.5in;
+            min-height: 11in;
+            padding: 0.75in;
+            border: 3px solid var(--ink);
+            border-radius: 4px;
+            box-shadow: 10px 10px 0 rgba(43, 33, 64, 0.2);
+            position: relative;
+        }
+
+        /* Worksheet Header */
+        .ws-header {
+            border-bottom: 4px solid var(--ink);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .ws-header::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: repeating-linear-gradient(90deg, var(--bus-yellow) 0, var(--bus-yellow) 20px, var(--ink) 20px, var(--ink) 40px);
+        }
+
+        .ws-title-area {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .ws-title-area h2 { font-size: 2.2rem; color: var(--ink); text-transform: uppercase; }
+        .ws-title-area h3 { font-size: 1.2rem; color: var(--purple); font-family: 'Nunito', sans-serif; font-weight: 800; }
+
+        .ws-student-info {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .info-field {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            flex: 1;
+        }
+        .info-field span { white-space: nowrap; }
+        .info-field .line {
+            flex: 1;
+            border-bottom: 2px dashed var(--ink);
+            margin-right: 20px;
+        }
+
+        .frizzle-quote {
+            background: var(--teal);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 2px solid var(--ink);
+            font-family: 'Baloo 2', cursive;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 4px 4px 0 var(--ink);
+            position: relative;
+        }
+        .frizzle-quote::before {
+            content: "🦎";
+            position: absolute;
+            top: -15px;
+            right: 15px;
+            font-size: 1.8rem;
+        }
+
+        /* Worksheet Questions */
+        .instructions {
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            background: var(--purple-lt);
+            padding: 8px 12px;
+            border-left: 5px solid var(--purple);
+        }
+
+        .question-block {
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
+
+        .q-prompt {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .q-options {
+            list-style: none;
+            padding-left: 25px;
+        }
+
+        .q-options li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bubble {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--ink);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+
+        /* The Traceable Font Magic */
+        .traceable-text {
+            font-family: 'Playpen Sans', cursive;
+            font-weight: 400;
+            font-size: 1.4rem;
+            color: #ccc;
+            letter-spacing: 2px;
+            text-decoration: underline;
+            text-decoration-style: dashed;
+            text-decoration-color: #ccc;
+            text-underline-offset: 4px;
+        }
+
+        .normal-text {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--ink);
+        }
+
+        /* Answer Key (Hidden by default in print, toggled by UI) */
+        .answer-key-section {
+            margin-top: 40px;
+            border-top: 3px dashed var(--ink);
+            padding-top: 20px;
+            display: none;
+            page-break-inside: avoid;
+        }
+        .answer-key-section h3 { color: var(--purple); margin-bottom: 10px; }
+        .answer-key-list { list-style: decimal inside; font-weight: 700; }
+        .answer-key-list li { margin-bottom: 5px; }
+
+        /* ============ PRINT STYLES ============ */
+        @media print {
+            @page { size: portrait; margin: 0.5in; }
+            body { background: white; background-image: none; }
+            .config-panel { display: none !important; }
+            .preview-area { padding: 0; display: block; overflow: visible; }
+            .worksheet-paper {
+                width: 100%;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                min-height: auto;
+            }
+            .frizzle-quote { box-shadow: none; border-width: 1px; color: black; background: #f0f0f0; }
+            .traceable-text { color: #a0a0a0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+
+<style>
+/* K-2 Worksheet Tracing & Print Enhancements */
+.k2-tracing-text {
+  font-family: 'Comic Sans MS', 'Trebuchet MS', cursive, sans-serif;
+  letter-spacing: 3px;
+  color: #94a3b8;
+  border-bottom: 2px dashed #cbd5e1;
+  padding-bottom: 4px;
+  display: inline-block;
+}
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  #msb-hub-return-dock, #global-fs-btn, .no-print, header nav, .msb-header {
+    display: none !important;
+  }
+  .worksheet-page, .print-sheet, #worksheet-dom {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    page-break-after: always;
+  }
+}
+</style>
+
+</head>
+<body>
+<!-- CONTROL PANEL -->
+<aside class="config-panel no-print">
+<h1>🚌 FrizzWorksheetz</h1>
+<div style="display: flex; gap: 8px; margin-bottom: 12px; align-items: center;">
+<select id="presetSelector" onchange="loadSelectedPreset(this.value)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #2d3748; font-weight: bold; background: #fff; cursor: pointer;">
+<option value="gets_charged">⚡ Energy &amp; Electricity (Gets Charged)</option>
+<option value="inside_earth">🌋 Volcanoes (Blows Its Top)</option>
+<option value="solar_system">🪐 Solar System (Out of This World)</option>
+<option value="human_body">🥪 Digestive System (For Lunch)</option>
+<option value="rainforest">🌴 Rainforest Ecosystem (In the Rainforest)</option>
+<option value="works_out">🫀 Circulation &amp; Muscles (Works Out)</option>
+</select>
+<button onclick="loadSelectedPreset(document.getElementById('presetSelector').value)" style="padding: 10px 14px; font-weight: bold; border-radius: 8px; background: #f6ad55; border: 2px solid #2d3748; cursor: pointer;" type="button">
+            🚀 Load
+          </button>
+</div>
+<button class="btn" onclick="loadPreset('empty')">🔄 Clear Form</button>
+<div class="control-group">
+<h3>📝 Header Details</h3>
+<div class="input-row">
+<label>Worksheet Title</label>
+<input id="ui-title" oninput="updatePreview()" type="text" value="The Clark Fam Lab: Gets Charged"/>
+</div>
+<div class="input-row">
+<label>Episode / Subtitle</label>
+<input id="ui-subtitle" oninput="updatePreview()" type="text" value="Energy &amp; Electricity"/>
+</div>
+<div class="input-row">
+<label>Teacher / Class Name</label>
+<input id="ui-teacher" oninput="updatePreview()" type="text" value="Mr. Clark"/>
+</div>
+</div>
+<div class="control-group">
+<h3>⚙️ Layout Options</h3>
+<div class="toggle-row">
+<input checked="" id="ui-tracing" onchange="updatePreview()" type="checkbox"/>
+<label for="ui-tracing">Use Traceable Font for Answers</label>
+</div>
+<div class="toggle-row">
+<input checked="" id="ui-quote" onchange="updatePreview()" type="checkbox"/>
+<label for="ui-quote">Show Ms. Frizzle Quote Banner</label>
+</div>
+<div class="toggle-row">
+<input id="ui-key" onchange="updatePreview()" type="checkbox"/>
+<label for="ui-key">Include Answer Key at Bottom</label>
+</div>
+</div>
+<div class="control-group">
+<h3>🧠 Vocabulary / Questions</h3>
+<div id="vocab-container"></div>
+<button class="btn" onclick="addQuestionUI()">➕ Add Question</button>
+</div>
+<button class="btn primary" onclick="window.print()">🖨️ Print / Save PDF</button>
+</aside>
+<!-- PRINT PREVIEW AREA -->
+<main class="preview-area">
+<div class="worksheet-paper" id="worksheet-dom">
+<!-- Dynamically populated by JS -->
+</div>
+</main>
+<script>
+        /* ================= STATE ================= */
+        let worksheetData = {
+            title: "The Clark Fam Lab: Gets Charged",
+            subtitle: "Energy & Electricity",
+            teacher: "Mr. Clark",
+            useTracing: true,
+            showQuote: true,
+            showKey: false,
+            questions: []
+        };
+
+        /* ================= PRESETS (dropdown source) =================
+           FIX: presets use the app's native format (prompt/options/correctIndex)
+           so they load straight into worksheetData — no DOM scraping needed. */
+        const MSB_PRESETS = {
+            gets_charged: {
+                title: "The Clark Fam Lab: Gets Charged",
+                subtitle: "Energy & Electricity",
+                teacher: "Mr. Clark",
+                questions: [
+                    { prompt: "The complete loop or path that electricity travels through to power our devices is called a...", options: ["Circuit", "Circle", "Filament", "Battery"], correctIndex: 0 },
+                    { prompt: "The tiny wire inside a traditional light bulb that gets hot and glows brightly is the...", options: ["Switch", "Glass", "Filament", "Insulator"], correctIndex: 2 },
+                    { prompt: "A material that lets electricity flow easily, like copper wire or aluminum foil, is a...", options: ["Conductor", "Eraser", "Plastic", "Insulator"], correctIndex: 0 },
+                    { prompt: "A material that blocks the flow of electricity, keeping us safe, is an...", options: ["Engine", "Conductor", "Magnet", "Insulator"], correctIndex: 3 },
+                    { prompt: "This device stores chemical energy and acts like a pump to push electricity around the loop.", options: ["Light bulb", "Battery", "Wire", "Switch"], correctIndex: 1 }
+                ]
+            },
+            inside_earth: {
+                title: "The Clark Fam Lab: Blows Its Top",
+                subtitle: "Inside the Earth & Volcanoes",
+                teacher: "Mr. Clark",
+                questions: [
+                    { prompt: "Molten, liquid rock that is trapped beneath the Earth's crust is called...", options: ["Lava", "Magma", "Granite", "Ash"], correctIndex: 1 },
+                    { prompt: "When molten rock breaks through a vent to reach the Earth's surface, it is known as...", options: ["Lava", "Magma", "Fossil", "Bedrock"], correctIndex: 0 },
+                    { prompt: "The outermost, solid rocky shell of our planet that we live on is the...", options: ["Core", "Mantle", "Crust", "Atmosphere"], correctIndex: 2 },
+                    { prompt: "Rocks formed when molten magma or lava cools and hardens are classified as...", options: ["Sedimentary", "Igneous", "Metamorphic", "Mineral"], correctIndex: 1 },
+                    { prompt: "An opening or fracture in the Earth's crust where gas and molten rock escape is a...", options: ["Fault line", "Glacier", "Trench", "Volcano"], correctIndex: 3 }
+                ]
+            },
+            solar_system: {
+                title: "The Clark Fam Lab: Out of This World",
+                subtitle: "Lost in the Solar System",
+                teacher: "Mr. Clark",
+                questions: [
+                    { prompt: "The invisible force that pulls objects toward one another and keeps planets in orbit is...", options: ["Gravity", "Friction", "Magnetism", "Inertia"], correctIndex: 0 },
+                    { prompt: "The star at the center of our solar system that provides heat and light is the...", options: ["Moon", "Jupiter", "Sun", "Polaris"], correctIndex: 2 },
+                    { prompt: "The curved, repetitive path that a planet takes around a star is called an...", options: ["Axis", "Orbit", "Rotation", "Eclipse"], correctIndex: 1 },
+                    { prompt: "The largest planet in our solar system, famous for its giant red spot storm, is...", options: ["Jupiter", "Saturn", "Neptune", "Mars"], correctIndex: 0 },
+                    { prompt: "A rocky or metallic body orbiting the sun, mostly found between Mars and Jupiter, is an...", options: ["Comet", "Meteor", "Nebula", "Asteroid"], correctIndex: 3 }
+                ]
+            },
+            human_body: {
+                title: "The Clark Fam Lab: For Lunch",
+                subtitle: "Inside the Human Body (Digestion)",
+                teacher: "Mr. Clark",
+                questions: [
+                    { prompt: "The muscular tube that transports swallowed food from your throat to your stomach is the...", options: ["Trachea", "Esophagus", "Intestine", "Artery"], correctIndex: 1 },
+                    { prompt: "Special proteins produced by the body that speed up chemical breakdown of food are...", options: ["Enzymes", "Vitamins", "Hormones", "Calories"], correctIndex: 0 },
+                    { prompt: "Most nutrients from digested food are absorbed into the bloodstream within the...", options: ["Stomach", "Large Intestine", "Small Intestine", "Liver"], correctIndex: 2 },
+                    { prompt: "The primary organ that churns food with powerful acidic juices to break it down is the...", options: ["Heart", "Stomach", "Lungs", "Kidney"], correctIndex: 1 },
+                    { prompt: "Microscopic finger-like projections in the small intestine that absorb nutrients are...", options: ["Cilia", "Capillaries", "Cells", "Villi"], correctIndex: 3 }
+                ]
+            },
+            rainforest: {
+                title: "The Clark Fam Lab: In the Rainforest",
+                subtitle: "Ecosystems & Biodiversity",
+                teacher: "Mr. Clark",
+                questions: [
+                    { prompt: "The dense upper roof formed by leafy treetops in a tropical forest is called the...", options: ["Canopy", "Understory", "Forest floor", "Emergent layer"], correctIndex: 0 },
+                    { prompt: "The process green plants use to turn sunlight, carbon dioxide, and water into food is...", options: ["Respiration", "Evaporation", "Photosynthesis", "Germination"], correctIndex: 2 },
+                    { prompt: "A community of living organisms interacting together with their physical environment is an...", options: ["Atmosphere", "Ecosystem", "Organism", "Habitat"], correctIndex: 1 },
+                    { prompt: "Organisms like mushrooms and bacteria that break down dead leaves and recycle nutrients are...", options: ["Producers", "Predators", "Herbivores", "Decomposers"], correctIndex: 3 },
+                    { prompt: "A close, long-term relationship between two different species where both benefit is...", options: ["Mutualism", "Parasitism", "Competition", "Predation"], correctIndex: 0 }
+                ]
+            },
+            works_out: {
+                title: "The Clark Fam Lab: Works Out",
+                subtitle: "Circulation & Muscles",
+                teacher: "Mr. Clark",
+                questions: [
+                    { prompt: "The hard-working muscular pump that circulates blood throughout your entire body is the...", options: ["Heart", "Lung", "Brain", "Liver"], correctIndex: 0 },
+                    { prompt: "Blood vessels that carry oxygen-rich blood away from the heart to the rest of the body are...", options: ["Veins", "Arteries", "Capillaries", "Nerves"], correctIndex: 1 },
+                    { prompt: "Tiny microscopic blood vessels where oxygen and nutrients actually pass into cells are...", options: ["Arteries", "Valves", "Capillaries", "Veins"], correctIndex: 2 },
+                    { prompt: "The vital gas that red blood cells collect in the lungs to deliver to working muscles is...", options: ["Carbon dioxide", "Nitrogen", "Helium", "Oxygen"], correctIndex: 3 },
+                    { prompt: "Tough bands of tissue that connect your skeletal muscles directly to your bones are...", options: ["Ligaments", "Tendons", "Cartilage", "Joints"], correctIndex: 1 }
+                ]
+            }
+        };
+
+        /* Used by the "Clear Form" button */
+        const presets = { empty: [] };
+
+        /* ================= DOM ================= */
+        const vocabContainer = document.getElementById('vocab-container');
+        const worksheetDom = document.getElementById('worksheet-dom');
+
+        /* ================= HELPERS ================= */
+        // Escape user text before inserting into HTML (attributes or content)
+        function esc(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        // Accept both legacy shapes (clue/correct) and native shape (prompt/correctIndex)
+        function normalizeQuestions(raw) {
+            return (raw || []).map(q => ({
+                prompt: q.prompt != null ? q.prompt : (q.clue != null ? q.clue : ""),
+                options: (Array.isArray(q.options) && q.options.length)
+                    ? q.options.slice()
+                    : ["Option 1", "Option 2", "Option 3", "Option 4"],
+                correctIndex: (typeof q.correctIndex === 'number') ? q.correctIndex
+                            : (typeof q.correct === 'number') ? q.correct : 0
+            }));
+        }
+
+        function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+        /* ================= CORE FUNCTIONS ================= */
+
+        // "Clear Form" — empties the question builder only
+        function loadPreset(presetName) {
+            worksheetData.questions = clone(presets[presetName] || []);
+            renderConfigUI();
+            updatePreview();
+        }
+
+        // FIX: dropdown handler now drives the app's real state.
+        // Sets the header inputs, loads normalized questions into
+        // worksheetData, then re-renders the editor AND the preview.
+        function loadSelectedPreset(presetKey) {
+            const data = MSB_PRESETS[presetKey];
+            if (!data) return;
+
+            // Keep the dropdown in sync when triggered via the Load button
+            const sel = document.getElementById('presetSelector');
+            if (sel && sel.value !== presetKey) sel.value = presetKey;
+
+            // 1. Header details
+            if (data.title != null)    document.getElementById('ui-title').value = data.title;
+            if (data.subtitle != null) document.getElementById('ui-subtitle').value = data.subtitle;
+            if (data.teacher != null)  document.getElementById('ui-teacher').value = data.teacher;
+
+            // 2. Questions (normalized to the app's native format)
+            worksheetData.questions = normalizeQuestions(data.questions);
+
+            // 3. Re-render editor + preview
+            renderConfigUI();
+            updatePreview();
+        }
+
+        function renderConfigUI() {
+            vocabContainer.innerHTML = '';
+            worksheetData.questions.forEach((q, qIndex) => {
+                const item = document.createElement('div');
+                item.className = 'vocab-builder-item';
+
+                let optionsHtml = '';
+                q.options.forEach((opt, oIndex) => {
+                    optionsHtml += `
+                        <div class="option-row">
+                            <input type="radio" name="correct_${qIndex}" ${q.correctIndex === oIndex ? 'checked' : ''} onchange="updateCorrectAnswer(${qIndex}, ${oIndex})">
+                            <input type="text" value="${esc(opt)}" oninput="updateOptionText(${qIndex}, ${oIndex}, this.value)" placeholder="Option ${oIndex + 1}">
+                        </div>
+                    `;
+                });
+
+                item.innerHTML = `
+                    <button class="btn danger remove-btn" onclick="removeQuestion(${qIndex})">X</button>
+                    <div class="input-row" style="margin-bottom:8px; margin-top: 15px;">
+                        <label>Definition / Clue</label>
+                        <textarea rows="2" oninput="updatePromptText(${qIndex}, this.value)">${esc(q.prompt)}</textarea>
+                    </div>
+                    <label style="font-size: 0.8rem; font-weight:800;">Answers (Select Correct):</label>
+                    ${optionsHtml}
+                `;
+                vocabContainer.appendChild(item);
+            });
+        }
+
+        function addQuestionUI() {
+            worksheetData.questions.push({
+                prompt: "New question prompt...",
+                options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+                correctIndex: 0
+            });
+            renderConfigUI();
+            updatePreview();
+        }
+
+        function removeQuestion(index) {
+            worksheetData.questions.splice(index, 1);
+            renderConfigUI();
+            updatePreview();
+        }
+
+        function updatePromptText(qIndex, val) {
+            worksheetData.questions[qIndex].prompt = val;
+            updatePreview();
+        }
+
+        function updateOptionText(qIndex, oIndex, val) {
+            worksheetData.questions[qIndex].options[oIndex] = val;
+            updatePreview();
+        }
+
+        function updateCorrectAnswer(qIndex, oIndex) {
+            worksheetData.questions[qIndex].correctIndex = oIndex;
+            updatePreview();
+        }
+
+        function updatePreview() {
+            // Sync simple UI states
+            worksheetData.title = document.getElementById('ui-title').value;
+            worksheetData.subtitle = document.getElementById('ui-subtitle').value;
+            worksheetData.teacher = document.getElementById('ui-teacher').value;
+            worksheetData.useTracing = document.getElementById('ui-tracing').checked;
+            worksheetData.showQuote = document.getElementById('ui-quote').checked;
+            worksheetData.showKey = document.getElementById('ui-key').checked;
+
+            const textClass = worksheetData.useTracing ? 'traceable-text' : 'normal-text';
+            const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
+            let questionsHtml = '';
+            let keyHtml = '';
+
+            worksheetData.questions.forEach((q, i) => {
+                // Guard against an out-of-range correct index
+                const ci = (q.correctIndex >= 0 && q.correctIndex < q.options.length) ? q.correctIndex : 0;
+
+                let optionsHtml = '';
+                q.options.forEach((opt, j) => {
+                    optionsHtml += `
+                        <li>
+                            <div class="bubble">${letters[j] || (j + 1)}</div>
+                            <span class="${textClass}">${esc(opt)}</span>
+                        </li>
+                    `;
+                });
+
+                questionsHtml += `
+                    <div class="question-block">
+                        <div class="q-prompt">${i + 1}. ${esc(q.prompt)}</div>
+                        <ul class="q-options">
+                            ${optionsHtml}
+                        </ul>
+                    </div>
+                `;
+
+                keyHtml += `<li>${letters[ci] || (ci + 1)} - ${esc(q.options[ci])}</li>`;
+            });
+
+            const html = `
+                <div class="ws-header">
+                    <div class="ws-title-area">
+                        <h2>${esc(worksheetData.title)}</h2>
+                        <h3>${esc(worksheetData.subtitle)}</h3>
+                    </div>
+                    <div class="ws-student-info">
+                        <div class="info-field"><span>Name:</span><div class="line"></div></div>
+                        <div class="info-field"><span>Date:</span><div class="line"></div></div>
+                        <div class="info-field"><span>Class:</span><div style="border-bottom:none; font-weight:800; color:var(--purple);">${esc(worksheetData.teacher)}</div></div>
+                    </div>
+                </div>
+
+                ${worksheetData.showQuote ? `
+                <div class="frizzle-quote">
+                    "Take chances, make mistakes, and get messy!"
+                </div>` : ''}
+
+                <div class="instructions">
+                    Read the clue carefully. Then, trace the correct vocabulary word!
+                </div>
+
+                <div class="questions-container">
+                    ${questionsHtml}
+                </div>
+
+                <div class="answer-key-section" style="display: ${worksheetData.showKey ? 'block' : 'none'};">
+                    <h3>Teacher's Answer Key</h3>
+                    <ul class="answer-key-list">
+                        ${keyHtml}
+                    </ul>
+                </div>
+            `;
+
+            worksheetDom.innerHTML = html;
+        }
+
+        /* ================= INIT =================
+           Load the dropdown's default selection so the form,
+           the selector, and the preview all agree on startup. */
+        loadSelectedPreset('gets_charged');
+    </script>
+<!-- Magic School Bus - Return to Command Center Dock -->
+<div id="msb-hub-return-dock" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:system-ui,-apple-system,sans-serif;">
+<a href="index.html" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.4),0 0 15px rgba(255,216,61,0.3)';" onmouseover="this.style.transform='translateY(-3px) scale(1.03)';this.style.boxShadow='0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(255,216,61,0.5)';" style="display:inline-flex;align-items:center;gap:10px;padding:10px 18px;background:linear-gradient(135deg,#101c46,#162861);color:#ffd83d;border:2px solid #ffd83d;border-radius:999px;text-decoration:none;font-weight:800;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 15px rgba(255,216,61,0.3);transition:all 0.2s cubic-bezier(0.2,0.8,0.2,1);backdrop-filter:blur(8px);">
+<span style="font-size:18px;">🚌</span>
+<span>Return to Bus Hub</span>
+</a>
+</div>
+<audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio><audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio>
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+</html>
