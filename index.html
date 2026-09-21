@@ -1594,7 +1594,6 @@
       margin-bottom: 15px;
     }
   </style>
-  <link rel="stylesheet" href="scrollbars.css">
   <style>
     /* Injected Artwork */
 
@@ -2852,7 +2851,7 @@
      All future modules render inside one of the containers below.
 
      ============================================================== -->
-      <main class="msb-main" id="msb-main_1" tabindex="-1">
+      <main class="msb-main" id="msb-main" id="msb-main_1" tabindex="-1">
         <div class="msb-workspace">
           <!-- ROUTE: HOME / PART 1 -->
           <section class="msb-view" data-view="home" id="msb-view-home">
@@ -9941,7 +9940,7 @@
       </section>
     </div>
   </div>
-  <main class="msb-main" id="msb-main_2">
+  <main class="msb-main" id="msb-main" id="msb-main_2">
     <div class="msb-workspace" id="msb-workspace">
     </div>
   </main>
@@ -15701,49 +15700,58 @@
       panels.forEach(p => p.classList.toggle('active', p.id === `msb-doc-panel-${tabName}`));
     };
   </script>
-  <script id="msb-menu-toggle-logic">
-    /* ROBUST WORKING SIDEBAR MENU TOGGLE */
-    (function setupMenuToggle() {
-      const menuToggle = document.getElementById('msb-menu-toggle');
-      let backdrop = document.getElementById('msb-mobile-backdrop');
-      if (!backdrop) {
-        backdrop = document.createElement('div');
-        backdrop.id = 'msb-mobile-backdrop';
-        document.body.appendChild(backdrop);
-      }
-
-      if (menuToggle) {
-        menuToggle.addEventListener('click', function (e) {
-          e.stopPropagation();
-          if (window.innerWidth <= 800) {
-            document.body.classList.toggle('msb-sidebar-open');
-            const isOpen = document.body.classList.contains('msb-sidebar-open');
-            menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-          } else {
-            document.body.classList.toggle('msb-sidebar-collapsed');
-            const isCollapsed = document.body.classList.contains('msb-sidebar-collapsed');
-            menuToggle.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
-          }
-        });
-      }
-
-      backdrop.addEventListener('click', function () {
-        document.body.classList.remove('msb-sidebar-open');
-        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
-      });
-
-      window.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-          document.body.classList.remove('msb-sidebar-open');
-          if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
-        }
-      });
-    })();
-  </script>
+  
 
     <!-- Global Fullscreen Toggle -->
     <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
     
+
+<script id="msb-unified-menu-logic">
+document.addEventListener('DOMContentLoaded', () => {
+  const menuToggle = document.getElementById('msb-menu-toggle');
+  const backdrop = document.getElementById('msb-mobile-backdrop');
+
+  if (!menuToggle) return;
+
+  function handleMenuToggle(e) {
+    if (e) e.preventDefault();
+    const isMobile = window.innerWidth <= 800;
+    if (isMobile) {
+      document.body.classList.toggle('msb-sidebar-open');
+      const isOpen = document.body.classList.contains('msb-sidebar-open');
+      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    } else {
+      document.body.classList.toggle('msb-sidebar-collapsed');
+      const isCollapsed = document.body.classList.contains('msb-sidebar-collapsed');
+      menuToggle.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+    }
+  }
+
+  // Clear existing listeners by replacing node clone
+  const newToggle = menuToggle.cloneNode(true);
+  menuToggle.parentNode.replaceChild(newToggle, menuToggle);
+  newToggle.addEventListener('click', handleMenuToggle);
+
+  if (backdrop) {
+    backdrop.addEventListener('click', () => {
+      document.body.classList.remove('msb-sidebar-open');
+      newToggle.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  // Close sidebar on mobile link click
+  const navLinks = document.querySelectorAll('.msb-nav-button');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 800) {
+        document.body.classList.remove('msb-sidebar-open');
+        newToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+});
+</script>
+
 </body>
 
 </html>
