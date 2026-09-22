@@ -844,10 +844,12 @@
       position: relative;
       overflow: hidden;
       padding: 18px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255, 255, 255, .15);
       border-radius: var(--radius-lg);
-      background: linear-gradient(145deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .035));
-      box-shadow: var(--shadow-sm);
+      background: rgba(11, 23, 52, .92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.06);
     }
 
     .msb-card-title {
@@ -1068,16 +1070,18 @@
       content: attr(data-msb-tooltip);
       position: absolute;
       left: 50%;
-      bottom: calc(100% + 9px);
+      top: calc(100% + 9px);
       z-index: 20;
       max-width: 220px;
       pointer-events: none;
       opacity: 0;
-      transform: translate(-50%, 5px);
+      transform: translate(-50%, -5px);
       padding: 6px 8px;
       border-radius: 8px;
       color: #fff;
-      background: #040918;
+      background: rgba(4, 9, 24, .95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, .14);
       box-shadow: var(--shadow-md);
       white-space: nowrap;
@@ -1471,14 +1475,17 @@
     }
 
     .util-card {
-      background: linear-gradient(160deg, rgba(20, 30, 60, 0.8), rgba(10, 15, 35, 0.9));
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(10, 18, 42, .94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, .15);
       padding: 30px;
       border-radius: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
     }
 
     /* Grading Table Polish */
@@ -1733,14 +1740,17 @@
     }
 
     .util-card {
-      background: linear-gradient(160deg, rgba(20, 30, 60, 0.8), rgba(10, 15, 35, 0.9));
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(10, 18, 42, .94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, .15);
       padding: 30px;
       border-radius: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
     }
 
     /* Grading Table Polish */
@@ -2256,11 +2266,13 @@
     }
 
     .util-card {
-      background: linear-gradient(160deg, #0d1b3e 0%, #081126 100%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      background: rgba(10, 18, 42, .96) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
       padding: 24px !important;
       border-radius: 18px !important;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,.08) !important;
       color: #ffffff !important;
     }
 
@@ -2941,10 +2953,12 @@
                 .msb-stops-hub {
                   position: relative;
                   padding: 26px;
-                  background: linear-gradient(145deg, rgba(16, 28, 70, 0.75), rgba(7, 17, 38, 0.88));
+                  background: rgba(10, 18, 42, .94);
+                  backdrop-filter: blur(18px);
+                  -webkit-backdrop-filter: blur(18px);
                   border: 1px solid rgba(255, 216, 61, 0.28);
                   border-radius: var(--radius-xl);
-                  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+                  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,.06);
                 }
 
                 .msb-stops-header {
@@ -14500,7 +14514,7 @@
 
         <div class="util-card">
 
-          <h3>⭐±ï¸⭐ Bus Speedometer Timer</h3>
+          <h3>⏱️ Bus Speedometer Timer</h3>
 
           <div class="sub">Ms. Frizzle's countdown to the next stop. Visual + audio alerts.</div>
 
@@ -14526,7 +14540,7 @@
 
               <button class="btn-bus primary" id="btn-start">🚀 START BUS</button>
 
-              <button class="btn-bus" id="btn-pause">⭐¸ï¸⭐ BRAKE</button>
+              <button class="btn-bus" id="btn-pause">🛑 BRAKE</button>
 
               <button class="btn-bus danger" id="btn-reset">🔄 RESET</button>
 
