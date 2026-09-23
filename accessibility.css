@@ -1,0 +1,140 @@
+/* Shared screen styles. Print worksheets retain their original ink/paper palette. */
+@media screen {
+  :root {
+    --a11y-surface: rgba(15, 23, 42, .96);
+    --a11y-copy: #e2e8f0;
+  }
+  /* Two-tone rings remain visible on both paper and illustrated space. */
+  html body :is(a[href], button, input, select, textarea, summary, [tabindex], [role="button"]):focus-visible {
+    outline: 3px solid #facc15 !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 0 6px #0f172a !important;
+  }
+  :is(button, [role="button"], nav a, .sidebar a):not(:disabled):hover {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+  :is(.msb-stop-card, .msb-station-box, .td-seat-card):is(:hover, :focus-within) {
+    border-color: #facc15 !important;
+    box-shadow: 0 0 0 2px #facc15, 0 0 0 5px #0f172a !important;
+  }
+  body.msb-classroom {
+    --text-muted: #cbd5e1;
+    --text-soft: #e2e8f0;
+    --glass: var(--a11y-surface);
+  }
+  .msb-classroom :is(.msb-card, .msb-stop-card, .msb-stops-hub,
+    .msb-station-box, .msb-doc-panel, .msb-doc-card, .msb-video-card,
+    .msb-vocab-card, .msb-download-card, .td-stat-box, .td-seat-card,
+    .wse-card, .wse-stat-box, .wse-stats-bar, .vh-card, .util-card,
+    .msb-modal-card, .pin-card, .td-toolbar, .td-broadcast, .td-seats-section) {
+    background: var(--a11y-surface) !important;
+    border: 1px solid rgba(255, 255, 255, .25);
+    color: #f8fafc;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .msb-classroom :is(.msb-stat-value, .td-stat-val, .wse-stat-val,
+    .msb-card-title, .td-seat-name) { color: #f8fafc !important; }
+  .msb-classroom :is(.msb-stat-label, .msb-card-copy, .td-stat-label,
+    .wse-stat-lbl, .wse-card-desc, .msb-stop-card-desc, .td-seat-num,
+    .td-badge-option-sub) { color: var(--a11y-copy) !important; opacity: 1; }
+  .msb-classroom :is(.msb-nav-badge, .msb-stop-card-badge, .td-seat-status,
+    .td-seat-pin-badge, .msb-status-pill) {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border: 1px solid #64748b;
+  }
+  .msb-classroom :is(.msb-button-secondary, .td-seat-btn, .td-seat-pin-toggle,
+    .td-badge-add-btn, .wse-btn-print, .vh-btn-yt, .btn-bus:not(.primary):not(.danger)) {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #94a3b8 !important;
+  }
+  .msb-classroom :is(.wse-submit-btn, #wse-submit-btn, #msb-ws-submit, .td-btn-success) {
+    background: #166534 !important; color: #fff !important;
+  }
+  .msb-classroom :is(.td-btn-danger, .btn-bus.danger, .msb-persist-btn.msb-danger,
+    #btn-reset, #msb-btn-reset) { background: #991b1b !important; color: #fff !important; }
+  .msb-classroom .td-seat-name { background: transparent; border: 0; padding: 0; font: inherit; font-weight: 800; text-align: left; cursor: pointer; }
+  .msb-classroom input::placeholder, .msb-classroom textarea::placeholder { color: #cbd5e1; opacity: 1; }
+  .msb-classroom .bus-seat[data-student-id] { font: inherit; color: inherit; }
+  /* Legacy classroom metrics use the same predictable backing in either theme. */
+  .stat-card {
+    background: var(--a11y-surface) !important; color: #f8fafc !important;
+    border: 1px solid rgba(255,255,255,.25);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
+  .stat-card .number { color: #facc15 !important; }
+  [data-theme] { --primary: #4054b2; --success: #166534; --info: #075985; }
+  [data-theme="dark"] { --text-muted: #cbd5e1; --card-bg: #0f172a; }
+  [data-theme="dark"] .student-card { color: #f8fafc; }
+  @media (max-width: 600px) {
+    .msb-classroom .msb-header { gap: 6px; padding-inline: 8px; }
+    .msb-classroom .msb-header-controls { gap: 4px; }
+    .msb-classroom .msb-brand { min-width: 0; flex: 1; }
+    .msb-classroom .msb-brand-logo { display: none; }
+    .msb-classroom .msb-stops-hub { padding: 16px; }
+    .msb-classroom .msb-stops-grid { grid-template-columns: minmax(0, 1fr); }
+    .msb-classroom .msb-stops-search-wrap { min-width: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+  @media (forced-colors: active) {
+    :is(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 3px solid Highlight !important; }
+  }
+}
+/* Shared polish: predictable contrast, responsive controls, print and focus. */
+[hidden] { display: none !important; }
+.site-skip { position:fixed;top:8px;left:8px;transform:translateY(-180%);z-index:100000;background:#fff;color:#101c46;padding:12px;border:3px solid #101c46; }
+.site-skip:focus { transform:none; }
+.site-return { display:inline-block;margin:24px;padding:12px 20px;background:#101c46;color:#ffe96a;border-radius:12px; }
+.embedded-station :is(#msb-hub-return-dock,#global-fs-btn,.site-return) { display:none !important; }
+.repair-grade { background:#f8fafc;color:#10203b;border:1px solid #64748b;border-radius:16px;padding:24px;margin:18px 0; }
+.repair-grade :is(input,textarea,select) { display:block;width:100%;margin:8px 0 18px;padding:12px;background:white;color:#10203b;border:1px solid #475569;border-radius:8px; }
+.repair-grade h2 { color:#10203b; }
+.repair-answer { padding:12px 0;border-bottom:1px solid #94a3b8;overflow-wrap:anywhere; }
+.repair-check { display:block;padding:8px 0; }
+.repair-check input { margin-right:10px; }
+.writing-space { height:90px;border-bottom:1px solid #64748b; }
+.repair-certificate { background:white;color:#10203b;border:5px double #10203b;text-align:center;padding:40px;margin:24px 0; }
+.repair-certificate h3 { font-size:2rem; }
+@media screen {
+  :is(button,select,input,textarea) { font-family:inherit; }
+  :is(button,[role="button"],.site-return) { min-height:40px; }
+  .msb-classroom :is(.student-dash,.bus-login,.pin-card,.util-card) { color:#10203b;background:#f8fafc !important; }
+  .msb-classroom .util-card :is(h2,h3,.sub,label,.timer-readout,.picker-result) { color:#10203b !important;opacity:1; }
+  .msb-classroom .util-card :is(button,select) { background:#10203b;color:#fff;border:1px solid #475569; }
+  .msb-classroom .util-card .primary { background:#ffd83d;color:#10203b; }
+  .msb-classroom .util-card .tick-label { color:#10203b; }
+  .msb-classroom :is(.msb-input,.msb-textarea,.td-hero-input,.wse-search input,.vh-search input) { background:#0f172a;color:#f8fafc;border-color:#94a3b8; }
+  .msb-classroom select { background:#0f172a;color:#f8fafc; }
+  .msb-classroom :is(.wse-option-label,.wse-textarea) { color:#10203b;background:#fff; }
+  .msb-classroom :is(.wse-option-label.selected,.wse-option-label:has(input:checked)) { color:#10203b;background:#fef08a; }
+  .msb-classroom .wse-q-text { color:#10203b; }
+  .msb-classroom .msb-hero { background-color:#14234e; }
+  .msb-classroom .msb-cosmos { opacity:.18; }
+  .msb-classroom .repair-grade :is(input,textarea) { background:#fff;color:#10203b; }
+  .msb-classroom :is(.msb-stop-card-desc,.msb-doc-desc,.msb-vocab-def) { color:#e2e8f0; }
+  .msb-classroom .dash-header [style*="opacity"] { opacity:1 !important; }
+  #classroom-grading,#classroom-storage,#msb-worksheet-container { min-width:0; }
+  #msb-worksheet-container:not([hidden]) { padding:20px;border:2px solid #ffd83d;border-radius:16px;margin-bottom:24px; }
+  :is(.repair-grade, .repair-certificate) button { background:#10203b;color:#fff;border-radius:8px;padding:10px 16px; }
+  @media(max-width:600px) {
+    .msb-classroom .msb-brand-title { font-size:.85rem;white-space:normal; }
+    .msb-classroom .msb-header .msb-control-btn { padding:8px; }
+    .msb-classroom .msb-app-status { display:none; }
+    .msb-classroom :is(.msb-hero,.msb-card,.repair-grade) { padding:16px; }
+    .msb-classroom .msb-hero-bus { display:none; }
+    .repair-grade { padding:16px; }
+    #msb-hub-return-dock { right:8px !important;bottom:8px !important; }
+  }
+}
+@media print {
+  #global-fs-btn,#msb-hub-return-dock,.site-return,.site-skip,#tabs,button { display:none !important; }
+  .repair-grade,.repair-certificate { box-shadow:none;break-inside:avoid;color:#000;background:#fff; }
+  body { background:#fff !important; }
+  textarea { min-height:70px; }
+}
+

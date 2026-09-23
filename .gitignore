@@ -1,4 +1,7 @@
-.codeboarding/
+documents/
 .agent-projects/
-scratch/
-*.log
+.codeboarding/
+desktop.ini
+*.exe
+archive/
+html-source-files/

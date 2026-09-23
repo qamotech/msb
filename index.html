@@ -37,8 +37,8 @@
       --paper: #f7fbff;
       --ink: #10203b;
       --text: #f7f9ff;
-      --text-soft: #cbd7f7;
-      --text-muted: #91a4d2;
+      --text-soft: #d4e0f8;
+      --text-muted: #a8bde6;
       --border: rgba(255, 255, 255, .13);
       --border-bright: rgba(255, 216, 61, .35);
       --glass: rgba(18, 33, 76, .78);
@@ -192,6 +192,13 @@
       z-index: var(--z-bg);
       overflow: hidden;
       pointer-events: none;
+      background-image: url('images/science_doodles_bg_1788837375272.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.38;
+      filter: brightness(0.9) contrast(1.15);
     }
 
     .msb-cosmos::before {
@@ -422,7 +429,7 @@
 
     .msb-sidebar-section-label {
       padding: 5px 10px 8px;
-      color: var(--text-muted);
+      color: var(--text-soft);
       font-size: .68rem;
       font-weight: 900;
       letter-spacing: .13em;
@@ -455,7 +462,8 @@
     .msb-nav-button:hover {
       transform: translateX(2px);
       color: #fff;
-      background: rgba(255, 255, 255, .055);
+      background: rgba(255, 255, 255, .08);
+      border-color: rgba(255, 255, 255, .1);
     }
 
     .msb-nav-button[aria-current="page"] {
@@ -583,10 +591,10 @@
       display: grid;
       grid-template-columns: minmax(0, 1.35fr) minmax(250px, .65fr);
       gap: 20px;
-      padding: clamp(22px, 3vw, 38px);
-      border: 1px solid rgba(255, 216, 61, .22);
+      padding: clamp(28px, 4vw, 48px) clamp(22px, 3vw, 38px);
+      border: 1px solid rgba(255, 216, 61, .28);
       border-radius: var(--radius-xl);
-      background: radial-gradient(circle at 88% 18%, rgba(255, 216, 61, .13), transparent 25%), radial-gradient(circle at 70% 90%, rgba(72, 216, 234, .1), transparent 30%), linear-gradient(135deg, rgba(31, 52, 115, .92), rgba(21, 36, 84, .84));
+      background: radial-gradient(circle at 88% 18%, rgba(255, 216, 61, .14), transparent 25%), radial-gradient(circle at 70% 90%, rgba(72, 216, 234, .12), transparent 30%), linear-gradient(135deg, rgba(31, 52, 115, .92), rgba(21, 36, 84, .88));
       box-shadow: var(--shadow-lg), var(--yellow-glow);
     }
 
@@ -622,9 +630,11 @@
     .msb-hero-title {
       margin: 14px 0 9px;
       max-width: 800px;
-      font-size: clamp(1.75rem, 4vw, 3.5rem);
-      line-height: 1;
+      font-size: clamp(1.75rem, 4vw, 3.6rem);
+      line-height: 1.05;
       letter-spacing: -.04em;
+      font-weight: 900;
+      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
     }
 
     .msb-hero-title strong {
@@ -635,7 +645,8 @@
       max-width: 750px;
       margin: 0;
       color: var(--text-soft);
-      font-size: clamp(.92rem, 1.4vw, 1.06rem);
+      font-size: clamp(1rem, 1.4vw, 1.1rem);
+      line-height: 1.65;
     }
 
     .msb-hero-actions {
@@ -675,8 +686,13 @@
 
     .msb-button-secondary {
       color: #fff;
-      background: rgba(255, 255, 255, .07);
-      border-color: var(--border);
+      background: rgba(255, 255, 255, .09);
+      border-color: rgba(255, 255, 255, .22);
+    }
+
+    .msb-button-secondary:hover {
+      background: rgba(255, 255, 255, .15);
+      border-color: rgba(255, 255, 255, .35);
     }
 
     .msb-button-danger {
@@ -844,12 +860,12 @@
       position: relative;
       overflow: hidden;
       padding: 18px;
-      border: 1px solid rgba(255, 255, 255, .15);
+      border: 1px solid rgba(255, 255, 255, .18);
       border-radius: var(--radius-lg);
-      background: rgba(11, 23, 52, .92);
+      background: rgba(14, 28, 65, .94);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.06);
+      box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .msb-card-title {
@@ -919,7 +935,7 @@
 
     .msb-stat-label {
       margin-top: 5px;
-      color: var(--text-muted);
+      color: var(--text-soft);
       font-size: .75rem;
       font-weight: 800;
     }
@@ -930,9 +946,9 @@
       display: grid;
       place-items: center;
       padding: 28px;
-      border: 1px dashed rgba(255, 216, 61, .28);
+      border: 1px dashed rgba(255, 216, 61, .32);
       border-radius: var(--radius-xl);
-      background: rgba(255, 255, 255, .025);
+      background: rgba(255, 216, 61, .03);
     }
 
     .msb-placeholder-inner {
@@ -982,7 +998,7 @@
 
     .msb-section-subtitle {
       margin: 5px 0 0;
-      color: var(--text-muted);
+      color: var(--text-soft);
       font-size: .88rem;
     }
 
@@ -1032,7 +1048,7 @@
 
     .msb-input::placeholder,
     .msb-textarea::placeholder {
-      color: #7082aa
+      color: #8898c4;
     }
 
     /* ---------- BADGES / PILLS ---------- */
@@ -1076,16 +1092,17 @@
       pointer-events: none;
       opacity: 0;
       transform: translate(-50%, -5px);
-      padding: 6px 8px;
+      padding: 6px 10px;
       border-radius: 8px;
       color: #fff;
-      background: rgba(4, 9, 24, .95);
+      background: rgba(4, 9, 24, .97);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, .14);
+      border: 1px solid rgba(255, 255, 255, .2);
       box-shadow: var(--shadow-md);
       white-space: nowrap;
-      font-size: .68rem;
+      font-size: .7rem;
+      font-weight: 700;
       transition: opacity var(--fast), transform var(--fast);
     }
 
@@ -1371,37 +1388,16 @@
     }
 
     ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 216, 61, 0.35);
       border-radius: 5px;
       border: 2px solid rgba(0, 0, 0, 0.3);
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 216, 61, 0.6);
     }
 
-    /* Typography Scaling */
-
-    .msb-hero-title {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-    }
-
-    .msb-section-title {
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 900;
-      letter-spacing: -0.01em;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    }
-
-    .msb-hero-copy {
-      font-size: clamp(1.1rem, 2vw, 1.3rem);
-      line-height: 1.6;
-      max-width: 600px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-    }
+    /* Typography scaling — consolidated in primary block above */
 
     /* Modal Backdrop Blur */
 
@@ -1599,525 +1595,6 @@
       padding-bottom: 15px;
       border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
       margin-bottom: 15px;
-    }
-  </style>
-  <style>
-    /* Injected Artwork */
-
-    .msb-cosmos {
-
-      background-image: url('science_doodles_bg_1788837375272.jpg');
-
-      background-size: cover;
-
-      background-position: center;
-
-      opacity: 0.2;
-      /* blend with dark background */
-
-    }
-
-
-
-
-
-    /* --- 20 END TO END UI UPGRADES --- */
-
-    /* Custom Scrollbars */
-
-    ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 5px;
-      border: 2px solid rgba(0, 0, 0, 0.3);
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.4);
-    }
-
-    /* Typography Scaling */
-
-    .msb-hero-title {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-    }
-
-    .msb-section-title {
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 900;
-      letter-spacing: -0.01em;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    }
-
-    .msb-hero-copy {
-      font-size: clamp(1.1rem, 2vw, 1.3rem);
-      line-height: 1.6;
-      max-width: 600px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-    }
-
-    /* Modal Backdrop Blur */
-
-    .msb-modal-overlay {
-      backdrop-filter: blur(8px);
-      background: rgba(5, 13, 31, 0.85);
-    }
-
-    .msb-modal {
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 24px;
-    }
-
-    /* Dashboard Empty State Polish */
-
-    .empty-status {
-      background: rgba(255, 255, 255, 0.03);
-      padding: 40px;
-      border-radius: 16px;
-      border: 1px dashed rgba(255, 255, 255, 0.2);
-      font-size: 1.2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-    }
-
-    .empty-status svg {
-      width: 48px;
-      height: 48px;
-      opacity: 0.5;
-    }
-
-    /* Student Cards Enhance */
-
-    .student-card {
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .student-card:hover {
-      transform: scale(1.03) translateY(-4px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-      z-index: 10;
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Watch Room Cinematic Mode */
-
-    [data-view="media"] {
-      background: radial-gradient(circle at center, #0a1128 0%, #020617 100%);
-      margin: -20px;
-      padding: 20px;
-      border-radius: 24px;
-      box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
-    }
-
-    .msb-video-hub__header {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 20px;
-      margin-bottom: 30px;
-    }
-
-    /* Utilities Grid Polish */
-
-    #msb-module-utilities .msb-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-    }
-
-    .util-card {
-      background: rgba(10, 18, 42, .94);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255, 255, 255, .15);
-      padding: 30px;
-      border-radius: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      box-shadow: 0 8px 32px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    /* Grading Table Polish */
-
-    .msb-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      margin-top: 15px;
-    }
-
-    .msb-table th {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 14px 20px;
-      text-align: left;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-size: 0.8rem;
-      color: var(--text-soft);
-      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .msb-table td {
-      padding: 16px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      background: rgba(0, 0, 0, 0.2);
-      transition: background 0.2s;
-    }
-
-    .msb-table tr:hover td {
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    /* Worksheet Tablet Styling */
-
-    .msb-ws-canvas {
-      background: #F8FAFC;
-      color: #0F172A;
-      border-radius: 12px;
-      padding: 40px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 0 0 1px #E2E8F0;
-      position: relative;
-    }
-
-    .msb-ws-canvas::before {
-      content: '';
-      position: absolute;
-      left: 30px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: #FECDD3;
-    }
-
-    /* Notebook margin line */
-
-    /* Motivational Badges Glow */
-
-    .msb-badge-yellow {
-      box-shadow: 0 0 10px rgba(255, 216, 61, 0.4);
-      font-weight: 900;
-    }
-
-    .msb-badge-green {
-      box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-      font-weight: 900;
-    }
-
-    /* Seat Selector UI */
-
-    .seat-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 24px;
-      border-radius: 16px;
-      border: 2px dashed rgba(255, 255, 255, 0.1);
-    }
-
-    .seat-item {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .seat-item:hover {
-      background: rgba(255, 216, 61, 0.15);
-      border-color: var(--bus-yellow);
-      transform: translateY(-4px);
-    }
-
-    /* Experiment Log Lab Notebook */
-
-    .msb-experiment-log {
-      font-family: 'Fira Code', monospace;
-      background: #1E293B;
-      border-left: 4px solid var(--cosmic-purple);
-      padding: 20px;
-      border-radius: 0 12px 12px 0;
-      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .msb-experiment-log__head {
-      font-family: 'Fredoka', sans-serif;
-      padding-bottom: 15px;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
-      margin-bottom: 15px;
-    }
-  </style>
-  <style>
-    /* ==========================================================================
-
-   HIGH-CONTRAST BUTTON & ACTION BAR ENHANCEMENTS
-
-   ========================================================================== */
-
-    .msb-button-primary,
-    .wse-btn-launch,
-    .vh-btn-play,
-    .td-btn-gold {
-
-      background: linear-gradient(180deg, #ffe96a 0%, #ffd83d 100%) !important;
-
-      color: #071126 !important;
-
-      font-weight: 900 !important;
-
-      border: 1px solid #e7a900 !important;
-
-      text-shadow: none !important;
-
-      box-shadow: 0 4px 14px rgba(255, 216, 61, 0.25) !important;
-
-    }
-
-    .msb-button-primary:hover,
-    .wse-btn-launch:hover,
-    .vh-btn-play:hover,
-    .td-btn-gold:hover {
-
-      background: linear-gradient(180deg, #fff294 0%, #ffe04d 100%) !important;
-
-      color: #030814 !important;
-
-      transform: translateY(-2px);
-
-      box-shadow: 0 8px 20px rgba(255, 216, 61, 0.4) !important;
-
-    }
-
-    .msb-button-secondary,
-    .wse-btn-print,
-    .vh-btn-yt,
-    .td-seat-btn {
-
-      background: rgba(255, 255, 255, 0.12) !important;
-
-      color: #ffffff !important;
-
-      border: 1px solid rgba(255, 255, 255, 0.28) !important;
-
-      font-weight: 800 !important;
-
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6) !important;
-
-    }
-
-    .msb-button-secondary:hover,
-    .wse-btn-print:hover,
-    .vh-btn-yt:hover,
-    .td-seat-btn:hover {
-
-      background: rgba(255, 255, 255, 0.22) !important;
-
-      color: #ffffff !important;
-
-      border-color: rgba(255, 216, 61, 0.5) !important;
-
-      transform: translateY(-2px);
-
-    }
-
-    .wse-submit-btn,
-    #wse-submit-btn,
-    .td-btn-success {
-
-      background: linear-gradient(180deg, #48bb78 0%, #2f855a 100%) !important;
-
-      color: #ffffff !important;
-
-      font-weight: 900 !important;
-
-      border: 1px solid #276749 !important;
-
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
-
-    }
-
-    .wse-submit-btn:hover,
-    #wse-submit-btn:hover,
-    .td-btn-success:hover {
-
-      background: linear-gradient(180deg, #59d884 0%, #38a169 100%) !important;
-
-      transform: translateY(-2px);
-
-    }
-
-    .td-btn-danger {
-
-      background: linear-gradient(180deg, #e53e3e 0%, #c53030 100%) !important;
-
-      color: #ffffff !important;
-
-      font-weight: 900 !important;
-
-      border: 1px solid #9b2c2c !important;
-
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
-
-    }
-
-    .td-btn-primary {
-
-      background: #1e3370 !important;
-
-      color: #ffffff !important;
-
-      font-weight: 800 !important;
-
-      border: 1px solid rgba(255, 255, 255, 0.3) !important;
-
-    }
-
-    .td-btn-primary:hover {
-
-      background: #2b4694 !important;
-
-      border-color: var(--bus-yellow) !important;
-
-    }
-
-    /* ==========================================================================
-
-   UNIFIED HIGH-FIDELITY PRINT STYLESHEET
-
-   ========================================================================== */
-
-    #msb-printable-sheet {
-
-      display: none !important;
-
-    }
-
-    @media print {
-
-      /* Complete reset */
-
-      html,
-      body {
-
-        background: #ffffff !important;
-
-        color: #000000 !important;
-
-        margin: 0 !important;
-
-        padding: 0 !important;
-
-        min-height: auto !important;
-
-        height: auto !important;
-
-        overflow: visible !important;
-
-      }
-
-      /* Hide entire interactive web app */
-
-      #msb-app,
-
-      .msb-app-shell,
-
-      .msb-cosmos,
-
-      .msb-header,
-
-      .msb-sidebar,
-
-      .msb-mobile-backdrop,
-
-      #msb-toast-layer,
-
-      .msb-skip-link,
-
-      .msb-modal-overlay,
-
-      .wse-solver-overlay,
-
-      .td-modal-overlay,
-
-      .app-shell,
-
-      #msbAppShell,
-
-      .msb-main,
-
-      [data-view] {
-
-        display: none !important;
-
-        visibility: hidden !important;
-
-      }
-
-      /* Show ONLY #msb-printable-sheet */
-
-      #msb-printable-sheet {
-
-        display: block !important;
-
-        position: static !important;
-
-        width: 100% !important;
-
-        max-width: 100% !important;
-
-        margin: 0 !important;
-
-        padding: 0 !important;
-
-        background: #ffffff !important;
-
-        color: #000000 !important;
-
-        visibility: visible !important;
-
-      }
-
-      #msb-printable-sheet * {
-
-        visibility: visible !important;
-
-        color: #000000 !important;
-
-        background: transparent !important;
-
-        box-shadow: none !important;
-
-        text-shadow: none !important;
-
-      }
-
-      @page {
-
-        size: letter portrait;
-
-        margin: 10mm 12mm;
-
-      }
-
     }
   </style>
   <style>
@@ -2504,39 +1981,11 @@
     }
   </style>
   <style id="msb-banner-and-menu-enhancements">
-    /* Sleek Glassmorphism Header & Cosmic Hero without picture */
-    .msb-header {
-      height: 74px !important;
-      background: linear-gradient(180deg, rgba(17, 30, 71, 0.97), rgba(11, 23, 52, 0.94)) !important;
-      border-bottom: 1px solid rgba(255, 216, 61, 0.28) !important;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3) !important;
-      backdrop-filter: blur(16px) !important;
-    }
-
-    .msb-hero {
-      position: relative !important;
-      isolation: isolate !important;
-      overflow: hidden !important;
-      display: grid !important;
-      grid-template-columns: minmax(0, 1.35fr) minmax(250px, .65fr) !important;
-      gap: 20px !important;
-      padding: clamp(28px, 4vw, 48px) clamp(22px, 3vw, 38px) !important;
-      border: 1px solid rgba(255, 216, 61, 0.28) !important;
-      border-radius: var(--radius-xl) !important;
-      background: radial-gradient(circle at 88% 18%, rgba(255, 216, 61, 0.14), transparent 25%),
-        radial-gradient(circle at 70% 90%, rgba(72, 216, 234, 0.12), transparent 30%),
-        linear-gradient(135deg, rgba(31, 52, 115, 0.92), rgba(21, 36, 84, 0.88)) !important;
-      box-shadow: var(--shadow-lg), var(--yellow-glow) !important;
-    }
+    /* Banner & Menu Enhancements — .msb-hero consolidated into primary block above */
 
     /* ==========================================================
-     HERO BANNER ARTWORK & SIDEBAR COLLAPSE / DRAWER STYLES
+     SIDEBAR COLLAPSE / DRAWER STYLES
      ========================================================== */
-
-    /* Show more of the magic bus hero banner picture on the top banner */
-
-
-
 
     /* Desktop Sidebar Collapse */
     .msb-app-shell {
@@ -2595,37 +2044,19 @@
     }
   </style>
   <style id="msb-science-doodles-bg-style">
-    /* Prominent Science Doodles Background */
-    html {
-      background: #071126 !important;
-    }
-
+    /* Science Doodles Background — merged into .msb-cosmos above; body gradient stays */
+    html { background: #071126; }
     body {
       background: radial-gradient(circle at 80% -20%, rgba(96, 70, 184, 0.35), transparent 34rem),
         radial-gradient(circle at 5% 80%, rgba(72, 216, 234, 0.18), transparent 32rem),
-        linear-gradient(145deg, rgba(7, 17, 38, 0.86), rgba(16, 28, 70, 0.82)),
-        url('science_doodles_bg_1788837375272.jpg') center center / cover fixed no-repeat !important;
-    }
-
-    .msb-cosmos {
-      position: fixed !important;
-      inset: 0 !important;
-      z-index: 0 !important;
-      overflow: hidden !important;
-      pointer-events: none !important;
-      background-image: url('science_doodles_bg_1788837375272.jpg') !important;
-      background-size: cover !important;
-      background-position: center !important;
-      background-repeat: no-repeat !important;
-      background-attachment: fixed !important;
-      opacity: 0.38 !important;
-      filter: brightness(0.9) contrast(1.15) !important;
+        linear-gradient(145deg, rgba(7, 17, 38, 0.86), rgba(16, 28, 70, 0.82));
     }
   </style>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+<link rel="stylesheet" href="accessibility.css"/>
+<script src="assets/site.js" defer></script>
 </head>
 
-<body>
+<body class="msb-classroom">
   <a class="msb-skip-link" href="#msb-main">Skip to classroom</a>
   <div aria-hidden="true" class="msb-cosmos"></div>
   <div aria-hidden="true" id="msb-printable-sheet"></div>
@@ -2650,8 +2081,8 @@
           <span class="msb-control-btn-label">Menu</span>
         </button>
         <div aria-label="The Magic School Bus Virtual Classroom" class="msb-brand">
-          <img alt="Magic School Bus Icon" class="msb-brand-logo" onmouseout="this.style.transform='none'"
-            onmouseover="this.style.transform='scale(1.12) rotate(3deg)'" src="Futuristic_Magic_School_Bus.ico"
+          <img decoding="async"  alt="Magic School Bus Icon" class="msb-brand-logo" onmouseout="this.style.transform='none'"
+            onmouseover="this.style.transform='scale(1.12) rotate(3deg)'" src="assets/Futuristic_Magic_School_Bus.ico"
             style="width: 48px; height: 48px; object-fit: contain; border-radius: 12px; filter: drop-shadow(0 2px 10px rgba(255, 216, 61, 0.5)); flex-shrink: 0; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); cursor: pointer;" />
           <div class="msb-brand-copy">
             <span class="msb-brand-kicker">Field Trip Control</span>
@@ -2829,13 +2260,22 @@
             <span class="msb-nav-label">V3 Lab Portal</span>
             <span class="msb-nav-badge" style="background:#48d8ea;color:#071126;">Lab</span>
           </a>
-          <a class="msb-nav-button" href="_archive/msb-monolith-archive.html" title="Monolith Classroom Engine Archive">
+          <a class="msb-nav-button" href="MSB_Science_Packets_Complete.html" title="Science Lab Packet Generator">
             <span aria-hidden="true" class="msb-nav-icon" style="font-size: 1.1rem;">🏛️</span>
-            <span class="msb-nav-label">Monolith Archive</span>
+            <span class="msb-nav-label">Science Packets</span>
             <span class="msb-nav-badge" style="background:#df4051;color:#fff;">Arch</span>
           </a>
         </nav>
-        
+        <div class="msb-sidebar-footer">
+          <div style="padding: 12px 10px; border-top: 1px solid rgba(255,216,61,.15); margin-top: 8px;">
+            <div style="font-size: .7rem; font-weight: 900; color: var(--bus-yellow); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px;">🚌 Magic School Bus</div>
+            <div style="font-size: .68rem; color: var(--text-muted); line-height: 1.4;">Virtual Classroom Suite · K–12 Science</div>
+            <div style="margin-top: 8px; display: flex; gap: 6px;">
+              <span style="font-size: .64rem; background: rgba(255,216,61,.1); color: var(--bus-yellow); border: 1px solid rgba(255,216,61,.22); border-radius: 999px; padding: 2px 7px; font-weight: 800;">v1.0</span>
+              <span style="font-size: .64rem; background: rgba(89,216,132,.08); color: var(--good); border: 1px solid rgba(89,216,132,.2); border-radius: 999px; padding: 2px 7px; font-weight: 800;">● Online</span>
+            </div>
+          </div>
+        </div>
       </aside>
       <button aria-label="Close classroom navigation" class="msb-mobile-backdrop" id="msb-mobile-backdrop" tabindex="-1"
         type="button">
@@ -2847,7 +2287,7 @@
      All future modules render inside one of the containers below.
 
      ============================================================== -->
-      <main class="msb-main" id="msb-main" id="msb-main_1" tabindex="-1">
+      <main class="msb-main" id="msb-main" tabindex="-1">
         <div class="msb-workspace">
           <!-- ROUTE: HOME / PART 1 -->
           <section class="msb-view" data-view="home" id="msb-view-home">
@@ -2911,13 +2351,13 @@
                 </div>
                 <div>
                   <div class="msb-stat-value" id="msb-stat-students">0</div>
-                  <div class="msb-stat-label">8/10 seats available</div>
+                  <div class="msb-stat-label" id="msb-stat-seats">10/10 seats available</div>
                 </div>
               </article>
               <article class="msb-card msb-stat-card msb-col-3">
                 <div class="msb-stat-head">
                   <h2 class="msb-card-title">Worksheets</h2>
-                  <span aria-hidden="true" class="msb-stat-icon"></span>
+                  <span aria-hidden="true" class="msb-stat-icon">📝</span>
                 </div>
                 <div>
                   <div class="msb-stat-value" id="msb-stat-worksheets">0</div>
@@ -2927,7 +2367,7 @@
               <article class="msb-card msb-stat-card msb-col-3">
                 <div class="msb-stat-head">
                   <h2 class="msb-card-title">Stars</h2>
-                  <span aria-hidden="true" class="msb-stat-icon"></span>
+                  <span aria-hidden="true" class="msb-stat-icon">⭐</span>
                 </div>
                 <div>
                   <div class="msb-stat-value" id="msb-stat-stars">0</div>
@@ -2937,7 +2377,7 @@
               <article class="msb-card msb-stat-card msb-col-3">
                 <div class="msb-stat-head">
                   <h2 class="msb-card-title">Submissions</h2>
-                  <span aria-hidden="true" class="msb-stat-icon"></span>
+                  <span aria-hidden="true" class="msb-stat-icon">📋</span>
                 </div>
                 <div>
                   <div class="msb-stat-value" id="msb-stat-submissions">0</div>
@@ -2953,12 +2393,12 @@
                 .msb-stops-hub {
                   position: relative;
                   padding: 26px;
-                  background: rgba(10, 18, 42, .94);
+                  background: rgba(13, 24, 58, .96);
                   backdrop-filter: blur(18px);
                   -webkit-backdrop-filter: blur(18px);
-                  border: 1px solid rgba(255, 216, 61, 0.28);
+                  border: 1px solid rgba(255, 216, 61, 0.3);
                   border-radius: var(--radius-xl);
-                  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,.06);
+                  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,.08);
                 }
 
                 .msb-stops-header {
@@ -2993,7 +2433,7 @@
                   width: 100%;
                   margin-bottom: 20px;
                   padding-bottom: 16px;
-                  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
                 }
 
                 .msb-stops-search-wrap {
@@ -3071,8 +2511,8 @@
                   display: flex;
                   flex-direction: column;
                   padding: 20px;
-                  background: linear-gradient(145deg, rgba(22, 40, 97, 0.7), rgba(11, 23, 52, 0.85));
-                  border: 1px solid rgba(255, 255, 255, 0.1);
+                  background: linear-gradient(145deg, rgba(26, 48, 112, 0.75), rgba(14, 28, 65, 0.9));
+                  border: 1px solid rgba(255, 255, 255, 0.13);
                   border-radius: var(--radius-lg);
                   transition: all 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
                   overflow: hidden;
@@ -3144,8 +2584,9 @@
                   margin: 8px 0 16px;
                   font-size: 0.84rem;
                   color: var(--text-soft);
-                  line-height: 1.5;
+                  line-height: 1.6;
                   flex-grow: 1;
+                  opacity: 0.92;
                 }
 
                 .msb-stop-card-tags {
@@ -3160,8 +2601,9 @@
                   font-weight: 800;
                   padding: 3px 8px;
                   border-radius: 6px;
-                  background: rgba(255, 255, 255, 0.06);
-                  color: var(--text-muted);
+                  background: rgba(255, 255, 255, 0.09);
+                  color: var(--text-soft);
+                  border: 1px solid rgba(255, 255, 255, 0.1);
                 }
 
                 .msb-stop-card-actions {
@@ -3564,7 +3006,7 @@
                       Preview</button>
                   </div>
                 </article>
-                <!-- Card 11: Monolith Classroom Engine Archive -->
+                <!-- Card 11: Science Lab Packet Generator -->
                 <article class="msb-stop-card" data-cat="portals"
                   data-tags="monolith archive parts 1-8 full engine offline backup" style="--card-accent: #df4051;">
                   <div class="msb-stop-card-head">
@@ -3572,7 +3014,7 @@
                     <span class="msb-stop-card-badge"
                       style="color: #df4051; border-color: rgba(223,64,81,0.3); background: rgba(223,64,81,0.1);">Archive</span>
                   </div>
-                  <h3 class="msb-stop-card-title">Monolith Classroom Engine Archive</h3>
+                  <h3 class="msb-stop-card-title">Science Lab Packet Generator</h3>
                   <p class="msb-stop-card-desc">Complete 8-part all-in-one standalone classroom architecture archive for
                     reference and offline deployment.</p>
                   <div class="msb-stop-card-tags">
@@ -3581,14 +3023,35 @@
                     <span class="msb-stop-tag">Reference</span>
                   </div>
                   <div class="msb-stop-card-actions">
-                    <a class="msb-stop-btn-board" href="_archive/msb-monolith-archive.html" target="_blank">🚀 Board Bus</a>
+                    <a class="msb-stop-btn-board" href="MSB_Science_Packets_Complete.html" target="_blank">🚀 Board Bus</a>
                     <button class="msb-stop-btn-preview"
-                      onclick="openBusStopModal('_archive/msb-monolith-archive.html', 'Monolith Classroom Engine Archive', '🏛️', 'Standalone monolithic virtual classroom build combining all parts into an offline bundle.', ['Complete 8-part application shell', 'Offline deployment ready', 'Historical system snapshot'])">👁️
+                      onclick="openBusStopModal('MSB_Science_Packets_Complete.html', 'Science Lab Packet Generator', '🏛️', 'Create, edit, export and print science investigation packets.', ['13 editable science scenarios', 'Printable student lab packets', 'Import and export custom scenarios'])">👁️
                       Preview</button>
                   </div>
                 </article>
               </div>
             </section>
+
+            <!-- Page Footer -->
+            <footer style="margin-top: 40px; padding: 24px 20px; border-top: 1px solid rgba(255,216,61,.15); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;">
+              <div style="display:flex; align-items:center; gap: 10px;">
+                <span style="font-size: 1.4rem;">🚌</span>
+                <div>
+                  <div style="font-size: .82rem; font-weight: 900; color: var(--bus-yellow);">The Magic School Bus Virtual Classroom</div>
+                  <div style="font-size: .72rem; color: var(--text-muted); margin-top: 2px;">Interactive Science Education for K–12</div>
+                </div>
+              </div>
+              <div style="display:flex; flex-wrap:wrap; gap: 8px; align-items: center;">
+                <span style="font-size: .7rem; color: var(--text-muted);">🔬 Science</span>
+                <span style="color: rgba(255,255,255,.2);">·</span>
+                <span style="font-size: .7rem; color: var(--text-muted);">📝 Curriculum</span>
+                <span style="color: rgba(255,255,255,.2);">·</span>
+                <span style="font-size: .7rem; color: var(--text-muted);">🎓 Teacher Tools</span>
+                <span style="color: rgba(255,255,255,.2);">·</span>
+                <span style="font-size: .7rem; color: var(--text-muted);">👩‍🔬 Student Portal</span>
+              </div>
+              <div style="font-size: .68rem; color: rgba(255,255,255,.3); text-align: right;">Built for curious learners everywhere ✨</div>
+            </footer>
           </section>
           <!-- ============================================================
 
@@ -4899,7 +4362,7 @@
 
                     const students = window.MSB_APP.get('classroom.students') || [];
 
-                    if (students.length === 0) {
+                    if (students.length === 0 && !window.MSB_APP.get('meta.rosterInitialized')) {
 
                       // Pre-seed with demo class on first load
 
@@ -4921,6 +4384,8 @@
 
                     if (window.MSB_APP) {
 
+                      students.forEach(student => { if (!student.id) student.id = 'student-' + crypto.randomUUID(); });
+                      window.MSB_APP.set('meta.rosterInitialized', true);
                       window.MSB_APP.set('classroom.students', students);
 
                       // Calculate total stars
@@ -5211,11 +4676,11 @@
 
                     <div class="td-seat-info">
 
-                      <h4 class="td-seat-name" onclick="window.TeacherModule.editName(${i})" title="Click to edit name">
+                      <button type="button" class="td-seat-name" onclick="window.TeacherModule.editName(${i})" title="Click to edit name">
 
                         ${student.name} <span style="font-size:0.75rem; color:var(--text-muted);">✎</span>
 
-                      </h4>
+                      </button>
 
                       <div class="td-seat-pin-row">
 
@@ -7830,6 +7295,7 @@
 
                   document.getElementById('wse-modal-score').style.display = 'none';
 
+                  document.getElementById('wse-submit-btn').disabled = false;
                   document.getElementById('wse-submit-btn').textContent = '✅ Check & Grade';
 
                   document.getElementById('wse-submit-btn').style.display = '';
@@ -7862,7 +7328,8 @@
 
                 window.gradeActiveWorksheet = function () {
 
-                  if (!activeWorksheet) return;
+                  if (!activeWorksheet || document.getElementById('wse-submit-btn').disabled) return;
+                  document.getElementById('wse-submit-btn').disabled = true;
 
                   let earned = 0;
 
@@ -8610,7 +8077,7 @@
                 <!-- 1. Gets Lost in Space (Space) -->
                 <div class="vh-card" data-cat="space" data-vid="yM-VG4sqUQM">
                   <div class="vh-thumb" onclick="playVideo(this, 'yM-VG4sqUQM')">
-                    <img alt="Gets Lost in Space" loading="lazy"
+                    <img decoding="async"  alt="Gets Lost in Space" loading="lazy"
                       src="https://i.ytimg.com/vi/yM-VG4sqUQM/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
@@ -8641,7 +8108,7 @@
                 <!-- 2. For Lunch (Human Body) -->
                 <div class="vh-card" data-cat="human-body" data-vid="rF4EiIIIIkw">
                   <div class="vh-thumb" onclick="playVideo(this, 'rF4EiIIIIkw')">
-                    <img alt="For Lunch" loading="lazy" src="https://i.ytimg.com/vi/rF4EiIIIIkw/hqdefault.jpg" />
+                    <img decoding="async"  alt="For Lunch" loading="lazy" src="https://i.ytimg.com/vi/rF4EiIIIIkw/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
                   </div>
@@ -8671,7 +8138,7 @@
                 <!-- 3. Inside Ralphie (Human Body) -->
                 <div class="vh-card" data-cat="human-body" data-vid="slBjkSysh8U">
                   <div class="vh-thumb" onclick="playVideo(this, 'slBjkSysh8U')">
-                    <img alt="Inside Ralphie" loading="lazy" src="https://i.ytimg.com/vi/slBjkSysh8U/hqdefault.jpg" />
+                    <img decoding="async"  alt="Inside Ralphie" loading="lazy" src="https://i.ytimg.com/vi/slBjkSysh8U/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
                   </div>
@@ -8701,7 +8168,7 @@
                 <!-- 4. Hops Home (Nature) -->
                 <div class="vh-card" data-cat="nature" data-vid="DneI39Yt8Dg">
                   <div class="vh-thumb" onclick="playVideo(this, 'DneI39Yt8Dg')">
-                    <img alt="Hops Home" loading="lazy" src="https://i.ytimg.com/vi/DneI39Yt8Dg/hqdefault.jpg" />
+                    <img decoding="async"  alt="Hops Home" loading="lazy" src="https://i.ytimg.com/vi/DneI39Yt8Dg/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
                   </div>
@@ -8731,7 +8198,7 @@
                 <!-- 5. Meets the Rot Squad (Nature) -->
                 <div class="vh-card" data-cat="nature" data-vid="A1OKxuZQ-0M">
                   <div class="vh-thumb" onclick="playVideo(this, 'A1OKxuZQ-0M')">
-                    <img alt="Meets the Rot Squad" loading="lazy"
+                    <img decoding="async"  alt="Meets the Rot Squad" loading="lazy"
                       src="https://i.ytimg.com/vi/A1OKxuZQ-0M/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
@@ -8762,7 +8229,7 @@
                 <!-- 6. In the Haunted House (Physics) -->
                 <div class="vh-card" data-cat="physics" data-vid="0aZnNXLRCS4">
                   <div class="vh-thumb" onclick="playVideo(this, '0aZnNXLRCS4')">
-                    <img alt="In the Haunted House" loading="lazy"
+                    <img decoding="async"  alt="In the Haunted House" loading="lazy"
                       src="https://i.ytimg.com/vi/0aZnNXLRCS4/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
@@ -8793,7 +8260,7 @@
                 <!-- 7. Plays Ball (Physics) -->
                 <div class="vh-card" data-cat="physics" data-vid="I0Aw53pWCow">
                   <div class="vh-thumb" onclick="playVideo(this, 'I0Aw53pWCow')">
-                    <img alt="Plays Ball" loading="lazy" src="https://i.ytimg.com/vi/I0Aw53pWCow/hqdefault.jpg" />
+                    <img decoding="async"  alt="Plays Ball" loading="lazy" src="https://i.ytimg.com/vi/I0Aw53pWCow/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
                   </div>
@@ -8823,7 +8290,7 @@
                 <!-- 8. Goes to Seed (Nature) -->
                 <div class="vh-card" data-cat="nature" data-vid="qhJaygnqY94">
                   <div class="vh-thumb" onclick="playVideo(this, 'qhJaygnqY94')">
-                    <img alt="Goes to Seed" loading="lazy" src="https://i.ytimg.com/vi/qhJaygnqY94/hqdefault.jpg" />
+                    <img decoding="async"  alt="Goes to Seed" loading="lazy" src="https://i.ytimg.com/vi/qhJaygnqY94/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
                   </div>
@@ -8853,7 +8320,7 @@
                 <!-- 9. Kicks Up a Storm (Weather) -->
                 <div class="vh-card" data-cat="weather" data-vid="rYZ1KH6C4Ts">
                   <div class="vh-thumb" onclick="playVideo(this, 'rYZ1KH6C4Ts')">
-                    <img alt="Kicks Up a Storm" loading="lazy" src="https://i.ytimg.com/vi/rYZ1KH6C4Ts/hqdefault.jpg" />
+                    <img decoding="async"  alt="Kicks Up a Storm" loading="lazy" src="https://i.ytimg.com/vi/rYZ1KH6C4Ts/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
                   </div>
@@ -8883,7 +8350,7 @@
                 <!-- 10. Blows Its Top (Earth Science) -->
                 <div class="vh-card" data-cat="earth" data-vid="3ZYBlHfFW_E">
                   <div class="vh-thumb" onclick="playVideo(this, '3ZYBlHfFW_E')">
-                    <img alt="Blows Its Top" loading="lazy" src="https://i.ytimg.com/vi/3ZYBlHfFW_E/hqdefault.jpg" />
+                    <img decoding="async"  alt="Blows Its Top" loading="lazy" src="https://i.ytimg.com/vi/3ZYBlHfFW_E/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
                   </div>
@@ -8913,7 +8380,7 @@
                 <!-- 11. Wet All Over (Weather) -->
                 <div class="vh-card" data-cat="weather" data-vid="XOTOIVgqU3g">
                   <div class="vh-thumb" onclick="playVideo(this, 'XOTOIVgqU3g')">
-                    <img alt="Wet All Over" loading="lazy" src="https://i.ytimg.com/vi/XOTOIVgqU3g/hqdefault.jpg" />
+                    <img decoding="async"  alt="Wet All Over" loading="lazy" src="https://i.ytimg.com/vi/XOTOIVgqU3g/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
                   </div>
@@ -8943,7 +8410,7 @@
                 <!-- 12. All Dried Up (Nature) -->
                 <div class="vh-card" data-cat="nature" data-vid="CviZEXNQBhg">
                   <div class="vh-thumb" onclick="playVideo(this, 'CviZEXNQBhg')">
-                    <img alt="All Dried Up" loading="lazy" src="https://i.ytimg.com/vi/CviZEXNQBhg/hqdefault.jpg" />
+                    <img decoding="async"  alt="All Dried Up" loading="lazy" src="https://i.ytimg.com/vi/CviZEXNQBhg/hqdefault.jpg" />
                     <div class="vh-play-btn"><span>▶</span></div>
                     <div class="vh-duration">25:00</div>
                   </div>
@@ -9728,7 +9195,7 @@
                 <h2 style="margin:0 0 16px; color:#fff; display:flex; align-items:center; gap:8px;"><span>📖</span>
                   Class 1 Core Science Vocabulary Flashcards</h2>
                 <p style="color:var(--text-soft); margin-bottom:20px;">Master terms from
-                  <code>CMSB Class 1 DOCS.txt</code> with interactive flashcards.</p>
+                  <code>documents/CMSB Class 1 DOCS.txt</code> with interactive flashcards.</p>
                 <div class="msb-vocab-grid">
                   <div class="msb-vocab-card" onclick="this.style.borderColor = 'var(--science-cyan)'">
                     <div class="msb-vocab-term"><span>⚡ STATIC</span><span
@@ -9775,7 +9242,7 @@
                 <h2 style="margin:0 0 16px; color:#fff; display:flex; align-items:center; gap:8px;"><span>🎬</span>
                   Magic School Bus Video Screening Time Trims</h2>
                 <p style="color:var(--text-soft); margin-bottom:20px;">Curated lesson timestamps from
-                  <code>Magic School Bus Vids.txt</code> for focused classroom screening.</p>
+                  <code>documents/Magic School Bus Vids.txt</code> for focused classroom screening.</p>
                 <div style="display:grid; gap:16px;">
                   <div
                     style="padding:18px; background:rgba(7,17,38,0.85); border:1px solid rgba(89,168,255,0.3); border-radius:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
@@ -9827,7 +9294,7 @@
                         Guide</span>
                     </div>
                     <a class="msb-button msb-button-primary msb-button-small" download=""
-                      href="Magic_School_Bus_Electricity_Lab_Complete.docx">📥 Download</a>
+                      href="documents/Magic_School_Bus_Electricity_Lab_Complete.docx">📥 Download</a>
                   </div>
                   <div class="msb-download-card">
                     <div>
@@ -9836,7 +9303,7 @@
                       <span style="color:var(--text-muted); font-size:0.75rem;">DOCX • 402 KB • Classroom Styled</span>
                     </div>
                     <a class="msb-button msb-button-primary msb-button-small" download=""
-                      href="Magic School Bus Electricity Lab Guide - Styled.docx">📥 Download</a>
+                      href="documents/Magic School Bus Electricity Lab Guide - Styled.docx">📥 Download</a>
                   </div>
                   <div class="msb-download-card">
                     <div>
@@ -9845,7 +9312,7 @@
                       <span style="color:var(--text-muted); font-size:0.75rem;">DOCX • 8.4 KB • Student Steps</span>
                     </div>
                     <a class="msb-button msb-button-primary msb-button-small" download=""
-                      href="Magic School Bus Electricity Lab Instructions.docx">📥 Download</a>
+                      href="documents/Magic School Bus Electricity Lab Instructions.docx">📥 Download</a>
                   </div>
                   <div class="msb-download-card">
                     <div>
@@ -9853,7 +9320,7 @@
                       <span style="color:var(--text-muted); font-size:0.75rem;">TXT • 127 B • Science Vocabulary</span>
                     </div>
                     <a class="msb-button msb-button-secondary msb-button-small" download=""
-                      href="CMSB Class 1 DOCS.txt">📥 Download</a>
+                      href="documents/CMSB Class 1 DOCS.txt">📥 Download</a>
                   </div>
                   <div class="msb-download-card">
                     <div>
@@ -9861,7 +9328,7 @@
                       <span style="color:var(--text-muted); font-size:0.75rem;">TXT • 191 B • Video Time Trims</span>
                     </div>
                     <a class="msb-button msb-button-secondary msb-button-small" download=""
-                      href="Magic School Bus Vids.txt">📥 Download</a>
+                      href="documents/Magic School Bus Vids.txt">📥 Download</a>
                   </div>
                 </div>
               </div>
@@ -10342,7 +9809,7 @@
       part: 1, name: "Core Shell & Design System", initialized: false, routes: {
         home: { label: "Bus Dashboard", elementId: "msb-view-home" }, teacher: { label: "Teacher Dashboard", elementId: "msb-module-teacher" }, student: { label: "Student Portal", elementId: "msb-module-student" }, worksheets: { label: "Worksheets", elementId: "msb-module-worksheets" }, media: { label: "Watch + Science Lab", elementId: "msb-module-media" }, grading: { label: "Grading Station", elementId: "msb-module-grading" }, utilities: { label: "Teacher Utilities", elementId: "msb-module-utilities" },
         docs: { label: "Lab Documents & Guides", elementId: "msb-view-docs" }
-      }, init() { if (this.initialized) return; this.cacheDOM(); this.bindEvents(); this.bindState(); this.applyInitialState(); this.updateDashboardStats(); this.initialized = true; MSB_APP.set("meta.initialized", true); window.dispatchEvent(new CustomEvent("msb:ready", { detail: { part: 1, app: MSB_APP } })); console.info("%c Magic School Bus Virtual Classroom  Part 1 ready", "background:#ffd83d;color:#101c46;padding:4px 8px;border-radius:4px;font-weight:bold"); }, cacheDOM() { this.dom = { body: document.body, main: document.getElementById("msb-main"), sidebar: document.getElementById("msb-sidebar"), menuToggle: document.getElementById("msb-menu-toggle"), backdrop: document.getElementById("msb-mobile-backdrop"), contrastToggle: document.getElementById("msb-contrast-toggle"), teacherModeButton: document.getElementById("msb-teacher-mode-button"), appStatus: document.getElementById("msb-app-status"), toastLayer: document.getElementById("msb-toast-layer"), navButtons: [...document.querySelectorAll("[data-route]")], routeJumpButtons: [...document.querySelectorAll("[data-route-jump]")], views: [...document.querySelectorAll("[data-view]")], statStudents: document.getElementById("msb-stat-students"), statWorksheets: document.getElementById("msb-stat-worksheets"), statStars: document.getElementById("msb-stat-stars"), statSubmissions: document.getElementById("msb-stat-submissions"), rosterCount: document.getElementById("msb-nav-roster-count") }; }, bindEvents() { this.dom.menuToggle.addEventListener("click", () => { this.toggleSidebar(); }); this.dom.backdrop.addEventListener("click", () => { this.closeSidebar(); }); this.dom.contrastToggle.addEventListener("click", () => { const active = !MSB_APP.get("ui.highContrast"); MSB_APP.set("ui.highContrast", active); }); this.dom.teacherModeButton.addEventListener("click", () => { const mode = MSB_APP.get("session.mode"); if (mode === "teacher") { this.navigate("teacher"); } else { MSB_APP.set("session.mode", "teacher"); MSB_APP.set("session.activeStudentId", null); this.toast("Teacher mode activated.", "success"); this.navigate("teacher"); } }); this.dom.navButtons.forEach(button => { button.addEventListener("click", () => { this.navigate(button.dataset.route); }); }); this.dom.routeJumpButtons.forEach(button => { button.addEventListener("click", () => { this.navigate(button.dataset.routeJump); }); }); window.addEventListener("keydown", event => { if (event.key === "Escape") { this.closeSidebar(); } if (event.altKey && !event.ctrlKey && !event.metaKey && /^[1-7]$/.test(event.key)) { const routeNames = Object.keys(this.routes); const route = routeNames[Number(event.key) - 1]; if (route) { event.preventDefault(); this.navigate(route); } } }); window.addEventListener("resize", () => { if (window.innerWidth > 800) { this.closeSidebar(false); } }); }, bindState() { MSB_APP.subscribe("ui.activeRoute", route => { this.renderRoute(route); }); MSB_APP.subscribe("ui.sidebarOpen", isOpen => { this.renderSidebarState(isOpen); }); MSB_APP.subscribe("ui.highContrast", isEnabled => { this.renderContrastState(isEnabled); }); MSB_APP.subscribe("classroom.students", () => { this.updateDashboardStats(); }); MSB_APP.subscribe("worksheets.library", () => { this.updateDashboardStats(); }); MSB_APP.subscribe("worksheets.assignments", () => { this.updateDashboardStats(); }); MSB_APP.subscribe("worksheets.submissions", () => { this.updateDashboardStats(); }); MSB_APP.subscribe("rewards.classStars", () => { this.updateDashboardStats(); }); MSB_APP.subscribe("*", path => { if (String(path).startsWith("classroom.") || String(path).startsWith("worksheets.") || String(path).startsWith("rewards.")) { this.updateDashboardStats(); } }); }, applyInitialState() { this.renderSidebarState(MSB_APP.get("ui.sidebarOpen")); this.renderContrastState(MSB_APP.get("ui.highContrast")); this.renderRoute(MSB_APP.get("ui.activeRoute")); }, navigate(route) { if (!this.routes[route]) { console.warn(`[MSB] Unknown route "${route}"`); return false; } MSB_APP.set("ui.activeRoute", route); if (window.innerWidth <= 800) { this.closeSidebar(); } window.dispatchEvent(new CustomEvent("msb:navigate", { detail: { route, routeConfig: this.routes[route] } })); return true; }, renderRoute(route) { if (!this.routes[route]) route = "home"; this.dom.views.forEach(view => { view.hidden = view.dataset.view !== route; }); this.dom.navButtons.forEach(button => { if (button.dataset.route === route) { button.setAttribute("aria-current", "page"); } else { button.removeAttribute("aria-current"); } }); document.title = route === "home" ? "The Magic School Bus Virtual Classroom" : `${this.routes[route].label}  Magic School Bus Classroom`; requestAnimationFrame(() => { if (this.dom.main) { this.dom.main.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); } }); }, toggleSidebar() { MSB_APP.set("ui.sidebarOpen", !MSB_APP.get("ui.sidebarOpen")); }, closeSidebar(updateState = true) { if (updateState) { MSB_APP.set("ui.sidebarOpen", false); } else { this.renderSidebarState(false); } }, renderSidebarState(isOpen) { this.dom.body.classList.toggle("msb-sidebar-open", Boolean(isOpen)); this.dom.menuToggle.setAttribute("aria-expanded", String(Boolean(isOpen))); this.dom.menuToggle.setAttribute("aria-label", isOpen ? "Close classroom navigation" : "Open classroom navigation"); }, renderContrastState(isEnabled) { document.body.classList.toggle("msb-high-contrast", Boolean(isEnabled)); this.dom.contrastToggle.setAttribute("aria-pressed", String(Boolean(isEnabled))); }, updateDashboardStats() { const students = MSB_APP.get("classroom.students") || []; const assignments = MSB_APP.get("worksheets.assignments") || []; const library = MSB_APP.get("worksheets.library") || []; const submissions = MSB_APP.get("worksheets.submissions") || {}; const stars = Number(MSB_APP.get("rewards.classStars")) || 0; this.dom.statStudents.textContent = students.length.toLocaleString(); this.dom.statWorksheets.textContent = Math.max(assignments.length, library.length).toLocaleString(); this.dom.statStars.textContent = stars.toLocaleString(); this.dom.statSubmissions.textContent = Object.keys(submissions).length.toLocaleString(); if (students.length > 0) { this.dom.rosterCount.hidden = false; this.dom.rosterCount.textContent = students.length > 99 ? "99+" : String(students.length); } else { this.dom.rosterCount.hidden = true; } }, setStatus(text, state = "ready") { if (!this.dom.appStatus) return; this.dom.appStatus.textContent = String(text); const dot = this.dom.appStatus.closest(".msb-status-pill")?.querySelector(".msb-status-dot"); if (dot) { const colors = { ready: "var(--good)", busy: "var(--warn)", error: "var(--danger)", info: "var(--info)" }; dot.style.background = colors[state] || colors.ready; } }, toast(message, type = "info", duration = 3400) { if (!this.dom.toastLayer) return null; const id = MSB_APP.helpers.generateId("toast"); const toast = document.createElement("div"); toast.id = id; toast.className = "msb-toast"; toast.dataset.type = type; toast.setAttribute("role", type === "error" ? "alert" : "status"); const icons = { success: "", error: "!", info: "i", warning: "" }; const icon = document.createElement("strong"); icon.textContent = icons[type] || icons.info; icon.setAttribute("aria-hidden", "true"); const copy = document.createElement("div"); copy.className = "msb-toast-copy"; copy.textContent = String(message); const close = document.createElement("button"); close.className = "msb-toast-close"; close.type = "button"; close.setAttribute("aria-label", "Dismiss notification"); close.textContent = ""; toast.append(icon, copy, close); this.dom.toastLayer.appendChild(toast); let timer = null; const remove = () => { if (timer) clearTimeout(timer); toast.remove(); }; close.addEventListener("click", remove); if (duration > 0) { timer = setTimeout(remove, duration); } return { id, element: toast, remove }; }
+      }, init() { if (this.initialized) return; this.cacheDOM(); this.bindEvents(); this.bindState(); this.applyInitialState(); this.updateDashboardStats(); this.initialized = true; MSB_APP.set("meta.initialized", true); window.dispatchEvent(new CustomEvent("msb:ready", { detail: { part: 1, app: MSB_APP } })); console.info("%c Magic School Bus Virtual Classroom  Part 1 ready", "background:#ffd83d;color:#101c46;padding:4px 8px;border-radius:4px;font-weight:bold"); }, cacheDOM() { this.dom = { body: document.body, main: document.getElementById("msb-main"), sidebar: document.getElementById("msb-sidebar"), menuToggle: document.getElementById("msb-menu-toggle"), backdrop: document.getElementById("msb-mobile-backdrop"), contrastToggle: document.getElementById("msb-contrast-toggle"), teacherModeButton: document.getElementById("msb-teacher-mode-button"), appStatus: document.getElementById("msb-app-status"), toastLayer: document.getElementById("msb-toast-layer"), navButtons: [...document.querySelectorAll("[data-route]")], routeJumpButtons: [...document.querySelectorAll("[data-route-jump]")], views: [...document.querySelectorAll("[data-view]")], statStudents: document.getElementById("msb-stat-students"), statWorksheets: document.getElementById("msb-stat-worksheets"), statStars: document.getElementById("msb-stat-stars"), statSubmissions: document.getElementById("msb-stat-submissions"), rosterCount: document.getElementById("msb-nav-roster-count") }; }, bindEvents() { this.dom.menuToggle.addEventListener("click", () => { this.toggleSidebar(); }); this.dom.backdrop.addEventListener("click", () => { this.closeSidebar(); }); this.dom.contrastToggle.addEventListener("click", () => { const active = !MSB_APP.get("ui.highContrast"); MSB_APP.set("ui.highContrast", active); }); this.dom.teacherModeButton.addEventListener("click", () => { const mode = MSB_APP.get("session.mode"); if (mode === "teacher") { this.navigate("teacher"); } else { MSB_APP.set("session.mode", "teacher"); MSB_APP.set("session.activeStudentId", null); this.toast("Teacher mode activated.", "success"); this.navigate("teacher"); } }); this.dom.navButtons.forEach(button => { button.addEventListener("click", () => { this.navigate(button.dataset.route); }); }); this.dom.routeJumpButtons.forEach(button => { button.addEventListener("click", () => { this.navigate(button.dataset.routeJump); }); }); window.addEventListener("keydown", event => { if (event.key === "Escape") { this.closeSidebar(); } if (event.altKey && !event.ctrlKey && !event.metaKey && /^[1-7]$/.test(event.key)) { const routeNames = Object.keys(this.routes); const route = routeNames[Number(event.key) - 1]; if (route) { event.preventDefault(); this.navigate(route); } } }); window.addEventListener("resize", () => { if (window.innerWidth > 800) { this.closeSidebar(false); } }); }, bindState() { MSB_APP.subscribe("ui.activeRoute", route => { this.renderRoute(route); }); MSB_APP.subscribe("ui.sidebarOpen", isOpen => { this.renderSidebarState(isOpen); }); MSB_APP.subscribe("ui.highContrast", isEnabled => { this.renderContrastState(isEnabled); }); MSB_APP.subscribe("classroom.students", () => { this.updateDashboardStats(); }); MSB_APP.subscribe("worksheets.library", () => { this.updateDashboardStats(); }); MSB_APP.subscribe("worksheets.assignments", () => { this.updateDashboardStats(); }); MSB_APP.subscribe("worksheets.submissions", () => { this.updateDashboardStats(); }); MSB_APP.subscribe("rewards.classStars", () => { this.updateDashboardStats(); }); MSB_APP.subscribe("*", path => { if (String(path).startsWith("classroom.") || String(path).startsWith("worksheets.") || String(path).startsWith("rewards.")) { this.updateDashboardStats(); } }); }, applyInitialState() { this.renderSidebarState(MSB_APP.get("ui.sidebarOpen")); this.renderContrastState(MSB_APP.get("ui.highContrast")); this.renderRoute(MSB_APP.get("ui.activeRoute")); }, navigate(route) { if (!this.routes[route]) { console.warn(`[MSB] Unknown route "${route}"`); return false; } MSB_APP.set("ui.activeRoute", route); if (window.innerWidth <= 800) { this.closeSidebar(); } window.dispatchEvent(new CustomEvent("msb:navigate", { detail: { route, routeConfig: this.routes[route] } })); return true; }, renderRoute(route) { if (!this.routes[route]) route = "home"; this.dom.views.forEach(view => { view.hidden = view.dataset.view !== route; }); this.dom.navButtons.forEach(button => { if (button.dataset.route === route) { button.setAttribute("aria-current", "page"); } else { button.removeAttribute("aria-current"); } }); document.title = route === "home" ? "The Magic School Bus Virtual Classroom" : `${this.routes[route].label}  Magic School Bus Classroom`; requestAnimationFrame(() => { if (this.dom.main) { this.dom.main.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); } }); }, toggleSidebar() { MSB_APP.set("ui.sidebarOpen", !MSB_APP.get("ui.sidebarOpen")); }, closeSidebar(updateState = true) { if (updateState) { MSB_APP.set("ui.sidebarOpen", false); } else { this.renderSidebarState(false); } }, renderSidebarState(isOpen) { this.dom.body.classList.toggle("msb-sidebar-open", Boolean(isOpen)); this.dom.menuToggle.setAttribute("aria-expanded", String(Boolean(isOpen))); this.dom.menuToggle.setAttribute("aria-label", isOpen ? "Close classroom navigation" : "Open classroom navigation"); }, renderContrastState(isEnabled) { document.body.classList.toggle("msb-high-contrast", Boolean(isEnabled)); this.dom.contrastToggle.setAttribute("aria-pressed", String(Boolean(isEnabled))); }, updateDashboardStats() { const students = MSB_APP.get("classroom.students") || []; const assignments = MSB_APP.get("worksheets.assignments") || []; const library = MSB_APP.get("worksheets.library") || []; const submissions = MSB_APP.get("worksheets.submissions") || {}; const stars = Number(MSB_APP.get("rewards.classStars")) || 0; this.dom.statStudents.textContent = students.length.toLocaleString(); document.getElementById("msb-stat-seats").textContent = `${Math.max(0, 10 - students.length)}/10 seats available`; this.dom.statWorksheets.textContent = Math.max(assignments.length, library.length).toLocaleString(); this.dom.statStars.textContent = stars.toLocaleString(); this.dom.statSubmissions.textContent = Object.keys(submissions).length.toLocaleString(); if (students.length > 0) { this.dom.rosterCount.hidden = false; this.dom.rosterCount.textContent = students.length > 99 ? "99+" : String(students.length); } else { this.dom.rosterCount.hidden = true; } }, setStatus(text, state = "ready") { if (!this.dom.appStatus) return; this.dom.appStatus.textContent = String(text); const dot = this.dom.appStatus.closest(".msb-status-pill")?.querySelector(".msb-status-dot"); if (dot) { const colors = { ready: "var(--good)", busy: "var(--warn)", error: "var(--danger)", info: "var(--info)" }; dot.style.background = colors[state] || colors.ready; } }, toast(message, type = "info", duration = 3400) { if (!this.dom.toastLayer) return null; const id = MSB_APP.helpers.generateId("toast"); const toast = document.createElement("div"); toast.id = id; toast.className = "msb-toast"; toast.dataset.type = type; toast.setAttribute("role", type === "error" ? "alert" : "status"); const icons = { success: "", error: "!", info: "i", warning: "" }; const icon = document.createElement("strong"); icon.textContent = icons[type] || icons.info; icon.setAttribute("aria-hidden", "true"); const copy = document.createElement("div"); copy.className = "msb-toast-copy"; copy.textContent = String(message); const close = document.createElement("button"); close.className = "msb-toast-close"; close.type = "button"; close.setAttribute("aria-label", "Dismiss notification"); close.textContent = "×"; toast.append(icon, copy, close); this.dom.toastLayer.appendChild(toast); let timer = null; const remove = () => { if (timer) clearTimeout(timer); toast.remove(); }; close.addEventListener("click", remove); if (duration > 0) { timer = setTimeout(remove, duration); } return { id, element: toast, remove }; }
     }; window.MSB_MODULES[1] = CoreModule; /* ======================================================================== SHARED MODULE API Future parts can use this stable convenience layer rather than reaching directly into Part 1 implementation details. ======================================================================== */ window.MSB_UI = { navigate(route) { return CoreModule.navigate(route); }, toast(message, type, duration) { return CoreModule.toast(message, type, duration); }, setStatus(text, state) { return CoreModule.setStatus(text, state); }, openSidebar() { MSB_APP.set("ui.sidebarOpen", true); }, closeSidebar() { MSB_APP.set("ui.sidebarOpen", false); }, getRoute() { return MSB_APP.get("ui.activeRoute"); } }; /* ======================================================================== FUTURE MODULE REGISTRATION CONTRACT Example used by Parts 27: window.MSB_MODULES[2] = { part: 2, name: "Teacher Dashboard & Roster Management", init(app, ui) { const mount = document.getElementById("msb-module-teacher"); // Render module UI... } }; Part 8 will enumerate MSB_MODULES and run any uninitialized modules. ======================================================================== */ window.MSB_REGISTER_MODULE = function registerModule(partNumber, definition) { const part = Number(partNumber); if (!Number.isInteger(part) || part < 1 || part > 8) { throw new RangeError("MSB module part number must be an integer from 1 through 8."); } if (!definition || typeof definition !== "object") { throw new TypeError("MSB module definition must be an object."); } window.MSB_MODULES[part] = { part, initialized: false, ...definition }; window.dispatchEvent(new CustomEvent("msb:module-registered", { detail: { part, module: window.MSB_MODULES[part] } })); return window.MSB_MODULES[part]; }; /* ======================================================================== BASIC INTEGRATION SELF-CHECK Part 8 will replace/extend this with the full integration test suite. ======================================================================== */ function runPart1SelfCheck() { const tests = [{ name: "Global MSB_APP exists", pass: Boolean(window.MSB_APP) }, { name: "Global module registry exists", pass: Boolean(window.MSB_MODULES) }, { name: "Part 1 registered", pass: Boolean(window.MSB_MODULES[1]) }, { name: "Main workspace exists", pass: Boolean(document.getElementById("msb-main")) }, { name: "Teacher mount exists", pass: Boolean(document.getElementById("msb-module-teacher")) }, { name: "Student mount exists", pass: Boolean(document.getElementById("msb-module-student")) }, { name: "Worksheet mount exists", pass: Boolean(document.getElementById("msb-module-worksheets")) }, { name: "Media mount exists", pass: Boolean(document.getElementById("msb-module-media")) }, { name: "Grading mount exists", pass: Boolean(document.getElementById("msb-module-grading")) }, { name: "Utilities mount exists", pass: Boolean(document.getElementById("msb-module-utilities")) }, { name: "Reactive state API works", pass: typeof MSB_APP.get === "function" && typeof MSB_APP.set === "function" && typeof MSB_APP.subscribe === "function" }]; const passed = tests.every(test => test.pass); console.groupCollapsed(`[MSB] Part 1 self-check: ${passed ? "PASS" : "FAIL"}`); tests.forEach(test => { console[test.pass ? "log" : "error"](`${test.pass ? "" : ""} ${test.name}`); }); console.groupEnd(); return { passed, tests }; } window.MSB_PART1_SELF_CHECK = runPart1SelfCheck; /* ======================================================================== STARTUP ======================================================================== */ function boot() { CoreModule.init(); const check = runPart1SelfCheck(); if (!check.passed) { CoreModule.setStatus("Shell Error", "error"); CoreModule.toast("The core classroom shell did not pass all startup checks.", "error", 0); } else { CoreModule.setStatus("Bus Ready", "ready"); } } if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", boot, { once: true }); } else { boot(); }
     })();
 
@@ -10798,7 +10265,7 @@
 
           m.id = MOUNT_ID;
 
-          const workspace = document.getElementById('main-workspace') || document.body;
+          const workspace = document.getElementById('msb-module-student');
 
           workspace.appendChild(m);
 
@@ -10910,7 +10377,7 @@
 
             ${seats.map((s, idx) => s ? `
 
-              <div class="bus-seat ${window.MSB_APP.currentStudentId === s.id ? 'logged-in' : ''}" data-student-id="${s.id}" data-seat="${idx}">
+              <button type="button" class="bus-seat ${window.MSB_APP.currentStudentId === s.id ? 'logged-in' : ''}" data-student-id="${s.id}" data-seat="${idx}">
 
                 <div class="seat-avatar" style="background:${s.color || '#fff'}">${s.avatar || AVATAR_POOL[idx % AVATAR_POOL.length]}</div>
 
@@ -10918,7 +10385,7 @@
 
                 <div class="seat-meta">${s.stars || 0} ⭐ • ${s.badges?.length || 0} badges</div>
 
-              </div>
+              </button>
 
             ` : `
 
@@ -11118,7 +10585,7 @@
 
         const mount = getMount();
 
-        const worksheets = (window.MSB_APP.worksheets || []).map(ws => {
+        const worksheets = Object.values(window.MSB_APP.worksheets || {}).map(ws => {
 
           const sub = (student.submissions || []).find(s => s.worksheetId === ws.id);
 
@@ -11280,9 +10747,9 @@
 
             const act = b.dataset.action;
 
-            if (act === 'watch' && window.MSB_MODULES[5]?.renderVideoHub) window.MSB_MODULES[5].renderVideoHub();
+            if (act === 'watch') window.MSB_UI.navigate('media');
 
-            if (act === 'lab' && window.MSB_MODULES[5]?.renderExperiment) window.MSB_MODULES[5].renderExperiment();
+            if (act === 'lab') window.MSB_UI.navigate('media');
 
           });
 
@@ -11300,9 +10767,9 @@
 
           const overlay = document.getElementById('pin-overlay');
 
-          if (!overlay.classList.contains('open')) return;
+          if (!overlay || !overlay.classList.contains('open')) return;
 
-          if (/[0-9]/.test(e.key)) handlePinKey(e.key);
+          if (/^[0-9]$/.test(e.key)) handlePinKey(e.key);
 
           if (e.key === 'Backspace') handlePinKey('⌫');
 
@@ -11885,7 +11352,7 @@
 
             ${q.diagramSrc
 
-                ? `<img class="msb-ws-diagram-img" src="${q.diagramSrc}" alt="Diagram">`
+                ? `<img decoding="async"  class="msb-ws-diagram-img" src="${q.diagramSrc}" alt="Diagram">`
 
                 : `<div style="padding:2.5rem;text-align:center;color:#888;font-size:1.1rem">
 
@@ -14496,7 +13963,7 @@
 
       function render() {
 
-        const mount = document.getElementById('utilities-mount') || (() => { const el = document.createElement('div'); el.id = 'utilities-mount'; (document.getElementById('main-workspace') || document.body).appendChild(el); return el; })();
+        const mount = document.getElementById('utilities-mount') || (() => { const el = document.createElement('div'); el.id = 'utilities-mount'; document.getElementById('msb-module-utilities').appendChild(el); return el; })();
 
         mount.innerHTML = `
 
@@ -14688,7 +14155,7 @@
 
         document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => setTimer(parseInt(b.dataset.preset)));
 
-        document.getElementById('btn-custom').onclick = () => { const v = prompt('Enter seconds (e.g., 120 for 2 min):', '300'); if (v && !isNaN(v)) setTimer(parseInt(v)); };
+        document.getElementById('btn-custom').onclick = () => { const v = prompt('Enter seconds (e.g., 120 for 2 min):', '300'); if (v && Number.isFinite(Number(v)) && Number(v) > 0 && Number(v) <= 86400) setTimer(Math.ceil(Number(v))); else if (v !== null) alert('Enter a duration from 1 to 86400 seconds.'); };
 
         document.querySelectorAll('[data-sfx]').forEach(b => b.onclick = () => play(b.dataset.sfx));
 
@@ -14866,11 +14333,9 @@
 
           const data = serializeState();
 
+          const previous = localStorage.getItem(STORAGE_KEY);
+          if (previous) { try { JSON.parse(previous); localStorage.setItem(BACKUP_KEY, previous); } catch (_) {} }
           localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-
-          // Keep a rolling backup
-
-          localStorage.setItem(BACKUP_KEY, localStorage.getItem(STORAGE_KEY) || '');
 
           window.MSB_APP.lastSaved = data._meta.savedAt;
 
@@ -14928,7 +14393,8 @@
 
           // Merge carefully (preserve any runtime-only properties)
 
-          window.MSB_APP = Object.assign({}, window.MSB_APP || {}, data);
+          if (data.state && typeof data.state === 'object') Object.assign(window.MSB_APP.state, data.state);
+          for (const [key, value] of Object.entries(data)) { if (key !== 'state' && key !== '_meta' && typeof window.MSB_APP[key] !== 'function') window.MSB_APP[key] = value; }
 
           delete window.MSB_APP._meta; // meta is storage-only
 
@@ -15128,7 +14594,8 @@
 
             if (!ok) return;
 
-            window.MSB_APP = Object.assign({}, window.MSB_APP || {}, data);
+            if (data.state && typeof data.state === 'object') Object.assign(window.MSB_APP.state, data.state);
+          for (const [key, value] of Object.entries(data)) { if (key !== 'state' && key !== '_meta' && typeof window.MSB_APP[key] !== 'function') window.MSB_APP[key] = value; }
 
             delete window.MSB_APP._meta;
 
@@ -15595,7 +15062,7 @@
             style="margin:0; padding-left:20px; color:var(--text-soft); font-size:0.88rem; display:grid; gap:4px;"></ul>
         </div>
         <div class="msb-modal-iframe-container" id="msb-modal-iframe-box">
-          <iframe class="msb-modal-iframe" id="msb-modal-iframe" src="about:blank" title="Live Preview"></iframe>
+          <iframe loading="lazy"  class="msb-modal-iframe" id="msb-modal-iframe" src="about:blank" title="Live Preview"></iframe>
         </div>
       </div>
       <div class="msb-modal-footer">
@@ -15706,7 +15173,7 @@
 
 <script id="msb-unified-menu-logic">
 document.addEventListener('DOMContentLoaded', () => {
-  const menuToggle = document.getElementById('msb-menu-toggle');
+  let menuToggle = document.getElementById('msb-menu-toggle');
   const backdrop = document.getElementById('msb-mobile-backdrop');
 
   if (!menuToggle) return;
@@ -15728,6 +15195,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Clear existing listeners by replacing node clone
   const newToggle = menuToggle.cloneNode(true);
   menuToggle.parentNode.replaceChild(newToggle, menuToggle);
+  menuToggle = newToggle;
   newToggle.addEventListener('click', handleMenuToggle);
 
   if (backdrop) {
@@ -15750,6 +15218,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<script src="assets/classroom.js" defer></script>
 </body>
 
 </html>
