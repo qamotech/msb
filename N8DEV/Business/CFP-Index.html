@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clark Family Projects | General Home Improvement</title>
+    <style>
+        /* --- COLOR SCHEME & VARIABLES --- */
+        :root {
+            --black: #050505;
+            --dark-gray: #1a1a1a;
+            --blue: #00AEEF; /* Logo bright blue */
+            --tan: #C19A6B;  /* Logo pencil wood tan */
+            --white: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* --- TYPOGRAPHY & HEADER --- */
+        header {
+            background-color: rgba(5, 5, 5, 0.9);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 2px solid var(--blue);
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--tan);
+            letter-spacing: 1px;
+        }
+        
+        .logo-text span {
+            color: var(--blue);
+        }
+
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--blue);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: radial-gradient(circle at center, var(--dark-gray) 0%, var(--black) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ANIMATION 1: Floating Accent Elements */
+        .shape {
+            position: absolute;
+            background: var(--blue);
+            opacity: 0.1;
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+        .shape1 { width: 300px; height: 300px; top: -50px; left: -100px; }
+        .shape2 { width: 200px; height: 200px; bottom: 50px; right: -50px; background: var(--tan); animation-delay: -4s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(30px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* ANIMATION 2: Hero Fade & Slide Up */
+        .hero-content {
+            z-index: 10;
+            animation: fadeSlideUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        @keyframes fadeSlideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 span {
+            color: var(--blue);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--tan);
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        /* ANIMATION 3: Button Pulse Glow on Hover */
+        .cta-btn {
+            padding: 15px 35px;
+            background-color: var(--blue);
+            color: var(--black);
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background-color: var(--tan);
+            color: var(--black);
+            animation: pulseGlow 1s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 10px rgba(193, 154, 107, 0.5); }
+            100% { box-shadow: 0 0 25px rgba(193, 154, 107, 1); }
+        }
+
+        /* --- SERVICES SECTION --- */
+        .services {
+            padding: 100px 20px;
+            background-color: var(--black);
+            text-align: center;
+        }
+
+        .services h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--white);
+            border-bottom: 3px solid var(--tan);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--dark-gray);
+            padding: 40px 20px;
+            border-radius: 8px;
+            border-top: 4px solid var(--blue);
+            opacity: 0;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--tan);
+        }
+
+        .card h3 {
+            color: var(--tan);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* ANIMATION 4: Scroll-Triggered Fade & Scale (via JS) */
+        .scroll-reveal {
+            animation: revealUp 0.8s forwards;
+        }
+
+        @keyframes revealUp {
+            0% { opacity: 0; transform: translateY(50px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* --- ABOUT & CONTACT FOOTER --- */
+        footer {
+            background-color: var(--dark-gray);
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 2px solid var(--blue);
+        }
+
+        .footer-content h2 {
+            color: var(--tan);
+            margin-bottom: 20px;
+        }
+
+        .footer-content p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #ddd;
+        }
+        
+        .contact-info {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            header { flex-direction: column; padding: 15px; }
+            nav { margin-top: 15px; }
+            nav a { margin: 0 10px; }
+            .hero h1 { font-size: 2.8rem; }
+        }
+    </style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+
+    <header>
+        <div class="logo-text">CF<span>P</span></div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#services">Services</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="hero-content">
+            <h1>Clark Family <span>Projects</span></h1>
+            <p>Over 20 Years of Trade Experience. Expert Painting, Finished Carpentry, and Precision Assembly for Your Home.</p>
+            <a href="#contact" class="cta-btn">Get a Quote</a>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <h2>Our Services</h2>
+        <div class="grid">
+            <div class="card js-reveal">
+                <h3>Painting</h3>
+                <p>Flawless interior and exterior painting tailored to breathe new life into your living spaces. Clean lines, prep work, and precise execution.</p>
+            </div>
+            <div class="card js-reveal">
+                <h3>Finished Carpentry</h3>
+                <p>Custom trim, molding, and architectural woodwork. We bring detailed craftsmanship to frame your rooms perfectly.</p>
+            </div>
+            <div class="card js-reveal">
+                <h3>Furniture Assembly</h3>
+                <p>Don't struggle with instructions. We provide rapid, structurally sound assembly for all complex furniture and cabinetry.</p>
+            </div>
+            <div class="card js-reveal">
+                <h3>Light Plumbing & Electrical</h3>
+                <p>Safe and efficient fixture swaps. From installing modern ceiling fans to upgrading sink faucets, we handle the technical details.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <h2>Operated by Nate & Shawna Clark</h2>
+            <p>Proudly serving the Baltimore and Edgewood areas.</p>
+            <p>MHIC Licensed & Insured</p>
+            
+            <div class="contact-info">
+                <p><strong>Phone:</strong> 850-730-7710 | 850-730-7709</p>
+                <p><strong>Email:</strong> nateandshawnaclark@gmail.com</p>
+                <p style="margin-top: 15px; font-size: 0.9rem; color: var(--blue);">We Accept: Zelle, CashApp, Venmo, VISA, and PayPal</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Scroll Animations -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.2
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('scroll-reveal');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const cards = document.querySelectorAll('.js-reveal');
+            cards.forEach((card, index) => {
+                // Add a slight delay to each card for a staggered effect
+                card.style.animationDelay = `${index * 0.15}s`;
+                observer.observe(card);
+            });
+        });
+    </script>
+
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+</html>

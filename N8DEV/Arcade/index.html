@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Hub</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --text-color: #e0e6ed;
+            --accent-color: #00f0ff;
+            --card-bg: rgba(15, 23, 42, 0.8);
+            --card-border: rgba(0, 240, 255, 0.3);
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            margin-bottom: 2rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1000px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+            border-color: var(--accent-color);
+        }
+        .card h2 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.25rem;
+        }
+    </style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+
+    <h1>Retro Arcade Hub</h1>
+    
+    <div class="grid">
+        <a href="CombatCars.html" class="card">
+            <h2>Combat Cars</h2>
+        </a>
+        <a href="MiyagiDo-ShadowDefense.html" class="card">
+            <h2>Miyagi-Do: Shadow Defense</h2>
+        </a>
+        <a href="N8-Strike.html" class="card">
+            <h2>N8-Strike</h2>
+        </a>
+        <a href="NinjaSandbox.html" class="card">
+            <h2>Ninja Interactive Sandbox</h2>
+        </a>
+        <a href="Shipment-8Bit.html" class="card">
+            <h2>Shipment 8-Bit FPS</h2>
+        </a>
+    </div>
+
+
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+</html>

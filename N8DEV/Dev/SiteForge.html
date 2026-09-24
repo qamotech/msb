@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>SiteForge Cyber Electric — Visual Web Builder</title>
+  <style>
+    :root{
+      --bg:#06070c;--panel:#0b0e17;--panel2:#111625;--line:#25304a;--text:#e9f6ff;
+      --muted:#8190aa;--cyan:#20f7ff;--violet:#9a5cff;--pink:#ff3ed1;--lime:#9dff4a;
+      --danger:#ff4d6d;--warn:#ffd166;--shadow:0 18px 55px #0009;--radius:12px;
+      --sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+      --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace
+    }
+    *{box-sizing:border-box}html,body{height:100%}body{margin:0;overflow:hidden;background:var(--bg);color:var(--text);font:13px/1.45 var(--sans)}
+    button,input,select,textarea{font:inherit}button{color:inherit}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 18% -5%,#20f7ff13,transparent 34%),radial-gradient(circle at 95% 5%,#9a5cff18,transparent 32%),linear-gradient(#ffffff02 1px,transparent 1px),linear-gradient(90deg,#ffffff02 1px,transparent 1px);background-size:auto,auto,32px 32px,32px 32px}
+    ::selection{background:#20f7ff55;color:white}::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#2a3550;border-radius:8px}::-webkit-scrollbar-track{background:transparent}
+    .app{height:100%;display:grid;grid-template-rows:56px 1fr 28px}
+    .topbar{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line);background:#090c14e8;backdrop-filter:blur(18px);z-index:20}
+    .brand{display:flex;align-items:center;gap:10px;min-width:216px}.brand-mark{width:32px;height:32px;border:1px solid var(--cyan);border-radius:8px;display:grid;place-items:center;font:900 18px var(--mono);color:#041014;background:linear-gradient(135deg,var(--cyan),var(--violet));box-shadow:0 0 24px #20f7ff55;transform:skew(-6deg)}
+    .brand strong{display:block;letter-spacing:.14em;font-size:13px}.brand small{display:block;color:var(--muted);font:9px var(--mono);letter-spacing:.12em}
+    .project-name{width:190px;background:#0d1220;border:1px solid transparent;border-bottom-color:var(--line);color:var(--text);padding:7px 9px;outline:0}.project-name:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #20f7ff13}
+    .spacer{flex:1}.toolbar-group{display:flex;gap:5px;padding-right:7px;margin-right:2px;border-right:1px solid var(--line)}
+    .btn,.icon-btn,.seg button{border:1px solid var(--line);background:#101522;cursor:pointer;border-radius:8px;transition:.16s ease;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+    .btn{padding:8px 11px}.icon-btn{width:34px;height:34px}.btn:hover,.icon-btn:hover,.seg button:hover{border-color:#4b5d81;background:#171f30;transform:translateY(-1px)}.btn:focus-visible,.icon-btn:focus-visible,.tab:focus-visible,.component:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+    .btn.primary{background:linear-gradient(135deg,#00bfc7,#7951dd);border-color:var(--cyan);font-weight:800}.btn.primary:hover{box-shadow:0 0 20px #20f7ff44}.btn.danger{color:#ff8fa5}
+    .theme-select{height:34px;max-width:112px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--text);padding:0 8px;outline:0;cursor:pointer}.theme-select:focus{border-color:var(--cyan)}
+    button:disabled{opacity:.35;cursor:not-allowed;transform:none!important}.kbd{font:10px var(--mono);color:var(--muted);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 4px}
+    .workspace{min-height:0;display:grid;grid-template-columns:244px minmax(330px,1fr) 292px}
+    .sidebar{min-height:0;background:#090d16e8;border-right:1px solid var(--line);display:flex;flex-direction:column}.sidebar.right{border-right:0;border-left:1px solid var(--line)}
+    .panel-head{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.14em;font:700 10px var(--mono);color:#b7c6dc}
+    .panel-scroll{padding:10px;overflow:auto;min-height:0}.search{width:100%;background:#0b101c;border:1px solid var(--line);color:var(--text);padding:9px 10px;border-radius:8px;outline:0;margin-bottom:10px}.search:focus{border-color:var(--cyan)}
+    .section-label{display:flex;align-items:center;gap:7px;margin:12px 2px 7px;color:var(--muted);font:700 10px var(--mono);letter-spacing:.12em;text-transform:uppercase}.section-label:after{content:"";height:1px;background:var(--line);flex:1}
+    .component-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.component{min-height:66px;text-align:left;border:1px solid var(--line);background:linear-gradient(145deg,#111727,#0c101a);border-radius:9px;color:var(--text);cursor:grab;padding:9px;position:relative;overflow:hidden}.component:before{content:"";position:absolute;inset:auto 0 0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));opacity:0;transition:.2s}.component:hover{border-color:#425275;transform:translateY(-2px);box-shadow:0 8px 22px #0006}.component:hover:before{opacity:1}.component b{display:block;font-size:11px;margin-top:6px}.component span{color:var(--cyan);font:16px var(--mono)}
+    .templates{display:grid;gap:7px}.template{border:1px solid var(--line);background:#0e1422;border-radius:9px;padding:9px;text-align:left;cursor:pointer}.template:hover{border-color:var(--violet)}.template strong{display:block}.template small{color:var(--muted)}
+    .stage{min-width:0;min-height:0;display:grid;grid-template-rows:42px 1fr;background:#080b12}
+    .stagebar{display:flex;align-items:center;justify-content:center;gap:10px;border-bottom:1px solid var(--line);background:#0a0e18}.seg{display:flex;background:#070a11;border:1px solid var(--line);padding:3px;border-radius:9px}.seg button{border:0;background:transparent;border-radius:6px;padding:5px 10px;color:var(--muted)}.seg button.active{background:#1a2337;color:var(--cyan);box-shadow:inset 0 0 0 1px #20f7ff44}
+    .zoom-read{min-width:44px;text-align:center;color:var(--muted);font:11px var(--mono)}
+    .canvas-wrap{min-height:0;overflow:auto;padding:28px;display:flex;justify-content:center;align-items:flex-start;background-image:radial-gradient(#283450 1px,transparent 1px);background-size:18px 18px;position:relative}
+    .canvas-shell{width:min(100%,1100px);min-width:280px;transition:width .22s ease,transform .2s ease;transform-origin:top center}.canvas-shell.tablet{width:768px}.canvas-shell.mobile{width:390px}
+    .canvas-label{height:25px;border:1px solid #27324a;border-bottom:0;border-radius:9px 9px 0 0;background:#0b101c;color:#6f7f9b;padding:5px 9px;font:9px var(--mono);letter-spacing:.1em;display:flex;justify-content:space-between}
+    #canvas{background:#fff;color:#111;min-height:640px;border:1px solid #33405c;box-shadow:0 25px 80px #000d;position:relative;overflow:hidden;user-select:none}
+    #canvas.empty:before{content:"DROP COMPONENTS OR CHOOSE A TEMPLATE";position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);color:#8a93a5;border:1px dashed #aeb8c8;border-radius:12px;padding:24px 30px;font:700 12px var(--mono);letter-spacing:.1em;white-space:nowrap}
+    #canvas.drag-target{outline:3px solid var(--cyan);outline-offset:-3px}
+    .canvas-el{position:relative;min-height:18px}.canvas-el:hover{outline:1px dashed #08a6af;outline-offset:-1px}.canvas-el.selected{outline:2px solid #7654e8!important;outline-offset:-2px;z-index:2}.canvas-el.selected:after{content:attr(data-tag);position:absolute;left:0;top:0;transform:translateY(-100%);background:#7654e8;color:white;font:9px var(--mono);padding:3px 6px;pointer-events:none}
+    .drop-line{height:3px!important;min-height:3px;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+    .properties-empty{color:var(--muted);text-align:center;padding:38px 14px}.properties-empty .empty-glyph{font-size:35px;color:#34415b;margin-bottom:8px}
+    .field{margin-bottom:11px}.field label{display:flex;justify-content:space-between;margin-bottom:5px;color:#a8b5c9;font:10px var(--mono);text-transform:uppercase;letter-spacing:.08em}.field input,.field textarea,.field select{width:100%;background:#0a0f1a;border:1px solid var(--line);border-radius:7px;color:var(--text);padding:8px;outline:0;resize:vertical}.field textarea{min-height:70px}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #20f7ff11}.field input[type=color]{height:36px;padding:3px}.field input[type=range]{padding:0;accent-color:var(--cyan)}
+    .property-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:12px 0}.property-actions .btn{padding:7px}
+    .tabs{display:flex;border-bottom:1px solid var(--line);padding:0 8px}.tab{flex:1;border:0;background:transparent;color:var(--muted);padding:9px 3px;cursor:pointer;border-bottom:2px solid transparent;font:10px var(--mono);text-transform:uppercase}.tab.active{color:var(--cyan);border-color:var(--cyan)}.tab-panel{display:none}.tab-panel.active{display:block}
+    .code-drawer{position:absolute;inset:43px 0 0;z-index:8;background:#080b13;display:none;grid-template-rows:40px 1fr}.code-drawer.open{display:grid}.code-head{display:flex;align-items:center;gap:8px;padding:0 10px;border-bottom:1px solid var(--line)}.code-head strong{font:11px var(--mono);letter-spacing:.1em}.code-tabs{display:flex;gap:3px}.code-editor{width:100%;height:100%;border:0;outline:0;resize:none;background:#070a11;color:#cde8ff;padding:16px;font:12px/1.6 var(--mono);tab-size:2}
+    .modal-backdrop{position:fixed;inset:0;z-index:100;background:#02040bcc;backdrop-filter:blur(9px);display:none;place-items:center;padding:24px}.modal-backdrop.open{display:grid}.modal{width:min(920px,96vw);max-height:88vh;overflow:hidden;border:1px solid #36425f;border-radius:14px;background:#0a0e18;box-shadow:var(--shadow),0 0 55px #20f7ff18;display:grid;grid-template-rows:48px 1fr}.modal.small{width:min(560px,96vw)}.modal-head{display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid var(--line)}.modal-head h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase}.modal-body{padding:16px;overflow:auto}.modal-body.flush{padding:0}.preview-frame{border:0;background:white;width:100%;height:72vh}
+    .audit-card{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:11px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:#0e1320}.audit-card.pass{border-color:#9dff4a44}.audit-card.warn{border-color:#ffd16655}.audit-icon{font-size:18px}.audit-card p{margin:2px 0;color:var(--muted)}
+    .command-list{display:grid;gap:3px}.command{display:flex;justify-content:space-between;border:0;border-radius:7px;background:transparent;color:var(--text);padding:10px;text-align:left;cursor:pointer}.command:hover,.command.active{background:#192238;color:var(--cyan)}
+    .lab-preview{height:120px;display:grid;place-items:center;border:1px solid var(--line);border-radius:10px;margin-bottom:12px;background:#161d2d}.lab-card{width:120px;height:66px;border-radius:14px;background:#20f7ff33;backdrop-filter:blur(10px)}
+    .prompt-output{white-space:pre-wrap;background:#070a11;border:1px solid var(--line);border-radius:8px;padding:12px;color:#bbd7ed;font:11px/1.55 var(--mono);min-height:100px}.score{color:var(--lime);font:700 11px var(--mono)}
+    .statusbar{display:flex;align-items:center;gap:16px;padding:0 10px;border-top:1px solid var(--line);background:#080b12;color:#6f7f9b;font:10px var(--mono);letter-spacing:.05em}.statusbar .live{color:var(--lime)}.statusbar .status-spacer{flex:1}
+    .toast-stack{position:fixed;right:14px;bottom:40px;z-index:200;display:grid;gap:8px}.toast{min-width:250px;max-width:360px;background:#101728;border:1px solid #384765;border-left:3px solid var(--cyan);border-radius:8px;padding:10px 12px;box-shadow:var(--shadow);animation:toastIn .18s ease}.toast.error{border-left-color:var(--danger)}.toast.success{border-left-color:var(--lime)}@keyframes toastIn{from{opacity:0;transform:translateX(18px)}}
+    .help-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.shortcut{display:flex;justify-content:space-between;padding:9px;border-bottom:1px solid var(--line);color:#aab7ca}
+    .tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tool-card{border:1px solid var(--line);border-radius:10px;background:#0e1422;padding:14px}.tool-card strong{display:block;margin-bottom:4px}.tool-card p{min-height:38px;margin:0 0 12px;color:var(--muted);font-size:12px}.tool-card .btn{width:100%}
+    .boot{position:fixed;inset:0;z-index:999;background:#05070c;display:grid;place-items:center;transition:.5s}.boot.hide{opacity:0;pointer-events:none}.boot-inner{width:min(420px,80vw)}.boot-logo{font:900 28px var(--mono);letter-spacing:.18em;color:var(--cyan);text-shadow:0 0 24px #20f7ff}.boot-line{height:2px;background:#161d2d;margin-top:14px;overflow:hidden}.boot-line:after{content:"";display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--violet));animation:boot 1s ease both}@keyframes boot{from{width:0}to{width:100%}}
+    .light-ui{--bg:#eef3f8;--panel:#f8fbff;--panel2:#fff;--line:#cbd6e4;--text:#101827;--muted:#64748b}.light-ui body:before{opacity:.25}.light-ui .topbar,.light-ui .sidebar,.light-ui .stagebar,.light-ui .statusbar{background:#f7faffee}.light-ui .btn,.light-ui .icon-btn,.light-ui .component,.light-ui .template{background:#fff}.light-ui .stage{background:#dce5ef}.light-ui .canvas-wrap{background-color:#d7e0eb}.light-ui .field input,.light-ui .field textarea,.light-ui .field select,.light-ui .search{background:white;color:#111}
+    .theme-dim{--bg:#171a20;--panel:#1d2129;--panel2:#242a34;--line:#384150;--text:#d8e0ea;--muted:#909baa;--cyan:#62dfe5;--violet:#9479d8;--pink:#df70c5;--lime:#a8db73}.theme-dim body:before{opacity:.45}.theme-dim .topbar,.theme-dim .sidebar,.theme-dim .stagebar,.theme-dim .statusbar{background:#1b1f27ef}.theme-dim .stage{background:#14171d}.theme-dim .canvas-wrap{background-color:#20252d}
+    .theme-midnight{--bg:#030817;--panel:#071126;--panel2:#0a1730;--line:#1c3960;--text:#e2eeff;--muted:#7792b8;--cyan:#36d8ff;--violet:#6875ff;--pink:#ef55d5;--lime:#85f7c3}.theme-midnight .topbar,.theme-midnight .sidebar,.theme-midnight .stagebar,.theme-midnight .statusbar{background:#050d20ed}.theme-midnight .stage{background:#030714}.theme-midnight .canvas-wrap{background-color:#071022}
+    @media(max-width:900px){.workspace{grid-template-columns:210px 1fr}.sidebar.right{position:fixed;right:0;top:56px;bottom:28px;width:290px;z-index:40;transform:translateX(100%);transition:.2s}.sidebar.right.open{transform:none}.topbar .hide-small{display:none}.brand{min-width:auto}.brand small{display:none}.project-name{width:120px}.canvas-wrap{padding:18px}}
+    @media(max-width:650px){.workspace{grid-template-columns:1fr}.sidebar.left{position:fixed;left:0;top:56px;bottom:28px;width:230px;z-index:41;transform:translateX(-100%);transition:.2s}.sidebar.left.open{transform:none}.topbar{padding:0 7px}.brand strong{display:none}.project-name{width:110px}.toolbar-group{padding:0;border:0}.btn span.label{display:none}.canvas-wrap{padding:10px}.help-grid,.tool-grid{grid-template-columns:1fr}.theme-select{max-width:82px}}
+  </style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+  <div class="boot" id="boot" aria-hidden="true"><div class="boot-inner"><div class="boot-logo">SITEFORGE // CE</div><div style="color:#74829b;font:10px var(--mono);margin-top:8px">INITIALIZING CREATIVE SYSTEMS...</div><div class="boot-line"></div></div></div>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark">S</div><div><strong>SITEFORGE</strong><small>CYBER ELECTRIC EDITION</small></div></div>
+      <input class="project-name" id="projectName" value="Untitled interface" aria-label="Project name">
+      <div class="toolbar-group">
+        <button class="icon-btn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+        <button class="icon-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+      </div>
+      <div class="spacer"></div>
+      <div class="toolbar-group hide-small">
+        <button class="btn" id="saveBtn">Save</button>
+        <button class="btn" id="loadBtn">Load</button>
+        <button class="btn" id="auditBtn">Audit</button>
+        <button class="btn" id="codeBtn">&lt;/&gt; Code</button>
+        <button class="btn" id="sourceToolsBtn">Source tools</button>
+      </div>
+      <button class="btn primary" id="previewBtn"><span>◉</span><span class="label">Preview</span></button>
+      <button class="icon-btn" id="commandBtn" title="Command palette (Ctrl+K)">⌘</button>
+      <select class="theme-select" id="themeSelect" title="Interface theme" aria-label="Interface theme">
+        <option value="cyber">Cyber</option>
+        <option value="dim">Dim</option>
+        <option value="midnight">Midnight</option>
+        <option value="light">Light</option>
+      </select>
+      <button class="icon-btn" id="rightPanelBtn" title="Toggle properties">⚙</button>
+    </header>
+
+    <main class="workspace">
+      <aside class="sidebar left" id="leftPanel">
+        <div class="panel-head"><span>Component Matrix</span><button class="icon-btn" id="closeLeft" style="width:26px;height:26px">×</button></div>
+        <div class="panel-scroll">
+          <input class="search" id="componentSearch" placeholder="Filter components…" aria-label="Filter components">
+          <div id="componentLibrary"></div>
+          <div class="section-label">Launch templates</div>
+          <div class="templates" id="templateList"></div>
+        </div>
+      </aside>
+
+      <section class="stage">
+        <div class="stagebar">
+          <button class="icon-btn" id="leftPanelBtn" title="Components">☷</button>
+          <div class="seg" aria-label="Device preview">
+            <button data-device="desktop" class="active">Desktop</button>
+            <button data-device="tablet">Tablet</button>
+            <button data-device="mobile">Mobile</button>
+          </div>
+          <button class="icon-btn" id="zoomOut" title="Zoom out">−</button>
+          <span class="zoom-read" id="zoomRead">100%</span>
+          <button class="icon-btn" id="zoomIn" title="Zoom in">+</button>
+          <button class="icon-btn" id="fullscreenBtn" title="Fullscreen canvas">⛶</button>
+        </div>
+        <div class="canvas-wrap" id="canvasWrap">
+          <div class="canvas-shell" id="canvasShell">
+            <div class="canvas-label"><span>LIVE COMPOSITION</span><span id="canvasSize">AUTO × 640</span></div>
+            <div id="canvas" class="empty" role="application" aria-label="Website canvas"></div>
+          </div>
+        </div>
+        <div class="code-drawer" id="codeDrawer">
+          <div class="code-head"><strong>LIVE SOURCE</strong><div class="code-tabs"><button class="btn" data-code-tab="html">HTML</button><button class="btn" data-code-tab="css">CSS</button><button class="btn" data-code-tab="js">JS</button></div><div class="spacer"></div><button class="btn" id="formatBtn">Format</button><button class="btn" id="minifyBtn">Minify</button><button class="btn" id="copyCodeBtn">Copy</button><button class="btn primary" id="applyCodeBtn">Apply HTML</button><button class="icon-btn" id="closeCode">×</button></div>
+          <textarea class="code-editor" id="codeEditor" spellcheck="false" aria-label="Source editor"></textarea>
+        </div>
+      </section>
+
+      <aside class="sidebar right" id="rightPanel">
+        <div class="panel-head"><span>Inspector</span><button class="icon-btn" id="closeRight" style="width:26px;height:26px">×</button></div>
+        <div class="tabs">
+          <button class="tab active" data-tab="properties">Properties</button>
+          <button class="tab" data-tab="effects">FX Lab</button>
+          <button class="tab" data-tab="prompt">Prompt</button>
+        </div>
+        <div class="panel-scroll">
+          <div class="tab-panel active" id="tab-properties"><div id="properties"></div></div>
+          <div class="tab-panel" id="tab-effects">
+            <div class="lab-preview" id="labPreview"><div class="lab-card" id="labCard"></div></div>
+            <div class="field"><label>Gradient A <span id="gaVal">#20f7ff</span></label><input type="color" id="gradientA" value="#20f7ff"></div>
+            <div class="field"><label>Gradient B <span id="gbVal">#9a5cff</span></label><input type="color" id="gradientB" value="#9a5cff"></div>
+            <div class="field"><label>Angle <span id="angleVal">135°</span></label><input type="range" id="gradientAngle" min="0" max="360" value="135"></div>
+            <div class="field"><label>Radius <span id="radiusVal">14px</span></label><input type="range" id="fxRadius" min="0" max="80" value="14"></div>
+            <div class="field"><label>Depth <span id="depthVal">24px</span></label><input type="range" id="fxDepth" min="0" max="80" value="24"></div>
+            <button class="btn primary" id="applyFx" style="width:100%">Apply to selected</button>
+            <button class="btn" id="copyCss" style="width:100%;margin-top:7px">Copy CSS</button>
+          </div>
+          <div class="tab-panel" id="tab-prompt">
+            <div class="field"><label>Goal</label><select id="promptGoal"><option>Landing page</option><option>Product dashboard</option><option>Portfolio</option><option>Documentation hub</option></select></div>
+            <div class="field"><label>Audience</label><input id="promptAudience" value="design-forward technology teams"></div>
+            <div class="field"><label>Tone</label><select id="promptTone"><option>Cyber electric</option><option>Minimal and precise</option><option>Bold and playful</option><option>Premium editorial</option></select></div>
+            <div class="field"><label>Constraints</label><textarea id="promptConstraints">Responsive, accessible, fast, no external dependencies.</textarea></div>
+            <button class="btn primary" id="buildPrompt" style="width:100%">Build design prompt</button>
+            <div style="display:flex;justify-content:space-between;margin:10px 0 5px"><span class="section-label" style="margin:0;flex:1">Output</span><span class="score" id="promptScore">—</span></div>
+            <div class="prompt-output" id="promptOutput">Configure a brief, then generate.</div>
+            <button class="btn" id="copyPrompt" style="width:100%;margin-top:7px">Copy prompt</button>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="statusbar">
+      <span class="live">● LIVE</span><span id="statusText">System ready</span><span id="elementCount">0 components</span><span class="status-spacer"></span><span>LOCAL-FIRST</span><span id="saveState">SAVED</span>
+    </footer>
+  </div>
+
+  <div class="modal-backdrop" id="previewModal"><div class="modal"><div class="modal-head"><h2>Live project preview</h2><div style="display:flex;gap:6px"><button class="btn" id="openExternal">Open new window</button><button class="btn primary" id="downloadHtml">Export HTML</button><button class="btn" id="downloadZip">Export ZIP</button><button class="icon-btn" data-close="previewModal">×</button></div></div><div class="modal-body flush"><iframe class="preview-frame" id="previewFrame" title="Project preview" sandbox="allow-forms allow-scripts allow-popups"></iframe></div></div></div>
+  <div class="modal-backdrop" id="auditModal"><div class="modal small"><div class="modal-head"><h2>Accessibility & quality scan</h2><button class="icon-btn" data-close="auditModal">×</button></div><div class="modal-body" id="auditResults"></div></div></div>
+  <div class="modal-backdrop" id="commandModal"><div class="modal small"><div class="modal-head"><h2>Command network</h2><button class="icon-btn" data-close="commandModal">×</button></div><div class="modal-body"><input class="search" id="commandSearch" placeholder="Type a command…" autocomplete="off"><div class="command-list" id="commandList"></div></div></div></div>
+  <div class="modal-backdrop" id="helpModal"><div class="modal small"><div class="modal-head"><h2>Keyboard controls</h2><button class="icon-btn" data-close="helpModal">×</button></div><div class="modal-body"><div class="help-grid" id="helpGrid"></div></div></div></div>
+  <div class="modal-backdrop" id="sourceToolsModal"><div class="modal"><div class="modal-head"><h2>HTML / CSS / JavaScript toolkit</h2><button class="icon-btn" data-close="sourceToolsModal">×</button></div><div class="modal-body"><div class="tool-grid">
+    <div class="tool-card"><strong>Import editable HTML</strong><p>Load an HTML file into the canvas. Standard elements become native components; complex blocks stay editable as raw HTML.</p><button class="btn primary" id="importHtmlBtn">Choose HTML file</button></div>
+    <div class="tool-card"><strong>Merge source files</strong><p>Choose HTML, CSS, and JavaScript files together and merge them into the editable project.</p><button class="btn" id="mergeFilesBtn">Choose source files</button></div>
+    <div class="tool-card"><strong>Minified single file</strong><p>Compress the current project and download one portable HTML document.</p><button class="btn" id="minifiedExportBtn">Download minified HTML</button></div>
+    <div class="tool-card"><strong>Split project package</strong><p>Download index.html, styles.css, and script.js as a clean ZIP package.</p><button class="btn" id="splitExportBtn">Download split ZIP</button></div>
+    <div class="tool-card"><strong>Merged project</strong><p>Combine the current HTML, CSS, and JavaScript into one self-contained HTML file.</p><button class="btn" id="mergedExportBtn">Download merged HTML</button></div>
+    <div class="tool-card"><strong>Project backup</strong><p>Export or re-import the complete editable SiteForge project model.</p><div style="display:flex;gap:7px"><button class="btn" id="exportProjectBtn">Export JSON</button><button class="btn" id="importProjectBtn">Import JSON</button></div></div>
+  </div></div></div></div>
+  <div class="toast-stack" id="toasts" aria-live="polite"></div>
+  <input type="file" id="importFile" accept=".json" hidden>
+  <input type="file" id="htmlImportFile" accept=".html,.htm,text/html" hidden>
+  <input type="file" id="sourceMergeFiles" accept=".html,.htm,.css,.js,text/html,text/css,text/javascript,application/javascript" multiple hidden>
+
+  <script>
+  (() => {
+    'use strict';
+    const $ = (s, root=document) => root.querySelector(s);
+    const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const uid = () => 'sf_' + Math.random().toString(36).slice(2,9);
+    const clone = value => JSON.parse(JSON.stringify(value));
+    const STORAGE_KEY = 'siteforge-cyber-electric-v1';
+    const state = { elements:[], selected:null, history:[], historyIndex:-1, dirty:false, device:'desktop', zoom:1, codeTab:'html', customCSS:'', customJS:'', dropIndex:null };
+
+    const catalog = [
+      {group:'Foundation',type:'heading',icon:'H1',name:'Heading'},
+      {group:'Foundation',type:'text',icon:'¶',name:'Text'},
+      {group:'Foundation',type:'button',icon:'↗',name:'Button'},
+      {group:'Foundation',type:'image',icon:'▧',name:'Image'},
+      {group:'Foundation',type:'divider',icon:'—',name:'Divider'},
+      {group:'Foundation',type:'spacer',icon:'↕',name:'Spacer'},
+      {group:'Foundation',type:'raw',icon:'<>',name:'HTML Block'},
+      {group:'Structure',type:'hero',icon:'✦',name:'Hero'},
+      {group:'Structure',type:'card',icon:'◇',name:'Card'},
+      {group:'Structure',type:'navbar',icon:'☰',name:'Navbar'},
+      {group:'Structure',type:'columns',icon:'▥',name:'Columns'},
+      {group:'Structure',type:'quote',icon:'“',name:'Quote'},
+      {group:'Structure',type:'form',icon:'⌁',name:'Form'}
+    ];
+
+    const defaults = {
+      heading:()=>({type:'heading',content:'Build beyond the ordinary.',tag:'h2',style:{fontSize:'42px',fontWeight:'800',color:'#10131a',textAlign:'left',padding:'28px 32px',background:'transparent'}}),
+      text:()=>({type:'text',content:'A focused paragraph that explains the value clearly and invites the next action.',style:{fontSize:'17px',color:'#3f4857',textAlign:'left',padding:'12px 32px',background:'transparent'}}),
+      button:()=>({type:'button',content:'Launch project',url:'#',style:{fontSize:'15px',color:'#041014',background:'linear-gradient(135deg,#20f7ff,#9a5cff)',padding:'14px 22px',margin:'14px 32px',borderRadius:'10px',textAlign:'left'}}),
+      image:()=>({type:'image',url:'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1400&q=80',alt:'Abstract neon gradient',style:{height:'320px',padding:'0',margin:'16px 32px',borderRadius:'18px'}}),
+      divider:()=>({type:'divider',style:{height:'1px',background:'#d7deea',margin:'22px 32px'}}),
+      spacer:()=>({type:'spacer',style:{height:'56px',background:'transparent'}}),
+      raw:()=>({type:'raw',name:'Custom HTML',html:'<section style="padding:32px"><h2>Editable HTML block</h2><p>Paste or write any valid HTML in the inspector.</p></section>',style:{background:'transparent',padding:'0'}}),
+      hero:()=>({type:'hero',eyebrow:'SYSTEMS / ONLINE',content:'Turn raw ideas into electric experiences.',body:'Compose, style, test, and export a production-ready page from one visual command center.',button:'Start building',url:'#',style:{color:'#f4fbff',background:'linear-gradient(135deg,#070b12,#18203a)',padding:'84px 54px',textAlign:'left',borderRadius:'0'}}),
+      card:()=>({type:'card',eyebrow:'CAPABILITY 01',content:'Fast by design',body:'A reusable content card with hierarchy, rhythm, and a clear action.',button:'Explore →',url:'#',style:{color:'#111827',background:'#f3f7fb',padding:'34px',margin:'18px 32px',borderRadius:'18px'}}),
+      navbar:()=>({type:'navbar',brand:'NEXUS',links:'Work,Studio,Notes,Contact',button:'Connect',style:{color:'#f4fbff',background:'#080b12',padding:'18px 28px'}}),
+      columns:()=>({type:'columns',content:'Designed for momentum',body:'Ship thoughtful interfaces without losing the thread.',content2:'Built for control',body2:'Every important decision stays editable and portable.',style:{color:'#151923',background:'#ffffff',padding:'40px 32px',gap:'22px'}}),
+      quote:()=>({type:'quote',content:'The future is something we compose, one deliberate interaction at a time.',body:'— SiteForge Studio',style:{color:'#f5f7ff',background:'#11182a',padding:'42px 48px',margin:'18px 32px',borderRadius:'18px'}}),
+      form:()=>({type:'form',content:'Join the signal',body:'Get occasional field notes on design systems and creative tooling.',button:'Subscribe',placeholder:'you@domain.com',style:{color:'#111827',background:'#eaf1f7',padding:'42px 32px'}})
+    };
+
+    const templates = [
+      {name:'Electric launch',desc:'Navbar, hero, features, CTA',types:['navbar','hero','columns','card','quote','form']},
+      {name:'Clean portfolio',desc:'Hero, intro, projects, contact',types:['navbar','heading','text','image','columns','form']},
+      {name:'Product pulse',desc:'Launch-ready product story',types:['navbar','hero','card','columns','quote','form']}
+    ];
+
+    function componentFrom(type){ const base=defaults[type](); return {id:uid(),...base,style:{...base.style}}; }
+    function styleText(style={}){ return Object.entries(style).filter(([,v])=>v!==''&&v!=null).map(([k,v])=>`${k.replace(/[A-Z]/g,m=>'-'+m.toLowerCase())}:${v}`).join(';'); }
+    function safeRawForCanvas(html=''){
+      const template=document.createElement('template');template.innerHTML=html;
+      template.content.querySelectorAll('script,iframe,object,embed,base').forEach(node=>node.remove());
+      template.content.querySelectorAll('*').forEach(node=>[...node.attributes].forEach(attr=>{if(/^on/i.test(attr.name))node.removeAttribute(attr.name)}));
+      return template.innerHTML;
+    }
+    function elementHTML(el, editing=true){
+      const cls=editing?'canvas-el':'sf-block', attrs=editing?` data-id="${el.id}" data-tag="${el.type.toUpperCase()}" draggable="true"`:'';
+      const st=styleText(el.style);
+      switch(el.type){
+        case 'heading': return `<div class="${cls}"${attrs}><${el.tag||'h2'} style="${st};margin-block:0">${esc(el.content)}</${el.tag||'h2'}></div>`;
+        case 'text': return `<div class="${cls}"${attrs}><p style="${st};margin-block:0">${esc(el.content)}</p></div>`;
+        case 'button': return `<div class="${cls}"${attrs} style="text-align:${el.style.textAlign||'left'}"><a href="${esc(el.url||'#')}" style="${st};display:inline-block;text-decoration:none">${esc(el.content)}</a></div>`;
+        case 'image': return `<div class="${cls}"${attrs}><img src="${esc(el.url)}" alt="${esc(el.alt||'')}" style="${st};display:block;width:calc(100% - ${(parseInt(el.style.margin)||0)*2}px);object-fit:cover;max-width:100%" onerror="this.style.background='#dfe6ef';this.removeAttribute('src')"></div>`;
+        case 'divider': return `<div class="${cls}"${attrs}><div style="${st}"></div></div>`;
+        case 'spacer': return `<div class="${cls}"${attrs} style="${st}"></div>`;
+        case 'raw': return editing?`<div class="${cls}"${attrs} style="${st}"><div class="sf-raw-host">${safeRawForCanvas(el.html||'')}</div></div>`:(el.html||'');
+        case 'hero': return `<section class="${cls}"${attrs} style="${st}"><div style="font:700 11px ui-monospace;letter-spacing:.18em;color:#20f7ff;margin-bottom:14px">${esc(el.eyebrow)}</div><h1 style="font:900 clamp(42px,7vw,84px)/.98 system-ui;margin:0;max-width:900px;letter-spacing:-.055em">${esc(el.content)}</h1><p style="font:18px/1.6 system-ui;color:#b5c2d5;max-width:680px;margin:24px 0">${esc(el.body)}</p><a href="${esc(el.url||'#')}" style="display:inline-block;background:#20f7ff;color:#041014;padding:14px 20px;border-radius:9px;text-decoration:none;font-weight:800">${esc(el.button)}</a></section>`;
+        case 'card': return `<article class="${cls}"${attrs} style="${st}"><div style="font:700 10px ui-monospace;letter-spacing:.16em;color:#7654e8">${esc(el.eyebrow)}</div><h3 style="font:800 28px system-ui;margin:9px 0">${esc(el.content)}</h3><p style="line-height:1.6;opacity:.72">${esc(el.body)}</p><a href="${esc(el.url||'#')}" style="color:inherit;font-weight:800;text-decoration:none">${esc(el.button)}</a></article>`;
+        case 'navbar': return `<nav class="${cls}"${attrs} style="${st};display:flex;align-items:center;gap:24px"><strong style="font:900 17px ui-monospace;letter-spacing:.15em">${esc(el.brand)}</strong><div style="display:flex;gap:20px;margin-left:auto">${el.links.split(',').map(x=>`<a href="#" style="color:inherit;text-decoration:none;opacity:.72">${esc(x.trim())}</a>`).join('')}</div><a href="#" style="color:#041014;background:#20f7ff;padding:9px 13px;border-radius:7px;text-decoration:none;font-weight:800">${esc(el.button)}</a></nav>`;
+        case 'columns': return `<section class="${cls}"${attrs} style="${st};display:grid;grid-template-columns:repeat(2,minmax(0,1fr))"><article><h3 style="font:800 28px system-ui;margin:0 0 8px">${esc(el.content)}</h3><p style="line-height:1.6;opacity:.7">${esc(el.body)}</p></article><article><h3 style="font:800 28px system-ui;margin:0 0 8px">${esc(el.content2)}</h3><p style="line-height:1.6;opacity:.7">${esc(el.body2)}</p></article></section>`;
+        case 'quote': return `<figure class="${cls}"${attrs} style="${st}"><blockquote style="font:700 clamp(24px,4vw,44px)/1.2 system-ui;margin:0 0 18px;letter-spacing:-.03em">“${esc(el.content)}”</blockquote><figcaption style="opacity:.64">${esc(el.body)}</figcaption></figure>`;
+        case 'form': return `<section class="${cls}"${attrs} style="${st}"><h2 style="font:850 36px system-ui;margin:0 0 8px">${esc(el.content)}</h2><p style="opacity:.7;max-width:620px">${esc(el.body)}</p><form onsubmit="event.preventDefault();this.querySelector('button').textContent='Subscribed ✓'" style="display:flex;gap:8px;margin-top:18px"><input aria-label="Email address" type="email" required placeholder="${esc(el.placeholder)}" style="flex:1;min-width:0;padding:13px;border:1px solid #aab4c3;border-radius:8px"><button style="border:0;background:#111827;color:white;padding:13px 18px;border-radius:8px;font-weight:800">${esc(el.button)}</button></form></section>`;
+        default:return '';
+      }
+    }
+
+    function render(){
+      const canvas=$('#canvas');
+      canvas.innerHTML=state.elements.map(el=>elementHTML(el,true)).join('');
+      canvas.classList.toggle('empty',!state.elements.length);
+      $$('.canvas-el',canvas).forEach(node=>{
+        node.classList.toggle('selected',node.dataset.id===state.selected);
+        node.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();select(node.dataset.id)});
+        node.addEventListener('dragstart',e=>{e.dataTransfer.setData('application/siteforge-id',node.dataset.id);e.dataTransfer.effectAllowed='move'});
+        node.addEventListener('dragover',e=>{e.preventDefault();node.classList.add('drop-line')});
+        node.addEventListener('dragleave',()=>node.classList.remove('drop-line'));
+        node.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();node.classList.remove('drop-line');moveOrAdd(e,node.dataset.id)});
+      });
+      $('#elementCount').textContent=`${state.elements.length} component${state.elements.length===1?'':'s'}`;
+      $('#undoBtn').disabled=state.historyIndex<=0; $('#redoBtn').disabled=state.historyIndex>=state.history.length-1;
+      renderProperties();
+      updateCode(false);
+    }
+
+    function snapshot(label='Edit',shouldRender=true){
+      const data=JSON.stringify({elements:state.elements,customCSS:state.customCSS,customJS:state.customJS});
+      if(state.history[state.historyIndex]?.data===data)return;
+      state.history=state.history.slice(0,state.historyIndex+1);
+      state.history.push({data,label});
+      if(state.history.length>60)state.history.shift();
+      state.historyIndex=state.history.length-1;
+      state.dirty=true; $('#saveState').textContent='UNSAVED'; $('#statusText').textContent=label;
+      scheduleAutosave();
+      if(shouldRender)render();
+      else{
+        $('#undoBtn').disabled=state.historyIndex<=0;
+        $('#redoBtn').disabled=state.historyIndex>=state.history.length-1;
+        updateCode(false);
+      }
+    }
+    function restoreHistory(index){
+      if(index<0||index>=state.history.length)return;
+      state.historyIndex=index; const data=JSON.parse(state.history[index].data);
+      state.elements=data.elements;state.customCSS=data.customCSS||'';state.customJS=data.customJS||'';
+      if(!state.elements.some(x=>x.id===state.selected))state.selected=null;
+      state.dirty=true;$('#saveState').textContent='UNSAVED';render();toast(state.history[index].label);
+    }
+    const undo=()=>restoreHistory(state.historyIndex-1), redo=()=>restoreHistory(state.historyIndex+1);
+
+    function add(type,index=state.elements.length){
+      const el=componentFrom(type);state.elements.splice(index,0,el);state.selected=el.id;snapshot(`Added ${type}`);select(el.id);return el;
+    }
+    function moveOrAdd(event,beforeId){
+      const newType=event.dataTransfer.getData('application/siteforge-type');
+      const existing=event.dataTransfer.getData('application/siteforge-id');
+      let index=state.elements.findIndex(x=>x.id===beforeId);if(index<0)index=state.elements.length;
+      if(newType){add(newType,index);return}
+      if(existing){const from=state.elements.findIndex(x=>x.id===existing);if(from<0||from===index)return;const [item]=state.elements.splice(from,1);if(from<index)index--;state.elements.splice(index,0,item);state.selected=item.id;snapshot('Reordered component')}
+    }
+    function select(id){state.selected=id;render();$('#rightPanel').classList.add('open')}
+    function removeSelected(){
+      if(!state.selected)return;const i=state.elements.findIndex(x=>x.id===state.selected);if(i<0)return;
+      const name=state.elements[i].type;state.elements.splice(i,1);state.selected=state.elements[Math.min(i,state.elements.length-1)]?.id||null;snapshot(`Deleted ${name}`);
+    }
+    function duplicateSelected(){const i=state.elements.findIndex(x=>x.id===state.selected);if(i<0)return;const el=clone(state.elements[i]);el.id=uid();state.elements.splice(i+1,0,el);state.selected=el.id;snapshot('Duplicated component')}
+    function nudgeSelected(delta){const i=state.elements.findIndex(x=>x.id===state.selected),to=i+delta;if(i<0||to<0||to>=state.elements.length)return;[state.elements[i],state.elements[to]]=[state.elements[to],state.elements[i]];snapshot('Moved component')}
+
+    function propertyFields(el){
+      const fields=[]; const text=(key,label,area=false)=>fields.push({key,label,type:area?'textarea':'text',value:el[key]||''});
+      if(['heading','text','button','hero','card','quote','form','columns'].includes(el.type))text('content','Primary text',true);
+      if(['hero','card','quote','form','columns'].includes(el.type))text('body','Supporting text',true);
+      if(['hero','card'].includes(el.type))text('eyebrow','Eyebrow');
+      if(['button','hero','card','navbar','form'].includes(el.type))text('button','Button label');
+      if(['button','hero','card'].includes(el.type))text('url','Link URL');
+      if(el.type==='image'){text('url','Image URL');text('alt','Alt text')}
+      if(el.type==='heading')fields.push({key:'tag',label:'Semantic tag',type:'select',options:['h1','h2','h3','h4'],value:el.tag});
+      if(el.type==='navbar'){text('brand','Brand');text('links','Links (comma separated)')}
+      if(el.type==='form')text('placeholder','Input placeholder');
+      if(el.type==='columns'){text('content2','Column 2 heading',true);text('body2','Column 2 text',true)}
+      if(el.type==='raw'){text('name','Block label');text('html','HTML source',true)}
+      return fields;
+    }
+    function renderProperties(){
+      const root=$('#properties'),el=state.elements.find(x=>x.id===state.selected);
+      if(!el){root.innerHTML='<div class="properties-empty"><div class="empty-glyph">⌁</div><strong>No component selected</strong><p>Select a canvas element to route its controls here.</p></div>';return}
+      const fields=propertyFields(el).map(f=>`<div class="field"><label>${esc(f.label)}</label>${f.type==='textarea'?`<textarea data-prop="${f.key}">${esc(f.value)}</textarea>`:f.type==='select'?`<select data-prop="${f.key}">${f.options.map(o=>`<option${o===f.value?' selected':''}>${o}</option>`).join('')}</select>`:`<input data-prop="${f.key}" value="${esc(f.value)}">`}</div>`).join('');
+      const styles=[
+        ['background','Background','text'],['color','Text color','text'],['fontSize','Font size','text'],
+        ['fontWeight','Weight','text'],['padding','Padding','text'],['margin','Margin','text'],
+        ['borderRadius','Radius','text'],['textAlign','Align','select'],['height','Height','text']
+      ];
+      root.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div><strong style="text-transform:capitalize">${esc(el.type)}</strong><div style="color:var(--muted);font:9px var(--mono)">${el.id}</div></div><span style="color:var(--cyan)">●</span></div>${fields}<div class="section-label">Visual layer</div>${styles.map(([key,label,type])=>`<div class="field"><label>${label}</label>${type==='select'?`<select data-style="${key}">${['left','center','right'].map(o=>`<option${o===(el.style[key]||'left')?' selected':''}>${o}</option>`).join('')}</select>`:`<input data-style="${key}" value="${esc(el.style[key]||'')}" placeholder="inherit">`}</div>`).join('')}<div class="property-actions"><button class="btn" id="moveUp">↑ Move</button><button class="btn" id="moveDown">↓ Move</button><button class="btn" id="duplicateEl">⧉ Duplicate</button><button class="btn danger" id="deleteEl">⌫ Delete</button></div>`;
+      $$('[data-prop]',root).forEach(input=>input.addEventListener('input',()=>{el[input.dataset.prop]=input.value;liveMutation()}));
+      $$('[data-style]',root).forEach(input=>input.addEventListener('input',()=>{el.style[input.dataset.style]=input.value;liveMutation()}));
+      $('#moveUp')?.addEventListener('click',()=>nudgeSelected(-1));$('#moveDown')?.addEventListener('click',()=>nudgeSelected(1));$('#duplicateEl')?.addEventListener('click',duplicateSelected);$('#deleteEl')?.addEventListener('click',removeSelected);
+    }
+    let mutationTimer; function liveMutation(){
+      clearTimeout(mutationTimer);renderCanvasOnly();state.dirty=true;$('#saveState').textContent='UNSAVED';$('#statusText').textContent='Editing…';
+      mutationTimer=setTimeout(()=>snapshot('Updated properties',false),1100);
+    }
+    function renderCanvasOnly(){
+      const canvas=$('#canvas');canvas.innerHTML=state.elements.map(el=>elementHTML(el,true)).join('');canvas.classList.toggle('empty',!state.elements.length);
+      $$('.canvas-el',canvas).forEach(node=>{node.classList.toggle('selected',node.dataset.id===state.selected);node.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();select(node.dataset.id)});node.addEventListener('dragstart',e=>e.dataTransfer.setData('application/siteforge-id',node.dataset.id));node.addEventListener('dragover',e=>{e.preventDefault();node.classList.add('drop-line')});node.addEventListener('dragleave',()=>node.classList.remove('drop-line'));node.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();node.classList.remove('drop-line');moveOrAdd(e,node.dataset.id)})});
+      updateCode(false);
+    }
+
+    function cleanBody(){return state.elements.map(el=>elementHTML(el,false)).join('\n')}
+    function generatedCSS(){return `*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#111827;background:#fff}.sf-block{position:relative}a,button,input{font:inherit}img{max-width:100%}@media(max-width:640px){.sf-block[style*="grid-template-columns"]{grid-template-columns:1fr!important}.sf-block{padding-left:22px!important;padding-right:22px!important}nav.sf-block div{display:none!important}}\n${state.customCSS}`.trim()}
+    function generatedHTML(){
+      const name=$('#projectName').value.trim()||'SiteForge Project';
+      return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1">\n  <title>${esc(name)}</title>\n  <style>\n${generatedCSS().split('\n').map(x=>'    '+x).join('\n')}\n  </style>\n<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>\n<body>\n${cleanBody().split('\n').map(x=>'  '+x).join('\n')}\n<script>\n${state.customJS}\n` + '</' + 'script>\n</body>\n</html>';
+    }
+    function updateCode(force=true){
+      if(!force&& !$('#codeDrawer').classList.contains('open'))return;
+      const editor=$('#codeEditor'); if(state.codeTab==='html')editor.value=generatedHTML();if(state.codeTab==='css')editor.value=generatedCSS();if(state.codeTab==='js')editor.value=state.customJS;
+      $$('[data-code-tab]').forEach(b=>b.classList.toggle('primary',b.dataset.codeTab===state.codeTab));
+    }
+    function inlineStyle(node){
+      const out={};for(const key of node.style||[]){out[key.replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]=node.style.getPropertyValue(key)}
+      return out;
+    }
+    function onlyAttributes(node,allowed){return [...node.attributes].every(attr=>allowed.includes(attr.name.toLowerCase()))}
+    function importedElement(node){
+      const tag=node.tagName.toLowerCase(),style=inlineStyle(node);
+      if(/^h[1-6]$/.test(tag)&&onlyAttributes(node,['style']))return {id:uid(),type:'heading',content:node.textContent.trim(),tag,style:{...defaults.heading().style,...style}};
+      if(tag==='p'&&onlyAttributes(node,['style']))return {id:uid(),type:'text',content:node.textContent.trim(),style:{...defaults.text().style,...style}};
+      if(tag==='img'&&onlyAttributes(node,['src','alt','style','width','height']))return {id:uid(),type:'image',url:node.getAttribute('src')||'',alt:node.getAttribute('alt')||'',style:{...defaults.image().style,...style}};
+      if(tag==='hr'&&onlyAttributes(node,['style']))return {id:uid(),type:'divider',style:{...defaults.divider().style,...style}};
+      if((tag==='a'||tag==='button')&&onlyAttributes(node,['href','style','type']))return {id:uid(),type:'button',content:node.textContent.trim()||'Action',url:node.getAttribute('href')||'#',style:{...defaults.button().style,...style}};
+      return {id:uid(),type:'raw',name:`Imported <${tag}>`,html:node.outerHTML,style:{background:'transparent',padding:'0'}};
+    }
+    function importHtmlText(text,label='HTML file',confirmReplace=false,extraCSS='',extraJS=''){
+      if(confirmReplace&&state.elements.length&&!confirm('Replace the current canvas with the uploaded HTML?'))return false;
+      const doc=new DOMParser().parseFromString(text,'text/html');
+      if(doc.querySelector('parsererror'))throw new Error('HTML could not be parsed');
+      const title=doc.querySelector('title')?.textContent.trim();
+      const css=[...doc.querySelectorAll('style')].map(x=>x.textContent).join('\n\n');
+      const js=[...doc.querySelectorAll('script:not([src])')].map(x=>x.textContent).join('\n\n');
+      const bodyNodes=[...doc.body.children].filter(node=>!['SCRIPT','STYLE','LINK'].includes(node.tagName));
+      const imported=bodyNodes.map(importedElement);
+      if(!imported.length&&doc.body.textContent.trim())imported.push({id:uid(),type:'text',content:doc.body.textContent.trim(),style:defaults.text().style});
+      state.elements=imported;
+      state.customCSS=[css,extraCSS].filter(Boolean).join('\n\n');
+      state.customJS=[js,extraJS].filter(Boolean).join('\n\n');
+      state.selected=state.elements[0]?.id||null;
+      if(title)$('#projectName').value=title;
+      snapshot(`Imported ${label}`);
+      toast(`${state.elements.length} editable block${state.elements.length===1?'':'s'} imported`,'success');
+      return true;
+    }
+    async function importHtmlFile(file){if(!file)return;importHtmlText(await file.text(),file.name,true)}
+    async function mergeSourceSelection(files){
+      const list=[...files];if(!list.length)return;
+      const read=await Promise.all(list.map(async file=>({name:file.name.toLowerCase(),text:await file.text()})));
+      const htmlFiles=read.filter(x=>/\.html?$/.test(x.name)),css=read.filter(x=>x.name.endsWith('.css')).map(x=>x.text).join('\n\n'),js=read.filter(x=>/\.m?js$/.test(x.name)).map(x=>x.text).join('\n\n');
+      if(htmlFiles.length){
+        const docs=htmlFiles.map(x=>new DOMParser().parseFromString(x.text,'text/html'));
+        const mergedBody=docs.map(d=>d.body.innerHTML).join('\n');
+        const head=docs[0].head.innerHTML;
+        importHtmlText(`<!doctype html><html><head>${head}<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head><body>${mergedBody}</body></html>`,`${htmlFiles.length} HTML file${htmlFiles.length===1?'':'s'}`,true,css,js);
+      }else{
+        state.customCSS=[state.customCSS,css].filter(Boolean).join('\n\n');
+        state.customJS=[state.customJS,js].filter(Boolean).join('\n\n');
+        snapshot('Merged CSS and JavaScript files');
+        toast(`${list.length} source file${list.length===1?'':'s'} merged`,'success');
+      }
+    }
+    function applyCode(){
+      const value=$('#codeEditor').value;
+      if(state.codeTab==='css'){state.customCSS=value;snapshot('Applied custom CSS');toast('Custom CSS applied','success');return}
+      if(state.codeTab==='js'){state.customJS=value;snapshot('Applied custom JavaScript');toast('Custom JavaScript applied','success');return}
+      try{importHtmlText(value,'HTML source')}catch(err){toast('Could not apply this HTML','error')}
+    }
+    function formatCode(){const e=$('#codeEditor');if(state.codeTab==='html')e.value=e.value.replace(/></g,'>\\n<').replace(/^\\s*\\n/gm,'');else e.value=e.value.replace(/}/g,'}\\n').replace(/{/g,' {\\n  ').replace(/;/g,';\\n  ');toast('Source formatted')}
+    function minifyCode(){
+      const e=$('#codeEditor');
+      if(state.codeTab==='css')e.value=minifyCssSource(e.value);
+      else if(state.codeTab==='js')e.value=minifyJsSource(e.value);
+      else e.value=minifyHtmlSource(e.value);
+      toast('Source minified');
+    }
+
+    function renderLibrary(filter=''){
+      const q=filter.toLowerCase();const root=$('#componentLibrary');root.innerHTML='';
+      [...new Set(catalog.map(x=>x.group))].forEach(group=>{
+        const items=catalog.filter(x=>x.group===group&&(x.name.toLowerCase().includes(q)||x.type.includes(q)));if(!items.length)return;
+        root.insertAdjacentHTML('beforeend',`<div class="section-label">${group}</div><div class="component-grid">${items.map(x=>`<button class="component" draggable="true" data-type="${x.type}"><span>${x.icon}</span><b>${x.name}</b></button>`).join('')}</div>`);
+      });
+      $$('.component',root).forEach(btn=>{btn.addEventListener('click',()=>add(btn.dataset.type));btn.addEventListener('dragstart',e=>{e.dataTransfer.setData('application/siteforge-type',btn.dataset.type);e.dataTransfer.effectAllowed='copy'})});
+    }
+    function renderTemplates(){
+      $('#templateList').innerHTML=templates.map((t,i)=>`<button class="template" data-template="${i}"><strong>${t.name}</strong><small>${t.desc}</small></button>`).join('');
+      $$('.template').forEach(b=>b.addEventListener('click',()=>loadTemplate(+b.dataset.template)));
+    }
+    function loadTemplate(index){
+      if(state.elements.length&&!confirm('Replace the current canvas with this template?'))return;
+      state.elements=templates[index].types.map(componentFrom);state.selected=state.elements[1]?.id||state.elements[0]?.id;state.customCSS='';state.customJS='';snapshot(`Loaded ${templates[index].name}`);toast('Template routed to canvas','success');
+    }
+
+    let autosaveTimer;function scheduleAutosave(){
+      clearTimeout(autosaveTimer);
+      $('#statusText').textContent='Changes pending — autosave in a few seconds';
+      autosaveTimer=setTimeout(()=>saveProject(true),6500);
+    }
+    function projectData(){return {version:1,name:$('#projectName').value,elements:state.elements,customCSS:state.customCSS,customJS:state.customJS,savedAt:new Date().toISOString()}}
+    function saveProject(auto=false){localStorage.setItem(STORAGE_KEY,JSON.stringify(projectData()));state.dirty=false;$('#saveState').textContent='SAVED';$('#statusText').textContent=auto?'Autosaved locally':'Project saved locally';if(!auto)toast('Project saved to this device','success')}
+    function loadProject(){
+      const raw=localStorage.getItem(STORAGE_KEY);if(!raw){toast('No local project found','error');return}
+      try{const data=JSON.parse(raw);$('#projectName').value=data.name||'Untitled interface';state.elements=data.elements||[];state.customCSS=data.customCSS||'';state.customJS=data.customJS||'';state.selected=state.elements[0]?.id||null;state.history=[];state.historyIndex=-1;snapshot('Loaded local project');state.dirty=false;$('#saveState').textContent='SAVED';toast('Local project loaded','success')}catch{toast('Saved project is unreadable','error')}
+    }
+    function download(content,name,type='text/plain'){const blob=new Blob([content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+    function exportJSON(){download(JSON.stringify(projectData(),null,2),slug()+'.siteforge.json','application/json')}
+    function slug(){return ($('#projectName').value||'siteforge-project').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+    function openPreview(){const html=generatedHTML();$('#previewFrame').srcdoc=html;openModal('previewModal')}
+    function openExternal(){const w=open('','_blank');if(!w){toast('Popup blocked by browser','error');return}w.document.open();w.document.write(generatedHTML());w.document.close()}
+    function copy(value,label='Copied'){navigator.clipboard.writeText(value).then(()=>toast(label,'success')).catch(()=>{const ta=document.createElement('textarea');ta.value=value;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast(label,'success')})}
+
+    const crcTable=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=(c&1)?0xedb88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+    function crc32(bytes){let c=0xffffffff;for(const b of bytes)c=crcTable[(c^b)&255]^(c>>>8);return(c^0xffffffff)>>>0}
+    function u16(n){return new Uint8Array([n&255,(n>>>8)&255])}function u32(n){return new Uint8Array([n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255])}
+    function join(parts){const len=parts.reduce((n,p)=>n+p.length,0),out=new Uint8Array(len);let o=0;for(const p of parts){out.set(p,o);o+=p.length}return out}
+    function makeZip(files){
+      const enc=new TextEncoder(),locals=[],centrals=[];let offset=0;
+      Object.entries(files).forEach(([name,text])=>{const n=enc.encode(name),d=enc.encode(text),crc=crc32(d),local=join([u32(0x04034b50),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(d.length),u32(d.length),u16(n.length),u16(0),n,d]);locals.push(local);centrals.push(join([u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(d.length),u32(d.length),u16(n.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(offset),n]));offset+=local.length});
+      const center=join(centrals),body=join(locals);return join([body,center,u32(0x06054b50),u16(0),u16(0),u16(centrals.length),u16(centrals.length),u32(center.length),u32(body.length),u16(0)]);
+    }
+    function exportZip(){const html=generatedHTML(),readme=`# ${$('#projectName').value}\n\nExported from SiteForge Cyber Electric. Open index.html in any modern browser.`;download(makeZip({'index.html':html,'README.md':readme}),slug()+'.zip','application/zip')}
+    function minifyCssSource(css){return css.replace(/\/\*[\s\S]*?\*\//g,'').replace(/\s+/g,' ').replace(/\s*([{}:;,>])\s*/g,'$1').trim()}
+    function minifyJsSource(js){return js.split('\n').map(line=>line.trim()).filter(Boolean).join('\n')}
+    function minifyHtmlSource(html){
+      const doc=new DOMParser().parseFromString(html,'text/html');
+      doc.querySelectorAll('style').forEach(node=>node.textContent=minifyCssSource(node.textContent));
+      doc.querySelectorAll('script').forEach(node=>node.textContent=minifyJsSource(node.textContent));
+      return '<!doctype html>'+doc.documentElement.outerHTML.replace(/>\s+</g,'><').trim();
+    }
+    function minifiedDocument(){return minifyHtmlSource(generatedHTML())}
+    function splitIndexHTML(){
+      const name=$('#projectName').value.trim()||'SiteForge Project';
+      return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1">\n  <title>${esc(name)}</title>\n  <link rel="stylesheet" href="styles.css">\n  <script src="script.js" defer>` + '</' + `script>\n<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>\n<body>\n${cleanBody().split('\n').map(x=>'  '+x).join('\n')}\n</body>\n</html>`;
+    }
+    function exportMinified(){download(minifiedDocument(),slug()+'.min.html','text/html');toast('Minified HTML downloaded','success')}
+    function exportMerged(){download(generatedHTML(),slug()+'.html','text/html');toast('Merged HTML downloaded','success')}
+    function exportSplitZip(){
+      const readme=`# ${$('#projectName').value}\n\nSplit SiteForge package: index.html + styles.css + script.js.`;
+      download(makeZip({'index.html':splitIndexHTML(),'styles.css':generatedCSS(),'script.js':state.customJS,'README.md':readme}),slug()+'-split.zip','application/zip');
+      toast('Split source package downloaded','success');
+    }
+
+    function audit(){
+      const issues=[],passes=[];
+      const h1=state.elements.filter(x=>x.type==='heading'&&x.tag==='h1').length+state.elements.filter(x=>x.type==='hero').length;
+      if(h1===1)passes.push(['Heading structure','Exactly one primary heading is present.']);else issues.push(['Heading structure',h1?'Multiple primary headings detected.':'Add one H1 or Hero component.']);
+      const badImages=state.elements.filter(x=>x.type==='image'&&!x.alt?.trim());if(badImages.length)issues.push(['Image alternatives',`${badImages.length} image${badImages.length>1?'s':''} need descriptive alt text.`]);else passes.push(['Image alternatives','All images include alternative text.']);
+      const badLinks=state.elements.filter(x=>['button','hero','card'].includes(x.type)&&(!x.url||x.url==='#'));if(badLinks.length)issues.push(['Link destinations',`${badLinks.length} action${badLinks.length>1?'s':''} still use placeholder links.`]);else passes.push(['Link destinations','Actions use explicit destinations.']);
+      if(state.elements.length>=4)passes.push(['Content depth','The page has enough structure for a meaningful scan.']);else issues.push(['Content depth','Add more structure before publishing.']);
+      const labels=state.elements.filter(x=>x.type==='form').length;passes.push(['Form labeling',labels?'Form input includes a programmatic label.':'No form controls to inspect.']);
+      $('#auditResults').innerHTML=`<div style="font:800 28px var(--mono);margin-bottom:14px;color:${issues.length?'var(--warn)':'var(--lime)'}">${issues.length?issues.length+' checks need attention':'ALL CHECKS CLEAR'}</div>`+issues.map(x=>auditCard(x,'warn')).join('')+passes.map(x=>auditCard(x,'pass')).join('');
+      openModal('auditModal');
+    }
+    function auditCard(item,type){return `<div class="audit-card ${type}"><div class="audit-icon">${type==='pass'?'✓':'!'}</div><div><strong>${esc(item[0])}</strong><p>${esc(item[1])}</p></div></div>`}
+
+    function updateFx(){
+      const a=$('#gradientA').value,b=$('#gradientB').value,angle=$('#gradientAngle').value,r=$('#fxRadius').value,d=$('#fxDepth').value;
+      $('#gaVal').textContent=a;$('#gbVal').textContent=b;$('#angleVal').textContent=angle+'°';$('#radiusVal').textContent=r+'px';$('#depthVal').textContent=d+'px';
+      $('#labCard').style.cssText=`width:120px;height:66px;background:linear-gradient(${angle}deg,${a},${b});border-radius:${r}px;box-shadow:0 ${Math.round(d/2)}px ${d}px #0008`;
+    }
+    function fxCSS(){return `background: linear-gradient(${$('#gradientAngle').value}deg, ${$('#gradientA').value}, ${$('#gradientB').value});\nborder-radius: ${$('#fxRadius').value}px;\nbox-shadow: 0 ${Math.round($('#fxDepth').value/2)}px ${$('#fxDepth').value}px rgba(0,0,0,.45);`}
+    function applyFx(){const el=state.elements.find(x=>x.id===state.selected);if(!el){toast('Select a component first','error');return}el.style.background=`linear-gradient(${$('#gradientAngle').value}deg,${$('#gradientA').value},${$('#gradientB').value})`;el.style.borderRadius=$('#fxRadius').value+'px';el.style.boxShadow=`0 ${Math.round($('#fxDepth').value/2)}px ${$('#fxDepth').value}px rgba(0,0,0,.45)`;snapshot('Applied FX recipe');toast('Electric FX applied','success')}
+
+    function buildPrompt(){
+      const goal=$('#promptGoal').value,audience=$('#promptAudience').value.trim(),tone=$('#promptTone').value,constraints=$('#promptConstraints').value.trim();
+      const prompt=`Design a ${goal.toLowerCase()} for ${audience||'a clearly defined audience'}.\n\nCreative direction: ${tone}. Establish a strong first viewport, deliberate typographic hierarchy, a restrained electric accent palette, and responsive interaction states. Use concrete product copy—not filler.\n\nRequired constraints: ${constraints||'Responsive and accessible.'}\n\nDeliver a complete, self-contained interface with semantic HTML, clear focus states, keyboard-friendly controls, useful empty/error states, and polished mobile behavior.`;
+      $('#promptOutput').textContent=prompt;const score=Math.min(100,55+(audience.length>12?15:5)+(constraints.length>25?20:8)+10);$('#promptScore').textContent=score+'/100';toast('Design prompt synthesized','success')
+    }
+
+    const commands=[
+      ['Add heading',()=>add('heading'),'H'],['Add hero',()=>add('hero'),'R'],['Preview project',openPreview,'P'],['Toggle source editor',toggleCode,'C'],
+      ['Run accessibility audit',audit,'A'],['Save locally',()=>saveProject(false),'S'],['Export HTML',()=>download(generatedHTML(),slug()+'.html','text/html'),'E'],
+      ['Import editable HTML',()=>$('#htmlImportFile').click(),'I'],['Open source toolkit',()=>openModal('sourceToolsModal'),'X'],
+      ['Export project JSON',exportJSON,'J'],['Import project JSON',()=>$('#importFile').click(),'B'],['Load electric template',()=>loadTemplate(0),'T'],
+      ['Clear canvas',clearCanvas,'⌫'],['Keyboard controls',()=>openModal('helpModal'),'?']
+    ];
+    function renderCommands(filter=''){
+      const q=filter.toLowerCase(),items=commands.filter(x=>x[0].toLowerCase().includes(q));
+      $('#commandList').innerHTML=items.map((x,i)=>`<button class="command${i===0?' active':''}" data-command="${commands.indexOf(x)}"><span>${x[0]}</span><span class="kbd">${x[2]}</span></button>`).join('');
+      $$('.command').forEach(b=>b.addEventListener('click',()=>{closeModal('commandModal');commands[+b.dataset.command][1]()}));
+    }
+    function clearCanvas(){if(state.elements.length&&!confirm('Clear every component from the canvas?'))return;state.elements=[];state.selected=null;snapshot('Cleared canvas')}
+    function toggleCode(){const d=$('#codeDrawer');d.classList.toggle('open');if(d.classList.contains('open'))updateCode(true)}
+    function openModal(id){$('#'+id).classList.add('open');if(id==='commandModal'){renderCommands();setTimeout(()=>$('#commandSearch').focus(),0)}}
+    function closeModal(id){$('#'+id).classList.remove('open')}
+    function toast(message,type='info'){const node=document.createElement('div');node.className='toast '+type;node.textContent=message;$('#toasts').appendChild(node);setTimeout(()=>node.remove(),2800)}
+    function setDevice(device){state.device=device;$('#canvasShell').className='canvas-shell '+(device==='desktop'?'':device);$$('[data-device]').forEach(b=>b.classList.toggle('active',b.dataset.device===device));requestAnimationFrame(updateCanvasSize)}
+    function updateCanvasSize(){const r=$('#canvas').getBoundingClientRect();$('#canvasSize').textContent=`${Math.round(r.width)} × ${Math.max(640,Math.round(r.height))}`}
+    function setZoom(delta){state.zoom=Math.max(.5,Math.min(1.25,state.zoom+delta));$('#canvasShell').style.transform=`scale(${state.zoom})`;$('#zoomRead').textContent=Math.round(state.zoom*100)+'%'}
+    function applyTheme(theme='cyber'){
+      const valid=['cyber','dim','midnight','light'];if(!valid.includes(theme))theme='cyber';
+      document.documentElement.classList.remove('light-ui','theme-dim','theme-midnight');
+      if(theme==='light')document.documentElement.classList.add('light-ui');
+      if(theme==='dim')document.documentElement.classList.add('theme-dim');
+      if(theme==='midnight')document.documentElement.classList.add('theme-midnight');
+      $('#themeSelect').value=theme;localStorage.setItem('siteforge-ui-theme',theme);
+    }
+
+    function bind(){
+      $('#componentSearch').addEventListener('input',e=>renderLibrary(e.target.value));
+      $('#canvas').addEventListener('click',()=>{state.selected=null;render()});
+      $('#canvas').addEventListener('dragover',e=>{e.preventDefault();$('#canvas').classList.add('drag-target')});
+      $('#canvas').addEventListener('dragleave',e=>{if(e.target===$('#canvas'))$('#canvas').classList.remove('drag-target')});
+      $('#canvas').addEventListener('drop',e=>{e.preventDefault();$('#canvas').classList.remove('drag-target');if(e.target===$('#canvas'))moveOrAdd(e,'__end__')});
+      $('#undoBtn').onclick=undo;$('#redoBtn').onclick=redo;$('#saveBtn').onclick=()=>saveProject(false);$('#loadBtn').onclick=loadProject;$('#auditBtn').onclick=audit;$('#previewBtn').onclick=openPreview;$('#codeBtn').onclick=toggleCode;$('#closeCode').onclick=toggleCode;$('#commandBtn').onclick=()=>openModal('commandModal');$('#sourceToolsBtn').onclick=()=>openModal('sourceToolsModal');$('#themeSelect').onchange=e=>applyTheme(e.target.value);
+      $('#leftPanelBtn').onclick=()=>$('#leftPanel').classList.toggle('open');$('#rightPanelBtn').onclick=()=>$('#rightPanel').classList.toggle('open');$('#closeLeft').onclick=()=>$('#leftPanel').classList.remove('open');$('#closeRight').onclick=()=>$('#rightPanel').classList.remove('open');
+      $$('[data-device]').forEach(b=>b.onclick=()=>setDevice(b.dataset.device));$('#zoomIn').onclick=()=>setZoom(.1);$('#zoomOut').onclick=()=>setZoom(-.1);
+      $('#fullscreenBtn').onclick=()=>{const el=$('#canvasWrap');if(!document.fullscreenElement)el.requestFullscreen?.();else document.exitFullscreen?.()};
+      $$('[data-close]').forEach(b=>b.onclick=()=>closeModal(b.dataset.close));$$('.modal-backdrop').forEach(m=>m.addEventListener('mousedown',e=>{if(e.target===m)closeModal(m.id)}));
+      $$('[data-code-tab]').forEach(b=>b.onclick=()=>{state.codeTab=b.dataset.codeTab;updateCode(true)});$('#applyCodeBtn').onclick=applyCode;$('#formatBtn').onclick=formatCode;$('#minifyBtn').onclick=minifyCode;$('#copyCodeBtn').onclick=()=>copy($('#codeEditor').value,'Source copied');
+      $('#downloadHtml').onclick=()=>download(generatedHTML(),slug()+'.html','text/html');$('#downloadZip').onclick=exportZip;$('#openExternal').onclick=openExternal;
+      $$('.tab').forEach(tab=>tab.onclick=()=>{$$('.tab').forEach(x=>x.classList.remove('active'));$$('.tab-panel').forEach(x=>x.classList.remove('active'));tab.classList.add('active');$('#tab-'+tab.dataset.tab).classList.add('active')});
+      ['gradientA','gradientB','gradientAngle','fxRadius','fxDepth'].forEach(id=>$('#'+id).addEventListener('input',updateFx));$('#applyFx').onclick=applyFx;$('#copyCss').onclick=()=>copy(fxCSS(),'CSS recipe copied');
+      $('#buildPrompt').onclick=buildPrompt;$('#copyPrompt').onclick=()=>copy($('#promptOutput').textContent,'Prompt copied');
+      $('#commandSearch').addEventListener('input',e=>renderCommands(e.target.value));
+      $('#projectName').addEventListener('input',()=>{state.dirty=true;$('#saveState').textContent='UNSAVED';scheduleAutosave()});
+      $('#importHtmlBtn').onclick=()=>$('#htmlImportFile').click();$('#mergeFilesBtn').onclick=()=>$('#sourceMergeFiles').click();
+      $('#minifiedExportBtn').onclick=exportMinified;$('#splitExportBtn').onclick=exportSplitZip;$('#mergedExportBtn').onclick=exportMerged;
+      $('#exportProjectBtn').onclick=exportJSON;$('#importProjectBtn').onclick=()=>$('#importFile').click();
+      $('#htmlImportFile').addEventListener('change',async e=>{const file=e.target.files[0];try{await importHtmlFile(file)}catch{toast('This HTML file could not be imported','error')}e.target.value=''});
+      $('#sourceMergeFiles').addEventListener('change',async e=>{try{await mergeSourceSelection(e.target.files)}catch{toast('The selected source files could not be merged','error')}e.target.value=''});
+      $('#importFile').addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const d=JSON.parse(reader.result);$('#projectName').value=d.name||'Imported project';state.elements=d.elements||[];state.customCSS=d.customCSS||'';state.customJS=d.customJS||'';state.selected=state.elements[0]?.id||null;snapshot('Imported project');toast('Project imported','success')}catch{toast('Invalid project file','error')}};reader.readAsText(file);e.target.value=''});
+      addEventListener('resize',updateCanvasSize);addEventListener('beforeunload',e=>{if(state.dirty){e.preventDefault();e.returnValue=''}});
+      document.addEventListener('keydown',e=>{
+        const typing=/INPUT|TEXTAREA|SELECT/.test(e.target.tagName);
+        if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openModal('commandModal');return}
+        if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();saveProject(false);return}
+        if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo();return}
+        if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();redo();return}
+        if(e.key==='Escape'){$$('.modal-backdrop.open').forEach(m=>closeModal(m.id));$('#codeDrawer').classList.remove('open');return}
+        if(typing)return;
+        if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();removeSelected()}
+        if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){e.preventDefault();duplicateSelected()}
+        if(e.altKey&&e.key==='ArrowUp'){e.preventDefault();nudgeSelected(-1)}
+        if(e.altKey&&e.key==='ArrowDown'){e.preventDefault();nudgeSelected(1)}
+        if(e.key==='?')openModal('helpModal');
+      });
+    }
+
+    function init(){
+      renderLibrary();renderTemplates();bind();applyTheme(localStorage.getItem('siteforge-ui-theme')||'cyber');updateFx();
+      $('#helpGrid').innerHTML=[['Command palette','Ctrl / Cmd + K'],['Save project','Ctrl / Cmd + S'],['Undo','Ctrl / Cmd + Z'],['Redo','Ctrl / Cmd + Shift + Z'],['Duplicate','Ctrl / Cmd + D'],['Move earlier','Alt + ↑'],['Move later','Alt + ↓'],['Delete selected','Delete'],['Close panel','Escape'],['Open this help','?']].map(x=>`<div class="shortcut"><span>${x[0]}</span><span class="kbd">${x[1]}</span></div>`).join('');
+      state.elements=[componentFrom('navbar'),componentFrom('hero'),componentFrom('columns')];state.selected=state.elements[1].id;
+      state.history=[{data:JSON.stringify({elements:state.elements,customCSS:'',customJS:''}),label:'Initial composition'}];state.historyIndex=0;state.dirty=false;render();updateCanvasSize();
+      setTimeout(()=>$('#boot').classList.add('hide'),900);setTimeout(()=>$('#boot').remove(),1500);
+    }
+    init();
+  })();
+  </script>
+</body>
+</html>

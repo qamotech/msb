@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mecha-Transformer-Ninja ARPG Controller</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #030305; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        canvas { display: block; width: 100%; height: 100%; }
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .hud { padding: 20px; color: #0FF; text-shadow: 0 0 5px #0FF; text-transform: uppercase; letter-spacing: 2px; font-size: 14px; font-weight: bold; }
+        .controls { position: absolute; bottom: 20px; left: 20px; color: #888; text-shadow: none; font-size: 12px; }
+        .controls span { color: #0FF; }
+        .bar-container { width: 200px; height: 10px; background: #222; border: 1px solid #0FF; margin-top: 5px; box-shadow: 0 0 10px rgba(0, 255, 255, 0.2); }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, #0055ff, #00ffff); transition: width 0.1s linear; }
+        .dash-fill { background: linear-gradient(90deg, #ff0055, #ff00ff); }
+    </style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="ui-layer">
+        <div class="hud">
+            <div>Mode: <span id="modeDisplay" style="color: #fff;">NINJA</span></div>
+            <div style="margin-top: 15px;">DASH DRIVE</div>
+            <div class="bar-container"><div id="dashBar" class="bar-fill dash-fill" style="width: 100%;"></div></div>
+            <div style="margin-top: 15px;">WEAPON CAPACITOR</div>
+            <div class="bar-container"><div id="atkBar" class="bar-fill" style="width: 100%;"></div></div>
+        </div>
+        <div class="controls">
+            <span>[WASD]</span> Move | <span>[Mouse]</span> Aim | <span>[Left Click]</span> Cyber-Katana | <span>[Right Click]</span> Plasma Shuriken<br>
+            <span>[Shift]</span> Blink-Dash | <span>[Space]</span> Transform (Vehicle/Ninja)
+        </div>
+    </div>
+
+<script>
+// --- CORE ENGINE ---
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d', { alpha: false }); 
+let dpr = 1, width, height;
+
+function resize() {
+    dpr = window.devicePixelRatio || 1;
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
+}
+window.addEventListener('resize', resize);
+resize();
+
+// --- INPUT MANAGER ---
+const Input = {
+    keys: { w: false, a: false, s: false, d: false, shift: false, space: false },
+    mouse: { x: width/2, y: height/2, worldX: 0, worldY: 0, left: false, right: false },
+    prevKeys: {}, prevMouse: {},
+    init() {
+        window.addEventListener('keydown', e => this.handleKey(e, true));
+        window.addEventListener('keyup', e => this.handleKey(e, false));
+        window.addEventListener('mousemove', e => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; });
+        window.addEventListener('mousedown', e => this.handleMouse(e, true));
+        window.addEventListener('mouseup', e => this.handleMouse(e, false));
+        window.addEventListener('contextmenu', e => e.preventDefault());
+    },
+    handleKey(e, isDown) {
+        const k = e.key.toLowerCase();
+        if (this.keys.hasOwnProperty(k)) this.keys[k] = isDown;
+        if (e.code === 'Space') { this.keys.space = isDown; e.preventDefault(); }
+        if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') { this.keys.shift = isDown; e.preventDefault(); }
+    },
+    handleMouse(e, isDown) {
+        if (e.button === 0) this.mouse.left = isDown;
+        if (e.button === 2) this.mouse.right = isDown;
+    },
+    update() {
+        this.prevKeys = { ...this.keys };
+        this.prevMouse = { ...this.mouse };
+    },
+    justPressed(key) { return this.keys[key] && !this.prevKeys[key]; },
+    mouseJustPressed(btn) { return this.mouse[btn] && !this.prevMouse[btn]; }
+};
+Input.init();
+
+// --- CAMERA ---
+const Camera = {
+    x: 0, y: 0, targetX: 0, targetY: 0, shakeX: 0, shakeY: 0, shakeTime: 0,
+    update(dt, player) {
+        this.targetX = player.x - width / 2;
+        this.targetY = player.y - height / 2;
+        this.x += (this.targetX - this.x) * 10 * dt;
+        this.y += (this.targetY - this.y) * 10 * dt;
+
+        if (this.shakeTime > 0) {
+            this.shakeX = (Math.random() - 0.5) * 20 * this.shakeTime;
+            this.shakeY = (Math.random() - 0.5) * 20 * this.shakeTime;
+            this.shakeTime -= dt * 2;
+        } else {
+            this.shakeX = this.shakeY = 0;
+        }
+        
+        Input.mouse.worldX = Input.mouse.x + this.x;
+        Input.mouse.worldY = Input.mouse.y + this.y;
+    },
+    apply() { ctx.save(); ctx.translate(-this.x + this.shakeX, -this.y + this.shakeY); },
+    restore() { ctx.restore(); },
+    shake(intensity) { this.shakeTime = intensity; }
+};
+
+// --- O(1) FAST OBJECT POOLING ---
+class FastPool {
+    constructor(ClassType, size) {
+        this.pool = Array.from({length: size}, () => new ClassType());
+        this.activeCount = 0;
+    }
+    spawn(...args) {
+        if (this.activeCount < this.pool.length) {
+            const item = this.pool[this.activeCount];
+            item.spawn(...args);
+            this.activeCount++;
+            return item;
+        }
+    }
+    update(dt) {
+        for (let i = this.activeCount - 1; i >= 0; i--) {
+            const item = this.pool[i];
+            item.update(dt);
+            if (!item.active) {
+                // Swap-and-pop logic removes GC pauses
+                this.activeCount--;
+                const lastItem = this.pool[this.activeCount];
+                this.pool[this.activeCount] = item;
+                this.pool[i] = lastItem;
+            }
+        }
+    }
+    draw() {
+        for (let i = 0; i < this.activeCount; i++) this.pool[i].draw();
+    }
+}
+
+// --- EFFECTS ENTITIES ---
+class Particle {
+    spawn(x, y, vx, vy, life, color, size, glow = false) {
+        this.x = x; this.y = y; this.vx = vx; this.vy = vy;
+        this.life = life; this.maxLife = life; this.color = color;
+        this.size = size; this.glow = glow; this.active = true;
+    }
+    update(dt) {
+        this.x += this.vx * dt; this.y += this.vy * dt;
+        this.life -= dt;
+        if (this.life <= 0) this.active = false;
+    }
+    draw() {
+        const alpha = Math.max(0, this.life / this.maxLife);
+        if (this.glow) { // Fast pseudo-glow replaces slow shadowBlur
+            ctx.globalAlpha = alpha * 0.2;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size * 2.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = this.glow ? '#FFF' : this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+    }
+}
+
+class Projectile {
+    spawn(x, y, vx, vy, type) {
+        this.x = x; this.y = y; this.vx = vx; this.vy = vy;
+        this.type = type; this.life = 2.0; this.active = true;
+        this.rotation = 0;
+    }
+    update(dt) {
+        this.x += this.vx * dt; this.y += this.vy * dt;
+        this.rotation += 20 * dt;
+        this.life -= dt;
+        if (this.life <= 0) this.active = false;
+        
+        if (Math.random() < 0.5) Particles.spawn(this.x, this.y, -this.vx*0.1, -this.vy*0.1, 0.3, '#0FF', 3, true);
+    }
+    draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        
+        // Fast pseudo-glow
+        ctx.fillStyle = '#0FF';
+        ctx.globalAlpha = 0.3;
+        ctx.beginPath(); ctx.arc(0, 0, 15, 0, Math.PI*2); ctx.fill();
+        
+        ctx.globalAlpha = 1.0;
+        ctx.fillStyle = '#E0F7FA';
+        ctx.beginPath();
+        for(let i=0; i<4; i++) {
+            ctx.lineTo(15, 0); ctx.lineTo(4, 4); ctx.rotate(Math.PI / 2);
+        }
+        ctx.closePath();
+        ctx.fill();
+        
+        ctx.fillStyle = '#0055FF';
+        ctx.beginPath(); ctx.arc(0,0, 4, 0, Math.PI*2); ctx.fill();
+        ctx.restore();
+    }
+}
+
+const Particles = new FastPool(Particle, 400);
+const Projectiles = new FastPool(Projectile, 50);
+
+// --- PLAYER CONTROLLER ---
+const STATES = { IDLE: 0, RUN: 1, DASH: 2, MELEE: 3, RANGED: 4, TRANSFORMING: 5, VEHICLE: 6 };
+
+class Player {
+    constructor(x, y) {
+        this.x = x; this.y = y;
+        this.vx = 0; this.vy = 0;
+        this.angle = 0;
+        this.state = STATES.IDLE;
+        
+        this.speedNinja = 400;
+        this.speedVehicle = 900;
+        this.dashSpeed = 1500;
+        
+        this.dashTimer = 0; this.dashCD = 1.5;
+        this.atkTimer = 0; this.atkCD = 0.4;
+        
+        this.morph = 0; 
+        this.stateTimer = 0;
+        this.animTime = 0;
+        
+        this.trails = Array.from({length: 10}, () => ({active: false, x:0, y:0, angle:0, morph:0, alpha:0}));
+        this.trailIdx = 0;
+        this.meleeArc = 0;
+        this.meleeActive = false;
+        
+        // DOM cache optimizations
+        this.lastDashStr = '';
+        this.lastAtkStr = '';
+    }
+
+    update(dt) {
+        this.animTime += dt;
+        this.dashTimer = Math.max(0, this.dashTimer - dt);
+        this.atkTimer = Math.max(0, this.atkTimer - dt);
+
+        switch (this.state) {
+            case STATES.IDLE:
+            case STATES.RUN:
+                this.handleMovement(dt, this.speedNinja);
+                this.handleRotation(dt);
+                this.handleActions(dt);
+                if (Input.justPressed('space')) this.startTransform(1);
+                break;
+                
+            case STATES.VEHICLE:
+                this.handleMovement(dt, this.speedVehicle);
+                this.handleRotation(dt);
+                if (Input.justPressed('space')) this.startTransform(0);
+                if (this.vx !== 0 || this.vy !== 0) {
+                    const bx = this.x - Math.cos(this.angle) * 30;
+                    const by = this.y - Math.sin(this.angle) * 30;
+                    Particles.spawn(bx + (Math.random()-0.5)*10, by + (Math.random()-0.5)*10, -this.vx*0.2, -this.vy*0.2, 0.4, '#0FF', 4, true);
+                }
+                break;
+
+            case STATES.DASH:
+                this.stateTimer -= dt;
+                this.x += this.vx * dt; this.y += this.vy * dt;
+                this.spawnTrail();
+                if (this.stateTimer <= 0) this.state = STATES.RUN;
+                break;
+
+            case STATES.MELEE:
+                this.stateTimer -= dt;
+                this.x += this.vx * 0.1 * dt; this.y += this.vy * 0.1 * dt;
+                this.meleeArc = 1 - (this.stateTimer / 0.25);
+                if (this.stateTimer <= 0) { this.state = STATES.IDLE; this.meleeActive = false; }
+                break;
+
+            case STATES.RANGED:
+                this.stateTimer -= dt;
+                this.handleMovement(dt, this.speedNinja * 0.5);
+                this.handleRotation(dt);
+                if (this.stateTimer <= 0) this.state = STATES.IDLE;
+                break;
+
+            case STATES.TRANSFORMING:
+                this.stateTimer -= dt;
+                const targetMorph = this.morphTarget;
+                this.morph += (targetMorph - this.morph) * dt * 8;
+                this.handleMovement(dt, this.speedNinja * 0.2);
+                this.handleRotation(dt);
+                
+                Particles.spawn(this.x + (Math.random()-0.5)*40, this.y + (Math.random()-0.5)*40, (Math.random()-0.5)*100, (Math.random()-0.5)*100, 0.2, '#F0F', 2, true);
+
+                if (this.stateTimer <= 0) {
+                    this.morph = targetMorph;
+                    this.state = targetMorph === 1 ? STATES.VEHICLE : STATES.IDLE;
+                    document.getElementById('modeDisplay').innerText = targetMorph === 1 ? "HOVER-VEHICLE" : "NINJA";
+                    document.getElementById('modeDisplay').style.color = targetMorph === 1 ? "#F0F" : "#0FF";
+                }
+                break;
+        }
+
+        this.trails.forEach(t => { if (t.active) { t.alpha -= dt * 3; if (t.alpha <= 0) t.active = false; }});
+        
+        // Fast DOM updates
+        const dStr = ((1 - this.dashTimer/this.dashCD)*100).toFixed(1) + '%';
+        if (dStr !== this.lastDashStr) { document.getElementById('dashBar').style.width = dStr; this.lastDashStr = dStr; }
+        
+        const aStr = ((1 - this.atkTimer/this.atkCD)*100).toFixed(1) + '%';
+        if (aStr !== this.lastAtkStr) { document.getElementById('atkBar').style.width = aStr; this.lastAtkStr = aStr; }
+    }
+
+    handleMovement(dt, speed) {
+        let dx = 0, dy = 0;
+        if (Input.keys.w) dy -= 1;
+        if (Input.keys.s) dy += 1;
+        if (Input.keys.a) dx -= 1;
+        if (Input.keys.d) dx += 1;
+
+        let mag = Math.hypot(dx, dy);
+        if (mag > 0) { dx /= mag; dy /= mag; }
+
+        const friction = 15;
+        this.vx += (dx * speed - this.vx) * friction * dt;
+        this.vy += (dy * speed - this.vy) * friction * dt;
+
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+
+        if (this.state === STATES.IDLE && mag > 0.1) this.state = STATES.RUN;
+        if (this.state === STATES.RUN && mag < 0.1) this.state = STATES.IDLE;
+    }
+
+    handleRotation(dt) {
+        const dx = Input.mouse.worldX - this.x;
+        const dy = Input.mouse.worldY - this.y;
+        const targetAngle = Math.atan2(dy, dx);
+        
+        let diff = targetAngle - this.angle;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        this.angle += diff * 15 * dt;
+    }
+
+    handleActions(dt) {
+        if (Input.justPressed('shift') && this.dashTimer <= 0) {
+            let mag = Math.hypot(this.vx, this.vy);
+            let dirX = mag > 50 ? this.vx / mag : Math.cos(this.angle);
+            let dirY = mag > 50 ? this.vy / mag : Math.sin(this.angle);
+            
+            this.vx = dirX * this.dashSpeed;
+            this.vy = dirY * this.dashSpeed;
+            this.state = STATES.DASH;
+            this.stateTimer = 0.15;
+            this.dashTimer = this.dashCD;
+            Camera.shake(0.1);
+            return;
+        }
+
+        if (Input.mouseJustPressed('left') && this.atkTimer <= 0) {
+            this.state = STATES.MELEE;
+            this.stateTimer = 0.25;
+            this.atkTimer = this.atkCD;
+            this.meleeActive = true;
+            this.vx = Math.cos(this.angle) * 500;
+            this.vy = Math.sin(this.angle) * 500;
+            Camera.shake(0.15);
+            return;
+        }
+
+        if (Input.mouseJustPressed('right') && this.atkTimer <= 0) {
+            this.state = STATES.RANGED;
+            this.stateTimer = 0.1;
+            this.atkTimer = 0.2;
+            const px = this.x + Math.cos(this.angle) * 30;
+            const py = this.y + Math.sin(this.angle) * 30;
+            Projectiles.spawn(px, py, Math.cos(this.angle) * 1200, Math.sin(this.angle) * 1200, 1);
+            this.vx -= Math.cos(this.angle) * 200;
+            this.vy -= Math.sin(this.angle) * 200;
+            return;
+        }
+    }
+
+    startTransform(targetMorph) {
+        this.state = STATES.TRANSFORMING;
+        this.morphTarget = targetMorph;
+        this.stateTimer = 0.3;
+        Camera.shake(0.2);
+    }
+
+    spawnTrail() {
+        const t = this.trails[this.trailIdx];
+        t.active = true; t.x = this.x; t.y = this.y; t.angle = this.angle; t.morph = this.morph; t.alpha = 0.6;
+        this.trailIdx = (this.trailIdx + 1) % this.trails.length;
+    }
+
+    // --- RENDERING ---
+    drawPlayerModel(ctx, morph, alpha = 1) {
+        ctx.globalAlpha = alpha;
+        
+        const breathe = this.state === STATES.IDLE && morph === 0 ? Math.sin(this.animTime * 5) * 0.02 : 0;
+        const metalDark = '#1a1c23', metalLight = '#3a3f4c', neonCyan = '#00FFFF', neonMagenta = '#FF00FF';
+        
+        const bodyScaleX = 1 + morph * 0.5 + breathe;
+        const bodyScaleY = 1 + morph * 0.8 + breathe;
+        const shoulderX = 18 - morph * 10, shoulderY = 0 + morph * 15;
+        const armAngle = this.state === STATES.RUN ? Math.sin(this.animTime * 15) * 0.5 * (1-morph) : 0.3 * (1-morph);
+        
+        for (let side = -1; side <= 1; side += 2) {
+            ctx.save();
+            ctx.scale(1, side); 
+            
+            // Arms
+            ctx.save();
+            ctx.translate(shoulderY, shoulderX);
+            ctx.rotate(armAngle);
+            ctx.fillStyle = metalDark;
+            ctx.strokeStyle = neonCyan;
+            ctx.lineWidth = 1;
+            
+            ctx.beginPath();
+            if (morph < 0.5) {
+                ctx.moveTo(0, -5); ctx.lineTo(20, -3); ctx.lineTo(18, 3); ctx.lineTo(0, 5);
+            } else {
+                ctx.moveTo(0, 0); ctx.lineTo(-20, 15); ctx.lineTo(30, 30); ctx.lineTo(10, 0);
+            }
+            ctx.closePath();
+            ctx.fill(); ctx.stroke();
+
+            // Weapon
+            if (side === 1 && morph < 0.5 && this.state !== STATES.MELEE) {
+                ctx.translate(18, 0);
+                ctx.globalAlpha = alpha * 0.4;
+                ctx.fillStyle = neonMagenta;
+                ctx.fillRect(-2, -3, 34, 6);
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = '#FFF';
+                ctx.fillRect(0, -1, 30, 2);
+            }
+            ctx.restore();
+            
+            // Legs
+            ctx.save();
+            ctx.translate(-15 - morph*5, 8 - morph*4);
+            const legAngle = this.state === STATES.RUN && morph === 0 ? Math.sin(this.animTime * 15 + (side===1?Math.PI:0)) * 0.5 : 0;
+            ctx.rotate(legAngle);
+            ctx.fillStyle = metalDark;
+            ctx.strokeStyle = neonMagenta;
+            ctx.beginPath();
+            ctx.moveTo(0, -5); ctx.lineTo(-20 - morph*10, -3); ctx.lineTo(-20 - morph*10, 3); ctx.lineTo(0, 5);
+            ctx.closePath();
+            ctx.fill(); ctx.stroke();
+            
+            if (morph > 0.5) {
+                ctx.fillStyle = neonCyan;
+                ctx.globalAlpha = alpha * 0.4;
+                ctx.beginPath(); ctx.arc(-32, 0, 8, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = '#FFF'; ctx.globalAlpha = alpha;
+                ctx.beginPath(); ctx.arc(-32, 0, 4, 0, Math.PI*2); ctx.fill();
+            }
+            ctx.restore();
+            
+            ctx.restore(); // FIX: Closed matrix scaling pop preventing memory stack leak
+        }
+
+        // Torso
+        ctx.save();
+        ctx.scale(bodyScaleY, bodyScaleX);
+        ctx.fillStyle = metalLight;
+        ctx.strokeStyle = metalDark;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(15, 0); ctx.lineTo(5, 12); ctx.lineTo(-15, 10); ctx.lineTo(-20, 0); ctx.lineTo(-15, -10); ctx.lineTo(5, -12);
+        ctx.closePath();
+        ctx.fill(); ctx.stroke();
+        
+        ctx.fillStyle = morph > 0.5 ? neonMagenta : neonCyan;
+        ctx.globalAlpha = alpha * 0.4;
+        ctx.beginPath(); ctx.arc(-5, 0, 8 + morph*2, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#FFF'; ctx.globalAlpha = alpha;
+        ctx.beginPath(); ctx.arc(-5, 0, 4 + morph*2, 0, Math.PI*2); ctx.fill();
+        ctx.restore();
+
+        // Cockpit
+        ctx.save();
+        ctx.translate(12 + morph*8, 0);
+        ctx.fillStyle = metalDark;
+        ctx.beginPath();
+        if (morph < 0.5) {
+            ctx.moveTo(8, 0); ctx.lineTo(0, 6); ctx.lineTo(-6, 4); ctx.lineTo(-6, -4); ctx.lineTo(0, -6);
+        } else {
+            ctx.moveTo(20, 0); ctx.lineTo(0, 5); ctx.lineTo(-10, 0); ctx.lineTo(0, -5);
+        }
+        ctx.closePath(); ctx.fill();
+        
+        ctx.fillStyle = neonCyan;
+        ctx.globalAlpha = alpha * 0.4;
+        if (morph < 0.5) {
+            ctx.fillRect(-2, -5, 10, 10);
+        } else {
+            ctx.beginPath(); ctx.moveTo(17, 0); ctx.lineTo(2, 5); ctx.lineTo(-7, 0); ctx.lineTo(2, -5); ctx.fill();
+        }
+        ctx.fillStyle = '#FFF'; ctx.globalAlpha = alpha;
+        if (morph < 0.5) {
+            ctx.fillRect(0, -3, 6, 6);
+        } else {
+            ctx.beginPath(); ctx.moveTo(15, 0); ctx.lineTo(2, 3); ctx.lineTo(-5, 0); ctx.lineTo(2, -3); ctx.fill();
+        }
+        ctx.restore();
+
+        ctx.globalAlpha = 1;
+    }
+
+    draw() {
+        this.trails.forEach(t => {
+            if (!t.active) return;
+            ctx.save();
+            ctx.translate(t.x, t.y);
+            ctx.rotate(t.angle);
+            ctx.globalCompositeOperation = 'screen';
+            this.drawPlayerModel(ctx, t.morph, t.alpha * 0.5);
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.restore();
+        });
+
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+
+        if (this.state === STATES.MELEE && this.meleeActive) {
+            ctx.save();
+            const startAngle = -Math.PI * 0.6;
+            const endAngle = Math.PI * 0.6;
+            const currentAngle = startAngle + (endAngle - startAngle) * this.meleeArc;
+            
+            ctx.rotate(currentAngle);
+            
+            ctx.strokeStyle = '#FF00FF';
+            ctx.lineWidth = 12 + Math.sin(this.meleeArc * Math.PI) * 16;
+            ctx.lineCap = 'round';
+            ctx.globalAlpha = 0.3;
+            ctx.beginPath(); ctx.arc(0, 0, 50, -0.2, 0.2); ctx.stroke();
+
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 4 + Math.sin(this.meleeArc * Math.PI) * 8;
+            ctx.globalAlpha = 1.0;
+            ctx.beginPath(); ctx.arc(0, 0, 50, -0.2, 0.2); ctx.stroke();
+            
+            ctx.globalAlpha = 1 - this.meleeArc;
+            ctx.lineWidth = 20;
+            ctx.strokeStyle = 'rgba(255, 0, 255, 0.5)';
+            ctx.beginPath();
+            ctx.arc(0, 0, 50, startAngle, currentAngle);
+            ctx.stroke();
+            
+            ctx.restore();
+            
+            if (this.meleeArc > 0.4 && this.meleeArc < 0.6) {
+                Particles.spawn(this.x + Math.cos(this.angle)*50, this.y + Math.sin(this.angle)*50, (Math.random()-0.5)*300, (Math.random()-0.5)*300, 0.2, '#FFF', 2, true);
+            }
+        }
+
+        this.drawPlayerModel(ctx, this.morph, 1);
+        ctx.restore();
+    }
+}
+
+// --- ENVIRONMENT ---
+function drawGrid() {
+    const gridSize = 100;
+    const offsetX = -(Camera.x % gridSize);
+    const offsetY = -(Camera.y % gridSize);
+    
+    ctx.strokeStyle = '#0F202A';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let x = offsetX; x < width + gridSize; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, height); }
+    for (let y = offsetY; y < height + gridSize; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(width, y); }
+    ctx.stroke();
+    
+    ctx.fillStyle = '#0FF';
+    ctx.globalAlpha = 0.3;
+    for (let x = offsetX; x < width + gridSize; x += gridSize) {
+        for (let y = offsetY; y < height + gridSize; y += gridSize) ctx.fillRect(x - 2, y - 2, 4, 4);
+    }
+    ctx.globalAlpha = 1;
+}
+
+// --- MAIN LOOP ---
+const player = new Player(0, 0);
+let lastTime = 0;
+
+function gameLoop(now) {
+    if (!lastTime) lastTime = now;
+    let dt = (now - lastTime) / 1000;
+    if (dt > 0.1) dt = 0.1; // Safety clamp 
+    lastTime = now;
+
+    Input.update();
+    player.update(dt);
+    Camera.update(dt, player);
+    Projectiles.update(dt);
+    Particles.update(dt);
+
+    ctx.fillStyle = '#030305';
+    ctx.fillRect(0, 0, width, height);
+    drawGrid();
+
+    Camera.apply();
+    
+    Particles.draw();
+    player.draw();
+    Projectiles.draw();
+    
+    Camera.restore();
+
+    requestAnimationFrame(gameLoop);
+}
+
+requestAnimationFrame(gameLoop);
+</script>
+
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+</html>

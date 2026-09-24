@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BUILD//50 — AI Webbuilding Prompt Deck</title>
+  <style>
+    :root {
+      --ink: #06110e;
+      --panel: #0b1c17;
+      --panel-2: #10271f;
+      --line: rgba(205,255,229,.14);
+      --paper: #f3f6ef;
+      --muted: #91a69d;
+      --mint: #73f7b6;
+      --mint-2: #c8ffe5;
+      --coral: #ff765f;
+      --yellow: #f4d56a;
+      --radius: 18px;
+      --shadow: 0 24px 60px rgba(0,0,0,.36);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--paper);
+      background:
+        radial-gradient(circle at 84% 8%, rgba(115,247,182,.11), transparent 28rem),
+        radial-gradient(circle at 12% 42%, rgba(255,118,95,.07), transparent 24rem),
+        var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    body.modal-open { overflow: hidden; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    ::selection { color: var(--ink); background: var(--mint); }
+
+    .shell { width: min(1480px, 100%); margin: 0 auto; padding: 16px; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      padding: 8px 0 20px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; letter-spacing: -.04em; }
+    .brand-mark {
+      display: grid; place-items: center; width: 35px; aspect-ratio: 1;
+      border-radius: 10px; color: var(--ink); background: var(--mint); font-size: 13px;
+      box-shadow: 0 0 0 5px rgba(115,247,182,.08);
+    }
+    .status-pill {
+      display: flex; align-items: center; gap: 8px; padding: 8px 11px;
+      border: 1px solid var(--line); border-radius: 99px; color: var(--muted);
+      font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    }
+    .status-pill::before { content: ""; width: 7px; aspect-ratio: 1; border-radius: 50%; background: var(--mint); box-shadow: 0 0 12px var(--mint); }
+
+    .hero { padding: 38px 0 28px; border-top: 1px solid var(--line); }
+    .eyebrow { color: var(--mint); font-size: 11px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; }
+    h1 { max-width: 980px; margin: 13px 0 18px; font-size: clamp(42px, 8.4vw, 118px); line-height: .88; letter-spacing: -.075em; }
+    h1 span { color: transparent; -webkit-text-stroke: 1px rgba(200,255,229,.52); }
+    .hero-bottom { display: grid; gap: 24px; }
+    .hero-copy { max-width: 640px; margin: 0; color: #b3c3bc; font-size: clamp(16px, 2vw, 20px); line-height: 1.55; }
+    .meter {
+      display: grid; grid-template-columns: auto 1fr; gap: 10px 14px; align-items: center;
+      padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: rgba(11,28,23,.7);
+    }
+    .meter strong { font-size: 26px; letter-spacing: -.05em; }
+    .meter span { color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .meter-track { grid-column: 1 / -1; height: 4px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.08); }
+    .meter-track i { display: block; width: 100%; height: 100%; background: linear-gradient(90deg, var(--mint), var(--yellow), var(--coral)); }
+
+    .controls {
+      position: sticky; top: 0; z-index: 10; display: grid; gap: 10px;
+      padding: 12px 0; background: linear-gradient(var(--ink) 82%, transparent);
+    }
+    .search-wrap { position: relative; }
+    .search-wrap::before { content: "⌕"; position: absolute; left: 16px; top: 50%; transform: translateY(-52%); color: var(--mint); font-size: 24px; }
+    #search {
+      width: 100%; min-height: 52px; padding: 0 46px; color: var(--paper); background: var(--panel);
+      border: 1px solid var(--line); border-radius: 13px; outline: none; transition: border-color .2s, box-shadow .2s;
+    }
+    #search:focus { border-color: var(--mint); box-shadow: 0 0 0 4px rgba(115,247,182,.1); }
+    #clearSearch { position: absolute; right: 7px; top: 7px; width: 38px; height: 38px; border: 0; border-radius: 9px; color: var(--muted); background: transparent; cursor: pointer; }
+    #clearSearch:hover { color: var(--paper); background: rgba(255,255,255,.06); }
+    .filters { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+    .filters::-webkit-scrollbar { display: none; }
+    .filter {
+      flex: 0 0 auto; padding: 9px 12px; color: var(--muted); background: transparent;
+      border: 1px solid var(--line); border-radius: 99px; cursor: pointer;
+      font-size: 11px; font-weight: 850; letter-spacing: .06em; transition: .2s ease;
+    }
+    .filter:hover, .filter.active { color: var(--ink); border-color: var(--mint); background: var(--mint); transform: translateY(-1px); }
+
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin: 25px 0 14px; }
+    .section-head h2 { margin: 0; font-size: clamp(24px, 4vw, 42px); letter-spacing: -.05em; }
+    .result-count { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .prompt-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .prompt-card {
+      position: relative; isolation: isolate; min-height: 196px; padding: 0; overflow: hidden;
+      text-align: left; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel);
+      cursor: pointer; transform: translateZ(0); transition: transform .22s cubic-bezier(.2,.8,.2,1), border-color .22s, box-shadow .22s, background .22s;
+    }
+    .prompt-card::after {
+      content: ""; position: absolute; inset: auto -30% -70% 20%; z-index: -1; height: 140px;
+      border-radius: 50%; background: var(--card-accent); filter: blur(60px); opacity: .11; transition: opacity .25s, transform .25s;
+    }
+    .prompt-card:hover { transform: translateY(-5px); border-color: color-mix(in srgb, var(--card-accent) 60%, transparent); box-shadow: 0 18px 38px rgba(0,0,0,.24); background: var(--panel-2); }
+    .prompt-card:hover::after { opacity: .23; transform: translateY(-18px); }
+    .prompt-card:active { transform: translateY(-1px) scale(.985); }
+    .prompt-card:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
+    .card-inner { display: flex; flex-direction: column; min-height: 196px; padding: 18px; }
+    .card-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .card-number { color: var(--card-accent); font-size: 12px; font-weight: 950; letter-spacing: .08em; }
+    .card-tag { padding: 5px 7px; border: 1px solid var(--line); border-radius: 99px; color: var(--muted); font-size: 9px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+    .prompt-card h3 { margin: 24px 0 8px; font-size: 21px; line-height: 1.05; letter-spacing: -.035em; }
+    .prompt-card p { margin: 0 0 16px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .card-action { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 13px; border-top: 1px solid var(--line); color: #c6d3cd; font-size: 10px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+    .card-arrow { color: var(--card-accent); font-size: 18px; transition: transform .2s; }
+    .prompt-card:hover .card-arrow { transform: translateX(4px); }
+    .prompt-card.copied { animation: cardPop .42s ease; }
+    .prompt-card.copied::before { content: "COPIED"; position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; color: var(--ink); background: var(--mint); font-size: 18px; font-weight: 950; letter-spacing: .14em; animation: flashOut .48s forwards; }
+    .ripple { position: absolute; z-index: 4; border-radius: 50%; pointer-events: none; background: rgba(255,255,255,.35); transform: scale(0); animation: ripple .55s ease-out; }
+
+    .empty { display: none; padding: 56px 24px; text-align: center; border: 1px dashed var(--line); border-radius: var(--radius); color: var(--muted); }
+    .empty strong { display: block; margin-bottom: 8px; color: var(--paper); font-size: 22px; }
+    .data-note { margin: 44px 0 20px; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(11,28,23,.6); }
+    .data-note summary { cursor: pointer; color: var(--mint); font-size: 12px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+    .data-note p { color: var(--muted); line-height: 1.6; }
+    #jsonSource { max-height: 420px; overflow: auto; padding: 16px; white-space: pre-wrap; color: #c8d8d0; background: #040b09; border-radius: 12px; font: 11px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 26px 0 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+
+    .modal { position: fixed; inset: 0; z-index: 50; display: none; padding: 12px; background: rgba(1,8,6,.78); backdrop-filter: blur(14px); }
+    .modal.open { display: grid; place-items: center; animation: fadeIn .18s ease; }
+    .modal-card { width: min(820px, 100%); max-height: calc(100vh - 24px); overflow: auto; border: 1px solid rgba(115,247,182,.3); border-radius: 22px; background: #0c1c17; box-shadow: var(--shadow); animation: modalUp .3s cubic-bezier(.2,.8,.2,1); }
+    .modal-top { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 16px; background: rgba(12,28,23,.94); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); }
+    .copy-state { display: flex; align-items: center; gap: 8px; color: var(--mint); font-size: 10px; font-weight: 900; letter-spacing: .11em; text-transform: uppercase; }
+    .copy-state::before { content: "✓"; display: grid; place-items: center; width: 22px; aspect-ratio: 1; border-radius: 50%; color: var(--ink); background: var(--mint); }
+    .close { width: 38px; aspect-ratio: 1; border: 1px solid var(--line); border-radius: 10px; color: var(--paper); background: transparent; cursor: pointer; transition: .2s; }
+    .close:hover { color: var(--ink); border-color: var(--coral); background: var(--coral); transform: rotate(5deg); }
+    .modal-body { padding: 22px 18px; }
+    .modal-kicker { color: var(--coral); font-size: 10px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+    .modal-body h2 { margin: 8px 0 18px; font-size: clamp(28px, 6vw, 52px); line-height: 1; letter-spacing: -.055em; }
+    .prompt-output { margin: 0; padding: 18px; white-space: pre-wrap; color: #d6e2dc; background: #06110e; border: 1px solid var(--line); border-radius: 14px; font: 13px/1.72 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .modal-actions { display: grid; gap: 9px; margin-top: 14px; }
+    .action-button { min-height: 48px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; font-size: 11px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; transition: .2s; }
+    .action-button.primary { color: var(--ink); border-color: var(--mint); background: var(--mint); }
+    .action-button.secondary { background: transparent; }
+    .action-button:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,.25); }
+    .action-button:disabled { cursor: wait; opacity: .74; transform: none; }
+    .run-panel { display: none; margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.025); }
+    .run-panel.active { display: block; }
+    .run-label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 9px; color: var(--muted); font-size: 10px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+    .loader { height: 5px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.08); }
+    .loader i { display: block; width: 38%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--mint), var(--yellow), var(--coral)); animation: loading 1s ease-in-out infinite; }
+    .run-panel.success .loader i { width: 100%; animation: none; background: var(--mint); }
+    .run-result { margin: 10px 0 0; color: #c8d6d0; font-size: 12px; line-height: 1.55; }
+    .toast { position: fixed; left: 50%; bottom: 18px; z-index: 70; transform: translate(-50%, 30px); padding: 11px 15px; border: 1px solid rgba(115,247,182,.35); border-radius: 99px; color: var(--ink); background: var(--mint); box-shadow: var(--shadow); opacity: 0; pointer-events: none; font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; transition: .25s; }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+    @keyframes fadeIn { from { opacity: 0; } }
+    @keyframes modalUp { from { opacity: 0; transform: translateY(22px) scale(.98); } }
+    @keyframes cardPop { 50% { transform: scale(.98); } }
+    @keyframes flashOut { 0%,55% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+    @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+    @keyframes loading { 0% { transform: translateX(-120%); } 100% { transform: translateX(360%); } }
+    @media (min-width: 620px) {
+      .shell { padding: 24px; }
+      .hero-bottom { grid-template-columns: 1fr 230px; align-items: end; }
+      .controls { grid-template-columns: minmax(260px, 1fr) auto; align-items: center; }
+      .prompt-grid { grid-template-columns: repeat(2, 1fr); }
+      .modal-actions { grid-template-columns: 1fr 1fr; }
+      .modal-body { padding: 30px; }
+    }
+    @media (min-width: 980px) {
+      .hero { padding: 62px 0 42px; }
+      .prompt-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    }
+    @media (min-width: 1320px) { .prompt-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+  </style>
+<!-- N8-ENHANCEMENTS:HEAD:START -->
+  <meta name="description" content="Use BUILD//50 — AI Webbuilding Prompt Deck, a practical standalone browser tool from the N8 CyberDev collection.">
+  <meta name="keywords" content="BUILD//50 — AI Webbuilding Prompt Deck, Tools &amp; Productivity, N8 CyberDev, Qamelot, interactive web app, standalone HTML">
+  <meta name="author" content="N8 CyberDev / Qamelot">
+  <meta name="creator" content="N8 CyberDev">
+  <meta name="publisher" content="Qamelot">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#070b14">
+  <meta name="color-scheme" content="dark light">
+  <meta name="application-name" content="N8 CyberDev">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="n8-improvement-count" content="80">
+  <meta name="n8-feature-count" content="16">
+  <link rel="canonical" href="https://qamotech.github.io/DevDashboard/n8Prompt.html">
+  <link rel="icon" type="image/png" sizes="128x128" href="n8-icon.png">
+  <link rel="shortcut icon" type="image/png" href="n8-icon.png">
+  <link rel="apple-touch-icon" href="n8-icon.png">
+  <link rel="manifest" href="qamelot-media-assets/site.webmanifest">
+  <link rel="stylesheet" href="n8-tools-transformers.css">
+  <script defer src="n8-tools-transformers.js"></script>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="N8 CyberDev">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="BUILD//50 — AI Webbuilding Prompt Deck">
+  <meta property="og:description" content="Use BUILD//50 — AI Webbuilding Prompt Deck, a practical standalone browser tool from the N8 CyberDev collection.">
+  <meta property="og:url" content="https://qamotech.github.io/DevDashboard/n8Prompt.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="BUILD//50 — AI Webbuilding Prompt Deck">
+  <meta name="twitter:description" content="Use BUILD//50 — AI Webbuilding Prompt Deck, a practical standalone browser tool from the N8 CyberDev collection.">
+  <style id="n8x-styles">
+    :root{--n8x-cyan:#66e7ff;--n8x-violet:#ae82ff;--n8x-ink:#f4fbff;--n8x-muted:#a8b7c8;--n8x-bg:rgba(5,10,18,.96);--n8x-line:rgba(102,231,255,.28);--n8x-shadow:0 18px 55px rgba(0,0,0,.55)}
+    #n8x-skip{position:fixed;left:12px;top:10px;z-index:2147483647;transform:translateY(-160%);padding:10px 14px;border-radius:9px;color:#031017;background:var(--n8x-cyan);font:800 13px/1.2 system-ui,sans-serif;text-decoration:none;transition:transform .18s}
+    #n8x-skip:focus{transform:none}
+    #n8x-shell,#n8x-shell *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    #n8x-shell{position:fixed;right:14px;bottom:14px;z-index:2147483000;color:var(--n8x-ink);line-height:1.4;touch-action:manipulation}
+    #n8x-shell[data-n8x-side="left"]{left:14px;right:auto}
+    #n8x-dock{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:5px;max-width:250px;padding:6px;border:1px solid var(--n8x-line);border-radius:15px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(18px) saturate(1.25);transition:.18s}
+    #n8x-shell:not([data-n8x-expanded="true"]) .n8x-secondary{display:none}
+    #n8x-shell[data-n8x-hidden="true"] #n8x-dock,#n8x-shell[data-n8x-hidden="true"] #n8x-panel{display:none}
+    #n8x-restore{display:none;place-items:center;width:34px;height:44px;border:1px solid var(--n8x-line);border-right:0;border-radius:12px 0 0 12px;color:var(--n8x-cyan);background:var(--n8x-bg);box-shadow:var(--n8x-shadow);font:900 10px/1 ui-monospace,monospace;letter-spacing:-.04em;cursor:pointer}
+    #n8x-shell[data-n8x-side="left"] #n8x-restore{border:1px solid var(--n8x-line);border-left:0;border-radius:0 12px 12px 0}
+    #n8x-shell[data-n8x-hidden="true"] #n8x-restore{display:grid}
+    .n8x-btn,.n8x-link{min-width:42px;min-height:42px;display:grid;place-items:center;border:1px solid transparent;border-radius:11px;padding:7px;color:var(--n8x-ink);background:transparent;text-decoration:none;cursor:pointer;font-size:18px;line-height:1;transition:background .18s,border-color .18s,transform .18s}
+    .n8x-btn:hover,.n8x-btn:focus-visible,.n8x-link:hover,.n8x-link:focus-visible{outline:0;border-color:var(--n8x-line);background:rgba(102,231,255,.12);transform:translateY(-2px)}
+    .n8x-primary{color:#041017;background:linear-gradient(135deg,var(--n8x-cyan),#a8f3ff)}
+    #n8x-progress{position:fixed;left:0;top:0;z-index:2147483646;width:0;height:3px;background:linear-gradient(90deg,var(--n8x-cyan),var(--n8x-violet));box-shadow:0 0 12px var(--n8x-cyan);pointer-events:none}
+    #n8x-panel{position:fixed;right:14px;bottom:70px;width:min(400px,calc(100vw - 28px));max-height:min(620px,calc(100vh - 96px));display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;border:1px solid var(--n8x-line);border-radius:18px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(22px) saturate(1.3);overflow:hidden;opacity:0;transform:translateY(18px) scale(.98);pointer-events:none;transition:.2s}
+    #n8x-shell[data-n8x-side="left"] #n8x-panel{left:14px;right:auto}
+    #n8x-panel[aria-hidden="false"]{opacity:1;transform:none;pointer-events:auto}
+    .n8x-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 17px 12px}.n8x-head strong{font-size:14px;letter-spacing:.08em;text-transform:uppercase}.n8x-head small{display:block;margin-top:3px;color:var(--n8x-muted);font-size:11px}
+    #n8x-search{width:calc(100% - 28px);min-height:44px;margin:0 14px 10px;border:1px solid var(--n8x-line);border-radius:11px;padding:0 13px;color:var(--n8x-ink);background:rgba(255,255,255,.055);font-size:14px;outline:0}#n8x-search:focus{border-color:var(--n8x-cyan);box-shadow:0 0 0 3px rgba(102,231,255,.1)}
+    #n8x-list{overflow:auto;padding:4px 10px 12px;scrollbar-width:thin}.n8x-page{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;min-height:51px;padding:7px;border-radius:11px;color:var(--n8x-ink);text-decoration:none}.n8x-page:hover,.n8x-page:focus-visible{outline:0;background:rgba(102,231,255,.1)}.n8x-num{display:grid;place-items:center;width:31px;height:31px;border:1px solid var(--n8x-line);border-radius:9px;color:var(--n8x-cyan);font:800 10px/1 ui-monospace,monospace}.n8x-copy{min-width:0}.n8x-copy b,.n8x-copy span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.n8x-copy b{font-size:12px}.n8x-copy span{color:var(--n8x-muted);font-size:9px}.n8x-arrow{color:var(--n8x-muted)}
+    .n8x-foot{display:flex;justify-content:space-between;gap:10px;padding:11px 15px;border-top:1px solid var(--n8x-line);color:var(--n8x-muted);font-size:10px}.n8x-empty{padding:28px 14px;text-align:center;color:var(--n8x-muted);font-size:12px}
+    #n8x-toast{position:fixed;left:50%;bottom:78px;z-index:2147483647;max-width:calc(100vw - 28px);transform:translate(-50%,18px);padding:10px 14px;border:1px solid var(--n8x-line);border-radius:10px;color:var(--n8x-ink);background:var(--n8x-bg);box-shadow:var(--n8x-shadow);font:700 12px/1.3 system-ui,sans-serif;opacity:0;pointer-events:none;transition:.2s}#n8x-toast.n8x-show{opacity:1;transform:translate(-50%,0)}
+    html[data-n8x-calm="true"] body>*:not(#n8x-shell):not(#n8x-progress):not(#n8x-toast):not(#n8x-skip){filter:saturate(.72) brightness(.86)}
+    html[data-n8x-calm="true"]{scroll-behavior:auto!important}
+    :focus-visible{outline:2px solid var(--n8x-cyan,#66e7ff);outline-offset:3px}
+    @media(max-width:620px){#n8x-shell{right:0;bottom:max(8px,env(safe-area-inset-bottom))}#n8x-shell[data-n8x-side="left"]{left:0;right:auto}#n8x-dock{display:grid;grid-template-columns:36px;gap:3px;max-width:none;padding:4px;border-radius:14px 0 0 14px}#n8x-shell[data-n8x-side="left"] #n8x-dock{border-radius:0 14px 14px 0}#n8x-shell[data-n8x-expanded="true"] #n8x-dock{grid-template-columns:repeat(2,36px)}.n8x-btn,.n8x-link{min-width:36px;min-height:36px;padding:5px;font-size:15px}#n8x-panel{right:46px;bottom:0;width:min(360px,calc(100vw - 54px));max-height:min(560px,calc(100dvh - 16px));border-radius:16px}#n8x-shell[data-n8x-side="left"] #n8x-panel{left:46px;right:auto}.n8x-head{padding:12px 13px 9px}#n8x-search{width:calc(100% - 20px);min-height:40px;margin:0 10px 7px}#n8x-list{padding:3px 7px 9px}.n8x-page{grid-template-columns:31px 1fr auto;gap:7px;min-height:44px;padding:5px}.n8x-num{width:28px;height:28px}.n8x-foot{padding:8px 11px}.n8x-foot span:last-child{display:none}}
+    @media(max-width:380px){#n8x-panel{width:calc(100vw - 50px);right:42px}#n8x-shell[data-n8x-side="left"] #n8x-panel{left:42px;right:auto}.n8x-copy span{display:none}}
+    @media(prefers-reduced-motion:reduce){#n8x-shell *,#n8x-skip,#n8x-toast{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+    @media print{#n8x-shell,#n8x-progress,#n8x-toast,#n8x-skip{display:none!important}}
+  </style>
+  <!-- N8-ENHANCEMENTS:HEAD:END -->
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">B50</span><span>BUILD//50</span></div>
+      <div class="status-pill">Prompt deck online</div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="heroTitle">
+        <div class="eyebrow">AI webbuilding prompt generator · v1.0</div>
+        <h1 id="heroTitle">FROM BLANK PAGE <span>TO BUILT.</span></h1>
+        <div class="hero-bottom">
+          <p class="hero-copy">Fifty sharp prompts for planning, designing, coding, testing, and shipping better websites. Tap once to copy. Open instantly. Run when ready.</p>
+          <div class="meter" aria-label="50 prompts loaded">
+            <strong>50/50</strong><span>Prompts loaded</span>
+            <div class="meter-track"><i></i></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="controls" aria-label="Prompt filters">
+        <div class="search-wrap">
+          <input id="search" type="search" autocomplete="off" placeholder="Search navigation, SEO, React, database…" aria-label="Search prompts">
+          <button id="clearSearch" type="button" aria-label="Clear search">×</button>
+        </div>
+        <div class="filters" id="filters" aria-label="Filter by category"></div>
+      </section>
+
+      <div class="section-head">
+        <h2>Choose your build move.</h2>
+        <div class="result-count" id="resultCount">Showing 50 prompts</div>
+      </div>
+      <section class="prompt-grid" id="promptGrid" aria-label="50 webbuilding prompts"></section>
+      <div class="empty" id="emptyState"><strong>No prompt found.</strong>Try a broader search or switch categories.</div>
+
+      <details class="data-note">
+        <summary>View the complete 50-prompt JSON data source</summary>
+        <p>This is the exact structured data driving the prompt grid above. It can be copied into another project as a direct data source.</p>
+        <pre id="jsonSource"></pre>
+      </details>
+    </main>
+
+    <footer><span>BUILD//50 · AI website production system</span><span>Copy locally · API-ready execution hook</span></footer>
+  </div>
+
+  <div class="modal" id="promptModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-top">
+        <div class="copy-state" id="copyState">Copied to clipboard</div>
+        <button class="close" id="closeModal" type="button" aria-label="Close prompt">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-kicker" id="modalKicker"></div>
+        <h2 id="modalTitle"></h2>
+        <pre class="prompt-output" id="promptOutput"></pre>
+        <div class="modal-actions">
+          <button class="action-button secondary" id="copyAgain" type="button">Copy prompt again</button>
+          <button class="action-button primary" id="executePrompt" type="button">Simulate AI execution →</button>
+        </div>
+        <div class="run-panel" id="runPanel" aria-live="polite">
+          <div class="run-label"><span id="runStatus">Preparing request payload</span><span id="runPercent">0%</span></div>
+          <div class="loader"><i></i></div>
+          <p class="run-result" id="runResult">This placeholder is ready to be replaced with your AI API request.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite">Prompt copied</div>
+
+  <script>
+    const prompts = [
+      { id: 1, category: "Blueprints", title: "Full Website Blueprint", summary: "Turn a rough idea into a complete implementation plan.", prompt: `Act as a senior product designer and full-stack architect. Turn the following website idea into an implementation-ready blueprint: [WEBSITE IDEA]. Define the target audience, primary user journey, page hierarchy, content sections, reusable components, responsive behavior, visual direction, recommended technology stack, data requirements, integrations, accessibility needs, SEO plan, analytics events, edge cases, and launch checklist. Prioritize a lean first release, explain key tradeoffs, and finish with a clear build order that another developer can follow without guessing.` },
+      { id: 2, category: "Blueprints", title: "Single-Page App Architect", summary: "Plan a focused, interactive SPA from end to end.", prompt: `Design the architecture for a responsive single-page web application that does this: [APP PURPOSE]. Provide the information architecture, component tree, client-side state model, event flow, data shapes, API boundaries, loading and error states, empty states, keyboard behavior, mobile adaptations, and performance strategy. Recommend Vanilla JavaScript or a lightweight framework based on actual complexity. Include pseudocode for the core interaction and a phased implementation plan.` },
+      { id: 3, category: "Blueprints", title: "Landing Page Strategy", summary: "Map a conversion-first landing page before coding.", prompt: `Create a conversion-focused landing page strategy for [PRODUCT OR SERVICE] aimed at [AUDIENCE]. Define the single primary conversion goal, visitor objections, message hierarchy, section-by-section wireframe, headline options, proof elements, calls to action, FAQ topics, mobile ordering, trust signals, and analytics events. Keep the experience focused and credible. Finish with production-ready section copy placeholders and a concise visual art direction.` },
+      { id: 4, category: "Blueprints", title: "SaaS Dashboard Plan", summary: "Structure a useful dashboard around real decisions.", prompt: `Architect a SaaS dashboard for [PRODUCT] used by [USER TYPE]. Identify the decisions users need to make, then propose navigation, key metrics, widgets, tables, filters, detail views, notifications, onboarding, role permissions, empty states, and responsive behavior. For each dashboard module, specify its data inputs, interaction states, and why it deserves space. Avoid vanity metrics and finish with a prioritized component inventory.` },
+      { id: 5, category: "Blueprints", title: "E-commerce Store Map", summary: "Design the full storefront and buying journey.", prompt: `Plan a modern e-commerce website for [BRAND] selling [PRODUCTS]. Map the complete journey from discovery to post-purchase, including home, collection, search, filters, product detail, cart, checkout handoff, account, order status, returns, and support. Specify conversion features, merchandising rules, product data fields, responsive behavior, accessibility, performance targets, SEO structure, and analytics events. Include failure states and a lean MVP build sequence.` },
+      { id: 6, category: "Blueprints", title: "Portfolio Site System", summary: "Shape a memorable portfolio with clear proof.", prompt: `Create a distinctive portfolio website plan for a [PROFESSION] named [NAME]. Build a narrative that proves expertise rather than merely listing projects. Define the page structure, case-study template, project filtering, about section, credibility signals, contact flow, downloadable assets, motion guidelines, mobile behavior, and SEO setup. Propose three visual directions and recommend the strongest one with reasoning.` },
+      { id: 7, category: "Blueprints", title: "Content Site Architecture", summary: "Organize articles for discovery and retention.", prompt: `Design the information architecture for a content-rich website about [TOPIC]. Produce a taxonomy, category and tag rules, URL structure, navigation system, search and filtering model, article template, author pages, related-content logic, newsletter placements, structured data plan, archive behavior, and editorial workflow. Optimize for both human discovery and search engines while preventing duplicate or thin content.` },
+      { id: 8, category: "Blueprints", title: "MVP Scope Cutter", summary: "Reduce an ambitious website into a shippable first release.", prompt: `Act as a pragmatic technical product lead. Reduce this website concept into a high-value MVP: [CONCEPT AND FEATURE LIST]. Classify every feature as must-have, next, later, or remove. Explain the user value, cost, dependencies, and risk behind each decision. Define the smallest complete user journey, success metrics, technical constraints, assumptions to validate, and a two-week implementation sequence. Be decisive and protect the core outcome.` },
+
+      { id: 9, category: "UI Systems", title: "Responsive HTML Skeleton", summary: "Generate semantic, accessible page structure.", prompt: `Write production-quality semantic HTML for this page: [PAGE DESCRIPTION]. Include a skip link, landmark regions, logical heading order, accessible navigation, meaningful form labels where needed, and content sections with realistic placeholder copy. Do not use divs when a more meaningful element exists. Add concise class names intended for a scalable CSS system, but do not include styling or JavaScript yet.` },
+      { id: 10, category: "UI Systems", title: "CSS Design System", summary: "Create tokens and components that stay coherent.", prompt: `Create a mobile-first CSS design system for [BRAND OR PRODUCT]. Define color, typography, spacing, sizing, radius, shadow, layering, motion, and breakpoint tokens using CSS custom properties. Then implement base styles and reusable patterns for buttons, inputs, cards, badges, alerts, navigation, dialogs, and responsive layout primitives. Include dark-mode handling, focus-visible states, reduced-motion support, and comments explaining only non-obvious decisions.` },
+      { id: 11, category: "UI Systems", title: "Complex Navigation Builder", summary: "Build responsive navigation with robust behavior.", prompt: `Build a production-ready responsive navigation system for [SITE TYPE] using semantic HTML, modern CSS, and Vanilla JavaScript. It must include desktop dropdowns or a mega menu, a mobile drawer, active states, keyboard navigation, Escape-to-close, outside-click handling, focus management, and accessible ARIA attributes. Prevent layout shift and scroll bleed. Return complete code plus a short explanation of the interaction model.` },
+      { id: 12, category: "UI Systems", title: "Hero Section Designer", summary: "Create a striking first viewport that converts.", prompt: `Design and code a distinctive hero section for [PRODUCT OR BRAND]. The primary message is [MESSAGE] and the action is [CTA]. Provide semantic HTML and mobile-first CSS with a strong typographic hierarchy, trust cue, secondary action, responsive composition, and purposeful motion. Avoid generic gradient blobs and empty marketing language. Use CSS-native visual elements unless imagery is essential, and explain the conversion logic briefly.` },
+      { id: 13, category: "UI Systems", title: "Pricing Table Designer", summary: "Make plan comparison simple and persuasive.", prompt: `Design and code an accessible responsive pricing section for [PRODUCT] with these plans: [PLAN DETAILS]. Clarify the ideal customer for each plan, normalize feature comparisons, highlight the recommended option honestly, and handle monthly/yearly pricing if relevant. Include semantic HTML, mobile-first CSS, keyboard-accessible controls, concise conversion copy, FAQ prompts, and a graceful narrow-screen layout.` },
+      { id: 14, category: "UI Systems", title: "Form Experience Builder", summary: "Create an accessible form with excellent feedback.", prompt: `Build a polished, accessible [FORM TYPE] for [PURPOSE] using HTML, CSS, and Vanilla JavaScript. Include appropriate input types, labels, hints, validation rules, inline error messages, disabled and loading states, success confirmation, keyboard flow, autofill support, and spam-mitigation placeholders. Preserve user input after errors and make the layout excellent on small screens. Return complete code with a mock submit handler ready for API integration.` },
+      { id: 15, category: "UI Systems", title: "Card Grid Composer", summary: "Create a responsive, content-resilient card system.", prompt: `Create a responsive card grid for [CONTENT TYPE] using semantic HTML and modern CSS Grid. Cards must handle short and long titles, optional images, metadata, badges, and actions without breaking alignment. Include hover, focus, pressed, loading-skeleton, and empty states. Use container-aware sizing where useful, support reduced motion, and make the entire pattern accessible without turning every card into invalid nested links.` },
+      { id: 16, category: "UI Systems", title: "Modal & Drawer System", summary: "Build overlays with correct focus and scroll behavior.", prompt: `Implement an accessible modal and mobile drawer system in Vanilla JavaScript for [USE CASE]. Include trigger wiring, focus trapping, initial focus, focus restoration, Escape and backdrop closing, scroll locking, nested interactive content, ARIA labeling, transition states, and reduced-motion support. Prevent accidental close during critical actions. Return self-contained HTML, CSS, and JavaScript plus a short integration guide.` },
+      { id: 17, category: "UI Systems", title: "Dark Mode Engineer", summary: "Add a durable theme system without flashes.", prompt: `Add a robust light/dark theme system to this website: [PASTE CODE OR DESCRIBE SITE]. Use CSS custom properties, respect prefers-color-scheme on first visit, persist explicit user choice, prevent a flash of the wrong theme, update theme-color metadata, and provide an accessible toggle with clear state. Audit contrast in both themes and include a strategy for images, shadows, charts, and embedded widgets.` },
+
+      { id: 18, category: "Content & SEO", title: "Homepage Copywriter", summary: "Write specific homepage copy around customer outcomes.", prompt: `Write complete homepage copy for [BUSINESS] serving [AUDIENCE]. The offer is [OFFER] and the desired action is [CTA]. Produce a focused hero, problem framing, benefit sections, how-it-works, proof, objection handling, CTA blocks, and FAQ. Use concrete language, match this brand voice: [VOICE], avoid unsupported claims, and label each section so the copy can be dropped directly into a page design.` },
+      { id: 19, category: "Content & SEO", title: "Product Page Copy", summary: "Turn product details into clear purchase motivation.", prompt: `Write conversion-focused product page copy for [PRODUCT] using these verified details: [DETAILS]. Create a product title, short promise, key benefits, feature explanations, use cases, specifications, trust copy, shipping or delivery notes, care instructions if relevant, FAQs, and calls to action. Distinguish facts from suggested claims, never invent proof, and provide concise mobile-first and expanded desktop copy variants.` },
+      { id: 20, category: "Content & SEO", title: "SEO Metadata Pack", summary: "Generate accurate titles, descriptions, and social text.", prompt: `Create an SEO metadata pack for these pages: [PAGE LIST AND PURPOSES]. For each page, provide a unique title tag, meta description, suggested slug, canonical guidance, Open Graph title and description, X card text, and primary search intent. Keep within sensible display lengths, make every line specific and honest, avoid keyword stuffing, and flag pages that risk overlapping search intent.` },
+      { id: 21, category: "Content & SEO", title: "Structured Data Generator", summary: "Create valid JSON-LD matched to visible content.", prompt: `Generate valid JSON-LD structured data for [PAGE URL OR PAGE TYPE] representing [ENTITY OR CONTENT]. Select only schema types justified by visible page content. Include required and high-value recommended properties, use absolute URLs, connect related entities with stable @id values, and avoid fabricated ratings, reviews, prices, or credentials. Return the JSON-LD script and a validation checklist for Google Rich Results and Schema.org.` },
+      { id: 22, category: "Content & SEO", title: "Topic Cluster Planner", summary: "Build search coverage around real audience questions.", prompt: `Create an SEO topic cluster for [BUSINESS OR SITE] around [CORE TOPIC] and audience [AUDIENCE]. Identify one pillar page and supporting articles grouped by search intent and funnel stage. For each, provide a working title, target query, user question, unique angle, recommended format, internal links, and conversion opportunity. Remove cannibalizing ideas and prioritize the first ten pieces by achievable business value.` },
+      { id: 23, category: "Content & SEO", title: "FAQ & Objection Engine", summary: "Answer real blockers with concise, useful copy.", prompt: `Generate a high-quality FAQ section for [PRODUCT, SERVICE, OR PROCESS] aimed at [AUDIENCE]. Cover purchase objections, eligibility, setup, pricing, timing, privacy, security, cancellation, support, and realistic edge cases. Write direct answers in the brand voice [VOICE], avoid vague reassurance, and mark any answer that requires the business owner to supply a verified policy or fact.` },
+      { id: 24, category: "Content & SEO", title: "Accessibility Copy Audit", summary: "Improve labels, instructions, errors, and alt text.", prompt: `Audit the interface copy below for accessibility and usability: [PASTE UI COPY OR CODE]. Rewrite ambiguous labels, placeholder-only fields, link text, button names, instructions, validation errors, status messages, image alt text, and screen-reader-only context. Ensure errors explain how to recover and status updates make sense without color or position. Return a before/after table and note any issues that require design or code changes.` },
+      { id: 25, category: "Content & SEO", title: "Internal Linking Architect", summary: "Build useful paths between related pages.", prompt: `Design an internal linking plan for this website: [SITEMAP OR PAGE LIST]. Group pages by topic and intent, identify orphan pages, define hub-and-spoke relationships, recommend contextual anchor text, add relevant breadcrumb paths, and propose related-content modules. Keep every link useful to the reader, avoid repetitive exact-match anchors, and provide a prioritized list of changes with source page, destination page, and placement context.` },
+
+      { id: 26, category: "Interactivity", title: "JavaScript Interaction Builder", summary: "Implement a polished UI behavior from a plain description.", prompt: `Implement this front-end interaction using modern Vanilla JavaScript: [DESCRIBE INTERACTION]. Start by defining states, events, and edge cases. Then return semantic HTML, scoped CSS, and readable JavaScript with event delegation where appropriate. Include keyboard and touch behavior, loading and error feedback, reduced-motion handling, cleanup for listeners or timers, and clear placeholders for future API integration. Avoid dependencies unless they materially reduce complexity.` },
+      { id: 27, category: "Interactivity", title: "Search & Filter Engine", summary: "Create fast client-side discovery for a content set.", prompt: `Build a responsive client-side search, filter, and sort interface for [DATASET TYPE]. Include debounced text search, multi-filter logic, result counts, clear-all behavior, URL query synchronization, empty states, keyboard usability, and persistence of sensible preferences. Use a sample data array and Vanilla JavaScript. Keep performance smooth for at least 1,000 items and explain how to replace the sample data.` },
+      { id: 28, category: "Interactivity", title: "Multi-Step Wizard", summary: "Guide users through a complex task without losing progress.", prompt: `Create an accessible multi-step form wizard for [PROCESS]. Define steps and validation boundaries, then implement progress indication, back and next controls, conditional fields, per-step validation, keyboard flow, saved local draft state, summary review, final loading state, and recoverable submission errors. Use semantic HTML, mobile-first CSS, and Vanilla JavaScript with a mock API function.` },
+      { id: 29, category: "Interactivity", title: "Drag-and-Drop Board", summary: "Build an accessible reorderable workflow board.", prompt: `Build a responsive drag-and-drop board for [USE CASE] with columns [COLUMNS]. Support pointer, touch, and keyboard reordering; clear drop indicators; item creation and editing; empty columns; local persistence; and screen-reader announcements. Use semantic HTML, CSS, and Vanilla JavaScript. Separate the data model from rendering so a real API can replace local storage later.` },
+      { id: 30, category: "Interactivity", title: "Realtime UI Simulator", summary: "Prototype live updates and connection states.", prompt: `Create a front-end prototype for a realtime [DASHBOARD, CHAT, FEED, OR TRACKER]. Simulate incoming events and implement connected, reconnecting, offline, paused, and error states. Prevent duplicate events, preserve scroll position appropriately, show timestamps clearly, allow filtering, and include an adapter interface where WebSocket or Server-Sent Events logic can later be connected. Return complete accessible HTML, CSS, and Vanilla JavaScript.` },
+      { id: 31, category: "Interactivity", title: "Clipboard & Share Toolkit", summary: "Add resilient copy, share, and feedback actions.", prompt: `Implement a reusable copy-and-share toolkit for [CONTENT TYPE]. Include Clipboard API support, a safe fallback, Web Share API enhancement, copied feedback, error feedback, keyboard activation, selection preservation, and secure-context limitations. Provide semantic markup, polished mobile-first styles, and a small Vanilla JavaScript API that can attach to multiple elements using data attributes.` },
+      { id: 32, category: "Interactivity", title: "File Upload Experience", summary: "Create a robust upload interface ready for a backend.", prompt: `Build an accessible file-upload interface for [FILE TYPES AND PURPOSE]. Include click-to-browse, drag-and-drop enhancement, accepted-type and size validation, multiple-file rules, previews where appropriate, progress simulation, cancellation, retry, remove, success and error states, and mobile behavior. Keep the transport layer as a clearly defined mock function that can be replaced with signed URL or multipart API logic.` },
+      { id: 33, category: "Interactivity", title: "Interactive Data Table", summary: "Build a capable table that survives small screens.", prompt: `Create an accessible data table for [DATA TYPE] with sorting, search, filters, pagination, selectable rows, bulk actions, column visibility, loading skeletons, empty states, and error recovery. Define the mobile strategy explicitly: priority columns, horizontal scroll, or card transformation. Use semantic table markup where tabular relationships matter and Vanilla JavaScript with mock data.` },
+      { id: 34, category: "Interactivity", title: "Animation Choreographer", summary: "Add motion that communicates hierarchy and state.", prompt: `Design a purposeful motion system for this interface: [DESCRIBE OR PASTE CODE]. Define entrance, hover, press, loading, success, error, overlay, and page-transition behaviors with durations and easing tokens. Implement the most important effects in performant CSS and minimal JavaScript. Animate only transform and opacity where possible, respect prefers-reduced-motion, prevent layout shift, and explain the user feedback each animation provides.` },
+
+      { id: 35, category: "Data & Backend", title: "REST API Contract", summary: "Define a clean interface between front end and server.", prompt: `Design a REST API contract for [APPLICATION] supporting these actions: [ACTIONS]. Define resources, endpoints, methods, request and response JSON, validation, pagination, filtering, idempotency, authentication boundaries, authorization rules, status codes, rate-limit behavior, and a consistent error envelope. Include example requests and responses plus front-end integration notes for loading, optimistic updates, retries, and cache invalidation.` },
+      { id: 36, category: "Data & Backend", title: "Database Schema Designer", summary: "Model application data with constraints and growth in mind.", prompt: `Design a relational database schema for [APPLICATION DESCRIPTION]. Identify entities, fields, types, primary and foreign keys, constraints, indexes, ownership boundaries, lifecycle timestamps, soft-delete needs, and audit requirements. Normalize deliberately, explain any denormalization, and cover common query patterns. Return an entity relationship outline, SQL DDL for [DATABASE], sample records, and migration considerations.` },
+      { id: 37, category: "Data & Backend", title: "Authentication Flow", summary: "Plan secure sign-in and account recovery experiences.", prompt: `Design a secure authentication and account lifecycle for [APPLICATION]. Cover sign-up, email verification, sign-in, sign-out, password reset, session expiry, device management, optional social login, multi-factor authentication, rate limiting, and account deletion. Separate authentication from authorization. Map front-end screens and states to backend endpoints, identify threats and mitigations, and recommend secure cookie or token handling for the stated architecture.` },
+      { id: 38, category: "Data & Backend", title: "Role Permission Matrix", summary: "Translate user roles into enforceable access rules.", prompt: `Create a role and permission model for [APPLICATION] with these user types: [ROLES]. List resources and actions, then build a least-privilege permission matrix. Define ownership rules, tenant boundaries, invitation flows, role changes, admin safeguards, audit logging, and how the UI should hide or disable unavailable actions without relying on client-side enforcement. Include backend authorization pseudocode for the highest-risk operations.` },
+      { id: 39, category: "Data & Backend", title: "AI API Integration Plan", summary: "Connect a web UI to an AI service safely.", prompt: `Design a production-ready integration between this web interface and an AI API: [INTERFACE AND TASK]. Define the server-side proxy, request validation, prompt construction, model settings, streaming response flow, cancellation, timeouts, retries, rate limits, usage tracking, moderation or safety checks, secret management, logging with privacy controls, and user-facing error states. Provide framework-neutral pseudocode and never expose API keys in browser code.` },
+      { id: 40, category: "Data & Backend", title: "Webhook Workflow", summary: "Handle external events reliably and idempotently.", prompt: `Design a reliable webhook receiver for [PROVIDER AND EVENT TYPES]. Include signature verification, timestamp tolerance, raw-body handling, idempotency, event storage, fast acknowledgement, background processing, retries, dead-letter handling, observability, replay tooling, and safe logging. Provide endpoint pseudocode, an event table schema, and a test matrix covering duplicates, reordering, invalid signatures, and downstream failure.` },
+      { id: 41, category: "Data & Backend", title: "Local-First Data Layer", summary: "Create offline-friendly state with a migration path.", prompt: `Design a local-first data layer for [WEB APP] using browser storage. Choose localStorage, IndexedDB, or another browser capability based on data shape and size. Define the schema, version migrations, read/write API, optimistic UI, offline behavior, quota errors, export/import, reset controls, privacy considerations, and the future synchronization boundary. Provide clean Vanilla JavaScript implementation code and sample usage.` },
+
+      { id: 42, category: "Quality & Launch", title: "Accessibility Audit", summary: "Find and prioritize barriers against WCAG.", prompt: `Perform a WCAG 2.2 AA accessibility audit of this page code: [PASTE HTML, CSS, AND JAVASCRIPT]. Review semantics, headings, landmarks, keyboard access, focus order and visibility, names and labels, contrast, zoom, reflow, forms, dialogs, live regions, motion, touch targets, and error recovery. Return findings ranked by severity with exact code references, user impact, and concrete fixes. Distinguish automated-check candidates from issues requiring manual testing.` },
+      { id: 43, category: "Quality & Launch", title: "Performance Optimizer", summary: "Improve real loading and interaction speed.", prompt: `Audit this website for performance and Core Web Vitals: [PASTE CODE OR URL DATA]. Identify likely LCP, INP, and CLS problems; render-blocking work; excessive JavaScript; image and font waste; caching gaps; and third-party cost. Prioritize fixes by impact and effort, provide exact implementation changes, define a performance budget, and include before/after measurement steps using browser performance tooling.` },
+      { id: 44, category: "Quality & Launch", title: "Cross-Browser Test Plan", summary: "Cover browsers, devices, inputs, and failure states.", prompt: `Create a risk-based cross-browser test plan for [WEBSITE OR FEATURE]. Define a practical browser and device matrix, viewport sizes, input modes, network conditions, and assistive technology checks. Write test cases for layout, navigation, forms, media, storage, permissions, clipboard, modals, and critical JavaScript APIs. Include expected results, fallback behavior, severity rules, and a concise release smoke-test checklist.` },
+      { id: 45, category: "Quality & Launch", title: "Frontend Security Review", summary: "Find client-side risks before release.", prompt: `Review this front-end implementation for security and privacy risks: [PASTE CODE OR ARCHITECTURE]. Check cross-site scripting, unsafe DOM insertion, URL handling, open redirects, third-party scripts, dependency exposure, token storage, CSRF assumptions, clickjacking, content security policy, file uploads, sensitive logging, browser storage, and data minimization. Rank findings by exploitability and impact, then provide precise remediations and secure coding examples.` },
+      { id: 46, category: "Quality & Launch", title: "Error State Designer", summary: "Make failures understandable and recoverable.", prompt: `Design complete error and recovery states for [WEBSITE OR FLOW]. Cover validation errors, empty data, offline mode, slow network, timeout, permission denial, authentication expiry, rate limiting, server errors, partial success, and destructive-action failure. For each state, provide user-facing copy, primary and secondary actions, technical logging needs, accessibility announcements, retry rules, and whether entered data should be preserved.` },
+      { id: 47, category: "Quality & Launch", title: "Analytics Event Map", summary: "Measure real user outcomes without noisy tracking.", prompt: `Create a privacy-conscious analytics plan for [WEBSITE] whose business goal is [GOAL]. Define a small event taxonomy covering acquisition, key journey steps, conversion, failure, and retention. For each event specify trigger, properties, user value, business question, and implementation location. Include naming conventions, consent boundaries, data minimization, test procedures, and a dashboard outline. Exclude vanity events that will not influence a decision.` },
+      { id: 48, category: "Quality & Launch", title: "PWA Upgrade Plan", summary: "Turn a useful site into a reliable installable app.", prompt: `Plan and implement a progressive web app upgrade for [WEBSITE]. Define the manifest, icons, theme behavior, install experience, service worker scope, cache strategies by resource type, offline fallback, update flow, background capabilities only if justified, and storage constraints. Provide production-ready code plus testing steps for installation, offline use, stale content, cache invalidation, and recovery from a broken service worker.` },
+      { id: 49, category: "Quality & Launch", title: "Deployment Checklist", summary: "Prepare a website for a calm, reversible launch.", prompt: `Create a complete pre-launch and deployment checklist for [WEBSITE AND HOSTING PLATFORM]. Cover environment configuration, secrets, build output, redirects, headers, HTTPS, domains and DNS, forms and email, database migrations, backups, caching, compression, accessibility, SEO, analytics, legal pages, monitoring, error reporting, smoke tests, rollback, and post-launch verification. Separate must-pass gates from follow-up improvements and assign clear evidence for each check.` },
+      { id: 50, category: "Quality & Launch", title: "Full Code Review", summary: "Review a website like a senior production engineer.", prompt: `Act as a senior front-end engineer reviewing this website for production: [PASTE CODE OR REPOSITORY CONTEXT]. Evaluate correctness, architecture, maintainability, semantics, accessibility, responsiveness, interaction design, performance, security, SEO, browser support, and failure handling. Report only evidence-backed findings. Rank issues by severity, cite exact locations, propose minimal fixes, note what is already strong, and finish with a prioritized release-readiness decision.` }
+    ];
+
+    const categoryColors = {
+      "Blueprints": "#73f7b6",
+      "UI Systems": "#75c9ff",
+      "Content & SEO": "#f4d56a",
+      "Interactivity": "#ff9d68",
+      "Data & Backend": "#cf9cff",
+      "Quality & Launch": "#ff765f"
+    };
+
+    const grid = document.getElementById("promptGrid");
+    const filters = document.getElementById("filters");
+    const search = document.getElementById("search");
+    const emptyState = document.getElementById("emptyState");
+    const resultCount = document.getElementById("resultCount");
+    const modal = document.getElementById("promptModal");
+    const promptOutput = document.getElementById("promptOutput");
+    const executeButton = document.getElementById("executePrompt");
+    const runPanel = document.getElementById("runPanel");
+    const toast = document.getElementById("toast");
+    let activeCategory = "All";
+    let activePrompt = null;
+    let lastTrigger = null;
+    let toastTimer;
+
+    const categories = ["All", ...new Set(prompts.map(item => item.category))];
+
+    function renderFilters() {
+      filters.innerHTML = categories.map(category => `<button class="filter${category === activeCategory ? " active" : ""}" type="button" data-category="${category}">${category}</button>`).join("");
+    }
+
+    function renderPrompts() {
+      const query = search.value.trim().toLowerCase();
+      const visible = prompts.filter(item => {
+        const matchesCategory = activeCategory === "All" || item.category === activeCategory;
+        const haystack = `${item.title} ${item.summary} ${item.prompt} ${item.category}`.toLowerCase();
+        return matchesCategory && haystack.includes(query);
+      });
+
+      grid.innerHTML = visible.map(item => `
+        <button class="prompt-card" type="button" data-id="${item.id}" style="--card-accent:${categoryColors[item.category]}" aria-label="Copy and open prompt ${item.id}: ${item.title}">
+          <span class="card-inner">
+            <span class="card-meta"><span class="card-number">${String(item.id).padStart(2, "0")}/50</span><span class="card-tag">${item.category}</span></span>
+            <h3>${item.title}</h3>
+            <p>${item.summary}</p>
+            <span class="card-action"><span>Copy + open</span><span class="card-arrow">→</span></span>
+          </span>
+        </button>`).join("");
+
+      resultCount.textContent = `Showing ${visible.length} ${visible.length === 1 ? "prompt" : "prompts"}`;
+      emptyState.style.display = visible.length ? "none" : "block";
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (error) {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        area.select();
+        const copied = document.execCommand("copy");
+        area.remove();
+        return copied;
+      }
+    }
+
+    function showToast(message) {
+      clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.classList.add("show");
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    function addRipple(card, event) {
+      const rect = card.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const ripple = document.createElement("span");
+      ripple.className = "ripple";
+      ripple.style.width = ripple.style.height = `${size}px`;
+      ripple.style.left = `${(event.clientX || rect.left + rect.width / 2) - rect.left - size / 2}px`;
+      ripple.style.top = `${(event.clientY || rect.top + rect.height / 2) - rect.top - size / 2}px`;
+      card.appendChild(ripple);
+      ripple.addEventListener("animationend", () => ripple.remove());
+    }
+
+    async function openPrompt(item, trigger, event) {
+      activePrompt = item;
+      lastTrigger = trigger;
+      addRipple(trigger, event);
+      const copied = await copyText(item.prompt);
+      trigger.classList.remove("copied");
+      void trigger.offsetWidth;
+      trigger.classList.add("copied");
+      document.getElementById("modalKicker").textContent = `${String(item.id).padStart(2, "0")} / ${item.category}`;
+      document.getElementById("modalTitle").textContent = item.title;
+      document.getElementById("copyState").textContent = copied ? "Copied to clipboard" : "Prompt ready — copy manually";
+      promptOutput.textContent = item.prompt;
+      runPanel.className = "run-panel";
+      executeButton.disabled = false;
+      executeButton.textContent = "Simulate AI execution →";
+      modal.classList.add("open");
+      document.body.classList.add("modal-open");
+      document.getElementById("closeModal").focus();
+      showToast(copied ? "Prompt copied" : "Prompt opened");
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      document.body.classList.remove("modal-open");
+      if (lastTrigger) lastTrigger.focus();
+    }
+
+    grid.addEventListener("click", event => {
+      const card = event.target.closest(".prompt-card");
+      if (!card) return;
+      const item = prompts.find(prompt => prompt.id === Number(card.dataset.id));
+      openPrompt(item, card, event);
+    });
+
+    filters.addEventListener("click", event => {
+      const button = event.target.closest(".filter");
+      if (!button) return;
+      activeCategory = button.dataset.category;
+      renderFilters();
+      renderPrompts();
+    });
+
+    search.addEventListener("input", renderPrompts);
+    document.getElementById("clearSearch").addEventListener("click", () => { search.value = ""; search.focus(); renderPrompts(); });
+    document.getElementById("closeModal").addEventListener("click", closeModal);
+    modal.addEventListener("click", event => { if (event.target === modal) closeModal(); });
+    document.addEventListener("keydown", event => { if (event.key === "Escape" && modal.classList.contains("open")) closeModal(); });
+
+    document.getElementById("copyAgain").addEventListener("click", async () => {
+      if (!activePrompt) return;
+      const copied = await copyText(activePrompt.prompt);
+      showToast(copied ? "Copied again" : "Select the prompt text to copy");
+    });
+
+    executeButton.addEventListener("click", () => {
+      if (!activePrompt || executeButton.disabled) return;
+      executeButton.disabled = true;
+      executeButton.textContent = "Executing…";
+      runPanel.className = "run-panel active";
+      const statuses = [
+        [18, "Preparing request payload"],
+        [43, "Sending prompt to AI endpoint"],
+        [72, "Streaming response tokens"],
+        [100, "Simulation complete"]
+      ];
+      let index = 0;
+      const step = () => {
+        const [percent, label] = statuses[index];
+        document.getElementById("runPercent").textContent = `${percent}%`;
+        document.getElementById("runStatus").textContent = label;
+        index += 1;
+        if (index < statuses.length) {
+          setTimeout(step, 520);
+        } else {
+          runPanel.classList.add("success");
+          document.getElementById("runResult").textContent = "Success. The execution hook completed. Replace simulateExecution() with your secure server-side AI endpoint when you are ready to connect a live model.";
+          executeButton.textContent = "Simulation complete ✓";
+          showToast("Execution complete");
+        }
+      };
+      step();
+    });
+
+    document.getElementById("jsonSource").textContent = JSON.stringify(prompts, null, 2);
+    renderFilters();
+    renderPrompts();
+  </script>
+<!-- N8-ENHANCEMENTS:BODY:START -->
+  <a id="n8x-skip" href="#n8x-content">Skip to page content</a>
+  <div id="n8x-progress" aria-hidden="true"></div>
+  <div id="n8x-content" tabindex="-1"></div>
+  <aside id="n8x-shell" aria-label="N8 CyberDev navigation">
+    <section id="n8x-panel" aria-hidden="true" aria-label="All Qamelot pages">
+      <div class="n8x-head"><div><strong>Qamelot Menu</strong><small>Search every live N8 experience</small></div><button class="n8x-btn" id="n8x-close" type="button" aria-label="Close menu">×</button></div>
+      <label for="n8x-search" style="position:absolute;clip:rect(0 0 0 0)">Search pages</label><input id="n8x-search" type="search" placeholder="Search tools, games, studios…" autocomplete="off" spellcheck="false">
+      <nav id="n8x-list" aria-label="Every Qamelot page"><a class="n8x-page" href="acai-adaptive-cyber-analysis-interface.html" data-search="acai // adaptive cyber analysis interface acai-adaptive-cyber-analysis-interface.html experiments &amp; archives"><span class="n8x-num">01</span><span class="n8x-copy"><b>ACAI // Adaptive Cyber Analysis Interface</b><span>Experiments &amp; Archives · acai-adaptive-cyber-analysis-interface.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AHub.html" data-search="n8 asset hub n8ahub.html developer studios"><span class="n8x-num">02</span><span class="n8x-copy"><b>N8 Asset Hub</b><span>Developer Studios · n8AHub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AHubPrime.html" data-search="n8 asset hub prime n8ahubprime.html developer studios"><span class="n8x-num">03</span><span class="n8x-copy"><b>N8 Asset Hub Prime</b><span>Developer Studios · n8AHubPrime.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="who-road-convo-lab.html" data-search="who//road — neon conversation lab who-road-convo-lab.html experiments &amp; archives"><span class="n8x-num">04</span><span class="n8x-copy"><b>WHO//ROAD — Neon Conversation Lab</b><span>Experiments &amp; Archives · who-road-convo-lab.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="blood-and-gold-panther-arena.html" data-search="blood &amp; gold: panther arena blood-and-gold-panther-arena.html games &amp; simulations"><span class="n8x-num">05</span><span class="n8x-copy"><b>Blood &amp; Gold: Panther Arena</b><span>Games &amp; Simulations · blood-and-gold-panther-arena.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="cyber-count-calcun8r-edison-hwy.html" data-search="cyber-count calcun8r // edison hwy cyber-count-calcun8r-edison-hwy.html experiments &amp; archives"><span class="n8x-num">06</span><span class="n8x-copy"><b>CYBER-COUNT CALCUN8R // EDISON HWY</b><span>Experiments &amp; Archives · cyber-count-calcun8r-edison-hwy.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="social-footer.html" data-search="social footer social-footer.html experiments &amp; archives"><span class="n8x-num">07</span><span class="n8x-copy"><b>Social Footer</b><span>Experiments &amp; Archives · social-footer.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="cyber-data-multi-team-logistics-engine.html" data-search="cyber-data // multi-team logistics engine cyber-data-multi-team-logistics-engine.html experiments &amp; archives"><span class="n8x-num">08</span><span class="n8x-copy"><b>CYBER-DATA // MULTI-TEAM LOGISTICS ENGINE</b><span>Experiments &amp; Archives · cyber-data-multi-team-logistics-engine.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="contractor-tool-belt-tactical-utility-engine.html" data-search="contractor tool belt - tactical utility engine contractor-tool-belt-tactical-utility-engine.html tools &amp; productivity"><span class="n8x-num">09</span><span class="n8x-copy"><b>Contractor Tool Belt - Tactical Utility Engine</b><span>Tools &amp; Productivity · contractor-tool-belt-tactical-utility-engine.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qtd-courage-under-fire.html" data-search="qamelot tower defense: courage under fire qtd-courage-under-fire.html games &amp; simulations"><span class="n8x-num">10</span><span class="n8x-copy"><b>Qamelot Tower Defense: Courage Under Fire</b><span>Games &amp; Simulations · qtd-courage-under-fire.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="css-visuals-library-40.html" data-search="css visuals library (40) css-visuals-library-40.html tools &amp; productivity"><span class="n8x-num">11</span><span class="n8x-copy"><b>CSS Visuals Library (40)</b><span>Tools &amp; Productivity · css-visuals-library-40.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-hub.html" data-search="devdashboard hub devdashboard-hub.html developer studios"><span class="n8x-num">12</span><span class="n8x-copy"><b>DevDashboard Hub</b><span>Developer Studios · devdashboard-hub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="blob-bash-royale.html" data-search="blob bash royale: ascension blob-bash-royale.html games &amp; simulations"><span class="n8x-num">13</span><span class="n8x-copy"><b>Blob Bash Royale: Ascension</b><span>Games &amp; Simulations · blob-bash-royale.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="web-app-dev-dashboard.html" data-search="⚡ web app dev dashboard web-app-dev-dashboard.html developer studios"><span class="n8x-num">14</span><span class="n8x-copy"><b>⚡ Web App Dev Dashboard</b><span>Developer Studios · web-app-dev-dashboard.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AnimHub.html" data-search="🪃 n8 animation hub n8animhub.html developer studios"><span class="n8x-num">15</span><span class="n8x-copy"><b>🪃 N8 Animation Hub</b><span>Developer Studios · n8AnimHub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="MiyagiThrow.html" data-search="🥷🏾 miyagi throw! miyagithrow.html games &amp; simulations"><span class="n8x-num">16</span><span class="n8x-copy"><b>🥷🏾 Miyagi Throw!</b><span>Games &amp; Simulations · MiyagiThrow.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="push-complete.html" data-search="push complete push-complete.html developer studios"><span class="n8x-num">17</span><span class="n8x-copy"><b>Push Complete</b><span>Developer Studios · push-complete.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-conquest-super-arcade-edition.html" data-search="qamelot conquest: super arcade edition qamelot-conquest-super-arcade-edition.html games &amp; simulations"><span class="n8x-num">18</span><span class="n8x-copy"><b>Qamelot Conquest: Super Arcade Edition</b><span>Games &amp; Simulations · qamelot-conquest-super-arcade-edition.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdash-svg-studio.html" data-search="devdash svg studio devdash-svg-studio.html developer studios"><span class="n8x-num">20</span><span class="n8x-copy"><b>DevDash SVG Studio</b><span>Developer Studios · devdash-svg-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="svg-sandbox-studio.html" data-search="svg sandbox studio svg-sandbox-studio.html developer studios"><span class="n8x-num">21</span><span class="n8x-copy"><b>SVG Sandbox Studio</b><span>Developer Studios · svg-sandbox-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="ecotechcomm-secure-ptt-link.html" data-search="ecotechcomm // secure ptt link ecotechcomm-secure-ptt-link.html featured sites"><span class="n8x-num">22</span><span class="n8x-copy"><b>EcoTechComm // Secure PTT Link</b><span>Featured Sites · ecotechcomm-secure-ptt-link.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="ecotechcomm-secure-frequency.html" data-search="ecotechcomm | secure frequency ecotechcomm-secure-frequency.html featured sites"><span class="n8x-num">23</span><span class="n8x-copy"><b>EcoTechComm | Secure Frequency</b><span>Featured Sites · ecotechcomm-secure-frequency.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-home.html" data-search="devdashboard home devdashboard-home.html experiments &amp; archives"><span class="n8x-num">24</span><span class="n8x-copy"><b>DevDashboard Home</b><span>Experiments &amp; Archives · devdashboard-home.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="homehub.html" data-search="homehub — command your day. build your future. homehub.html experiments &amp; archives"><span class="n8x-num">25</span><span class="n8x-copy"><b>HomeHub — Command Your Day. Build Your Future.</b><span>Experiments &amp; Archives · homehub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="mecha-strike.html" data-search="mecha strike: transformer protocol v5 mecha-strike.html games &amp; simulations"><span class="n8x-num">26</span><span class="n8x-copy"><b>Mecha Strike: Transformer Protocol v5</b><span>Games &amp; Simulations · mecha-strike.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="lattice-a-the-ai-context-lab.html" data-search="lattice — the ai context lab lattice-a-the-ai-context-lab.html experiments &amp; archives"><span class="n8x-num">28</span><span class="n8x-copy"><b>Lattice — The AI Context Lab</b><span>Experiments &amp; Archives · lattice-a-the-ai-context-lab.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="loc-me-in-llc.html" data-search="loc me in | premium braids &amp; locs artistry edgewood loc-me-in-llc.html featured sites"><span class="n8x-num">29</span><span class="n8x-copy"><b>Loc Me In | Premium Braids &amp; Locs Artistry Edgewood</b><span>Featured Sites · loc-me-in-llc.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="eco-tech-motion-library.html" data-search="eco-tech motion library eco-tech-motion-library.html tools &amp; productivity"><span class="n8x-num">30</span><span class="n8x-copy"><b>Eco-Tech Motion Library</b><span>Tools &amp; Productivity · eco-tech-motion-library.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8Prompt.html" data-search="build//50 — ai webbuilding prompt deck n8prompt.html tools &amp; productivity"><span class="n8x-num">31</span><span class="n8x-copy"><b>BUILD//50 — AI Webbuilding Prompt Deck</b><span>Tools &amp; Productivity · n8Prompt.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="neon-pong.html" data-search="neon pong neon-pong.html games &amp; simulations"><span class="n8x-num">32</span><span class="n8x-copy"><b>Neon Pong</b><span>Games &amp; Simulations · neon-pong.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="new-perspective-painting-llc.html" data-search="new perspective painting llc new-perspective-painting-llc.html featured sites"><span class="n8x-num">33</span><span class="n8x-copy"><b>New Perspective Painting LLC</b><span>Featured Sites · new-perspective-painting-llc.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="pulse-productivity-and-biorhythm-studio.html" data-search="pulse // productivity &amp; biorhythm studio pulse-productivity-and-biorhythm-studio.html tools &amp; productivity"><span class="n8x-num">34</span><span class="n8x-copy"><b>Pulse // Productivity &amp; Biorhythm Studio</b><span>Tools &amp; Productivity · pulse-productivity-and-biorhythm-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="index.html" data-search="qamelot menu — every webpage index.html experiments &amp; archives"><span class="n8x-num">35</span><span class="n8x-copy"><b>Qamelot Menu — Every Webpage</b><span>Experiments &amp; Archives · index.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="tri-nexus-grail-matrix.html" data-search="tri-nexus: grail matrix tri-nexus-grail-matrix.html games &amp; simulations"><span class="n8x-num">37</span><span class="n8x-copy"><b>TRI-NEXUS: GRAIL MATRIX</b><span>Games &amp; Simulations · tri-nexus-grail-matrix.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamomathcore-sci-fi-nexus.html" data-search="qamomathcore // sci-fi_nexus qamomathcore-sci-fi-nexus.html games &amp; simulations"><span class="n8x-num">38</span><span class="n8x-copy"><b>QamoMathCore // SCI-FI_NEXUS</b><span>Games &amp; Simulations · qamomathcore-sci-fi-nexus.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-math-core.html" data-search="qamelot // math_core qamelot-math-core.html tools &amp; productivity"><span class="n8x-num">39</span><span class="n8x-copy"><b>QAMELOT // MATH_CORE</b><span>Tools &amp; Productivity · qamelot-math-core.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-1.html" data-search="qamelot media component qamelot-media-1.html experiments &amp; archives"><span class="n8x-num">40</span><span class="n8x-copy"><b>Qamelot Media Component</b><span>Experiments &amp; Archives · qamelot-media-1.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-2.html" data-search="qamelot media component qamelot-media-2.html experiments &amp; archives"><span class="n8x-num">41</span><span class="n8x-copy"><b>Qamelot Media Component</b><span>Experiments &amp; Archives · qamelot-media-2.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-3.html" data-search="qamelot media - forward flick edition qamelot-media-3.html experiments &amp; archives"><span class="n8x-num">42</span><span class="n8x-copy"><b>Qamelot Media - Forward Flick Edition</b><span>Experiments &amp; Archives · qamelot-media-3.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="screensaver.html" data-search="interactive nebula screensaver screensaver.html experiments &amp; archives"><span class="n8x-num">43</span><span class="n8x-copy"><b>Interactive Nebula Screensaver</b><span>Experiments &amp; Archives · screensaver.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="spriteforge-studio.html" data-search="spriteforge studio spriteforge-studio.html experiments &amp; archives"><span class="n8x-num">44</span><span class="n8x-copy"><b>SpriteForge Studio</b><span>Experiments &amp; Archives · spriteforge-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="stix-stax-stonz.html" data-search="stix stax stonz: cyber camelot stix-stax-stonz.html games &amp; simulations"><span class="n8x-num">45</span><span class="n8x-copy"><b>Stix Stax Stonz: Cyber Camelot</b><span>Games &amp; Simulations · stix-stax-stonz.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="task-forge.html" data-search="task forge task-forge.html experiments &amp; archives"><span class="n8x-num">46</span><span class="n8x-copy"><b>Task Forge</b><span>Experiments &amp; Archives · task-forge.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8-tools.html" data-search="n8 tools — your browser workbench n8-tools.html tools &amp; productivity"><span class="n8x-num">47</span><span class="n8x-copy"><b>N8 Tools — Your browser workbench</b><span>Tools &amp; Productivity · n8-tools.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-hub-index.html" data-search="devdashboard hub devdashboard-hub-index.html experiments &amp; archives"><span class="n8x-num">48</span><span class="n8x-copy"><b>DevDashboard Hub</b><span>Experiments &amp; Archives · devdashboard-hub-index.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="funPromptz.html" data-search="funpromptz — creative media prompt arcade funpromptz.html tools &amp; productivity"><span class="n8x-num">49</span><span class="n8x-copy"><b>funPromptz — Creative Media Prompt Arcade</b><span>Tools &amp; Productivity · funPromptz.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="masterPrompt.html" data-search="masterprompt — animated ai webbuilding command deck masterprompt.html tools &amp; productivity"><span class="n8x-num">50</span><span class="n8x-copy"><b>masterPrompt — Animated AI Webbuilding Command Deck</b><span>Tools &amp; Productivity · masterPrompt.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="QamelotMenu.html" data-search="qamelot menu — compatibility directory qamelotmenu.html experiments &amp; archives"><span class="n8x-num">51</span><span class="n8x-copy"><b>Qamelot Menu — Compatibility Directory</b><span>Experiments &amp; Archives · QamelotMenu.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a></nav>
+      <div class="n8x-foot"><span id="n8x-count">48 pages</span><span>/ search · Esc close · Alt+M menu</span></div>
+    </section>
+    <nav id="n8x-dock" aria-label="Quick page controls">
+      <a class="n8x-link n8x-primary" href="index.html" aria-label="Open Qamelot home" title="Home (Alt+H)">⌂</a>
+      <button class="n8x-btn" id="n8x-open" type="button" aria-expanded="false" aria-controls="n8x-panel" aria-label="Browse every page" title="All pages (Alt+M)">☰</button>
+      <a class="n8x-link n8x-secondary" href="eco-tech-motion-library.html" aria-label="Previous page: Eco-Tech Motion Library" title="Previous page">←</a>
+      <a class="n8x-link n8x-secondary" href="neon-pong.html" aria-label="Next page: Neon Pong" title="Next page">→</a>
+      <button class="n8x-btn n8x-secondary" id="n8x-random" type="button" aria-label="Open a random page" title="Random page (Alt+R)">⚄</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-share" type="button" aria-label="Share or copy this page link" title="Share page">↗</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-calm" type="button" aria-pressed="false" aria-label="Toggle calm viewing mode" title="Calm mode">◐</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-full" type="button" aria-label="Toggle fullscreen" title="Fullscreen">⛶</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+      <button class="n8x-btn" id="n8x-more" type="button" aria-expanded="false" aria-label="Show more controls" title="More controls">•••</button>
+      <button class="n8x-btn" id="n8x-move" type="button" aria-label="Move controls to the other side" title="Move controls">⇆</button>
+      <button class="n8x-btn" id="n8x-hide" type="button" aria-label="Hide floating controls" title="Hide controls">−</button>
+    </nav>
+    <button id="n8x-restore" type="button" aria-label="Show N8 controls" title="Show controls">N8</button>
+  </aside>
+  <div id="n8x-toast" role="status" aria-live="polite"></div>
+  <script id="n8x-script">
+  (()=>{
+    const pages=["acai-adaptive-cyber-analysis-interface.html","n8AHub.html","n8AHubPrime.html","who-road-convo-lab.html","blood-and-gold-panther-arena.html","cyber-count-calcun8r-edison-hwy.html","social-footer.html","cyber-data-multi-team-logistics-engine.html","contractor-tool-belt-tactical-utility-engine.html","qtd-courage-under-fire.html","css-visuals-library-40.html","devdashboard-hub.html","blob-bash-royale.html","web-app-dev-dashboard.html","n8AnimHub.html","MiyagiThrow.html","push-complete.html","qamelot-conquest-super-arcade-edition.html","devdash-svg-studio.html","svg-sandbox-studio.html","ecotechcomm-secure-ptt-link.html","ecotechcomm-secure-frequency.html","devdashboard-home.html","homehub.html","mecha-strike.html","lattice-a-the-ai-context-lab.html","loc-me-in-llc.html","eco-tech-motion-library.html","n8Prompt.html","neon-pong.html","new-perspective-painting-llc.html","pulse-productivity-and-biorhythm-studio.html","index.html","tri-nexus-grail-matrix.html","qamomathcore-sci-fi-nexus.html","qamelot-math-core.html","qamelot-media-1.html","qamelot-media-2.html","qamelot-media-3.html","screensaver.html","spriteforge-studio.html","stix-stax-stonz.html","task-forge.html","n8-tools.html","devdashboard-hub-index.html","funPromptz.html","masterPrompt.html","QamelotMenu.html"];
+    const shell=document.getElementById('n8x-shell'),panel=document.getElementById('n8x-panel'),open=document.getElementById('n8x-open'),search=document.getElementById('n8x-search'),list=document.getElementById('n8x-list'),toast=document.getElementById('n8x-toast'),more=document.getElementById('n8x-more');
+    const readSetting=(key,fallback)=>{try{return localStorage.getItem(key)??fallback}catch{return fallback}},writeSetting=(key,value)=>{try{localStorage.setItem(key,value)}catch{}};
+    shell.dataset.n8xSide=readSetting('n8x-side','right')==='left'?'left':'right';shell.dataset.n8xHidden=String(readSetting('n8x-hidden','false')==='true');shell.dataset.n8xExpanded='false';
+    const showToast=(message)=>{toast.textContent=message;toast.classList.add('n8x-show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('n8x-show'),2200)};
+    const setExpanded=(active)=>{shell.dataset.n8xExpanded=String(active);more.setAttribute('aria-expanded',String(active));more.setAttribute('aria-label',active?'Show fewer controls':'Show more controls')};
+    const setMenu=(visible,returnFocus=true)=>{if(visible){shell.dataset.n8xHidden='false';writeSetting('n8x-hidden','false');setExpanded(false)}panel.setAttribute('aria-hidden',String(!visible));open.setAttribute('aria-expanded',String(visible));if(visible){search.focus();search.select()}else if(returnFocus&&shell.dataset.n8xHidden!=='true')open.focus()};
+    const setHidden=(hidden)=>{setMenu(false,false);shell.dataset.n8xHidden=String(hidden);writeSetting('n8x-hidden',String(hidden));if(!hidden)open.focus()};
+    open.addEventListener('click',()=>setMenu(panel.getAttribute('aria-hidden')==='true'));
+    document.getElementById('n8x-close').addEventListener('click',()=>setMenu(false));
+    more.addEventListener('click',()=>setExpanded(shell.dataset.n8xExpanded!=='true'));
+    document.getElementById('n8x-move').addEventListener('click',()=>{const side=shell.dataset.n8xSide==='left'?'right':'left';shell.dataset.n8xSide=side;writeSetting('n8x-side',side);showToast('Controls moved '+side)});
+    document.getElementById('n8x-hide').addEventListener('click',()=>setHidden(true));
+    document.getElementById('n8x-restore').addEventListener('click',()=>setHidden(false));
+    search.addEventListener('input',()=>{const query=search.value.trim().toLowerCase();let shown=0;list.querySelectorAll('.n8x-page').forEach(link=>{const match=!query||link.dataset.search.includes(query);link.hidden=!match;if(match)shown++});document.getElementById('n8x-count').textContent=shown+' page'+(shown===1?'':'s')});
+    document.getElementById('n8x-random').addEventListener('click',()=>{const choices=pages.filter(file=>file!=="n8Prompt.html");location.href=choices[Math.floor(Math.random()*choices.length)]||'index.html'});
+    document.getElementById('n8x-share').addEventListener('click',async()=>{const data={title:document.title,text:'Explore '+document.title,url:location.href};try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(location.href);showToast('Live page link copied')}}catch(error){if(error.name!=='AbortError')showToast('Use the address bar to copy this link')}});
+    const calm=document.getElementById('n8x-calm');const saved=localStorage.getItem('n8x-calm')==='true';document.documentElement.dataset.n8xCalm=String(saved);calm.setAttribute('aria-pressed',String(saved));calm.addEventListener('click',()=>{const active=document.documentElement.dataset.n8xCalm!=='true';document.documentElement.dataset.n8xCalm=String(active);calm.setAttribute('aria-pressed',String(active));localStorage.setItem('n8x-calm',String(active));showToast(active?'Calm mode on':'Calm mode off')});
+    document.getElementById('n8x-full').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(error){showToast('Fullscreen is unavailable here')}});
+    document.getElementById('n8x-top').addEventListener('click',()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
+    const progress=document.getElementById('n8x-progress');const updateProgress=()=>{const max=document.documentElement.scrollHeight-innerHeight;progress.style.width=(max>0?Math.min(100,scrollY/max*100):0)+'%'};addEventListener('scroll',updateProgress,{passive:true});addEventListener('resize',updateProgress,{passive:true});updateProgress();
+    document.addEventListener('pointerdown',event=>{if(panel.getAttribute('aria-hidden')==='false'&&!shell.contains(event.target))setMenu(false,false)},{capture:true});
+    document.addEventListener('keydown',event=>{const typing=/input|textarea|select/i.test(document.activeElement?.tagName||'');if(event.key==='Escape'&&panel.getAttribute('aria-hidden')==='false'){event.preventDefault();setMenu(false)}else if(event.key==='/'&&!typing){event.preventDefault();setMenu(true)}else if(event.altKey&&event.key.toLowerCase()==='m'){event.preventDefault();setMenu(panel.getAttribute('aria-hidden')==='true')}else if(event.altKey&&event.key.toLowerCase()==='h'){event.preventDefault();location.href='index.html'}else if(event.altKey&&event.key.toLowerCase()==='r'){event.preventDefault();document.getElementById('n8x-random').click()}});
+    document.querySelectorAll('a[target="_blank"]').forEach(link=>{const rel=new Set((link.rel||'').split(/s+/).filter(Boolean));rel.add('noopener');rel.add('noreferrer');link.rel=[...rel].join(' ')});
+  })();
+  </script>
+  <!-- N8-ENHANCEMENTS:BODY:END -->
+</body>
+</html>

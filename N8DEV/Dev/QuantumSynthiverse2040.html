@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quantum Synthiverse 2040 — Neural Matrix & Holographic Synth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Outfit:wght@300;400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --secondary: #ff007f;
+            --accent: #ffb700;
+            --bg-deep: #05070d;
+            --glass-bg: rgba(13, 18, 30, 0.65);
+            --glass-border: rgba(0, 255, 204, 0.25);
+            --glass-glow: rgba(0, 255, 204, 0.15);
+            --text-main: #e0f7fa;
+            --text-dim: #80a0a8;
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-deep);
+            font-family: var(--font-body);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #canvas-matrix {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            cursor: crosshair;
+            background: radial-gradient(circle at center, #0a1120 0%, #030508 100%);
+        }
+
+        /* Glassmorphic Dashboard UI */
+        .hud-layer {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 340px 1fr 360px;
+            grid-template-rows: 80px 1fr auto;
+            pointer-events: none;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .interactive-panel {
+            pointer-events: auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 20px var(--glass-glow);
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .interactive-panel:hover {
+            border-color: rgba(0, 255, 204, 0.5);
+            box-shadow: 0 12px 48px 0 rgba(0, 255, 204, 0.2), inset 0 0 30px rgba(0, 255, 204, 0.2);
+        }
+
+        /* Header Navigation */
+        .top-header {
+            grid-column: 1 / -1;
+            grid-row: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            padding: 0 30px;
+        }
+
+        .brand-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-shadow: 0 0 30px rgba(0, 255, 204, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pulse-beacon {
+            width: 12px;
+            height: 12px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--primary);
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(0.95); opacity: 0.7; box-shadow: 0 0 8px var(--primary); }
+            50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 20px var(--primary); }
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-cyber {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 1px solid var(--primary);
+            background: linear-gradient(135deg, rgba(0, 255, 204, 0.15), rgba(0, 0, 0, 0.4));
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+        }
+
+        .btn-cyber:hover, .btn-cyber.active {
+            background: var(--primary);
+            color: #030508;
+            box-shadow: 0 0 25px var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-cyber.danger {
+            border-color: var(--secondary);
+            color: var(--secondary);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+        }
+
+        .btn-cyber.danger:hover, .btn-cyber.danger.active {
+            background: var(--secondary);
+            color: #fff;
+            box-shadow: 0 0 25px var(--secondary);
+        }
+
+        /* Left Side Controls */
+        .controls-panel {
+            grid-column: 1;
+            grid-row: 2;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            color: var(--accent);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        .value-badge {
+            font-family: var(--font-mono);
+            color: var(--primary);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+        }
+
+        /* Palette Grid */
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .palette-btn {
+            height: 44px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            letter-spacing: 1px;
+        }
+
+        .palette-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .palette-btn.selected {
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Right Side Oracle Terminal */
+        .terminal-panel {
+            grid-column: 3;
+            grid-row: 2;
+            gap: 14px;
+            font-family: var(--font-mono);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .terminal-log {
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            color: var(--text-dim);
+            max-height: 480px;
+        }
+
+        .log-entry {
+            border-left: 2px solid var(--primary);
+            padding-left: 8px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .log-entry.warn { border-color: var(--accent); color: #ffe599; }
+        .log-entry.crit { border-color: var(--secondary); color: #ff99cc; font-weight: bold; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-5px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .terminal-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-input {
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .terminal-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
+
+        /* Bottom Mode Switchers */
+        .footer-panel {
+            grid-column: 2;
+            grid-row: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .mode-tab {
+            flex: 1;
+            max-width: 180px;
+            padding: 12px;
+            text-align: center;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.25s;
+            color: var(--text-dim);
+        }
+
+        .mode-tab:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .mode-tab.active {
+            background: linear-gradient(135deg, rgba(0, 255, 204, 0.25), rgba(0, 0, 0, 0.5));
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+            transform: translateY(-4px);
+        }
+
+        /* Scrollbar customization */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+        ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* Responsive UI Scaling */
+        @media (max-width: 1200px) {
+            .hud-layer {
+                grid-template-columns: 280px 1fr 300px;
+            }
+        }
+        @media (max-width: 900px) {
+            .hud-layer {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+                overflow-y: auto;
+                pointer-events: auto;
+            }
+            .interactive-panel { max-height: none; }
+            #canvas-matrix { pointer-events: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-matrix"></canvas>
+
+    <div class="hud-layer">
+        <!-- Top Title Bar -->
+        <header class="interactive-panel top-header">
+            <div class="brand-title">
+                <div class="pulse-beacon"></div>
+                Quantum Synthiverse 2040
+            </div>
+            <div class="audio-controls">
+                <button id="btn-audio" class="btn-cyber">🔊 Engage Audio Core</button>
+                <button id="btn-pulse" class="btn-cyber danger">💥 Quantum Surge</button>
+            </div>
+        </header>
+
+        <!-- Left Controls Dashboard -->
+        <aside class="interactive-panel controls-panel">
+            <div class="section-title"><span>⚡ Matrix Physics</span><span class="value-badge">V-9000</span></div>
+            
+            <div class="control-group">
+                <div class="control-label"><span>Gravitational Warp</span><span id="val-gravity" class="value-badge">1.2G</span></div>
+                <input type="range" id="rng-gravity" min="0.1" max="5.0" step="0.1" value="1.2">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label"><span>Synaptic Velocity</span><span id="val-speed" class="value-badge">2.4x</span></div>
+                <input type="range" id="rng-speed" min="0.2" max="6.0" step="0.2" value="2.4">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label"><span>Chaos Resonance</span><span id="val-chaos" class="value-badge">35%</span></div>
+                <input type="range" id="rng-chaos" min="0" max="100" step="1" value="35">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label"><span>Lattice Connections</span><span id="val-links" class="value-badge">110px</span></div>
+                <input type="range" id="rng-links" min="30" max="220" step="10" value="110">
+            </div>
+
+            <div class="section-title" style="margin-top: 15px;"><span>🎨 Holographic Palettes</span></div>
+            <div class="palette-grid">
+                <div class="palette-btn selected" style="background: linear-gradient(135deg, #00ffcc, #ff007f);" data-palette="cyber">CYBERPUNK</div>
+                <div class="palette-btn" style="background: linear-gradient(135deg, #ffb700, #ff2a00);" data-palette="solar">SOLAR FLARE</div>
+                <div class="palette-btn" style="background: linear-gradient(135deg, #00ff73, #0066ff);" data-palette="emerald">EMERALD</div>
+                <div class="palette-btn" style="background: linear-gradient(135deg, #9d00ff, #00f0ff);" data-palette="nebula">NEBULA</div>
+            </div>
+            
+            <div class="section-title" style="margin-top: 15px;"><span>🛸 Orbital Telemetry</span></div>
+            <div style="font-size: 0.8rem; line-height: 1.6; color: var(--text-dim);">
+                • <b style="color: var(--text-main);">Mouse Drag:</b> Warp spacetime attractor.<br>
+                • <b style="color: var(--text-main);">Audio Core:</b> Generates algorithmic chords matched to matrix tension.<br>
+                • <b style="color: var(--text-main);">Quantum Surge:</b> Emulates a hyper-nova expansion across all active particles.
+            </div>
+        </aside>
+
+        <!-- Center Bottom Formation Modes -->
+        <footer class="interactive-panel footer-panel">
+            <div class="mode-tab active" data-mode="nebula">🌌 NEBULA SPHERE</div>
+            <div class="mode-tab" data-mode="vortex">🌀 CYBER VORTEX</div>
+            <div class="mode-tab" data-mode="attractor">♾️ LORENTZ CORE</div>
+            <div class="mode-tab" data-mode="grid">🕸️ NEURAL SYNAPSE</div>
+        </footer>
+
+        <!-- Right Side Terminal -->
+        <aside class="interactive-panel terminal-panel">
+            <div class="section-title"><span>🤖 Neural Oracle Core</span><span class="value-badge">ONLINE</span></div>
+            <div class="terminal-log" id="term-log">
+                <div class="log-entry">SYSTEM INIT: Quantum Synthiverse Engine v2040.8 Online.</div>
+                <div class="log-entry warn">Holographic neural lattice synchronized. 1,500 quantum nodes deployed to RAM.</div>
+                <div class="log-entry">Ready for input. Ask a concept or initiate matrix destabilization...</div>
+            </div>
+            <div class="terminal-input-group">
+                <input type="text" id="term-input" class="terminal-input" placeholder="Query Oracle (e.g. status, warp, destiny)...">
+                <button id="btn-submit" class="btn-cyber" style="padding: 0 16px;">➤</button>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        /* === QUANTUM MATRIX & SYNTHIVERSE ENGINE 2040 === */
+
+        const canvas = document.getElementById('canvas-matrix');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // Application State & Telemetry
+        const state = {
+            mode: 'nebula',
+            palette: 'cyber',
+            gravity: 1.2,
+            speed: 2.4,
+            chaos: 35,
+            maxDistance: 110,
+            mouseX: width / 2,
+            mouseY: height / 2,
+            isDragging: false,
+            audioEngaged: false,
+            surgeProgress: 0,
+            time: 0
+        };
+
+        const palettes = {
+            cyber:   ['#00ffcc', '#ff007f', '#00bfff', '#ff5500', '#ffffff'],
+            solar:   ['#ffb700', '#ff2a00', '#ff7700', '#ffea00', '#ffe6a7'],
+            emerald: ['#00ff73', '#00ffcc', '#00a8ff', '#5ae668', '#a7ffeb'],
+            nebula:  ['#9d00ff', '#00f0ff', '#e000ff', '#7000ff', '#f8bbd0']
+        };
+
+        /* --- WEB AUDIO GENERATIVE POLYSYNTH --- */
+        let audioCtx, masterGain, droneOsc, chordTimers = [];
+
+        function initAudio() {
+            if (state.audioEngaged) {
+                // Shut down audio
+                if (audioCtx) audioCtx.suspend();
+                document.getElementById('btn-audio').classList.remove('active');
+                document.getElementById('btn-audio').innerHTML = '🔊 Engage Audio Core';
+                state.audioEngaged = false;
+                logOracle("Audio synth muted. Silent vacuum mode engaged.", "warn");
+                return;
+            }
+
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            masterGain = audioCtx.createGain();
+            masterGain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+            masterGain.connect(audioCtx.destination);
+
+            // Generative Ambient Sub-Bass Drone
+            droneOsc = audioCtx.createOscillator();
+            const droneFilter = audioCtx.createBiquadFilter();
+            droneFilter.type = 'lowpass';
+            droneFilter.frequency.value = 140;
+            droneOsc.type = 'sawtooth';
+            droneOsc.frequency.value = 55; // A1 Note
+            droneOsc.connect(droneFilter);
+            droneFilter.connect(masterGain);
+            droneOsc.start();
+
+            // Algorithmic Chord Trigger Loop
+            const notes = [220, 261.63, 329.63, 392.00, 440, 523.25, 659.25, 783.99]; // A Minor Pentatonic / Cyberpunk scale
+            setInterval(() => {
+                if (!state.audioEngaged) return;
+                if (Math.random() > 0.35) playHarmonicPulse(notes[Math.floor(Math.random() * notes.length)]);
+            }, 800);
+
+            document.getElementById('btn-audio').classList.add('active');
+            document.getElementById('btn-audio').innerHTML = '🔉 Matrix Online';
+            state.audioEngaged = true;
+            logOracle("Generative Web Audio polysynth connected! Playing harmonic spectrum matching matrix resonance.", "crit");
+        }
+
+        function playHarmonicPulse(freq, isSurge = false) {
+            if (!state.audioEngaged || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = isSurge ? 'square' : 'sine';
+            osc.frequency.setValueAtTime(freq * (isSurge ? 0.5 : 1), audioCtx.currentTime);
+
+            // Sleek ADSR envelope
+            const now = audioCtx.currentTime;
+            gain.gain.setValueAtTime(0.01, now);
+            gain.gain.exponentialRampToValueAtTime(isSurge ? 0.4 : 0.15, now + 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + (isSurge ? 2.5 : 1.2));
+
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start();
+            osc.stop(now + (isSurge ? 2.6 : 1.3));
+        }
+
+        document.getElementById('btn-audio').addEventListener('click', initAudio);
+
+        /* --- PARTICLE & HOLOGRAPHIC LATTICE CLASSES --- */
+
+        class QuantumNode {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.radius = Math.random() * 2.5 + 1.2;
+                this.color = palettes[state.palette][Math.floor(Math.random() * palettes[state.palette].length)];
+                this.baseAlpha = Math.random() * 0.6 + 0.4;
+                this.angle = Math.random() * Math.PI * 2;
+                this.orbitRadius = Math.random() * (Math.min(width, height) * 0.4) + 40;
+                this.lorentzZ = Math.random() * 30 - 15;
+            }
+
+            update() {
+                // Apply Mathematical Formations
+                const centerX = width / 2;
+                const centerY = height / 2;
+                let targetX = this.x;
+                let targetY = this.y;
+
+                if (state.mode === 'nebula') {
+                    this.angle += 0.005 * state.speed;
+                    targetX = centerX + Math.cos(this.angle) * this.orbitRadius;
+                    targetY = centerY + Math.sin(this.angle) * this.orbitRadius;
+                } 
+                else if (state.mode === 'vortex') {
+                    this.orbitRadius = Math.max(10, (this.orbitRadius - 0.5 * state.speed) % (width * 0.5));
+                    this.angle += (0.05 / (this.orbitRadius * 0.01)) * (state.speed * 0.4);
+                    targetX = centerX + Math.cos(this.angle) * this.orbitRadius;
+                    targetY = centerY + Math.sin(this.angle) * this.orbitRadius;
+                }
+                else if (state.mode === 'attractor') {
+                    // Simplified Lorentz simulation simulation
+                    const dx = (10 * (this.vy - this.vx)) * 0.005 * state.speed;
+                    const dy = (this.vx * (28 - this.lorentzZ) - this.vy) * 0.005 * state.speed;
+                    this.vx += dx * 0.1;
+                    this.vy += dy * 0.1;
+                    targetX = centerX + (this.vx * 16);
+                    targetY = centerY + (this.vy * 16);
+                }
+
+                // Smooth interpolation towards formation targets
+                if (state.mode !== 'grid') {
+                    this.vx += (targetX - this.x) * 0.003 * state.gravity;
+                    this.vy += (targetY - this.y) * 0.003 * state.gravity;
+                }
+
+                // Interactive Mouse Attractor
+                const distMouseX = state.mouseX - this.x;
+                const distMouseY = state.mouseY - this.y;
+                const distMouse = Math.sqrt(distMouseX * distMouseX + distMouseY * distMouseY);
+                if (distMouse < 350 && state.isDragging) {
+                    const force = (350 - distMouse) / 350;
+                    this.vx += (distMouseX / distMouse) * force * 1.5 * state.gravity;
+                    this.vy += (distMouseY / distMouse) * force * 1.5 * state.gravity;
+                }
+
+                // Chaos Resonance random scatter
+                if (state.chaos > 0 && Math.random() < 0.15) {
+                    this.vx += (Math.random() - 0.5) * (state.chaos * 0.08);
+                    this.vy += (Math.random() - 0.5) * (state.chaos * 0.08);
+                }
+
+                // Apply velocities with natural dampening
+                this.x += this.vx * (state.speed * 0.4);
+                this.y += this.vy * (state.speed * 0.4);
+                this.vx *= 0.94;
+                this.vy *= 0.94;
+
+                // Screen Wrap
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // Initialize Quantum Particle Matrix
+        const NODE_COUNT = 150; // Optimized for 60FPS fluid connective line rendering
+        const nodes = Array.from({ length: NODE_COUNT }, () => new QuantumNode());
+
+        function updatePalette() {
+            nodes.forEach(n => {
+                n.color = palettes[state.palette][Math.floor(Math.random() * palettes[state.palette].length)];
+            });
+        }
+
+        /* --- ANIMATION & RENDER LOOP --- */
+        function render() {
+            state.time += 0.016;
+
+            // Translucent clear for motion blur trail aesthetics
+            ctx.fillStyle = 'rgba(5, 7, 13, 0.35)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Handle Quantum Surge Shockwave
+            if (state.surgeProgress > 0 && state.surgeProgress < 1) {
+                state.surgeProgress += 0.025;
+                const surgeRadius = state.surgeProgress * Math.max(width, height) * 1.2;
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2, surgeRadius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(0, 255, 204, ${1 - state.surgeProgress})`;
+                ctx.lineWidth = 12 * (1 - state.surgeProgress);
+                ctx.shadowBlur = 30;
+                ctx.shadowColor = '#00ffcc';
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
+
+            // Update & Draw Nodes + Synapse Connective Web
+            for (let i = 0; i < nodes.length; i++) {
+                const nodeA = nodes[i];
+                nodeA.update();
+                nodeA.draw();
+
+                // Connective Lines
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const nodeB = nodes[j];
+                    const dx = nodeA.x - nodeB.x;
+                    const dy = nodeA.y - nodeB.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < state.maxDistance) {
+                        const alpha = (1 - dist / state.maxDistance) * 0.65;
+                        ctx.beginPath();
+                        ctx.moveTo(nodeA.x, nodeA.y);
+                        ctx.lineTo(nodeB.x, nodeB.y);
+                        ctx.strokeStyle = nodeA.color;
+                        ctx.globalAlpha = alpha;
+                        ctx.lineWidth = 1.2;
+                        ctx.stroke();
+                        ctx.globalAlpha = 1.0;
+                    }
+                }
+            }
+
+            requestAnimationFrame(render);
+        }
+
+        // Boot Animation Loop
+        render();
+
+        /* --- INTERACTIVITY & EVENT HANDLERS --- */
+
+        window.addEventListener('mousedown', (e) => { state.isDragging = true; state.mouseX = e.clientX; state.mouseY = e.clientY; });
+        window.addEventListener('mousemove', (e) => { if (state.isDragging) { state.mouseX = e.clientX; state.mouseY = e.clientY; } });
+        window.addEventListener('mouseup', () => { state.isDragging = false; });
+        
+        // Mobile touch equivalents
+        window.addEventListener('touchstart', (e) => { state.isDragging = true; state.mouseX = e.touches[0].clientX; state.mouseY = e.touches[0].clientY; });
+        window.addEventListener('touchmove', (e) => { if (state.isDragging) { state.mouseX = e.touches[0].clientX; state.mouseY = e.touches[0].clientY; } });
+        window.addEventListener('touchend', () => { state.isDragging = false; });
+
+        // Quantum Surge Button
+        document.getElementById('btn-pulse').addEventListener('click', () => {
+            state.surgeProgress = 0.01;
+            nodes.forEach(n => {
+                const angle = Math.atan2(n.y - height / 2, n.x - width / 2);
+                const force = Math.random() * 28 + 15;
+                n.vx += Math.cos(angle) * force;
+                n.vy += Math.sin(angle) * force;
+            });
+            playHarmonicPulse(110, true); // Deep bass surge punch
+            logOracle("⚠️ QUANTUM SURGE TRIGGERED: Spacetime shockwave expanding at Mach 9. Matrix dispersed.", "crit");
+        });
+
+        // UI Sliders
+        document.getElementById('rng-gravity').addEventListener('input', (e) => {
+            state.gravity = parseFloat(e.target.value);
+            document.getElementById('val-gravity').innerText = `${state.gravity}G`;
+        });
+
+        document.getElementById('rng-speed').addEventListener('input', (e) => {
+            state.speed = parseFloat(e.target.value);
+            document.getElementById('val-speed').innerText = `${state.speed}x`;
+        });
+
+        document.getElementById('rng-chaos').addEventListener('input', (e) => {
+            state.chaos = parseInt(e.target.value);
+            document.getElementById('val-chaos').innerText = `${state.chaos}%`;
+        });
+
+        document.getElementById('rng-links').addEventListener('input', (e) => {
+            state.maxDistance = parseInt(e.target.value);
+            document.getElementById('val-links').innerText = `${state.maxDistance}px`;
+        });
+
+        // Palette Switches
+        document.querySelectorAll('.palette-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                state.palette = btn.getAttribute('data-palette');
+                updatePalette();
+                logOracle(`Palette re-indexed to protocol [${state.palette.toUpperCase()}]. Chromatic waves shifted.`);
+            });
+        });
+
+        // Formation Mode Switches
+        document.querySelectorAll('.mode-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                state.mode = tab.getAttribute('data-mode');
+                logOracle(`Geometry formation restructured into: [${tab.innerText}]. Gravitational pull adjusting...`, "warn");
+            });
+        });
+
+        /* --- NEURAL ORACLE CORE (2040 GENERATIVE AI TERMINAL) --- */
+        const termLog = document.getElementById('term-log');
+        const termInput = document.getElementById('term-input');
+
+        function logOracle(msg, type = "") {
+            const div = document.createElement('div');
+            div.className = `log-entry ${type}`;
+            const time = new Date().toTimeString().split(' ')[0];
+            div.innerHTML = `<b>[${time}]</b> ${msg}`;
+            termLog.appendChild(div);
+            termLog.scrollTop = termLog.scrollHeight;
+        }
+
+        function handleOracleQuery() {
+            const query = termInput.value.trim().toLowerCase();
+            if (!query) return;
+            
+            logOracle(`User query logged: "${termInput.value}"`, "warn");
+            termInput.value = "";
+
+            setTimeout(() => {
+                if (query.includes('status') || query.includes('hello')) {
+                    logOracle("Oracle Diagnostics: Neural synthesis core operating at 99.98% quantum efficiency. No dimensional fractures detected.", "crit");
+                } else if (query.includes('warp') || query.includes('matrix')) {
+                    logOracle("Spacetime anomaly detected! Manipulating gravity constants in simulated sector.", "warn");
+                    state.gravity = (Math.random() * 4 + 0.5).toFixed(1);
+                    document.getElementById('val-gravity').innerText = `${state.gravity}G`;
+                    document.getElementById('rng-gravity').value = state.gravity;
+                } else if (query.includes('destiny') || query.includes('future') || query.includes('2040')) {
+                    logOracle("In 2040, human consciousness and synthetic quantum matrices converge. You are not just playing with code; you are sculpting light and frequency.", "crit");
+                    playHarmonicPulse(523.25);
+                } else {
+                    const replies = [
+                        `Analyzing computational resonance for concept: "${query.toUpperCase()}". Neural links reinforcing...`,
+                        `Telemetry indicates high harmonic frequency around "${query}". Sub-routine executing...`,
+                        `Oracle has processed your command through 12,000 parallel dimensions. Outcome: Harmonious.`,
+                        `Synaptic lattice vibrating at 432 Hz in response to data input.`
+                    ];
+                    logOracle(replies[Math.floor(Math.random() * replies.length)]);
+                }
+            }, 500);
+        }
+
+        document.getElementById('btn-submit').addEventListener('click', handleOracleQuery);
+        termInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleOracleQuery(); });
+    </script>
+</body>
+</html>

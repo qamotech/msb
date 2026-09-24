@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Architect Studio Pro | All-In-One SEO Optimization Suite</title>
+    <style>
+        :root {
+            --bg-base: #0f172a;
+            --bg-panel: #1e293b;
+            --bg-card: #334155;
+            --bg-hover: #475569;
+            --accent-primary: #3b82f6;
+            --accent-primary-hover: #2563eb;
+            --accent-success: #22c55e;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-stack); }
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+
+        /* Navigation Sidebar */
+        .sidebar { width: 280px; background-color: var(--bg-panel); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 10; }
+        .sidebar-header { padding: 1.25rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 1.15rem; font-weight: 700; color: #60a5fa; display: flex; align-items: center; gap: 0.5rem; }
+        .nav-section-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; margin: 1.25rem 1rem 0.5rem 1rem; }
+        .nav-list { list-style: none; padding: 0 0.5rem; overflow-y: auto; flex: 1; }
+        .nav-item button { width: 100%; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: none; border: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; border-radius: 0.5rem; cursor: pointer; text-align: left; transition: all 0.2s; }
+        .nav-item button:hover { background-color: var(--bg-card); color: var(--text-main); }
+        .nav-item button.active { background-color: var(--accent-primary); color: #ffffff; font-weight: 600; }
+
+        /* Main Workspace Area */
+        .workspace { flex: 1; display: flex; flex-direction: column; overflow: hidden; background-color: var(--bg-base); }
+        .topbar { height: 60px; border-bottom: 1px solid var(--border-color); background-color: var(--bg-panel); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; }
+        .topbar-title { font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
+        .topbar-actions { display: flex; gap: 0.75rem; }
+
+        /* Content Container */
+        .tool-viewport { flex: 1; overflow-y: auto; padding: 1.5rem; }
+        .tool-panel { display: none; max-width: 1200px; margin: 0 auto; }
+        .tool-panel.active { display: block; animation: fadeIn 0.2s ease-in-out; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Modular UI Components */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+        @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+        .card { background-color: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1.5rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; }
+        .card-title { font-size: 1rem; font-weight: 600; color: var(--text-main); }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem; }
+        .input-text, .select-input, .textarea-input { width: 100%; background-color: var(--bg-base); border: 1px solid var(--border-color); border-radius: 0.375rem; padding: 0.6rem 0.8rem; color: var(--text-main); font-size: 0.9rem; transition: border-color 0.2s; }
+        .input-text:focus, .select-input:focus, .textarea-input:focus { outline: none; border-color: var(--accent-primary); }
+        .textarea-input { min-height: 100px; resize: vertical; font-family: monospace; line-height: 1.4; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+        .btn-primary { background-color: var(--accent-primary); color: #fff; }
+        .btn-primary:hover { background-color: var(--accent-primary-hover); }
+        .btn-secondary { background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background-color: var(--bg-hover); }
+        .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+
+        .badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .badge-success { background-color: rgba(34, 197, 94, 0.2); color: var(--accent-success); }
+        .badge-warning { background-color: rgba(245, 158, 11, 0.2); color: var(--accent-warning); }
+        .badge-danger { background-color: rgba(239, 68, 68, 0.2); color: var(--accent-danger); }
+
+        /* SERP Preview Simulator Specifics */
+        .serp-box { background: #ffffff; color: #202124; padding: 1rem; border-radius: 0.5rem; font-family: arial, sans-serif; margin-top: 1rem; }
+        .serp-url { color: #202124; font-size: 12px; line-height: 1.3; word-break: break-all; margin-bottom: 2px; }
+        .serp-title { color: #1a0dab; font-size: 18px; line-height: 1.2; text-decoration: none; cursor: pointer; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .serp-title:hover { text-decoration: underline; }
+        .serp-snippet { color: #4d5156; font-size: 13px; line-height: 1.4; }
+
+        /* Metrics & Stats Cards */
+        .stat-card { background: var(--bg-card); padding: 1rem; border-radius: 0.5rem; text-align: center; border: 1px solid var(--border-color); }
+        .stat-val { font-size: 1.5rem; font-weight: 700; color: var(--accent-primary); margin-top: 0.25rem; }
+        .stat-lbl { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+
+        /* Tables */
+        .table-responsive { overflow-x: auto; margin-top: 1rem; }
+        .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; }
+        .data-table th, .data-table td { padding: 0.75rem; border-bottom: 1px solid var(--border-color); }
+        .data-table th { background-color: var(--bg-card); color: var(--text-muted); font-weight: 600; }
+        .data-table tr:hover { background-color: rgba(255, 255, 255, 0.02); }
+
+        /* Code View Blocks */
+        .code-preview { background-color: #090d16; border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1rem; color: #a5f3fc; font-family: monospace; font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; word-break: break-all; margin-top: 0.5rem; }
+
+        /* Toast Notifications */
+        #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
+        .toast { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--accent-primary); padding: 0.75rem 1.25rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); animation: slideIn 0.2s ease-out; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    </style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">⚡ SEO ARCHITECT</div>
+            <span class="badge badge-success">PRO v3.0</span>
+        </div>
+        
+        <div class="nav-section-title">On-Page SEO Tools</div>
+        <ul class="nav-list">
+            <li class="nav-item"><button class="active" onclick="SEOApp.switchTab('serp-tool')">🖥️ SERP & Metadata Simulator</button></li>
+            <li class="nav-item"><button onclick="SEOApp.switchTab('keyword-tool')">📊 Keyword Density & N-Gram</button></li>
+            <li class="nav-item"><button onclick="SEOApp.switchTab('auditor-tool')">🔍 Technical On-Page Auditor</button></li>
+        </ul>
+
+        <div class="nav-section-title">Schema & Code Builders</div>
+        <ul class="nav-list">
+            <li class="nav-item"><button onclick="SEOApp.switchTab('schema-tool')">🧩 JSON-LD Schema Generator</button></li>
+            <li class="nav-item"><button onclick="SEOApp.switchTab('robots-sitemap-tool')">🤖 Robots.txt & Sitemap Generator</button></li>
+        </ul>
+
+        <div class="nav-section-title">Link & Technical Infrastructure</div>
+        <ul class="nav-list">
+            <li class="nav-item"><button onclick="SEOApp.switchTab('url-tool')">🔗 URL Slug & UTM Builder</button></li>
+            <li class="nav-item"><button onclick="SEOApp.switchTab('anchor-tool')">⚓ Anchor Text & Link Auditor</button></li>
+            <li class="nav-item"><button onclick="SEOApp.switchTab('cwv-tool')">⚡ Core Web Vitals Diagnostic</button></li>
+        </ul>
+
+        <div class="nav-section-title">Business & ROI</div>
+        <ul class="nav-list">
+            <li class="nav-item"><button onclick="SEOApp.switchTab('roi-tool')">📈 SEO Traffic & ROI Calculator</button></li>
+        </ul>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+        <header class="topbar">
+            <div class="topbar-title" id="active-tool-title">SERP & Metadata Simulator</div>
+            <div class="topbar-actions">
+                <button class="btn btn-secondary btn-sm" onclick="SEOApp.loadDemoData()">⚡ Load Sample Data</button>
+                <button class="btn btn-primary btn-sm" onclick="SEOApp.exportFullReport()">📥 Export Project Report</button>
+            </div>
+        </header>
+
+        <div class="tool-viewport">
+
+            <!-- 1. SERP & Metadata Simulator -->
+            <section id="serp-tool" class="tool-panel active">
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Metadata Inputs</span></div>
+                        <div class="form-group">
+                            <label>Target Page URL</label>
+                            <input type="text" id="serp-input-url" class="input-text" value="https://mysite.com/guides/ultimate-seo-checklist" oninput="SEOApp.SERP.update()">
+                        </div>
+                        <div class="form-group">
+                            <label>SEO Title Tag (<span id="title-char-cnt">0</span> / 60 Chars | ~<span id="title-px-cnt">0</span>px)</label>
+                            <input type="text" id="serp-input-title" class="input-text" value="Ultimate Technical SEO Checklist for 2026 | Complete Guide" oninput="SEOApp.SERP.update()">
+                        </div>
+                        <div class="form-group">
+                            <label>Meta Description (<span id="desc-char-cnt">0</span> / 160 Chars | ~<span id="desc-px-cnt">0</span>px)</label>
+                            <textarea id="serp-input-desc" class="textarea-input" oninput="SEOApp.SERP.update()">Master technical SEO with our comprehensive checklist. Learn how to audit site architecture, core web vitals, schema markup, and boost search rankings easily.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Robots Directive</label>
+                            <select id="serp-input-robots" class="select-input" onchange="SEOApp.SERP.update()">
+                                <option value="index, follow">index, follow (Default)</option>
+                                <option value="noindex, follow">noindex, follow</option>
+                                <option value="index, nofollow">index, nofollow</option>
+                                <option value="noindex, nofollow">noindex, nofollow</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="card">
+                            <div class="card-header"><span class="card-title">Google SERP Preview (Desktop)</span></div>
+                            <div class="serp-box">
+                                <div class="serp-url" id="serp-prev-url">https://mysite.com › guides › ultimate-seo-checklist</div>
+                                <div class="serp-title" id="serp-prev-title">Ultimate Technical SEO Checklist for 2026 | Complete Guide</div>
+                                <div class="serp-snippet" id="serp-prev-desc">Master technical SEO with our comprehensive checklist...</div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="card-title">Generated HTML Meta Tags</span>
+                                <button class="btn btn-secondary btn-sm" onclick="SEOApp.copyToClipboard('serp-code-output')">📋 Copy Meta Tags</button>
+                            </div>
+                            <div class="code-preview" id="serp-code-output">&lt;!-- Code will generate dynamically --&gt;</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Keyword Density & N-Gram Analyzer -->
+            <section id="keyword-tool" class="tool-panel">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Content Input & Controls</span></div>
+                    <div class="form-group">
+                        <label>Paste Article / Web Content Body Text</label>
+                        <textarea id="kw-input-text" class="textarea-input" style="min-height: 140px;" placeholder="Paste text here to compute keyword density..." oninput="SEOApp.Keyword.analyze()"></textarea>
+                    </div>
+                    <div class="grid-3" style="margin-bottom: 0;">
+                        <div class="form-group">
+                            <label>N-Gram Phrase Grouping</label>
+                            <select id="kw-ngram-select" class="select-input" onchange="SEOApp.Keyword.analyze()">
+                                <option value="1">Single Words (1-Gram)</option>
+                                <option value="2">2-Word Phrases (Bi-Grams)</option>
+                                <option value="3">3-Word Phrases (Tri-Grams)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Filter Common Stopwords</label>
+                            <select id="kw-stopword-select" class="select-input" onchange="SEOApp.Keyword.analyze()">
+                                <option value="yes">Yes (Remove "the", "and", "is")</option>
+                                <option value="no">No (Include all words)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Minimum Word Length</label>
+                            <input type="number" id="kw-min-len" class="input-text" value="3" min="1" max="10" oninput="SEOApp.Keyword.analyze()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3" style="margin-bottom: 1.5rem;">
+                    <div class="stat-card"><div class="stat-lbl">Total Words</div><div class="stat-val" id="kw-stat-words">0</div></div>
+                    <div class="stat-card"><div class="stat-lbl">Unique Terms</div><div class="stat-val" id="kw-stat-unique">0</div></div>
+                    <div class="stat-card"><div class="stat-lbl">Readability (Flesch)</div><div class="stat-val" id="kw-stat-readability">0</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Keyword Frequency & Density Analysis</span></div>
+                    <div class="table-responsive">
+                        <data-table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Keyword / Phrase</th>
+                                    <th>Frequency Count</th>
+                                    <th>Density Percentage</th>
+                                    <th>Optimization Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="kw-table-body">
+                                <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Enter text above to analyze frequency.</td></tr>
+                            </tbody>
+                        </data-table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Technical On-Page Auditor -->
+            <section id="auditor-tool" class="tool-panel">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Live URL or HTML Parser</span></div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Option A: Fetch & Audit Live Web URL</label>
+                            <div style="display:flex; gap: 0.5rem;">
+                                <input type="text" id="audit-url-input" class="input-text" placeholder="https://example.com">
+                                <button class="btn btn-primary" onclick="SEOApp.Auditor.fetchAndAudit()">Fetch & Audit</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Option B: Instant Direct HTML Inspection</label>
+                            <button class="btn btn-secondary" style="width:100%" onclick="SEOApp.Auditor.auditRawHTML()">Audit HTML Text</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Raw HTML Code Source (Used for Option B or direct debug)</label>
+                        <textarea id="audit-html-input" class="textarea-input" placeholder="<html><head><title>My Title</title>...<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head><body>...
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body></html>"></textarea>
+                    </div>
+                </div>
+
+                <div id="audit-results-area" style="display: none;">
+                    <div class="grid-3" style="margin-bottom: 1.5rem;">
+                        <div class="stat-card"><div class="stat-lbl">Overall Health Score</div><div class="stat-val" id="audit-score">0 / 100</div></div>
+                        <div class="stat-card"><div class="stat-lbl">Passed Checks</div><div class="stat-val" style="color:var(--accent-success);" id="audit-passed-cnt">0</div></div>
+                        <div class="stat-card"><div class="stat-lbl">Errors / Warnings</div><div class="stat-val" style="color:var(--accent-danger);" id="audit-issues-cnt">0</div></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Detailed Audit Findings</span></div>
+                        <div id="audit-checklist-results"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. JSON-LD Schema Generator -->
+            <section id="schema-tool" class="tool-panel">
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Schema Configurator</span></div>
+                        <div class="form-group">
+                            <label>Select Schema Type</label>
+                            <select id="schema-type-select" class="select-input" onchange="SEOApp.Schema.renderForm()">
+                                <option value="article">Article / Blog Post</option>
+                                <option value="product">Product & E-Commerce</option>
+                                <option value="faq">FAQ Page</option>
+                                <option value="local">Local Business</option>
+                            </select>
+                        </div>
+                        <div id="schema-dynamic-form"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Generated JSON-LD Output</span>
+                            <button class="btn btn-secondary btn-sm" onclick="SEOApp.copyToClipboard('schema-json-output')">📋 Copy JSON-LD</button>
+                        </div>
+                        <div class="code-preview" id="schema-json-output"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Robots.txt & Sitemap Generator -->
+            <section id="robots-sitemap-tool" class="tool-panel">
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Robots.txt Builder</span></div>
+                        <div class="form-group">
+                            <label>User-Agent Directive</label>
+                            <input type="text" id="robots-ua" class="input-text" value="*">
+                        </div>
+                        <div class="form-group">
+                            <label>Disallow Paths (One per line)</label>
+                            <textarea id="robots-disallow" class="textarea-input" style="height:70px;">/admin/&#10;/cart/&#10;/checkout/&#10;/private/</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>XML Sitemap URL</label>
+                            <input type="text" id="robots-sitemap-url" class="input-text" value="https://mysite.com/sitemap.xml">
+                        </div>
+                        <button class="btn btn-primary" onclick="SEOApp.Technical.generateRobots()">Generate Robots.txt</button>
+                        <div class="code-preview" id="robots-output" style="margin-top:1rem;"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">XML Sitemap Generator</span></div>
+                        <div class="form-group">
+                            <label>Paste List of Site URLs (One per line)</label>
+                            <textarea id="sitemap-urls-input" class="textarea-input" style="height:140px;">https://mysite.com/&#10;https://mysite.com/about&#10;https://mysite.com/services&#10;https://mysite.com/blog&#10;https://mysite.com/contact</textarea>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Change Frequency</label>
+                                <select id="sitemap-freq" class="select-input">
+                                    <option value="weekly">weekly</option>
+                                    <option value="daily">daily</option>
+                                    <option value="monthly">monthly</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Priority Rating</label>
+                                <select id="sitemap-priority" class="select-input">
+                                    <option value="0.8">0.8</option>
+                                    <option value="1.0">1.0</option>
+                                    <option value="0.5">0.5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="SEOApp.Technical.generateSitemap()">Generate XML Sitemap</button>
+                        <div class="code-preview" id="sitemap-output" style="margin-top:1rem;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. URL Slug & UTM Builder -->
+            <section id="url-tool" class="tool-panel">
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">SEO Clean URL Slug Generator</span></div>
+                        <div class="form-group">
+                            <label>Article Title / String Input</label>
+                            <input type="text" id="slug-input" class="input-text" value="How to Boost SEO Rank by 200% in 2026!" oninput="SEOApp.URLTools.generateSlug()">
+                        </div>
+                        <div class="form-group">
+                            <label>Cleaned Permalinks Slug Output</label>
+                            <input type="text" id="slug-output" class="input-text" readonly style="color:var(--accent-success); font-weight:bold;">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Campaign UTM Tracking URL Builder</span></div>
+                        <div class="form-group">
+                            <label>Base Destination URL</label>
+                            <input type="text" id="utm-base" class="input-text" value="https://mysite.com/landing-page" oninput="SEOApp.URLTools.buildUTM()">
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Campaign Source (`utm_source`)</label>
+                                <input type="text" id="utm-source" class="input-text" value="newsletter" oninput="SEOApp.URLTools.buildUTM()">
+                            </div>
+                            <div class="form-group">
+                                <label>Campaign Medium (`utm_medium`)</label>
+                                <input type="text" id="utm-medium" class="input-text" value="email" oninput="SEOApp.URLTools.buildUTM()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Campaign Name (`utm_campaign`)</label>
+                            <input type="text" id="utm-name" class="input-text" value="spring_sale" oninput="SEOApp.URLTools.buildUTM()">
+                        </div>
+                        <div class="form-group">
+                            <label>Final Trackable UTM URL</label>
+                            <div class="code-preview" id="utm-output"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Anchor Text & Link Auditor -->
+            <section id="anchor-tool" class="tool-panel">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Anchor Text Optimization & Link Parser</span></div>
+                    <div class="form-group">
+                        <label>Paste Article HTML Code or Text Containing Links</label>
+                        <textarea id="anchor-input-html" class="textarea-input" style="height:120px;" placeholder="Paste HTML containing <a> tags here..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="SEOApp.Anchor.analyze()">Audit Links & Anchor Text</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Extracted Link Audit Results</span></div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Anchor Text</th>
+                                    <th>Target Destination (HREF)</th>
+                                    <th>Type</th>
+                                    <th>Anchor Quality Assessment</th>
+                                </tr>
+                            </thead>
+                            <tbody id="anchor-table-body">
+                                <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No links parsed yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. Core Web Vitals Diagnostic -->
+            <section id="cwv-tool" class="tool-panel">
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Core Web Vitals Input Diagnostic</span></div>
+                        <div class="form-group">
+                            <label>LCP - Largest Contentful Paint (Seconds)</label>
+                            <input type="number" step="0.1" id="cwv-lcp" class="input-text" value="2.1" oninput="SEOApp.CWV.diagnose()">
+                        </div>
+                        <div class="form-group">
+                            <label>INP - Interaction to Next Paint (Milliseconds)</label>
+                            <input type="number" id="cwv-inp" class="input-text" value="150" oninput="SEOApp.CWV.diagnose()">
+                        </div>
+                        <div class="form-group">
+                            <label>CLS - Cumulative Layout Shift (Score index)</label>
+                            <input type="number" step="0.01" id="cwv-cls" class="input-text" value="0.05" oninput="SEOApp.CWV.diagnose()">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Diagnostic Results & Action Plan</span></div>
+                        <div id="cwv-results-container"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. SEO ROI Calculator -->
+            <section id="roi-tool" class="tool-panel">
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Target Keyword Metrics</span></div>
+                        <div class="form-group">
+                            <label>Monthly Search Volume for Keyword</label>
+                            <input type="number" id="roi-volume" class="input-text" value="25000" oninput="SEOApp.ROI.calculate()">
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Current Google Rank Position</label>
+                                <input type="number" id="roi-curr-pos" class="input-text" value="8" min="1" max="20" oninput="SEOApp.ROI.calculate()">
+                            </div>
+                            <div class="form-group">
+                                <label>Target Google Rank Position</label>
+                                <input type="number" id="roi-target-pos" class="input-text" value="2" min="1" max="10" oninput="SEOApp.ROI.calculate()">
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Conversion Rate %</label>
+                                <input type="number" step="0.1" id="roi-conv-rate" class="input-text" value="2.5" oninput="SEOApp.ROI.calculate()">
+                            </div>
+                            <div class="form-group">
+                                <label>Average Customer Value ($)</label>
+                                <input type="number" id="roi-aov" class="input-text" value="120" oninput="SEOApp.ROI.calculate()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Projected Organic Business Impact</span></div>
+                        <div class="grid-2" style="margin-bottom:1rem;">
+                            <div class="stat-card"><div class="stat-lbl">Est. Current Clicks/Mo</div><div class="stat-val" id="roi-stat-curr-clicks">0</div></div>
+                            <div class="stat-card"><div class="stat-lbl">Target Clicks/Mo</div><div class="stat-val" style="color:var(--accent-success)" id="roi-stat-target-clicks">0</div></div>
+                        </div>
+                        <div class="stat-card" style="margin-bottom:1rem;">
+                            <div class="stat-lbl">Net Additional Monthly Clicks</div>
+                            <div class="stat-val" style="color:var(--accent-primary)" id="roi-stat-net-clicks">+0</div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="stat-card"><div class="stat-lbl">Monthly Revenue Increase</div><div class="stat-val" style="color:var(--accent-success)" id="roi-stat-monthly-rev">$0</div></div>
+                            <div class="stat-card"><div class="stat-lbl">Annual Revenue Increase</div><div class="stat-val" style="color:var(--accent-success)" id="roi-stat-annual-rev">$0</div></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Global Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        /**
+         * SEO ARCHITECT STUDIO PRO - MAIN APPLICATION CONTROLLER
+         * Architecture: Modular Namespace Pattern
+         */
+        const SEOApp = {
+            // CTR Benchmark curves by position (Pos 1-10)
+            CTR_CURVES: { 1: 0.396, 2: 0.184, 3: 0.101, 4: 0.076, 5: 0.054, 6: 0.035, 7: 0.024, 8: 0.018, 9: 0.014, 10: 0.011 },
+
+            init: function() {
+                this.SERP.update();
+                this.Keyword.analyze();
+                this.Schema.renderForm();
+                this.URLTools.generateSlug();
+                this.URLTools.buildUTM();
+                this.CWV.diagnose();
+                this.ROI.calculate();
+                this.Technical.generateRobots();
+                this.Technical.generateSitemap();
+            },
+
+            switchTab: function(toolId) {
+                document.querySelectorAll('.tool-panel').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.nav-item button').forEach(el => el.classList.remove('active'));
+                
+                const activePanel = document.getElementById(toolId);
+                if (activePanel) {
+                    activePanel.classList.add('active');
+                    event.currentTarget.classList.add('active');
+                    document.getElementById('active-tool-title').innerText = event.currentTarget.innerText.replace(/^[^\s]+\s/, '');
+                }
+            },
+
+            toast: function(msg) {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerText = msg;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            },
+
+            copyToClipboard: function(elementId) {
+                const el = document.getElementById(elementId);
+                if (!el) return;
+                const textToCopy = el.innerText || el.value;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    this.toast("⚡ Copied to clipboard successfully!");
+                }).catch(err => {
+                    this.toast("❌ Failed to copy to clipboard.");
+                });
+            },
+
+            loadDemoData: function() {
+                document.getElementById('kw-input-text').value = `Search Engine Optimization (SEO) is essential for digital visibility. Good technical SEO ensures search engines can crawl, index, and rank your website effectively. Focus on core web vitals, high-quality backlink building, target keywords, site speed, clean metadata, structured schema markup, and user experience. Avoid keyword stuffing and broken links!`;
+                
+                document.getElementById('anchor-input-html').value = `<p>Check out our <a href="/seo-guide">SEO Guide</a> or <a href="https://google.com" target="_blank">click here</a> for search tools. Read more on <a href="https://external site.com/report">industry stats</a>.</p>`;
+
+                document.getElementById('audit-html-input').value = `<!DOCTYPE html>
+<html>
+<head>
+    <title>Awesome Product Page | Buy Tech Online</title>
+    <meta name="description" content="Shop the best technical products and SEO tools with fast shipping and incredible discounts today.">
+    <link rel="canonical" href="https://example.com/product">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+    <h1>Awesome Technical Product</h1>
+    <h2>Features & Benefits</h2>
+    <img src="product.jpg" alt="Product Image">
+    <img src="banner.jpg">
+    <a href="/checkout">Proceed to Checkout</a>
+    <a href="https://external.com" target="_blank">External Partner</a>
+
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+</html>`;
+
+                this.SERP.update();
+                this.Keyword.analyze();
+                this.Anchor.analyze();
+                this.Auditor.auditRawHTML();
+                this.toast("✅ Sample demo data loaded into tools!");
+            },
+
+            exportFullReport: function() {
+                const reportData = {
+                    timestamp: new Date().toISOString(),
+                    serpTitle: document.getElementById('serp-input-title').value,
+                    serpDescription: document.getElementById('serp-input-desc').value,
+                    roiProjectionMonthly: document.getElementById('roi-stat-monthly-rev').innerText,
+                    cwvLCP: document.getElementById('cwv-lcp').value + 's'
+                };
+                
+                const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `SEO_Audit_Report_${Date.now()}.json`;
+                a.click();
+                this.toast("📥 Full Project Report exported as JSON!");
+            },
+
+            // ----------------------------------------------------
+            // TOOL MODULE 1: SERP SIMULATOR
+            // ----------------------------------------------------
+            SERP: {
+                update: function() {
+                    const url = document.getElementById('serp-input-url').value || 'https://example.com';
+                    const title = document.getElementById('serp-input-title').value || 'Title Placeholder';
+                    const desc = document.getElementById('serp-input-desc').value || 'Description Placeholder';
+                    const robots = document.getElementById('serp-input-robots').value;
+
+                    // Compute pixel & length counters
+                    document.getElementById('title-char-cnt').innerText = title.length;
+                    document.getElementById('title-px-cnt').innerText = Math.round(title.length * 9.8);
+                    document.getElementById('desc-char-cnt').innerText = desc.length;
+                    document.getElementById('desc-px-cnt').innerText = Math.round(desc.length * 6.2);
+
+                    // Update UI Preview
+                    document.getElementById('serp-prev-url').innerText = url.replace(/^https?:\/\//, '').replace(/\/$/, '').replaceAll('/', ' › ');
+                    document.getElementById('serp-prev-title').innerText = title;
+                    document.getElementById('serp-prev-desc').innerText = desc;
+
+                    // Generate Code Output
+                    const htmlCode = `<!-- Primary SEO Meta Tags -->
+<title>${SEOApp.escapeHTML(title)}</title>
+<meta name="title" content="${SEOApp.escapeHTML(title)}">
+<meta name="description" content="${SEOApp.escapeHTML(desc)}">
+<meta name="robots" content="${robots}">
+<link rel="canonical" href="${SEOApp.escapeHTML(url)}">`;
+
+                    document.getElementById('serp-code-output').innerText = htmlCode;
+                }
+            },
+
+            // ----------------------------------------------------
+            // TOOL MODULE 2: KEYWORD & N-GRAM DENSITY
+            // ----------------------------------------------------
+            Keyword: {
+                STOPWORDS: new Set(["a","about","above","after","again","against","all","am","an","and","any","are","aren't","as","at","be","because","been","before","being","below","between","both","but","by","can't","cannot","could","couldn't","did","didn't","do","does","doesn't","doing","don't","down","during","each","few","for","from","further","had","hadn't","has","hasn't","have","haven't","having","he","he'd","he'll","he's","her","here","here's","hers","herself","him","himself","his","how","how's","i","i'd","i'll","i'm","i've","if","in","into","is","isn't","it","it's","its","itself","let's","me","more","most","mustn't","my","myself","no","nor","not","of","off","on","once","only","or","other","ought","our","ours","ourselves","out","over","own","same","shan't","she","she'd","she'll","she's","should","shouldn't","so","some","such","than","that","that's","the","their","theirs","them","themselves","then","there","there's","these","they","they'd","they'll","they're","they've","this","those","through","to","too","under","until","up","very","was","wasn't","we","we'd","we'll","we're","we've","were","weren't","what","what's","when","when's","where","where's","which","while","who","who's","whom","why","why's","with","won't","would","wouldn't","you","you'd","you'll","you're","you've","your","yours","yourself","yourselves"]),
+
+                analyze: function() {
+                    const text = document.getElementById('kw-input-text').value;
+                    const ngramSize = parseInt(document.getElementById('kw-ngram-select').value);
+                    const filterStop = document.getElementById('kw-stopword-select').value === 'yes';
+                    const minLen = parseInt(document.getElementById('kw-min-len').value) || 1;
+
+                    if (!text.trim()) {
+                        document.getElementById('kw-stat-words').innerText = "0";
+                        document.getElementById('kw-stat-unique').innerText = "0";
+                        document.getElementById('kw-stat-readability').innerText = "0";
+                        document.getElementById('kw-table-body').innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Enter text above to analyze frequency.</td></tr>`;
+                        return;
+                    }
+
+                    // Cleaning and tokenization
+                    const cleanText = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+                    const words = cleanText.split(/\s+/).filter(w => w.length >= minLen);
+                    const totalWordCount = words.length;
+
+                    // Readability score calculation (Flesch Reading Ease approximation)
+                    const sentences = text.split(/[.!?]+/).filter(Boolean).length || 1;
+                    const syllables = words.reduce((acc, word) => acc + (word.match(/[aeiouy]{1,2}/g) || []).length, 0) || 1;
+                    const flesch = Math.round(206.835 - (1.015 * (totalWordCount / sentences)) - (84.6 * (syllables / totalWordCount)));
+
+                    document.getElementById('kw-stat-words').innerText = totalWordCount;
+                    document.getElementById('kw-stat-readability').innerText = Math.max(0, Math.min(100, flesch));
+
+                    // Build N-Grams
+                    const nGrams = [];
+                    for (let i = 0; i <= words.length - ngramSize; i++) {
+                        const slice = words.slice(i, i + ngramSize);
+                        if (filterStop && slice.some(w => this.STOPWORDS.has(w))) continue;
+                        nGrams.push(slice.join(' '));
+                    }
+
+                    // Count Frequencies
+                    const counts = {};
+                    nGrams.forEach(phrase => counts[phrase] = (counts[phrase] || 0) + 1);
+
+                    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+                    document.getElementById('kw-stat-unique').innerText = Object.keys(counts).length;
+
+                    // Populate Table
+                    const tbody = document.getElementById('kw-table-body');
+                    tbody.innerHTML = '';
+
+                    sorted.slice(0, 15).forEach(([phrase, count]) => {
+                        const density = ((count / (totalWordCount || 1)) * 100).toFixed(2);
+                        let badge = '<span class="badge badge-success">Optimal</span>';
+                        if (density > 3.5) badge = '<span class="badge badge-danger">Stuffing Risk</span>';
+                        else if (density < 0.5) badge = '<span class="badge badge-warning">Low Density</span>';
+
+                        tbody.innerHTML += `<tr>
+                            <td><strong>${SEOApp.escapeHTML(phrase)}</strong></td>
+                            <td>${count}</td>
+                            <td>${density}%</td>
+                            <td>${badge}</td>
+                        </tr>`;
+                    });
+                }
+            },
+
+            // ----------------------------------------------------
+            // TOOL MODULE 3: ON-PAGE TECHNICAL AUDITOR
+            // ----------------------------------------------------
+            Auditor: {
+                fetchAndAudit: function() {
+                    const url = document.getElementById('audit-url-input').value;
+                    if (!url.startsWith('http')) {
+                        SEOApp.toast("⚠️ Please enter a valid URL starting with http:// or https://");
+                        return;
+                    }
+
+                    SEOApp.toast("⏳ Fetching URL via CORS proxy...");
+                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+
+                    fetch(proxyUrl)
+                        .then(res => {
+                            if (!res.ok) throw new Error("HTTP Fetch Error");
+                            return res.text();
+                        })
+                        .then(html => {
+                            document.getElementById('audit-html-input').value = html;
+                            this.runAuditLogic(html, url);
+                            SEOApp.toast("✅ URL Audit Complete!");
+                        })
+                        .catch(err => {
+                            SEOApp.toast("❌ Failed to fetch URL. Try pasting raw HTML instead.");
+                        });
+                },
+
+                auditRawHTML: function() {
+                    const html = document.getElementById('audit-html-input').value;
+                    if (!html.trim()) {
+                        SEOApp.toast("⚠️ Please enter HTML content into the input box!");
+                        return;
+                    }
+                    this.runAuditLogic(html, 'Raw HTML Snapshot');
+                    SEOApp.toast("✅ HTML Audit Complete!");
+                },
+
+                runAuditLogic: function(htmlString, sourceLabel) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlString, "text/html");
+
+                    const checks = [];
+                    let score = 100;
+
+                    // Title Tag Check
+                    const title = doc.querySelector('title')?.innerText || '';
+                    if (!title) {
+                        checks.push({ status: 'fail', msg: 'Missing <title> tag in page head.' });
+                        score -= 20;
+                    } else if (title.length < 30 || title.length > 60) {
+                        checks.push({ status: 'warn', msg: `<title> length (${title.length} chars) is outside recommended range (30-60 chars).` });
+                        score -= 5;
+                    } else {
+                        checks.push({ status: 'pass', msg: `<title> tag exists and has optimal length (${title.length} chars).` });
+                    }
+
+                    // Meta Description
+                    const desc = doc.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+                    if (!desc) {
+                        checks.push({ status: 'fail', msg: 'Missing Meta Description tag.' });
+                        score -= 20;
+                    } else if (desc.length < 100 || desc.length > 160) {
+                        checks.push({ status: 'warn', msg: `Meta Description length (${desc.length} chars) is outside recommended range (100-160 chars).` });
+                        score -= 5;
+                    } else {
+                        checks.push({ status: 'pass', msg: `Meta Description exists and has optimal length (${desc.length} chars).` });
+                    }
+
+                    // Heading H1 Structure
+                    const h1s = doc.querySelectorAll('h1');
+                    if (h1s.length === 0) {
+                        checks.push({ status: 'fail', msg: 'Page is missing an <h1> primary heading.' });
+                        score -= 15;
+                    } else if (h1s.length > 1) {
+                        checks.push({ status: 'warn', msg: `Multiple <h1> tags found (${h1s.length}). Recommended to have exactly 1.` });
+                        score -= 5;
+                    } else {
+                        checks.push({ status: 'pass', msg: `Single <h1> tag present: "${h1s[0].innerText.substring(0, 40)}..."` });
+                    }
+
+                    // Image Alt Attributes
+                    const imgs = doc.querySelectorAll('img');
+                    let missingAlt = 0;
+                    imgs.forEach(img => { if (!img.hasAttribute('alt') || !img.getAttribute('alt').trim()) missingAlt++; });
+                    if (imgs.length > 0 && missingAlt > 0) {
+                        checks.push({ status: 'warn', msg: `${missingAlt} out of ${imgs.length} images are missing 'alt' text attributes.` });
+                        score -= 10;
+                    } else {
+                        checks.push({ status: 'pass', msg: `All images (${imgs.length}) contain valid 'alt' text.` });
+                    }
+
+                    // Canonical Tag
+                    const canonical = doc.querySelector('link[rel="canonical"]');
+                    if (!canonical) {
+                        checks.push({ status: 'warn', msg: 'Missing rel="canonical" link tag.' });
+                        score -= 10;
+                    } else {
+                        checks.push({ status: 'pass', msg: `Canonical tag present: ${canonical.getAttribute('href')}` });
+                    }
+
+                    // Viewport Mobile Responsive Tag
+                    const viewport = doc.querySelector('meta[name="viewport"]');
+                    if (!viewport) {
+                        checks.push({ status: 'fail', msg: 'Missing mobile viewport meta tag.' });
+                        score -= 15;
+                    } else {
+                        checks.push({ status: 'pass', msg: 'Mobile viewport meta tag correctly configured.' });
+                    }
+
+                    // Render Results
+                    score = Math.max(0, score);
+                    document.getElementById('audit-score').innerText = `${score} / 100`;
+                    document.getElementById('audit-passed-cnt').innerText = checks.filter(c => c.status === 'pass').length;
+                    document.getElementById('audit-issues-cnt').innerText = checks.filter(c => c.status !== 'pass').length;
+
+                    const resultsDiv = document.getElementById('audit-checklist-results');
+                    resultsDiv.innerHTML = '';
+                    checks.forEach(check => {
+                        let badge = '<span class="badge badge-success">PASS</span>';
+                        if (check.status === 'fail') badge = '<span class="badge badge-danger">FAIL</span>';
+                        if (check.status === 'warn') badge = '<span class="badge badge-warning">WARN</span>';
+
+                        resultsDiv.innerHTML += `<div style="display:flex; align-items:center; justify-content:space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+                            <span style="font-size:0.9rem; color:var(--text-main);">${check.msg}</span>
+                            ${badge}
+                        </div>`;
+                    });
+
+                    document.getElementById('audit-results-area').style.display = 'block';
+                }
+            },
+
+            // ----------------------------------------------------
+            // TOOL MODULE 4: JSON-LD SCHEMA GENERATOR
+            // ----------------------------------------------------
+            Schema: {
+                renderForm: function() {
+                    const type = document.getElementById('schema-type-select').value;
+                    const container = document.getElementById('schema-dynamic-form');
+
+                    if (type === 'article') {
+                        container.innerHTML = `
+                            <div class="form-group"><label>Headline</label><input type="text" id="sch-art-headline" class="input-text" value="How to Master Technical SEO" oninput="SEOApp.Schema.generate()"></div>
+                            <div class="form-group"><label>Author Name</label><input type="text" id="sch-art-author" class="input-text" value="Jane Doe" oninput="SEOApp.Schema.generate()"></div>
+                            <div class="form-group"><label>Publisher Name</label><input type="text" id="sch-art-pub" class="input-text" value="SEO Tech Inc" oninput="SEOApp.Schema.generate()"></div>
+                        `;
+                    } else if (type === 'product') {
+                        container.innerHTML = `
+                            <div class="form-group"><label>Product Name</label><input type="text" id="sch-prod-name" class="input-text" value="SEO Pro Software Suite" oninput="SEOApp.Schema.generate()"></div>
+                            <div class="form-group"><label>Price ($)</label><input type="text" id="sch-prod-price" class="input-text" value="99.00" oninput="SEOApp.Schema.generate()"></div>
+                            <div class="form-group"><label>Currency</label><input type="text" id="sch-prod-curr" class="input-text" value="USD" oninput="SEOApp.Schema.generate()"></div>
+                        `;
+                    } else if (type === 'faq') {
+                        container.innerHTML = `
+                            <div class="form-group"><label>Question 1</label><input type="text" id="sch-faq-q1" class="input-text" value="What is Technical SEO?" oninput="SEOApp.Schema.generate()"></div>
+                            <div class="form-group"><label>Answer 1</label><input type="text" id="sch-faq-a1" class="input-text" value="Technical SEO involves optimizing server and site structure." oninput="SEOApp.Schema.generate()"></div>
+                        `;
+                    } else if (type === 'local') {
+                        container.innerHTML = `
+                            <div class="form-group"><label>Business Name</label><input type="text" id="sch-loc-name" class="input-text" value="Downtown SEO Agency" oninput="SEOApp.Schema.generate()"></div>
+                            <div class="form-group"><label>Phone</label><input type="text" id="sch-loc-phone" class="input-text" value="+1-555-0199" oninput="SEOApp.Schema.generate()"></div>
+                        `;
+                    }
+                    this.generate();
+                },
+
+                generate: function() {
+                    const type = document.getElementById('schema-type-select').value;
+                    let schemaObj = {};
+
+                    if (type === 'article') {
+                        schemaObj = {
+                            "@context": "https://schema.org",
+                            "@type": "Article",
+                            "headline": document.getElementById('sch-art-headline')?.value || '',
+                            "author": { "@type": "Person", "name": document.getElementById('sch-art-author')?.value || '' },
+                            "publisher": { "@type": "Organization", "name": document.getElementById('sch-art-pub')?.value || '' }
+                        };
+                    } else if (type === 'product') {
+                        schemaObj = {
+                            "@context": "https://schema.org",
+                            "@type": "Product",
+                            "name": document.getElementById('sch-prod-name')?.value || '',
+                            "offers": {
+                                "@type": "Offer",
+                                "price": document.getElementById('sch-prod-price')?.value || '0',
+                                "priceCurrency": document.getElementById('sch-prod-curr')?.value || 'USD',
+                                "availability": "https://schema.org/InStock"
+                            }
+                        };
+                    } else if (type === 'faq') {
+                        schemaObj = {
+                            "@context": "https://schema.org",
+                            "@type": "FAQPage",
+                            "mainEntity": [{
+                                "@type": "Question",
+                                "name": document.getElementById('sch-faq-q1')?.value || '',
+                                "acceptedAnswer": { "@type": "Answer", "text": document.getElementById('sch-faq-a1')?.value || '' }
+                            }]
+                        };
+                    } else if (type === 'local') {
+                        schemaObj = {
+                            "@context": "https://schema.org",
+                            "@type": "LocalBusiness",
+                            "name": document.getElementById('sch-loc-name')?.value || '',
+                            "telephone": document.getElementById('sch-loc-phone')?.value || ''
+                        };
+                    }
+
+                    const jsonText = `<script type="application/ld+json">\n${JSON.stringify(schemaObj, null, 2)}\n<\/script>`;
+                    document.getElementById('schema-json-output').innerText = jsonText;
+                }
+            },
+
+            // ----------------------------------------------------
+            // TOOL MODULE 5: TECHNICAL ROBOTS & SITEMAP
+            // ----------------------------------------------------
+            Technical: {
+                generateRobots: function() {
+                    const ua = document.getElementById('robots-ua').value;
+                    const disallows = document.getElementById('robots-disallow').value.split('\n').filter(Boolean);
+                    const sitemap = document.getElementById('robots-sitemap-url').value;
+
+                    let txt = `User-agent: ${ua}\n`;
+                    disallows.forEach(path => { txt += `Disallow: ${path.trim()}\n`; });
+                    txt += `\nSitemap: ${sitemap}`;
+
+                    document.getElementById('robots-output').innerText = txt;
+                },
+
+                generateSitemap: function() {
+                    const urls = document.getElementById('sitemap-urls-input').value.split('\n').filter(Boolean);
+                    const freq = document.getElementById('sitemap-freq').value;
+                    const priority = document.getElementById('sitemap-priority').value;
+                    const today = new Date().toISOString().split('T')[0];
+
+                    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+                    urls.forEach(u => {
+                        xml += `  <url>\n    <loc>${SEOApp.escapeHTML(u.trim())}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${freq}</changefreq>\n    <priority>${priority}</priority>\n  </url>\n`;
+                    });
+                    xml += `</urlset>`;
+
+                    document.getElementById('sitemap-output').innerText = xml;
+                }
+            },
+
+            // ----------------------------------------------------
+            // TOOL MODULE 6: URL SLUG & UTM BUILDER
+            // ----------------------------------------------------
+            URLTools: {
+                generateSlug: function() {
+                    const input = document.getElementById('slug-input').value;
+                    const slug = input.toLowerCase()
+                        .trim()
+                        .replace(/[^\w\s-]/g, '')
+                        .replace(/[\s_-]+/g, '-')
+                        .replace(/^-+|-+$/g, '');
+                    document.getElementById('slug-output').value = slug;
+                },
+
+                buildUTM: function() {
+                    const base = document.getElementById('utm-base').value || 'https://example.com';
+                    const src = document.getElementById('utm-source').value;
+                    const med = document.getElementById('utm-medium').value;
+                    const name = document.getElementById('utm-name').value;
+
+                    const params = new URLSearchParams();
+                    if (src) params.append('utm_source', src);
+                    if (med) params.append('utm_medium', med);
+                    if (name) params.append('utm_campaign', name);
+
+                    const finalURL = `${base}${base.includes('?') ? '&' : '?'}${params.toString()}`;
+                    document.getElementById('utm-output').innerText = finalURL;
+                }
+            },
+
+            // ----------------------------------------------------
+            // TOOL MODULE 7: ANCHOR TEXT & LINK AUDITOR
+            // ----------------------------------------------------
+            Anchor: {
+                GENERIC_ANCHORS: new Set(["click here", "read more", "here", "link", "website", "more", "source", "this page", "check out"]),
+
+                analyze: function() {
+                    const html = document.getElementById('anchor-input-html').value;
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, "text/html");
+                    const links = doc.querySelectorAll('a');
+
+                    const tbody = document.getElementById('anchor-table-body');
+                    tbody.innerHTML = '';
+
+                    if (links.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No <a> anchor link tags found in parsed content.</td></tr>`;
+                        return;
+                    }
+
+                    links.forEach(link => {
+                        const anchorText = link.innerText.trim() || '[Empty Anchor Text]';
+                        const href = link.getAttribute('href') || '#';
+                        const isExternal = href.startsWith('http');
+                        const isGeneric = this.GENERIC_ANCHORS.has(anchorText.toLowerCase());
+
+                        let quality = '<span class="badge badge-success">Good Keyword Anchor</span>';
+                        if (isGeneric) quality = '<span class="badge badge-danger">Generic / Weak Anchor</span>';
+                        if (anchorText === '[Empty Anchor Text]') quality = '<span class="badge badge-danger">Missing Text</span>';
+
+                        tbody.innerHTML += `<tr>
+                            <td><strong>${SEOApp.escapeHTML(anchorText)}</strong></td>
+                            <td><span style="font-family:monospace;">${SEOApp.escapeHTML(href)}</span></td>
+                            <td>${isExternal ? 'External' : 'Internal'}</td>
+                            <td>${quality}</td>
+                        </tr>`;
+                    });
+                }
+            },
+
+            // ----------------------------------------------------
+            // TOOL MODULE 8: CORE WEB VITALS DIAGNOSTIC
+            // ----------------------------------------------------
+            CWV: {
+                diagnose: function() {
+                    const lcp = parseFloat(document.getElementById('cwv-lcp').value) || 0;
+                    const inp = parseInt(document.getElementById('cwv-inp').value) || 0;
+                    const cls = parseFloat(document.getElementById('cwv-cls').value) || 0;
+
+                    const container = document.getElementById('cwv-results-container');
+                    container.innerHTML = '';
+
+                    const getStatus = (val, good, poor) => {
+                        if (val <= good) return { lbl: 'GOOD', cls: 'badge-success' };
+                        if (val <= poor) return { lbl: 'NEEDS IMPROVEMENT', cls: 'badge-warning' };
+                        return { lbl: 'POOR', cls: 'badge-danger' };
+                    };
+
+                    const lcpStat = getStatus(lcp, 2.5, 4.0);
+                    const inpStat = getStatus(inp, 200, 500);
+                    const clsStat = getStatus(cls, 0.1, 0.25);
+
+                    container.innerHTML = `
+                        <div style="margin-bottom:1rem;">
+                            <strong>Largest Contentful Paint (LCP):</strong> ${lcp}s 
+                            <span class="badge ${lcpStat.cls}">${lcpStat.lbl}</span>
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <strong>Interaction to Next Paint (INP):</strong> ${inp}ms 
+                            <span class="badge ${inpStat.cls}">${inpStat.lbl}</span>
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <strong>Cumulative Layout Shift (CLS):</strong> ${cls} 
+                            <span class="badge ${clsStat.cls}">${clsStat.lbl}</span>
+                        </div>
+                        <hr style="border-color:var(--border-color); margin: 1rem 0;">
+                        <h4 style="margin-bottom:0.5rem; color:var(--accent-primary);">Recommended Fixes:</h4>
+                        <ul style="padding-left: 1.2rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
+                            ${lcp > 2.5 ? '<li>Convert heavy images to WebP/AVIF & compress hero assets.</li>' : ''}
+                            ${inp > 200 ? '<li>Reduce JavaScript execution time and break up long main-thread tasks.</li>' : ''}
+                            ${cls > 0.1 ? '<li>Set explicit width & height attributes on all image and video tags.</li>' : ''}
+                            ${lcp <= 2.5 && inp <= 200 && cls <= 0.1 ? '<li>🎉 All Core Web Vitals are in the optimal Green Zone!</li>' : ''}
+                        </ul>
+                    `;
+                }
+            },
+
+            // ----------------------------------------------------
+            // TOOL MODULE 9: SEO ROI & TRAFFIC CALCULATOR
+            // ----------------------------------------------------
+            ROI: {
+                calculate: function() {
+                    const volume = parseInt(document.getElementById('roi-volume').value) || 0;
+                    const currPos = Math.min(10, Math.max(1, parseInt(document.getElementById('roi-curr-pos').value) || 10));
+                    const targetPos = Math.min(10, Math.max(1, parseInt(document.getElementById('roi-target-pos').value) || 1));
+                    const convRate = (parseFloat(document.getElementById('roi-conv-rate').value) || 0) / 100;
+                    const aov = parseFloat(document.getElementById('roi-aov').value) || 0;
+
+                    const currCTR = SEOApp.CTR_CURVES[currPos] || 0.01;
+                    const targetCTR = SEOApp.CTR_CURVES[targetPos] || 0.39;
+
+                    const currClicks = Math.round(volume * currCTR);
+                    const targetClicks = Math.round(volume * targetCTR);
+                    const netClicks = Math.max(0, targetClicks - currClicks);
+
+                    const monthlyRev = netClicks * convRate * aov;
+                    const annualRev = monthlyRev * 12;
+
+                    document.getElementById('roi-stat-curr-clicks').innerText = currClicks.toLocaleString();
+                    document.getElementById('roi-stat-target-clicks').innerText = targetClicks.toLocaleString();
+                    document.getElementById('roi-stat-net-clicks').innerText = `+${netClicks.toLocaleString()}`;
+                    document.getElementById('roi-stat-monthly-rev').innerText = `$${Math.round(monthlyRev).toLocaleString()}`;
+                    document.getElementById('roi-stat-annual-rev').innerText = `$${Math.round(annualRev).toLocaleString()}`;
+                }
+            },
+
+            // Helper to escape HTML characters
+            escapeHTML: function(str) {
+                return str.replace(/[&<>'"]/g, 
+                    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+                );
+            }
+        };
+
+        // Initialize application on DOM load
+        document.addEventListener('DOMContentLoaded', () => SEOApp.init());
+    </script>
+
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+</html>

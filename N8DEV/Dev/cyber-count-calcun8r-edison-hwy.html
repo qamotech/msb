@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CYBER-COUNT CALCUN8R // EDISON HWY</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap');
+
+        :root {
+            --bg-color: #060913; 
+            --panel-bg: rgba(13, 20, 35, 0.7);
+            --vibranium: #00ff66; /* Neon Green */
+            --autobot-gold: #00f5d4; /* Cyber Cyan */
+            --excalibur: #f0f8ff; /* White/Ice */
+            --energon: #00d2ff; /* Cyber Blue */
+            --text-main: #8fa2b2;
+            --danger-red: #ff3333;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--vibranium);
+            padding-bottom: 15px;
+            width: 100%;
+            max-width: 1200px;
+            box-shadow: 0 10px 20px -10px rgba(138, 43, 226, 0.3);
+            position: relative; 
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--excalibur);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(224, 230, 237, 0.5), 0 0 20px var(--vibranium);
+            padding: 0 20px;
+        }
+
+        .subtitle {
+            color: var(--autobot-gold);
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+            margin-top: 5px;
+        }
+
+        .btn-fullscreen {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--energon);
+            border: 1px solid var(--energon);
+            padding: 8px 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 2px;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-fullscreen:hover, .btn-fullscreen.active {
+            background: var(--energon);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .btn-fullscreen {
+                position: relative;
+                margin: 15px auto 0 auto;
+                justify-content: center;
+                width: 200px;
+            }
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 80px; /* Reduced margin so it doesn't leave massive blank space */
+        }
+
+        .calc-card {
+            background: var(--panel-bg);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-top: 3px solid var(--energon);
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 4px 15px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calc-card:hover {
+            border-color: var(--energon);
+            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.1), 0 8px 25px rgba(138, 43, 226, 0.4);
+        }
+
+        .card-header {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--autobot-gold);
+            font-size: 1.4rem;
+            border-bottom: 1px solid rgba(255, 183, 0, 0.3);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .meta-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .meta-inputs input[type="text"] {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px dashed var(--vibranium);
+            color: var(--excalibur);
+            font-family: 'Rajdhani', sans-serif;
+            padding: 6px;
+            font-size: 0.9rem;
+            outline: none;
+            text-transform: uppercase;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .calc-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: var(--excalibur);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spec-tag {
+            font-size: 0.8rem;
+            color: var(--vibranium);
+            background: rgba(138, 43, 226, 0.1);
+            padding: 2px 6px;
+            border-radius: 2px;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .input-group.three-col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.75rem;
+            color: #8b9bb4;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        input[type="number"] {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #2a3441;
+            color: var(--energon);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 8px;
+            border-radius: 2px;
+            outline: none;
+            transition: border-color 0.2s;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        .result-box {
+            background: rgba(0, 240, 255, 0.05);
+            border-left: 3px solid var(--energon);
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .result-label {
+            color: var(--text-main);
+            font-size: 0.8rem;
+        }
+
+        .result-value {
+            color: var(--energon);
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.4);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        button {
+            flex: 1;
+            padding: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            border-radius: 2px;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+
+        .btn-log {
+            background: rgba(255, 183, 0, 0.2);
+            color: var(--autobot-gold);
+            border: 1px solid var(--autobot-gold);
+        }
+
+        .btn-log:hover {
+            background: var(--autobot-gold);
+            color: #000;
+            box-shadow: 0 0 10px var(--autobot-gold);
+        }
+
+        .btn-clear {
+            background: rgba(255, 51, 51, 0.1);
+            color: var(--danger-red);
+            border: 1px solid var(--danger-red);
+        }
+
+        /* --- UPDATED TERMINAL DRAWER CSS --- */
+        .terminal-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 350px; /* Taller on PC, but handles overflow */
+            max-height: 50vh; /* Never take up more than half the screen height when open */
+            background: #050608;
+            border-top: 2px solid var(--vibranium);
+            box-sizing: border-box;
+            z-index: 100;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* The collapsed state pushes everything off-screen EXCEPT the 55px header */
+        .terminal-panel.collapsed {
+            transform: translateY(calc(100% - 55px));
+        }
+
+        .terminal-header {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--vibranium);
+            font-size: 1rem;
+            padding: 15px 20px;
+            background: #0d0e15;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+        }
+
+        .terminal-header:hover {
+            background: rgba(138, 43, 226, 0.1);
+        }
+
+        /* Little arrow indicator */
+        .toggle-icon {
+            transition: transform 0.3s ease;
+            color: var(--energon);
+        }
+        .collapsed .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .terminal-content {
+            padding: 10px 20px 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 600px; /* Forces horizontal scroll on tiny screens inside the drawer */
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #1a2233;
+        }
+
+        th { color: var(--autobot-gold); }
+        td { color: var(--excalibur); }
+        .row-total { color: var(--energon); font-weight: 700; font-family: 'Orbitron', sans-serif; }
+
+    </style>
+<!-- N8-ENHANCEMENTS:HEAD:START -->
+  <meta name="description" content="Explore CYBER-COUNT CALCUN8R // EDISON HWY, an interactive web experiment in the N8 CyberDev collection.">
+  <meta name="keywords" content="CYBER-COUNT CALCUN8R // EDISON HWY, Experiments &amp; Archives, N8 CyberDev, Qamelot, interactive web app, standalone HTML">
+  <meta name="author" content="N8 CyberDev / Qamelot">
+  <meta name="creator" content="N8 CyberDev">
+  <meta name="publisher" content="Qamelot">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#070b14">
+  <meta name="color-scheme" content="dark light">
+  <meta name="application-name" content="N8 CyberDev">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="n8-improvement-count" content="80">
+  <meta name="n8-feature-count" content="16">
+  <link rel="canonical" href="https://qamotech.github.io/DevDashboard/cyber-count-calcun8r-edison-hwy.html">
+  <link rel="icon" type="image/png" sizes="128x128" href="n8-icon.png">
+  <link rel="shortcut icon" type="image/png" href="n8-icon.png">
+  <link rel="apple-touch-icon" href="n8-icon.png">
+  <link rel="manifest" href="qamelot-media-assets/site.webmanifest">
+  <link rel="stylesheet" href="n8-tools-transformers.css">
+  <script defer src="n8-tools-transformers.js"></script>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="N8 CyberDev">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="CYBER-COUNT CALCUN8R // EDISON HWY">
+  <meta property="og:description" content="Explore CYBER-COUNT CALCUN8R // EDISON HWY, an interactive web experiment in the N8 CyberDev collection.">
+  <meta property="og:url" content="https://qamotech.github.io/DevDashboard/cyber-count-calcun8r-edison-hwy.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="CYBER-COUNT CALCUN8R // EDISON HWY">
+  <meta name="twitter:description" content="Explore CYBER-COUNT CALCUN8R // EDISON HWY, an interactive web experiment in the N8 CyberDev collection.">
+  <style id="n8x-styles">
+    :root{--n8x-cyan:#66e7ff;--n8x-violet:#ae82ff;--n8x-ink:#f4fbff;--n8x-muted:#a8b7c8;--n8x-bg:rgba(5,10,18,.96);--n8x-line:rgba(102,231,255,.28);--n8x-shadow:0 18px 55px rgba(0,0,0,.55)}
+    #n8x-skip{position:fixed;left:12px;top:10px;z-index:2147483647;transform:translateY(-160%);padding:10px 14px;border-radius:9px;color:#031017;background:var(--n8x-cyan);font:800 13px/1.2 system-ui,sans-serif;text-decoration:none;transition:transform .18s}
+    #n8x-skip:focus{transform:none}
+    #n8x-shell,#n8x-shell *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    #n8x-shell{position:fixed;right:14px;bottom:14px;z-index:2147483000;color:var(--n8x-ink);line-height:1.4;touch-action:manipulation}
+    #n8x-shell[data-n8x-side="left"]{left:14px;right:auto}
+    #n8x-dock{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:5px;max-width:250px;padding:6px;border:1px solid var(--n8x-line);border-radius:15px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(18px) saturate(1.25);transition:.18s}
+    #n8x-shell:not([data-n8x-expanded="true"]) .n8x-secondary{display:none}
+    #n8x-shell[data-n8x-hidden="true"] #n8x-dock,#n8x-shell[data-n8x-hidden="true"] #n8x-panel{display:none}
+    #n8x-restore{display:none;place-items:center;width:34px;height:44px;border:1px solid var(--n8x-line);border-right:0;border-radius:12px 0 0 12px;color:var(--n8x-cyan);background:var(--n8x-bg);box-shadow:var(--n8x-shadow);font:900 10px/1 ui-monospace,monospace;letter-spacing:-.04em;cursor:pointer}
+    #n8x-shell[data-n8x-side="left"] #n8x-restore{border:1px solid var(--n8x-line);border-left:0;border-radius:0 12px 12px 0}
+    #n8x-shell[data-n8x-hidden="true"] #n8x-restore{display:grid}
+    .n8x-btn,.n8x-link{min-width:42px;min-height:42px;display:grid;place-items:center;border:1px solid transparent;border-radius:11px;padding:7px;color:var(--n8x-ink);background:transparent;text-decoration:none;cursor:pointer;font-size:18px;line-height:1;transition:background .18s,border-color .18s,transform .18s}
+    .n8x-btn:hover,.n8x-btn:focus-visible,.n8x-link:hover,.n8x-link:focus-visible{outline:0;border-color:var(--n8x-line);background:rgba(102,231,255,.12);transform:translateY(-2px)}
+    .n8x-primary{color:#041017;background:linear-gradient(135deg,var(--n8x-cyan),#a8f3ff)}
+    #n8x-progress{position:fixed;left:0;top:0;z-index:2147483646;width:0;height:3px;background:linear-gradient(90deg,var(--n8x-cyan),var(--n8x-violet));box-shadow:0 0 12px var(--n8x-cyan);pointer-events:none}
+    #n8x-panel{position:fixed;right:14px;bottom:70px;width:min(400px,calc(100vw - 28px));max-height:min(620px,calc(100vh - 96px));display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;border:1px solid var(--n8x-line);border-radius:18px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(22px) saturate(1.3);overflow:hidden;opacity:0;transform:translateY(18px) scale(.98);pointer-events:none;transition:.2s}
+    #n8x-shell[data-n8x-side="left"] #n8x-panel{left:14px;right:auto}
+    #n8x-panel[aria-hidden="false"]{opacity:1;transform:none;pointer-events:auto}
+    .n8x-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 17px 12px}.n8x-head strong{font-size:14px;letter-spacing:.08em;text-transform:uppercase}.n8x-head small{display:block;margin-top:3px;color:var(--n8x-muted);font-size:11px}
+    #n8x-search{width:calc(100% - 28px);min-height:44px;margin:0 14px 10px;border:1px solid var(--n8x-line);border-radius:11px;padding:0 13px;color:var(--n8x-ink);background:rgba(255,255,255,.055);font-size:14px;outline:0}#n8x-search:focus{border-color:var(--n8x-cyan);box-shadow:0 0 0 3px rgba(102,231,255,.1)}
+    #n8x-list{overflow:auto;padding:4px 10px 12px;scrollbar-width:thin}.n8x-page{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;min-height:51px;padding:7px;border-radius:11px;color:var(--n8x-ink);text-decoration:none}.n8x-page:hover,.n8x-page:focus-visible{outline:0;background:rgba(102,231,255,.1)}.n8x-num{display:grid;place-items:center;width:31px;height:31px;border:1px solid var(--n8x-line);border-radius:9px;color:var(--n8x-cyan);font:800 10px/1 ui-monospace,monospace}.n8x-copy{min-width:0}.n8x-copy b,.n8x-copy span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.n8x-copy b{font-size:12px}.n8x-copy span{color:var(--n8x-muted);font-size:9px}.n8x-arrow{color:var(--n8x-muted)}
+    .n8x-foot{display:flex;justify-content:space-between;gap:10px;padding:11px 15px;border-top:1px solid var(--n8x-line);color:var(--n8x-muted);font-size:10px}.n8x-empty{padding:28px 14px;text-align:center;color:var(--n8x-muted);font-size:12px}
+    #n8x-toast{position:fixed;left:50%;bottom:78px;z-index:2147483647;max-width:calc(100vw - 28px);transform:translate(-50%,18px);padding:10px 14px;border:1px solid var(--n8x-line);border-radius:10px;color:var(--n8x-ink);background:var(--n8x-bg);box-shadow:var(--n8x-shadow);font:700 12px/1.3 system-ui,sans-serif;opacity:0;pointer-events:none;transition:.2s}#n8x-toast.n8x-show{opacity:1;transform:translate(-50%,0)}
+    html[data-n8x-calm="true"] body>*:not(#n8x-shell):not(#n8x-progress):not(#n8x-toast):not(#n8x-skip){filter:saturate(.72) brightness(.86)}
+    html[data-n8x-calm="true"]{scroll-behavior:auto!important}
+    :focus-visible{outline:2px solid var(--n8x-cyan,#66e7ff);outline-offset:3px}
+    @media(max-width:620px){#n8x-shell{right:0;bottom:max(8px,env(safe-area-inset-bottom))}#n8x-shell[data-n8x-side="left"]{left:0;right:auto}#n8x-dock{display:grid;grid-template-columns:36px;gap:3px;max-width:none;padding:4px;border-radius:14px 0 0 14px}#n8x-shell[data-n8x-side="left"] #n8x-dock{border-radius:0 14px 14px 0}#n8x-shell[data-n8x-expanded="true"] #n8x-dock{grid-template-columns:repeat(2,36px)}.n8x-btn,.n8x-link{min-width:36px;min-height:36px;padding:5px;font-size:15px}#n8x-panel{right:46px;bottom:0;width:min(360px,calc(100vw - 54px));max-height:min(560px,calc(100dvh - 16px));border-radius:16px}#n8x-shell[data-n8x-side="left"] #n8x-panel{left:46px;right:auto}.n8x-head{padding:12px 13px 9px}#n8x-search{width:calc(100% - 20px);min-height:40px;margin:0 10px 7px}#n8x-list{padding:3px 7px 9px}.n8x-page{grid-template-columns:31px 1fr auto;gap:7px;min-height:44px;padding:5px}.n8x-num{width:28px;height:28px}.n8x-foot{padding:8px 11px}.n8x-foot span:last-child{display:none}}
+    @media(max-width:380px){#n8x-panel{width:calc(100vw - 50px);right:42px}#n8x-shell[data-n8x-side="left"] #n8x-panel{left:42px;right:auto}.n8x-copy span{display:none}}
+    @media(prefers-reduced-motion:reduce){#n8x-shell *,#n8x-skip,#n8x-toast{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+    @media print{#n8x-shell,#n8x-progress,#n8x-toast,#n8x-skip{display:none!important}}
+  </style>
+  <!-- N8-ENHANCEMENTS:HEAD:END -->
+</head>
+<body>
+
+    <header>
+        <h1>Cyber-Count CalcuN8r</h1>
+        <div class="subtitle">EDISON HWY // INVENTORY PROTOCOL</div>
+        <button id="fullscreen-btn" class="btn-fullscreen">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+            <span>FULLSCREEN</span>
+        </button>
+    </header>
+
+    <div class="calc-grid" id="calculator-container"></div>
+
+    <div class="terminal-panel collapsed" id="terminal-drawer">
+        <div class="terminal-header" onclick="toggleDrawer()">
+            <span>DATA VAULT // ACTION LOG</span>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span id="global-total" style="color: var(--energon);">SYSTEM READY</span>
+                <svg class="toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+        </div>
+        <div class="terminal-content">
+            <table id="log-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Brand</th>
+                        <th>Type</th>
+                        <th>Lot(s)</th>
+                        <th>Location(s)</th>
+                        <th>P-R-C-U / P-R-U</th>
+                        <th>Total Cans</th>
+                    </tr>
+                </thead>
+                <tbody id="log-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // --- TERMINAL DRAWER LOGIC ---
+        function toggleDrawer() {
+            const drawer = document.getElementById('terminal-drawer');
+            drawer.classList.toggle('collapsed');
+        }
+
+        // Open the drawer automatically when you log a count, so you see it worked
+        function openDrawer() {
+            const drawer = document.getElementById('terminal-drawer');
+            drawer.classList.remove('collapsed');
+        }
+
+        // --- FULLSCREEN LOGIC ---
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const fullscreenText = fullscreenBtn.querySelector('span');
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch((err) => {
+                    console.warn(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        fullscreenBtn.addEventListener('click', toggleFullScreen);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F11') {
+                e.preventDefault(); 
+                toggleFullScreen();
+            }
+        });
+
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                fullscreenText.innerText = 'EXIT FULLSCREEN';
+                fullscreenBtn.classList.add('active');
+            } else {
+                fullscreenText.innerText = 'FULLSCREEN';
+                fullscreenBtn.classList.remove('active');
+            }
+        });
+
+
+        // --- CALCULATOR LOGIC ---
+        const metricsData = [
+            { id: "popz", name: "Popz", filled: { p_total: 2400, r_total: 10, c_total: 24, spec: "24-Pack" }, empty: { p_total: 8169, r_total: 21, spec: "12 oz / 202" } },
+            { id: "frost", name: "Frost & Summer Frost", filled: { p_total: 1680, r_total: 7, c_total: 12, spec: "12-Pack" }, empty: { p_total: 6224, r_total: 16, spec: "16 oz / 202" } },
+            { id: "gridlock", name: "Gridlock", filled: { p_total: 1680, r_total: 7, c_total: 12, spec: "12-Pack" }, empty: { p_total: 6224, r_total: 16, spec: "12 oz Sleek" } },
+            { id: "waves", name: "Waves", filled: { p_total: 2496, r_total: 8, c_total: 24, spec: "24-Pack" }, empty: { p_total: 8096, r_total: 16, spec: "12 oz Sleek" } },
+            { id: "bellevie", name: "Belle Vie", filled: { p_total: 2400, r_total: 10, c_total: 24, spec: "24-Pack" }, empty: { p_total: 8169, r_total: 21, spec: "12 oz / 202" } }
+        ];
+
+        const container = document.getElementById('calculator-container');
+        const logBody = document.getElementById('log-body');
+
+        // Generator Engine
+        metricsData.forEach(brand => {
+            const fRowsPerPallet = brand.filled.p_total / brand.filled.r_total;
+            const eRowsPerPallet = brand.empty.p_total / brand.empty.r_total;
+
+            const cardHTML = `
+                <div class="calc-card" id="card-${brand.id}">
+                    <div class="card-header">${brand.name}</div>
+                    
+                    <div class="meta-inputs">
+                        <input type="text" id="${brand.id}-lot" placeholder="LOT CODE(S)">
+                        <input type="text" id="${brand.id}-loc" placeholder="LOCATION(S)">
+                    </div>
+                    
+                    <div class="calc-section">
+                        <div class="section-title">
+                            FILLED CANS <span class="spec-tag">${brand.filled.spec}</span>
+                        </div>
+                        <div class="input-group four-col">
+                            <div class="input-field">
+                                <label>P (x${brand.filled.p_total})</label>
+                                <input type="number" id="${brand.id}-f-p" min="0" placeholder="0">
+                            </div>
+                            <div class="input-field">
+                                <label>R (x${fRowsPerPallet})</label>
+                                <input type="number" id="${brand.id}-f-r" min="0" placeholder="0">
+                            </div>
+                            <div class="input-field">
+                                <label>C (x${brand.filled.c_total})</label>
+                                <input type="number" id="${brand.id}-f-c" min="0" placeholder="0">
+                            </div>
+                            <div class="input-field">
+                                <label>U (x1)</label>
+                                <input type="number" id="${brand.id}-f-u" min="0" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="result-box">
+                            <span class="result-label">FILLED TOTAL:</span>
+                            <span class="result-value" id="${brand.id}-f-total" data-val="0">0</span>
+                        </div>
+                    </div>
+
+                    <div class="calc-section">
+                        <div class="section-title">
+                            EMPTY CANS <span class="spec-tag">${brand.empty.spec}</span>
+                        </div>
+                        <div class="input-group three-col">
+                            <div class="input-field">
+                                <label>P (x${brand.empty.p_total})</label>
+                                <input type="number" id="${brand.id}-e-p" min="0" placeholder="0">
+                            </div>
+                            <div class="input-field">
+                                <label>R (x${Math.round(eRowsPerPallet)})</label>
+                                <input type="number" id="${brand.id}-e-r" min="0" placeholder="0">
+                            </div>
+                            <div class="input-field">
+                                <label>U (x1)</label>
+                                <input type="number" id="${brand.id}-e-u" min="0" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="result-box" style="border-left-color: var(--vibranium);">
+                            <span class="result-label">EMPTY TOTAL:</span>
+                            <span class="result-value" style="color: var(--excalibur);" id="${brand.id}-e-total" data-val="0">0</span>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn-clear" onclick="clearCard('${brand.id}')">CLEAR</button>
+                        <button class="btn-log" onclick="logCard('${brand.id}', '${brand.name}')">LOG COUNT</button>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', cardHTML);
+        });
+
+        // Calculation Engine
+        metricsData.forEach(brand => {
+            const fRowsPerPallet = brand.filled.p_total / brand.filled.r_total;
+            const eRowsPerPallet = brand.empty.p_total / brand.empty.r_total;
+
+            const fp = document.getElementById(`${brand.id}-f-p`);
+            const fr = document.getElementById(`${brand.id}-f-r`);
+            const fc = document.getElementById(`${brand.id}-f-c`);
+            const fu = document.getElementById(`${brand.id}-f-u`);
+            const fTotal = document.getElementById(`${brand.id}-f-total`);
+
+            const ep = document.getElementById(`${brand.id}-e-p`);
+            const er = document.getElementById(`${brand.id}-e-r`);
+            const eu = document.getElementById(`${brand.id}-e-u`);
+            const eTotal = document.getElementById(`${brand.id}-e-total`);
+
+            const calcFilled = () => {
+                const p = parseInt(fp.value) || 0;
+                const r = parseInt(fr.value) || 0;
+                const c = parseInt(fc.value) || 0;
+                const u = parseInt(fu.value) || 0;
+                const total = (p * brand.filled.p_total) + (r * fRowsPerPallet) + (c * brand.filled.c_total) + u;
+                fTotal.innerText = total.toLocaleString();
+                fTotal.setAttribute('data-val', total);
+            };
+
+            const calcEmpty = () => {
+                const p = parseInt(ep.value) || 0;
+                const r = parseInt(er.value) || 0;
+                const u = parseInt(eu.value) || 0;
+                const total = (p * brand.empty.p_total) + (r * Math.round(eRowsPerPallet)) + u;
+                eTotal.innerText = total.toLocaleString();
+                eTotal.setAttribute('data-val', total);
+            };
+
+            [fp, fr, fc, fu].forEach(input => input.addEventListener('input', calcFilled));
+            [ep, er, eu].forEach(input => input.addEventListener('input', calcEmpty));
+        });
+
+        // Clear Card
+        function clearCard(brandId) {
+            const inputs = document.querySelectorAll(`#card-${brandId} input[type="number"], #card-${brandId} input[type="text"]`);
+            inputs.forEach(input => input.value = '');
+            
+            document.getElementById(`${brandId}-f-total`).innerText = '0';
+            document.getElementById(`${brandId}-f-total`).setAttribute('data-val', '0');
+            
+            document.getElementById(`${brandId}-e-total`).innerText = '0';
+            document.getElementById(`${brandId}-e-total`).setAttribute('data-val', '0');
+        }
+
+        // Log Count
+        function logCard(brandId, brandName) {
+            const lot = document.getElementById(`${brandId}-lot`).value || 'N/A';
+            const loc = document.getElementById(`${brandId}-loc`).value || 'N/A';
+            
+            const fp = document.getElementById(`${brandId}-f-p`).value || '0';
+            const fr = document.getElementById(`${brandId}-f-r`).value || '0';
+            const fc = document.getElementById(`${brandId}-f-c`).value || '0';
+            const fu = document.getElementById(`${brandId}-f-u`).value || '0';
+            const fTotal = parseInt(document.getElementById(`${brandId}-f-total`).getAttribute('data-val'));
+
+            const ep = document.getElementById(`${brandId}-e-p`).value || '0';
+            const er = document.getElementById(`${brandId}-e-r`).value || '0';
+            const eu = document.getElementById(`${brandId}-e-u`).value || '0';
+            const eTotal = parseInt(document.getElementById(`${brandId}-e-total`).getAttribute('data-val'));
+
+            const timeString = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+
+            let logged = false;
+
+            if(fTotal > 0) {
+                appendLog(timeString, brandName, 'Filled', lot, loc, `${fp}p - ${fr}r - ${fc}c - ${fu}u`, fTotal);
+                logged = true;
+            }
+            if(eTotal > 0) {
+                appendLog(timeString, brandName, 'Empty', lot, loc, `${ep}p - ${er}r - ${eu}u`, eTotal);
+                logged = true;
+            }
+
+            if(!logged) {
+                alert("No counts entered to log.");
+            } else {
+                clearCard(brandId);
+                openDrawer(); // Pop the drawer open so you know it logged successfully
+            }
+        }
+
+        function appendLog(time, brand, type, lot, loc, prcu, total) {
+            const row = `
+                <tr>
+                    <td>${time}</td>
+                    <td>${brand}</td>
+                    <td style="color: ${type === 'Filled' ? 'var(--energon)' : 'var(--vibranium)'};">${type}</td>
+                    <td>${lot}</td>
+                    <td>${loc}</td>
+                    <td>${prcu}</td>
+                    <td class="row-total">${total.toLocaleString()}</td>
+                </tr>
+            `;
+            logBody.insertAdjacentHTML('afterbegin', row);
+        }
+    </script>
+    <input type="text" inputmode="none" />
+<!-- N8-ENHANCEMENTS:BODY:START -->
+  <a id="n8x-skip" href="#n8x-content">Skip to page content</a>
+  <div id="n8x-progress" aria-hidden="true"></div>
+  <div id="n8x-content" tabindex="-1"></div>
+  <aside id="n8x-shell" aria-label="N8 CyberDev navigation">
+    <section id="n8x-panel" aria-hidden="true" aria-label="All Qamelot pages">
+      <div class="n8x-head"><div><strong>Qamelot Menu</strong><small>Search every live N8 experience</small></div><button class="n8x-btn" id="n8x-close" type="button" aria-label="Close menu">×</button></div>
+      <label for="n8x-search" style="position:absolute;clip:rect(0 0 0 0)">Search pages</label><input id="n8x-search" type="search" placeholder="Search tools, games, studios…" autocomplete="off" spellcheck="false">
+      <nav id="n8x-list" aria-label="Every Qamelot page"><a class="n8x-page" href="acai-adaptive-cyber-analysis-interface.html" data-search="acai // adaptive cyber analysis interface acai-adaptive-cyber-analysis-interface.html experiments &amp; archives"><span class="n8x-num">01</span><span class="n8x-copy"><b>ACAI // Adaptive Cyber Analysis Interface</b><span>Experiments &amp; Archives · acai-adaptive-cyber-analysis-interface.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AHub.html" data-search="n8 asset hub n8ahub.html developer studios"><span class="n8x-num">02</span><span class="n8x-copy"><b>N8 Asset Hub</b><span>Developer Studios · n8AHub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AHubPrime.html" data-search="n8 asset hub prime n8ahubprime.html developer studios"><span class="n8x-num">03</span><span class="n8x-copy"><b>N8 Asset Hub Prime</b><span>Developer Studios · n8AHubPrime.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="who-road-convo-lab.html" data-search="who//road — neon conversation lab who-road-convo-lab.html experiments &amp; archives"><span class="n8x-num">04</span><span class="n8x-copy"><b>WHO//ROAD — Neon Conversation Lab</b><span>Experiments &amp; Archives · who-road-convo-lab.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="blood-and-gold-panther-arena.html" data-search="blood &amp; gold: panther arena blood-and-gold-panther-arena.html games &amp; simulations"><span class="n8x-num">05</span><span class="n8x-copy"><b>Blood &amp; Gold: Panther Arena</b><span>Games &amp; Simulations · blood-and-gold-panther-arena.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="cyber-count-calcun8r-edison-hwy.html" data-search="cyber-count calcun8r // edison hwy cyber-count-calcun8r-edison-hwy.html experiments &amp; archives"><span class="n8x-num">06</span><span class="n8x-copy"><b>CYBER-COUNT CALCUN8R // EDISON HWY</b><span>Experiments &amp; Archives · cyber-count-calcun8r-edison-hwy.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="social-footer.html" data-search="social footer social-footer.html experiments &amp; archives"><span class="n8x-num">07</span><span class="n8x-copy"><b>Social Footer</b><span>Experiments &amp; Archives · social-footer.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="cyber-data-multi-team-logistics-engine.html" data-search="cyber-data // multi-team logistics engine cyber-data-multi-team-logistics-engine.html experiments &amp; archives"><span class="n8x-num">08</span><span class="n8x-copy"><b>CYBER-DATA // MULTI-TEAM LOGISTICS ENGINE</b><span>Experiments &amp; Archives · cyber-data-multi-team-logistics-engine.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="contractor-tool-belt-tactical-utility-engine.html" data-search="contractor tool belt - tactical utility engine contractor-tool-belt-tactical-utility-engine.html tools &amp; productivity"><span class="n8x-num">09</span><span class="n8x-copy"><b>Contractor Tool Belt - Tactical Utility Engine</b><span>Tools &amp; Productivity · contractor-tool-belt-tactical-utility-engine.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qtd-courage-under-fire.html" data-search="qamelot tower defense: courage under fire qtd-courage-under-fire.html games &amp; simulations"><span class="n8x-num">10</span><span class="n8x-copy"><b>Qamelot Tower Defense: Courage Under Fire</b><span>Games &amp; Simulations · qtd-courage-under-fire.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="css-visuals-library-40.html" data-search="css visuals library (40) css-visuals-library-40.html tools &amp; productivity"><span class="n8x-num">11</span><span class="n8x-copy"><b>CSS Visuals Library (40)</b><span>Tools &amp; Productivity · css-visuals-library-40.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-hub.html" data-search="devdashboard hub devdashboard-hub.html developer studios"><span class="n8x-num">12</span><span class="n8x-copy"><b>DevDashboard Hub</b><span>Developer Studios · devdashboard-hub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="blob-bash-royale.html" data-search="blob bash royale: ascension blob-bash-royale.html games &amp; simulations"><span class="n8x-num">13</span><span class="n8x-copy"><b>Blob Bash Royale: Ascension</b><span>Games &amp; Simulations · blob-bash-royale.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="web-app-dev-dashboard.html" data-search="⚡ web app dev dashboard web-app-dev-dashboard.html developer studios"><span class="n8x-num">14</span><span class="n8x-copy"><b>⚡ Web App Dev Dashboard</b><span>Developer Studios · web-app-dev-dashboard.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AnimHub.html" data-search="🪃 n8 animation hub n8animhub.html developer studios"><span class="n8x-num">15</span><span class="n8x-copy"><b>🪃 N8 Animation Hub</b><span>Developer Studios · n8AnimHub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="MiyagiThrow.html" data-search="🥷🏾 miyagi throw! miyagithrow.html games &amp; simulations"><span class="n8x-num">16</span><span class="n8x-copy"><b>🥷🏾 Miyagi Throw!</b><span>Games &amp; Simulations · MiyagiThrow.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="push-complete.html" data-search="push complete push-complete.html developer studios"><span class="n8x-num">17</span><span class="n8x-copy"><b>Push Complete</b><span>Developer Studios · push-complete.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-conquest-super-arcade-edition.html" data-search="qamelot conquest: super arcade edition qamelot-conquest-super-arcade-edition.html games &amp; simulations"><span class="n8x-num">18</span><span class="n8x-copy"><b>Qamelot Conquest: Super Arcade Edition</b><span>Games &amp; Simulations · qamelot-conquest-super-arcade-edition.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdash-svg-studio.html" data-search="devdash svg studio devdash-svg-studio.html developer studios"><span class="n8x-num">20</span><span class="n8x-copy"><b>DevDash SVG Studio</b><span>Developer Studios · devdash-svg-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="svg-sandbox-studio.html" data-search="svg sandbox studio svg-sandbox-studio.html developer studios"><span class="n8x-num">21</span><span class="n8x-copy"><b>SVG Sandbox Studio</b><span>Developer Studios · svg-sandbox-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="ecotechcomm-secure-ptt-link.html" data-search="ecotechcomm // secure ptt link ecotechcomm-secure-ptt-link.html featured sites"><span class="n8x-num">22</span><span class="n8x-copy"><b>EcoTechComm // Secure PTT Link</b><span>Featured Sites · ecotechcomm-secure-ptt-link.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="ecotechcomm-secure-frequency.html" data-search="ecotechcomm | secure frequency ecotechcomm-secure-frequency.html featured sites"><span class="n8x-num">23</span><span class="n8x-copy"><b>EcoTechComm | Secure Frequency</b><span>Featured Sites · ecotechcomm-secure-frequency.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-home.html" data-search="devdashboard home devdashboard-home.html experiments &amp; archives"><span class="n8x-num">24</span><span class="n8x-copy"><b>DevDashboard Home</b><span>Experiments &amp; Archives · devdashboard-home.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="homehub.html" data-search="homehub — command your day. build your future. homehub.html experiments &amp; archives"><span class="n8x-num">25</span><span class="n8x-copy"><b>HomeHub — Command Your Day. Build Your Future.</b><span>Experiments &amp; Archives · homehub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="mecha-strike.html" data-search="mecha strike: transformer protocol v5 mecha-strike.html games &amp; simulations"><span class="n8x-num">26</span><span class="n8x-copy"><b>Mecha Strike: Transformer Protocol v5</b><span>Games &amp; Simulations · mecha-strike.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="lattice-a-the-ai-context-lab.html" data-search="lattice — the ai context lab lattice-a-the-ai-context-lab.html experiments &amp; archives"><span class="n8x-num">28</span><span class="n8x-copy"><b>Lattice — The AI Context Lab</b><span>Experiments &amp; Archives · lattice-a-the-ai-context-lab.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="loc-me-in-llc.html" data-search="loc me in | premium braids &amp; locs artistry edgewood loc-me-in-llc.html featured sites"><span class="n8x-num">29</span><span class="n8x-copy"><b>Loc Me In | Premium Braids &amp; Locs Artistry Edgewood</b><span>Featured Sites · loc-me-in-llc.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="eco-tech-motion-library.html" data-search="eco-tech motion library eco-tech-motion-library.html tools &amp; productivity"><span class="n8x-num">30</span><span class="n8x-copy"><b>Eco-Tech Motion Library</b><span>Tools &amp; Productivity · eco-tech-motion-library.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8Prompt.html" data-search="build//50 — ai webbuilding prompt deck n8prompt.html tools &amp; productivity"><span class="n8x-num">31</span><span class="n8x-copy"><b>BUILD//50 — AI Webbuilding Prompt Deck</b><span>Tools &amp; Productivity · n8Prompt.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="neon-pong.html" data-search="neon pong neon-pong.html games &amp; simulations"><span class="n8x-num">32</span><span class="n8x-copy"><b>Neon Pong</b><span>Games &amp; Simulations · neon-pong.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="new-perspective-painting-llc.html" data-search="new perspective painting llc new-perspective-painting-llc.html featured sites"><span class="n8x-num">33</span><span class="n8x-copy"><b>New Perspective Painting LLC</b><span>Featured Sites · new-perspective-painting-llc.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="pulse-productivity-and-biorhythm-studio.html" data-search="pulse // productivity &amp; biorhythm studio pulse-productivity-and-biorhythm-studio.html tools &amp; productivity"><span class="n8x-num">34</span><span class="n8x-copy"><b>Pulse // Productivity &amp; Biorhythm Studio</b><span>Tools &amp; Productivity · pulse-productivity-and-biorhythm-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="index.html" data-search="qamelot menu — every webpage index.html experiments &amp; archives"><span class="n8x-num">35</span><span class="n8x-copy"><b>Qamelot Menu — Every Webpage</b><span>Experiments &amp; Archives · index.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="tri-nexus-grail-matrix.html" data-search="tri-nexus: grail matrix tri-nexus-grail-matrix.html games &amp; simulations"><span class="n8x-num">37</span><span class="n8x-copy"><b>TRI-NEXUS: GRAIL MATRIX</b><span>Games &amp; Simulations · tri-nexus-grail-matrix.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamomathcore-sci-fi-nexus.html" data-search="qamomathcore // sci-fi_nexus qamomathcore-sci-fi-nexus.html games &amp; simulations"><span class="n8x-num">38</span><span class="n8x-copy"><b>QamoMathCore // SCI-FI_NEXUS</b><span>Games &amp; Simulations · qamomathcore-sci-fi-nexus.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-math-core.html" data-search="qamelot // math_core qamelot-math-core.html tools &amp; productivity"><span class="n8x-num">39</span><span class="n8x-copy"><b>QAMELOT // MATH_CORE</b><span>Tools &amp; Productivity · qamelot-math-core.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-1.html" data-search="qamelot media component qamelot-media-1.html experiments &amp; archives"><span class="n8x-num">40</span><span class="n8x-copy"><b>Qamelot Media Component</b><span>Experiments &amp; Archives · qamelot-media-1.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-2.html" data-search="qamelot media component qamelot-media-2.html experiments &amp; archives"><span class="n8x-num">41</span><span class="n8x-copy"><b>Qamelot Media Component</b><span>Experiments &amp; Archives · qamelot-media-2.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-3.html" data-search="qamelot media - forward flick edition qamelot-media-3.html experiments &amp; archives"><span class="n8x-num">42</span><span class="n8x-copy"><b>Qamelot Media - Forward Flick Edition</b><span>Experiments &amp; Archives · qamelot-media-3.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="screensaver.html" data-search="interactive nebula screensaver screensaver.html experiments &amp; archives"><span class="n8x-num">43</span><span class="n8x-copy"><b>Interactive Nebula Screensaver</b><span>Experiments &amp; Archives · screensaver.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="spriteforge-studio.html" data-search="spriteforge studio spriteforge-studio.html experiments &amp; archives"><span class="n8x-num">44</span><span class="n8x-copy"><b>SpriteForge Studio</b><span>Experiments &amp; Archives · spriteforge-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="stix-stax-stonz.html" data-search="stix stax stonz: cyber camelot stix-stax-stonz.html games &amp; simulations"><span class="n8x-num">45</span><span class="n8x-copy"><b>Stix Stax Stonz: Cyber Camelot</b><span>Games &amp; Simulations · stix-stax-stonz.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="task-forge.html" data-search="task forge task-forge.html experiments &amp; archives"><span class="n8x-num">46</span><span class="n8x-copy"><b>Task Forge</b><span>Experiments &amp; Archives · task-forge.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8-tools.html" data-search="n8 tools — your browser workbench n8-tools.html tools &amp; productivity"><span class="n8x-num">47</span><span class="n8x-copy"><b>N8 Tools — Your browser workbench</b><span>Tools &amp; Productivity · n8-tools.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-hub-index.html" data-search="devdashboard hub devdashboard-hub-index.html experiments &amp; archives"><span class="n8x-num">48</span><span class="n8x-copy"><b>DevDashboard Hub</b><span>Experiments &amp; Archives · devdashboard-hub-index.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="funPromptz.html" data-search="funpromptz — creative media prompt arcade funpromptz.html tools &amp; productivity"><span class="n8x-num">49</span><span class="n8x-copy"><b>funPromptz — Creative Media Prompt Arcade</b><span>Tools &amp; Productivity · funPromptz.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="masterPrompt.html" data-search="masterprompt — animated ai webbuilding command deck masterprompt.html tools &amp; productivity"><span class="n8x-num">50</span><span class="n8x-copy"><b>masterPrompt — Animated AI Webbuilding Command Deck</b><span>Tools &amp; Productivity · masterPrompt.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="QamelotMenu.html" data-search="qamelot menu — compatibility directory qamelotmenu.html experiments &amp; archives"><span class="n8x-num">51</span><span class="n8x-copy"><b>Qamelot Menu — Compatibility Directory</b><span>Experiments &amp; Archives · QamelotMenu.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a></nav>
+      <div class="n8x-foot"><span id="n8x-count">48 pages</span><span>/ search · Esc close · Alt+M menu</span></div>
+    </section>
+    <nav id="n8x-dock" aria-label="Quick page controls">
+      <a class="n8x-link n8x-primary" href="index.html" aria-label="Open Qamelot home" title="Home (Alt+H)">⌂</a>
+      <button class="n8x-btn" id="n8x-open" type="button" aria-expanded="false" aria-controls="n8x-panel" aria-label="Browse every page" title="All pages (Alt+M)">☰</button>
+      <a class="n8x-link n8x-secondary" href="blood-and-gold-panther-arena.html" aria-label="Previous page: Blood &amp; Gold: Panther Arena" title="Previous page">←</a>
+      <a class="n8x-link n8x-secondary" href="social-footer.html" aria-label="Next page: Social Footer" title="Next page">→</a>
+      <button class="n8x-btn n8x-secondary" id="n8x-random" type="button" aria-label="Open a random page" title="Random page (Alt+R)">⚄</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-share" type="button" aria-label="Share or copy this page link" title="Share page">↗</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-calm" type="button" aria-pressed="false" aria-label="Toggle calm viewing mode" title="Calm mode">◐</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-full" type="button" aria-label="Toggle fullscreen" title="Fullscreen">⛶</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+      <button class="n8x-btn" id="n8x-more" type="button" aria-expanded="false" aria-label="Show more controls" title="More controls">•••</button>
+      <button class="n8x-btn" id="n8x-move" type="button" aria-label="Move controls to the other side" title="Move controls">⇆</button>
+      <button class="n8x-btn" id="n8x-hide" type="button" aria-label="Hide floating controls" title="Hide controls">−</button>
+    </nav>
+    <button id="n8x-restore" type="button" aria-label="Show N8 controls" title="Show controls">N8</button>
+  </aside>
+  <div id="n8x-toast" role="status" aria-live="polite"></div>
+  <script id="n8x-script">
+  (()=>{
+    const pages=["acai-adaptive-cyber-analysis-interface.html","n8AHub.html","n8AHubPrime.html","who-road-convo-lab.html","blood-and-gold-panther-arena.html","cyber-count-calcun8r-edison-hwy.html","social-footer.html","cyber-data-multi-team-logistics-engine.html","contractor-tool-belt-tactical-utility-engine.html","qtd-courage-under-fire.html","css-visuals-library-40.html","devdashboard-hub.html","blob-bash-royale.html","web-app-dev-dashboard.html","n8AnimHub.html","MiyagiThrow.html","push-complete.html","qamelot-conquest-super-arcade-edition.html","devdash-svg-studio.html","svg-sandbox-studio.html","ecotechcomm-secure-ptt-link.html","ecotechcomm-secure-frequency.html","devdashboard-home.html","homehub.html","mecha-strike.html","lattice-a-the-ai-context-lab.html","loc-me-in-llc.html","eco-tech-motion-library.html","n8Prompt.html","neon-pong.html","new-perspective-painting-llc.html","pulse-productivity-and-biorhythm-studio.html","index.html","tri-nexus-grail-matrix.html","qamomathcore-sci-fi-nexus.html","qamelot-math-core.html","qamelot-media-1.html","qamelot-media-2.html","qamelot-media-3.html","screensaver.html","spriteforge-studio.html","stix-stax-stonz.html","task-forge.html","n8-tools.html","devdashboard-hub-index.html","funPromptz.html","masterPrompt.html","QamelotMenu.html"];
+    const shell=document.getElementById('n8x-shell'),panel=document.getElementById('n8x-panel'),open=document.getElementById('n8x-open'),search=document.getElementById('n8x-search'),list=document.getElementById('n8x-list'),toast=document.getElementById('n8x-toast'),more=document.getElementById('n8x-more');
+    const readSetting=(key,fallback)=>{try{return localStorage.getItem(key)??fallback}catch{return fallback}},writeSetting=(key,value)=>{try{localStorage.setItem(key,value)}catch{}};
+    shell.dataset.n8xSide=readSetting('n8x-side','right')==='left'?'left':'right';shell.dataset.n8xHidden=String(readSetting('n8x-hidden','false')==='true');shell.dataset.n8xExpanded='false';
+    const showToast=(message)=>{toast.textContent=message;toast.classList.add('n8x-show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('n8x-show'),2200)};
+    const setExpanded=(active)=>{shell.dataset.n8xExpanded=String(active);more.setAttribute('aria-expanded',String(active));more.setAttribute('aria-label',active?'Show fewer controls':'Show more controls')};
+    const setMenu=(visible,returnFocus=true)=>{if(visible){shell.dataset.n8xHidden='false';writeSetting('n8x-hidden','false');setExpanded(false)}panel.setAttribute('aria-hidden',String(!visible));open.setAttribute('aria-expanded',String(visible));if(visible){search.focus();search.select()}else if(returnFocus&&shell.dataset.n8xHidden!=='true')open.focus()};
+    const setHidden=(hidden)=>{setMenu(false,false);shell.dataset.n8xHidden=String(hidden);writeSetting('n8x-hidden',String(hidden));if(!hidden)open.focus()};
+    open.addEventListener('click',()=>setMenu(panel.getAttribute('aria-hidden')==='true'));
+    document.getElementById('n8x-close').addEventListener('click',()=>setMenu(false));
+    more.addEventListener('click',()=>setExpanded(shell.dataset.n8xExpanded!=='true'));
+    document.getElementById('n8x-move').addEventListener('click',()=>{const side=shell.dataset.n8xSide==='left'?'right':'left';shell.dataset.n8xSide=side;writeSetting('n8x-side',side);showToast('Controls moved '+side)});
+    document.getElementById('n8x-hide').addEventListener('click',()=>setHidden(true));
+    document.getElementById('n8x-restore').addEventListener('click',()=>setHidden(false));
+    search.addEventListener('input',()=>{const query=search.value.trim().toLowerCase();let shown=0;list.querySelectorAll('.n8x-page').forEach(link=>{const match=!query||link.dataset.search.includes(query);link.hidden=!match;if(match)shown++});document.getElementById('n8x-count').textContent=shown+' page'+(shown===1?'':'s')});
+    document.getElementById('n8x-random').addEventListener('click',()=>{const choices=pages.filter(file=>file!=="cyber-count-calcun8r-edison-hwy.html");location.href=choices[Math.floor(Math.random()*choices.length)]||'index.html'});
+    document.getElementById('n8x-share').addEventListener('click',async()=>{const data={title:document.title,text:'Explore '+document.title,url:location.href};try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(location.href);showToast('Live page link copied')}}catch(error){if(error.name!=='AbortError')showToast('Use the address bar to copy this link')}});
+    const calm=document.getElementById('n8x-calm');const saved=localStorage.getItem('n8x-calm')==='true';document.documentElement.dataset.n8xCalm=String(saved);calm.setAttribute('aria-pressed',String(saved));calm.addEventListener('click',()=>{const active=document.documentElement.dataset.n8xCalm!=='true';document.documentElement.dataset.n8xCalm=String(active);calm.setAttribute('aria-pressed',String(active));localStorage.setItem('n8x-calm',String(active));showToast(active?'Calm mode on':'Calm mode off')});
+    document.getElementById('n8x-full').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(error){showToast('Fullscreen is unavailable here')}});
+    document.getElementById('n8x-top').addEventListener('click',()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
+    const progress=document.getElementById('n8x-progress');const updateProgress=()=>{const max=document.documentElement.scrollHeight-innerHeight;progress.style.width=(max>0?Math.min(100,scrollY/max*100):0)+'%'};addEventListener('scroll',updateProgress,{passive:true});addEventListener('resize',updateProgress,{passive:true});updateProgress();
+    document.addEventListener('pointerdown',event=>{if(panel.getAttribute('aria-hidden')==='false'&&!shell.contains(event.target))setMenu(false,false)},{capture:true});
+    document.addEventListener('keydown',event=>{const typing=/input|textarea|select/i.test(document.activeElement?.tagName||'');if(event.key==='Escape'&&panel.getAttribute('aria-hidden')==='false'){event.preventDefault();setMenu(false)}else if(event.key==='/'&&!typing){event.preventDefault();setMenu(true)}else if(event.altKey&&event.key.toLowerCase()==='m'){event.preventDefault();setMenu(panel.getAttribute('aria-hidden')==='true')}else if(event.altKey&&event.key.toLowerCase()==='h'){event.preventDefault();location.href='index.html'}else if(event.altKey&&event.key.toLowerCase()==='r'){event.preventDefault();document.getElementById('n8x-random').click()}});
+    document.querySelectorAll('a[target="_blank"]').forEach(link=>{const rel=new Set((link.rel||'').split(/s+/).filter(Boolean));rel.add('noopener');rel.add('noreferrer');link.rel=[...rel].join(' ')});
+  })();
+  </script>
+  <!-- N8-ENHANCEMENTS:BODY:END -->
+</body>
+</html>

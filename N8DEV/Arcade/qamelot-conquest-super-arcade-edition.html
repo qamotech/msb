@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qamelot Conquest: Super Arcade Edition</title>
+    <!-- Favicon -->
+    <!-- Google Fonts: Modern & Tech Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --neon-green: #39ff14;
+            --neon-pink: #ffb703;
+            --neon-purple: #8a4fcf;
+            --neon-gold: #cfb997;
+            --neon-red: #ff3333;
+            --neon-blue: #8a4fcf;
+            
+            --bg-color: #0a060d;
+            --panel-bg: rgba(22, 14, 28, 0.85);
+            --border-color: #8a4fcf;
+            --text-color: #fcf9f2;
+            --glow-color: rgba(138, 79, 207, 0.3);
+            
+            --font-pixel: 'Orbitron', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-ui: 'Outfit', sans-serif;
+        }
+
+        body.theme-matrix {
+            --bg-color: #010802;
+            --panel-bg: rgba(2, 18, 5, 0.9);
+            --border-color: var(--neon-green);
+            --glow-color: rgba(57, 255, 20, 0.35);
+        }
+
+        body.theme-sunset {
+            --bg-color: #0c0214;
+            --panel-bg: rgba(30, 2, 40, 0.85);
+            --border-color: var(--neon-pink);
+            --glow-color: rgba(255, 0, 127, 0.3);
+        }
+
+        body.theme-gold {
+            --bg-color: #0c0a02;
+            --panel-bg: rgba(25, 20, 2, 0.9);
+            --border-color: var(--neon-gold);
+            --glow-color: rgba(255, 183, 3, 0.3);
+        }
+
+        body.theme-plasma {
+            --bg-color: #0a0101;
+            --panel-bg: rgba(25, 2, 2, 0.9);
+            --border-color: var(--neon-red);
+            --glow-color: rgba(255, 51, 51, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-ui);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(13, 20, 40, 0.4) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(20, 10, 35, 0.4) 0px, transparent 50%);
+        }
+
+        /* --- Scanlines / Vignette Effect (Subtle 2000s glow) --- */
+        .glass-overlay {
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        /* --- Header styling --- */
+        header {
+            background: rgba(8, 8, 16, 0.85);
+            border-bottom: 2px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px var(--glow-color);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            z-index: 10;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .game-title {
+            font-family: var(--font-pixel);
+            font-size: 1.15rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--border-color);
+            background: linear-gradient(135deg, #fff 30%, var(--border-color) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- HUD Stats --- */
+        .hud-stats {
+            display: flex;
+            gap: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 0.45rem 1.25rem;
+            border-radius: 8px;
+            font-family: var(--font-pixel);
+            font-size: 0.8rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .hud-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* --- Game Main Wrapper --- */
+        .game-wrapper {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 290px 1fr 310px;
+            height: calc(100vh - 55px);
+            overflow: hidden;
+        }
+
+        /* --- Sidebars --- */
+        .sidebar {
+            background: var(--panel-bg);
+            border-right: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 1.25rem;
+            gap: 1.25rem;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            box-shadow: inset -5px 0 15px rgba(0,0,0,0.2);
+        }
+
+        .sidebar.right-sidebar {
+            border-right: none;
+            border-left: 2px solid var(--border-color);
+            box-shadow: inset 5px 0 15px rgba(0,0,0,0.2);
+        }
+
+        .panel-title {
+            font-family: var(--font-pixel);
+            font-size: 0.8rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px var(--border-color);
+        }
+
+        /* --- Game Canvas Container --- */
+        .canvas-container {
+            background: #010103;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex: 1;
+            overflow: hidden;
+            padding: 0.75rem;
+        }
+
+        canvas#game-canvas {
+            background: #020204;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 0 35px var(--glow-color);
+            display: block;
+            border-radius: 8px;
+        }
+
+        /* --- Action Cards / Upgrade Buttons --- */
+        .shop-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            transition: all 0.25s ease;
+        }
+
+        .shop-card:hover {
+            border-color: var(--border-color);
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .shop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-pixel);
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .shop-desc {
+            font-size: 0.8rem;
+            opacity: 0.75;
+            line-height: 1.35;
+        }
+
+        .shop-cost {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--border-color);
+            font-weight: 700;
+            margin: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .retro-btn {
+            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 0.55rem 1rem;
+            font-family: var(--font-pixel);
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .retro-btn:hover:not(:disabled) {
+            background: var(--border-color);
+            color: #000;
+            box-shadow: 0 0 15px var(--border-color), 0 4px 12px rgba(0,0,0,0.5);
+            transform: scale(1.02);
+        }
+
+        .retro-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.4);
+            box-shadow: none;
+        }
+
+        /* --- Console Log Area --- */
+        .bottom-console {
+            background: rgba(4, 4, 8, 0.95);
+            border-top: 2px solid var(--border-color);
+            height: 100px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            padding: 0.5rem 1.25rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            z-index: 10;
+        }
+
+        .console-line {
+            line-height: 1.4;
+            color: #a0a0b0;
+        }
+
+        .console-line.success { color: var(--border-color); filter: brightness(1.2); }
+        .console-line.error { color: #ff3333; }
+
+        /* --- Controls Info List --- */
+        .info-list {
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            background: rgba(0,0,0,0.4);
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.06);
+            line-height: 1.45;
+        }
+
+        /* --- Screen Overlay Modal --- */
+        .screen-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(4, 4, 10, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            z-index: 100;
+            text-align: center;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+        }
+
+        .overlay-title {
+            font-family: var(--font-pixel);
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-shadow: 0 0 25px var(--border-color);
+            animation: pulse 1.5s infinite;
+        }
+
+        .overlay-desc {
+            font-size: 0.95rem;
+            max-width: 440px;
+            line-height: 1.5;
+            color: #a5a5b5;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.03); opacity: 1; }
+        }
+
+        /* --- Powerups HUD --- */
+        .powerups-hud {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-family: var(--font-pixel);
+            font-size: 0.7rem;
+        }
+
+        .active-powerup-badge {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            padding: 0.35rem 0.65rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+
+        @media (max-width: 900px) {
+            header {
+                padding: 0.5rem 0.75rem;
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: stretch;
+            }
+            .hud-stats {
+                font-size: 0.7rem;
+                padding: 0.35rem 0.75rem;
+                justify-content: space-around;
+            }
+            .game-wrapper {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow-y: auto;
+            }
+            .sidebar {
+                display: none; /* Hide instructions and active timers on mobile */
+            }
+            .sidebar.right-sidebar {
+                display: flex; /* Keep upgrades active */
+                border-left: none;
+                border-top: 2px solid var(--border-color);
+                max-height: 480px;
+                overflow-y: auto;
+                padding: 1rem;
+            }
+            .canvas-container {
+                padding: 0.25rem;
+            }
+            canvas#game-canvas {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+    </style>
+<!-- N8-ENHANCEMENTS:HEAD:START -->
+  <meta name="description" content="Play Qamelot Conquest: Super Arcade Edition, an interactive browser game from the N8 CyberDev collection.">
+  <meta name="keywords" content="Qamelot Conquest: Super Arcade Edition, Games &amp; Simulations, N8 CyberDev, Qamelot, interactive web app, standalone HTML">
+  <meta name="author" content="N8 CyberDev / Qamelot">
+  <meta name="creator" content="N8 CyberDev">
+  <meta name="publisher" content="Qamelot">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#070b14">
+  <meta name="color-scheme" content="dark light">
+  <meta name="application-name" content="N8 CyberDev">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="n8-improvement-count" content="80">
+  <meta name="n8-feature-count" content="16">
+  <link rel="canonical" href="https://qamotech.github.io/DevDashboard/qamelot-conquest-super-arcade-edition.html">
+  <link rel="icon" type="image/png" sizes="128x128" href="n8-icon.png">
+  <link rel="shortcut icon" type="image/png" href="n8-icon.png">
+  <link rel="apple-touch-icon" href="n8-icon.png">
+  <link rel="manifest" href="qamelot-media-assets/site.webmanifest">
+  <link rel="stylesheet" href="n8-tools-transformers.css">
+  <script defer src="n8-tools-transformers.js"></script>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="N8 CyberDev">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="Qamelot Conquest: Super Arcade Edition">
+  <meta property="og:description" content="Play Qamelot Conquest: Super Arcade Edition, an interactive browser game from the N8 CyberDev collection.">
+  <meta property="og:url" content="https://qamotech.github.io/DevDashboard/qamelot-conquest-super-arcade-edition.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Qamelot Conquest: Super Arcade Edition">
+  <meta name="twitter:description" content="Play Qamelot Conquest: Super Arcade Edition, an interactive browser game from the N8 CyberDev collection.">
+  <style id="n8x-styles">
+    :root{--n8x-cyan:#66e7ff;--n8x-violet:#ae82ff;--n8x-ink:#f4fbff;--n8x-muted:#a8b7c8;--n8x-bg:rgba(5,10,18,.96);--n8x-line:rgba(102,231,255,.28);--n8x-shadow:0 18px 55px rgba(0,0,0,.55)}
+    #n8x-skip{position:fixed;left:12px;top:10px;z-index:2147483647;transform:translateY(-160%);padding:10px 14px;border-radius:9px;color:#031017;background:var(--n8x-cyan);font:800 13px/1.2 system-ui,sans-serif;text-decoration:none;transition:transform .18s}
+    #n8x-skip:focus{transform:none}
+    #n8x-shell,#n8x-shell *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    #n8x-shell{position:fixed;right:14px;bottom:14px;z-index:2147483000;color:var(--n8x-ink);line-height:1.4;touch-action:manipulation}
+    #n8x-shell[data-n8x-side="left"]{left:14px;right:auto}
+    #n8x-dock{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:5px;max-width:250px;padding:6px;border:1px solid var(--n8x-line);border-radius:15px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(18px) saturate(1.25);transition:.18s}
+    #n8x-shell:not([data-n8x-expanded="true"]) .n8x-secondary{display:none}
+    #n8x-shell[data-n8x-hidden="true"] #n8x-dock,#n8x-shell[data-n8x-hidden="true"] #n8x-panel{display:none}
+    #n8x-restore{display:none;place-items:center;width:34px;height:44px;border:1px solid var(--n8x-line);border-right:0;border-radius:12px 0 0 12px;color:var(--n8x-cyan);background:var(--n8x-bg);box-shadow:var(--n8x-shadow);font:900 10px/1 ui-monospace,monospace;letter-spacing:-.04em;cursor:pointer}
+    #n8x-shell[data-n8x-side="left"] #n8x-restore{border:1px solid var(--n8x-line);border-left:0;border-radius:0 12px 12px 0}
+    #n8x-shell[data-n8x-hidden="true"] #n8x-restore{display:grid}
+    .n8x-btn,.n8x-link{min-width:42px;min-height:42px;display:grid;place-items:center;border:1px solid transparent;border-radius:11px;padding:7px;color:var(--n8x-ink);background:transparent;text-decoration:none;cursor:pointer;font-size:18px;line-height:1;transition:background .18s,border-color .18s,transform .18s}
+    .n8x-btn:hover,.n8x-btn:focus-visible,.n8x-link:hover,.n8x-link:focus-visible{outline:0;border-color:var(--n8x-line);background:rgba(102,231,255,.12);transform:translateY(-2px)}
+    .n8x-primary{color:#041017;background:linear-gradient(135deg,var(--n8x-cyan),#a8f3ff)}
+    #n8x-progress{position:fixed;left:0;top:0;z-index:2147483646;width:0;height:3px;background:linear-gradient(90deg,var(--n8x-cyan),var(--n8x-violet));box-shadow:0 0 12px var(--n8x-cyan);pointer-events:none}
+    #n8x-panel{position:fixed;right:14px;bottom:70px;width:min(400px,calc(100vw - 28px));max-height:min(620px,calc(100vh - 96px));display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;border:1px solid var(--n8x-line);border-radius:18px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(22px) saturate(1.3);overflow:hidden;opacity:0;transform:translateY(18px) scale(.98);pointer-events:none;transition:.2s}
+    #n8x-shell[data-n8x-side="left"] #n8x-panel{left:14px;right:auto}
+    #n8x-panel[aria-hidden="false"]{opacity:1;transform:none;pointer-events:auto}
+    .n8x-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 17px 12px}.n8x-head strong{font-size:14px;letter-spacing:.08em;text-transform:uppercase}.n8x-head small{display:block;margin-top:3px;color:var(--n8x-muted);font-size:11px}
+    #n8x-search{width:calc(100% - 28px);min-height:44px;margin:0 14px 10px;border:1px solid var(--n8x-line);border-radius:11px;padding:0 13px;color:var(--n8x-ink);background:rgba(255,255,255,.055);font-size:14px;outline:0}#n8x-search:focus{border-color:var(--n8x-cyan);box-shadow:0 0 0 3px rgba(102,231,255,.1)}
+    #n8x-list{overflow:auto;padding:4px 10px 12px;scrollbar-width:thin}.n8x-page{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;min-height:51px;padding:7px;border-radius:11px;color:var(--n8x-ink);text-decoration:none}.n8x-page:hover,.n8x-page:focus-visible{outline:0;background:rgba(102,231,255,.1)}.n8x-num{display:grid;place-items:center;width:31px;height:31px;border:1px solid var(--n8x-line);border-radius:9px;color:var(--n8x-cyan);font:800 10px/1 ui-monospace,monospace}.n8x-copy{min-width:0}.n8x-copy b,.n8x-copy span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.n8x-copy b{font-size:12px}.n8x-copy span{color:var(--n8x-muted);font-size:9px}.n8x-arrow{color:var(--n8x-muted)}
+    .n8x-foot{display:flex;justify-content:space-between;gap:10px;padding:11px 15px;border-top:1px solid var(--n8x-line);color:var(--n8x-muted);font-size:10px}.n8x-empty{padding:28px 14px;text-align:center;color:var(--n8x-muted);font-size:12px}
+    #n8x-toast{position:fixed;left:50%;bottom:78px;z-index:2147483647;max-width:calc(100vw - 28px);transform:translate(-50%,18px);padding:10px 14px;border:1px solid var(--n8x-line);border-radius:10px;color:var(--n8x-ink);background:var(--n8x-bg);box-shadow:var(--n8x-shadow);font:700 12px/1.3 system-ui,sans-serif;opacity:0;pointer-events:none;transition:.2s}#n8x-toast.n8x-show{opacity:1;transform:translate(-50%,0)}
+    html[data-n8x-calm="true"] body>*:not(#n8x-shell):not(#n8x-progress):not(#n8x-toast):not(#n8x-skip){filter:saturate(.72) brightness(.86)}
+    html[data-n8x-calm="true"]{scroll-behavior:auto!important}
+    :focus-visible{outline:2px solid var(--n8x-cyan,#66e7ff);outline-offset:3px}
+    @media(max-width:620px){#n8x-shell{right:0;bottom:max(8px,env(safe-area-inset-bottom))}#n8x-shell[data-n8x-side="left"]{left:0;right:auto}#n8x-dock{display:grid;grid-template-columns:36px;gap:3px;max-width:none;padding:4px;border-radius:14px 0 0 14px}#n8x-shell[data-n8x-side="left"] #n8x-dock{border-radius:0 14px 14px 0}#n8x-shell[data-n8x-expanded="true"] #n8x-dock{grid-template-columns:repeat(2,36px)}.n8x-btn,.n8x-link{min-width:36px;min-height:36px;padding:5px;font-size:15px}#n8x-panel{right:46px;bottom:0;width:min(360px,calc(100vw - 54px));max-height:min(560px,calc(100dvh - 16px));border-radius:16px}#n8x-shell[data-n8x-side="left"] #n8x-panel{left:46px;right:auto}.n8x-head{padding:12px 13px 9px}#n8x-search{width:calc(100% - 20px);min-height:40px;margin:0 10px 7px}#n8x-list{padding:3px 7px 9px}.n8x-page{grid-template-columns:31px 1fr auto;gap:7px;min-height:44px;padding:5px}.n8x-num{width:28px;height:28px}.n8x-foot{padding:8px 11px}.n8x-foot span:last-child{display:none}}
+    @media(max-width:380px){#n8x-panel{width:calc(100vw - 50px);right:42px}#n8x-shell[data-n8x-side="left"] #n8x-panel{left:42px;right:auto}.n8x-copy span{display:none}}
+    @media(prefers-reduced-motion:reduce){#n8x-shell *,#n8x-skip,#n8x-toast{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+    @media print{#n8x-shell,#n8x-progress,#n8x-toast,#n8x-skip{display:none!important}}
+  </style>
+  <!-- N8-ENHANCEMENTS:HEAD:END -->
+</head>
+<body class="theme-sunset">
+
+    <!-- CRT Overlay -->
+    <div class="glass-overlay"></div>
+
+    <!-- HEADER HUD -->
+    <header>
+        <div class="logo-section">
+            <a href="devdashboard-hub-index.html" title="Return to Hub Home" style="display: flex; align-items: center; transition: 0.2s ease;">
+                <img src="n8-icon.png" alt="Qamelot Favicon" style="width: 32px; height: 32px; object-fit: contain; margin-right: 0.5rem;">
+            </a>
+            <div>
+                <h1 class="game-title">QAMELOT CONQUEST</h1>
+                <div style="font-size:0.6rem; font-family:var(--font-pixel); opacity:0.6; margin-top:2px;">GLOWING ARCADE OVERLOAD</div>
+            </div>
+        </div>
+
+        <!-- HUD stats -->
+        <div class="hud-stats">
+            <div class="hud-item" title="Gold Coins">
+                <span>💰 COINS:</span>
+                <span id="hud-coins" style="color:#fff; font-weight:bold;">0</span>
+            </div>
+            <div class="hud-item" title="High Score">
+                <span>🏆 BEST STAGE:</span>
+                <span id="hud-highscore" style="color:var(--border-color);">1</span>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:1rem; align-items:center;">
+            <label for="mute-checkbox" style="cursor:pointer; display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; font-family:var(--font-pixel);">
+                <span>🔊 SOUND</span>
+                <input type="checkbox" id="mute-checkbox" checked style="cursor:pointer;">
+            </label>
+            <select id="screen-theme" class="retro-btn" style="background:#000; padding:0.2rem;" title="Select color palette theme" onchange="changeCrtTheme(this.value)">
+                <option value="sunset">MIDNIGHT SUNSET</option>
+                <option value="matrix">MATRIX GREEN</option>
+                <option value="gold">GLITCH GOLD</option>
+                <option value="plasma">PLASMA RED</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- MAIN GAME WRAPPER -->
+    <div class="game-wrapper">
+        
+        <!-- LEFT SIDEBAR: Controls & Powerups -->
+        <aside class="sidebar">
+            <div>
+                <h2 class="panel-title">🕹️ CONTROLS</h2>
+                <div class="info-list">
+                    <div>• <strong>MOUSE</strong>: Move left / right to dodge and slide clones.</div>
+                    <div>• <strong>KEYBOARD</strong>: Press A / D or LEFT / RIGHT arrow keys.</div>
+                    <div>• <strong>AUTO-SHOOT</strong>: Active at all times.</div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="panel-title">⚡ POWERUPS</h2>
+                <div class="info-list" style="font-size:0.75rem; gap:0.75rem;">
+                    <div>🛡️ <strong>SHIELD</strong>: Protects from 1 collision.</div>
+                    <div>⚡ <strong>HYPERFIRE</strong>: Shoots 4x faster + 2x damage.</div>
+                    <div>🧲 <strong>MAGNET</strong>: Pulls coins from whole track.</div>
+                </div>
+            </div>
+
+            <div style="margin-top:auto;">
+                <h2 class="panel-title">⭐ POWERUP TIMERS</h2>
+                <div class="powerups-hud" id="active-powerups-hud">
+                    <span style="color:rgba(255,255,255,0.4);">No active powerups</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CENTER PANEL: Game Canvas (Widescreen Enlarged) -->
+        <div class="canvas-container">
+            <!-- Start Screen Overlay -->
+            <div class="screen-overlay" id="start-overlay">
+                <div class="overlay-title">QAMELOT CONQUEST</div>
+                <div class="overlay-desc">Slide to guide your squadron. Defeat bosses with warning telegraph signals. Spend coins to level up starting clones and weapon beams!</div>
+                <button class="retro-btn" style="padding:1rem 2rem; font-size:0.8rem;" onclick="startGame()">LAUNCH RUN</button>
+            </div>
+
+            <!-- Game Over Screen Overlay -->
+            <div class="screen-overlay" id="gameover-overlay" style="display:none;">
+                <div class="overlay-title" style="color:#ff3333; text-shadow:0 0 25px #ff3333;">MISSION DEFEAT</div>
+                <div class="overlay-desc" id="gameover-stats">You were overrun at Stage 1.</div>
+                <button class="retro-btn" style="padding:1rem 2rem; font-size:0.8rem;" onclick="startGame()">TRY AGAIN</button>
+            </div>
+
+            <!-- Stage Clear Overlay -->
+            <div class="screen-overlay" id="clear-overlay" style="display:none;">
+                <div class="overlay-title" style="color:var(--border-color);">STAGE CLEARED!</div>
+                <div class="overlay-desc" id="clear-stats">Boss defeated. Gold bounty gathered!</div>
+                <button class="retro-btn" style="padding:1rem 2rem; font-size:0.8rem;" onclick="nextStage()">NEXT STAGE</button>
+            </div>
+
+            <!-- Enlarged game field dimensions -->
+            <canvas id="game-canvas" width="650" height="780"></canvas>
+        </div>
+
+        <!-- RIGHT SIDEBAR: Upgrades Shop -->
+        <aside class="sidebar right-sidebar">
+            <h2 class="panel-title">🛒 METAGAME UPGRADES</h2>
+            
+            <!-- Upgrade 1: Starting Clones -->
+            <div class="shop-card">
+                <div class="shop-header">
+                    <span>👥 START CLONES</span>
+                    <span id="level-start-clones">LVL 1</span>
+                </div>
+                <div class="shop-desc">Start run with additional clones.</div>
+                <div class="shop-cost">💰 <span id="cost-start-clones">150</span></div>
+                <button class="retro-btn" id="btn-upgrade-clones" onclick="buyUpgrade('clones')">UPGRADE</button>
+            </div>
+
+            <!-- Upgrade 2: Fire Rate -->
+            <div class="shop-card">
+                <div class="shop-header">
+                    <span>⚡ FIRE SPEED</span>
+                    <span id="level-fire-rate">LVL 1</span>
+                </div>
+                <div class="shop-desc">All clones shoot faster.</div>
+                <div class="shop-cost">💰 <span id="cost-fire-rate">200</span></div>
+                <button class="retro-btn" id="btn-upgrade-firerate" onclick="buyUpgrade('firerate')">UPGRADE</button>
+            </div>
+
+            <!-- Upgrade 3: Gun Power -->
+            <div class="shop-card">
+                <div class="shop-header">
+                    <span>🔫 GUN POWER</span>
+                    <span id="level-gun-power">LVL 1</span>
+                </div>
+                <div class="shop-desc">Projectiles damage count is boosted.</div>
+                <div class="shop-cost">💰 <span id="cost-gun-power">250</span></div>
+                <button class="retro-btn" id="btn-upgrade-gunpower" onclick="buyUpgrade('gunpower')">UPGRADE</button>
+            </div>
+
+            <!-- Upgrade 4: Shield Start -->
+            <div class="shop-card">
+                <div class="shop-header">
+                    <span>🛡️ START SHIELD</span>
+                    <span id="level-start-shield">LVL 0</span>
+                </div>
+                <div class="shop-desc">Start with a shield to protect your leader.</div>
+                <div class="shop-cost">💰 <span id="cost-start-shield">300</span></div>
+                <button class="retro-btn" id="btn-upgrade-shield" onclick="buyUpgrade('shield')">UPGRADE</button>
+            </div>
+
+            <!-- Stage Info display -->
+            <div style="margin-top:auto; background:rgba(0,0,0,0.5); padding:0.75rem; border:1px solid var(--border-color); font-family:var(--font-pixel); font-size:0.75rem; border-radius:8px;">
+                <div style="text-align:center; font-weight:bold; margin-bottom:0.25rem;">CURRENT STATE</div>
+                <div>• STAGE: <span id="info-stage" style="color:#fff;">1</span></div>
+                <div>• FIRE DELAY: <span id="info-firedelay" style="color:#fff;">200ms</span></div>
+                <div>• BULLET DMG: <span id="info-dmg" style="color:#fff;">1</span></div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- SYSTEM CONSOLE / LOGS -->
+    <footer class="bottom-console" id="console-logs">
+        <div class="console-line success">[SYSTEM] Castle garrison initialized. Click 'LAUNCH RUN' to deploy Qamelot vanguard.</div>
+    </footer>
+
+    <!-- GAME CODE -->
+    <script>
+        // ==========================================
+        // 1. SOUND & CHIPTUNE MUSIC GENERATION
+        // ==========================================
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const muteCheckbox = document.getElementById("mute-checkbox");
+
+        let bgmTimer = null;
+        let bgmIndex = 0;
+        const melody = [
+            261.63, 293.66, 329.63, 349.23, 392.00, 349.23, 329.63, 293.66,
+            329.63, 349.23, 392.00, 440.00, 493.88, 440.00, 392.00, 349.23,
+            392.00, 440.00, 493.88, 523.25, 587.33, 523.25, 493.88, 440.00,
+            493.88, 523.25, 587.33, 659.25, 587.33, 523.25, 493.88, 293.66
+        ];
+
+        function startBGM() {
+            if (bgmTimer) clearInterval(bgmTimer);
+            bgmIndex = 0;
+            bgmTimer = setInterval(() => {
+                if (muteCheckbox.checked || !gameState.active) return;
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(melody[bgmIndex % melody.length] * 0.5, audioCtx.currentTime);
+                    
+                    gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
+                    
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.2);
+                    bgmIndex++;
+                } catch (e) {}
+            }, 250);
+        }
+
+        function stopBGM() {
+            if (bgmTimer) {
+                clearInterval(bgmTimer);
+                bgmTimer = null;
+            }
+        }
+
+        function playSound(type) {
+            if (muteCheckbox.checked) return;
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'shoot') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(450, now);
+                    osc.frequency.exponentialRampToValueAtTime(150, now + 0.08);
+                    gain.gain.setValueAtTime(0.03, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } 
+                else if (type === 'coin') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, now); // D5
+                    osc.frequency.setValueAtTime(783.99, now + 0.08); // G5
+                    gain.gain.setValueAtTime(0.04, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.18);
+                    osc.start(now);
+                    osc.stop(now + 0.18);
+                } 
+                else if (type === 'gate_pass') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.linearRampToValueAtTime(1000, now + 0.25);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } 
+                else if (type === 'powerup') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.setValueAtTime(450, now + 0.1);
+                    osc.frequency.setValueAtTime(600, now + 0.2);
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                }
+                else if (type === 'hit') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(120, now);
+                    osc.frequency.linearRampToValueAtTime(40, now + 0.08);
+                    gain.gain.setValueAtTime(0.04, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } 
+                else if (type === 'explode') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(90, now);
+                    osc.frequency.linearRampToValueAtTime(30, now + 0.35);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                }
+                else if (type === 'clone_lose') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, now);
+                    osc.frequency.setValueAtTime(110, now + 0.08);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                }
+                else if (type === 'victory') {
+                    osc.type = 'square';
+                    const scale = [523.25, 659.25, 783.99, 1046.50];
+                    scale.forEach((freq, idx) => {
+                        const noteOsc = audioCtx.createOscillator();
+                        const noteGain = audioCtx.createGain();
+                        noteOsc.type = 'square';
+                        noteOsc.connect(noteGain);
+                        noteGain.connect(audioCtx.destination);
+                        const startT = now + idx * 0.12;
+                        noteOsc.frequency.setValueAtTime(freq, startT);
+                        noteGain.gain.setValueAtTime(0.04, startT);
+                        noteGain.gain.linearRampToValueAtTime(0, startT + 0.3);
+                        noteOsc.start(startT);
+                        noteOsc.stop(startT + 0.3);
+                    });
+                }
+                else if (type === 'gameover') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.linearRampToValueAtTime(40, now + 0.9);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.9);
+                    osc.start(now);
+                    osc.stop(now + 0.9);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // ==========================================
+        // 2. META UPGRADE SYSTEM & PERSISTENCE
+        // ==========================================
+        const upgrades = {
+            coins: 0,
+            highscore: 1,
+            startClones: { lvl: 1, val: 0, cost: 150 },
+            fireRate: { lvl: 1, val: 200, cost: 200 },
+            gunPower: { lvl: 1, val: 1, cost: 250 },
+            startShield: { lvl: 0, val: 0, cost: 300 }
+        };
+
+        // Load saves
+        try {
+            const data = localStorage.getItem("cloneshield_save_v3");
+            if (data) {
+                const parse = JSON.parse(data);
+                if (parse) {
+                    upgrades.coins = parse.coins || 0;
+                    upgrades.highscore = parse.highscore || 1;
+                    if (parse.startClones) upgrades.startClones = parse.startClones;
+                    if (parse.fireRate) upgrades.fireRate = parse.fireRate;
+                    if (parse.gunPower) upgrades.gunPower = parse.gunPower;
+                    if (parse.startShield) upgrades.startShield = parse.startShield;
+                }
+            }
+        } catch (e) {}
+
+        function saveGame() {
+            try {
+                localStorage.setItem("cloneshield_save_v3", JSON.stringify(upgrades));
+            } catch (e) {}
+        }
+
+        function updateUpgradeUI() {
+            document.getElementById("hud-coins").innerText = upgrades.coins;
+            document.getElementById("hud-highscore").innerText = upgrades.highscore;
+            
+            document.getElementById("level-start-clones").innerText = `LVL ${upgrades.startClones.lvl}`;
+            document.getElementById("cost-start-clones").innerText = upgrades.startClones.cost;
+            document.getElementById("btn-upgrade-clones").disabled = upgrades.coins < upgrades.startClones.cost;
+
+            document.getElementById("level-fire-rate").innerText = `LVL ${upgrades.fireRate.lvl}`;
+            document.getElementById("cost-fire-rate").innerText = upgrades.fireRate.cost;
+            document.getElementById("btn-upgrade-firerate").disabled = upgrades.coins < upgrades.fireRate.cost;
+
+            document.getElementById("level-gun-power").innerText = `LVL ${upgrades.gunPower.lvl}`;
+            document.getElementById("cost-gun-power").innerText = upgrades.gunPower.cost;
+            document.getElementById("btn-upgrade-gunpower").disabled = upgrades.coins < upgrades.gunPower.cost;
+
+            document.getElementById("level-start-shield").innerText = `LVL ${upgrades.startShield.lvl}`;
+            document.getElementById("cost-start-shield").innerText = upgrades.startShield.cost;
+            document.getElementById("btn-upgrade-shield").disabled = upgrades.coins < upgrades.startShield.cost;
+
+            document.getElementById("info-stage").innerText = gameState.stage;
+            document.getElementById("info-firedelay").innerText = `${upgrades.fireRate.val}ms`;
+            document.getElementById("info-dmg").innerText = upgrades.gunPower.val;
+        }
+
+        function buyUpgrade(type) {
+            playSound('coin');
+            if (type === 'clones') {
+                upgrades.coins -= upgrades.startClones.cost;
+                upgrades.startClones.lvl++;
+                upgrades.startClones.val += 1;
+                upgrades.startClones.cost = Math.round(upgrades.startClones.cost * 1.85);
+            } 
+            else if (type === 'firerate') {
+                upgrades.coins -= upgrades.fireRate.cost;
+                upgrades.fireRate.lvl++;
+                upgrades.fireRate.val = Math.max(70, upgrades.fireRate.val - 12);
+                upgrades.fireRate.cost = Math.round(upgrades.fireRate.cost * 1.9);
+            } 
+            else if (type === 'gunpower') {
+                upgrades.coins -= upgrades.gunPower.cost;
+                upgrades.gunPower.lvl++;
+                upgrades.gunPower.val += 1;
+                upgrades.gunPower.cost = Math.round(upgrades.gunPower.cost * 1.95);
+            }
+            else if (type === 'shield') {
+                upgrades.coins -= upgrades.startShield.cost;
+                upgrades.startShield.lvl++;
+                upgrades.startShield.val = 1;
+                upgrades.startShield.cost = Math.round(upgrades.startShield.cost * 2.2);
+            }
+            saveGame();
+            updateUpgradeUI();
+        }
+
+        function changeCrtTheme(val) {
+            document.body.className = '';
+            if (val === 'matrix') document.body.classList.add('theme-matrix');
+            else if (val === 'gold') document.body.classList.add('theme-gold');
+            else if (val === 'plasma') document.body.classList.add('theme-plasma');
+            playSound('coin');
+            logConsole(`CRT display theme adjusted to ${val.toUpperCase()}.`, 'success');
+        }
+
+        // ==========================================
+        // 3. MAIN RUNNER GAME LOGIC
+        // ==========================================
+        const canvas = document.getElementById("game-canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Starfield background elements
+        const stars = [];
+        for (let i = 0; i < 60; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                speed: 1 + Math.random() * 3,
+                size: 1.5 + Math.random() * 2.5
+            });
+        }
+
+        let gameState = {
+            active: false,
+            stage: 1,
+            playerX: canvas.width / 2,
+            playerY: 660,
+            clones: [],
+            bullets: [],
+            enemies: [],
+            gates: [],
+            particles: [],
+            coinsDropped: [],
+            powerups: [],
+            enemyBullets: [],
+            runCoinsEarned: 0,
+            shootTimer: 0,
+            distanceTraveled: 0,
+            bossSpawned: false,
+            bossHP: 0,
+            bossMaxHP: 0,
+            bossX: canvas.width / 2,
+            bossDirection: 1,
+            bossBullets: [],
+            
+            // Powerup status timers
+            shieldActive: false,
+            hyperfireTimer: 0,
+            magnetTimer: 0,
+
+            // Boss telegraph tracking (2000s balancing)
+            bossTelegraphLine: false,
+            bossTelegraphX: 0,
+            bossTelegraphTimer: 0
+        };
+
+        const keys = { a: false, d: false, ArrowLeft: false, ArrowRight: false };
+        window.addEventListener("keydown", (e) => {
+            if (e.key in keys) keys[e.key] = true;
+            if (e.key === " " && !gameState.active) {
+                if (document.getElementById("start-overlay").style.display !== "none") startGame();
+                else if (document.getElementById("gameover-overlay").style.display !== "none") startGame();
+                else if (document.getElementById("clear-overlay").style.display !== "none") nextStage();
+            }
+        });
+        window.addEventListener("keyup", (e) => {
+            if (e.key in keys) keys[e.key] = false;
+        });
+
+        function handleSteer(clientX) {
+            if (!gameState.active) return;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / (rect.width || 1);
+            const mouseX = (clientX - rect.left) * scaleX;
+            gameState.playerX = Math.max(30, Math.min(canvas.width - 30, mouseX));
+        }
+
+        canvas.addEventListener("mousemove", (e) => {
+            handleSteer(e.clientX);
+        });
+
+        canvas.addEventListener("touchmove", (e) => {
+            if (e.touches && e.touches[0]) {
+                handleSteer(e.touches[0].clientX);
+            }
+        }, { passive: true });
+
+        canvas.addEventListener("touchstart", (e) => {
+            if (e.touches && e.touches[0]) {
+                handleSteer(e.touches[0].clientX);
+            }
+        }, { passive: true });
+
+        // Crowd layout offsets
+        function layoutClones(num) {
+            gameState.clones = [];
+            for (let i = 0; i < num; i++) {
+                const angle = (i * Math.PI * 2) / 6;
+                const dist = 28 + Math.floor(i / 6) * 22;
+                gameState.clones.push({
+                    dx: Math.cos(angle) * dist,
+                    dy: Math.sin(angle) * dist + 15,
+                    active: true
+                });
+            }
+        }
+
+        function createParticleExplosion(x, y, color = '#00f0ff', count = 15) {
+            for (let i = 0; i < count; i++) {
+                gameState.particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 7,
+                    vy: (Math.random() - 0.5) * 7,
+                    life: 25 + Math.random() * 25,
+                    maxLife: 50,
+                    color: color
+                });
+            }
+        }
+
+        function spawnGate(yOffset = -150) {
+            const valLeft = generateGateValue();
+            const valRight = generateGateValue();
+
+            gameState.gates.push({
+                x: 15, y: yOffset, w: canvas.width / 2 - 30, h: 48,
+                op: valLeft.op, val: valLeft.val,
+                color: valLeft.op === '+' || valLeft.op === 'x' ? '#00f0ff' : '#ff3333'
+            });
+
+            gameState.gates.push({
+                x: canvas.width / 2 + 15, y: yOffset, w: canvas.width / 2 - 30, h: 48,
+                op: valRight.op, val: valRight.val,
+                color: valRight.op === '+' || valRight.op === 'x' ? '#00f0ff' : '#ff3333'
+            });
+        }
+
+        function generateGateValue() {
+            const types = ['+', 'x', '-', '/'];
+            let op = types[Math.floor(Math.random() * 2)];
+            if (Math.random() < 0.35) op = types[Math.floor(Math.random() * 4)];
+
+            let val = 1;
+            if (op === '+') val = Math.floor(Math.random() * 20) + 4;
+            else if (op === 'x') val = Math.floor(Math.random() * 2) + 2;
+            else if (op === '-') val = Math.floor(Math.random() * 25) + 5;
+            else if (op === '/') val = 2;
+
+            return { op: op, val: val };
+        }
+
+        function spawnEnemyBlock(yOffset = -100) {
+            const spots = [50, 190, 330, 470];
+            const count = Math.floor(Math.random() * 3) + 1;
+            spots.sort(() => Math.random() - 0.5);
+
+            for (let i = 0; i < count; i++) {
+                const randType = Math.random();
+                let type = 'normal';
+                let health = Math.floor(gameState.stage * 15 + Math.random() * 20) + 5;
+                let color = '#ff3333';
+
+                if (randType < 0.22) {
+                    type = 'shielded';
+                    health = Math.round(health * 3);
+                    color = '#ffb703'; // Amber Shield
+                } else if (randType < 0.38) {
+                    type = 'shooter';
+                    health = Math.round(health * 0.9);
+                    color = '#ff00ff'; // Purple shooter
+                }
+
+                gameState.enemies.push({
+                    x: spots[i],
+                    y: yOffset,
+                    w: 120,
+                    h: 55,
+                    hp: health,
+                    maxHp: health,
+                    type: type,
+                    color: color,
+                    shootCooldown: Math.random() * 120
+                });
+            }
+
+            if (Math.random() < 0.5) {
+                spawnPowerup(yOffset - 90);
+            }
+        }
+
+        function spawnPowerup(yOffset) {
+            const types = ['shield', 'hyperfire', 'magnet'];
+            const sel = types[Math.floor(Math.random() * types.length)];
+            gameState.powerups.push({
+                x: 60 + Math.random() * (canvas.width - 150),
+                y: yOffset,
+                type: sel,
+                w: 28,
+                h: 28
+            });
+        }
+
+        // ==========================================
+        // 4. GAME SEQUENCE & LOOPS
+        // ==========================================
+        function startGame() {
+            document.getElementById("start-overlay").style.display = "none";
+            document.getElementById("gameover-overlay").style.display = "none";
+            document.getElementById("clear-overlay").style.display = "none";
+            
+            gameState.active = true;
+            gameState.playerX = canvas.width / 2;
+            gameState.playerY = 660;
+            gameState.bullets = [];
+            gameState.enemies = [];
+            gameState.gates = [];
+            gameState.particles = [];
+            gameState.coinsDropped = [];
+            gameState.powerups = [];
+            gameState.enemyBullets = [];
+            gameState.bossBullets = [];
+            gameState.runCoinsEarned = 0;
+            gameState.distanceTraveled = 0;
+            gameState.bossSpawned = false;
+            gameState.shootTimer = 0;
+            
+            gameState.shieldActive = upgrades.startShield.val > 0;
+            gameState.hyperfireTimer = 0;
+            gameState.magnetTimer = 0;
+
+            // Telegraph
+            gameState.bossTelegraphLine = false;
+            gameState.bossTelegraphTimer = 0;
+
+            layoutClones(upgrades.startClones.val);
+            
+            spawnGate(-150);
+            spawnEnemyBlock(-350);
+            spawnGate(-580);
+            spawnEnemyBlock(-780);
+
+            logConsole(`Run commenced for Stage ${gameState.stage}. Deploying!`, 'success');
+            playSound('gate_pass');
+            startBGM();
+            updateUpgradeUI();
+            
+            requestAnimationFrame(gameTick);
+        }
+
+        function nextStage() {
+            gameState.stage++;
+            startGame();
+        }
+
+        function gameTick() {
+            if (!gameState.active) return;
+
+            const speed = 8;
+            if (keys.a || keys.ArrowLeft) gameState.playerX = Math.max(30, gameState.playerX - speed);
+            if (keys.d || keys.ArrowRight) gameState.playerX = Math.min(canvas.width - 30, gameState.playerX + speed);
+
+            stars.forEach(s => {
+                s.y += s.speed;
+                if (s.y > canvas.height) {
+                    s.y = 0;
+                    s.x = Math.random() * canvas.width;
+                }
+            });
+
+            if (!gameState.bossSpawned) {
+                gameState.distanceTraveled += 2.5;
+                const targetDist = 1800 + gameState.stage * 450;
+                
+                if (gameState.distanceTraveled >= targetDist) {
+                    gameState.bossSpawned = true;
+                    gameState.bossMaxHP = 350 * gameState.stage * (upgrades.gunPower.val + gameState.clones.length * 0.6);
+                    gameState.bossHP = gameState.bossMaxHP;
+                    gameState.bossX = canvas.width / 2;
+                    logConsole(`⚠️ WARNING: Giant Battle Cruiser incoming! HP: ${gameState.bossHP}`, 'error');
+                    playSound('gameover');
+                }
+
+                if (gameState.distanceTraveled % 280 === 0) spawnGate(-100);
+                if (gameState.distanceTraveled % 280 === 140) spawnEnemyBlock(-100);
+            }
+
+            if (gameState.hyperfireTimer > 0) gameState.hyperfireTimer--;
+            if (gameState.magnetTimer > 0) gameState.magnetTimer--;
+
+            const hudP = document.getElementById("active-powerups-hud");
+            let hudHTML = '';
+            if (gameState.shieldActive) hudHTML += `<div class="active-powerup-badge">🛡️ SHIELD</div>`;
+            if (gameState.hyperfireTimer > 0) hudHTML += `<div class="active-powerup-badge" style="border-color:var(--neon-gold); color:var(--neon-gold);">⚡ HYPER (${Math.ceil(gameState.hyperfireTimer/60)}s)</div>`;
+            if (gameState.magnetTimer > 0) hudHTML += `<div class="active-powerup-badge" style="border-color:var(--neon-blue); color:var(--neon-blue);">🧲 MAGNET (${Math.ceil(gameState.magnetTimer/60)}s)</div>`;
+            hudP.innerHTML = hudHTML || `<span style="color:rgba(255,255,255,0.4);">No active powerups</span>`;
+
+            // Shooting delay
+            gameState.shootTimer += 16.66;
+            const baseDelay = upgrades.fireRate.val;
+            const activeDelay = gameState.hyperfireTimer > 0 ? 50 : baseDelay;
+
+            if (gameState.shootTimer >= activeDelay) {
+                gameState.shootTimer = 0;
+                const damage = upgrades.gunPower.val * (gameState.hyperfireTimer > 0 ? 2 : 1);
+                
+                // Bullet trail particle effects
+                gameState.bullets.push({ x: gameState.playerX, y: gameState.playerY - 15, vy: -15, dmg: damage });
+                gameState.clones.forEach(c => {
+                    if (c.active) {
+                        gameState.bullets.push({
+                            x: gameState.playerX + c.dx,
+                            y: gameState.playerY + c.dy - 15,
+                            vy: -15,
+                            dmg: damage
+                        });
+                    }
+                });
+                playSound('shoot');
+            }
+
+            gameState.bullets.forEach((b, idx) => {
+                b.y += b.vy;
+                if (b.y < 0) gameState.bullets.splice(idx, 1);
+            });
+
+            // Update Enemy Bullets (Slower/Sparse for feasibility)
+            gameState.enemyBullets.forEach((eb, idx) => {
+                eb.y += eb.vy;
+                if (eb.y > canvas.height) {
+                    gameState.enemyBullets.splice(idx, 1);
+                    return;
+                }
+
+                if (Math.hypot(gameState.playerX - eb.x, gameState.playerY - eb.y) < 18) {
+                    gameState.enemyBullets.splice(idx, 1);
+                    hitPlayer();
+                }
+
+                gameState.clones.forEach(c => {
+                    if (c.active) {
+                        const cx = gameState.playerX + c.dx;
+                        const cy = gameState.playerY + c.dy;
+                        if (Math.hypot(cx - eb.x, cy - eb.y) < 15) {
+                            c.active = false;
+                            gameState.enemyBullets.splice(idx, 1);
+                            createParticleExplosion(cx, cy, '#ff3333', 6);
+                            playSound('clone_lose');
+                        }
+                    }
+                });
+            });
+
+            gameState.clones = gameState.clones.filter(c => c.active);
+
+            gameState.powerups.forEach((p, idx) => {
+                p.y += 3.5;
+                if (Math.hypot(gameState.playerX - p.x, gameState.playerY - p.y) < 32) {
+                    collectPowerup(p.type);
+                    gameState.powerups.splice(idx, 1);
+                }
+            });
+            gameState.powerups = gameState.powerups.filter(p => p.y < canvas.height);
+
+            gameState.gates.forEach((g, idx) => {
+                g.y += 3.5;
+                const playerWidth = 36;
+                if (g.y + g.h >= gameState.playerY && g.y <= gameState.playerY + 15) {
+                    if (gameState.playerX + playerWidth/2 >= g.x && gameState.playerX - playerWidth/2 <= g.x + g.w) {
+                        applyGateMath(g.op, g.val);
+                        const siblingY = g.y;
+                        gameState.gates = gameState.gates.filter(gate => Math.abs(gate.y - siblingY) > 5);
+                        playSound('gate_pass');
+                    }
+                }
+            });
+            gameState.gates = gameState.gates.filter(g => g.y < canvas.height);
+
+            gameState.enemies.forEach((e, eIdx) => {
+                e.y += 2.8;
+
+                if (e.type === 'shooter') {
+                    e.shootCooldown--;
+                    if (e.shootCooldown <= 0) {
+                        e.shootCooldown = 120 + Math.random() * 120;
+                        gameState.enemyBullets.push({
+                            x: e.x + e.w/2,
+                            y: e.y + e.h,
+                            vy: 5.0 // slower projectile
+                        });
+                    }
+                }
+
+                gameState.bullets.forEach((b, bIdx) => {
+                    if (b.x >= e.x && b.x <= e.x + e.w && b.y >= e.y && b.y <= e.y + e.h) {
+                        e.hp -= b.dmg;
+                        gameState.bullets.splice(bIdx, 1);
+                        createParticleExplosion(b.x, b.y, e.color, 3);
+                        playSound('hit');
+
+                        if (e.hp <= 0) {
+                            createParticleExplosion(e.x + e.w/2, e.y + e.h/2, e.color, 16);
+                            const lootAmt = Math.floor(Math.random() * 4) + 3;
+                            for (let c = 0; c < lootAmt; c++) {
+                                gameState.coinsDropped.push({
+                                    x: e.x + Math.random() * e.w,
+                                    y: e.y + Math.random() * e.h,
+                                    vy: 1.8 + Math.random()*2
+                                });
+                            }
+                            gameState.enemies.splice(eIdx, 1);
+                            playSound('explode');
+                        }
+                    }
+                });
+
+                if (Math.hypot(gameState.playerX - (e.x + e.w/2), gameState.playerY - (e.y + e.h/2)) < 35) {
+                    hitPlayer();
+                }
+
+                gameState.clones.forEach((c, cIdx) => {
+                    if (c.active) {
+                        const cx = gameState.playerX + c.dx;
+                        const cy = gameState.playerY + c.dy;
+                        if (cx >= e.x && cx <= e.x + e.w && cy >= e.y && cy <= e.y + e.h) {
+                            c.active = false;
+                            createParticleExplosion(cx, cy, '#ff3333', 8);
+                            playSound('clone_lose');
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // BOSS MECHANICS (TELEGRAPH & BALANCING)
+            // ==========================================
+            if (gameState.bossSpawned && gameState.bossHP > 0) {
+                gameState.bossX += gameState.bossDirection * 2.2;
+                if (gameState.bossX > canvas.width - 90 || gameState.bossX < 90) {
+                    gameState.bossDirection *= -1;
+                }
+
+                // Telegraph warning laser logic
+                gameState.bossTelegraphTimer++;
+                if (gameState.bossTelegraphTimer >= 140) {
+                    // Start telegraph warning
+                    gameState.bossTelegraphLine = true;
+                    gameState.bossTelegraphX = gameState.bossX;
+                }
+                
+                if (gameState.bossTelegraphTimer >= 200) {
+                    // Fire major laser burst down the center warning line
+                    gameState.bossTelegraphLine = false;
+                    gameState.bossTelegraphTimer = 0;
+                    
+                    // Spawn slower, avoidable bullet pattern down the center lane
+                    for (let yOffset = 0; yOffset < 3; yOffset++) {
+                        gameState.bossBullets.push({
+                            x: gameState.bossTelegraphX,
+                            y: 110 + yOffset * 20,
+                            vx: 0,
+                            vy: 4.5
+                        });
+                    }
+                    playSound('explode');
+                }
+
+                // Normal turret shots
+                if (Math.random() < 0.04) {
+                    // 3-way slower bullets (velocity reduced from 5.5 to 3.8)
+                    for (let angle = -0.3; angle <= 0.3; angle += 0.3) {
+                        gameState.bossBullets.push({
+                            x: gameState.bossX,
+                            y: 110,
+                            vx: Math.sin(angle) * 2.8,
+                            vy: 3.8
+                        });
+                    }
+                    playSound('shoot');
+                }
+
+                // Bullets hitting Boss
+                gameState.bullets.forEach((b, bIdx) => {
+                    const bx = b.x;
+                    const by = b.y;
+                    if (bx >= gameState.bossX - 90 && bx <= gameState.bossX + 90 && by >= 30 && by <= 130) {
+                        gameState.bossHP -= b.dmg;
+                        gameState.bullets.splice(bIdx, 1);
+                        createParticleExplosion(bx, by, '#ff00e5', 4);
+                        playSound('hit');
+
+                        if (gameState.bossHP <= 0) {
+                            createParticleExplosion(gameState.bossX, 80, '#ff00e5', 50);
+                            playSound('victory');
+                            stageClear();
+                        }
+                    }
+                });
+
+                // Update Boss bullets
+                gameState.bossBullets.forEach((bb, idx) => {
+                    bb.y += bb.vy;
+                    bb.x += bb.vx;
+                    if (bb.y > canvas.height) {
+                        gameState.bossBullets.splice(idx, 1);
+                        return;
+                    }
+
+                    if (Math.hypot(bb.x - gameState.playerX, bb.y - gameState.playerY) < 18) {
+                        gameState.bossBullets.splice(idx, 1);
+                        hitPlayer();
+                    }
+
+                    gameState.clones.forEach(c => {
+                        if (c.active) {
+                            const cx = gameState.playerX + c.dx;
+                            const cy = gameState.playerY + c.dy;
+                            if (Math.hypot(bb.x - cx, bb.y - cy) < 15) {
+                                c.active = false;
+                                gameState.bossBullets.splice(idx, 1);
+                                createParticleExplosion(cx, cy, '#ff3333', 6);
+                                playSound('clone_lose');
+                            }
+                        }
+                    });
+                });
+            }
+
+            gameState.coinsDropped.forEach((coin, idx) => {
+                coin.y += coin.vy;
+
+                const magnetRange = gameState.magnetTimer > 0 ? 600 : 180;
+                const dist = Math.hypot(gameState.playerX - coin.x, gameState.playerY - coin.y);
+
+                if (dist < magnetRange) {
+                    coin.x += (gameState.playerX - coin.x) * 0.16;
+                    coin.y += (gameState.playerY - coin.y) * 0.16;
+                }
+
+                if (dist < 20) {
+                    const multi = gameState.hyperfireTimer > 0 ? 15 : 6;
+                    upgrades.coins += multi;
+                    gameState.runCoinsEarned += multi;
+                    gameState.coinsDropped.splice(idx, 1);
+                    playSound('coin');
+                    updateUpgradeUI();
+                }
+            });
+
+            gameState.particles.forEach((p, idx) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life--;
+                if (p.life <= 0) gameState.particles.splice(idx, 1);
+            });
+
+            drawGameFrame();
+
+            requestAnimationFrame(gameTick);
+        }
+
+        function hitPlayer() {
+            if (gameState.shieldActive) {
+                gameState.shieldActive = false;
+                createParticleExplosion(gameState.playerX, gameState.playerY, '#00f0ff', 24);
+                playSound('explode');
+                logConsole("Energy Shield Absorbed Collision Damage!", "success");
+            } else {
+                gameOver();
+            }
+        }
+
+        function collectPowerup(type) {
+            playSound('powerup');
+            if (type === 'shield') {
+                gameState.shieldActive = true;
+                logConsole("POWERUP: Shield Regenerated!", "success");
+            } else if (type === 'hyperfire') {
+                gameState.hyperfireTimer = 240;
+                logConsole("POWERUP: Hyperfire Cannon Activated!", "success");
+            } else if (type === 'magnet') {
+                gameState.magnetTimer = 300;
+                logConsole("POWERUP: Coin Attractor Enabled!", "success");
+            }
+        }
+
+        function applyGateMath(op, val) {
+            let count = gameState.clones.length + 1;
+            if (op === '+') count += val;
+            else if (op === 'x') count *= val;
+            else if (op === '-') count = Math.max(1, count - val);
+            else if (op === '/') count = Math.max(1, Math.floor(count / val));
+
+            layoutClones(count - 1);
+            logConsole(`Gate multiplication: Army count now ${count}!`, 'success');
+        }
+
+        function gameOver() {
+            gameState.active = false;
+            playSound('gameover');
+            stopBGM();
+
+            if (gameState.stage > upgrades.highscore) {
+                upgrades.highscore = gameState.stage;
+            }
+            saveGame();
+
+            document.getElementById("gameover-overlay").style.display = "flex";
+            document.getElementById("gameover-stats").innerText = `You gathered 💰 ${gameState.runCoinsEarned} coins.\nStage achieved: ${gameState.stage}.`;
+            updateUpgradeUI();
+        }
+
+        function stageClear() {
+            gameState.active = false;
+            stopBGM();
+
+            const bonus = gameState.stage * 250;
+            upgrades.coins += bonus;
+            gameState.runCoinsEarned += bonus;
+
+            if (gameState.stage >= upgrades.highscore) {
+                upgrades.highscore = gameState.stage + 1;
+            }
+            saveGame();
+
+            document.getElementById("clear-overlay").style.display = "flex";
+            document.getElementById("clear-stats").innerText = `Stage ${gameState.stage} Clear!\nBonus bounty: 💰 ${bonus} coins!`;
+            updateUpgradeUI();
+        }
+
+        // ==========================================
+        // 5. 2000S FLASH ARCADE RENDERING PIPELINE
+        // ==========================================
+        function drawGameFrame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Dark Grid Parallax Space
+            ctx.fillStyle = '#020205';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Parallax stars
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            stars.forEach(s => {
+                ctx.fillStyle = `rgba(0, 240, 255, ${0.3 + Math.sin(Date.now()*0.003 + s.x)*0.4})`;
+                ctx.fillRect(s.x, s.y, s.size, s.size);
+            });
+
+            // Road Track with modern neon gradient sides
+            const trackGlow = ctx.createLinearGradient(45, 0, canvas.width - 45, 0);
+            trackGlow.addColorStop(0, 'rgba(8, 8, 20, 0.95)');
+            trackGlow.addColorStop(0.5, 'rgba(15, 15, 30, 0.9)');
+            trackGlow.addColorStop(1, 'rgba(8, 8, 20, 0.95)');
+            
+            ctx.fillStyle = trackGlow;
+            ctx.fillRect(45, 0, canvas.width - 90, canvas.height);
+
+            // Neon Borders
+            ctx.strokeStyle = varColor();
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = varColor();
+            ctx.lineWidth = 4;
+            
+            ctx.beginPath();
+            ctx.moveTo(45, 0);
+            ctx.lineTo(45, canvas.height);
+            ctx.moveTo(canvas.width - 45, 0);
+            ctx.lineTo(canvas.width - 45, canvas.height);
+            ctx.stroke();
+            
+            ctx.lineWidth = 1;
+            ctx.shadowBlur = 0; // reset glow
+
+            // Lanes markings
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.setLineDash([30, 30]);
+            for (let x = 180; x < canvas.width - 45; x += 140) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
+
+            // Draw Boss Warning Telegraph Line (Feasibility update)
+            if (gameState.bossSpawned && gameState.bossTelegraphLine) {
+                ctx.strokeStyle = 'rgba(255, 0, 0, 0.65)';
+                ctx.lineWidth = 3;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(gameState.bossTelegraphX, 120);
+                ctx.lineTo(gameState.bossTelegraphX, canvas.height);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.lineWidth = 1;
+
+                // Telegraph Warning Text
+                ctx.font = '8px "Orbitron"';
+                ctx.fillStyle = '#ff3333';
+                ctx.textAlign = 'center';
+                ctx.fillText("⚠️ WARNING: TARGET LOCK", gameState.bossTelegraphX, 220);
+            }
+
+            // Draw Math Gates (Glow vector style)
+            gameState.gates.forEach(g => {
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = g.color;
+                
+                ctx.strokeStyle = g.color;
+                ctx.lineWidth = 3;
+                
+                // Rounded rectangle path
+                drawRoundedRect(ctx, g.x, g.y, g.w, g.h, 8);
+                ctx.stroke();
+                ctx.lineWidth = 1;
+
+                // Glossy gradient fill
+                const gateGrad = ctx.createLinearGradient(g.x, g.y, g.x, g.y + g.h);
+                gateGrad.addColorStop(0, g.op === '+' || g.op === 'x' ? 'rgba(0, 240, 255, 0.25)' : 'rgba(255, 51, 51, 0.25)');
+                gateGrad.addColorStop(1, 'rgba(0,0,0,0.4)');
+                ctx.fillStyle = gateGrad;
+                drawRoundedRect(ctx, g.x, g.y, g.w, g.h, 8);
+                ctx.fill();
+
+                ctx.shadowBlur = 0; // reset
+
+                // Text
+                ctx.font = '700 13px "Orbitron"';
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`${g.op.toUpperCase()}${g.val}`, g.x + g.w/2, g.y + g.h/2);
+            });
+
+            // Draw Powerups (Glossy vector style)
+            gameState.powerups.forEach(p => {
+                let pColor = '#39ff14';
+                let pIcon = '🛡️';
+                if (p.type === 'hyperfire') { pColor = '#ffb703'; pIcon = '⚡'; }
+                else if (p.type === 'magnet') { pColor = '#00f0ff'; pIcon = '🧲'; }
+
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = pColor;
+                
+                ctx.fillStyle = pColor;
+                ctx.beginPath();
+                ctx.arc(p.x + p.w/2, p.y + p.h/2, 16, 0, Math.PI*2);
+                ctx.fill();
+
+                ctx.shadowBlur = 0;
+
+                ctx.font = '12px "Orbitron"';
+                ctx.fillStyle = '#000';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(pIcon, p.x + p.w/2, p.y + p.h/2);
+            });
+
+            // Draw Enemies (Vector style droids)
+            gameState.enemies.forEach(e => {
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = e.color;
+
+                const enemyGrad = ctx.createRadialGradient(e.x + e.w/2, e.y + e.h/2, 10, e.x + e.w/2, e.y + e.h/2, 60);
+                enemyGrad.addColorStop(0, '#300202');
+                enemyGrad.addColorStop(1, '#0e0202');
+                ctx.fillStyle = enemyGrad;
+                
+                ctx.strokeStyle = e.color;
+                ctx.lineWidth = 2.5;
+                drawRoundedRect(ctx, e.x, e.y, e.w, e.h, 6);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.lineWidth = 1;
+                ctx.shadowBlur = 0;
+
+                // HP Counter overlay
+                ctx.font = '700 12px "Orbitron"';
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(e.hp, e.x + e.w/2, e.y + e.h/2);
+
+                // Small badge to show shielded/shooter types
+                if (e.type === 'shielded') {
+                    ctx.fillStyle = '#ffb703';
+                    ctx.beginPath();
+                    ctx.arc(e.x + 12, e.y + 12, 4, 0, Math.PI*2);
+                    ctx.fill();
+                } else if (e.type === 'shooter') {
+                    ctx.fillStyle = '#ff00ff';
+                    ctx.beginPath();
+                    ctx.arc(e.x + 12, e.y + 12, 4, 0, Math.PI*2);
+                    ctx.fill();
+                }
+            });
+
+            // Draw Boss (Giant mechanical battleship)
+            if (gameState.bossSpawned && gameState.bossHP > 0) {
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#ff003c';
+
+                const bossGrad = ctx.createLinearGradient(gameState.bossX - 90, 30, gameState.bossX + 90, 120);
+                bossGrad.addColorStop(0, '#2e020a');
+                bossGrad.addColorStop(0.5, '#120005');
+                bossGrad.addColorStop(1, '#2e020a');
+                ctx.fillStyle = bossGrad;
+
+                ctx.strokeStyle = '#ff003c';
+                ctx.lineWidth = 4;
+                drawRoundedRect(ctx, gameState.bossX - 90, 30, 180, 95, 12);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.lineWidth = 1;
+                ctx.shadowBlur = 0;
+
+                // Boss HP bar
+                const pct = gameState.bossHP / gameState.bossMaxHP;
+                ctx.fillStyle = '#111';
+                ctx.fillRect(gameState.bossX - 80, 15, 160, 8);
+                ctx.fillStyle = '#ff003c';
+                ctx.fillRect(gameState.bossX - 80, 15, 160 * pct, 8);
+
+                ctx.font = '700 11px "Orbitron"';
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.fillText(`WARSHIP HP: ${gameState.bossHP}`, gameState.bossX, 85);
+            }
+
+            // Draw dropped coins (Glowing vector style)
+            gameState.coinsDropped.forEach(coin => {
+                ctx.fillStyle = '#ffb703';
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#ffb703';
+                ctx.beginPath();
+                ctx.arc(coin.x, coin.y, 6, 0, Math.PI*2);
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            });
+
+            // Draw Bullets (Glowing laser beams)
+            gameState.bullets.forEach(b => {
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = gameState.hyperfireTimer > 0 ? '#ffb703' : '#ffffff';
+                
+                if (gameState.hyperfireTimer > 0) {
+                    ctx.fillStyle = '#ffb703';
+                    ctx.fillRect(b.x - 3, b.y, 6, 15);
+                } else {
+                    ctx.fillStyle = '#00f0ff';
+                    ctx.fillRect(b.x - 2, b.y, 4, 10);
+                }
+                ctx.shadowBlur = 0;
+            });
+
+            // Draw Enemy bullets
+            ctx.fillStyle = '#ff00ff';
+            gameState.enemyBullets.forEach(eb => {
+                ctx.beginPath();
+                ctx.arc(eb.x, eb.y, 6, 0, Math.PI*2);
+                ctx.fill();
+            });
+
+            // Draw Boss bullets
+            ctx.fillStyle = '#ff003c';
+            gameState.bossBullets.forEach(bb => {
+                ctx.beginPath();
+                ctx.arc(bb.x, bb.y, 7, 0, Math.PI*2);
+                ctx.fill();
+            });
+
+            // Draw Particles
+            gameState.particles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x - 2, p.y - 2, 4, 4);
+            });
+
+            // Draw Clones
+            gameState.clones.forEach(c => {
+                if (c.active) {
+                    const cx = gameState.playerX + c.dx;
+                    const cy = gameState.playerY + c.dy;
+                    drawSoldierVector(cx, cy, false);
+                }
+            });
+
+            // Draw Leader
+            drawSoldierVector(gameState.playerX, gameState.playerY, true);
+
+            // Energy shield visual ring
+            if (gameState.shieldActive) {
+                ctx.strokeStyle = '#00f0ff';
+                ctx.lineWidth = 3;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#00f0ff';
+                ctx.beginPath();
+                ctx.arc(gameState.playerX, gameState.playerY - 2, 32, 0, Math.PI*2);
+                ctx.stroke();
+                ctx.lineWidth = 1;
+                ctx.shadowBlur = 0;
+            }
+
+            // Draw Distance progress track
+            if (!gameState.bossSpawned) {
+                const targetDist = 1800 + gameState.stage * 450;
+                const ratio = Math.min(1.0, gameState.distanceTraveled / targetDist);
+                ctx.fillStyle = 'rgba(255,255,255,0.1)';
+                ctx.fillRect(20, 50, 8, 550);
+                
+                ctx.fillStyle = varColor();
+                ctx.fillRect(20, 600 - 550 * ratio, 8, 550 * ratio);
+            }
+        }
+
+        // Draw rounded rectangle helper
+        function drawRoundedRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        // Draw modern 2000s vector style soldier capsules
+        function drawSoldierVector(x, y, isLeader = false) {
+            const level = upgrades.startClones.lvl + upgrades.gunPower.lvl;
+            
+            let colorCore = varColor();
+            let colorOutline = '#ffffff';
+
+            if (level >= 12) {
+                colorCore = '#ff00ff'; // Golden visor / magenta suit
+                colorOutline = '#ffb703';
+            } else if (level >= 6) {
+                colorCore = '#00f0ff';
+                colorOutline = '#ffffff';
+            }
+
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = colorCore;
+
+            // Glossy circular body
+            const bodyGrad = ctx.createRadialGradient(x, y, 2, x, y, 12);
+            bodyGrad.addColorStop(0, '#ffffff');
+            bodyGrad.addColorStop(0.5, colorCore);
+            bodyGrad.addColorStop(1, '#000000');
+            
+            ctx.fillStyle = bodyGrad;
+            ctx.strokeStyle = colorOutline;
+            ctx.lineWidth = 2;
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 12, 0, Math.PI*2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.lineWidth = 1;
+            ctx.shadowBlur = 0;
+
+            // Visor / glowing eye
+            ctx.fillStyle = isLeader ? '#00f0ff' : '#ffffff';
+            ctx.fillRect(x - 5, y - 4, 10, 3);
+        }
+
+        function varColor() {
+            if (document.body.classList.contains('theme-matrix')) return '#39ff14';
+            if (document.body.classList.contains('theme-gold')) return '#ffb703';
+            if (document.body.classList.contains('theme-plasma')) return '#ff3333';
+            return '#ff007f'; // Sunset pink default
+        }
+
+        function logConsole(text, type = 'info') {
+            const consoleLogs = document.getElementById("console-logs");
+            const dateStr = new Date().toLocaleTimeString();
+            const logLine = document.createElement("div");
+            logLine.className = `console-line ${type}`;
+            logLine.innerText = `[${dateStr}] ${text}`;
+            consoleLogs.appendChild(logLine);
+            consoleLogs.scrollTop = consoleLogs.scrollHeight;
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            updateUpgradeUI();
+            drawGameFrame();
+        });
+    </script>
+<!-- N8-ENHANCEMENTS:BODY:START -->
+  <a id="n8x-skip" href="#n8x-content">Skip to page content</a>
+  <div id="n8x-progress" aria-hidden="true"></div>
+  <div id="n8x-content" tabindex="-1"></div>
+  <aside id="n8x-shell" aria-label="N8 CyberDev navigation">
+    <section id="n8x-panel" aria-hidden="true" aria-label="All Qamelot pages">
+      <div class="n8x-head"><div><strong>Qamelot Menu</strong><small>Search every live N8 experience</small></div><button class="n8x-btn" id="n8x-close" type="button" aria-label="Close menu">×</button></div>
+      <label for="n8x-search" style="position:absolute;clip:rect(0 0 0 0)">Search pages</label><input id="n8x-search" type="search" placeholder="Search tools, games, studios…" autocomplete="off" spellcheck="false">
+      <nav id="n8x-list" aria-label="Every Qamelot page"><a class="n8x-page" href="acai-adaptive-cyber-analysis-interface.html" data-search="acai // adaptive cyber analysis interface acai-adaptive-cyber-analysis-interface.html experiments &amp; archives"><span class="n8x-num">01</span><span class="n8x-copy"><b>ACAI // Adaptive Cyber Analysis Interface</b><span>Experiments &amp; Archives · acai-adaptive-cyber-analysis-interface.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AHub.html" data-search="n8 asset hub n8ahub.html developer studios"><span class="n8x-num">02</span><span class="n8x-copy"><b>N8 Asset Hub</b><span>Developer Studios · n8AHub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AHubPrime.html" data-search="n8 asset hub prime n8ahubprime.html developer studios"><span class="n8x-num">03</span><span class="n8x-copy"><b>N8 Asset Hub Prime</b><span>Developer Studios · n8AHubPrime.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="who-road-convo-lab.html" data-search="who//road — neon conversation lab who-road-convo-lab.html experiments &amp; archives"><span class="n8x-num">04</span><span class="n8x-copy"><b>WHO//ROAD — Neon Conversation Lab</b><span>Experiments &amp; Archives · who-road-convo-lab.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="blood-and-gold-panther-arena.html" data-search="blood &amp; gold: panther arena blood-and-gold-panther-arena.html games &amp; simulations"><span class="n8x-num">05</span><span class="n8x-copy"><b>Blood &amp; Gold: Panther Arena</b><span>Games &amp; Simulations · blood-and-gold-panther-arena.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="cyber-count-calcun8r-edison-hwy.html" data-search="cyber-count calcun8r // edison hwy cyber-count-calcun8r-edison-hwy.html experiments &amp; archives"><span class="n8x-num">06</span><span class="n8x-copy"><b>CYBER-COUNT CALCUN8R // EDISON HWY</b><span>Experiments &amp; Archives · cyber-count-calcun8r-edison-hwy.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="social-footer.html" data-search="social footer social-footer.html experiments &amp; archives"><span class="n8x-num">07</span><span class="n8x-copy"><b>Social Footer</b><span>Experiments &amp; Archives · social-footer.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="cyber-data-multi-team-logistics-engine.html" data-search="cyber-data // multi-team logistics engine cyber-data-multi-team-logistics-engine.html experiments &amp; archives"><span class="n8x-num">08</span><span class="n8x-copy"><b>CYBER-DATA // MULTI-TEAM LOGISTICS ENGINE</b><span>Experiments &amp; Archives · cyber-data-multi-team-logistics-engine.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="contractor-tool-belt-tactical-utility-engine.html" data-search="contractor tool belt - tactical utility engine contractor-tool-belt-tactical-utility-engine.html tools &amp; productivity"><span class="n8x-num">09</span><span class="n8x-copy"><b>Contractor Tool Belt - Tactical Utility Engine</b><span>Tools &amp; Productivity · contractor-tool-belt-tactical-utility-engine.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qtd-courage-under-fire.html" data-search="qamelot tower defense: courage under fire qtd-courage-under-fire.html games &amp; simulations"><span class="n8x-num">10</span><span class="n8x-copy"><b>Qamelot Tower Defense: Courage Under Fire</b><span>Games &amp; Simulations · qtd-courage-under-fire.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="css-visuals-library-40.html" data-search="css visuals library (40) css-visuals-library-40.html tools &amp; productivity"><span class="n8x-num">11</span><span class="n8x-copy"><b>CSS Visuals Library (40)</b><span>Tools &amp; Productivity · css-visuals-library-40.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-hub.html" data-search="devdashboard hub devdashboard-hub.html developer studios"><span class="n8x-num">12</span><span class="n8x-copy"><b>DevDashboard Hub</b><span>Developer Studios · devdashboard-hub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="blob-bash-royale.html" data-search="blob bash royale: ascension blob-bash-royale.html games &amp; simulations"><span class="n8x-num">13</span><span class="n8x-copy"><b>Blob Bash Royale: Ascension</b><span>Games &amp; Simulations · blob-bash-royale.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="web-app-dev-dashboard.html" data-search="⚡ web app dev dashboard web-app-dev-dashboard.html developer studios"><span class="n8x-num">14</span><span class="n8x-copy"><b>⚡ Web App Dev Dashboard</b><span>Developer Studios · web-app-dev-dashboard.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AnimHub.html" data-search="🪃 n8 animation hub n8animhub.html developer studios"><span class="n8x-num">15</span><span class="n8x-copy"><b>🪃 N8 Animation Hub</b><span>Developer Studios · n8AnimHub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="MiyagiThrow.html" data-search="🥷🏾 miyagi throw! miyagithrow.html games &amp; simulations"><span class="n8x-num">16</span><span class="n8x-copy"><b>🥷🏾 Miyagi Throw!</b><span>Games &amp; Simulations · MiyagiThrow.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="push-complete.html" data-search="push complete push-complete.html developer studios"><span class="n8x-num">17</span><span class="n8x-copy"><b>Push Complete</b><span>Developer Studios · push-complete.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-conquest-super-arcade-edition.html" data-search="qamelot conquest: super arcade edition qamelot-conquest-super-arcade-edition.html games &amp; simulations"><span class="n8x-num">18</span><span class="n8x-copy"><b>Qamelot Conquest: Super Arcade Edition</b><span>Games &amp; Simulations · qamelot-conquest-super-arcade-edition.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdash-svg-studio.html" data-search="devdash svg studio devdash-svg-studio.html developer studios"><span class="n8x-num">20</span><span class="n8x-copy"><b>DevDash SVG Studio</b><span>Developer Studios · devdash-svg-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="svg-sandbox-studio.html" data-search="svg sandbox studio svg-sandbox-studio.html developer studios"><span class="n8x-num">21</span><span class="n8x-copy"><b>SVG Sandbox Studio</b><span>Developer Studios · svg-sandbox-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="ecotechcomm-secure-ptt-link.html" data-search="ecotechcomm // secure ptt link ecotechcomm-secure-ptt-link.html featured sites"><span class="n8x-num">22</span><span class="n8x-copy"><b>EcoTechComm // Secure PTT Link</b><span>Featured Sites · ecotechcomm-secure-ptt-link.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="ecotechcomm-secure-frequency.html" data-search="ecotechcomm | secure frequency ecotechcomm-secure-frequency.html featured sites"><span class="n8x-num">23</span><span class="n8x-copy"><b>EcoTechComm | Secure Frequency</b><span>Featured Sites · ecotechcomm-secure-frequency.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-home.html" data-search="devdashboard home devdashboard-home.html experiments &amp; archives"><span class="n8x-num">24</span><span class="n8x-copy"><b>DevDashboard Home</b><span>Experiments &amp; Archives · devdashboard-home.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="homehub.html" data-search="homehub — command your day. build your future. homehub.html experiments &amp; archives"><span class="n8x-num">25</span><span class="n8x-copy"><b>HomeHub — Command Your Day. Build Your Future.</b><span>Experiments &amp; Archives · homehub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="mecha-strike.html" data-search="mecha strike: transformer protocol v5 mecha-strike.html games &amp; simulations"><span class="n8x-num">26</span><span class="n8x-copy"><b>Mecha Strike: Transformer Protocol v5</b><span>Games &amp; Simulations · mecha-strike.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="lattice-a-the-ai-context-lab.html" data-search="lattice — the ai context lab lattice-a-the-ai-context-lab.html experiments &amp; archives"><span class="n8x-num">28</span><span class="n8x-copy"><b>Lattice — The AI Context Lab</b><span>Experiments &amp; Archives · lattice-a-the-ai-context-lab.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="loc-me-in-llc.html" data-search="loc me in | premium braids &amp; locs artistry edgewood loc-me-in-llc.html featured sites"><span class="n8x-num">29</span><span class="n8x-copy"><b>Loc Me In | Premium Braids &amp; Locs Artistry Edgewood</b><span>Featured Sites · loc-me-in-llc.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="eco-tech-motion-library.html" data-search="eco-tech motion library eco-tech-motion-library.html tools &amp; productivity"><span class="n8x-num">30</span><span class="n8x-copy"><b>Eco-Tech Motion Library</b><span>Tools &amp; Productivity · eco-tech-motion-library.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8Prompt.html" data-search="build//50 — ai webbuilding prompt deck n8prompt.html tools &amp; productivity"><span class="n8x-num">31</span><span class="n8x-copy"><b>BUILD//50 — AI Webbuilding Prompt Deck</b><span>Tools &amp; Productivity · n8Prompt.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="neon-pong.html" data-search="neon pong neon-pong.html games &amp; simulations"><span class="n8x-num">32</span><span class="n8x-copy"><b>Neon Pong</b><span>Games &amp; Simulations · neon-pong.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="new-perspective-painting-llc.html" data-search="new perspective painting llc new-perspective-painting-llc.html featured sites"><span class="n8x-num">33</span><span class="n8x-copy"><b>New Perspective Painting LLC</b><span>Featured Sites · new-perspective-painting-llc.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="pulse-productivity-and-biorhythm-studio.html" data-search="pulse // productivity &amp; biorhythm studio pulse-productivity-and-biorhythm-studio.html tools &amp; productivity"><span class="n8x-num">34</span><span class="n8x-copy"><b>Pulse // Productivity &amp; Biorhythm Studio</b><span>Tools &amp; Productivity · pulse-productivity-and-biorhythm-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="index.html" data-search="qamelot menu — every webpage index.html experiments &amp; archives"><span class="n8x-num">35</span><span class="n8x-copy"><b>Qamelot Menu — Every Webpage</b><span>Experiments &amp; Archives · index.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="tri-nexus-grail-matrix.html" data-search="tri-nexus: grail matrix tri-nexus-grail-matrix.html games &amp; simulations"><span class="n8x-num">37</span><span class="n8x-copy"><b>TRI-NEXUS: GRAIL MATRIX</b><span>Games &amp; Simulations · tri-nexus-grail-matrix.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamomathcore-sci-fi-nexus.html" data-search="qamomathcore // sci-fi_nexus qamomathcore-sci-fi-nexus.html games &amp; simulations"><span class="n8x-num">38</span><span class="n8x-copy"><b>QamoMathCore // SCI-FI_NEXUS</b><span>Games &amp; Simulations · qamomathcore-sci-fi-nexus.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-math-core.html" data-search="qamelot // math_core qamelot-math-core.html tools &amp; productivity"><span class="n8x-num">39</span><span class="n8x-copy"><b>QAMELOT // MATH_CORE</b><span>Tools &amp; Productivity · qamelot-math-core.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-1.html" data-search="qamelot media component qamelot-media-1.html experiments &amp; archives"><span class="n8x-num">40</span><span class="n8x-copy"><b>Qamelot Media Component</b><span>Experiments &amp; Archives · qamelot-media-1.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-2.html" data-search="qamelot media component qamelot-media-2.html experiments &amp; archives"><span class="n8x-num">41</span><span class="n8x-copy"><b>Qamelot Media Component</b><span>Experiments &amp; Archives · qamelot-media-2.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-3.html" data-search="qamelot media - forward flick edition qamelot-media-3.html experiments &amp; archives"><span class="n8x-num">42</span><span class="n8x-copy"><b>Qamelot Media - Forward Flick Edition</b><span>Experiments &amp; Archives · qamelot-media-3.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="screensaver.html" data-search="interactive nebula screensaver screensaver.html experiments &amp; archives"><span class="n8x-num">43</span><span class="n8x-copy"><b>Interactive Nebula Screensaver</b><span>Experiments &amp; Archives · screensaver.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="spriteforge-studio.html" data-search="spriteforge studio spriteforge-studio.html experiments &amp; archives"><span class="n8x-num">44</span><span class="n8x-copy"><b>SpriteForge Studio</b><span>Experiments &amp; Archives · spriteforge-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="stix-stax-stonz.html" data-search="stix stax stonz: cyber camelot stix-stax-stonz.html games &amp; simulations"><span class="n8x-num">45</span><span class="n8x-copy"><b>Stix Stax Stonz: Cyber Camelot</b><span>Games &amp; Simulations · stix-stax-stonz.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="task-forge.html" data-search="task forge task-forge.html experiments &amp; archives"><span class="n8x-num">46</span><span class="n8x-copy"><b>Task Forge</b><span>Experiments &amp; Archives · task-forge.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8-tools.html" data-search="n8 tools — your browser workbench n8-tools.html tools &amp; productivity"><span class="n8x-num">47</span><span class="n8x-copy"><b>N8 Tools — Your browser workbench</b><span>Tools &amp; Productivity · n8-tools.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-hub-index.html" data-search="devdashboard hub devdashboard-hub-index.html experiments &amp; archives"><span class="n8x-num">48</span><span class="n8x-copy"><b>DevDashboard Hub</b><span>Experiments &amp; Archives · devdashboard-hub-index.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="funPromptz.html" data-search="funpromptz — creative media prompt arcade funpromptz.html tools &amp; productivity"><span class="n8x-num">49</span><span class="n8x-copy"><b>funPromptz — Creative Media Prompt Arcade</b><span>Tools &amp; Productivity · funPromptz.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="masterPrompt.html" data-search="masterprompt — animated ai webbuilding command deck masterprompt.html tools &amp; productivity"><span class="n8x-num">50</span><span class="n8x-copy"><b>masterPrompt — Animated AI Webbuilding Command Deck</b><span>Tools &amp; Productivity · masterPrompt.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="QamelotMenu.html" data-search="qamelot menu — compatibility directory qamelotmenu.html experiments &amp; archives"><span class="n8x-num">51</span><span class="n8x-copy"><b>Qamelot Menu — Compatibility Directory</b><span>Experiments &amp; Archives · QamelotMenu.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a></nav>
+      <div class="n8x-foot"><span id="n8x-count">48 pages</span><span>/ search · Esc close · Alt+M menu</span></div>
+    </section>
+    <nav id="n8x-dock" aria-label="Quick page controls">
+      <a class="n8x-link n8x-primary" href="index.html" aria-label="Open Qamelot home" title="Home (Alt+H)">⌂</a>
+      <button class="n8x-btn" id="n8x-open" type="button" aria-expanded="false" aria-controls="n8x-panel" aria-label="Browse every page" title="All pages (Alt+M)">☰</button>
+      <a class="n8x-link n8x-secondary" href="push-complete.html" aria-label="Previous page: Push Complete" title="Previous page">←</a>
+      <a class="n8x-link n8x-secondary" href="devdash-svg-studio.html" aria-label="Next page: DevDash SVG Studio" title="Next page">→</a>
+      <button class="n8x-btn n8x-secondary" id="n8x-random" type="button" aria-label="Open a random page" title="Random page (Alt+R)">⚄</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-share" type="button" aria-label="Share or copy this page link" title="Share page">↗</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-calm" type="button" aria-pressed="false" aria-label="Toggle calm viewing mode" title="Calm mode">◐</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-full" type="button" aria-label="Toggle fullscreen" title="Fullscreen">⛶</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+      <button class="n8x-btn" id="n8x-more" type="button" aria-expanded="false" aria-label="Show more controls" title="More controls">•••</button>
+      <button class="n8x-btn" id="n8x-move" type="button" aria-label="Move controls to the other side" title="Move controls">⇆</button>
+      <button class="n8x-btn" id="n8x-hide" type="button" aria-label="Hide floating controls" title="Hide controls">−</button>
+    </nav>
+    <button id="n8x-restore" type="button" aria-label="Show N8 controls" title="Show controls">N8</button>
+  </aside>
+  <div id="n8x-toast" role="status" aria-live="polite"></div>
+  <script id="n8x-script">
+  (()=>{
+    const pages=["acai-adaptive-cyber-analysis-interface.html","n8AHub.html","n8AHubPrime.html","who-road-convo-lab.html","blood-and-gold-panther-arena.html","cyber-count-calcun8r-edison-hwy.html","social-footer.html","cyber-data-multi-team-logistics-engine.html","contractor-tool-belt-tactical-utility-engine.html","qtd-courage-under-fire.html","css-visuals-library-40.html","devdashboard-hub.html","blob-bash-royale.html","web-app-dev-dashboard.html","n8AnimHub.html","MiyagiThrow.html","push-complete.html","qamelot-conquest-super-arcade-edition.html","devdash-svg-studio.html","svg-sandbox-studio.html","ecotechcomm-secure-ptt-link.html","ecotechcomm-secure-frequency.html","devdashboard-home.html","homehub.html","mecha-strike.html","lattice-a-the-ai-context-lab.html","loc-me-in-llc.html","eco-tech-motion-library.html","n8Prompt.html","neon-pong.html","new-perspective-painting-llc.html","pulse-productivity-and-biorhythm-studio.html","index.html","tri-nexus-grail-matrix.html","qamomathcore-sci-fi-nexus.html","qamelot-math-core.html","qamelot-media-1.html","qamelot-media-2.html","qamelot-media-3.html","screensaver.html","spriteforge-studio.html","stix-stax-stonz.html","task-forge.html","n8-tools.html","devdashboard-hub-index.html","funPromptz.html","masterPrompt.html","QamelotMenu.html"];
+    const shell=document.getElementById('n8x-shell'),panel=document.getElementById('n8x-panel'),open=document.getElementById('n8x-open'),search=document.getElementById('n8x-search'),list=document.getElementById('n8x-list'),toast=document.getElementById('n8x-toast'),more=document.getElementById('n8x-more');
+    const readSetting=(key,fallback)=>{try{return localStorage.getItem(key)??fallback}catch{return fallback}},writeSetting=(key,value)=>{try{localStorage.setItem(key,value)}catch{}};
+    shell.dataset.n8xSide=readSetting('n8x-side','right')==='left'?'left':'right';shell.dataset.n8xHidden=String(readSetting('n8x-hidden','false')==='true');shell.dataset.n8xExpanded='false';
+    const showToast=(message)=>{toast.textContent=message;toast.classList.add('n8x-show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('n8x-show'),2200)};
+    const setExpanded=(active)=>{shell.dataset.n8xExpanded=String(active);more.setAttribute('aria-expanded',String(active));more.setAttribute('aria-label',active?'Show fewer controls':'Show more controls')};
+    const setMenu=(visible,returnFocus=true)=>{if(visible){shell.dataset.n8xHidden='false';writeSetting('n8x-hidden','false');setExpanded(false)}panel.setAttribute('aria-hidden',String(!visible));open.setAttribute('aria-expanded',String(visible));if(visible){search.focus();search.select()}else if(returnFocus&&shell.dataset.n8xHidden!=='true')open.focus()};
+    const setHidden=(hidden)=>{setMenu(false,false);shell.dataset.n8xHidden=String(hidden);writeSetting('n8x-hidden',String(hidden));if(!hidden)open.focus()};
+    open.addEventListener('click',()=>setMenu(panel.getAttribute('aria-hidden')==='true'));
+    document.getElementById('n8x-close').addEventListener('click',()=>setMenu(false));
+    more.addEventListener('click',()=>setExpanded(shell.dataset.n8xExpanded!=='true'));
+    document.getElementById('n8x-move').addEventListener('click',()=>{const side=shell.dataset.n8xSide==='left'?'right':'left';shell.dataset.n8xSide=side;writeSetting('n8x-side',side);showToast('Controls moved '+side)});
+    document.getElementById('n8x-hide').addEventListener('click',()=>setHidden(true));
+    document.getElementById('n8x-restore').addEventListener('click',()=>setHidden(false));
+    search.addEventListener('input',()=>{const query=search.value.trim().toLowerCase();let shown=0;list.querySelectorAll('.n8x-page').forEach(link=>{const match=!query||link.dataset.search.includes(query);link.hidden=!match;if(match)shown++});document.getElementById('n8x-count').textContent=shown+' page'+(shown===1?'':'s')});
+    document.getElementById('n8x-random').addEventListener('click',()=>{const choices=pages.filter(file=>file!=="qamelot-conquest-super-arcade-edition.html");location.href=choices[Math.floor(Math.random()*choices.length)]||'index.html'});
+    document.getElementById('n8x-share').addEventListener('click',async()=>{const data={title:document.title,text:'Explore '+document.title,url:location.href};try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(location.href);showToast('Live page link copied')}}catch(error){if(error.name!=='AbortError')showToast('Use the address bar to copy this link')}});
+    const calm=document.getElementById('n8x-calm');const saved=localStorage.getItem('n8x-calm')==='true';document.documentElement.dataset.n8xCalm=String(saved);calm.setAttribute('aria-pressed',String(saved));calm.addEventListener('click',()=>{const active=document.documentElement.dataset.n8xCalm!=='true';document.documentElement.dataset.n8xCalm=String(active);calm.setAttribute('aria-pressed',String(active));localStorage.setItem('n8x-calm',String(active));showToast(active?'Calm mode on':'Calm mode off')});
+    document.getElementById('n8x-full').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(error){showToast('Fullscreen is unavailable here')}});
+    document.getElementById('n8x-top').addEventListener('click',()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
+    const progress=document.getElementById('n8x-progress');const updateProgress=()=>{const max=document.documentElement.scrollHeight-innerHeight;progress.style.width=(max>0?Math.min(100,scrollY/max*100):0)+'%'};addEventListener('scroll',updateProgress,{passive:true});addEventListener('resize',updateProgress,{passive:true});updateProgress();
+    document.addEventListener('pointerdown',event=>{if(panel.getAttribute('aria-hidden')==='false'&&!shell.contains(event.target))setMenu(false,false)},{capture:true});
+    document.addEventListener('keydown',event=>{const typing=/input|textarea|select/i.test(document.activeElement?.tagName||'');if(event.key==='Escape'&&panel.getAttribute('aria-hidden')==='false'){event.preventDefault();setMenu(false)}else if(event.key==='/'&&!typing){event.preventDefault();setMenu(true)}else if(event.altKey&&event.key.toLowerCase()==='m'){event.preventDefault();setMenu(panel.getAttribute('aria-hidden')==='true')}else if(event.altKey&&event.key.toLowerCase()==='h'){event.preventDefault();location.href='index.html'}else if(event.altKey&&event.key.toLowerCase()==='r'){event.preventDefault();document.getElementById('n8x-random').click()}});
+    document.querySelectorAll('a[target="_blank"]').forEach(link=>{const rel=new Set((link.rel||'').split(/s+/).filter(Boolean));rel.add('noopener');rel.add('noreferrer');link.rel=[...rel].join(' ')});
+  })();
+  </script>
+  <!-- N8-ENHANCEMENTS:BODY:END -->
+</body>
+</html>

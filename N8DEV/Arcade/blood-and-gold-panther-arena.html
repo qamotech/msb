@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Blood & Gold: Panther Arena</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+
+        :root {
+            --neon-cyan: #00d2ff;
+            --vibranium-purple: #00ff66;
+            --panel-dark: rgba(13, 20, 35, 0.85);
+        }
+
+        body { 
+            margin: 0; 
+            background: #060913; 
+            background-image: 
+                radial-gradient(circle at 50% 50%, #0a162b 0%, #060913 80%),
+                linear-gradient(rgba(0, 210, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 20px 20px, 20px 20px;
+            color: #fff; 
+            font-family: 'Orbitron', sans-serif; 
+            text-align: center; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            padding: 10px;
+            overflow: hidden;
+        }
+        
+        /* Premium Cyber Header */
+        #header { 
+            width: 100%;
+            max-width: 360px;
+            padding: 15px 10px; 
+            background: rgba(6, 10, 20, 0.85); 
+            border: 1px solid rgba(168, 66, 255, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            margin-bottom: 10px;
+            z-index: 10;
+        }
+
+        h1 { 
+            margin: 0 0 12px 0; 
+            color: #fff; 
+            text-transform: uppercase; 
+            letter-spacing: 4px; 
+            font-size: 1.4rem; 
+            font-weight: 900;
+            text-shadow: 0 0 10px var(--vibranium-purple), 0 0 20px rgba(126, 16, 255, 0.5);
+        }
+
+        /* Feature 4: Session Score Ledger */
+        #score-ledger {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: #8da2bb;
+        }
+        .score-box { font-weight: 900; }
+        #score-p1 { color: var(--vibranium-purple); text-shadow: 0 0 5px rgba(168,66,255,0.4); }
+        #score-p2 { color: var(--neon-cyan); text-shadow: 0 0 5px rgba(0,240,255,0.4); }
+        
+        /* Mechanical Grid Buttons */
+        .controls { display: flex; justify-content: center; gap: 8px; }
+        
+        button { 
+            background: linear-gradient(to bottom, #252f44 0%, #0c1220 100%); 
+            border: 1px solid rgba(168, 66, 255, 0.3); 
+            color: #e2bfff; 
+            padding: 10px 14px; 
+            border-radius: 6px; 
+            font-size: 0.75rem; 
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 4px rgba(250,250,250,0.1);
+        }
+        
+        button:hover {
+            border-color: var(--neon-cyan);
+            color: #fff;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(1px);
+            background: #0c1220;
+        }
+
+        button.active-mode {
+            border-color: #ffcc00;
+            color: #ffcc00;
+            box-shadow: 0 0 8px rgba(255, 204, 0, 0.4);
+        }
+        
+        /* Vibranium Lattice Board Configuration */
+        #arena { 
+            width: 100%;
+            max-width: 340px; 
+            background: linear-gradient(135deg, #120e26 0%, #070714 100%); 
+            border: 3px solid #241e3b;
+            border-top-color: #513e80;
+            border-radius: 16px; 
+            padding: 12px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.9), 0 0 20px rgba(126, 16, 255, 0.15);
+            box-sizing: border-box;
+            z-index: 5;
+        }
+
+        /* Extinction Level Screen Shake Class */
+        .ele-shake {
+            animation: tremor 0.15s infinite;
+        }
+
+        @keyframes tremor {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            100% { transform: translate(-1px, -2px) rotate(1deg); }
+        }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 6px; background: transparent; }
+        
+        td { 
+            width: 42px; 
+            height: 42px; 
+            background: #030208;
+            border: 1px solid rgba(168, 66, 255, 0.2);
+            border-radius: 50%;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.9);
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s ease;
+        }
+
+        td:hover {
+            background: #140922;
+            border-color: rgba(168, 66, 255, 0.5);
+        }
+        
+        /* Feature 3: Win-Line Highlight Engine */
+        td.winner-glow {
+            animation: hyper-cycle 0.4s infinite alternate;
+            border-color: #ffffff !important;
+            z-index: 20;
+        }
+        @keyframes hyper-cycle {
+            0% { box-shadow: 0 0 5px #fff, inset 0 0 10px var(--neon-cyan); }
+            100% { box-shadow: 0 0 25px var(--neon-cyan), inset 0 0 20px #fff; }
+        }
+
+        /* Game Tokens */
+        .piece { 
+            width: 86%; 
+            height: 86%; 
+            border-radius: 50%; 
+            position: absolute;
+            top: 7%;
+            left: 7%;
+            animation: dropEffect 0.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes dropEffect {
+            0% { transform: translateY(-120px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Vibranium Purple Faction Core */
+        .purple { 
+            background: radial-gradient(circle at 35% 35%, #9effc4 0%, #00cc55 70%, #006622 100%); 
+            box-shadow: 0 0 12px var(--vibranium-purple), inset 0 -4px 6px rgba(0,0,0,0.4); 
+        }
+
+        /* Cyan Faction Core */
+        .blue { 
+            background: radial-gradient(circle at 35% 35%, #66e3ff 0%, #0088cc 70%, #003366 100%); 
+            box-shadow: 0 0 12px var(--neon-cyan), inset 0 -4px 6px rgba(0,0,0,0.4); 
+        }
+        
+        #status { 
+            margin-top: 15px; 
+            color: var(--vibranium-purple); 
+            font-weight: 900; 
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px rgba(168,66,255,0.3);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        /* Feature 1: ELE Detonation Visual Layer */
+        #ele-blast-shield {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            background: transparent;
+        }
+
+        .ele-active {
+            animation: radiation-blast 1.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes radiation-blast {
+            0% { background: #ffffff; opacity: 1; }
+            15% { background: #ff5100; opacity: 1; }
+            35% { background: #ffaa00; opacity: 0.9; }
+            100% { background: transparent; opacity: 0; }
+        }
+    </style>
+<!-- N8-ENHANCEMENTS:HEAD:START -->
+  <meta name="description" content="Play Blood &amp; Gold: Panther Arena, an interactive browser game from the N8 CyberDev collection.">
+  <meta name="keywords" content="Blood &amp; Gold: Panther Arena, Games &amp; Simulations, N8 CyberDev, Qamelot, interactive web app, standalone HTML">
+  <meta name="author" content="N8 CyberDev / Qamelot">
+  <meta name="creator" content="N8 CyberDev">
+  <meta name="publisher" content="Qamelot">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#070b14">
+  <meta name="color-scheme" content="dark light">
+  <meta name="application-name" content="N8 CyberDev">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="n8-improvement-count" content="80">
+  <meta name="n8-feature-count" content="16">
+  <link rel="canonical" href="https://qamotech.github.io/DevDashboard/blood-and-gold-panther-arena.html">
+  <link rel="icon" type="image/png" sizes="128x128" href="n8-icon.png">
+  <link rel="shortcut icon" type="image/png" href="n8-icon.png">
+  <link rel="apple-touch-icon" href="n8-icon.png">
+  <link rel="manifest" href="qamelot-media-assets/site.webmanifest">
+  <link rel="stylesheet" href="n8-tools-transformers.css">
+  <script defer src="n8-tools-transformers.js"></script>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="N8 CyberDev">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="Blood &amp; Gold: Panther Arena">
+  <meta property="og:description" content="Play Blood &amp; Gold: Panther Arena, an interactive browser game from the N8 CyberDev collection.">
+  <meta property="og:url" content="https://qamotech.github.io/DevDashboard/blood-and-gold-panther-arena.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Blood &amp; Gold: Panther Arena">
+  <meta name="twitter:description" content="Play Blood &amp; Gold: Panther Arena, an interactive browser game from the N8 CyberDev collection.">
+  <style id="n8x-styles">
+    :root{--n8x-cyan:#66e7ff;--n8x-violet:#ae82ff;--n8x-ink:#f4fbff;--n8x-muted:#a8b7c8;--n8x-bg:rgba(5,10,18,.96);--n8x-line:rgba(102,231,255,.28);--n8x-shadow:0 18px 55px rgba(0,0,0,.55)}
+    #n8x-skip{position:fixed;left:12px;top:10px;z-index:2147483647;transform:translateY(-160%);padding:10px 14px;border-radius:9px;color:#031017;background:var(--n8x-cyan);font:800 13px/1.2 system-ui,sans-serif;text-decoration:none;transition:transform .18s}
+    #n8x-skip:focus{transform:none}
+    #n8x-shell,#n8x-shell *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    #n8x-shell{position:fixed;right:14px;bottom:14px;z-index:2147483000;color:var(--n8x-ink);line-height:1.4;touch-action:manipulation}
+    #n8x-shell[data-n8x-side="left"]{left:14px;right:auto}
+    #n8x-dock{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:5px;max-width:250px;padding:6px;border:1px solid var(--n8x-line);border-radius:15px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(18px) saturate(1.25);transition:.18s}
+    #n8x-shell:not([data-n8x-expanded="true"]) .n8x-secondary{display:none}
+    #n8x-shell[data-n8x-hidden="true"] #n8x-dock,#n8x-shell[data-n8x-hidden="true"] #n8x-panel{display:none}
+    #n8x-restore{display:none;place-items:center;width:34px;height:44px;border:1px solid var(--n8x-line);border-right:0;border-radius:12px 0 0 12px;color:var(--n8x-cyan);background:var(--n8x-bg);box-shadow:var(--n8x-shadow);font:900 10px/1 ui-monospace,monospace;letter-spacing:-.04em;cursor:pointer}
+    #n8x-shell[data-n8x-side="left"] #n8x-restore{border:1px solid var(--n8x-line);border-left:0;border-radius:0 12px 12px 0}
+    #n8x-shell[data-n8x-hidden="true"] #n8x-restore{display:grid}
+    .n8x-btn,.n8x-link{min-width:42px;min-height:42px;display:grid;place-items:center;border:1px solid transparent;border-radius:11px;padding:7px;color:var(--n8x-ink);background:transparent;text-decoration:none;cursor:pointer;font-size:18px;line-height:1;transition:background .18s,border-color .18s,transform .18s}
+    .n8x-btn:hover,.n8x-btn:focus-visible,.n8x-link:hover,.n8x-link:focus-visible{outline:0;border-color:var(--n8x-line);background:rgba(102,231,255,.12);transform:translateY(-2px)}
+    .n8x-primary{color:#041017;background:linear-gradient(135deg,var(--n8x-cyan),#a8f3ff)}
+    #n8x-progress{position:fixed;left:0;top:0;z-index:2147483646;width:0;height:3px;background:linear-gradient(90deg,var(--n8x-cyan),var(--n8x-violet));box-shadow:0 0 12px var(--n8x-cyan);pointer-events:none}
+    #n8x-panel{position:fixed;right:14px;bottom:70px;width:min(400px,calc(100vw - 28px));max-height:min(620px,calc(100vh - 96px));display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;border:1px solid var(--n8x-line);border-radius:18px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(22px) saturate(1.3);overflow:hidden;opacity:0;transform:translateY(18px) scale(.98);pointer-events:none;transition:.2s}
+    #n8x-shell[data-n8x-side="left"] #n8x-panel{left:14px;right:auto}
+    #n8x-panel[aria-hidden="false"]{opacity:1;transform:none;pointer-events:auto}
+    .n8x-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 17px 12px}.n8x-head strong{font-size:14px;letter-spacing:.08em;text-transform:uppercase}.n8x-head small{display:block;margin-top:3px;color:var(--n8x-muted);font-size:11px}
+    #n8x-search{width:calc(100% - 28px);min-height:44px;margin:0 14px 10px;border:1px solid var(--n8x-line);border-radius:11px;padding:0 13px;color:var(--n8x-ink);background:rgba(255,255,255,.055);font-size:14px;outline:0}#n8x-search:focus{border-color:var(--n8x-cyan);box-shadow:0 0 0 3px rgba(102,231,255,.1)}
+    #n8x-list{overflow:auto;padding:4px 10px 12px;scrollbar-width:thin}.n8x-page{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;min-height:51px;padding:7px;border-radius:11px;color:var(--n8x-ink);text-decoration:none}.n8x-page:hover,.n8x-page:focus-visible{outline:0;background:rgba(102,231,255,.1)}.n8x-num{display:grid;place-items:center;width:31px;height:31px;border:1px solid var(--n8x-line);border-radius:9px;color:var(--n8x-cyan);font:800 10px/1 ui-monospace,monospace}.n8x-copy{min-width:0}.n8x-copy b,.n8x-copy span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.n8x-copy b{font-size:12px}.n8x-copy span{color:var(--n8x-muted);font-size:9px}.n8x-arrow{color:var(--n8x-muted)}
+    .n8x-foot{display:flex;justify-content:space-between;gap:10px;padding:11px 15px;border-top:1px solid var(--n8x-line);color:var(--n8x-muted);font-size:10px}.n8x-empty{padding:28px 14px;text-align:center;color:var(--n8x-muted);font-size:12px}
+    #n8x-toast{position:fixed;left:50%;bottom:78px;z-index:2147483647;max-width:calc(100vw - 28px);transform:translate(-50%,18px);padding:10px 14px;border:1px solid var(--n8x-line);border-radius:10px;color:var(--n8x-ink);background:var(--n8x-bg);box-shadow:var(--n8x-shadow);font:700 12px/1.3 system-ui,sans-serif;opacity:0;pointer-events:none;transition:.2s}#n8x-toast.n8x-show{opacity:1;transform:translate(-50%,0)}
+    html[data-n8x-calm="true"] body>*:not(#n8x-shell):not(#n8x-progress):not(#n8x-toast):not(#n8x-skip){filter:saturate(.72) brightness(.86)}
+    html[data-n8x-calm="true"]{scroll-behavior:auto!important}
+    :focus-visible{outline:2px solid var(--n8x-cyan,#66e7ff);outline-offset:3px}
+    @media(max-width:620px){#n8x-shell{right:0;bottom:max(8px,env(safe-area-inset-bottom))}#n8x-shell[data-n8x-side="left"]{left:0;right:auto}#n8x-dock{display:grid;grid-template-columns:36px;gap:3px;max-width:none;padding:4px;border-radius:14px 0 0 14px}#n8x-shell[data-n8x-side="left"] #n8x-dock{border-radius:0 14px 14px 0}#n8x-shell[data-n8x-expanded="true"] #n8x-dock{grid-template-columns:repeat(2,36px)}.n8x-btn,.n8x-link{min-width:36px;min-height:36px;padding:5px;font-size:15px}#n8x-panel{right:46px;bottom:0;width:min(360px,calc(100vw - 54px));max-height:min(560px,calc(100dvh - 16px));border-radius:16px}#n8x-shell[data-n8x-side="left"] #n8x-panel{left:46px;right:auto}.n8x-head{padding:12px 13px 9px}#n8x-search{width:calc(100% - 20px);min-height:40px;margin:0 10px 7px}#n8x-list{padding:3px 7px 9px}.n8x-page{grid-template-columns:31px 1fr auto;gap:7px;min-height:44px;padding:5px}.n8x-num{width:28px;height:28px}.n8x-foot{padding:8px 11px}.n8x-foot span:last-child{display:none}}
+    @media(max-width:380px){#n8x-panel{width:calc(100vw - 50px);right:42px}#n8x-shell[data-n8x-side="left"] #n8x-panel{left:42px;right:auto}.n8x-copy span{display:none}}
+    @media(prefers-reduced-motion:reduce){#n8x-shell *,#n8x-skip,#n8x-toast{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+    @media print{#n8x-shell,#n8x-progress,#n8x-toast,#n8x-skip{display:none!important}}
+  </style>
+  <!-- N8-ENHANCEMENTS:HEAD:END -->
+</head>
+<body>
+
+<div id="ele-blast-shield"></div>
+
+<div id="header">
+    <h1>PANTHER ARENA</h1>
+    <div id="score-ledger">
+        <div class="score-box">PURPLE: <span id="score-p1">0</span></div>
+        <div class="score-box">BLUE: <span id="score-p2">0</span></div>
+    </div>
+    <div class="controls">
+        <button id="modeBtn" onclick="window.toggle2P()">SOLO VS AI</button>
+        <button onclick="window.resetMatch()">RESET</button>
+        <button onclick="window.undoTurn()">UNDO</button>
+    </div>
+</div>
+
+<div id="arena">
+    <table id="board"></table>
+</div>
+
+<div id="status">PURPLE'S TURN</div>
+
+<script>
+    const ROWS = 6;
+    const COLS = 7;
+
+    window.twoP = false; 
+    window.turn = 1; // 1 = Purple, 2 = Blue
+    window.gameState = []; 
+    window.moveHistory = []; 
+    window.gameOver = false;
+    
+    // Memory Matrices for Score Tracking
+    let p1Wins = 0;
+    let p2Wins = 0;
+
+    function initMatrix() {
+        window.gameState = [];
+        for (let r = 0; r < ROWS; r++) {
+            window.gameState.push(new Array(COLS).fill(0));
+        }
+    }
+
+    window.toggle2P = function() {
+        if(window.moveHistory.length > 0) {
+            if(!confirm("Changing modes will clear current deployment. Proceed?")) return;
+        }
+        window.twoP = !window.twoP;
+        const btn = document.getElementById('modeBtn');
+        if(window.twoP) {
+            btn.innerHTML = "2 PLAYER";
+            btn.classList.add('active-mode');
+        } else {
+            btn.innerHTML = "SOLO VS AI";
+            btn.classList.remove('active-mode');
+        }
+        window.resetMatch();
+    };
+
+    window.resetMatch = function() {
+        window.turn = 1;
+        window.gameOver = false;
+        window.moveHistory = [];
+        initMatrix();
+        
+        // Clean out custom animations & classes
+        document.getElementById('arena').classList.remove('ele-shake');
+        document.getElementById('ele-blast-shield').classList.remove('ele-active');
+        
+        const statusEl = document.getElementById('status');
+        statusEl.innerHTML = "PURPLE'S TURN";
+        statusEl.style.color = "var(--vibranium-purple)";
+        statusEl.style.textShadow = "0 0 5px rgba(168,66,255,0.3)";
+
+        const cells = document.getElementsByTagName('td');
+        for(let i=0; i<cells.length; i++) {
+            cells[i].classList.remove('winner-glow');
+        }
+
+        const pieces = document.getElementsByClassName('piece');
+        while(pieces.length > 0) {
+            pieces[0].parentNode.removeChild(pieces[0]);
+        }
+    };
+
+    window.undoTurn = function() {
+        if (window.gameOver) return;
+        if (window.moveHistory.length === 0) return;
+        performUndo();
+        if (!window.twoP && window.turn === 2 && window.moveHistory.length > 0) {
+            performUndo();
+        }
+        updateStatusDisplay();
+    };
+
+    function performUndo() {
+        const lastCol = window.moveHistory.pop();
+        for (let r = 0; r < ROWS; r++) {
+            if (window.gameState[r][lastCol] !== 0) {
+                window.gameState[r][lastCol] = 0;
+                const cell = document.getElementById(`cell-${lastCol}-${r}`);
+                if (cell.firstChild) cell.removeChild(cell.firstChild);
+                break;
+            }
+        }
+        window.turn = (window.turn === 1 ? 2 : 1);
+    }
+
+    // Grid System Assembly
+    const table = document.getElementById('board');
+    for (let r = 0; r < ROWS; r++) {
+        const tr = document.createElement('tr');
+        for (let c = 0; c < COLS; c++) {
+            const td = document.createElement('td');
+            td.id = `cell-${c}-${r}`;
+            ((col) => {
+                td.onclick = () => {
+                    if (!window.gameOver && (window.twoP || window.turn === 1)) {
+                        window.dropPiece(col);
+                    }
+                };
+            })(c);
+            tr.appendChild(td);
+        }
+        table.appendChild(tr);
+    }
+
+    window.dropPiece = function(col) {
+        if (window.gameOver) return;
+
+        let row = -1;
+        for (let i = ROWS - 1; i >= 0; i--) {
+            if (window.gameState[i][col] === 0) {
+                row = i;
+                break;
+            }
+        }
+        
+        if (row !== -1) {
+            window.gameState[row][col] = window.turn;
+            window.moveHistory.push(col);
+
+            // Feature 2: Subtle Kinetic Click Haptic Feedback
+            if (navigator.vibrate) navigator.vibrate(40);
+
+            const cell = document.getElementById(`cell-${col}-${row}`);
+            const p = document.createElement('div');
+            p.className = 'piece ' + (window.turn === 1 ? 'purple' : 'blue');
+            cell.appendChild(p);
+            
+            // Win Vectors Diagnostic Check
+            const winCoords = checkVictory(row, col);
+            if (winCoords) {
+                executeELESequence(winCoords);
+                return;
+            }
+
+            window.turn = (window.turn === 1 ? 2 : 1);
+            updateStatusDisplay();
+
+            if (!window.twoP && window.turn === 2) {
+                setTimeout(executeAIMove, 350); 
+            }
+        }
+    };
+
+    function updateStatusDisplay() {
+        const statusEl = document.getElementById('status');
+        if (window.turn === 1) {
+            statusEl.innerHTML = "PURPLE'S TURN";
+            statusEl.style.color = "var(--vibranium-purple)";
+            statusEl.style.textShadow = "0 0 5px rgba(168,66,255,0.3)";
+        } else {
+            statusEl.innerHTML = "BLUE'S TURN";
+            statusEl.style.color = "var(--neon-cyan)";
+            statusEl.style.textShadow = "0 0 5px rgba(0,240,255,0.3)";
+        }
+    }
+
+    // Modified CheckVictory function returning structural coordinates array
+    function checkVictory(r, c) {
+        const target = window.gameState[r][c];
+        const directions = [
+            [[0, 1], [0, -1]],  
+            [[1, 0], [-1, 0]],  
+            [[1, 1], [-1, -1]], 
+            [[1, -1], [-1, 1]]  
+        ];
+
+        for (let d = 0; d < directions.length; d++) {
+            let matches = [[r, c]];
+            for (let i = 0; i < 2; i++) {
+                let dr = directions[d][i][0];
+                let dc = directions[d][i][1];
+                let currR = r + dr;
+                let currC = c + dc;
+                
+                while (currR >= 0 && currR < ROWS && currC >= 0 && currC < COLS && window.gameState[currR][currC] === target) {
+                    matches.push([currR, currC]);
+                    currR += dr;
+                    currC += dc;
+                }
+            }
+            if (matches.length >= 4) return matches;
+        }
+        return null;
+    }
+
+    // Feature 1: Extinction Level Event Function Architecture
+    function executeELESequence(winningCoordinates) {
+        window.gameOver = true;
+        
+        // 1. Core Visual Blast (White & Orange Flash Overlay)
+        const shield = document.getElementById('ele-blast-shield');
+        shield.classList.add('ele-active');
+        
+        // 2. Physical Shake Application to the Arena Cage
+        document.getElementById('arena').classList.add('ele-shake');
+
+        // 3. Heavy Pulse Haptic Engine Engagement
+        if (navigator.vibrate) {
+            navigator.vibrate([100, 50, 100, 50, 400]);
+        }
+
+        // 4. Native Camera Flash / Torch Deployment Request
+        flashHardwareTorch(500);
+
+        // 5. Highlight winning vectors
+        winningCoordinates.forEach(coord => {
+            const cell = document.getElementById(`cell-${coord[1]}-${coord[0]}`);
+            if (cell) cell.classList.add('winner-glow');
+        });
+
+        // Score Allocation Calculations
+        if (window.turn === 1) {
+            p1Wins++;
+            document.getElementById('score-p1').innerHTML = p1Wins;
+        } else {
+            p2Wins++;
+            document.getElementById('score-p2').innerHTML = p2Wins;
+        }
+
+        // Finalize Status Banner Printout
+        const statusEl = document.getElementById('status');
+        statusEl.innerHTML = (window.turn === 1 ? "PURPLE CLAN WINS" : "BLUE FACTOR WINS");
+        statusEl.style.color = (window.turn === 1 ? "var(--vibranium-purple)" : "var(--neon-cyan)");
+        statusEl.style.textShadow = window.turn === 1 ? "0 0 12px #a842ff" : "0 0 12px #00f0ff";
+    }
+
+    // Hardware Flash Interceptors
+    async function flashHardwareTorch(durationMs) {
+        try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            const track = stream.getVideoTracks()[0];
+            const capabilities = track.getCapabilities();
+            if (capabilities.torch) {
+                await track.applyConstraints({ advanced: [{ torch: true }] });
+                setTimeout(async () => {
+                    await track.applyConstraints({ advanced: [{ torch: false }] });
+                    track.stop();
+                }, durationMs);
+            } else {
+                track.stop();
+            }
+        } catch (e) {
+            // Fails silently if hardware permissions are unavailable or inside regular WebViews
+        }
+    }
+
+    // Machine Brain Engine
+    function executeAIMove() {
+        if (window.gameOver) return;
+
+        for (let c = 0; c < COLS; c++) {
+            let r = getTargetRow(c);
+            if (r !== -1) {
+                window.gameState[r][c] = 2;
+                if (checkVictory(r, c)) {
+                    window.gameState[r][c] = 0; 
+                    window.dropPiece(c);
+                    return;
+                }
+                window.gameState[r][c] = 0;
+            }
+        }
+
+        for (let c = 0; c < COLS; c++) {
+            let r = getTargetRow(c);
+            if (r !== -1) {
+                window.gameState[r][c] = 1;
+                if (checkVictory(r, c)) {
+                    window.gameState[r][c] = 0;
+                    window.dropPiece(c);
+                    return;
+                }
+                window.gameState[r][c] = 0;
+            }
+        }
+
+        const preferedOrder = [3, 4, 2, 5, 1, 6, 0];
+        for (let i = 0; i < preferedOrder.length; i++) {
+            let c = preferedOrder[i];
+            if (getTargetRow(c) !== -1) {
+                window.dropPiece(c);
+                return;
+            }
+        }
+    }
+
+    function getTargetRow(col) {
+        for (let i = ROWS - 1; i >= 0; i--) {
+            if (window.gameState[i][col] === 0) return i;
+        }
+        return -1;
+    }
+
+    initMatrix();
+</script>
+
+
+    <footer class="cyber-footer">
+        <div class="footer-title">System Navigation</div>
+        <div class="menu-container">
+            
+        <a href="stix-stax-stonz.html" style="text-decoration: none; display: block;">
+            <div class="btn-wrapper">
+                <div class="cyber-btn">
+                    <div class="cyber-btn-inner">
+                        <span class="btn-text">Stix Stax Stonz</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        
+        <a href="blood-and-gold-panther-arena.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--C4N8--</span></div></div></div>
+        </a>
+        
+        
+        <a href="tri-nexus-grail-matrix.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--TRINEXUS--</span></div></div></div>
+        </a>
+        
+        
+        <a href="mecha-strike.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--MENU--</span></div></div></div>
+        </a>
+        </div>
+    </footer>
+
+
+<!-- N8-ENHANCEMENTS:BODY:START -->
+  <a id="n8x-skip" href="#n8x-content">Skip to page content</a>
+  <div id="n8x-progress" aria-hidden="true"></div>
+  <div id="n8x-content" tabindex="-1"></div>
+  <aside id="n8x-shell" aria-label="N8 CyberDev navigation">
+    <section id="n8x-panel" aria-hidden="true" aria-label="All Qamelot pages">
+      <div class="n8x-head"><div><strong>Qamelot Menu</strong><small>Search every live N8 experience</small></div><button class="n8x-btn" id="n8x-close" type="button" aria-label="Close menu">×</button></div>
+      <label for="n8x-search" style="position:absolute;clip:rect(0 0 0 0)">Search pages</label><input id="n8x-search" type="search" placeholder="Search tools, games, studios…" autocomplete="off" spellcheck="false">
+      <nav id="n8x-list" aria-label="Every Qamelot page"><a class="n8x-page" href="acai-adaptive-cyber-analysis-interface.html" data-search="acai // adaptive cyber analysis interface acai-adaptive-cyber-analysis-interface.html experiments &amp; archives"><span class="n8x-num">01</span><span class="n8x-copy"><b>ACAI // Adaptive Cyber Analysis Interface</b><span>Experiments &amp; Archives · acai-adaptive-cyber-analysis-interface.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AHub.html" data-search="n8 asset hub n8ahub.html developer studios"><span class="n8x-num">02</span><span class="n8x-copy"><b>N8 Asset Hub</b><span>Developer Studios · n8AHub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AHubPrime.html" data-search="n8 asset hub prime n8ahubprime.html developer studios"><span class="n8x-num">03</span><span class="n8x-copy"><b>N8 Asset Hub Prime</b><span>Developer Studios · n8AHubPrime.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="who-road-convo-lab.html" data-search="who//road — neon conversation lab who-road-convo-lab.html experiments &amp; archives"><span class="n8x-num">04</span><span class="n8x-copy"><b>WHO//ROAD — Neon Conversation Lab</b><span>Experiments &amp; Archives · who-road-convo-lab.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="blood-and-gold-panther-arena.html" data-search="blood &amp; gold: panther arena blood-and-gold-panther-arena.html games &amp; simulations"><span class="n8x-num">05</span><span class="n8x-copy"><b>Blood &amp; Gold: Panther Arena</b><span>Games &amp; Simulations · blood-and-gold-panther-arena.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="cyber-count-calcun8r-edison-hwy.html" data-search="cyber-count calcun8r // edison hwy cyber-count-calcun8r-edison-hwy.html experiments &amp; archives"><span class="n8x-num">06</span><span class="n8x-copy"><b>CYBER-COUNT CALCUN8R // EDISON HWY</b><span>Experiments &amp; Archives · cyber-count-calcun8r-edison-hwy.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="social-footer.html" data-search="social footer social-footer.html experiments &amp; archives"><span class="n8x-num">07</span><span class="n8x-copy"><b>Social Footer</b><span>Experiments &amp; Archives · social-footer.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="cyber-data-multi-team-logistics-engine.html" data-search="cyber-data // multi-team logistics engine cyber-data-multi-team-logistics-engine.html experiments &amp; archives"><span class="n8x-num">08</span><span class="n8x-copy"><b>CYBER-DATA // MULTI-TEAM LOGISTICS ENGINE</b><span>Experiments &amp; Archives · cyber-data-multi-team-logistics-engine.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="contractor-tool-belt-tactical-utility-engine.html" data-search="contractor tool belt - tactical utility engine contractor-tool-belt-tactical-utility-engine.html tools &amp; productivity"><span class="n8x-num">09</span><span class="n8x-copy"><b>Contractor Tool Belt - Tactical Utility Engine</b><span>Tools &amp; Productivity · contractor-tool-belt-tactical-utility-engine.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qtd-courage-under-fire.html" data-search="qamelot tower defense: courage under fire qtd-courage-under-fire.html games &amp; simulations"><span class="n8x-num">10</span><span class="n8x-copy"><b>Qamelot Tower Defense: Courage Under Fire</b><span>Games &amp; Simulations · qtd-courage-under-fire.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="css-visuals-library-40.html" data-search="css visuals library (40) css-visuals-library-40.html tools &amp; productivity"><span class="n8x-num">11</span><span class="n8x-copy"><b>CSS Visuals Library (40)</b><span>Tools &amp; Productivity · css-visuals-library-40.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-hub.html" data-search="devdashboard hub devdashboard-hub.html developer studios"><span class="n8x-num">12</span><span class="n8x-copy"><b>DevDashboard Hub</b><span>Developer Studios · devdashboard-hub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="blob-bash-royale.html" data-search="blob bash royale: ascension blob-bash-royale.html games &amp; simulations"><span class="n8x-num">13</span><span class="n8x-copy"><b>Blob Bash Royale: Ascension</b><span>Games &amp; Simulations · blob-bash-royale.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="web-app-dev-dashboard.html" data-search="⚡ web app dev dashboard web-app-dev-dashboard.html developer studios"><span class="n8x-num">14</span><span class="n8x-copy"><b>⚡ Web App Dev Dashboard</b><span>Developer Studios · web-app-dev-dashboard.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8AnimHub.html" data-search="🪃 n8 animation hub n8animhub.html developer studios"><span class="n8x-num">15</span><span class="n8x-copy"><b>🪃 N8 Animation Hub</b><span>Developer Studios · n8AnimHub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="MiyagiThrow.html" data-search="🥷🏾 miyagi throw! miyagithrow.html games &amp; simulations"><span class="n8x-num">16</span><span class="n8x-copy"><b>🥷🏾 Miyagi Throw!</b><span>Games &amp; Simulations · MiyagiThrow.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="push-complete.html" data-search="push complete push-complete.html developer studios"><span class="n8x-num">17</span><span class="n8x-copy"><b>Push Complete</b><span>Developer Studios · push-complete.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-conquest-super-arcade-edition.html" data-search="qamelot conquest: super arcade edition qamelot-conquest-super-arcade-edition.html games &amp; simulations"><span class="n8x-num">18</span><span class="n8x-copy"><b>Qamelot Conquest: Super Arcade Edition</b><span>Games &amp; Simulations · qamelot-conquest-super-arcade-edition.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdash-svg-studio.html" data-search="devdash svg studio devdash-svg-studio.html developer studios"><span class="n8x-num">20</span><span class="n8x-copy"><b>DevDash SVG Studio</b><span>Developer Studios · devdash-svg-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="svg-sandbox-studio.html" data-search="svg sandbox studio svg-sandbox-studio.html developer studios"><span class="n8x-num">21</span><span class="n8x-copy"><b>SVG Sandbox Studio</b><span>Developer Studios · svg-sandbox-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="ecotechcomm-secure-ptt-link.html" data-search="ecotechcomm // secure ptt link ecotechcomm-secure-ptt-link.html featured sites"><span class="n8x-num">22</span><span class="n8x-copy"><b>EcoTechComm // Secure PTT Link</b><span>Featured Sites · ecotechcomm-secure-ptt-link.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="ecotechcomm-secure-frequency.html" data-search="ecotechcomm | secure frequency ecotechcomm-secure-frequency.html featured sites"><span class="n8x-num">23</span><span class="n8x-copy"><b>EcoTechComm | Secure Frequency</b><span>Featured Sites · ecotechcomm-secure-frequency.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-home.html" data-search="devdashboard home devdashboard-home.html experiments &amp; archives"><span class="n8x-num">24</span><span class="n8x-copy"><b>DevDashboard Home</b><span>Experiments &amp; Archives · devdashboard-home.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="homehub.html" data-search="homehub — command your day. build your future. homehub.html experiments &amp; archives"><span class="n8x-num">25</span><span class="n8x-copy"><b>HomeHub — Command Your Day. Build Your Future.</b><span>Experiments &amp; Archives · homehub.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="mecha-strike.html" data-search="mecha strike: transformer protocol v5 mecha-strike.html games &amp; simulations"><span class="n8x-num">26</span><span class="n8x-copy"><b>Mecha Strike: Transformer Protocol v5</b><span>Games &amp; Simulations · mecha-strike.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="lattice-a-the-ai-context-lab.html" data-search="lattice — the ai context lab lattice-a-the-ai-context-lab.html experiments &amp; archives"><span class="n8x-num">28</span><span class="n8x-copy"><b>Lattice — The AI Context Lab</b><span>Experiments &amp; Archives · lattice-a-the-ai-context-lab.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="loc-me-in-llc.html" data-search="loc me in | premium braids &amp; locs artistry edgewood loc-me-in-llc.html featured sites"><span class="n8x-num">29</span><span class="n8x-copy"><b>Loc Me In | Premium Braids &amp; Locs Artistry Edgewood</b><span>Featured Sites · loc-me-in-llc.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="eco-tech-motion-library.html" data-search="eco-tech motion library eco-tech-motion-library.html tools &amp; productivity"><span class="n8x-num">30</span><span class="n8x-copy"><b>Eco-Tech Motion Library</b><span>Tools &amp; Productivity · eco-tech-motion-library.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8Prompt.html" data-search="build//50 — ai webbuilding prompt deck n8prompt.html tools &amp; productivity"><span class="n8x-num">31</span><span class="n8x-copy"><b>BUILD//50 — AI Webbuilding Prompt Deck</b><span>Tools &amp; Productivity · n8Prompt.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="neon-pong.html" data-search="neon pong neon-pong.html games &amp; simulations"><span class="n8x-num">32</span><span class="n8x-copy"><b>Neon Pong</b><span>Games &amp; Simulations · neon-pong.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="new-perspective-painting-llc.html" data-search="new perspective painting llc new-perspective-painting-llc.html featured sites"><span class="n8x-num">33</span><span class="n8x-copy"><b>New Perspective Painting LLC</b><span>Featured Sites · new-perspective-painting-llc.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="pulse-productivity-and-biorhythm-studio.html" data-search="pulse // productivity &amp; biorhythm studio pulse-productivity-and-biorhythm-studio.html tools &amp; productivity"><span class="n8x-num">34</span><span class="n8x-copy"><b>Pulse // Productivity &amp; Biorhythm Studio</b><span>Tools &amp; Productivity · pulse-productivity-and-biorhythm-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="index.html" data-search="qamelot menu — every webpage index.html experiments &amp; archives"><span class="n8x-num">35</span><span class="n8x-copy"><b>Qamelot Menu — Every Webpage</b><span>Experiments &amp; Archives · index.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="tri-nexus-grail-matrix.html" data-search="tri-nexus: grail matrix tri-nexus-grail-matrix.html games &amp; simulations"><span class="n8x-num">37</span><span class="n8x-copy"><b>TRI-NEXUS: GRAIL MATRIX</b><span>Games &amp; Simulations · tri-nexus-grail-matrix.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamomathcore-sci-fi-nexus.html" data-search="qamomathcore // sci-fi_nexus qamomathcore-sci-fi-nexus.html games &amp; simulations"><span class="n8x-num">38</span><span class="n8x-copy"><b>QamoMathCore // SCI-FI_NEXUS</b><span>Games &amp; Simulations · qamomathcore-sci-fi-nexus.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-math-core.html" data-search="qamelot // math_core qamelot-math-core.html tools &amp; productivity"><span class="n8x-num">39</span><span class="n8x-copy"><b>QAMELOT // MATH_CORE</b><span>Tools &amp; Productivity · qamelot-math-core.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-1.html" data-search="qamelot media component qamelot-media-1.html experiments &amp; archives"><span class="n8x-num">40</span><span class="n8x-copy"><b>Qamelot Media Component</b><span>Experiments &amp; Archives · qamelot-media-1.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-2.html" data-search="qamelot media component qamelot-media-2.html experiments &amp; archives"><span class="n8x-num">41</span><span class="n8x-copy"><b>Qamelot Media Component</b><span>Experiments &amp; Archives · qamelot-media-2.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="qamelot-media-3.html" data-search="qamelot media - forward flick edition qamelot-media-3.html experiments &amp; archives"><span class="n8x-num">42</span><span class="n8x-copy"><b>Qamelot Media - Forward Flick Edition</b><span>Experiments &amp; Archives · qamelot-media-3.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="screensaver.html" data-search="interactive nebula screensaver screensaver.html experiments &amp; archives"><span class="n8x-num">43</span><span class="n8x-copy"><b>Interactive Nebula Screensaver</b><span>Experiments &amp; Archives · screensaver.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="spriteforge-studio.html" data-search="spriteforge studio spriteforge-studio.html experiments &amp; archives"><span class="n8x-num">44</span><span class="n8x-copy"><b>SpriteForge Studio</b><span>Experiments &amp; Archives · spriteforge-studio.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="stix-stax-stonz.html" data-search="stix stax stonz: cyber camelot stix-stax-stonz.html games &amp; simulations"><span class="n8x-num">45</span><span class="n8x-copy"><b>Stix Stax Stonz: Cyber Camelot</b><span>Games &amp; Simulations · stix-stax-stonz.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="task-forge.html" data-search="task forge task-forge.html experiments &amp; archives"><span class="n8x-num">46</span><span class="n8x-copy"><b>Task Forge</b><span>Experiments &amp; Archives · task-forge.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="n8-tools.html" data-search="n8 tools — your browser workbench n8-tools.html tools &amp; productivity"><span class="n8x-num">47</span><span class="n8x-copy"><b>N8 Tools — Your browser workbench</b><span>Tools &amp; Productivity · n8-tools.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="devdashboard-hub-index.html" data-search="devdashboard hub devdashboard-hub-index.html experiments &amp; archives"><span class="n8x-num">48</span><span class="n8x-copy"><b>DevDashboard Hub</b><span>Experiments &amp; Archives · devdashboard-hub-index.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="funPromptz.html" data-search="funpromptz — creative media prompt arcade funpromptz.html tools &amp; productivity"><span class="n8x-num">49</span><span class="n8x-copy"><b>funPromptz — Creative Media Prompt Arcade</b><span>Tools &amp; Productivity · funPromptz.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="masterPrompt.html" data-search="masterprompt — animated ai webbuilding command deck masterprompt.html tools &amp; productivity"><span class="n8x-num">50</span><span class="n8x-copy"><b>masterPrompt — Animated AI Webbuilding Command Deck</b><span>Tools &amp; Productivity · masterPrompt.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a><a class="n8x-page" href="QamelotMenu.html" data-search="qamelot menu — compatibility directory qamelotmenu.html experiments &amp; archives"><span class="n8x-num">51</span><span class="n8x-copy"><b>Qamelot Menu — Compatibility Directory</b><span>Experiments &amp; Archives · QamelotMenu.html</span></span><span class="n8x-arrow" aria-hidden="true">→</span></a></nav>
+      <div class="n8x-foot"><span id="n8x-count">48 pages</span><span>/ search · Esc close · Alt+M menu</span></div>
+    </section>
+    <nav id="n8x-dock" aria-label="Quick page controls">
+      <a class="n8x-link n8x-primary" href="index.html" aria-label="Open Qamelot home" title="Home (Alt+H)">⌂</a>
+      <button class="n8x-btn" id="n8x-open" type="button" aria-expanded="false" aria-controls="n8x-panel" aria-label="Browse every page" title="All pages (Alt+M)">☰</button>
+      <a class="n8x-link n8x-secondary" href="who-road-convo-lab.html" aria-label="Previous page: WHO//ROAD — Neon Conversation Lab" title="Previous page">←</a>
+      <a class="n8x-link n8x-secondary" href="cyber-count-calcun8r-edison-hwy.html" aria-label="Next page: CYBER-COUNT CALCUN8R // EDISON HWY" title="Next page">→</a>
+      <button class="n8x-btn n8x-secondary" id="n8x-random" type="button" aria-label="Open a random page" title="Random page (Alt+R)">⚄</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-share" type="button" aria-label="Share or copy this page link" title="Share page">↗</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-calm" type="button" aria-pressed="false" aria-label="Toggle calm viewing mode" title="Calm mode">◐</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-full" type="button" aria-label="Toggle fullscreen" title="Fullscreen">⛶</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+      <button class="n8x-btn" id="n8x-more" type="button" aria-expanded="false" aria-label="Show more controls" title="More controls">•••</button>
+      <button class="n8x-btn" id="n8x-move" type="button" aria-label="Move controls to the other side" title="Move controls">⇆</button>
+      <button class="n8x-btn" id="n8x-hide" type="button" aria-label="Hide floating controls" title="Hide controls">−</button>
+    </nav>
+    <button id="n8x-restore" type="button" aria-label="Show N8 controls" title="Show controls">N8</button>
+  </aside>
+  <div id="n8x-toast" role="status" aria-live="polite"></div>
+  <script id="n8x-script">
+  (()=>{
+    const pages=["acai-adaptive-cyber-analysis-interface.html","n8AHub.html","n8AHubPrime.html","who-road-convo-lab.html","blood-and-gold-panther-arena.html","cyber-count-calcun8r-edison-hwy.html","social-footer.html","cyber-data-multi-team-logistics-engine.html","contractor-tool-belt-tactical-utility-engine.html","qtd-courage-under-fire.html","css-visuals-library-40.html","devdashboard-hub.html","blob-bash-royale.html","web-app-dev-dashboard.html","n8AnimHub.html","MiyagiThrow.html","push-complete.html","qamelot-conquest-super-arcade-edition.html","devdash-svg-studio.html","svg-sandbox-studio.html","ecotechcomm-secure-ptt-link.html","ecotechcomm-secure-frequency.html","devdashboard-home.html","homehub.html","mecha-strike.html","lattice-a-the-ai-context-lab.html","loc-me-in-llc.html","eco-tech-motion-library.html","n8Prompt.html","neon-pong.html","new-perspective-painting-llc.html","pulse-productivity-and-biorhythm-studio.html","index.html","tri-nexus-grail-matrix.html","qamomathcore-sci-fi-nexus.html","qamelot-math-core.html","qamelot-media-1.html","qamelot-media-2.html","qamelot-media-3.html","screensaver.html","spriteforge-studio.html","stix-stax-stonz.html","task-forge.html","n8-tools.html","devdashboard-hub-index.html","funPromptz.html","masterPrompt.html","QamelotMenu.html"];
+    const shell=document.getElementById('n8x-shell'),panel=document.getElementById('n8x-panel'),open=document.getElementById('n8x-open'),search=document.getElementById('n8x-search'),list=document.getElementById('n8x-list'),toast=document.getElementById('n8x-toast'),more=document.getElementById('n8x-more');
+    const readSetting=(key,fallback)=>{try{return localStorage.getItem(key)??fallback}catch{return fallback}},writeSetting=(key,value)=>{try{localStorage.setItem(key,value)}catch{}};
+    shell.dataset.n8xSide=readSetting('n8x-side','right')==='left'?'left':'right';shell.dataset.n8xHidden=String(readSetting('n8x-hidden','false')==='true');shell.dataset.n8xExpanded='false';
+    const showToast=(message)=>{toast.textContent=message;toast.classList.add('n8x-show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('n8x-show'),2200)};
+    const setExpanded=(active)=>{shell.dataset.n8xExpanded=String(active);more.setAttribute('aria-expanded',String(active));more.setAttribute('aria-label',active?'Show fewer controls':'Show more controls')};
+    const setMenu=(visible,returnFocus=true)=>{if(visible){shell.dataset.n8xHidden='false';writeSetting('n8x-hidden','false');setExpanded(false)}panel.setAttribute('aria-hidden',String(!visible));open.setAttribute('aria-expanded',String(visible));if(visible){search.focus();search.select()}else if(returnFocus&&shell.dataset.n8xHidden!=='true')open.focus()};
+    const setHidden=(hidden)=>{setMenu(false,false);shell.dataset.n8xHidden=String(hidden);writeSetting('n8x-hidden',String(hidden));if(!hidden)open.focus()};
+    open.addEventListener('click',()=>setMenu(panel.getAttribute('aria-hidden')==='true'));
+    document.getElementById('n8x-close').addEventListener('click',()=>setMenu(false));
+    more.addEventListener('click',()=>setExpanded(shell.dataset.n8xExpanded!=='true'));
+    document.getElementById('n8x-move').addEventListener('click',()=>{const side=shell.dataset.n8xSide==='left'?'right':'left';shell.dataset.n8xSide=side;writeSetting('n8x-side',side);showToast('Controls moved '+side)});
+    document.getElementById('n8x-hide').addEventListener('click',()=>setHidden(true));
+    document.getElementById('n8x-restore').addEventListener('click',()=>setHidden(false));
+    search.addEventListener('input',()=>{const query=search.value.trim().toLowerCase();let shown=0;list.querySelectorAll('.n8x-page').forEach(link=>{const match=!query||link.dataset.search.includes(query);link.hidden=!match;if(match)shown++});document.getElementById('n8x-count').textContent=shown+' page'+(shown===1?'':'s')});
+    document.getElementById('n8x-random').addEventListener('click',()=>{const choices=pages.filter(file=>file!=="blood-and-gold-panther-arena.html");location.href=choices[Math.floor(Math.random()*choices.length)]||'index.html'});
+    document.getElementById('n8x-share').addEventListener('click',async()=>{const data={title:document.title,text:'Explore '+document.title,url:location.href};try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(location.href);showToast('Live page link copied')}}catch(error){if(error.name!=='AbortError')showToast('Use the address bar to copy this link')}});
+    const calm=document.getElementById('n8x-calm');const saved=localStorage.getItem('n8x-calm')==='true';document.documentElement.dataset.n8xCalm=String(saved);calm.setAttribute('aria-pressed',String(saved));calm.addEventListener('click',()=>{const active=document.documentElement.dataset.n8xCalm!=='true';document.documentElement.dataset.n8xCalm=String(active);calm.setAttribute('aria-pressed',String(active));localStorage.setItem('n8x-calm',String(active));showToast(active?'Calm mode on':'Calm mode off')});
+    document.getElementById('n8x-full').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(error){showToast('Fullscreen is unavailable here')}});
+    document.getElementById('n8x-top').addEventListener('click',()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
+    const progress=document.getElementById('n8x-progress');const updateProgress=()=>{const max=document.documentElement.scrollHeight-innerHeight;progress.style.width=(max>0?Math.min(100,scrollY/max*100):0)+'%'};addEventListener('scroll',updateProgress,{passive:true});addEventListener('resize',updateProgress,{passive:true});updateProgress();
+    document.addEventListener('pointerdown',event=>{if(panel.getAttribute('aria-hidden')==='false'&&!shell.contains(event.target))setMenu(false,false)},{capture:true});
+    document.addEventListener('keydown',event=>{const typing=/input|textarea|select/i.test(document.activeElement?.tagName||'');if(event.key==='Escape'&&panel.getAttribute('aria-hidden')==='false'){event.preventDefault();setMenu(false)}else if(event.key==='/'&&!typing){event.preventDefault();setMenu(true)}else if(event.altKey&&event.key.toLowerCase()==='m'){event.preventDefault();setMenu(panel.getAttribute('aria-hidden')==='true')}else if(event.altKey&&event.key.toLowerCase()==='h'){event.preventDefault();location.href='index.html'}else if(event.altKey&&event.key.toLowerCase()==='r'){event.preventDefault();document.getElementById('n8x-random').click()}});
+    document.querySelectorAll('a[target="_blank"]').forEach(link=>{const rel=new Set((link.rel||'').split(/s+/).filter(Boolean));rel.add('noopener');rel.add('noreferrer');link.rel=[...rel].join(' ')});
+  })();
+  </script>
+  <!-- N8-ENHANCEMENTS:BODY:END -->
+</body>
+</html>

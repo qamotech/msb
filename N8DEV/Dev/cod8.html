@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call of Duty: Shipment 8-bit</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: monospace;
+        }
+        canvas {
+            display: block;
+            background: #000;
+        }
+        #hud {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #0f0;
+            font-size: 16px;
+            font-family: monospace;
+        }
+        #gameOver {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #f00;
+            font-size: 32px;
+            font-family: monospace;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="hud">
+        <div>Health: <span id="health">100</span></div>
+        <div>Ammo: <span id="ammo">30</span></div>
+        <div>Kills: <span id="kills">0</span></div>
+    </div>
+    <div id="gameOver">GAME OVER</div>
+
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const hud = document.getElementById('hud');
+        const gameOver = document.getElementById('gameOver');
+        
+        // Set canvas size
+        canvas.width = 800;
+        canvas.height = 600;
+
+        // Game state
+        const gameState = {
+            player: {
+                x: 400,
+                y: 300,
+                angle: 0,
+                health: 100,
+                ammo: 30,
+                kills: 0,
+                speed: 5
+            },
+            bots: [],
+            bullets: [],
+            walls: [],
+            gameOver: false
+        };
+
+        // Colors
+        const colors = {
+            sky: '#555',
+            ground: '#333',
+            wall: '#777',
+            player: '#f00',
+            bot: '#00f',
+            bullet: '#ff0',
+            blood: '#f00',
+            health: '#0f0',
+            ammo: '#ff0'
+        };
+
+        // Map: Shipment-style with containers
+        function initMap() {
+            gameState.walls = [];
+            
+            // Outer walls
+            gameState.walls.push({ x1: 0, y1: 0, x2: 800, y2: 0 });
+            gameState.walls.push({ x1: 800, y1: 0, x2: 800, y2: 600 });
+            gameState.walls.push({ x1: 800, y1: 600, x2: 0, y2: 600 });
+            gameState.walls.push({ x1: 0, y1: 600, x2: 0, y2: 0 });
+
+            // Shipment containers (simplified 8-bit style)
+            // Left side containers
+            gameState.walls.push({ x1: 50, y1: 100, x2: 200, y2: 100 });
+            gameState.walls.push({ x1: 200, y1: 100, x2: 200, y2: 300 });
+            gameState.walls.push({ x1: 200, y1: 300, x2: 50, y2: 300 });
+            gameState.walls.push({ x1: 50, y1: 300, x2: 50, y2: 100 });
+
+            // Right side containers
+            gameState.walls.push({ x1: 550, y1: 100, x2: 700, y2: 100 });
+            gameState.walls.push({ x1: 700, y1: 100, x2: 700, y2: 300 });
+            gameState.walls.push({ x1: 700, y1: 300, x2: 550, y2: 300 });
+            gameState.walls.push({ x1: 550, y1: 300, x2: 550, y2: 100 });
+
+            // Middle containers
+            gameState.walls.push({ x1: 300, y1: 200, x2: 500, y2: 200 });
+            gameState.walls.push({ x1: 500, y1: 200, x2: 500, y2: 400 });
+            gameState.walls.push({ x1: 500, y1: 400, x2: 300, y2: 400 });
+            gameState.walls.push({ x1: 300, y1: 400, x2: 300, y2: 200 });
+
+            // Spawn bots
+            gameState.bots = [];
+            for (let i = 0; i < 4; i++) {
+                spawnBot();
+            }
+        }
+
+        // Spawn a bot at random position
+        function spawnBot() {
+            const side = Math.floor(Math.random() * 4);
+            let x, y;
+            
+            switch (side) {
+                case 0: // Top
+                    x = Math.random() * 800;
+                    y = 10;
+                    break;
+                case 1: // Right
+                    x = 790;
+                    y = Math.random() * 600;
+                    break;
+                case 2: // Bottom
+                    x = Math.random() * 800;
+                    y = 590;
+                    break;
+                case 3: // Left
+                    x = 10;
+                    y = Math.random() * 600;
+                    break;
+            }
+
+            gameState.bots.push({
+                x: x,
+                y: y,
+                angle: Math.random() * Math.PI * 2,
+                health: 100,
+                speed: 2 + Math.random() * 2,
+                cooldown: 0
+            });
+        }
+
+        // Input handling
+        const keys = {};
+        
+        window.addEventListener('keydown', (e) => {
+            keys[e.code] = true;
+            
+            // Reload game
+            if (gameState.gameOver && e.code === 'Space') {
+                resetGame();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            keys[e.code] = false;
+        });
+
+        // Mouse movement for looking around
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        canvas.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX - canvas.getBoundingClientRect().left;
+            mouseY = e.clientY - canvas.getBoundingClientRect().top;
+        });
+
+        // Shooting
+        canvas.addEventListener('click', () => {
+            if (gameState.gameOver) return;
+            
+            if (gameState.player.ammo > 0 && gameState.player.cooldown <= 0) {
+                shoot();
+                gameState.player.ammo--;
+                gameState.player.cooldown = 10;
+                updateHUD();
+            }
+        });
+
+        // Shoot bullet
+        function shoot() {
+            const angle = Math.atan2(
+                mouseY - canvas.height / 2,
+                mouseX - canvas.width / 2
+            );
+
+            gameState.bullets.push({
+                x: gameState.player.x,
+                y: gameState.player.y,
+                angle: angle,
+                speed: 10,
+                owner: 'player'
+            });
+        }
+
+        // Update HUD
+        function updateHUD() {
+            document.getElementById('health').textContent = gameState.player.health;
+            document.getElementById('ammo').textContent = gameState.player.ammo;
+            document.getElementById('kills').textContent = gameState.player.kills;
+        }
+
+        // Reset game
+        function resetGame() {
+            gameState.player = {
+                x: 400,
+                y: 300,
+                angle: 0,
+                health: 100,
+                ammo: 30,
+                kills: 0,
+                speed: 5,
+                cooldown: 0
+            };
+            
+            gameState.bots = [];
+            gameState.bullets = [];
+            gameState.gameOver = false;
+            gameOver.style.display = 'none';
+            
+            initMap();
+            updateHUD();
+        }
+
+        // Check collision with walls
+        function checkWallCollision(x, y, radius = 10) {
+            for (const wall of gameState.walls) {
+                // Simple line segment collision
+                const dx = wall.x2 - wall.x1;
+                const dy = wall.y2 - wall.y1;
+                const length = Math.sqrt(dx * dx + dy * dy);
+                
+                const t = ((x - wall.x1) * dx + (y - wall.y1) * dy) / (length * length);
+                
+                if (t >= 0 && t <= 1) {
+                    const closestX = wall.x1 + t * dx;
+                    const closestY = wall.y1 + t * dy;
+                    
+                    const distance = Math.sqrt(
+                        Math.pow(x - closestX, 2) + Math.pow(y - closestY, 2)
+                    );
+                    
+                    if (distance < radius) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // Spawn ammo pickup
+        function spawnAmmo() {
+            if (Math.random() < 0.01) {
+                gameState.ammoPickups.push({
+                    x: 50 + Math.random() * 700,
+                    y: 50 + Math.random() * 500
+                });
+            }
+        }
+
+        // Main game loop
+        function gameLoop() {
+            if (gameState.gameOver) {
+                return;
+            }
+
+            // Clear canvas
+            ctx.fillStyle = colors.sky;
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = colors.ground;
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+
+            // Update player angle based on mouse
+            gameState.player.angle = Math.atan2(
+                mouseY - canvas.height / 2,
+                mouseX - canvas.width / 2
+            );
+
+            // Player movement
+            if (keys['KeyW']) {
+                const newX = gameState.player.x + Math.cos(gameState.player.angle) * gameState.player.speed;
+                const newY = gameState.player.y + Math.sin(gameState.player.angle) * gameState.player.speed;
+                if (!checkWallCollision(newX, newY)) {
+                    gameState.player.x = newX;
+                    gameState.player.y = newY;
+                }
+            }
+            if (keys['KeyS']) {
+                const newX = gameState.player.x - Math.cos(gameState.player.angle) * gameState.player.speed;
+                const newY = gameState.player.y - Math.sin(gameState.player.angle) * gameState.player.speed;
+                if (!checkWallCollision(newX, newY)) {
+                    gameState.player.x = newX;
+                    gameState.player.y = newY;
+                }
+            }
+            if (keys['KeyA']) {
+                const newX = gameState.player.x + Math.cos(gameState.player.angle - Math.PI / 2) * gameState.player.speed;
+                const newY = gameState.player.y + Math.sin(gameState.player.angle - Math.PI / 2) * gameState.player.speed;
+                if (!checkWallCollision(newX, newY)) {
+                    gameState.player.x = newX;
+                    gameState.player.y = newY;
+                }
+            }
+            if (keys['KeyD']) {
+                const newX = gameState.player.x + Math.cos(gameState.player.angle + Math.PI / 2) * gameState.player.speed;
+                const newY = gameState.player.y + Math.sin(gameState.player.angle + Math.PI / 2) * gameState.player.speed;
+                if (!checkWallCollision(newX, newY)) {
+                    gameState.player.x = newX;
+                    gameState.player.y = newY;
+                }
+            }
+
+            // Decrease cooldown
+            if (gameState.player.cooldown > 0) {
+                gameState.player.cooldown--;
+            }
+
+            // Update bots
+            for (let i = gameState.bots.length - 1; i >= 0; i--) {
+                const bot = gameState.bots[i];
+                
+                // Move towards player
+                const dx = gameState.player.x - bot.x;
+                const dy = gameState.player.y - bot.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance > 0) {
+                    bot.angle = Math.atan2(dy, dx);
+                    
+                    // Move towards player
+                    const newX = bot.x + Math.cos(bot.angle) * bot.speed;
+                    const newY = bot.y + Math.sin(bot.angle) * bot.speed;
+                    
+                    if (!checkWallCollision(newX, newY, 8)) {
+                        bot.x = newX;
+                        bot.y = newY;
+                    }
+
+                    // Shoot at player
+                    if (distance < 300 && bot.cooldown <= 0) {
+                        gameState.bullets.push({
+                            x: bot.x,
+                            y: bot.y,
+                            angle: bot.angle,
+                            speed: 7,
+                            owner: 'bot'
+                        });
+                        bot.cooldown = 30 + Math.random() * 30;
+                    }
+                }
+
+                // Decrease cooldown
+                if (bot.cooldown > 0) {
+                    bot.cooldown--;
+                }
+
+                // Draw bot
+                ctx.fillStyle = colors.bot;
+                ctx.beginPath();
+                ctx.arc(bot.x, bot.y, 8, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Draw bot direction
+                ctx.strokeStyle = '#fff';
+                ctx.beginPath();
+                ctx.moveTo(bot.x, bot.y);
+                ctx.lineTo(
+                    bot.x + Math.cos(bot.angle) * 15,
+                    bot.y + Math.sin(bot.angle) * 15
+                );
+                ctx.stroke();
+
+                // Draw bot health bar
+                ctx.fillStyle = '#f00';
+                ctx.fillRect(bot.x - 10, bot.y - 15, 20, 3);
+                ctx.fillStyle = colors.health;
+                ctx.fillRect(bot.x - 10, bot.y - 15, 20 * (bot.health / 100), 3);
+            }
+
+            // Update bullets
+            for (let i = gameState.bullets.length - 1; i >= 0; i--) {
+                const bullet = gameState.bullets[i];
+                bullet.x += Math.cos(bullet.angle) * bullet.speed;
+                bullet.y += Math.sin(bullet.angle) * bullet.speed;
+
+                // Check wall collision
+                if (checkWallCollision(bullet.x, bullet.y, 3) ||
+                    bullet.x < 0 || bullet.x > canvas.width ||
+                    bullet.y < 0 || bullet.y > canvas.height) {
+                    gameState.bullets.splice(i, 1);
+                    continue;
+                }
+
+                // Check player hit
+                if (bullet.owner === 'bot') {
+                    const dx = gameState.player.x - bullet.x;
+                    const dy = gameState.player.y - bullet.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 10) {
+                        gameState.player.health -= 10;
+                        gameState.bullets.splice(i, 1);
+                        updateHUD();
+                        
+                        if (gameState.player.health <= 0) {
+                            gameState.gameOver = true;
+                            gameOver.style.display = 'block';
+                        }
+                        continue;
+                    }
+                }
+
+                // Check bot hit
+                if (bullet.owner === 'player') {
+                    for (let j = gameState.bots.length - 1; j >= 0; j--) {
+                        const bot = gameState.bots[j];
+                        const dx = bot.x - bullet.x;
+                        const dy = bot.y - bullet.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 10) {
+                            bot.health -= 30;
+                            gameState.bullets.splice(i, 1);
+                            
+                            if (bot.health <= 0) {
+                                gameState.bots.splice(j, 1);
+                                gameState.player.kills++;
+                                gameState.player.ammo += 5;
+                                if (gameState.player.ammo > 30) {
+                                    gameState.player.ammo = 30;
+                                }
+                                updateHUD();
+                                spawnBot();
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // Draw bullet
+                ctx.fillStyle = colors.bullet;
+                ctx.beginPath();
+                ctx.arc(bullet.x, bullet.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Draw walls
+            ctx.strokeStyle = colors.wall;
+            ctx.lineWidth = 8;
+            for (const wall of gameState.walls) {
+                ctx.beginPath();
+                ctx.moveTo(wall.x1, wall.y1);
+                ctx.lineTo(wall.x2, wall.y2);
+                ctx.stroke();
+            }
+
+            // Draw player
+            ctx.fillStyle = colors.player;
+            ctx.beginPath();
+            ctx.arc(gameState.player.x, gameState.player.y, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw player direction
+            ctx.strokeStyle = '#fff';
+            ctx.beginPath();
+            ctx.moveTo(gameState.player.x, gameState.player.y);
+            ctx.lineTo(
+                gameState.player.x + Math.cos(gameState.player.angle) * 20,
+                gameState.player.y + Math.sin(gameState.player.angle) * 20
+            );
+            ctx.stroke();
+
+            // Draw player health bar
+            ctx.fillStyle = '#f00';
+            ctx.fillRect(gameState.player.x - 15, gameState.player.y - 20, 30, 5);
+            ctx.fillStyle = colors.health;
+            ctx.fillRect(gameState.player.x - 15, gameState.player.y - 20, 30 * (gameState.player.health / 100), 5);
+
+            // Spawn ammo occasionally
+            spawnAmmo();
+
+            // Continue game loop
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Initialize game
+        initMap();
+        updateHUD();
+        gameLoop();
+    </script>
+</body>
+</html>

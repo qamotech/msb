@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "projectName": "N8-Pathfinder",
+  "userName": "developer",
+  "skillLevel": "intermediate",
+  "outputFolder": ".vibecheck/flow",
+  "planningArtifacts": ".vibecheck\\flow\\planning-artifacts",
+  "implementationArtifacts": ".vibecheck\\flow\\implementation-artifacts",
+  "installedAt": "2026-08-15T23:06:56.096Z",
+  "ide": [
+    "vscode"
+  ]
+}

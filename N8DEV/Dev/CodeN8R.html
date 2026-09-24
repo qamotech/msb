@@ -1,0 +1,2063 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>CodeN8R // Electric AI Studio</title>
+  <style>
+    :root {
+      /* Refined dark theme palette */
+      --bg-0:#0a0f1a;
+      --bg-1:#111b2c;
+      --glass:rgba(20,34,58,.66);
+      --glass-strong:rgba(15,25,45,.88);
+      --glass-soft:rgba(30,55,80,.42);
+      --line:rgba(120,210,255,.18);
+      --line-hot:rgba(70,210,255,.65);
+      --accent:#63e7ff; /* primary accent */
+      --cyan:var(--accent);
+      --blue:#3b84ff;
+      --violet:#c07cff;
+      --gold:#ffd966;
+      --green:#57f5a4;
+      --red:#ff5d7a;
+      --text:#e0f2ff;
+      --muted:#9ab0c0;
+      --shadow:0 22px 70px rgba(0,0,0,.48);
+      --radius:16px;
+      --header-h:62px;
+      --dock-h:54px;
+      --status-h:26px;
+      --effect-intensity:1;
+      --editor-size:14px;
+      --ui-font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono:"Cascadia Code","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+    }
+
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--bg-0);color:var(--text);font-family:var(--ui-font)}
+    body{
+      background:
+        radial-gradient(circle at 16% 8%,rgba(22,135,255,.2),transparent 27%),
+        radial-gradient(circle at 82% 14%,rgba(165,124,255,.14),transparent 25%),
+        radial-gradient(circle at 52% 92%,rgba(0,225,255,.1),transparent 32%),
+        linear-gradient(135deg,var(--bg-0),var(--bg-1) 48%,#02050a);
+    }
+    body::before{
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.34;
+      background-image:
+        linear-gradient(rgba(99,231,255,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(99,231,255,.035) 1px,transparent 1px);
+      background-size:28px 28px;
+      mask-image:linear-gradient(to bottom,#000,transparent 86%);
+    }
+    button,input,textarea,select{font:inherit}
+    button{color:inherit}
+    button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{
+      outline:2px solid var(--cyan);outline-offset:2px
+    }
+    ::selection{background:rgba(99,231,255,.28);color:#fff}
+    ::-webkit-scrollbar{width:9px;height:9px}
+    ::-webkit-scrollbar-track{background:rgba(0,0,0,.22)}
+    ::-webkit-scrollbar-thumb{background:linear-gradient(var(--blue),var(--cyan));border-radius:9px;border:2px solid transparent;background-clip:padding-box}
+
+    #electric-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:50;pointer-events:none;mix-blend-mode:screen}
+    .electric-frame{position:fixed;inset:3px;z-index:49;pointer-events:none;border:1px solid rgba(99,231,255,.22);filter:drop-shadow(0 0 6px rgba(99,231,255,.42))}
+    .rail{position:absolute;overflow:hidden}
+    .rail::after{
+      content:"";position:absolute;background:linear-gradient(90deg,transparent,var(--cyan),#fff,var(--violet),transparent);
+      filter:blur(.2px) drop-shadow(0 0 7px var(--cyan));animation:rail-surge 3.4s cubic-bezier(.22,.61,.36,1) infinite
+    }
+    .rail.top,.rail.bottom{left:0;width:100%;height:3px}
+    .rail.top{top:-1px}.rail.bottom{bottom:-1px}
+    .rail.top::after,.rail.bottom::after{width:28%;height:2px;left:-30%}
+    .rail.left,.rail.right{top:0;height:100%;width:3px}
+    .rail.left{left:-1px}.rail.right{right:-1px}
+    .rail.left::after,.rail.right::after{height:28%;width:2px;top:-30%;background:linear-gradient(180deg,transparent,var(--cyan),#fff,var(--violet),transparent);animation-delay:-1.7s}
+    @keyframes rail-surge{0%{transform:translateX(0);opacity:0}8%{opacity:1}60%{opacity:.8}100%{transform:translateX(470%);opacity:0}}
+    .rail.left::after,.rail.right::after{animation-name:rail-surge-y}
+    @keyframes rail-surge-y{0%{transform:translateY(0);opacity:0}8%{opacity:1}60%{opacity:.8}100%{transform:translateY(470%);opacity:0}}
+
+    .glass{
+      background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),var(--glass);
+      border:1px solid var(--line);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(22px) saturate(145%);-webkit-backdrop-filter:blur(22px) saturate(145%)
+    }
+    .glass-btn{
+      min-height:34px;padding:7px 11px;border-radius:10px;border:1px solid rgba(133,225,255,.25);
+      background:linear-gradient(135deg,rgba(255,255,255,.105),rgba(255,255,255,.028));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 7px 20px rgba(0,0,0,.18);
+      backdrop-filter:blur(12px);cursor:pointer;transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease;
+      white-space:nowrap;position:relative;overflow:hidden
+    }
+    .glass-btn::after{
+      content:"";position:absolute;inset:-100% auto -100% -55%;width:36%;transform:rotate(18deg);
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transition:left .42s ease
+    }
+    .glass-btn:hover{transform:translateY(-1px);border-color:var(--line-hot);background:linear-gradient(135deg,rgba(99,231,255,.16),rgba(22,135,255,.08));box-shadow:0 0 20px rgba(99,231,255,.13),inset 0 1px 0 rgba(255,255,255,.14)}
+    .glass-btn:hover::after{left:120%}
+    .glass-btn:active{transform:translateY(0) scale(.98)}
+    .glass-btn.primary{border-color:rgba(99,231,255,.6);background:linear-gradient(135deg,rgba(99,231,255,.26),rgba(22,135,255,.16));color:#fff}
+    .glass-btn.success{border-color:rgba(87,245,164,.5);color:var(--green)}
+    .glass-btn.danger{border-color:rgba(255,93,122,.42);color:#ff91a5}
+    .glass-btn.icon{width:34px;min-width:34px;padding:6px;display:grid;place-items:center}
+    .glass-btn.tiny{min-height:28px;padding:4px 8px;font-size:12px;border-radius:8px}
+    .glass-btn[disabled]{opacity:.42;cursor:not-allowed;transform:none}
+    .glass-btn.is-active{border-color:var(--cyan);background:rgba(99,231,255,.16);box-shadow:0 0 16px rgba(99,231,255,.17)}
+
+    #boot{
+      position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:
+        radial-gradient(circle at center,rgba(16,74,112,.27),transparent 35%),#020409;
+      transition:opacity .55s ease,visibility .55s ease
+    }
+    #boot.done{opacity:0;visibility:hidden}
+    .boot-card{width:min(620px,calc(100vw - 40px));padding:36px;border-radius:22px;text-align:center}
+    .boot-mark{
+      width:78px;height:78px;margin:0 auto 19px;border:1px solid var(--cyan);border-radius:24px;display:grid;place-items:center;
+      font:800 30px/1 var(--mono);color:var(--cyan);transform:rotate(45deg);box-shadow:0 0 34px rgba(99,231,255,.3),inset 0 0 28px rgba(22,135,255,.18)
+    }
+    .boot-mark span{transform:rotate(-45deg)}
+    .boot-title{margin:0;font-size:clamp(25px,5vw,45px);letter-spacing:.1em;text-transform:uppercase}
+    .boot-title em{font-style:normal;color:var(--cyan);text-shadow:0 0 16px rgba(99,231,255,.55)}
+    .boot-sub{color:var(--muted);font:12px/1.7 var(--mono);letter-spacing:.14em;text-transform:uppercase;margin:12px 0 22px}
+    .boot-track{height:5px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+    .boot-fill{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),#fff);box-shadow:0 0 17px var(--cyan);animation:boot-fill 1.5s ease forwards}
+    @keyframes boot-fill{to{width:100%}}
+    #boot-status{margin:12px 0 0;color:var(--cyan);font:11px var(--mono)}
+    #skip-boot{margin-top:18px}
+
+    #app{position:relative;z-index:2;height:100%;display:grid;grid-template-rows:var(--header-h) 1fr var(--dock-h) var(--status-h);min-width:320px}
+    #topbar{
+      margin:7px 8px 0;border-radius:14px 14px 10px 10px;display:flex;align-items:center;gap:12px;padding:8px 10px;min-width:0;z-index:80
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-width:max-content;padding-right:8px;border-right:1px solid var(--line)}
+    .brand-glyph{
+      width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(99,231,255,.25),rgba(165,124,255,.18));
+      border:1px solid rgba(99,231,255,.36);font:800 15px var(--mono);color:var(--cyan);box-shadow:0 0 20px rgba(99,231,255,.15)
+    }
+    .brand-name{font-weight:800;letter-spacing:.08em;font-size:14px}
+    .brand-name small{display:block;margin-top:2px;color:var(--muted);font:9px var(--mono);letter-spacing:.14em}
+    .toolbar-scroll{display:flex;align-items:center;gap:7px;min-width:0;overflow-x:auto;scrollbar-width:none;flex:1;padding:2px}
+    .toolbar-scroll::-webkit-scrollbar{display:none}
+    .api-cluster{display:flex;gap:6px;align-items:center;min-width:max-content}
+    .field-shell{
+      min-height:35px;border-radius:10px;border:1px solid var(--line);display:flex;align-items:center;background:rgba(0,0,0,.2);overflow:hidden;
+      transition:border-color .2s,box-shadow .2s
+    }
+    .field-shell:focus-within{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(99,231,255,.08)}
+    .field-shell input,.field-shell select{
+      height:33px;border:0;outline:0;background:transparent;color:var(--text);padding:0 9px;min-width:0
+    }
+    .field-shell input{width:205px;font:12px var(--mono)}
+    .field-shell select{width:176px;appearance:none;padding-right:24px;background-image:linear-gradient(45deg,transparent 50%,var(--cyan) 50%),linear-gradient(135deg,var(--cyan) 50%,transparent 50%);background-position:calc(100% - 13px) 14px,calc(100% - 9px) 14px;background-size:4px 4px;background-repeat:no-repeat}
+    .field-shell select option{background:#07111d;color:var(--text)}
+    .inline-icon{border:0;border-left:1px solid var(--line);height:33px;min-width:32px;background:rgba(255,255,255,.03);color:var(--muted);cursor:pointer}
+    .inline-icon:hover{color:var(--cyan);background:rgba(99,231,255,.08)}
+    .connection-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);box-shadow:0 0 0 4px rgba(138,169,184,.09);margin:0 3px}
+    .connection-dot.online{background:var(--green);box-shadow:0 0 10px var(--green),0 0 0 4px rgba(87,245,164,.1)}
+    .connection-dot.busy{background:var(--gold);box-shadow:0 0 10px var(--gold);animation:pulse 1s infinite}
+    .connection-dot.error{background:var(--red);box-shadow:0 0 10px var(--red)}
+    @keyframes pulse{50%{opacity:.35}}
+
+    #desktop{position:relative;margin:7px 8px 5px;min-height:0;overflow:hidden;border-radius:14px}
+    #desktop::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(99,231,255,.025),transparent 35%,rgba(165,124,255,.025));pointer-events:none}
+    #drop-hud{
+      position:absolute;inset:16px;z-index:500;display:none;place-items:center;border:2px dashed var(--cyan);border-radius:18px;
+      background:rgba(2,9,17,.84);backdrop-filter:blur(12px);color:var(--cyan);font:700 18px var(--mono);text-align:center
+    }
+    #desktop.dragging-file #drop-hud{display:grid}
+
+    .app-window{
+      position:absolute;min-width:210px;min-height:44px;border-radius:var(--radius);overflow:hidden;resize:both;
+      display:flex;flex-direction:column;transition:box-shadow .16s,border-color .16s,opacity .18s,transform .18s;
+      contain:layout;isolation:isolate
+    }
+    .app-window::after{
+      content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;border:1px solid transparent;
+      background:linear-gradient(115deg,transparent 15%,rgba(99,231,255,.42),transparent 33%,transparent 65%,rgba(165,124,255,.34),transparent 82%) border-box;
+      -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+      background-size:260% 100%;animation:window-charge 5.6s linear infinite;opacity:calc(.6 * var(--effect-intensity))
+    }
+    @keyframes window-charge{to{background-position:-260% 0}}
+    .app-window.is-focused{border-color:rgba(99,231,255,.42);box-shadow:0 24px 75px rgba(0,0,0,.55),0 0 28px rgba(99,231,255,.1),inset 0 1px 0 rgba(255,255,255,.1)}
+    .app-window.is-minimized{height:42px!important;min-height:42px;resize:none}
+    .app-window.is-minimized .window-body,.app-window.is-minimized .window-toolbar{display:none}
+    .app-window.is-maximized{inset:5px!important;width:calc(100% - 10px)!important;height:calc(100% - 10px)!important;resize:none;border-radius:12px}
+    .app-window.is-closed{display:none}
+    .window-titlebar{
+      height:41px;min-height:41px;display:flex;align-items:center;gap:8px;padding:0 8px 0 12px;border-bottom:1px solid var(--line);
+      background:linear-gradient(90deg,rgba(99,231,255,.055),transparent 55%,rgba(165,124,255,.055));cursor:grab;user-select:none
+    }
+    .window-titlebar:active{cursor:grabbing}
+    .window-icon{width:22px;height:22px;border-radius:7px;background:rgba(99,231,255,.1);border:1px solid rgba(99,231,255,.22);display:grid;place-items:center;color:var(--cyan);font:11px var(--mono)}
+    .window-title{font-weight:750;font-size:12px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+    .window-subtitle{color:var(--muted);font:10px var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .window-spacer{flex:1}
+    .window-size{color:var(--muted);font:9px var(--mono);min-width:54px;text-align:right}
+    .window-controls{display:flex;gap:5px}
+    .window-control{width:25px;height:25px;border-radius:7px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;display:grid;place-items:center;font:12px var(--mono)}
+    .window-control:hover{color:#fff;border-color:var(--cyan);background:rgba(99,231,255,.1)}
+    .window-control.close:hover{border-color:var(--red);color:#fff;background:rgba(255,93,122,.2)}
+    .window-toolbar{
+      min-height:39px;display:flex;align-items:center;gap:6px;padding:5px 8px;border-bottom:1px solid var(--line);
+      background:rgba(0,0,0,.12);overflow-x:auto;scrollbar-width:none
+    }
+    .window-toolbar::-webkit-scrollbar{display:none}
+    .window-body{position:relative;flex:1;min-height:0;overflow:auto}
+
+    #win-tools{left:6px;top:6px;width:218px;height:calc(100% - 12px)}
+    #win-chat{left:231px;top:6px;width:310px;height:calc(100% - 12px)}
+    #win-editor{left:548px;top:6px;width:calc((100% - 560px) * .53);height:calc(100% - 12px)}
+    #win-preview{right:6px;top:6px;width:calc((100% - 560px) * .47 - 6px);height:calc(100% - 12px)}
+    #win-console{left:25%;bottom:14px;width:50%;height:220px;display:none}
+    #win-console.is-open{display:flex}
+
+    .tool-section{padding:12px;border-bottom:1px solid var(--line)}
+    .section-label{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font:10px var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px}
+    .template-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .template-card{
+      min-height:68px;padding:9px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.035);cursor:grab;
+      transition:border-color .15s,transform .15s,background .15s
+    }
+    .template-card:hover{border-color:var(--cyan);transform:translateY(-1px);background:rgba(99,231,255,.07)}
+    .template-card:active{cursor:grabbing}
+    .template-card b{display:block;font-size:11px;margin-bottom:5px}
+    .template-card span{color:var(--muted);font:9px/1.35 var(--mono)}
+    .tool-stack{display:grid;gap:7px}
+    .control-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;color:var(--muted);font-size:11px}
+    .control-row output{color:var(--cyan);font:10px var(--mono)}
+    input[type="range"]{width:100%;accent-color:var(--cyan)}
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .mini-stat{padding:8px;border:1px solid var(--line);border-radius:9px;background:rgba(0,0,0,.13)}
+    .mini-stat span{display:block;color:var(--muted);font:9px var(--mono);text-transform:uppercase}
+    .mini-stat b{display:block;color:var(--text);font:12px var(--mono);margin-top:3px}
+
+    #chat-body{display:flex;flex-direction:column;overflow:hidden}
+    #chat-history{flex:1;min-height:0;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+    .message{border:1px solid var(--line);border-radius:12px;padding:10px;background:rgba(255,255,255,.032);box-shadow:inset 0 1px rgba(255,255,255,.035)}
+    .message.user{border-color:rgba(255,209,102,.24);background:rgba(255,209,102,.045)}
+    .message.error{border-color:rgba(255,93,122,.36);background:rgba(255,93,122,.055)}
+    .message.streaming{border-color:rgba(99,231,255,.38)}
+    .message-head{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+    .message-avatar{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;background:rgba(99,231,255,.1);color:var(--cyan);font:9px var(--mono)}
+    .message.user .message-avatar{background:rgba(255,209,102,.1);color:var(--gold)}
+    .message-sender{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .message-time{margin-left:auto;color:var(--muted);font:9px var(--mono)}
+    .message-copy{border:0;background:transparent;color:var(--muted);cursor:pointer;padding:2px}
+    .message-copy:hover{color:var(--cyan)}
+    .message-content{font:12px/1.55 var(--mono);color:#d9edf5;overflow-wrap:anywhere}
+    .message-content p{margin:0 0 8px}
+    .message-content p:last-child{margin-bottom:0}
+    .code-card{margin:8px 0;border:1px solid rgba(99,231,255,.22);border-radius:10px;overflow:hidden;background:#02060b}
+    .code-head{height:30px;display:flex;align-items:center;padding:0 7px 0 10px;border-bottom:1px solid var(--line);color:var(--muted);font:9px var(--mono);text-transform:uppercase}
+    .code-head .code-actions{margin-left:auto;display:flex;gap:4px}
+    .code-card pre{margin:0;padding:10px;max-height:260px;overflow:auto;color:#b8f5d6;font:11px/1.5 var(--mono);white-space:pre}
+    .typing-dots{display:inline-flex;gap:4px}
+    .typing-dots i{width:5px;height:5px;border-radius:50%;background:var(--cyan);animation:typing 1.1s infinite}
+    .typing-dots i:nth-child(2){animation-delay:.15s}.typing-dots i:nth-child(3){animation-delay:.3s}
+    @keyframes typing{50%{transform:translateY(-4px);opacity:.45}}
+    #prompt-zone{padding:9px;border-top:1px solid var(--line);background:rgba(0,0,0,.1)}
+    #chat-input{
+      width:100%;height:80px;min-height:55px;max-height:180px;resize:vertical;border:1px solid var(--line);border-radius:11px;
+      background:rgba(0,0,0,.24);color:var(--text);padding:10px;outline:0;font:12px/1.45 var(--mono)
+    }
+    #chat-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(99,231,255,.07)}
+    .prompt-footer{display:flex;align-items:center;gap:6px;margin-top:7px}
+    .prompt-meta{color:var(--muted);font:9px var(--mono);margin-right:auto}
+    .mini-select{
+      min-height:28px;border:1px solid var(--line);border-radius:8px;background:rgba(0,0,0,.25);color:var(--text);padding:4px 7px;font-size:10px;max-width:105px
+    }
+
+    #editor-body{overflow:hidden;background:rgba(0,0,0,.18)}
+    #editor-shell{position:absolute;inset:0;display:grid;grid-template-columns:auto 1fr;overflow:hidden}
+    #line-numbers{
+      margin:0;padding:13px 9px 40px;min-width:43px;overflow:hidden;text-align:right;user-select:none;border-right:1px solid var(--line);
+      background:rgba(0,0,0,.25);color:#456779;font:var(--editor-size)/1.55 var(--mono)
+    }
+    #code-editor{
+      width:100%;height:100%;resize:none;border:0;outline:0;padding:13px 15px 80px;overflow:auto;white-space:pre;tab-size:2;
+      background:transparent;color:#c6f7e0;caret-color:var(--cyan);font:var(--editor-size)/1.55 var(--mono)
+    }
+    #code-editor.drop-target{box-shadow:inset 0 0 0 2px var(--cyan),inset 0 0 60px rgba(99,231,255,.08)}
+    .editor-fade{position:absolute;right:12px;bottom:10px;pointer-events:none;color:rgba(99,231,255,.35);font:9px var(--mono)}
+
+    #preview-body{overflow:hidden;background:#05080c;display:flex;align-items:stretch;justify-content:center;padding:8px}
+    #device-shell{position:relative;width:100%;height:100%;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px var(--line),0 14px 36px rgba(0,0,0,.4);transition:width .25s,height .25s}
+    #preview-frame{width:100%;height:100%;display:block;border:0;background:#fff}
+    #preview-overlay{position:absolute;inset:0;display:none;place-items:center;background:rgba(2,7,12,.82);color:var(--cyan);font:12px var(--mono);z-index:2}
+    #device-shell.loading #preview-overlay{display:grid}
+    .viewport-readout{color:var(--muted);font:9px var(--mono);min-width:62px}
+
+    #console-output{margin:0;padding:10px;height:100%;overflow:auto;background:rgba(0,0,0,.25);font:11px/1.55 var(--mono);white-space:pre-wrap}
+    .log-row{padding:3px 0;border-bottom:1px solid rgba(255,255,255,.025);color:#bcd5df}
+    .log-row.error{color:#ff91a5}.log-row.warn{color:var(--gold)}.log-row.info{color:var(--cyan)}
+
+    #dock{
+      margin:0 8px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:7px;padding:7px 10px;z-index:80;overflow-x:auto
+    }
+    .dock-item{
+      min-width:42px;height:38px;padding:0 9px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.045);
+      display:flex;align-items:center;justify-content:center;gap:6px;cursor:grab;color:var(--muted);transition:.16s
+    }
+    .dock-item:hover,.dock-item.active{color:var(--cyan);border-color:rgba(99,231,255,.45);background:rgba(99,231,255,.09);transform:translateY(-2px)}
+    .dock-item span{font-size:11px;font-weight:700}
+    .dock-divider{width:1px;height:24px;background:var(--line);margin:0 2px}
+
+    #statusbar{display:flex;align-items:center;gap:12px;padding:0 12px;color:var(--muted);font:9px var(--mono);letter-spacing:.03em;z-index:80}
+    #statusbar .spacer{flex:1}
+    .status-segment{display:flex;align-items:center;gap:5px;white-space:nowrap}
+    .status-light{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green)}
+
+    dialog{
+      color:var(--text);width:min(590px,calc(100vw - 30px));max-height:min(760px,calc(100vh - 30px));padding:0;border:1px solid rgba(99,231,255,.32);
+      border-radius:18px;background:linear-gradient(135deg,rgba(16,31,50,.96),rgba(5,12,22,.96));box-shadow:0 35px 110px #000,0 0 40px rgba(99,231,255,.1);
+      backdrop-filter:blur(28px);overflow:hidden
+    }
+    dialog::backdrop{background:rgba(0,3,8,.68);backdrop-filter:blur(6px)}
+    .dialog-head{height:48px;display:flex;align-items:center;padding:0 12px 0 16px;border-bottom:1px solid var(--line)}
+    .dialog-head h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0}
+    .dialog-head button{margin-left:auto}
+    .dialog-body{padding:16px;max-height:calc(100vh - 115px);overflow:auto}
+    .dialog-actions{display:flex;justify-content:flex-end;gap:7px;padding:11px 16px;border-top:1px solid var(--line)}
+    .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .setting-card{padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025)}
+    .setting-card.wide{grid-column:1/-1}
+    .setting-card label{display:block;color:var(--muted);font:10px var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+    .setting-card input[type="text"],.setting-card input[type="number"],.setting-card textarea,.setting-card select{
+      width:100%;border:1px solid var(--line);border-radius:9px;background:rgba(0,0,0,.22);color:var(--text);padding:8px;outline:0
+    }
+    .setting-card textarea{height:100px;resize:vertical;font:11px/1.45 var(--mono)}
+    .check-row{display:flex!important;align-items:center;gap:8px!important;text-transform:none!important;letter-spacing:0!important;margin:0!important;font:12px var(--ui-font)!important;color:var(--text)!important}
+    .check-row input{accent-color:var(--cyan)}
+    .palette-search{width:100%;height:44px;border:1px solid var(--line);border-radius:11px;background:rgba(0,0,0,.24);color:var(--text);padding:0 12px;outline:0;font:13px var(--mono)}
+    .command-list{display:grid;gap:5px;margin-top:10px;max-height:390px;overflow:auto}
+    .command-item{width:100%;display:flex;align-items:center;gap:8px;text-align:left;padding:10px;border:1px solid transparent;border-radius:9px;background:transparent;color:var(--text);cursor:pointer}
+    .command-item:hover,.command-item.selected{border-color:var(--line);background:rgba(99,231,255,.07)}
+    .command-item small{margin-left:auto;color:var(--muted);font:9px var(--mono)}
+    .shortcut-table,.diagnostic-list,.version-list,.feature-list{display:grid;gap:6px}
+    .shortcut-row,.diag-row,.version-row,.feature-row{display:flex;align-items:center;gap:10px;padding:9px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.025)}
+    kbd{margin-left:auto;padding:3px 6px;border-radius:5px;border:1px solid rgba(255,255,255,.18);background:#050a10;color:var(--cyan);font:9px var(--mono);box-shadow:inset 0 -1px rgba(255,255,255,.08)}
+    .diag-icon{width:18px;text-align:center}.diag-row.pass .diag-icon{color:var(--green)}.diag-row.fail .diag-icon{color:var(--red)}.diag-row.warn .diag-icon{color:var(--gold)}
+    .version-row time{color:var(--muted);font:9px var(--mono);margin-right:auto}
+    .feature-list{grid-template-columns:1fr 1fr}
+    .feature-row{font-size:11px}.feature-row::before{content:"⚡";color:var(--cyan);font-size:9px}
+    .search-grid{display:grid;grid-template-columns:1fr auto;gap:8px}
+    .search-grid input{min-width:0;border:1px solid var(--line);border-radius:9px;background:rgba(0,0,0,.22);color:var(--text);padding:9px;outline:0}
+
+    #toast-stack{position:fixed;right:15px;bottom:90px;z-index:1200;display:grid;gap:8px;width:min(350px,calc(100vw - 30px));pointer-events:none}
+    .toast{padding:11px 13px;border-radius:11px;border:1px solid var(--line);background:rgba(7,18,30,.94);box-shadow:0 18px 45px rgba(0,0,0,.45);backdrop-filter:blur(18px);font:11px/1.45 var(--mono);animation:toast-in .24s ease}
+    .toast.good{border-color:rgba(87,245,164,.35)}.toast.error{border-color:rgba(255,93,122,.45)}.toast.warn{border-color:rgba(255,209,102,.4)}
+    @keyframes toast-in{from{opacity:0;transform:translateX(15px)}}
+    #closed-workspace{
+      position:fixed;inset:0;z-index:300;display:none;place-items:center;background:rgba(2,4,9,.88);backdrop-filter:blur(18px)
+    }
+    #closed-workspace.show{display:grid}
+    .closed-card{padding:28px;border-radius:18px;text-align:center}
+
+    body.reduced-motion *,body.reduced-motion *::before,body.reduced-motion *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}
+    body.reduced-motion #electric-canvas{display:none}
+    body.preview-focus #topbar,body.preview-focus #dock,body.preview-focus #statusbar{display:none}
+    body.preview-focus #app{grid-template-rows:1fr}
+    body.preview-focus #desktop{margin:0;border-radius:0}
+    body.preview-focus .app-window:not(#win-preview){display:none}
+    body.preview-focus #win-preview{inset:0!important;width:100%!important;height:100%!important;border-radius:0;resize:none}
+
+    @media (max-width:980px){
+      :root{--header-h:108px}
+      #topbar{align-content:flex-start;flex-wrap:wrap}
+      .brand{height:37px}
+      .toolbar-scroll{order:3;flex-basis:100%;height:42px}
+      .api-cluster{margin-left:auto;max-width:calc(100% - 165px)}
+      .field-shell input{width:145px}
+      .field-shell select{width:135px}
+      .window-subtitle,.window-size{display:none}
+    }
+    @media (max-width:650px){
+      :root{--header-h:148px;--dock-h:50px}
+      .api-cluster{order:3;flex-basis:100%;max-width:none;margin-left:0;overflow-x:auto}
+      .toolbar-scroll{order:4}
+      .field-shell input{width:155px}
+      #desktop{margin-left:4px;margin-right:4px}
+      .app-window{min-width:180px}
+      .settings-grid,.feature-list{grid-template-columns:1fr}
+      .setting-card.wide{grid-column:auto}
+      .dock-item span{display:none}
+      #statusbar .status-segment:nth-last-child(-n+2){display:none}
+    }
+  </style>
+    <link rel="stylesheet" href="styles/animations.css">
+</head>
+<body>
+  <canvas id="electric-canvas" aria-hidden="true"></canvas>
+  <div class="electric-frame" aria-hidden="true">
+    <i class="rail top"></i><i class="rail right"></i><i class="rail bottom"></i><i class="rail left"></i>
+  </div>
+
+  <div id="boot">
+    <div class="boot-card glass">
+      <div class="boot-mark"><span>N8</span></div>
+      <h1 class="boot-title">Code<em>N8R</em></h1>
+      <p class="boot-sub">Electric AI development environment · revision 2.0</p>
+      <div class="boot-track"><div class="boot-fill"></div></div>
+      <p id="boot-status">CALIBRATING ELECTRIC CORE...</p>
+      <button id="skip-boot" class="glass-btn tiny">SKIP BOOT</button>
+    </div>
+  </div>
+
+  <main id="app">
+    <header id="topbar" class="glass">
+      <div class="brand">
+        <div class="brand-glyph">N8</div>
+        <div class="brand-name">CODEN8R <small>ELECTRIC AI STUDIO</small></div>
+      </div>
+
+      <div class="toolbar-scroll" aria-label="Main toolbar">
+        <button class="glass-btn icon" data-command="new" title="New document (Ctrl+N)" aria-label="New document">＋</button>
+        <button class="glass-btn icon" data-command="open" title="Open or drop a file (Ctrl+O)" aria-label="Open file">⌁</button>
+        <button class="glass-btn icon" data-command="save" title="Save locally (Ctrl+S)" aria-label="Save locally">◇</button>
+        <button class="glass-btn icon" data-command="download" title="Download HTML (Ctrl+Shift+S)" aria-label="Download HTML">⇩</button>
+        <button class="glass-btn icon" data-command="undo" title="Undo (Ctrl+Z)" aria-label="Undo">↶</button>
+        <button class="glass-btn icon" data-command="redo" title="Redo (Ctrl+Y)" aria-label="Redo">↷</button>
+        <button class="glass-btn" data-command="run" title="Compile and run (Ctrl+R)">▶ RUN</button>
+        <button class="glass-btn" data-command="layout" title="Cycle window layouts">▦ LAYOUT</button>
+        <button class="glass-btn icon" data-command="palette" title="Command palette (Ctrl+K)" aria-label="Command palette">⌘</button>
+        <button class="glass-btn icon" data-command="settings" title="Settings" aria-label="Settings">⚙</button>
+        <button class="glass-btn icon" data-command="features" title="Feature matrix" aria-label="Feature matrix">60</button>
+      </div>
+
+      <div class="api-cluster">
+        <span id="connection-dot" class="connection-dot" title="Disconnected"></span>
+        <div class="field-shell">
+          <input id="api-key" type="password" autocomplete="off" spellcheck="false" data-lpignore="true" placeholder="Gemini API / auth key" aria-label="Gemini API key">
+          <button id="toggle-key" class="inline-icon" title="Show or hide key" aria-label="Show or hide API key">◉</button>
+          <button id="clear-key" class="inline-icon" title="Forget key" aria-label="Forget API key">×</button>
+        </div>
+        <div class="field-shell">
+          <select id="model-select" aria-label="Gemini model" disabled>
+            <option value="">Connect to discover models</option>
+          </select>
+          <button id="custom-model" class="inline-icon" title="Enter a model ID" aria-label="Enter a custom model">✎</button>
+        </div>
+        <button id="connect-btn" class="glass-btn primary">CONNECT</button>
+      </div>
+    </header>
+
+    <section id="desktop" aria-label="Resizable app windows">
+      <div id="drop-hud">DROP HTML, CSS, JS, JSON, TXT OR MD<br><small>Files load directly into the editor</small></div>
+
+      <section class="app-window glass" id="win-tools" data-window="tools" aria-label="Tools window">
+        <header class="window-titlebar">
+          <span class="window-icon">⌘</span><span class="window-title">Toolkit</span><span class="window-subtitle">drag templates into the editor</span>
+          <span class="window-spacer"></span><span class="window-size"></span>
+          <div class="window-controls">
+            <button class="window-control minimize" title="Minimize" aria-label="Minimize Toolkit">−</button>
+            <button class="window-control maximize" title="Maximize or restore" aria-label="Maximize Toolkit">□</button>
+            <button class="window-control close" title="Close" aria-label="Close Toolkit">×</button>
+          </div>
+        </header>
+        <div class="window-body">
+          <div class="tool-section">
+            <div class="section-label"><span>Starter modules</span><span>DRAG / CLICK</span></div>
+            <div class="template-grid" id="template-grid">
+              <button class="template-card" draggable="true" data-template="html"><b>Blank Web App</b><span>Semantic HTML starter</span></button>
+              <button class="template-card" draggable="true" data-template="canvas"><b>Canvas Game</b><span>Animated game loop</span></button>
+              <button class="template-card" draggable="true" data-template="dashboard"><b>Data Dashboard</b><span>Responsive metric UI</span></button>
+              <button class="template-card" draggable="true" data-template="landing"><b>Glass Landing</b><span>Polished product page</span></button>
+              <button class="template-card" draggable="true" data-template="particles"><b>Particles</b><span>Pointer-reactive visual</span></button>
+              <button class="template-card" draggable="true" data-template="component"><b>UI Components</b><span>Buttons, cards, forms</span></button>
+            </div>
+          </div>
+          <div class="tool-section">
+            <div class="section-label"><span>Editor actions</span></div>
+            <div class="tool-stack">
+              <button class="glass-btn" data-command="format">TIDY HTML</button>
+              <button class="glass-btn" data-command="find">FIND / REPLACE</button>
+              <button class="glass-btn" data-command="copy-code">COPY SOURCE</button>
+              <button class="glass-btn" data-command="snapshot">CREATE SNAPSHOT</button>
+              <button class="glass-btn" data-command="versions">VERSION HISTORY</button>
+              <button class="glass-btn danger" data-command="clear">CLEAR EDITOR</button>
+            </div>
+          </div>
+          <div class="tool-section">
+            <div class="section-label"><span>Source telemetry</span></div>
+            <div class="stat-grid">
+              <div class="mini-stat"><span>Lines</span><b id="stat-lines">0</b></div>
+              <div class="mini-stat"><span>Chars</span><b id="stat-chars">0</b></div>
+              <div class="mini-stat"><span>Words</span><b id="stat-words">0</b></div>
+              <div class="mini-stat"><span>Bytes</span><b id="stat-bytes">0 B</b></div>
+            </div>
+          </div>
+          <div class="tool-section">
+            <div class="section-label"><span>Quick controls</span></div>
+            <div class="tool-stack">
+              <div class="control-row"><span>Editor zoom</span><output id="editor-zoom-label">14px</output></div>
+              <input id="editor-zoom" type="range" min="10" max="24" value="14">
+              <label class="check-row"><input id="auto-run" type="checkbox" checked> Auto-run after edits</label>
+              <label class="check-row"><input id="include-source" type="checkbox" checked> Attach source to AI</label>
+              <label class="check-row"><input id="wrap-code" type="checkbox"> Wrap long code lines</label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="app-window glass" id="win-chat" data-window="chat" aria-label="Gemini chat window">
+        <header class="window-titlebar">
+          <span class="window-icon">✦</span><span class="window-title">Gemini Link</span><span class="window-subtitle" id="chat-model-label">offline</span>
+          <span class="window-spacer"></span><span class="window-size"></span>
+          <div class="window-controls">
+            <button class="window-control minimize" title="Minimize" aria-label="Minimize Gemini Link">−</button>
+            <button class="window-control maximize" title="Maximize or restore" aria-label="Maximize Gemini Link">□</button>
+            <button class="window-control close" title="Close" aria-label="Close Gemini Link">×</button>
+          </div>
+        </header>
+        <div class="window-toolbar">
+          <button class="glass-btn tiny" data-command="clear-chat">CLEAR</button>
+          <button class="glass-btn tiny" data-command="export-chat">EXPORT</button>
+          <button class="glass-btn tiny" data-command="retry">RETRY</button>
+          <button id="abort-btn" class="glass-btn tiny danger" disabled>STOP</button>
+          <span class="window-spacer"></span>
+          <button class="glass-btn tiny" data-command="settings">AI ⚙</button>
+        </div>
+        <div class="window-body" id="chat-body">
+          <div id="chat-history" aria-live="polite"></div>
+          <div id="prompt-zone">
+            <textarea id="chat-input" placeholder="Describe what to build, fix, explain, or improve… Drop text or a code file here." aria-label="Prompt Gemini"></textarea>
+            <div class="prompt-footer">
+              <span class="prompt-meta"><span id="prompt-tokens">0</span> est. tokens</span>
+              <select id="prompt-preset" class="mini-select" aria-label="Prompt preset">
+                <option value="">Prompt preset</option>
+                <option value="build">Build feature</option>
+                <option value="debug">Debug source</option>
+                <option value="review">Senior review</option>
+                <option value="accessibility">Accessibility</option>
+                <option value="performance">Performance</option>
+              </select>
+              <button id="send-btn" class="glass-btn primary">TRANSMIT ↵</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="app-window glass" id="win-editor" data-window="editor" aria-label="Source editor window">
+        <header class="window-titlebar">
+          <span class="window-icon">&lt;/&gt;</span><span class="window-title">Source Core</span><span class="window-subtitle" id="file-label">untitled.html</span>
+          <span class="window-spacer"></span><span class="window-size"></span>
+          <div class="window-controls">
+            <button class="window-control minimize" title="Minimize" aria-label="Minimize Source Core">−</button>
+            <button class="window-control maximize" title="Maximize or restore" aria-label="Maximize Source Core">□</button>
+            <button class="window-control close" title="Close" aria-label="Close Source Core">×</button>
+          </div>
+        </header>
+        <div class="window-toolbar">
+          <button class="glass-btn tiny success" data-command="run">▶ RUN</button>
+          <button class="glass-btn tiny" data-command="format">TIDY</button>
+          <button class="glass-btn tiny" data-command="find">FIND</button>
+          <button class="glass-btn tiny" data-command="open">IMPORT</button>
+          <button class="glass-btn tiny" data-command="download">EXPORT</button>
+          <span class="window-spacer"></span>
+          <span id="cursor-position" class="viewport-readout">Ln 1, Col 1</span>
+        </div>
+        <div class="window-body" id="editor-body">
+          <div id="editor-shell">
+            <pre id="line-numbers" aria-hidden="true">1</pre>
+            <textarea id="code-editor" aria-label="HTML source editor" spellcheck="false"></textarea>
+          </div>
+          <span class="editor-fade">DROP CODE / FILES HERE</span>
+        </div>
+      </section>
+
+      <section class="app-window glass" id="win-preview" data-window="preview" aria-label="Live preview window">
+        <header class="window-titlebar">
+          <span class="window-icon">◫</span><span class="window-title">Live Output</span><span class="window-subtitle" id="preview-status">ready</span>
+          <span class="window-spacer"></span><span class="window-size"></span>
+          <div class="window-controls">
+            <button class="window-control minimize" title="Minimize" aria-label="Minimize Live Output">−</button>
+            <button class="window-control maximize" title="Maximize or restore" aria-label="Maximize Live Output">□</button>
+            <button class="window-control close" title="Close" aria-label="Close Live Output">×</button>
+          </div>
+        </header>
+        <div class="window-toolbar">
+          <button class="glass-btn tiny success" data-command="run">↻ REFRESH</button>
+          <select id="viewport-select" class="mini-select" aria-label="Preview viewport">
+            <option value="fluid">Fluid</option>
+            <option value="1440x900">Desktop</option>
+            <option value="1024x768">Tablet L</option>
+            <option value="768x1024">Tablet P</option>
+            <option value="390x844">Phone</option>
+            <option value="360x800">Small phone</option>
+          </select>
+          <button id="rotate-device" class="glass-btn tiny" title="Rotate viewport">↻ DEVICE</button>
+          <button id="preview-zoom-out" class="glass-btn tiny" title="Zoom out">−</button>
+          <span id="preview-zoom-label" class="viewport-readout">100%</span>
+          <button id="preview-zoom-in" class="glass-btn tiny" title="Zoom in">＋</button>
+          <span class="window-spacer"></span>
+          <button id="sandbox-toggle" class="glass-btn tiny is-active" title="Toggle strict preview sandbox">SHIELD</button>
+          <button class="glass-btn tiny" data-command="open-preview" title="Open preview in a new tab">↗</button>
+          <button class="glass-btn tiny" data-command="preview-focus" title="Focus preview">⛶</button>
+        </div>
+        <div class="window-body" id="preview-body">
+          <div id="device-shell">
+            <iframe id="preview-frame" title="Rendered HTML preview" sandbox="allow-scripts allow-forms allow-modals allow-pointer-lock allow-popups allow-downloads"></iframe>
+            <div id="preview-overlay">COMPILING MATRIX…</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="app-window glass" id="win-console" data-window="console" aria-label="Preview console window">
+        <header class="window-titlebar">
+          <span class="window-icon">&gt;_</span><span class="window-title">Runtime Console</span><span class="window-subtitle">iframe logs and errors</span>
+          <span class="window-spacer"></span><span class="window-size"></span>
+          <div class="window-controls">
+            <button class="window-control minimize" title="Minimize" aria-label="Minimize Runtime Console">−</button>
+            <button class="window-control maximize" title="Maximize or restore" aria-label="Maximize Runtime Console">□</button>
+            <button class="window-control close" title="Close" aria-label="Close Runtime Console">×</button>
+          </div>
+        </header>
+        <div class="window-toolbar">
+          <button class="glass-btn tiny" data-command="clear-console">CLEAR LOG</button>
+          <span class="window-spacer"></span><span id="console-count" class="viewport-readout">0 events</span>
+        </div>
+        <div class="window-body"><pre id="console-output"></pre></div>
+      </section>
+    </section>
+
+    <nav id="dock" class="glass" aria-label="Window dock">
+      <button class="dock-item active" draggable="true" data-dock="tools" title="Toolkit"><b>⌘</b><span>Tools</span></button>
+      <button class="dock-item active" draggable="true" data-dock="chat" title="Gemini Link"><b>✦</b><span>AI</span></button>
+      <button class="dock-item active" draggable="true" data-dock="editor" title="Source Core"><b>&lt;/&gt;</b><span>Editor</span></button>
+      <button class="dock-item active" draggable="true" data-dock="preview" title="Live Output"><b>◫</b><span>Preview</span></button>
+      <button class="dock-item" draggable="true" data-dock="console" title="Runtime Console"><b>&gt;_</b><span>Console</span></button>
+      <i class="dock-divider"></i>
+      <button class="dock-item" data-command="restore-all" title="Restore all windows"><b>▦</b><span>Restore</span></button>
+      <button class="dock-item" data-command="minimize-all" title="Minimize all windows"><b>―</b><span>Minimize</span></button>
+      <button class="dock-item" data-command="fullscreen" title="Toggle app fullscreen"><b>⛶</b><span>Screen</span></button>
+      <button class="dock-item" data-command="diagnostics" title="Run diagnostics"><b>✓</b><span>Check</span></button>
+      <button class="dock-item" data-command="close-workspace" title="Close workspace"><b>×</b><span>Close</span></button>
+    </nav>
+
+    <footer id="statusbar">
+      <span class="status-segment"><i class="status-light"></i><span id="system-status">SYSTEM READY</span></span>
+      <span class="status-segment" id="autosave-status">AUTOSAVE READY</span>
+      <span class="spacer"></span>
+      <span class="status-segment" id="language-status">HTML · UTF-8</span>
+      <span class="status-segment" id="source-size">0 B</span>
+      <span class="status-segment" id="clock">--:--:--</span>
+    </footer>
+  </main>
+
+  <div id="closed-workspace">
+    <div class="closed-card glass">
+      <div class="boot-mark"><span>N8</span></div>
+      <h2>Workspace suspended</h2>
+      <p style="color:var(--muted);font:11px var(--mono)">Your unsaved source remains in memory.</p>
+      <button id="reopen-workspace" class="glass-btn primary">REOPEN CODEN8R</button>
+    </div>
+  </div>
+
+  <dialog id="settings-dialog">
+    <div class="dialog-head"><h2>Studio Settings</h2><button class="glass-btn icon tiny" data-close-dialog>×</button></div>
+    <div class="dialog-body">
+      <div class="settings-grid">
+        <div class="setting-card">
+          <label for="accent-color">Electric accent</label>
+          <input id="accent-color" type="color" value="#63e7ff" style="width:100%;height:38px;border:0;background:transparent">
+        </div>
+        <div class="setting-card">
+          <label for="effect-range">Electric intensity</label>
+          <input id="effect-range" type="range" min="0" max="2" value="1" step=".1">
+        </div>
+        <div class="setting-card">
+          <label for="temperature">Gemini temperature <output id="temperature-label">0.4</output></label>
+          <input id="temperature" type="range" min="0" max="2" value=".4" step=".1">
+        </div>
+        <div class="setting-card">
+          <label for="max-tokens">Maximum output tokens</label>
+          <input id="max-tokens" type="number" min="64" max="65536" value="8192">
+        </div>
+        <div class="setting-card wide">
+          <label for="system-prompt">System instruction</label>
+          <textarea id="system-prompt">You are an expert senior software engineer inside CodeN8R. Return exact, runnable, self-contained HTML/CSS/JavaScript when coding is requested. Use fenced code blocks. Preserve the user's intent, explain decisions concisely, and prioritize accessibility, security, performance, responsive design, and robust error handling.</textarea>
+        </div>
+        <div class="setting-card">
+          <label class="check-row"><input id="autosave-toggle" type="checkbox" checked> Autosave source on this device</label>
+        </div>
+        <div class="setting-card">
+          <label class="check-row"><input id="motion-toggle" type="checkbox"> Reduce animation and electricity</label>
+        </div>
+        <div class="setting-card">
+          <label class="check-row"><input id="stream-toggle" type="checkbox" checked> Stream Gemini responses</label>
+        </div>
+        <div class="setting-card">
+          <label class="check-row"><input id="history-toggle" type="checkbox" checked> Include recent chat context</label>
+        </div>
+      </div>
+      <p style="color:var(--muted);font:10px/1.5 var(--mono);margin:14px 2px 0">Security: the Gemini key is kept in memory only. It is never placed in saved projects, downloads, chat exports, or local storage.</p>
+    </div>
+    <div class="dialog-actions"><button class="glass-btn" id="reset-settings">RESET</button><button class="glass-btn primary" data-close-dialog>APPLY</button></div>
+  </dialog>
+
+  <dialog id="palette-dialog">
+    <div class="dialog-head"><h2>Command Palette</h2><button class="glass-btn icon tiny" data-close-dialog>×</button></div>
+    <div class="dialog-body">
+      <input id="palette-search" class="palette-search" placeholder="Type a command…" autocomplete="off">
+      <div id="command-list" class="command-list"></div>
+    </div>
+  </dialog>
+
+  <dialog id="find-dialog">
+    <div class="dialog-head"><h2>Find & Replace</h2><button class="glass-btn icon tiny" data-close-dialog>×</button></div>
+    <div class="dialog-body">
+      <div class="search-grid">
+        <input id="find-input" placeholder="Find text">
+        <button id="find-next" class="glass-btn">FIND NEXT</button>
+        <input id="replace-input" placeholder="Replace with">
+        <button id="replace-one" class="glass-btn">REPLACE</button>
+        <span></span><button id="replace-all" class="glass-btn primary">REPLACE ALL</button>
+      </div>
+      <p id="find-status" style="color:var(--muted);font:10px var(--mono);margin:12px 0 0">Enter a search term.</p>
+    </div>
+  </dialog>
+
+  <dialog id="shortcuts-dialog">
+    <div class="dialog-head"><h2>Keyboard Shortcuts</h2><button class="glass-btn icon tiny" data-close-dialog>×</button></div>
+    <div class="dialog-body"><div id="shortcut-table" class="shortcut-table"></div></div>
+  </dialog>
+
+  <dialog id="diagnostics-dialog">
+    <div class="dialog-head"><h2>System Diagnostics</h2><button class="glass-btn icon tiny" data-close-dialog>×</button></div>
+    <div class="dialog-body"><div id="diagnostic-list" class="diagnostic-list"></div></div>
+    <div class="dialog-actions"><button id="rerun-diagnostics" class="glass-btn primary">RUN AGAIN</button></div>
+  </dialog>
+
+  <dialog id="versions-dialog">
+    <div class="dialog-head"><h2>Version History</h2><button class="glass-btn icon tiny" data-close-dialog>×</button></div>
+    <div class="dialog-body"><div id="version-list" class="version-list"></div></div>
+    <div class="dialog-actions"><button class="glass-btn" data-command="snapshot">CREATE SNAPSHOT</button></div>
+  </dialog>
+
+  <dialog id="features-dialog">
+    <div class="dialog-head"><h2>60 Feature & Engineering Upgrades</h2><button class="glass-btn icon tiny" data-close-dialog>×</button></div>
+    <div class="dialog-body"><div id="feature-list" class="feature-list"></div></div>
+  </dialog>
+
+  <input id="file-input" type="file" accept=".html,.htm,.css,.js,.json,.txt,.md" hidden>
+  <div id="toast-stack" aria-live="polite"></div>
+
+  <script>
+  (() => {
+    "use strict";
+
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const API_BASE = "https://generativelanguage.googleapis.com/v1beta";
+    const STORAGE = {
+      project: "coden8r.project.v2",
+      settings: "coden8r.settings.v2",
+      layout: "coden8r.layout.v2",
+      versions: "coden8r.versions.v2"
+    };
+
+    const state = {
+      connected: false,
+      models: [],
+      controller: null,
+      busy: false,
+      messages: [],
+      lastPrompt: "",
+      fileName: "untitled.html",
+      dirty: false,
+      z: 20,
+      layoutIndex: 0,
+      previewZoom: 1,
+      viewport: { mode: "fluid", width: 0, height: 0 },
+      strictSandbox: true,
+      consoleEvents: 0,
+      autoRunTimer: null,
+      autosaveTimer: null,
+      versions: [],
+      settings: {
+        autosave: true,
+        stream: true,
+        history: true,
+        reducedMotion: false,
+        accent: "#63e7ff",
+        intensity: 1,
+        temperature: .4,
+        maxTokens: 8192,
+        editorSize: 14,
+        autoRun: true,
+        includeSource: true,
+        wrapCode: false,
+        systemPrompt: "You are an expert senior software engineer inside CodeN8R. Return exact, runnable, self-contained HTML/CSS/JavaScript when coding is requested. Use fenced code blocks. Preserve the user's intent, explain decisions concisely, and prioritize accessibility, security, performance, responsive design, and robust error handling."
+      }
+    };
+
+    const templates = {
+      html: `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>My Web App</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      background: #07111d;
+      color: #effcff;
+      font-family: system-ui, sans-serif;
+    }
+    main { width: min(720px, 90vw); text-align: center; }
+    h1 { color: #63e7ff; }
+    button { padding: .75rem 1rem; border: 0; border-radius: .7rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Hello from CodeN8R</h1>
+    <p>Edit the source and watch the preview update.</p>
+    <button id="action">Activate</button>
+  </main>
+  <script>
+    document.querySelector("#action").addEventListener("click", () => {
+      document.querySelector("h1").textContent = "System online";
+    });
+  <\/script>
+</body>
+</html>`,
+      canvas: `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Canvas Drift</title>
+  <style>html,body,canvas{width:100%;height:100%;margin:0;display:block;background:#020409;overflow:hidden}</style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <script>
+    const canvas = document.querySelector("#game");
+    const ctx = canvas.getContext("2d");
+    const pointer = { x: innerWidth / 2, y: innerHeight / 2 };
+    const particles = Array.from({length: 70}, () => ({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*2,vy:(Math.random()-.5)*2}));
+    function resize(){ canvas.width = innerWidth * devicePixelRatio; canvas.height = innerHeight * devicePixelRatio; ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }
+    addEventListener("resize", resize); addEventListener("pointermove", e => Object.assign(pointer,{x:e.clientX,y:e.clientY})); resize();
+    function frame(){
+      ctx.fillStyle="rgba(2,4,9,.18)"; ctx.fillRect(0,0,innerWidth,innerHeight);
+      for(const p of particles){
+        const dx=pointer.x-p.x,dy=pointer.y-p.y,d=Math.hypot(dx,dy)||1;
+        if(d<170){p.vx+=dx/d*.025;p.vy+=dy/d*.025}
+        p.x+=p.vx;p.y+=p.vy;p.vx*=.995;p.vy*=.995;
+        if(p.x<0||p.x>innerWidth)p.vx*=-1;if(p.y<0||p.y>innerHeight)p.vy*=-1;
+        ctx.fillStyle="#63e7ff";ctx.shadowBlur=12;ctx.shadowColor="#1687ff";ctx.beginPath();ctx.arc(p.x,p.y,2.2,0,Math.PI*2);ctx.fill();
+      }
+      requestAnimationFrame(frame);
+    } frame();
+  <\/script>
+</body>
+</html>`,
+      dashboard: `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pulseboard</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:#07101b;color:#edfaff;font-family:system-ui;padding:28px}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}h1{margin:0}.tag{color:#63e7ff}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{padding:18px;border:1px solid #20364a;border-radius:16px;background:linear-gradient(135deg,#102236cc,#09131fcc);box-shadow:0 18px 50px #0005}
+    .card span{color:#87a4b5;font-size:12px}.card b{display:block;font-size:28px;margin-top:8px}.wide{grid-column:span 2}.bars{height:180px;display:flex;align-items:end;gap:8px;padding-top:20px}.bars i{flex:1;background:linear-gradient(#63e7ff,#1687ff);border-radius:6px 6px 2px 2px}
+    @media(max-width:700px){.grid{grid-template-columns:1fr 1fr}.wide{grid-column:span 2}}
+  </style>
+</head>
+<body>
+  <header><div><span class="tag">LIVE SYSTEMS</span><h1>Pulseboard</h1></div><time id="time"></time></header>
+  <main class="grid">
+    <article class="card"><span>ACTIVE USERS</span><b>12,840</b></article><article class="card"><span>UPTIME</span><b>99.98%</b></article>
+    <article class="card"><span>LATENCY</span><b>42 ms</b></article><article class="card"><span>CONVERSION</span><b>8.4%</b></article>
+    <article class="card wide"><span>TRAFFIC</span><div class="bars">${[38,62,46,78,55,88,69,95,76,90].map(v=>`<i style="height:${v}%"></i>`).join("")}</div></article>
+    <article class="card wide"><span>STATUS</span><h2 style="color:#57f5a4">All systems operational</h2><p>Services are healthy across every monitored region.</p></article>
+  </main>
+  <script>setInterval(()=>document.querySelector("#time").textContent=new Date().toLocaleTimeString(),1000)<\/script>
+</body></html>`,
+      landing: `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Auralis</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;overflow:hidden;background:radial-gradient(circle at 20% 10%,#1e6b7f55,transparent 35%),radial-gradient(circle at 85% 15%,#7b4bcc44,transparent 35%),#070a12;color:white;font-family:system-ui}
+nav{display:flex;align-items:center;justify-content:space-between;padding:24px 6vw}.logo{font-weight:850;letter-spacing:.08em}.pill,button{border:1px solid #ffffff2f;background:#ffffff13;backdrop-filter:blur(16px);color:white;border-radius:999px;padding:12px 18px}
+main{min-height:75vh;display:grid;place-items:center;text-align:center;padding:30px}.hero{width:min(820px,95vw)}.eyebrow{color:#70ecff;letter-spacing:.18em;font-size:12px}h1{font-size:clamp(48px,9vw,98px);line-height:.95;margin:22px 0;background:linear-gradient(110deg,#fff,#70ecff 45%,#d2a7ff);color:transparent;background-clip:text}p{font-size:18px;color:#a9bbc8;max-width:620px;margin:0 auto 28px;line-height:1.7}.actions{display:flex;justify-content:center;gap:10px}.primary{background:#fff;color:#07101b}
+</style></head><body><nav><div class="logo">AURALIS</div><div class="pill">Private beta · 2026</div></nav><main><section class="hero"><div class="eyebrow">A NEW CREATIVE FREQUENCY</div><h1>Make ideas resonate.</h1><p>A focused workspace where ambitious teams turn early sparks into beautifully engineered products.</p><div class="actions"><button class="primary">Request access</button><button>Watch the story</button></div></section></main></body></html>`,
+      particles: `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Electric Field</title><style>*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#020409;color:#fff;font-family:system-ui}canvas{display:block}div{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none;text-align:center}h1{font-size:clamp(38px,8vw,90px);letter-spacing:.08em;text-shadow:0 0 30px #1687ff}p{color:#9db9c6}</style></head><body><canvas></canvas><div><section><h1>ELECTRIC FIELD</h1><p>Move your pointer to bend the current.</p></section></div><script>
+const c=document.querySelector("canvas"),x=c.getContext("2d"),p={x:innerWidth/2,y:innerHeight/2},pts=Array.from({length:120},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight}));
+function size(){c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio;x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}addEventListener("resize",size);addEventListener("pointermove",e=>{p.x=e.clientX;p.y=e.clientY});size();
+(function draw(){x.clearRect(0,0,innerWidth,innerHeight);for(const a of pts){const dx=p.x-a.x,dy=p.y-a.y,d=Math.hypot(dx,dy)||1;a.x+=dx/d*(d<220?-.5:.08);a.y+=dy/d*(d<220?-.5:.08);x.fillStyle=d<220?"#fff":"#1687ff";x.globalAlpha=Math.max(.12,1-d/900);x.fillRect(a.x,a.y,2,2)}requestAnimationFrame(draw)})()<\/script></body></html>`,
+      component: `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Component Lab</title><style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#0b1018;color:#eef8ff;font-family:system-ui;padding:36px}.shell{width:min(900px,100%);margin:auto}h1{margin-bottom:28px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.card{border:1px solid #293a4d;border-radius:18px;padding:22px;background:#111a26}.stack{display:flex;gap:10px;flex-wrap:wrap}button,input,select{border:1px solid #38516a;background:#101a27;color:white;border-radius:10px;padding:11px 14px}.primary{background:#63e7ff;color:#041018;border-color:#63e7ff}.danger{color:#ff829a;border-color:#ff5d7a}.badge{padding:6px 10px;border-radius:99px;background:#63e7ff1c;color:#63e7ff;font-size:12px}@media(max-width:650px){.grid{grid-template-columns:1fr}}
+</style></head><body><main class="shell"><h1>Component Lab</h1><div class="grid"><section class="card"><h2>Buttons</h2><div class="stack"><button class="primary">Primary</button><button>Secondary</button><button class="danger">Delete</button></div></section><section class="card"><h2>Inputs</h2><div class="stack"><input placeholder="Email address"><select><option>Starter</option><option>Pro</option></select></div></section><section class="card"><h2>Badges</h2><div class="stack"><span class="badge">Active</span><span class="badge">New</span></div></section><section class="card"><h2>Progress</h2><progress value="72" max="100" style="width:100%;accent-color:#63e7ff"></progress></section></div></main></body></html>`
+    };
+
+    const featureNames = [
+      "Live Gemini key verification","Dynamic model discovery","Current-model auto selection","Authorization-key header support",
+      "Streaming AI responses","Detailed API error recovery","Abort active generation","Retry last prompt","Temperature control",
+      "Output-token control","Editable system instruction","Recent chat context","Prompt presets","Source-aware prompting",
+      "Estimated prompt tokens","Safe chat rendering","Copy AI messages","Copy code blocks","Apply generated code","Drag generated code",
+      "Resizable desktop windows","Drag-anywhere title bars","Per-window minimize","Per-window maximize","Per-window close",
+      "Persistent window layouts","Four layout presets","Reorderable app dock","Restore all windows","Minimize all windows",
+      "Fullscreen workspace","Focused preview mode","Strict preview sandbox","Responsive viewport presets","Device rotation",
+      "Preview zoom controls","Open preview in new tab","Captured iframe console","Runtime error reporting","Auto-run with debounce",
+      "File drag and drop","Template drag and drop","Six starter templates","Local project autosave","Manual local save",
+      "HTML file download","Version snapshots","Version restoration","Find and replace","Source formatting",
+      "Line, word and byte stats","Line-number gutter","Cursor position","Editor zoom","Optional line wrapping",
+      "Command palette","Keyboard shortcut suite","Custom accent color","Reduced-motion mode","Built-in diagnostics"
+    ];
+
+    const shortcuts = [
+      ["Run preview","Ctrl / Cmd + R"],["Send prompt","Ctrl / Cmd + Enter"],["Command palette","Ctrl / Cmd + K"],
+      ["Save locally","Ctrl / Cmd + S"],["Download HTML","Ctrl / Cmd + Shift + S"],["Open file","Ctrl / Cmd + O"],
+      ["New document","Ctrl / Cmd + N"],["Find / replace","Ctrl / Cmd + F"],["Toggle preview focus","F10"],
+      ["Focus tools","Alt + 1"],["Focus AI chat","Alt + 2"],["Focus editor","Alt + 3"],["Focus preview","Alt + 4"],
+      ["Show shortcuts","Ctrl / Cmd + /"],["Indent selection","Tab"]
+    ];
+
+    const commands = [
+      ["new","New document","Ctrl+N"],["open","Open file","Ctrl+O"],["save","Save to this device","Ctrl+S"],
+      ["download","Download HTML","Ctrl+Shift+S"],["run","Compile and run preview","Ctrl+R"],["format","Tidy HTML source",""],
+      ["find","Find and replace","Ctrl+F"],["copy-code","Copy all source",""],["snapshot","Create version snapshot",""],
+      ["versions","Open version history",""],["layout","Cycle desktop layout",""],["restore-all","Restore all windows",""],
+      ["minimize-all","Minimize all windows",""],["console","Toggle runtime console",""],["preview-focus","Focus preview","F10"],
+      ["fullscreen","Toggle fullscreen",""],["clear-chat","Clear AI chat",""],["export-chat","Export AI chat",""],
+      ["diagnostics","Run diagnostics",""],["settings","Open settings",""],["shortcuts","Show keyboard shortcuts","Ctrl+/"],
+      ["features","Show feature matrix",""],["close-workspace","Suspend workspace",""]
+    ];
+
+    function toast(message, type = "") {
+      const node = document.createElement("div");
+      node.className = `toast ${type}`;
+      node.textContent = message;
+      $("#toast-stack").append(node);
+      setTimeout(() => { node.style.opacity = "0"; node.style.transform = "translateX(15px)"; }, 3300);
+      setTimeout(() => node.remove(), 3650);
+    }
+
+    function safeStorageGet(key, fallback = null) {
+      try { const value = localStorage.getItem(key); return value === null ? fallback : value; }
+      catch { return fallback; }
+    }
+    function safeStorageSet(key, value) {
+      try { localStorage.setItem(key, value); return true; }
+      catch { toast("Local storage is unavailable in this browser.", "warn"); return false; }
+    }
+    function escapeRegExp(value) { return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+    function formatBytes(bytes) {
+      if (bytes < 1024) return `${bytes} B`;
+      if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${(bytes / 1048576).toFixed(1)} MB`;
+    }
+    function nowTime() { return new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}); }
+    function setSystemStatus(text) { $("#system-status").textContent = text.toUpperCase(); }
+    function setConnection(kind, title) {
+      const dot = $("#connection-dot");
+      dot.className = `connection-dot ${kind || ""}`;
+      dot.title = title;
+    }
+
+    function loadSettings() {
+      try {
+        const saved = JSON.parse(safeStorageGet(STORAGE.settings, "{}"));
+        state.settings = {...state.settings, ...saved};
+      } catch {}
+      const s = state.settings;
+      $("#accent-color").value = s.accent;
+      $("#effect-range").value = s.intensity;
+      $("#temperature").value = s.temperature;
+      $("#temperature-label").textContent = Number(s.temperature).toFixed(1);
+      $("#max-tokens").value = s.maxTokens;
+      $("#system-prompt").value = s.systemPrompt;
+      $("#autosave-toggle").checked = s.autosave;
+      $("#motion-toggle").checked = s.reducedMotion;
+      $("#stream-toggle").checked = s.stream;
+      $("#history-toggle").checked = s.history;
+      $("#editor-zoom").value = s.editorSize;
+      $("#editor-zoom-label").textContent = `${s.editorSize}px`;
+      $("#auto-run").checked = s.autoRun;
+      $("#include-source").checked = s.includeSource;
+      $("#wrap-code").checked = s.wrapCode;
+      applySettings();
+    }
+
+    function syncSettingsFromUI() {
+      Object.assign(state.settings, {
+        accent: $("#accent-color").value,
+        intensity: Number($("#effect-range").value),
+        temperature: Number($("#temperature").value),
+        maxTokens: Math.max(64, Math.min(65536, Number($("#max-tokens").value) || 8192)),
+        systemPrompt: $("#system-prompt").value.trim(),
+        autosave: $("#autosave-toggle").checked,
+        reducedMotion: $("#motion-toggle").checked,
+        stream: $("#stream-toggle").checked,
+        history: $("#history-toggle").checked,
+        editorSize: Number($("#editor-zoom").value),
+        autoRun: $("#auto-run").checked,
+        includeSource: $("#include-source").checked,
+        wrapCode: $("#wrap-code").checked
+      });
+      safeStorageSet(STORAGE.settings, JSON.stringify(state.settings));
+      applySettings();
+    }
+
+    function applySettings() {
+      const s = state.settings;
+      document.documentElement.style.setProperty("--cyan", s.accent);
+      document.documentElement.style.setProperty("--effect-intensity", s.intensity);
+      document.documentElement.style.setProperty("--editor-size", `${s.editorSize}px`);
+      document.body.classList.toggle("reduced-motion", s.reducedMotion);
+      $("#code-editor").style.whiteSpace = s.wrapCode ? "pre-wrap" : "pre";
+      $("#auto-run").checked = s.autoRun;
+      $("#include-source").checked = s.includeSource;
+      $("#wrap-code").checked = s.wrapCode;
+      updateEditorMetrics();
+    }
+
+    function saveProject(silent = false) {
+      const payload = JSON.stringify({code:$("#code-editor").value,fileName:state.fileName,savedAt:Date.now()});
+      if (safeStorageSet(STORAGE.project, payload)) {
+        state.dirty = false;
+        $("#autosave-status").textContent = `SAVED ${nowTime()}`;
+        if (!silent) toast("Project saved on this device.", "good");
+      }
+    }
+
+    function restoreProject() {
+      const raw = safeStorageGet(STORAGE.project);
+      if (!raw) return false;
+      try {
+        const saved = JSON.parse(raw);
+        if (typeof saved.code !== "string") return false;
+        $("#code-editor").value = saved.code;
+        state.fileName = saved.fileName || "untitled.html";
+        $("#file-label").textContent = state.fileName;
+        return true;
+      } catch { return false; }
+    }
+
+    function downloadBlob(content, name, type) {
+      const blob = new Blob([content], {type});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url; link.download = name; document.body.append(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }
+
+    function downloadCode() {
+      const name = state.fileName.toLowerCase().endsWith(".html") ? state.fileName : `${state.fileName}.html`;
+      downloadBlob($("#code-editor").value, name, "text/html;charset=utf-8");
+      toast(`Downloaded ${name}.`, "good");
+    }
+
+    function updateEditorMetrics() {
+      const editor = $("#code-editor");
+      const value = editor.value;
+      const lines = value.split("\n").length;
+      const words = value.trim() ? value.trim().split(/\s+/).length : 0;
+      const bytes = new Blob([value]).size;
+      $("#line-numbers").textContent = Array.from({length:lines}, (_,i) => i + 1).join("\n");
+      $("#stat-lines").textContent = lines.toLocaleString();
+      $("#stat-chars").textContent = value.length.toLocaleString();
+      $("#stat-words").textContent = words.toLocaleString();
+      $("#stat-bytes").textContent = formatBytes(bytes);
+      $("#source-size").textContent = formatBytes(bytes);
+      $("#language-status").textContent = `${detectLanguage(value)} · UTF-8`;
+      updateCursor();
+    }
+
+    function detectLanguage(source) {
+      const s = source.trim();
+      if (/^<!doctype|<html|<body/i.test(s)) return "HTML";
+      if (/^\s*[{[]/.test(s)) { try { JSON.parse(s); return "JSON"; } catch {} }
+      if (/^\s*(?:const|let|var|function|import|export)\b/m.test(s)) return "JAVASCRIPT";
+      if (/[.#]?[a-z][^{]*\{[^}]*:[^}]*\}/i.test(s)) return "CSS";
+      if (/^#{1,6}\s/m.test(s)) return "MARKDOWN";
+      return "TEXT";
+    }
+
+    function updateCursor() {
+      const editor = $("#code-editor");
+      const before = editor.value.slice(0, editor.selectionStart);
+      const line = before.split("\n").length;
+      const col = before.length - before.lastIndexOf("\n");
+      $("#cursor-position").textContent = `Ln ${line}, Col ${col}`;
+    }
+
+    function onEditorInput() {
+      state.dirty = true;
+      $("#autosave-status").textContent = "UNSAVED";
+      updateEditorMetrics();
+      clearTimeout(state.autosaveTimer);
+      if (state.settings.autosave) state.autosaveTimer = setTimeout(() => saveProject(true), 900);
+      clearTimeout(state.autoRunTimer);
+      if (state.settings.autoRun) state.autoRunTimer = setTimeout(executeCode, 550);
+    }
+
+    function bridgeScript() {
+      return `<script>(function(){
+        const send=(level,args)=>{try{parent.postMessage({source:"coden8r-preview",level,args:args.map(v=>{try{return typeof v==="string"?v:JSON.stringify(v)}catch{return String(v)}})},"*")}catch{}};
+        ["log","info","warn","error"].forEach(level=>{const original=console[level];console[level]=function(...args){send(level,args);return original.apply(console,args)}});
+        addEventListener("error",e=>send("error",[e.message+" @ "+(e.filename||"inline")+":"+(e.lineno||0)]));
+        addEventListener("unhandledrejection",e=>send("error",["Unhandled promise rejection: "+String(e.reason)]));
+        send("info",["Preview runtime initialized"]);
+      })();<\/script>`;
+    }
+
+    function injectBridge(source) {
+      const bridge = bridgeScript();
+      if (/<\/body\s*>/i.test(source)) return source.replace(/<\/body\s*>/i, `${bridge}</body>`);
+      return `${source}\n${bridge}`;
+    }
+
+    function executeCode() {
+      const source = $("#code-editor").value;
+      const shell = $("#device-shell");
+      shell.classList.add("loading");
+      $("#preview-status").textContent = "compiling";
+      clearConsole(false);
+      try {
+        $("#preview-frame").srcdoc = injectBridge(source);
+        setTimeout(() => {
+          shell.classList.remove("loading");
+          $("#preview-status").textContent = `rendered ${nowTime()}`;
+        }, 220);
+        setSystemStatus("Preview compiled");
+      } catch (error) {
+        shell.classList.remove("loading");
+        $("#preview-status").textContent = "compile error";
+        logConsole("error", error.message);
+      }
+    }
+
+    function logConsole(level, message) {
+      state.consoleEvents++;
+      const row = document.createElement("div");
+      row.className = `log-row ${level}`;
+      row.textContent = `[${new Date().toLocaleTimeString()}] ${level.toUpperCase()}  ${message}`;
+      $("#console-output").append(row);
+      $("#console-output").scrollTop = $("#console-output").scrollHeight;
+      $("#console-count").textContent = `${state.consoleEvents} event${state.consoleEvents === 1 ? "" : "s"}`;
+      if (level === "error") {
+        $("#win-console").classList.add("is-open");
+        $("#win-console").classList.remove("is-closed");
+        syncDock();
+      }
+    }
+
+    function clearConsole(showToast = true) {
+      $("#console-output").replaceChildren();
+      state.consoleEvents = 0;
+      $("#console-count").textContent = "0 events";
+      if (showToast) toast("Runtime console cleared.");
+    }
+
+    function loadTemplate(name) {
+      if (!templates[name]) return;
+      if ($("#code-editor").value.trim() && state.dirty && !confirm("Replace the current source with this template?")) return;
+      createSnapshot("Before template");
+      $("#code-editor").value = templates[name];
+      state.fileName = `${name}.html`;
+      $("#file-label").textContent = state.fileName;
+      onEditorInput();
+      executeCode();
+      focusWindow($("#win-editor"));
+      toast(`${name} template loaded.`, "good");
+    }
+
+    function openFilePicker() { $("#file-input").click(); }
+    async function loadFile(file) {
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { toast("That file is larger than the 5 MB safety limit.", "error"); return; }
+      const allowed = /\.(html?|css|js|json|txt|md)$/i.test(file.name);
+      if (!allowed) { toast("Unsupported file type.", "error"); return; }
+      try {
+        const text = await file.text();
+        if ($("#code-editor").value.trim()) createSnapshot("Before import");
+        $("#code-editor").value = text;
+        state.fileName = file.name;
+        $("#file-label").textContent = file.name;
+        onEditorInput();
+        executeCode();
+        toast(`Loaded ${file.name}.`, "good");
+      } catch (error) { toast(`Could not read file: ${error.message}`, "error"); }
+    }
+
+    function newDocument() {
+      if (state.dirty && !confirm("Start a new document? Your current source is not saved.")) return;
+      createSnapshot("Before new document");
+      $("#code-editor").value = templates.html;
+      state.fileName = "untitled.html";
+      $("#file-label").textContent = state.fileName;
+      onEditorInput(); executeCode();
+    }
+
+    function copyText(text, success = "Copied to clipboard.") {
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(text).then(() => toast(success, "good")).catch(() => fallbackCopy(text, success));
+      } else fallbackCopy(text, success);
+    }
+    function fallbackCopy(text, success) {
+      const area = document.createElement("textarea"); area.value = text; area.style.position = "fixed"; area.style.opacity = "0";
+      document.body.append(area); area.select();
+      try { document.execCommand("copy"); toast(success, "good"); } catch { toast("Clipboard access was blocked.", "error"); }
+      area.remove();
+    }
+
+    function createSnapshot(label = "Manual snapshot") {
+      const code = $("#code-editor").value;
+      if (!code && !state.versions.length) return;
+      state.versions.unshift({id:crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`,label,time:Date.now(),code,fileName:state.fileName});
+      state.versions = state.versions.slice(0,20);
+      safeStorageSet(STORAGE.versions, JSON.stringify(state.versions));
+      renderVersions();
+      if (label === "Manual snapshot") toast("Version snapshot created.", "good");
+    }
+
+    function loadVersions() {
+      try { state.versions = JSON.parse(safeStorageGet(STORAGE.versions, "[]")); if (!Array.isArray(state.versions)) state.versions = []; }
+      catch { state.versions = []; }
+      renderVersions();
+    }
+
+    function renderVersions() {
+      const list = $("#version-list"); list.replaceChildren();
+      if (!state.versions.length) {
+        const empty = document.createElement("p"); empty.style.color = "var(--muted)"; empty.textContent = "No snapshots yet."; list.append(empty); return;
+      }
+      state.versions.forEach(version => {
+        const row = document.createElement("div"); row.className = "version-row";
+        const info = document.createElement("div");
+        const label = document.createElement("b"); label.textContent = version.label;
+        const time = document.createElement("time"); time.textContent = new Date(version.time).toLocaleString();
+        info.append(label, document.createElement("br"), time);
+        const restore = document.createElement("button"); restore.className = "glass-btn tiny"; restore.textContent = "RESTORE";
+        restore.addEventListener("click", () => {
+          createSnapshot("Before restore");
+          $("#code-editor").value = version.code; state.fileName = version.fileName || "restored.html"; $("#file-label").textContent = state.fileName;
+          onEditorInput(); executeCode(); $("#versions-dialog").close(); toast("Snapshot restored.", "good");
+        });
+        const remove = document.createElement("button"); remove.className = "glass-btn tiny danger"; remove.textContent = "×";
+        remove.addEventListener("click", () => {
+          state.versions = state.versions.filter(item => item.id !== version.id); safeStorageSet(STORAGE.versions, JSON.stringify(state.versions)); renderVersions();
+        });
+        row.append(info, restore, remove); list.append(row);
+      });
+    }
+
+    function formatHtmlSource() {
+      const editor = $("#code-editor");
+      const source = editor.value.trim();
+      if (!source) return;
+      createSnapshot("Before tidy");
+      const protectedBlocks = [];
+      let prepared = source.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, block => {
+        const token = `___CODEN8R_BLOCK_${protectedBlocks.length}___`;
+        protectedBlocks.push(block); return token;
+      });
+      prepared = prepared.replace(/>\s*</g, "><").replace(/</g, "\n<").trim();
+      const voidTags = /^(?:<!|<\/?(?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\b)/i;
+      let indent = 0;
+      const formatted = prepared.split("\n").filter(Boolean).map(raw => {
+        const line = raw.trim();
+        if (/^<\//.test(line)) indent = Math.max(0, indent - 1);
+        const output = `${"  ".repeat(indent)}${line}`;
+        if (/^<[^!/][^>]*>$/.test(line) && !/^<\//.test(line) && !/\/>$/.test(line) && !voidTags.test(line) && !/<\/[^>]+>$/.test(line)) indent++;
+        return output;
+      }).join("\n").replace(/___CODEN8R_BLOCK_(\d+)___/g, (_,i) => protectedBlocks[Number(i)]);
+      editor.value = formatted;
+      onEditorInput();
+      toast("Source tidied. A restore snapshot was created.", "good");
+    }
+
+    function openFind() {
+      openDialog("find-dialog");
+      setTimeout(() => { $("#find-input").focus(); $("#find-input").select(); }, 40);
+    }
+    function findNext() {
+      const editor = $("#code-editor"), term = $("#find-input").value;
+      if (!term) { $("#find-status").textContent = "Enter a search term."; return false; }
+      const haystack = editor.value.toLowerCase(), needle = term.toLowerCase();
+      let index = haystack.indexOf(needle, editor.selectionEnd);
+      if (index < 0) index = haystack.indexOf(needle);
+      if (index < 0) { $("#find-status").textContent = "No match found."; return false; }
+      editor.focus(); editor.setSelectionRange(index,index+term.length);
+      $("#find-status").textContent = `Match at character ${index + 1}.`; updateCursor(); return true;
+    }
+    function replaceOne() {
+      const editor = $("#code-editor"), term = $("#find-input").value;
+      if (!term) return;
+      const selected = editor.value.slice(editor.selectionStart,editor.selectionEnd);
+      if (selected.toLowerCase() !== term.toLowerCase() && !findNext()) return;
+      editor.setRangeText($("#replace-input").value,editor.selectionStart,editor.selectionEnd,"end"); onEditorInput(); findNext();
+    }
+    function replaceAll() {
+      const editor = $("#code-editor"), term = $("#find-input").value;
+      if (!term) return;
+      const regex = new RegExp(escapeRegExp(term),"gi");
+      const matches = editor.value.match(regex)?.length || 0;
+      if (!matches) { $("#find-status").textContent = "No matches found."; return; }
+      createSnapshot("Before replace all");
+      editor.value = editor.value.replace(regex,$("#replace-input").value); onEditorInput();
+      $("#find-status").textContent = `Replaced ${matches} match${matches === 1 ? "" : "es"}.`;
+    }
+
+    function appendMessage(sender, text, role = "assistant", options = {}) {
+      const message = document.createElement("article");
+      message.className = `message ${role === "user" ? "user" : role === "error" ? "error" : ""} ${options.streaming ? "streaming" : ""}`;
+      const head = document.createElement("div"); head.className = "message-head";
+      const avatar = document.createElement("span"); avatar.className = "message-avatar"; avatar.textContent = role === "user" ? "YOU" : role === "error" ? "!" : "AI";
+      const who = document.createElement("span"); who.className = "message-sender"; who.textContent = sender;
+      const time = document.createElement("time"); time.className = "message-time"; time.textContent = nowTime();
+      const copy = document.createElement("button"); copy.className = "message-copy"; copy.title = "Copy message"; copy.textContent = "⧉";
+      copy.addEventListener("click", () => copyText(message.dataset.raw || "", "Message copied."));
+      head.append(avatar,who,time,copy);
+      const content = document.createElement("div"); content.className = "message-content";
+      message.dataset.raw = text;
+      message.append(head,content);
+      $("#chat-history").append(message);
+      renderMessageContent(content,text,options.streaming);
+      $("#chat-history").scrollTop = $("#chat-history").scrollHeight;
+      return {
+        node: message,
+        update(value, streaming = true) {
+          message.dataset.raw = value; message.classList.toggle("streaming",streaming);
+          renderMessageContent(content,value,streaming);
+          $("#chat-history").scrollTop = $("#chat-history").scrollHeight;
+        }
+      };
+    }
+
+    function renderMessageContent(container,text,streaming = false) {
+      container.replaceChildren();
+      if (streaming && !text) {
+        const dots = document.createElement("span"); dots.className = "typing-dots"; dots.innerHTML = "<i></i><i></i><i></i>"; container.append(dots); return;
+      }
+      const parts = text.split(/```/);
+      parts.forEach((part,index) => {
+        if (index % 2 === 0) {
+          part.split(/\n{2,}/).filter(Boolean).forEach(block => {
+            const p = document.createElement("p"); p.textContent = block; container.append(p);
+          });
+        } else {
+          const firstBreak = part.indexOf("\n");
+          const firstLine = firstBreak >= 0 ? part.slice(0,firstBreak).trim() : "";
+          const language = /^[\w#+.-]{1,20}$/.test(firstLine) ? firstLine : "code";
+          const code = firstBreak >= 0 && language !== "code" ? part.slice(firstBreak + 1) : part;
+          const card = document.createElement("div"); card.className = "code-card"; card.draggable = true; card.dataset.code = code.replace(/\s+$/,"");
+          const codeHead = document.createElement("div"); codeHead.className = "code-head"; codeHead.textContent = language;
+          const actions = document.createElement("div"); actions.className = "code-actions";
+          const copy = document.createElement("button"); copy.className = "glass-btn tiny"; copy.textContent = "COPY";
+          copy.addEventListener("click", () => copyText(card.dataset.code,"Code block copied."));
+          const apply = document.createElement("button"); apply.className = "glass-btn tiny success"; apply.textContent = "APPLY";
+          apply.addEventListener("click", () => applyCode(card.dataset.code));
+          actions.append(copy,apply); codeHead.append(actions);
+          const pre = document.createElement("pre"); const codeNode = document.createElement("code"); codeNode.textContent = card.dataset.code; pre.append(codeNode);
+          card.append(codeHead,pre); container.append(card);
+          card.addEventListener("dragstart", e => { e.dataTransfer.setData("text/plain",card.dataset.code); e.dataTransfer.effectAllowed = "copy"; });
+        }
+      });
+    }
+
+    function applyCode(code) {
+      if (!code) return;
+      createSnapshot("Before AI code");
+      $("#code-editor").value = code;
+      state.fileName = "gemini-output.html";
+      $("#file-label").textContent = state.fileName;
+      onEditorInput(); executeCode(); focusWindow($("#win-editor"));
+      toast("Generated code applied to the editor.", "good");
+    }
+
+    function initialChat() {
+      appendMessage("SYSTEM","Gemini is ready for a real connection. Paste an API or authorization key, select CONNECT, and CodeN8R will discover the models currently available to that key. Keys remain in memory only.","assistant");
+    }
+
+    function getKey() { return $("#api-key").value.trim(); }
+    async function parseApiError(response) {
+      let data = null; let raw = "";
+      try { data = await response.json(); } catch { try { raw = await response.text(); } catch {} }
+      const apiMessage = data?.error?.message || raw || response.statusText;
+      let advice = apiMessage;
+      if (response.status === 400) advice = `Request rejected: ${apiMessage}`;
+      if (response.status === 401) advice = `Authentication failed. Recopy the complete key from Google AI Studio. ${apiMessage}`;
+      if (response.status === 403) advice = `Key denied. Check whether it is blocked, leaked, expired, or restricted for a different API. ${apiMessage}`;
+      if (response.status === 404) advice = `That model is not available to this key. Reconnect to refresh the live model list. ${apiMessage}`;
+      if (response.status === 429) advice = `Gemini quota or rate limit reached. Wait briefly, review billing/quota, or choose another available model. ${apiMessage}`;
+      if (response.status >= 500) advice = `Gemini service error (${response.status}). Retry in a moment. ${apiMessage}`;
+      return advice;
+    }
+
+    async function validateKey() {
+      const key = getKey();
+      if (!key) { toast("Paste a Gemini API or authorization key first.","warn"); $("#api-key").focus(); return false; }
+      if (state.busy) return false;
+      state.busy = true; setConnection("busy","Checking key and models"); $("#connect-btn").disabled = true; $("#connect-btn").textContent = "CHECKING…";
+      try {
+        const response = await fetch(`${API_BASE}/models?pageSize=100`, {headers:{"x-goog-api-key":key,"Accept":"application/json"}});
+        if (!response.ok) throw new Error(await parseApiError(response));
+        const data = await response.json();
+        const models = (data.models || [])
+          .filter(model => (model.supportedGenerationMethods || []).includes("generateContent"))
+          .map(model => ({id:model.name.replace(/^models\//,""),name:model.displayName || model.name,description:model.description || ""}))
+          .filter((model,index,array) => array.findIndex(item => item.id === model.id) === index)
+          .sort((a,b) => a.id.localeCompare(b.id,undefined,{numeric:true}));
+        if (!models.length) throw new Error("This key connected, but no generateContent models were returned.");
+        state.models = models; state.connected = true;
+        populateModels(models);
+        const selected = $("#model-select").value;
+        $("#chat-model-label").textContent = selected;
+        setConnection("online",`Connected · ${models.length} compatible models`);
+        setSystemStatus("Gemini connected");
+        toast(`Connected. ${models.length} compatible model${models.length === 1 ? "" : "s"} discovered.`,"good");
+        return true;
+      } catch (error) {
+        state.connected = false; state.models = []; resetModelSelect();
+        setConnection("error","Connection failed");
+        appendMessage("CONNECTION ERROR",error.message,"error");
+        toast("Gemini connection failed. Details are in the AI window.","error");
+        return false;
+      } finally {
+        state.busy = false; $("#connect-btn").disabled = false; $("#connect-btn").textContent = state.connected ? "RECONNECT" : "CONNECT";
+      }
+    }
+
+    function populateModels(models) {
+      const select = $("#model-select"); select.replaceChildren();
+      models.forEach(model => {
+        const option = document.createElement("option"); option.value = model.id; option.textContent = model.id; option.title = model.description; select.append(option);
+      });
+      const preferred = ["gemini-3.6-flash","gemini-3.6-pro","gemini-2.5-flash","gemini-2.5-pro","gemini-flash-latest"];
+      select.value = preferred.find(id => models.some(model => model.id === id)) || models[0].id;
+      select.disabled = false;
+    }
+    function resetModelSelect() {
+      const select = $("#model-select"); select.replaceChildren();
+      const option = document.createElement("option"); option.value = ""; option.textContent = "Connect to discover models"; select.append(option); select.disabled = true;
+      $("#chat-model-label").textContent = "offline";
+    }
+
+    function setCustomModel() {
+      const value = prompt("Enter the exact Gemini model ID (for example: gemini-3.6-flash):",$("#model-select").value || "");
+      if (!value) return;
+      const id = value.trim().replace(/^models\//,"");
+      const select = $("#model-select");
+      if (![...select.options].some(option => option.value === id)) {
+        const option = document.createElement("option"); option.value = id; option.textContent = `${id} (custom)`; select.append(option);
+      }
+      select.disabled = false; select.value = id; $("#chat-model-label").textContent = id;
+      toast("Custom model selected. A 404 means it is unavailable to this key.","warn");
+    }
+
+    function buildContents(prompt) {
+      const contents = [];
+      if (state.settings.history) {
+        state.messages.slice(-10).forEach(message => {
+          if (message.role === "user" || message.role === "model") contents.push({role:message.role,parts:[{text:message.text}]});
+        });
+      }
+      let text = prompt;
+      if (state.settings.includeSource && $("#code-editor").value.trim()) {
+        const source = $("#code-editor").value;
+        const clipped = source.length > 50000 ? `${source.slice(0,50000)}\n\n[Source truncated at 50,000 characters]` : source;
+        text += `\n\nCurrent editor source (${state.fileName}):\n\`\`\`html\n${clipped}\n\`\`\``;
+      }
+      contents.push({role:"user",parts:[{text}]});
+      return contents;
+    }
+
+    function responseText(data) {
+      return (data?.candidates || []).flatMap(candidate => candidate?.content?.parts || []).map(part => part.text || "").join("");
+    }
+
+    async function sendToGemini(forcedPrompt = "") {
+      if (state.busy) return;
+      const input = $("#chat-input");
+      const prompt = (forcedPrompt || input.value).trim();
+      if (!prompt) return;
+      if (!getKey()) { toast("Connect a Gemini key before transmitting.","warn"); $("#api-key").focus(); return; }
+      if (!state.connected && !(await validateKey())) return;
+      const model = $("#model-select").value;
+      if (!model) { toast("Select a Gemini model.","warn"); return; }
+
+      state.lastPrompt = prompt; input.value = ""; updatePromptTokens();
+      appendMessage("OPERATOR",prompt,"user");
+      const requestContents = buildContents(prompt);
+      state.messages.push({role:"user",text:prompt});
+      const pending = appendMessage(model,"","assistant",{streaming:true});
+      state.busy = true; state.controller = new AbortController(); $("#send-btn").disabled = true; $("#abort-btn").disabled = false; setConnection("busy","Gemini is generating");
+      setSystemStatus("Gemini generating");
+
+      const payload = {
+        systemInstruction:{parts:[{text:state.settings.systemPrompt}]},
+        contents:requestContents,
+        generationConfig:{temperature:state.settings.temperature,maxOutputTokens:state.settings.maxTokens}
+      };
+      let finalText = "";
+      try {
+        if (state.settings.stream) {
+          const url = `${API_BASE}/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`;
+          const response = await fetch(url,{
+            method:"POST",
+            headers:{"Content-Type":"application/json","Accept":"text/event-stream","x-goog-api-key":getKey()},
+            body:JSON.stringify(payload),signal:state.controller.signal
+          });
+          if (!response.ok) throw new Error(await parseApiError(response));
+          if (!response.body) throw new Error("Streaming is unavailable in this browser.");
+          const reader = response.body.getReader(), decoder = new TextDecoder();
+          let buffer = "";
+          while (true) {
+            const {value,done} = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value,{stream:true});
+            const events = buffer.split(/\r?\n\r?\n/); buffer = events.pop() || "";
+            for (const event of events) {
+              const dataLine = event.split(/\r?\n/).filter(line => line.startsWith("data:")).map(line => line.slice(5).trim()).join("");
+              if (!dataLine || dataLine === "[DONE]") continue;
+              try {
+                const chunkText = responseText(JSON.parse(dataLine));
+                if (chunkText) { finalText += chunkText; pending.update(finalText,true); }
+              } catch {}
+            }
+          }
+        } else {
+          const response = await fetch(`${API_BASE}/models/${encodeURIComponent(model)}:generateContent`,{
+            method:"POST",
+            headers:{"Content-Type":"application/json","Accept":"application/json","x-goog-api-key":getKey()},
+            body:JSON.stringify(payload),signal:state.controller.signal
+          });
+          if (!response.ok) throw new Error(await parseApiError(response));
+          finalText = responseText(await response.json());
+        }
+        if (!finalText.trim()) throw new Error("Gemini returned no text. The response may have been blocked by a safety filter.");
+        pending.update(finalText,false);
+        state.messages.push({role:"model",text:finalText});
+        setSystemStatus("Gemini response complete");
+      } catch (error) {
+        const message = error.name === "AbortError" ? "Generation stopped by the operator." : error.message;
+        pending.update(message,false); pending.node.classList.add(error.name === "AbortError" ? "" : "error");
+        if (error.name !== "AbortError") toast("Gemini request failed. See the AI window for details.","error");
+        setSystemStatus(error.name === "AbortError" ? "Generation stopped" : "Gemini request failed");
+      } finally {
+        state.busy = false; state.controller = null; $("#send-btn").disabled = false; $("#abort-btn").disabled = true;
+        setConnection(state.connected ? "online" : "","Gemini connection ready");
+      }
+    }
+
+    function abortGeneration() { state.controller?.abort(); }
+    function retryLast() {
+      if (!state.lastPrompt) { toast("There is no prompt to retry.","warn"); return; }
+      sendToGemini(state.lastPrompt);
+    }
+    function clearChat() {
+      if ($("#chat-history").children.length > 1 && !confirm("Clear the visible chat and conversation context?")) return;
+      $("#chat-history").replaceChildren(); state.messages = []; initialChat(); toast("Chat context cleared.");
+    }
+    function exportChat() {
+      const rows = $$(".message").map(node => `[${$(".message-sender",node)?.textContent || "MESSAGE"} ${$(".message-time",node)?.textContent || ""}]\n${node.dataset.raw || ""}`).join("\n\n");
+      downloadBlob(rows || "No messages.",`coden8r-chat-${new Date().toISOString().slice(0,10)}.txt`,"text/plain;charset=utf-8");
+    }
+    function updatePromptTokens() { $("#prompt-tokens").textContent = Math.ceil($("#chat-input").value.length / 4).toLocaleString(); }
+    function applyPromptPreset() {
+      const preset = $("#prompt-preset").value;
+      const presets = {
+        build:"Build this as a complete, production-quality feature. Return runnable code and briefly note key decisions:\n\n",
+        debug:"Debug the current source. Identify the root cause, then return the corrected complete code:\n\n",
+        review:"Review the current source as a senior software engineer. Prioritize bugs, security, resilience, maintainability, and user experience. Then provide improved code:\n\n",
+        accessibility:"Audit and improve the current source for WCAG accessibility, keyboard use, focus management, contrast, and reduced motion:\n\n",
+        performance:"Optimize the current source for runtime performance, loading, memory use, rendering efficiency, and responsiveness:\n\n"
+      };
+      if (presets[preset]) {
+        $("#chat-input").value = presets[preset] + $("#chat-input").value;
+        $("#chat-input").focus(); updatePromptTokens();
+      }
+      $("#prompt-preset").value = "";
+    }
+
+    function windowByName(name) { return $(`.app-window[data-window="${name}"]`); }
+    function focusWindow(win) {
+      if (!win || win.classList.contains("is-closed")) return;
+      state.z = Math.max(state.z,...$$(".app-window").map(item => Number(item.style.zIndex) || 0));
+      $$(".app-window").forEach(item => item.classList.remove("is-focused"));
+      win.classList.add("is-focused"); win.style.zIndex = ++state.z;
+    }
+    function minimizeWindow(win) { win.classList.add("is-minimized"); win.classList.remove("is-maximized"); syncDock(); saveLayout(); }
+    function maximizeWindow(win) {
+      if (win.classList.contains("is-maximized")) {
+        win.classList.remove("is-maximized");
+        const prior = win.dataset.restoreRect && JSON.parse(win.dataset.restoreRect);
+        if (prior) Object.assign(win.style,{left:`${prior.left}px`,top:`${prior.top}px`,width:`${prior.width}px`,height:`${prior.height}px`,right:"",bottom:""});
+      } else {
+        const desktop = $("#desktop").getBoundingClientRect(), rect = win.getBoundingClientRect();
+        win.dataset.restoreRect = JSON.stringify({left:rect.left-desktop.left,top:rect.top-desktop.top,width:rect.width,height:rect.height});
+        win.classList.remove("is-minimized"); win.classList.add("is-maximized");
+      }
+      focusWindow(win); syncDock(); saveLayout();
+    }
+    function closeWindow(win) {
+      win.classList.add("is-closed"); win.classList.remove("is-minimized","is-maximized");
+      if (win.id === "win-console") win.classList.remove("is-open");
+      syncDock(); saveLayout();
+    }
+    function restoreWindow(name) {
+      const win = windowByName(name); if (!win) return;
+      if (name === "console") win.classList.add("is-open");
+      win.classList.remove("is-closed","is-minimized"); focusWindow(win); syncDock(); saveLayout();
+    }
+    function toggleDockWindow(name) {
+      const win = windowByName(name); if (!win) return;
+      if (win.classList.contains("is-closed") || win.classList.contains("is-minimized") || (name === "console" && !win.classList.contains("is-open"))) restoreWindow(name);
+      else if (win.classList.contains("is-focused")) minimizeWindow(win);
+      else focusWindow(win);
+    }
+    function syncDock() {
+      $$("[data-dock]").forEach(button => {
+        const win = windowByName(button.dataset.dock);
+        const visible = win && !win.classList.contains("is-closed") && !win.classList.contains("is-minimized") && (button.dataset.dock !== "console" || win.classList.contains("is-open"));
+        button.classList.toggle("active",Boolean(visible));
+      });
+    }
+
+    function fitCompactWindows() {
+      const desk = $("#desktop").getBoundingClientRect();
+      const active = $(".app-window.is-focused:not(.is-closed)") || $("#win-editor");
+      const gap = 5;
+      $$(".app-window").forEach(win => {
+        if (win.classList.contains("is-closed") || win.classList.contains("is-maximized")) return;
+        Object.assign(win.style,{
+          left:`${gap}px`,
+          top:`${gap}px`,
+          width:`${Math.max(180,desk.width-gap*2)}px`,
+          height:`${Math.max(90,desk.height-gap*2)}px`,
+          right:"",
+          bottom:""
+        });
+      });
+      if (active && !active.classList.contains("is-minimized")) focusWindow(active);
+    }
+
+    function clampWindows() {
+      const desk = $("#desktop").getBoundingClientRect();
+      if (desk.width < 760) {
+        fitCompactWindows();
+        return;
+      }
+      $$(".app-window").forEach(win => {
+        if (win.classList.contains("is-maximized") || win.classList.contains("is-closed")) return;
+        const rect = win.getBoundingClientRect();
+        const left = Math.max(0,Math.min(rect.left-desk.left,Math.max(0,desk.width-80)));
+        const top = Math.max(0,Math.min(rect.top-desk.top,Math.max(0,desk.height-42)));
+        win.style.left = `${left}px`; win.style.top = `${top}px`; win.style.right = ""; win.style.bottom = "";
+        if (rect.width > desk.width) win.style.width = `${Math.max(210,desk.width-8)}px`;
+        if (rect.height > desk.height) win.style.height = `${Math.max(44,desk.height-8)}px`;
+      });
+    }
+
+    function setupWindowManager() {
+      $$(".app-window").forEach(win => {
+        const bar = $(".window-titlebar",win);
+        bar.addEventListener("pointerdown",event => {
+          if (event.target.closest("button") || win.classList.contains("is-maximized")) return;
+          focusWindow(win); bar.setPointerCapture(event.pointerId);
+          const desk = $("#desktop").getBoundingClientRect(), rect = win.getBoundingClientRect();
+          const origin = {x:event.clientX,y:event.clientY,left:rect.left-desk.left,top:rect.top-desk.top};
+          const move = e => {
+            const maxLeft = Math.max(0,desk.width-win.offsetWidth), maxTop = Math.max(0,desk.height-42);
+            win.style.left = `${Math.max(0,Math.min(maxLeft,origin.left+e.clientX-origin.x))}px`;
+            win.style.top = `${Math.max(0,Math.min(maxTop,origin.top+e.clientY-origin.y))}px`;
+            win.style.right = ""; win.style.bottom = "";
+          };
+          const up = () => { bar.removeEventListener("pointermove",move); bar.removeEventListener("pointerup",up); bar.removeEventListener("pointercancel",up); saveLayout(); };
+          bar.addEventListener("pointermove",move); bar.addEventListener("pointerup",up); bar.addEventListener("pointercancel",up);
+        });
+        bar.addEventListener("dblclick",event => { if (!event.target.closest("button")) maximizeWindow(win); });
+        win.addEventListener("pointerdown",() => focusWindow(win));
+        $(".minimize",win).addEventListener("click",() => minimizeWindow(win));
+        $(".maximize",win).addEventListener("click",() => maximizeWindow(win));
+        $(".close",win).addEventListener("click",() => closeWindow(win));
+        new ResizeObserver(() => {
+          const label = $(".window-size",win);
+          if (label) label.textContent = `${Math.round(win.offsetWidth)}×${Math.round(win.offsetHeight)}`;
+        }).observe(win);
+      });
+      focusWindow($("#win-editor"));
+    }
+
+    function saveLayout() {
+      clearTimeout(saveLayout.timer);
+      saveLayout.timer = setTimeout(() => {
+        const desk = $("#desktop").getBoundingClientRect();
+        const layout = $$(".app-window").map(win => {
+          const rect = win.getBoundingClientRect();
+          return {
+            name:win.dataset.window,left:(rect.left-desk.left)/Math.max(1,desk.width),top:(rect.top-desk.top)/Math.max(1,desk.height),
+            width:rect.width/Math.max(1,desk.width),height:rect.height/Math.max(1,desk.height),
+            minimized:win.classList.contains("is-minimized"),closed:win.classList.contains("is-closed"),maximized:win.classList.contains("is-maximized"),
+            open:win.classList.contains("is-open"),z:Number(win.style.zIndex)||0
+          };
+        });
+        safeStorageSet(STORAGE.layout,JSON.stringify(layout));
+      },180);
+    }
+
+    function restoreLayout() {
+      let layout;
+      try { layout = JSON.parse(safeStorageGet(STORAGE.layout,"null")); } catch {}
+      if (!Array.isArray(layout)) { applyLayout(0,false); return; }
+      const desk = $("#desktop").getBoundingClientRect();
+      layout.forEach(item => {
+        const win = windowByName(item.name); if (!win) return;
+        Object.assign(win.style,{left:`${item.left*desk.width}px`,top:`${item.top*desk.height}px`,width:`${item.width*desk.width}px`,height:`${item.height*desk.height}px`,right:"",bottom:"",zIndex:item.z||""});
+        win.classList.toggle("is-minimized",Boolean(item.minimized)); win.classList.toggle("is-closed",Boolean(item.closed));
+        win.classList.toggle("is-maximized",Boolean(item.maximized)); win.classList.toggle("is-open",Boolean(item.open));
+      });
+      clampWindows(); syncDock();
+    }
+
+    function applyLayout(index = (state.layoutIndex + 1) % 4,announce = true) {
+      state.layoutIndex = index;
+      const desk = $("#desktop").getBoundingClientRect(), gap = 7, w = desk.width, h = desk.height;
+      const tools = $("#win-tools"),chat = $("#win-chat"),editor = $("#win-editor"),preview = $("#win-preview"),consoleWin = $("#win-console");
+      [tools,chat,editor,preview].forEach(win => win.classList.remove("is-closed","is-minimized","is-maximized"));
+      const set = (win,x,y,width,height) => Object.assign(win.style,{left:`${x}px`,top:`${y}px`,width:`${Math.max(210,width)}px`,height:`${Math.max(90,height)}px`,right:"",bottom:""});
+      if (w < 760) {
+        [tools,chat,editor,preview].forEach(win => set(win,gap,gap,w-gap*2,h-gap*2));
+        consoleWin.classList.remove("is-open");
+        consoleWin.classList.add("is-closed");
+        focusWindow(editor);
+        syncDock();
+        saveLayout();
+        if (announce) toast("Compact stacked-window layout applied.");
+        return;
+      }
+      if (index === 0) {
+        const t=Math.max(190,w*.16),c=Math.max(250,w*.22),remain=w-t-c-gap*4,e=remain*.53;
+        set(tools,gap,gap,t,h-gap*2); set(chat,t+gap*2,gap,c,h-gap*2); set(editor,t+c+gap*3,gap,e,h-gap*2); set(preview,t+c+e+gap*4,gap,remain-e,h-gap*2);
+      } else if (index === 1) {
+        const left=Math.max(255,w*.28);
+        set(chat,gap,gap,left,h*.58-gap*1.5); set(tools,gap,h*.58,left,h*.42-gap); set(editor,left+gap*2,gap,w-left-gap*3,h*.64-gap*1.5); set(preview,left+gap*2,h*.64,w-left-gap*3,h*.36-gap);
+      } else if (index === 2) {
+        set(editor,gap,gap,w*.58-gap*1.5,h-gap*2); set(preview,w*.58+gap/2,gap,w*.42-gap*1.5,h-gap*2);
+        minimizeWindow(tools); minimizeWindow(chat);
+      } else {
+        const cw=Math.min(w*.7,800),ch=Math.min(h*.7,620),offset=Math.min(42,(w-cw)/4);
+        [tools,chat,editor,preview].forEach((win,i)=>set(win,18+i*offset,12+i*offset,cw,ch));
+      }
+      consoleWin.classList.remove("is-open"); consoleWin.classList.add("is-closed");
+      focusWindow(editor); syncDock(); saveLayout();
+      if (announce) toast(["Quad studio","Build focus","Editor / preview split","Cascade"][index] + " layout applied.");
+    }
+
+    function minimizeAll() { $$(".app-window").filter(win => !win.classList.contains("is-closed")).forEach(minimizeWindow); }
+    function restoreAll() {
+      ["tools","chat","editor","preview"].forEach(restoreWindow);
+      $("#win-console").classList.remove("is-open"); $("#win-console").classList.add("is-closed"); syncDock(); saveLayout();
+    }
+    function toggleConsole() {
+      const win=$("#win-console");
+      if (win.classList.contains("is-open") && !win.classList.contains("is-closed")) closeWindow(win); else restoreWindow("console");
+    }
+
+    function setViewport(value) {
+      const shell = $("#device-shell"), body = $("#preview-body");
+      if (value === "fluid") {
+        state.viewport = {mode:"fluid",width:0,height:0}; shell.style.width="100%";shell.style.height="100%";
+      } else {
+        const [width,height] = value.split("x").map(Number);
+        state.viewport = {mode:"fixed",width,height};
+        const availableW=Math.max(1,body.clientWidth-16),availableH=Math.max(1,body.clientHeight-16);
+        const fit=Math.min(availableW/width,availableH/height,1)*state.previewZoom;
+        shell.style.width=`${width*fit}px`;shell.style.height=`${height*fit}px`;
+      }
+      $("#preview-zoom-label").textContent=`${Math.round(state.previewZoom*100)}%`;
+    }
+    function rotateViewport() {
+      if (state.viewport.mode !== "fixed") { toast("Choose a device viewport first.","warn"); return; }
+      const value=`${state.viewport.height}x${state.viewport.width}`;
+      let option=[...$("#viewport-select").options].find(item=>item.value===value);
+      if (!option) { option=document.createElement("option");option.value=value;option.textContent="Rotated custom";$("#viewport-select").append(option); }
+      $("#viewport-select").value=value;setViewport(value);
+    }
+    function changePreviewZoom(delta) { state.previewZoom=Math.max(.35,Math.min(1.5,state.previewZoom+delta));setViewport($("#viewport-select").value); }
+    function toggleSandbox() {
+      state.strictSandbox=!state.strictSandbox;
+      const frame=$("#preview-frame");
+      frame.setAttribute("sandbox",state.strictSandbox?"allow-scripts allow-forms allow-modals allow-pointer-lock allow-popups allow-downloads":"allow-scripts allow-same-origin allow-forms allow-modals allow-pointer-lock allow-popups allow-downloads");
+      $("#sandbox-toggle").classList.toggle("is-active",state.strictSandbox);
+      $("#sandbox-toggle").textContent=state.strictSandbox?"SHIELD":"RELAXED";
+      executeCode();
+      toast(state.strictSandbox?"Strict preview sandbox enabled.":"Same-origin preview access enabled.","warn");
+    }
+    function openPreview() {
+      const blob=new Blob([$("#code-editor").value],{type:"text/html"});
+      const url=URL.createObjectURL(blob), opened=window.open(url,"_blank","noopener,noreferrer");
+      if (!opened) toast("The browser blocked the preview tab.","warn");
+      setTimeout(()=>URL.revokeObjectURL(url),60000);
+    }
+    function togglePreviewFocus() { document.body.classList.toggle("preview-focus"); if (!document.body.classList.contains("preview-focus")) clampWindows(); }
+    async function toggleFullscreen() {
+      try {
+        if (!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen();
+      } catch { toast("Fullscreen was blocked by the browser.","warn"); }
+    }
+
+    function openDialog(id) {
+      const dialog = document.getElementById(id);
+      if (!dialog) return;
+      if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    }
+
+    function renderCommandPalette(query = "") {
+      const list=$("#command-list");list.replaceChildren();
+      const filtered=commands.filter(([,label])=>label.toLowerCase().includes(query.toLowerCase()));
+      filtered.forEach(([id,label,key],index)=>{
+        const button=document.createElement("button");button.className=`command-item ${index===0?"selected":""}`;button.dataset.command=id;
+        const icon=document.createElement("span");icon.textContent="›";icon.style.color="var(--cyan)";
+        const text=document.createElement("span");text.textContent=label;const hint=document.createElement("small");hint.textContent=key;
+        button.append(icon,text,hint);button.addEventListener("click",()=>{$("#palette-dialog").close();runCommand(id)});
+        list.append(button);
+      });
+    }
+
+    function renderStaticLists() {
+      featureNames.forEach(name=>{const row=document.createElement("div");row.className="feature-row";row.textContent=name;$("#feature-list").append(row)});
+      shortcuts.forEach(([label,key])=>{const row=document.createElement("div");row.className="shortcut-row";const span=document.createElement("span");span.textContent=label;const k=document.createElement("kbd");k.textContent=key;row.append(span,k);$("#shortcut-table").append(row)});
+    }
+
+    function runDiagnostics() {
+      const tests = [
+        ["Required interface nodes",Boolean($("#code-editor")&&$("#preview-frame")&&$("#chat-history"))],
+        ["Fetch API available",typeof fetch==="function"],
+        ["Streaming response support",Boolean(window.ReadableStream&&window.TextDecoder)],
+        ["Local storage writable",(()=>{try{localStorage.setItem("coden8r.test","1");localStorage.removeItem("coden8r.test");return true}catch{return false}})()],
+        ["Blob download support",Boolean(window.Blob&&URL.createObjectURL)],
+        ["Preview sandbox enabled",state.strictSandbox],
+        ["Source contains content",Boolean($("#code-editor").value.trim())],
+        ["Gemini model selected",Boolean($("#model-select").value)],
+        ["Gemini connection verified",state.connected],
+        ["API key excluded from storage",!Object.values(STORAGE).some(key=>(safeStorageGet(key,"")||"").includes(getKey()||"__NO_KEY__"))],
+        ["Window manager active",$$(".app-window").length===5],
+        ["No duplicate element IDs",(()=>{const ids=$$("[id]").map(n=>n.id);return ids.length===new Set(ids).size})()]
+      ];
+      const list=$("#diagnostic-list");list.replaceChildren();
+      tests.forEach(([label,pass],index)=>{
+        const advisory=(index===7||index===8)&&!pass;
+        const row=document.createElement("div");row.className=`diag-row ${pass?"pass":advisory?"warn":"fail"}`;
+        const icon=document.createElement("span");icon.className="diag-icon";icon.textContent=pass?"✓":advisory?"!":"×";
+        const text=document.createElement("span");text.textContent=label;
+        const result=document.createElement("kbd");result.textContent=pass?"PASS":advisory?"OPTIONAL":"CHECK";
+        row.append(icon,text,result);list.append(row);
+      });
+      setSystemStatus("Diagnostics complete");
+    }
+
+    function exportChatOrWarn() { exportChat(); }
+    function closeWorkspace() { $("#closed-workspace").classList.add("show"); }
+
+    function runCommand(id) {
+      const editor=$("#code-editor");
+      const actions={
+        new:newDocument,open:openFilePicker,save:()=>saveProject(),download:downloadCode,
+        undo:()=>{editor.focus();document.execCommand("undo")},redo:()=>{editor.focus();document.execCommand("redo")},
+        run:executeCode,layout:()=>applyLayout(),palette:()=>{openDialog("palette-dialog");renderCommandPalette();setTimeout(()=>$("#palette-search").focus(),30)},
+        settings:()=>openDialog("settings-dialog"),features:()=>openDialog("features-dialog"),format:formatHtmlSource,find:openFind,
+        "copy-code":()=>copyText(editor.value,"Source copied."),snapshot:()=>createSnapshot(),versions:()=>openDialog("versions-dialog"),
+        clear:()=>{if(!editor.value||confirm("Clear all source code?")){createSnapshot("Before clear");editor.value="";onEditorInput();executeCode()}},
+        "clear-chat":clearChat,"export-chat":exportChatOrWarn,retry:retryLast,"clear-console":()=>clearConsole(),
+        "open-preview":openPreview,"preview-focus":togglePreviewFocus,"restore-all":restoreAll,"minimize-all":minimizeAll,
+        fullscreen:toggleFullscreen,diagnostics:()=>{runDiagnostics();openDialog("diagnostics-dialog")},shortcuts:()=>openDialog("shortcuts-dialog"),
+        console:toggleConsole,"close-workspace":closeWorkspace
+      };
+      actions[id]?.();
+    }
+
+    function setupDragDrop() {
+      $$(".template-card").forEach(card=>{
+        card.addEventListener("click",()=>loadTemplate(card.dataset.template));
+        card.addEventListener("dragstart",event=>{event.dataTransfer.setData("application/x-coden8r-template",card.dataset.template);event.dataTransfer.effectAllowed="copy"});
+      });
+      const editor=$("#code-editor");
+      editor.addEventListener("dragover",event=>{event.preventDefault();editor.classList.add("drop-target");event.dataTransfer.dropEffect="copy"});
+      editor.addEventListener("dragleave",()=>editor.classList.remove("drop-target"));
+      editor.addEventListener("drop",async event=>{
+        event.preventDefault();event.stopPropagation();editor.classList.remove("drop-target");
+        const template=event.dataTransfer.getData("application/x-coden8r-template");
+        if(template){loadTemplate(template);return}
+        if(event.dataTransfer.files?.length){await loadFile(event.dataTransfer.files[0]);return}
+        const text=event.dataTransfer.getData("text/plain");if(text)applyCode(text);
+      });
+      const desktop=$("#desktop");
+      let dragDepth=0;
+      desktop.addEventListener("dragenter",event=>{if(event.dataTransfer?.types?.includes("Files")){dragDepth++;desktop.classList.add("dragging-file")}});
+      desktop.addEventListener("dragleave",()=>{dragDepth=Math.max(0,dragDepth-1);if(!dragDepth)desktop.classList.remove("dragging-file")});
+      desktop.addEventListener("dragover",event=>{if(event.dataTransfer?.types?.includes("Files"))event.preventDefault()});
+      desktop.addEventListener("drop",async event=>{
+        dragDepth=0;desktop.classList.remove("dragging-file");
+        if(event.dataTransfer?.files?.length){event.preventDefault();await loadFile(event.dataTransfer.files[0])}
+      });
+      const prompt=$("#chat-input");
+      prompt.addEventListener("dragover",e=>e.preventDefault());
+      prompt.addEventListener("drop",async e=>{
+        e.preventDefault();
+        if(e.dataTransfer.files?.length){const file=e.dataTransfer.files[0];if(file.size<1024*1024){prompt.value+=await file.text();updatePromptTokens()}}
+        else{prompt.value+=e.dataTransfer.getData("text/plain");updatePromptTokens()}
+      });
+      let dockDrag=null;
+      $$("[data-dock]").forEach(item=>{
+        item.addEventListener("dragstart",()=>dockDrag=item);
+        item.addEventListener("dragover",e=>e.preventDefault());
+        item.addEventListener("drop",e=>{e.preventDefault();if(dockDrag&&dockDrag!==item){$("#dock").insertBefore(dockDrag,item);dockDrag=null}});
+      });
+    }
+
+    function setupKeyboard() {
+      document.addEventListener("keydown",event=>{
+        const mod=event.ctrlKey||event.metaKey;
+        if(mod&&event.key==="Enter"){event.preventDefault();sendToGemini();return}
+        if(mod&&event.key.toLowerCase()==="k"){event.preventDefault();runCommand("palette");return}
+        if(mod&&event.key.toLowerCase()==="s"){event.preventDefault();runCommand(event.shiftKey?"download":"save");return}
+        if(mod&&event.key.toLowerCase()==="o"){event.preventDefault();runCommand("open");return}
+        if(mod&&event.key.toLowerCase()==="n"){event.preventDefault();runCommand("new");return}
+        if(mod&&event.key.toLowerCase()==="f"){event.preventDefault();runCommand("find");return}
+        if(mod&&event.key.toLowerCase()==="r"){event.preventDefault();runCommand("run");return}
+        if(mod&&event.key==="/"){event.preventDefault();runCommand("shortcuts");return}
+        if(event.key==="F10"){event.preventDefault();togglePreviewFocus();return}
+        if(event.altKey&&["1","2","3","4"].includes(event.key)){event.preventDefault();restoreWindow(["tools","chat","editor","preview"][Number(event.key)-1]);return}
+        if(event.key==="Escape"&&document.body.classList.contains("preview-focus"))togglePreviewFocus();
+      });
+      $("#code-editor").addEventListener("keydown",event=>{
+        if(event.key==="Tab"){
+          event.preventDefault();const editor=event.currentTarget,start=editor.selectionStart,end=editor.selectionEnd;
+          if(start!==end){
+            const selected=editor.value.slice(start,end);
+            const replacement=event.shiftKey?selected.replace(/^ {1,2}/gm,""):selected.replace(/^/gm,"  ");
+            editor.setRangeText(replacement,start,end,"select");
+          }else editor.setRangeText("  ",start,end,"end");
+          onEditorInput();
+        }
+      });
+    }
+
+    function setupLightning() {
+      const canvas=$("#electric-canvas"),ctx=canvas.getContext("2d");
+      let width=0,height=0,dpr=1,bolts=[],last=0;
+      function resize(){dpr=Math.min(2,devicePixelRatio||1);width=innerWidth;height=innerHeight;canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+      function makeBolt(from=null,to=null,power=1){
+        if(state.settings.reducedMotion||state.settings.intensity<=0)return;
+        if(!from){
+          const side=Math.floor(Math.random()*4);
+          if(side===0){from={x:Math.random()*width,y:2};to={x:Math.random()*width,y:2}}
+          if(side===1){from={x:width-2,y:Math.random()*height};to={x:width-2,y:Math.random()*height}}
+          if(side===2){from={x:Math.random()*width,y:height-2};to={x:Math.random()*width,y:height-2}}
+          if(side===3){from={x:2,y:Math.random()*height};to={x:2,y:Math.random()*height}}
+        }
+        const dx=to.x-from.x,dy=to.y-from.y,length=Math.hypot(dx,dy),steps=Math.max(4,Math.ceil(length/24)),points=[from];
+        for(let i=1;i<steps;i++){
+          const t=i/steps,spread=Math.sin(Math.PI*t)*Math.min(28,length*.1)*power;
+          points.push({x:from.x+dx*t+(Math.random()-.5)*spread,y:from.y+dy*t+(Math.random()-.5)*spread});
+        }
+        points.push(to);bolts.push({points,life:1,power});
+      }
+      function draw(time){
+        ctx.clearRect(0,0,width,height);
+        if(time-last>1300/(Math.max(.2,state.settings.intensity))){makeBolt();last=time}
+        bolts.forEach(bolt=>{
+          ctx.save();ctx.globalAlpha=Math.max(0,bolt.life);ctx.lineJoin="round";ctx.lineCap="round";
+          ctx.beginPath();bolt.points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+          ctx.strokeStyle=state.settings.accent;ctx.lineWidth=1.1*bolt.power;ctx.shadowBlur=14*bolt.power;ctx.shadowColor=state.settings.accent;ctx.stroke();
+          ctx.globalAlpha=bolt.life*.75;ctx.strokeStyle="#fff";ctx.lineWidth=.45*bolt.power;ctx.shadowBlur=4;ctx.stroke();ctx.restore();
+          bolt.life-=.055;
+        });
+        bolts=bolts.filter(b=>b.life>0);requestAnimationFrame(draw);
+      }
+      addEventListener("resize",resize);addEventListener("pointerdown",event=>{
+        if(event.target.closest("button,input,textarea,select"))return;
+        const edges=[{x:event.clientX,y:2},{x:width-2,y:event.clientY},{x:event.clientX,y:height-2},{x:2,y:event.clientY}];
+        edges.sort((a,b)=>Math.hypot(a.x-event.clientX,a.y-event.clientY)-Math.hypot(b.x-event.clientX,b.y-event.clientY));
+        makeBolt({x:event.clientX,y:event.clientY},edges[0],1.25);
+      });resize();requestAnimationFrame(draw);
+    }
+
+    function bindEvents() {
+      document.addEventListener("click",event=>{
+        const command=event.target.closest("[data-command]")?.dataset.command;
+        if(command)runCommand(command);
+        if(event.target.closest("[data-close-dialog]"))event.target.closest("dialog")?.close();
+      });
+      $("#connect-btn").addEventListener("click",validateKey);
+      $("#toggle-key").addEventListener("click",()=>{$("#api-key").type=$("#api-key").type==="password"?"text":"password"});
+      $("#clear-key").addEventListener("click",()=>{
+        $("#api-key").value="";state.connected=false;state.models=[];resetModelSelect();setConnection("","Disconnected");$("#connect-btn").textContent="CONNECT";toast("Gemini key forgotten from memory.");
+      });
+      $("#api-key").addEventListener("keydown",event=>{if(event.key==="Enter")validateKey()});
+      $("#model-select").addEventListener("change",()=>$("#chat-model-label").textContent=$("#model-select").value);
+      $("#custom-model").addEventListener("click",setCustomModel);
+      $("#send-btn").addEventListener("click",()=>sendToGemini());
+      $("#abort-btn").addEventListener("click",abortGeneration);
+      $("#chat-input").addEventListener("input",updatePromptTokens);
+      $("#prompt-preset").addEventListener("change",applyPromptPreset);
+      $("#file-input").addEventListener("change",event=>{loadFile(event.target.files[0]);event.target.value=""});
+      $("#code-editor").addEventListener("input",onEditorInput);
+      $("#code-editor").addEventListener("scroll",()=>$("#line-numbers").scrollTop=$("#code-editor").scrollTop);
+      ["click","keyup","select"].forEach(type=>$("#code-editor").addEventListener(type,updateCursor));
+      $("#editor-zoom").addEventListener("input",()=>{$("#editor-zoom-label").textContent=`${$("#editor-zoom").value}px`;syncSettingsFromUI()});
+      $("#auto-run").addEventListener("change",syncSettingsFromUI);
+      $("#include-source").addEventListener("change",syncSettingsFromUI);
+      $("#wrap-code").addEventListener("change",syncSettingsFromUI);
+      ["accent-color","effect-range","temperature","max-tokens","system-prompt","autosave-toggle","motion-toggle","stream-toggle","history-toggle"].forEach(id=>{
+        $(`#${id}`).addEventListener(id==="system-prompt"?"change":"input",()=>{if(id==="temperature")$("#temperature-label").textContent=Number($("#temperature").value).toFixed(1);syncSettingsFromUI()});
+      });
+      $("#reset-settings").addEventListener("click",()=>{
+        localStorage.removeItem(STORAGE.settings);location.reload();
+      });
+      $("#viewport-select").addEventListener("change",event=>setViewport(event.target.value));
+      $("#rotate-device").addEventListener("click",rotateViewport);
+      $("#preview-zoom-out").addEventListener("click",()=>changePreviewZoom(-.1));
+      $("#preview-zoom-in").addEventListener("click",()=>changePreviewZoom(.1));
+      $("#sandbox-toggle").addEventListener("click",toggleSandbox);
+      $("#find-next").addEventListener("click",findNext);$("#replace-one").addEventListener("click",replaceOne);$("#replace-all").addEventListener("click",replaceAll);
+      $("#palette-search").addEventListener("input",event=>renderCommandPalette(event.target.value));
+      $("#palette-search").addEventListener("keydown",event=>{
+        if(event.key==="Enter"){$(".command-item.selected","#command-list")?.click()}
+        if(event.key==="ArrowDown"||event.key==="ArrowUp"){
+          event.preventDefault();const items=$$(".command-item","#command-list"),index=items.findIndex(x=>x.classList.contains("selected"));
+          items[index]?.classList.remove("selected");items[(index+(event.key==="ArrowDown"?1:-1)+items.length)%items.length]?.classList.add("selected");
+        }
+      });
+      $("#rerun-diagnostics").addEventListener("click",runDiagnostics);
+      $("#reopen-workspace").addEventListener("click",()=>$("#closed-workspace").classList.remove("show"));
+      $$("[data-dock]").forEach(button=>button.addEventListener("click",()=>toggleDockWindow(button.dataset.dock)));
+      addEventListener("message",event=>{
+        if(event.data?.source!=="coden8r-preview")return;
+        logConsole(event.data.level||"log",(event.data.args||[]).join(" "));
+      });
+      addEventListener("resize",()=>{clampWindows();setViewport($("#viewport-select").value)});
+      addEventListener("beforeunload",event=>{if(state.dirty&&!state.settings.autosave){event.preventDefault();event.returnValue=""}});
+      $("#skip-boot").addEventListener("click",()=>$("#boot").classList.add("done"));
+    }
+
+    async function boot() {
+      loadSettings();loadVersions();renderStaticLists();setupWindowManager();setupDragDrop();setupKeyboard();setupLightning();bindEvents();
+      initialChat();
+      const restored=restoreProject();
+      if(!restored)$("#code-editor").value=templates.html;
+      updateEditorMetrics();executeCode();
+      setTimeout(restoreLayout,50);
+      const phases=["CALIBRATING ELECTRIC CORE…","MOUNTING WINDOW MATRIX…","HARDENING PREVIEW SANDBOX…","SYSTEM ONLINE"];
+      phases.forEach((text,index)=>setTimeout(()=>$("#boot-status").textContent=text,index*380));
+      setTimeout(()=>$("#boot").classList.add("done"),1650);
+      setInterval(()=>$("#clock").textContent=new Date().toLocaleTimeString([], {hour12:false}),1000);
+      if(matchMedia("(prefers-reduced-motion: reduce)").matches&&!safeStorageGet(STORAGE.settings)){$("#motion-toggle").checked=true;syncSettingsFromUI()}
+    }
+
+    boot();
+  })();
+  </script>
+</body>
+</html>

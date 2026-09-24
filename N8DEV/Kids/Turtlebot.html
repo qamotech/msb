@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Win11 Fluent Turtle Bot Workspace</title>
+<style>
+  :root {
+    --sys-font: 'Segoe UI', system-ui, sans-serif;
+    --mono-font: 'Cascadia Code', 'Consolas', 'Menlo', monospace;
+    --win-accent: #0078d4;
+    --win-accent-hover: #005a9e;
+    --win-danger: #d13438;
+    --win-success: #107c10;
+    --neon-cyan: #00e5ff;
+    --neon-magenta: #ff00aa;
+    --transition-bezier: cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+
+  [data-theme="dark"] {
+    --bg-desktop: url('https://images.unsplash.com/photo-1622737133809-d95047b9e673?w=1920&q=80');
+    --bg-solid: #202020;
+    --acrylic: rgba(32, 32, 32, 0.65);
+    --acrylic-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --control-bg: rgba(255, 255, 255, 0.06);
+    --control-bg-hover: rgba(255, 255, 255, 0.1);
+    --turtle-shell: #0d3a1f;
+    --turtle-skin: #00e5ff;
+    --turtle-glow: rgba(0, 229, 255, 0.6);
+    --editor-gutter: rgba(255,255,255,0.04);
+    --editor-active-line: rgba(0,120,212,0.15);
+  }
+  [data-theme="light"] {
+    --bg-desktop: url('https://images.unsplash.com/photo-1622737133809-d95047b9e673?w=1920&q=80');
+    --bg-solid: #f3f3f3;
+    --acrylic: rgba(243, 243, 243, 0.7);
+    --acrylic-border: rgba(0, 0, 0, 0.1);
+    --text-primary: #111111;
+    --text-secondary: #5d5d5d;
+    --control-bg: rgba(0, 0, 0, 0.04);
+    --control-bg-hover: rgba(0, 0, 0, 0.08);
+    --turtle-shell: #1a4a2e;
+    --turtle-skin: #006a8e;
+    --turtle-glow: rgba(0, 106, 142, 0.4);
+    --editor-gutter: rgba(0,0,0,0.04);
+    --editor-active-line: rgba(0,120,212,0.08);
+  }
+  [data-theme="dim"] {
+    --bg-desktop: none;
+    --bg-solid: #1c2128;
+    --acrylic: rgba(28, 33, 40, 0.85);
+    --acrylic-border: rgba(255, 255, 255, 0.05);
+    --text-primary: #adbac7;
+    --text-secondary: #768390;
+    --control-bg: rgba(255, 255, 255, 0.05);
+    --control-bg-hover: rgba(255, 255, 255, 0.1);
+    --turtle-shell: #0a1f12;
+    --turtle-skin: #4a8fff;
+    --turtle-glow: rgba(74, 143, 255, 0.5);
+    --editor-gutter: rgba(255,255,255,0.03);
+    --editor-active-line: rgba(0,120,212,0.12);
+  }
+  [data-theme="bright"] {
+    --bg-desktop: none;
+    --bg-solid: #f6f8fa;
+    --acrylic: rgba(255, 255, 255, 0.95);
+    --acrylic-border: rgba(0, 0, 0, 0.15);
+    --text-primary: #000000;
+    --text-secondary: #57606a;
+    --control-bg: rgba(0, 0, 0, 0.05);
+    --control-bg-hover: rgba(0, 0, 0, 0.1);
+    --turtle-shell: #2a8a4a;
+    --turtle-skin: #0078d4;
+    --turtle-glow: rgba(0, 120, 212, 0.4);
+    --editor-gutter: rgba(0,0,0,0.04);
+    --editor-active-line: rgba(0,120,212,0.08);
+  }
+
+  body {
+    margin: 0; padding: 0;
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+    background: var(--bg-desktop) center/cover no-repeat;
+    background-color: var(--bg-solid);
+    font-family: var(--sys-font);
+    color: var(--text-primary);
+    transition: background 0.3s ease;
+  }
+
+  /* ==== Tech-Savvy Turtle Widget ==== */
+  #bot-widget {
+    position: fixed;
+    bottom: 40px; right: 40px;
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(0,229,255,0.15), transparent 70%), var(--acrylic);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--turtle-skin);
+    box-shadow: 0 0 24px var(--turtle-glow), 0 8px 32px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,229,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    z-index: 10000;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+    user-select: none;
+  }
+  #bot-widget::before {
+    content: '';
+    position: absolute; inset: -3px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--neon-cyan), var(--neon-magenta), var(--neon-cyan));
+    z-index: -1;
+    opacity: 0.5;
+    animation: rotate-ring 4s linear infinite;
+    filter: blur(2px);
+  }
+  #bot-widget::after {
+    content: '';
+    position: absolute; inset: 4px;
+    border-radius: 50%;
+    border: 1px dashed rgba(0, 229, 255, 0.3);
+    animation: rotate-ring 20s linear infinite reverse;
+    pointer-events: none;
+  }
+  #bot-widget:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 36px var(--turtle-glow), 0 8px 32px rgba(0,0,0,0.4);
+  }
+  @keyframes rotate-ring { to { transform: rotate(360deg); } }
+
+  .bot-icon { width: 70px; height: 70px; animation: float 4s ease-in-out infinite; filter: drop-shadow(0 0 4px var(--turtle-glow)); }
+  .bot-icon .head { transform-origin: 50px 20px; animation: head-nod 3s infinite alternate ease-in-out; }
+  .bot-icon .flipper-lt { transform-origin: 15px 40px; animation: swim 2s infinite alternate ease-in-out; }
+  .bot-icon .flipper-rt { transform-origin: 85px 40px; animation: swim-reverse 2s infinite alternate ease-in-out; }
+  .bot-icon .tail { transform-origin: 50px 85px; animation: wag 1.2s infinite alternate; }
+  .bot-icon .eye-glow { animation: eye-pulse 2s ease-in-out infinite; transform-origin: center; }
+  .bot-icon .circuit { stroke-dasharray: 4 3; animation: data-flow 2s linear infinite; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes head-nod { 0% { transform: rotate(-6deg); } 100% { transform: rotate(6deg); } }
+  @keyframes swim { 0% { transform: rotate(-15deg); } 100% { transform: rotate(15deg); } }
+  @keyframes swim-reverse { 0% { transform: rotate(15deg); } 100% { transform: rotate(-15deg); } }
+  @keyframes wag { 0% { transform: rotate(-12deg); } 100% { transform: rotate(12deg); } }
+  @keyframes eye-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+  @keyframes data-flow { to { stroke-dashoffset: -14; } }
+  @keyframes scan { 0% { transform: translateY(0); } 100% { transform: translateY(60px); } }
+
+  /* ==== Main Window ==== */
+  #app-window {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: 85vw; height: 85vh;
+    max-width: 1300px; max-height: 850px;
+    background: var(--acrylic);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--acrylic-border);
+    border-radius: 8px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.3);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    transition: transform 0.2s var(--transition-bezier), opacity 0.2s var(--transition-bezier);
+  }
+  #app-window.active {
+    display: flex;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .titlebar {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    background: rgba(0,0,0,0.02);
+    border-bottom: 1px solid var(--acrylic-border);
+    user-select: none;
+  }
+  .title-content { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600;}
+  .title-content svg { width: 18px; height: 18px; }
+  .title-shortcuts { font-size: 11px; color: var(--text-secondary); display: flex; gap: 12px; }
+  .title-shortcuts kbd {
+    background: var(--control-bg); border: 1px solid var(--acrylic-border);
+    border-radius: 3px; padding: 1px 6px; font-family: var(--mono-font);
+    font-size: 10px;
+  }
+  .window-controls { display: flex; gap: 4px; }
+  .window-controls button {
+    background: transparent; border: none; color: var(--text-primary);
+    width: 36px; height: 36px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background 0.1s; font-size: 12px;
+  }
+  .window-controls button:hover { background: var(--control-bg-hover); }
+  .window-controls button.close:hover { background: var(--win-danger); color: #fff; }
+
+  .app-body { display: flex; flex: 1; overflow: hidden; }
+
+  .sidebar {
+    width: 240px;
+    border-right: 1px solid var(--acrylic-border);
+    display: flex; flex-direction: column;
+    padding: 12px; gap: 6px;
+    background: rgba(0,0,0,0.02);
+  }
+  .nav-btn {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 14px;
+    background: transparent; border: none;
+    color: var(--text-primary); text-align: left;
+    font-size: 14px; border-radius: 6px;
+    cursor: pointer; transition: background 0.1s;
+  }
+  .nav-btn:hover { background: var(--control-bg-hover); }
+  .nav-btn.active { background: var(--control-bg); position: relative; font-weight: 600; }
+  .nav-btn.active::before {
+    content: ''; position: absolute;
+    left: 2px; top: 20%; height: 60%; width: 3px;
+    background: var(--win-accent); border-radius: 3px;
+  }
+  .sidebar-spacer { flex: 1; }
+
+  .content-area { flex: 1; position: relative; overflow-y: auto; padding: 24px; }
+  .tab-pane { display: none; height: 100%; flex-direction: column; }
+  .tab-pane.active { display: flex; }
+
+  /* ==== Status Bar ==== */
+  #status-bar {
+    height: 26px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px; font-size: 11px; color: var(--text-secondary);
+    background: rgba(0,0,0,0.04);
+    border-top: 1px solid var(--acrylic-border);
+    user-select: none;
+    font-family: var(--mono-font);
+  }
+  #status-bar .status-left, #status-bar .status-right { display: flex; gap: 14px; align-items: center; }
+  #status-bar .status-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--win-success);
+    display: inline-block; margin-right: 4px;
+    box-shadow: 0 0 6px var(--win-success);
+  }
+
+  h2 { margin-top: 0; font-weight: 600; margin-bottom: 15px; }
+  h3 { font-weight: 600; margin-bottom: 8px; }
+  .btn {
+    background: var(--control-bg); border: 1px solid var(--acrylic-border);
+    color: var(--text-primary); padding: 8px 16px; border-radius: 4px;
+    cursor: pointer; font-family: var(--sys-font); font-size: 13px;
+    transition: background 0.1s, border 0.1s;
+  }
+  .btn:hover { background: var(--control-bg-hover); border-color: rgba(128,128,128,0.3); }
+  .btn.primary { background: var(--win-accent); color: #fff; border-color: var(--win-accent); }
+  .btn.primary:hover { background: var(--win-accent-hover); }
+  .btn.danger { background: var(--win-danger); color: #fff; border-color: var(--win-danger); }
+  .btn.danger:hover { filter: brightness(0.9); }
+  .btn.icon { padding: 6px 10px; }
+  .btn-row { display:flex; gap:8px; flex-wrap: wrap; }
+
+  input, textarea, select {
+    background: var(--control-bg); border: 1px solid var(--acrylic-border);
+    color: var(--text-primary); padding: 10px 14px; border-radius: 4px;
+    font-family: var(--sys-font); outline: none; resize: vertical;
+  }
+  input:focus, textarea:focus, select:focus { border-bottom: 2px solid var(--win-accent); padding-bottom: 9px; }
+
+  /* Workbench */
+  .wb-container { display: flex; flex-direction: column; height: 100%; gap: 12px; }
+  .wb-toolbar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding: 4px 0; }
+  .wb-toolbar select { padding: 6px 10px; font-size: 12px; }
+  .wb-editors { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; height: 40%; }
+  .wb-editor-col { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+  .wb-editor-col label { display:flex; justify-content:space-between; align-items:center; }
+  .wb-editor-col label small { color: var(--text-secondary); }
+  .wb-preview-container { flex: 1; border: 1px solid var(--acrylic-border); border-radius: 6px; background: #fff; overflow: hidden; position: relative; min-height: 0; }
+  .wb-preview-container iframe { width: 100%; height: 100%; border: none; }
+
+  /* Code editor */
+  .code-editor {
+    position: relative; flex: 1; display: flex;
+    background: var(--control-bg);
+    border: 1px solid var(--acrylic-border);
+    border-radius: 4px; overflow: hidden; min-height: 0;
+  }
+  .code-editor.focused { border-bottom: 2px solid var(--win-accent); }
+  .code-editor .gutter {
+    flex: 0 0 auto; width: 38px;
+    padding: 10px 6px 10px 8px; text-align: right;
+    color: var(--text-secondary);
+    font-family: var(--mono-font); font-size: 12px; line-height: 1.5;
+    background: var(--editor-gutter);
+    user-select: none; overflow: hidden; white-space: pre;
+  }
+  .code-editor textarea {
+    flex: 1; border: none; border-radius: 0;
+    padding: 10px 12px;
+    font-family: var(--mono-font); font-size: 12px; line-height: 1.5;
+    background: transparent; white-space: pre;
+    overflow: auto; resize: none; tab-size: 2;
+  }
+  .code-editor textarea:focus { border-bottom: none; padding-bottom: 10px; }
+
+  /* Console */
+  .wb-console {
+    height: 130px;
+    background: #0c0c0c;
+    color: #d4d4d4;
+    font-family: var(--mono-font);
+    font-size: 12px;
+    border: 1px solid var(--acrylic-border);
+    border-radius: 4px;
+    overflow-y: auto;
+    padding: 8px 12px;
+    margin-top: 4px;
+  }
+  .wb-console .log-entry { padding: 2px 0; white-space: pre-wrap; word-break: break-word; }
+  .wb-console .log-entry.log { color: #d4d4d4; }
+  .wb-console .log-entry.warn { color: #dcdcaa; }
+  .wb-console .log-entry.error { color: #f48771; }
+  .wb-console .log-entry.info { color: #9cdcfe; }
+  .wb-console .log-entry .ts { color: #6a6a6a; margin-right: 6px; }
+  .wb-console-empty { color: #6a6a6a; font-style: italic; }
+
+  /* PromptN8R */
+  .prompt-container { display: flex; gap: 20px; height: 100%; }
+  .prompt-sidebar { width: 280px; display: flex; flex-direction: column; gap: 12px; border-right: 1px solid var(--acrylic-border); padding-right: 15px; min-height: 0; }
+  .prompt-main { flex: 1; display: flex; flex-direction: column; gap: 15px; min-height: 0; }
+  .prompt-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 5px; }
+  .prompt-item {
+    padding: 12px; background: var(--control-bg); border-radius: 6px;
+    cursor: pointer; border: 1px solid transparent; transition: border-color 0.1s;
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 6px;
+  }
+  .prompt-item:hover { border-color: var(--win-accent); }
+  .prompt-item.active { border-color: var(--win-accent); background: var(--control-bg-hover); }
+  .prompt-item > div { min-width: 0; flex: 1; }
+  .prompt-item strong { display: block; font-size: 14px; margin-bottom: 4px; }
+  .prompt-item small { color: var(--text-secondary); }
+  .prompt-item .del {
+    background: transparent; border: none; color: var(--text-secondary);
+    cursor: pointer; padding: 0 4px; font-size: 14px; border-radius: 3px;
+  }
+  .prompt-item .del:hover { color: var(--win-danger); background: var(--control-bg-hover); }
+  .prompt-stats { font-size: 11px; color: var(--text-secondary); padding: 6px 0; font-family: var(--mono-font); }
+  .prompt-history { max-height: 100px; overflow-y: auto; background: var(--control-bg); border: 1px solid var(--acrylic-border); border-radius: 4px; padding: 8px 10px; font-family: var(--mono-font); font-size: 11px; }
+  .prompt-history .h-item { padding: 2px 0; color: var(--text-secondary); }
+  .prompt-history .h-item .ts { color: var(--win-accent); margin-right: 6px; }
+
+  .var-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--control-bg); border: 1px solid var(--acrylic-border);
+    border-radius: 999px; padding: 4px 10px; font-size: 12px; margin: 3px 4px 0 0;
+  }
+  .var-chip .x { cursor: pointer; opacity: 0.6; }
+  .var-chip .x:hover { opacity: 1; color: var(--win-danger); }
+  .vars-panel { background: var(--control-bg); border: 1px solid var(--acrylic-border); border-radius: 4px; padding: 10px 12px; max-height: 130px; overflow-y: auto; }
+  .vars-panel h4 { margin: 0 0 6px 0; font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+
+  /* Vault */
+  .vault-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .drop-zone {
+    border: 2px dashed var(--acrylic-border);
+    border-radius: 8px; padding: 45px; text-align: center;
+    background: var(--control-bg); cursor: pointer; margin-top: 15px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .drop-zone:hover, .drop-zone.dragover { background: var(--control-bg-hover); border-color: var(--win-accent); }
+  .vault-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px; margin-top: 20px;
+  }
+  .vault-item {
+    background: var(--control-bg); border: 1px solid var(--acrylic-border);
+    border-radius: 6px; padding: 15px; display: flex; flex-direction: column;
+    align-items: center; gap: 10px; text-align: center; word-break: break-word;
+    position: relative;
+  }
+  .vault-item .icon { font-size: 36px; }
+  .vault-item .del {
+    position: absolute; top: 6px; right: 6px;
+    background: transparent; border: none; color: var(--text-secondary);
+    cursor: pointer; font-size: 14px;
+  }
+  .vault-item .del:hover { color: var(--win-danger); }
+
+  /* Notes */
+  .notes-container { display: flex; gap: 20px; height: 100%; min-height: 0; }
+  .notes-sidebar { width: 240px; display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--acrylic-border); padding-right: 15px; min-height: 0; }
+  .notes-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+  .note-item {
+    padding: 10px 12px; background: var(--control-bg); border-radius: 6px;
+    cursor: pointer; border: 1px solid transparent;
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  }
+  .note-item:hover { border-color: var(--win-accent); }
+  .note-item.active { border-color: var(--win-accent); background: var(--control-bg-hover); }
+  .note-item > div { min-width: 0; flex: 1; }
+  .note-item strong { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .note-item small { color: var(--text-secondary); font-size: 11px; }
+  .note-item .del { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; }
+  .note-item .del:hover { color: var(--win-danger); }
+  .notes-main { flex: 1; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+  .notes-main input { font-size: 18px; font-weight: 600; }
+  .notes-main textarea { flex: 1; font-family: var(--sys-font); line-height: 1.6; min-height: 0; }
+
+  /* Settings */
+  .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; max-width: 450px;}
+  .settings-section { margin-top: 24px; }
+  .settings-row { display:flex; align-items:center; justify-content: space-between; padding: 10px 0; max-width: 500px; border-bottom: 1px solid var(--acrylic-border); }
+  .settings-row label { font-size: 14px; }
+  .danger-note { color: var(--win-danger); font-size: 12px; margin-top: 6px; }
+
+  /* Toast */
+  #toast-host {
+    position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+    z-index: 20000; display: flex; flex-direction: column; gap: 8px; align-items: center;
+    pointer-events: none;
+  }
+  .toast {
+    background: var(--acrylic);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--acrylic-border);
+    color: var(--text-primary);
+    padding: 10px 18px; border-radius: 6px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    font-size: 13px;
+    animation: toast-in 0.2s ease-out;
+    pointer-events: auto;
+    min-width: 200px; max-width: 420px; text-align: center;
+  }
+  .toast.success { border-left: 3px solid var(--win-success); }
+  .toast.error { border-left: 3px solid var(--win-danger); }
+  .toast.info { border-left: 3px solid var(--win-accent); }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Modal */
+  #modal-host {
+    position: fixed; inset: 0; z-index: 15000;
+    display: none; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  }
+  #modal-host.active { display: flex; }
+  .modal {
+    background: var(--acrylic);
+    backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--acrylic-border);
+    border-radius: 8px;
+    min-width: 360px; max-width: 520px;
+    padding: 20px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+  }
+  .modal h3 { margin-top: 0; }
+  .modal .modal-body { margin: 12px 0 18px; color: var(--text-primary); line-height: 1.5; }
+  .modal .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+  .modal .input-row { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 14px; }
+  .modal input { width: 100%; box-sizing: border-box; }
+
+  /* Command Palette */
+  #cmd-palette {
+    position: fixed; top: 18%; left: 50%; transform: translateX(-50%);
+    width: 560px; max-width: 90vw;
+    background: var(--acrylic);
+    backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--turtle-skin);
+    border-radius: 8px;
+    box-shadow: 0 16px 60px rgba(0,0,0,0.5), 0 0 24px var(--turtle-glow);
+    z-index: 18000;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #cmd-palette.active { display: flex; }
+  #cmd-palette input {
+    border: none; border-bottom: 1px solid var(--acrylic-border);
+    border-radius: 0; padding: 14px 18px; font-size: 14px;
+    background: transparent; color: var(--text-primary);
+  }
+  #cmd-palette input:focus { border-bottom: 1px solid var(--turtle-skin); padding-bottom: 14px; }
+  #cmd-palette-results { max-height: 360px; overflow-y: auto; padding: 6px; }
+  .cmd-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-radius: 4px; cursor: pointer;
+    font-size: 13px; transition: background 0.1s;
+  }
+  .cmd-item:hover, .cmd-item.selected { background: var(--control-bg-hover); }
+  .cmd-item .cmd-shortcut { font-family: var(--mono-font); font-size: 11px; color: var(--text-secondary); }
+  .cmd-item .cmd-icon { margin-right: 10px; opacity: 0.7; }
+  .cmd-empty { padding: 20px; text-align: center; color: var(--text-secondary); font-size: 12px; }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.4); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.6); }
+</style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- Tech-Savvy Turtle Widget -->
+  <div id="bot-widget" title="Open Workspace (Ctrl+Space)">
+    <svg class="bot-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="shellGrad" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#0d3a1f"/>
+          <stop offset="100%" stop-color="#000"/>
+        </radialGradient>
+        <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#00e5ff"/>
+          <stop offset="100%" stop-color="#0080a0"/>
+        </linearGradient>
+        <filter id="glow"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+
+      <!-- Flippers -->
+      <path class="flipper-lt" d="M 15 40 Q 5 30 10 20 Q 25 25 30 40 Z" fill="url(#skinGrad)"/>
+      <path class="flipper-rt" d="M 85 40 Q 95 30 90 20 Q 75 25 70 40 Z" fill="url(#skinGrad)"/>
+      <path class="flipper-lt" d="M 30 80 Q 25 95 15 90 Q 15 75 35 70 Z" fill="url(#skinGrad)"/>
+      <path class="flipper-rt" d="M 70 80 Q 75 95 85 90 Q 85 75 65 70 Z" fill="url(#skinGrad)"/>
+
+      <!-- Tail -->
+      <polygon class="tail" points="45,85 55,85 50,98" fill="url(#skinGrad)"/>
+
+      <!-- Tech Shell -->
+      <ellipse cx="50" cy="55" rx="35" ry="40" fill="url(#shellGrad)" stroke="#00e5ff" stroke-width="0.5"/>
+      <ellipse cx="50" cy="53" rx="30" ry="35" fill="#0a2e1a" opacity="0.7"/>
+
+      <!-- Circuit pattern on shell -->
+      <g stroke="#00e5ff" stroke-width="0.8" fill="none" opacity="0.7" class="circuit">
+        <path d="M 50 20 L 50 30 L 35 30 L 35 45"/>
+        <path d="M 50 20 L 50 30 L 65 30 L 65 45"/>
+        <path d="M 35 45 L 25 45 L 25 60"/>
+        <path d="M 65 45 L 75 45 L 75 60"/>
+        <path d="M 50 30 L 50 70"/>
+        <path d="M 25 60 L 50 70 L 75 60"/>
+        <circle cx="50" cy="30" r="1.5" fill="#00e5ff"/>
+        <circle cx="35" cy="45" r="1.5" fill="#00e5ff"/>
+        <circle cx="65" cy="45" r="1.5" fill="#00e5ff"/>
+        <circle cx="50" cy="70" r="2" fill="#00e5ff"/>
+      </g>
+
+      <!-- Hexagonal shell panels -->
+      <path d="M 50 28 L 60 35 L 60 50 L 50 57 L 40 50 L 40 35 Z" fill="none" stroke="#00e5ff" stroke-width="0.6" opacity="0.5"/>
+      <path d="M 35 50 L 42 55 L 42 68 L 35 73 L 28 68 L 28 55 Z" fill="none" stroke="#00e5ff" stroke-width="0.6" opacity="0.5"/>
+      <path d="M 65 50 L 72 55 L 72 68 L 65 73 L 58 68 L 58 55 Z" fill="none" stroke="#00e5ff" stroke-width="0.6" opacity="0.5"/>
+
+      <!-- Antennae -->
+      <line x1="44" y1="10" x2="42" y2="2" stroke="#00e5ff" stroke-width="1"/>
+      <line x1="56" y1="10" x2="58" y2="2" stroke="#00e5ff" stroke-width="1"/>
+      <circle cx="42" cy="2" r="1.8" fill="#00e5ff" filter="url(#glow)">
+        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="58" cy="2" r="1.8" fill="#00e5ff" filter="url(#glow)">
+        <animate attributeName="opacity" values="1;0.4;1" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- Head -->
+      <g class="head">
+        <circle cx="50" cy="20" r="14" fill="url(#skinGrad)" stroke="#00e5ff" stroke-width="0.5"/>
+        <!-- Visor / holographic eyes -->
+        <rect class="eye-glow" x="40" y="16" width="20" height="6" rx="2" fill="#000" opacity="0.7"/>
+        <circle cx="44" cy="19" r="1.8" fill="#00e5ff" filter="url(#glow)">
+          <animate attributeName="r" values="1.5;2.2;1.5" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="56" cy="19" r="1.8" fill="#00e5ff" filter="url(#glow)">
+          <animate attributeName="r" values="2.2;1.5;2.2" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <!-- Mouth grille -->
+        <line x1="46" y1="26" x2="54" y2="26" stroke="#000" stroke-width="0.8"/>
+        <line x1="47" y1="28" x2="53" y2="28" stroke="#000" stroke-width="0.6"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Main Application Window -->
+  <div id="app-window">
+    <div class="titlebar" id="drag-handle">
+      <div class="title-content">
+        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="var(--turtle-shell)" stroke="var(--turtle-skin)" stroke-width="2"/></svg>
+        <span>Turtle Desktop Bot v2.0</span>
+      </div>
+      <div class="title-shortcuts">
+        <span><kbd>Ctrl</kbd>+<kbd>K</kbd> Commands</span>
+        <span><kbd>Ctrl</kbd>+<kbd>Space</kbd> Toggle</span>
+      </div>
+      <div class="window-controls">
+        <button onclick="minimizeApp()" title="Minimize">🗕</button>
+        <button onclick="toggleMaximizeApp()" title="Maximize">🗖</button>
+        <button class="close" onclick="minimizeApp()" title="Close">🗙</button>
+      </div>
+    </div>
+
+    <div class="app-body">
+      <div class="sidebar">
+        <button class="nav-btn active" data-target="tab-workbench">
+          <span>🖥️</span> Front-End Workbench
+        </button>
+        <button class="nav-btn" data-target="tab-promptn8r">
+          <span>⚡</span> PromptN8R
+        </button>
+        <button class="nav-btn" data-target="tab-vault">
+          <span>🗃️</span> Clipboard Vault
+        </button>
+        <button class="nav-btn" data-target="tab-notes">
+          <span>📝</span> Notes
+        </button>
+        <div class="sidebar-spacer"></div>
+        <button class="nav-btn" data-target="tab-settings">
+          <span>⚙️</span> Settings
+        </button>
+      </div>
+
+      <div class="content-area">
+
+        <!-- Workbench -->
+        <div id="tab-workbench" class="tab-pane active">
+          <h2>Front-End Developer Workbench</h2>
+          <div class="wb-container">
+            <div class="wb-toolbar">
+              <select id="wb-snippet-select">
+                <option value="">— Snippets —</option>
+              </select>
+              <button class="btn" onclick="loadSelectedSnippet()">Load</button>
+              <button class="btn" onclick="saveCurrentAsSnippet()">Save as Snippet</button>
+              <button class="btn" onclick="deleteSelectedSnippet()">Delete</button>
+              <span style="flex:1"></span>
+              <button class="btn" onclick="formatWorkbenchCode()">Format</button>
+              <button class="btn" onclick="clearWorkbenchAll()">Clear All</button>
+              <button class="btn" onclick="downloadWorkbench()">Download</button>
+            </div>
+            <div class="wb-editors">
+              <div class="wb-editor-col">
+                <label><small>HTML</small><small id="wb-stats-html">0 L · 0 ch</small></label>
+                <div class="code-editor" data-editor="html">
+                  <div class="gutter" id="wb-gutter-html"></div>
+                  <textarea id="wb-html" spellcheck="false" wrap="off"></textarea>
+                </div>
+              </div>
+              <div class="wb-editor-col">
+                <label><small>CSS</small><small id="wb-stats-css">0 L · 0 ch</small></label>
+                <div class="code-editor" data-editor="css">
+                  <div class="gutter" id="wb-gutter-css"></div>
+                  <textarea id="wb-css" spellcheck="false" wrap="off"></textarea>
+                </div>
+              </div>
+              <div class="wb-editor-col">
+                <label><small>JavaScript</small><small id="wb-stats-js">0 L · 0 ch</small></label>
+                <div class="code-editor" data-editor="js">
+                  <div class="gutter" id="wb-gutter-js"></div>
+                  <textarea id="wb-js" spellcheck="false" wrap="off"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="wb-preview-container">
+              <iframe id="wb-preview" sandbox="allow-scripts allow-same-origin allow-modals"></iframe>
+            </div>
+            <div class="wb-console" id="wb-console">
+              <div class="wb-console-empty">// Console output from preview will appear here</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PromptN8R -->
+        <div id="tab-promptn8r" class="tab-pane">
+          <h2>PromptN8R Engineer</h2>
+          <div class="prompt-container">
+            <div class="prompt-sidebar">
+              <input type="text" id="prompt-search" placeholder="Search prompts...">
+              <select id="prompt-category">
+                <option value="all">All Categories</option>
+                <option value="code">Coding</option>
+                <option value="design">Design</option>
+                <option value="utility">Utility</option>
+              </select>
+              <div class="prompt-list" id="prompt-list-ui"></div>
+            </div>
+            <div class="prompt-main">
+              <input type="text" id="prompt-title" placeholder="Prompt Title">
+              <textarea id="prompt-body" placeholder="Use {{variable_name}} placeholders..." style="flex:1;"></textarea>
+              <div class="prompt-stats" id="prompt-stats">Runs: 0 · Last compiled: never</div>
+              <div class="vars-panel" id="vars-panel">
+                <h4>Variables (auto-detected)</h4>
+                <div id="vars-chips"></div>
+              </div>
+              <div class="btn-row" style="justify-content:flex-end;">
+                <button class="btn" onclick="clearPrompt()">Clear</button>
+                <button class="btn" onclick="newPrompt()">New</button>
+                <button class="btn" onclick="deleteCurrentPrompt()" id="btn-delete-prompt" style="display:none;">Delete</button>
+                <button class="btn" onclick="savePrompt()">Save</button>
+                <button class="btn" onclick="copyPrompt()">Copy</button>
+                <button class="btn primary" onclick="compilePrompt()">⚡ Compile & Copy</button>
+              </div>
+              <details>
+                <summary style="cursor:pointer; color:var(--text-secondary); font-size:12px;">Compile history</summary>
+                <div class="prompt-history" id="prompt-history"></div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vault -->
+        <div id="tab-vault" class="tab-pane">
+          <div class="vault-header">
+            <div>
+               <h2>Clipboard & File Vault</h2>
+               <p style="color:var(--text-secondary); margin:0;">Drag & drop files or paste text. Stored in memory for this session.</p>
+            </div>
+            <button class="btn primary" onclick="readClipboard()">+ Paste from Clipboard</button>
+          </div>
+          <div class="drop-zone" id="drop-zone">
+            <h3>Drag & Drop Files Here</h3>
+            <p>Any file from anywhere will be processed and saved as an object URL.</p>
+          </div>
+          <div class="vault-grid" id="vault-grid"></div>
+        </div>
+
+        <!-- Notes -->
+        <div id="tab-notes" class="tab-pane">
+          <h2>Quick Notes</h2>
+          <div class="notes-container">
+            <div class="notes-sidebar">
+              <button class="btn primary" onclick="createNote()">+ New Note</button>
+              <input type="text" id="notes-search" placeholder="Search notes...">
+              <div class="notes-list" id="notes-list"></div>
+            </div>
+            <div class="notes-main">
+              <input type="text" id="note-title" placeholder="Note title...">
+              <textarea id="note-body" placeholder="Start writing..."></textarea>
+              <div class="btn-row" style="justify-content:flex-end;">
+                <button class="btn" onclick="deleteCurrentNote()" id="btn-delete-note" style="display:none;">Delete</button>
+                <span id="note-saved-status" style="color:var(--text-secondary); font-size:12px; align-self:center; margin-right:auto;">Saved</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings -->
+        <div id="tab-settings" class="tab-pane">
+          <h2>Settings</h2>
+          <p>Customize your Windows 11 Fluent environment.</p>
+
+          <div class="settings-section">
+            <h3>Appearance / Theme Mode</h3>
+            <div class="theme-grid">
+              <button class="btn" onclick="setTheme('light')">Light Mode</button>
+              <button class="btn" onclick="setTheme('dark')">Dark Mode</button>
+              <button class="btn" onclick="setTheme('dim')">Dim Mode</button>
+              <button class="btn" onclick="setTheme('bright')">Bright Mode</button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>Keyboard Shortcuts</h3>
+            <div class="settings-row"><label>Toggle workspace</label><span><kbd>Ctrl</kbd>+<kbd>Space</kbd></span></div>
+            <div class="settings-row"><label>Command palette</label><span><kbd>Ctrl</kbd>+<kbd>K</kbd></span></div>
+            <div class="settings-row"><label>New note</label><span><kbd>Ctrl</kbd>+<kbd>N</kbd></span></div>
+            <div class="settings-row"><label>Search prompts</label><span><kbd>Ctrl</kbd>+<kbd>P</kbd></span></div>
+            <div class="settings-row"><label>Run workbench</label><span><kbd>Ctrl</kbd>+<kbd>Enter</kbd></span></div>
+            <div class="settings-row"><label>Format code</label><span><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></span></div>
+          </div>
+
+          <div class="settings-section">
+            <h3>Data</h3>
+            <div class="settings-row">
+              <div>
+                <label>Export all data</label>
+                <div class="danger-note" style="color:var(--text-secondary);">Download a JSON backup.</div>
+              </div>
+              <button class="btn" onclick="exportData()">Export</button>
+            </div>
+            <div class="settings-row">
+              <div>
+                <label>Import data</label>
+                <div class="danger-note" style="color:var(--text-secondary);">Restore from a JSON file.</div>
+              </div>
+              <button class="btn" onclick="document.getElementById('import-file').click()">Import</button>
+              <input type="file" id="import-file" accept="application/json" style="display:none;">
+            </div>
+            <div class="settings-row">
+              <div>
+                <label>Reset everything</label>
+                <div class="danger-note">Permanently clears all locally stored data.</div>
+              </div>
+              <button class="btn danger" onclick="resetAllData()">Reset</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="status-bar">
+      <div class="status-left">
+        <span><span class="status-dot"></span><span id="status-active">Workbench</span></span>
+        <span id="status-time">--:--:--</span>
+      </div>
+      <div class="status-right">
+        <span id="status-memory">Memory: -- KB</span>
+        <span id="status-theme">Theme: dark</span>
+        <span id="status-saved">●</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Command Palette -->
+  <div id="cmd-palette">
+    <input type="text" id="cmd-input" placeholder="Type a command… (Ctrl+K)">
+    <div id="cmd-palette-results"></div>
+  </div>
+
+  <!-- Toast host -->
+  <div id="toast-host"></div>
+
+  <!-- Modal host -->
+  <div id="modal-host">
+    <div class="modal" id="modal">
+      <h3 id="modal-title">Confirm</h3>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+
+<script>
+  // ==========================================
+  // Storage
+  // ==========================================
+  const STORE_KEY = 'turtlebot_workspace_v3';
+  const defaultState = {
+    theme: 'dark',
+    workbench: { html: '', css: '', js: '' },
+    snippets: [
+      { id: 'starter', name: 'Starter Hero', html: '<div class="hero">\n  <h1>Hello World</h1>\n  <p>Get started</p>\n</div>', css: 'body {\n  font-family: sans-serif;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  margin: 0;\n  background: #f0f4f8;\n}\n.hero {\n  text-align: center;\n  padding: 40px;\n  background: white;\n  border-radius: 12px;\n  box-shadow: 0 4px 16px rgba(0,0,0,0.1);\n}', js: 'console.log("Ready!");' },
+      { id: 'canvas', name: 'Animated Canvas', html: '<canvas id="c"></canvas>', css: 'body { margin: 0; background: #000; }\ncanvas { display: block; }', js: 'const c = document.getElementById("c");\nconst ctx = c.getContext("2d");\nfunction resize() { c.width = innerWidth; c.height = innerHeight; }\nresize(); addEventListener("resize", resize);\nlet t = 0;\nfunction draw() {\n  t += 0.02;\n  ctx.fillStyle = "rgba(0,0,0,0.1)";\n  ctx.fillRect(0, 0, c.width, c.height);\n  for (let i = 0; i < 50; i++) {\n    const x = c.width/2 + Math.cos(t + i) * 100;\n    const y = c.height/2 + Math.sin(t + i) * 100;\n    ctx.fillStyle = `hsl(${t*30 + i*7}, 70%, 60%)`;\n    ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI*2); ctx.fill();\n  }\n  requestAnimationFrame(draw);\n}\ndraw();' }
+    ],
+    prompts: [
+      { id: 1, title: 'Code Refactoring Protocol', cat: 'code', body: 'Please analyze the following code snippet and suggest improvements for performance, readability, and security:\n\n{{code}}', runs: 0, lastCompiled: null },
+      { id: 2, title: 'UI Design System', cat: 'design', body: 'Describe a modern, Fluent-design inspired user interface for {{app_name}}. Focus on layout, typography scale, acrylic materials, and color scheme.', runs: 0, lastCompiled: null },
+      { id: 3, title: 'Data Extraction', cat: 'utility', body: 'Extract all the email addresses and phone numbers from the following text and format them into a JSON array:\n\n{{text}}', runs: 0, lastCompiled: null }
+    ],
+    promptHistory: [],
+    notes: [],
+    activePromptId: null,
+    activeNoteId: null
+  };
+
+  let state = loadState();
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return structuredClone(defaultState);
+      const parsed = JSON.parse(raw);
+      return Object.assign(structuredClone(defaultState), parsed);
+    } catch { return structuredClone(defaultState); }
+  }
+  function saveState() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); markSaved(); }
+    catch (e) { toast('Storage error: ' + e.message, 'error'); }
+  }
+  function markSaved() {
+    const el = document.getElementById('status-saved');
+    if (!el) return;
+    el.textContent = '●';
+    el.style.color = 'var(--win-success)';
+    el.title = 'Saved at ' + new Date().toLocaleTimeString();
+  }
+  function markDirty() {
+    const el = document.getElementById('status-saved');
+    if (!el) return;
+    el.textContent = '○';
+    el.style.color = 'var(--win-accent)';
+    el.title = 'Unsaved changes';
+  }
+
+  // ==========================================
+  // Toast & Modal
+  // ==========================================
+  function toast(msg, kind='info', ms=2400) {
+    const host = document.getElementById('toast-host');
+    const t = document.createElement('div');
+    t.className = 'toast ' + kind;
+    t.textContent = msg;
+    host.appendChild(t);
+    setTimeout(() => {
+      t.style.transition = 'opacity 0.3s';
+      t.style.opacity = '0';
+      setTimeout(() => t.remove(), 300);
+    }, ms);
+  }
+  function modal({ title='Confirm', body='', confirmText='OK', cancelText='Cancel', danger=false, showInput=false, inputValue='', inputPlaceholder='' } = {}) {
+    return new Promise((resolve) => {
+      const host = document.getElementById('modal-host');
+      document.getElementById('modal-title').textContent = title;
+      const bodyEl = document.getElementById('modal-body');
+      if (showInput) {
+        bodyEl.innerHTML = `<div class="modal-body">${escapeHtml(body)}</div><div class="input-row"><input id="modal-input" placeholder="${escapeAttr(inputPlaceholder)}" value="${escapeAttr(inputValue)}"></div>`;
+        setTimeout(() => document.getElementById('modal-input')?.focus(), 30);
+      } else {
+        bodyEl.innerHTML = `<div class="modal-body">${escapeHtml(body)}</div>`;
+      }
+      const actions = document.getElementById('modal-actions');
+      actions.innerHTML = '';
+      const cancelBtn = document.createElement('button');
+      cancelBtn.className = 'btn';
+      cancelBtn.textContent = cancelText;
+      cancelBtn.onclick = () => { close(null); };
+      const okBtn = document.createElement('button');
+      okBtn.className = 'btn ' + (danger ? 'danger' : 'primary');
+      okBtn.textContent = confirmText;
+      okBtn.onclick = () => {
+        if (showInput) close(document.getElementById('modal-input').value);
+        else close(true);
+      };
+      actions.appendChild(cancelBtn);
+      actions.appendChild(okBtn);
+      host.classList.add('active');
+      function close(val) {
+        host.classList.remove('active');
+        document.removeEventListener('keydown', onKey);
+        resolve(val);
+      }
+      function onKey(e) {
+        if (e.key === 'Escape') close(null);
+        if (e.key === 'Enter' && showInput) close(document.getElementById('modal-input').value);
+      }
+      document.addEventListener('keydown', onKey);
+    });
+  }
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+  function escapeAttr(s) { return escapeHtml(s); }
+
+  // ==========================================
+  // Bot Widget Drag & Open
+  // ==========================================
+  const botWidget = document.getElementById('bot-widget');
+  const appWindow = document.getElementById('app-window');
+  let isDragging = false, startX, startY, initialX, initialY;
+
+  botWidget.addEventListener('mousedown', (e) => {
+    isDragging = false;
+    startX = e.clientX; startY = e.clientY;
+    initialX = botWidget.offsetLeft; initialY = botWidget.offsetTop;
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+  function onMouseMove(e) {
+    if (Math.abs(e.clientX - startX) > 4 || Math.abs(e.clientY - startY) > 4) isDragging = true;
+    if (isDragging) {
+      botWidget.style.left = `${initialX + e.clientX - startX}px`;
+      botWidget.style.top = `${initialY + e.clientY - startY}px`;
+      botWidget.style.bottom = 'auto';
+      botWidget.style.right = 'auto';
+    }
+  }
+  function onMouseUp() {
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+    if (!isDragging) openApp();
+  }
+  function openApp() {
+    appWindow.classList.add('active');
+    botWidget.style.display = 'none';
+  }
+  function minimizeApp() {
+    appWindow.classList.remove('active');
+    setTimeout(() => botWidget.style.display = 'flex', 200);
+  }
+
+  let isMaximized = false;
+  function toggleMaximizeApp() {
+    isMaximized = !isMaximized;
+    if (isMaximized) {
+      appWindow.style.width = '100vw';
+      appWindow.style.height = '100vh';
+      appWindow.style.maxWidth = '100vw';
+      appWindow.style.maxHeight = '100vh';
+      appWindow.style.borderRadius = '0';
+    } else {
+      appWindow.style.width = '85vw';
+      appWindow.style.height = '85vh';
+      appWindow.style.maxWidth = '1300px';
+      appWindow.style.maxHeight = '850px';
+      appWindow.style.borderRadius = '8px';
+    }
+  }
+
+  // ==========================================
+  // Sidebar Navigation
+  // ==========================================
+  const navLabels = { 'tab-workbench':'Workbench', 'tab-promptn8r':'PromptN8R', 'tab-vault':'Vault', 'tab-notes':'Notes', 'tab-settings':'Settings' };
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.target));
+  });
+  function switchTab(id) {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.nav-btn[data-target="${id}"]`)?.classList.add('active');
+    document.getElementById(id)?.classList.add('active');
+    document.getElementById('status-active').textContent = navLabels[id] || id;
+  }
+
+  // ==========================================
+  // Status bar (clock + memory)
+  // ==========================================
+  function updateStatusBar() {
+    const t = new Date();
+    document.getElementById('status-time').textContent = t.toLocaleTimeString();
+    try {
+      const bytes = new Blob([JSON.stringify(state)]).size;
+      const kb = (bytes / 1024).toFixed(1);
+      document.getElementById('status-memory').textContent = `Storage: ${kb} KB`;
+    } catch {}
+    document.getElementById('status-theme').textContent = `Theme: ${state.theme}`;
+  }
+  setInterval(updateStatusBar, 1000);
+  updateStatusBar();
+
+  // ==========================================
+  // Theme
+  // ==========================================
+  function setTheme(themeName) {
+    document.documentElement.setAttribute('data-theme', themeName);
+    state.theme = themeName;
+    saveState();
+  }
+  setTheme(state.theme);
+
+  // ==========================================
+  // Code editor
+  // ==========================================
+  function setupEditor(textareaId, gutterId, statsId) {
+    const ta = document.getElementById(textareaId);
+    const gutter = document.getElementById(gutterId);
+    const stats = document.getElementById(statsId);
+    const wrap = ta.closest('.code-editor');
+
+    function updateGutter() {
+      const lines = ta.value.split('\n').length;
+      let g = '';
+      for (let i = 1; i <= lines; i++) g += i + '\n';
+      gutter.textContent = g;
+      if (stats) stats.textContent = `${lines} L · ${ta.value.length} ch`;
+    }
+    function syncScroll() { gutter.scrollTop = ta.scrollTop; }
+    function autoIndent(e) {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = ta.selectionStart, end = ta.selectionEnd;
+        const val = ta.value;
+        if (start !== end) {
+          const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+          const before = val.slice(0, lineStart);
+          const sel = val.slice(lineStart, end);
+          const lines = sel.split('\n');
+          if (e.shiftKey) {
+            const outdented = lines.map(l => l.replace(/^( {1,2}|\t)/, '')).join('\n');
+            ta.value = before + outdented + val.slice(end);
+            ta.selectionStart = lineStart;
+            ta.selectionEnd = lineStart + outdented.length;
+          } else {
+            const indented = lines.map(l => '  ' + l).join('\n');
+            ta.value = before + indented + val.slice(end);
+            ta.selectionStart = lineStart;
+            ta.selectionEnd = lineStart + indented.length;
+          }
+        } else {
+          ta.value = val.slice(0, start) + '  ' + val.slice(end);
+          ta.selectionStart = ta.selectionEnd = start + 2;
+        }
+        updateGutter();
+        ta.dispatchEvent(new Event('input', { bubbles: true }));
+        return;
+      }
+      if (e.key === 'Enter') {
+        const start = ta.selectionStart;
+        const val = ta.value;
+        const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+        const currentLine = val.slice(lineStart, start);
+        const indent = (currentLine.match(/^[ \t]*/) || [''])[0];
+        const extra = /[\{\[\(]\s*$/.test(currentLine) ? '  ' : '';
+        e.preventDefault();
+        ta.value = val.slice(0, start) + '\n' + indent + extra + val.slice(start);
+        ta.selectionStart = ta.selectionEnd = start + 1 + indent.length + extra.length;
+        updateGutter();
+        ta.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
+
+    ta.addEventListener('input', () => { updateGutter(); });
+    ta.addEventListener('scroll', syncScroll);
+    ta.addEventListener('keydown', autoIndent);
+    ta.addEventListener('focus', () => wrap.classList.add('focused'));
+    ta.addEventListener('blur', () => wrap.classList.remove('focused'));
+    updateGutter();
+    return { ta, updateGutter };
+  }
+
+  // ==========================================
+  // Workbench + Console capture
+  // ==========================================
+  const edHtml = setupEditor('wb-html', 'wb-gutter-html', 'wb-stats-html');
+  const edCss  = setupEditor('wb-css',  'wb-gutter-css',  'wb-stats-css');
+  const edJs   = setupEditor('wb-js',   'wb-gutter-js',   'wb-stats-js');
+  const wbPreview = document.getElementById('wb-preview');
+  const wbConsole = document.getElementById('wb-console');
+  let wbTimer = null;
+
+  function wbLog(level, args) {
+    const empty = wbConsole.querySelector('.wb-console-empty');
+    if (empty) empty.remove();
+    const div = document.createElement('div');
+    div.className = 'log-entry ' + level;
+    const ts = new Date().toLocaleTimeString();
+    const text = args.map(a => {
+      if (typeof a === 'object') { try { return JSON.stringify(a); } catch { return String(a); } }
+      return String(a);
+    }).join(' ');
+    div.innerHTML = `<span class="ts">${ts}</span>${escapeHtml(text)}`;
+    wbConsole.appendChild(div);
+    wbConsole.scrollTop = wbConsole.scrollHeight;
+  }
+
+  function updateWorkbench() {
+    const htmlContent = edHtml.ta.value;
+    const cssContent = `<style>${edCss.ta.value}</style>`;
+    const jsContent = `
+      <script>
+        (function(){
+          const send = (level) => (...args) => parent.postMessage({__wb_console__:true, level, args}, '*');
+          const _log = console.log.bind(console);
+          const _info = console.info.bind(console);
+          const _warn = console.warn.bind(console);
+          const _error = console.error.bind(console);
+          console.log = (...a) => { _log(...a); send('log')(...a); };
+          console.info = (...a) => { _info(...a); send('info')(...a); };
+          console.warn = (...a) => { _warn(...a); send('warn')(...a); };
+          console.error = (...a) => { _error(...a); send('error')(...a); };
+          window.addEventListener('error', e => send('error')('Uncaught:', e.message, '@', e.filename + ':' + e.lineno));
+          window.addEventListener('unhandledrejection', e => send('error')('Unhandled rejection:', String(e.reason)));
+        })();
+      <\/script>
+      <script>${edJs.ta.value}<\/script>
+    `;
+    const combined = `
+      <!DOCTYPE html>
+      <html>
+        <head><meta charset="utf-8">${cssContent}<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+        <body>${htmlContent}${jsContent}
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+      </html>
+    `;
+    wbConsole.innerHTML = '<div class="wb-console-empty">// Console cleared</div>';
+    wbPreview.srcdoc = combined;
+  }
+
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.__wb_console__) wbLog(e.data.level, e.data.args);
+  });
+
+  function persistWorkbench() {
+    state.workbench.html = edHtml.ta.value;
+    state.workbench.css = edCss.ta.value;
+    state.workbench.js = edJs.ta.value;
+    markDirty();
+    clearTimeout(wbTimer);
+    wbTimer = setTimeout(() => { saveState(); updateWorkbench(); }, 300);
+  }
+  [edHtml, edCss, edJs].forEach(ed => ed.ta.addEventListener('input', persistWorkbench));
+
+  if (!state.workbench.html) state.workbench.html = defaultState.workbench.html || `<div class="hero">\n  <h1>Hello Workbench</h1>\n  <p>Ctrl+Enter to run. Check console below.</p>\n</div>`;
+  if (!state.workbench.css) state.workbench.css = defaultState.workbench.css || `body {\n  font-family: sans-serif;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  margin: 0;\n  background: #f0f4f8;\n}\n.hero {\n  text-align: center;\n  padding: 40px;\n  background: white;\n  border-radius: 12px;\n  box-shadow: 0 4px 16px rgba(0,0,0,0.1);\n}`;
+  if (!state.workbench.js) state.workbench.js = defaultState.workbench.js || `console.log("Hello from preview!");\nconsole.info("Info: app started");\nconsole.warn("Warning: this is a demo");`;
+
+  edHtml.ta.value = state.workbench.html;
+  edCss.ta.value = state.workbench.css;
+  edJs.ta.value = state.workbench.js;
+  edHtml.updateGutter(); edCss.updateGutter(); edJs.updateGutter();
+
+  // Snippets
+  function renderSnippetSelect() {
+    const sel = document.getElementById('wb-snippet-select');
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— Snippets —</option>' +
+      state.snippets.map(s => `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+    sel.value = current;
+  }
+  function loadSelectedSnippet() {
+    const id = document.getElementById('wb-snippet-select').value;
+    if (!id) return;
+    const s = state.snippets.find(x => x.id === id);
+    if (!s) return;
+    edHtml.ta.value = s.html; edHtml.updateGutter();
+    edCss.ta.value = s.css; edCss.updateGutter();
+    edJs.ta.value = s.js; edJs.updateGutter();
+    persistWorkbench();
+    toast(`Loaded "${s.name}"`, 'success');
+  }
+  async function saveCurrentAsSnippet() {
+    const name = await modal({ title:'Save snippet', body:'Name your snippet.', showInput:true, inputValue:'My Snippet', inputPlaceholder:'Snippet name', confirmText:'Save' });
+    if (!name) return;
+    const id = 'snip_' + Date.now();
+    state.snippets.push({ id, name, html: edHtml.ta.value, css: edCss.ta.value, js: edJs.ta.value });
+    saveState(); renderSnippetSelect();
+    document.getElementById('wb-snippet-select').value = id;
+    toast(`Snippet "${name}" saved`, 'success');
+  }
+  async function deleteSelectedSnippet() {
+    const id = document.getElementById('wb-snippet-select').value;
+    if (!id) { toast('Select a snippet first', 'error'); return; }
+    const s = state.snippets.find(x => x.id === id);
+    const ok = await modal({ title:'Delete snippet?', body:`"${s.name}" will be removed.`, confirmText:'Delete', danger:true });
+    if (!ok) return;
+    state.snippets = state.snippets.filter(x => x.id !== id);
+    saveState(); renderSnippetSelect();
+    toast('Snippet deleted', 'success');
+  }
+
+  function formatWorkbenchCode() {
+    [edHtml, edCss, edJs].forEach(ed => {
+      const lines = ed.ta.value.split('\n');
+      let depth = 0;
+      const formatted = lines.map(line => {
+        let l = line.trim();
+        if (l.startsWith('}') || l.startsWith(')') || l.startsWith(']')) depth = Math.max(0, depth - 1);
+        const out = '  '.repeat(depth) + l;
+        const opens = (l.match(/[\{\[\(]/g) || []).length;
+        const closes = (l.match(/[\}\]\)]/g) || []).length;
+        depth += opens - closes;
+        depth = Math.max(0, depth);
+        return out;
+      }).join('\n');
+      ed.ta.value = formatted;
+      ed.updateGutter();
+    });
+    persistWorkbench();
+    toast('Code formatted', 'success');
+  }
+  function clearWorkbenchAll() {
+    if (!edHtml.ta.value && !edCss.ta.value && !edJs.ta.value) return;
+    edHtml.ta.value = ''; edCss.ta.value = ''; edJs.ta.value = '';
+    edHtml.updateGutter(); edCss.updateGutter(); edJs.updateGutter();
+    persistWorkbench();
+    toast('Workbench cleared', 'success');
+  }
+  function downloadWorkbench() {
+    const combined = `<!DOCTYPE html>\n<html>\n<head>\n<style>\n${edCss.ta.value}\n</style>\n<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>\n<body>\n${edHtml.ta.value}\n<script>\n${edJs.ta.value}\n<\/script>\n
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>\n</html>`;
+    const blob = new Blob([combined], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'workbench.html'; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast('Downloaded workbench.html', 'success');
+  }
+
+  renderSnippetSelect();
+  updateWorkbench();
+
+  // ==========================================
+  // PromptN8R
+  // ==========================================
+  function detectVars(text) {
+    const re = /\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\}\}/g;
+    const set = new Set();
+    let m;
+    while ((m = re.exec(text)) !== null) set.add(m[1]);
+    return Array.from(set);
+  }
+
+  function renderVarChips() {
+    const body = document.getElementById('prompt-body').value;
+    const vars = detectVars(body);
+    const host = document.getElementById('vars-chips');
+    if (vars.length === 0) { host.innerHTML = '<small style="color:var(--text-secondary);">No variables. Use {{name}} syntax.</small>'; return; }
+    host.innerHTML = vars.map(v => `<span class="var-chip">{{${escapeHtml(v)}}}<span class="x" title="Remove" data-v="${escapeAttr(v)}">✕</span></span>`).join('');
+    host.querySelectorAll('.x').forEach(x => {
+      x.onclick = () => {
+        const v = x.dataset.v;
+        const ta = document.getElementById('prompt-body');
+        ta.value = ta.value.replaceAll(`{{${v}}}`, v);
+        renderVarChips();
+      };
+    });
+  }
+
+  function updatePromptStats() {
+    const p = state.prompts.find(x => x.id === state.activePromptId);
+    const el = document.getElementById('prompt-stats');
+    if (!p) { el.textContent = 'New prompt · No runs yet'; return; }
+    const last = p.lastCompiled ? new Date(p.lastCompiled).toLocaleString() : 'never';
+    el.textContent = `Runs: ${p.runs || 0} · Last compiled: ${last}`;
+  }
+
+  function renderPromptHistory() {
+    const host = document.getElementById('prompt-history');
+    if (!state.promptHistory.length) { host.innerHTML = '<div class="h-item">No history yet</div>'; return; }
+    host.innerHTML = state.promptHistory.slice(-20).reverse().map(h =>
+      `<div class="h-item"><span class="ts">${new Date(h.t).toLocaleTimeString()}</span>${escapeHtml(h.title)}</div>`
+    ).join('');
+  }
+
+  function renderPrompts() {
+    const listUi = document.getElementById('prompt-list-ui');
+    const filter = document.getElementById('prompt-category').value;
+    const search = document.getElementById('prompt-search').value.toLowerCase();
+    listUi.innerHTML = '';
+    const filtered = state.prompts.filter(p =>
+      (filter === 'all' || p.cat === filter) &&
+      (p.title.toLowerCase().includes(search) || p.body.toLowerCase().includes(search))
+    );
+    if (filtered.length === 0) {
+      listUi.innerHTML = '<small style="color:var(--text-secondary); padding:8px;">No prompts found.</small>';
+      return;
+    }
+    filtered.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'prompt-item' + (state.activePromptId === p.id ? ' active' : '');
+      div.innerHTML = `<div><strong>${escapeHtml(p.title)}</strong><small>${p.cat.toUpperCase()} · runs: ${p.runs || 0}</small></div><button class="del" title="Delete">✕</button>`;
+      div.querySelector('div').onclick = () => loadPrompt(p.id);
+      div.querySelector('.del').onclick = async (e) => {
+        e.stopPropagation();
+        const ok = await modal({ title:'Delete prompt?', body:`"${p.title}" will be removed.`, confirmText:'Delete', danger:true });
+        if (ok) {
+          state.prompts = state.prompts.filter(x => x.id !== p.id);
+          if (state.activePromptId === p.id) { state.activePromptId = null; clearPrompt(); }
+          saveState();
+          renderPrompts();
+          toast('Prompt deleted', 'success');
+        }
+      };
+      listUi.appendChild(div);
+    });
+  }
+
+  function loadPrompt(id) {
+    const p = state.prompts.find(x => x.id === id);
+    if (!p) return;
+    state.activePromptId = id;
+    document.getElementById('prompt-title').value = p.title;
+    document.getElementById('prompt-body').value = p.body;
+    document.getElementById('prompt-category').value = p.cat;
+    document.getElementById('btn-delete-prompt').style.display = '';
+    renderVarChips();
+    updatePromptStats();
+    renderPrompts();
+    saveState();
+  }
+  function newPrompt() { state.activePromptId = null; clearPrompt(); }
+  function clearPrompt() {
+    document.getElementById('prompt-title').value = '';
+    document.getElementById('prompt-body').value = '';
+    state.activePromptId = null;
+    document.getElementById('btn-delete-prompt').style.display = 'none';
+    renderVarChips();
+    updatePromptStats();
+  }
+  function savePrompt() {
+    const title = document.getElementById('prompt-title').value.trim();
+    const body = document.getElementById('prompt-body').value;
+    const cat = document.getElementById('prompt-category').value;
+    if (!title || !body) { toast('Title and Body are required.', 'error'); return; }
+    const finalCat = cat === 'all' ? 'utility' : cat;
+    if (state.activePromptId) {
+      const p = state.prompts.find(x => x.id === state.activePromptId);
+      if (p) { p.title = title; p.body = body; p.cat = finalCat; }
+    } else {
+      const id = Date.now();
+      state.prompts.push({ id, title, body, cat: finalCat, runs: 0, lastCompiled: null });
+      state.activePromptId = id;
+    }
+    saveState();
+    renderPrompts();
+    document.getElementById('btn-delete-prompt').style.display = '';
+    updatePromptStats();
+    toast('Prompt saved', 'success');
+  }
+  async function deleteCurrentPrompt() {
+    if (!state.activePromptId) return;
+    const p = state.prompts.find(x => x.id === state.activePromptId);
+    if (!p) return;
+    const ok = await modal({ title:'Delete prompt?', body:`"${p.title}" will be removed.`, confirmText:'Delete', danger:true });
+    if (!ok) return;
+    state.prompts = state.prompts.filter(x => x.id !== state.activePromptId);
+    state.activePromptId = null;
+    saveState(); clearPrompt(); renderPrompts();
+    toast('Prompt deleted', 'success');
+  }
+  function copyPrompt() {
+    const body = document.getElementById('prompt-body').value;
+    if (!body) { toast('Nothing to copy', 'error'); return; }
+    navigator.clipboard.writeText(body).then(() => toast('Copied to clipboard', 'success'));
+  }
+  async function compilePrompt() {
+    let body = document.getElementById('prompt-body').value;
+    if (!body) { toast('Nothing to compile', 'error'); return; }
+    const vars = detectVars(body);
+    if (vars.length === 0) {
+      navigator.clipboard.writeText(body);
+      recordCompile('(no vars)');
+      toast('Copied (no variables)', 'success');
+      return;
+    }
+    const values = {};
+    for (const v of vars) {
+      const val = await modal({ title: `Set "${v}"`, body: `Enter a value for {{${v}}}`, confirmText:'Next', cancelText:'Skip', showInput:true, inputValue:'', inputPlaceholder:v });
+      if (val !== null) values[v] = val;
+    }
+    let out = body;
+    for (const [k, v] of Object.entries(values)) out = out.replaceAll(`{{${k}}}`, v);
+    navigator.clipboard.writeText(out);
+    recordCompile(document.getElementById('prompt-title').value || '(untitled)');
+    toast('Compiled & copied to clipboard', 'success');
+  }
+  function recordCompile(title) {
+    if (state.activePromptId) {
+      const p = state.prompts.find(x => x.id === state.activePromptId);
+      if (p) { p.runs = (p.runs || 0) + 1; p.lastCompiled = Date.now(); }
+    }
+    state.promptHistory.push({ t: Date.now(), title });
+    if (state.promptHistory.length > 50) state.promptHistory = state.promptHistory.slice(-50);
+    saveState();
+    updatePromptStats();
+    renderPromptHistory();
+    renderPrompts();
+  }
+
+  document.getElementById('prompt-search').addEventListener('input', renderPrompts);
+  document.getElementById('prompt-category').addEventListener('change', renderPrompts);
+  document.getElementById('prompt-body').addEventListener('input', renderVarChips);
+  renderPrompts(); renderPromptHistory();
+  if (state.activePromptId) loadPrompt(state.activePromptId);
+  else { renderVarChips(); updatePromptStats(); }
+
+  // ==========================================
+  // Vault
+  // ==========================================
+  const dropZone = document.getElementById('drop-zone');
+  const vaultGrid = document.getElementById('vault-grid');
+  function addVaultItem(title, contentUrl, type) {
+    const div = document.createElement('div');
+    div.className = 'vault-item';
+    let icon = '📄';
+    if (type.includes('image')) icon = '🖼️';
+    else if (type.includes('text') || type.includes('clipboard')) icon = '📝';
+    div.innerHTML = `
+      <button class="del" title="Remove">✕</button>
+      <div class="icon">${icon}</div>
+      <strong>${escapeHtml(title)}</strong>
+      <small style="margin-bottom:8px;">${escapeHtml(type)}</small>
+      <a href="${contentUrl}" target="_blank" class="btn" download="${escapeAttr(title)}">Download</a>
+    `;
+    div.querySelector('.del').onclick = () => {
+      div.remove();
+      if (contentUrl.startsWith('blob:')) URL.revokeObjectURL(contentUrl);
+    };
+    vaultGrid.prepend(div);
+  }
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false));
+  ['dragenter', 'dragover'].forEach(eventName => dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false));
+  ['dragleave', 'drop'].forEach(eventName => dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false));
+  dropZone.addEventListener('drop', (e) => {
+    const files = e.dataTransfer.files;
+    [...files].forEach(file => addVaultItem(file.name, URL.createObjectURL(file), file.type || 'unknown/file'));
+    if (files.length) toast(`${files.length} file(s) added`, 'success');
+  });
+  async function readClipboard() {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        const blob = new Blob([text], { type: 'text/plain' });
+        addVaultItem(`Clipboard_${new Date().toLocaleTimeString().replace(/:/g,'')}.txt`, URL.createObjectURL(blob), 'text/clipboard');
+        toast('Clipboard item added', 'success');
+      } else toast('Clipboard is empty.', 'info');
+    } catch { toast('Failed to read clipboard. Grant browser permissions.', 'error'); }
+  }
+
+  // ==========================================
+  // Notes
+  // ==========================================
+  document.getElementById('notes-search').addEventListener('input', renderNotes);
+  function renderNotes() {
+    const list = document.getElementById('notes-list');
+    const search = document.getElementById('notes-search').value.toLowerCase();
+    list.innerHTML = '';
+    const filtered = state.notes.filter(n =>
+      !search || n.title.toLowerCase().includes(search) || n.body.toLowerCase().includes(search)
+    ).sort((a,b) => b.updated - a.updated);
+    if (filtered.length === 0) {
+      list.innerHTML = '<small style="color:var(--text-secondary); padding:8px;">No notes yet.</small>';
+      return;
+    }
+    filtered.forEach(n => {
+      const div = document.createElement('div');
+      div.className = 'note-item' + (state.activeNoteId === n.id ? ' active' : '');
+      const preview = (n.body || '').slice(0, 60).replace(/\n/g, ' ');
+      div.innerHTML = `<div><strong>${escapeHtml(n.title || 'Untitled')}</strong><small>${escapeHtml(preview)}${n.body && n.body.length > 60 ? '…' : ''}</small></div><button class="del" title="Delete">✕</button>`;
+      div.querySelector('div').onclick = () => loadNote(n.id);
+      div.querySelector('.del').onclick = async (e) => {
+        e.stopPropagation();
+        const ok = await modal({ title:'Delete note?', body:`"${n.title || 'Untitled'}" will be removed.`, confirmText:'Delete', danger:true });
+        if (ok) {
+          state.notes = state.notes.filter(x => x.id !== n.id);
+          if (state.activeNoteId === n.id) { state.activeNoteId = null; clearNoteEditor(); }
+          saveState(); renderNotes();
+          toast('Note deleted', 'success');
+        }
+      };
+      list.appendChild(div);
+    });
+  }
+  function loadNote(id) {
+    const n = state.notes.find(x => x.id === id);
+    if (!n) return;
+    state.activeNoteId = id;
+    document.getElementById('note-title').value = n.title;
+    document.getElementById('note-body').value = n.body;
+    document.getElementById('btn-delete-note').style.display = '';
+    document.getElementById('note-saved-status').textContent = 'Saved';
+    renderNotes(); saveState();
+  }
+  function clearNoteEditor() {
+    document.getElementById('note-title').value = '';
+    document.getElementById('note-body').value = '';
+    document.getElementById('btn-delete-note').style.display = 'none';
+    document.getElementById('note-saved-status').textContent = '';
+  }
+  async function createNote() {
+    const title = await modal({ title:'New note', body:'Give your note a title.', showInput:true, inputValue:'', inputPlaceholder:'Title', confirmText:'Create' });
+    const n = { id: Date.now(), title: title || 'Untitled', body: '', updated: Date.now() };
+    state.notes.push(n); state.activeNoteId = n.id;
+    saveState(); clearNoteEditor();
+    document.getElementById('note-title').value = n.title;
+    document.getElementById('btn-delete-note').style.display = '';
+    document.getElementById('note-saved-status').textContent = 'Saved';
+    renderNotes();
+    document.getElementById('note-body').focus();
+  }
+  async function deleteCurrentNote() {
+    if (!state.activeNoteId) return;
+    const n = state.notes.find(x => x.id === state.activeNoteId);
+    if (!n) return;
+    const ok = await modal({ title:'Delete note?', body:`"${n.title}" will be removed.`, confirmText:'Delete', danger:true });
+    if (!ok) return;
+    state.notes = state.notes.filter(x => x.id !== state.activeNoteId);
+    state.activeNoteId = null;
+    saveState(); clearNoteEditor(); renderNotes();
+    toast('Note deleted', 'success');
+  }
+  let noteSaveTimer = null;
+  function autoSaveNote() {
+    if (!state.activeNoteId) return;
+    const n = state.notes.find(x => x.id === state.activeNoteId);
+    if (!n) return;
+    n.title = document.getElementById('note-title').value;
+    n.body = document.getElementById('note-body').value;
+    n.updated = Date.now();
+    const status = document.getElementById('note-saved-status');
+    status.textContent = 'Saving…';
+    markDirty();
+    clearTimeout(noteSaveTimer);
+    noteSaveTimer = setTimeout(() => { saveState(); status.textContent = 'Saved'; renderNotes(); }, 400);
+  }
+  document.getElementById('note-title').addEventListener('input', autoSaveNote);
+  document.getElementById('note-body').addEventListener('input', autoSaveNote);
+  if (state.activeNoteId) loadNote(state.activeNoteId);
+  renderNotes();
+
+  // ==========================================
+  // Command Palette
+  // ==========================================
+  const commands = [
+    { id: 'tab.workbench', icon:'🖥️', label:'Open Workbench', shortcut:'Ctrl+1', run: () => switchTab('tab-workbench') },
+    { id: 'tab.prompts', icon:'⚡', label:'Open PromptN8R', shortcut:'Ctrl+2', run: () => switchTab('tab-promptn8r') },
+    { id: 'tab.vault', icon:'🗃️', label:'Open Vault', shortcut:'Ctrl+3', run: () => switchTab('tab-vault') },
+    { id: 'tab.notes', icon:'📝', label:'Open Notes', shortcut:'Ctrl+4', run: () => switchTab('tab-notes') },
+    { id: 'tab.settings', icon:'⚙️', label:'Open Settings', shortcut:'Ctrl+,', run: () => switchTab('tab-settings') },
+    { id: 'action.newNote', icon:'➕', label:'New Note', shortcut:'Ctrl+N', run: () => { switchTab('tab-notes'); createNote(); } },
+    { id: 'action.newPrompt', icon:'➕', label:'New Prompt', shortcut:'', run: () => { switchTab('tab-promptn8r'); newPrompt(); } },
+    { id: 'action.compile', icon:'⚡', label:'Compile Prompt', shortcut:'Ctrl+Shift+C', run: () => { switchTab('tab-promptn8r'); compilePrompt(); } },
+    { id: 'action.copyPrompt', icon:'📋', label:'Copy Prompt', shortcut:'', run: () => { switchTab('tab-promptn8r'); copyPrompt(); } },
+    { id: 'action.runWorkbench', icon:'▶', label:'Run Workbench', shortcut:'Ctrl+Enter', run: () => { switchTab('tab-workbench'); updateWorkbench(); } },
+    { id: 'action.format', icon:'✨', label:'Format Workbench Code', shortcut:'Ctrl+Shift+F', run: () => { switchTab('tab-workbench'); formatWorkbenchCode(); } },
+    { id: 'action.download', icon:'⬇', label:'Download Workbench', shortcut:'', run: downloadWorkbench },
+    { id: 'action.clearWorkbench', icon:'🗑', label:'Clear Workbench', shortcut:'', run: clearWorkbenchAll },
+    { id: 'action.clipboard', icon:'📋', label:'Paste from Clipboard', shortcut:'', run: () => { switchTab('tab-vault'); readClipboard(); } },
+    { id: 'action.export', icon:'💾', label:'Export Data', shortcut:'', run: exportData },
+    { id: 'action.import', icon:'📂', label:'Import Data', shortcut:'', run: () => document.getElementById('import-file').click() },
+    { id: 'action.reset', icon:'⚠', label:'Reset All Data', shortcut:'', run: resetAllData },
+    { id: 'theme.light', icon:'☀', label:'Theme: Light', shortcut:'', run: () => setTheme('light') },
+    { id: 'theme.dark', icon:'🌙', label:'Theme: Dark', shortcut:'', run: () => setTheme('dark') },
+    { id: 'theme.dim', icon:'◐', label:'Theme: Dim', shortcut:'', run: () => setTheme('dim') },
+    { id: 'theme.bright', icon:'☀', label:'Theme: Bright', shortcut:'', run: () => setTheme('bright') },
+  ];
+
+  let cmdSelected = 0;
+  let cmdResults = [];
+  const cmdPalette = document.getElementById('cmd-palette');
+  const cmdInput = document.getElementById('cmd-input');
+  const cmdHost = document.getElementById('cmd-palette-results');
+
+  function openCmdPalette() {
+    if (!appWindow.classList.contains('active')) openApp();
+    cmdPalette.classList.add('active');
+    cmdInput.value = '';
+    filterCommands('');
+    setTimeout(() => cmdInput.focus(), 30);
+  }
+  function closeCmdPalette() { cmdPalette.classList.remove('active'); }
+  function filterCommands(q) {
+    q = q.toLowerCase().trim();
+    cmdResults = commands.filter(c => !q || c.label.toLowerCase().includes(q) || c.id.toLowerCase().includes(q));
+    cmdSelected = 0;
+    renderCmdResults();
+  }
+  function renderCmdResults() {
+    if (cmdResults.length === 0) {
+      cmdHost.innerHTML = '<div class="cmd-empty">No commands match</div>';
+      return;
+    }
+    cmdHost.innerHTML = cmdResults.map((c, i) => `
+      <div class="cmd-item ${i === cmdSelected ? 'selected' : ''}" data-i="${i}">
+        <span><span class="cmd-icon">${c.icon}</span>${escapeHtml(c.label)}</span>
+        <span class="cmd-shortcut">${c.shortcut || ''}</span>
+      </div>
+    `).join('');
+    cmdHost.querySelectorAll('.cmd-item').forEach(el => {
+      el.onclick = () => { cmdResults[parseInt(el.dataset.i)].run(); closeCmdPalette(); };
+    });
+  }
+  cmdInput.addEventListener('input', e => filterCommands(e.target.value));
+  cmdInput.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); cmdSelected = Math.min(cmdResults.length-1, cmdSelected+1); renderCmdResults(); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); cmdSelected = Math.max(0, cmdSelected-1); renderCmdResults(); }
+    if (e.key === 'Enter') { e.preventDefault(); if (cmdResults[cmdSelected]) { cmdResults[cmdSelected].run(); closeCmdPalette(); } }
+    if (e.key === 'Escape') { closeCmdPalette(); }
+  });
+  document.addEventListener('click', e => {
+    if (cmdPalette.classList.contains('active') && !cmdPalette.contains(e.target)) closeCmdPalette();
+  });
+
+  // ==========================================
+  // Global Keyboard Shortcuts
+  // ==========================================
+  document.addEventListener('keydown', e => {
+    const ctrl = e.ctrlKey || e.metaKey;
+    if (ctrl && e.key === 'k') { e.preventDefault(); openCmdPalette(); return; }
+    if (ctrl && e.code === 'Space') { e.preventDefault(); appWindow.classList.contains('active') ? minimizeApp() : openApp(); return; }
+    if (ctrl && e.key === 'n') { e.preventDefault(); switchTab('tab-notes'); createNote(); return; }
+    if (ctrl && e.key === 'p') { e.preventDefault(); switchTab('tab-promptn8r'); setTimeout(() => document.getElementById('prompt-search').focus(), 50); return; }
+    if (ctrl && e.key === ',') { e.preventDefault(); switchTab('tab-settings'); return; }
+    if (ctrl && !e.shiftKey && e.key === 'Enter') { e.preventDefault(); updateWorkbench(); return; }
+    if (ctrl && e.shiftKey && e.key.toLowerCase() === 'f') { e.preventDefault(); formatWorkbenchCode(); return; }
+    if (ctrl && e.shiftKey && e.key.toLowerCase() === 'c') { e.preventDefault(); compilePrompt(); return; }
+    if (ctrl && e.key === '1') { e.preventDefault(); switchTab('tab-workbench'); }
+    if (ctrl && e.key === '2') { e.preventDefault(); switchTab('tab-promptn8r'); }
+    if (ctrl && e.key === '3') { e.preventDefault(); switchTab('tab-vault'); }
+    if (ctrl && e.key === '4') { e.preventDefault(); switchTab('tab-notes'); }
+    if (e.key === 'Escape') {
+      if (cmdPalette.classList.contains('active')) closeCmdPalette();
+    }
+  });
+
+  // ==========================================
+  // Settings: Export / Import / Reset
+  // ==========================================
+  function exportData() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `turtlebot_backup_${new Date().toISOString().slice(0,10)}.json`; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast('Backup downloaded', 'success');
+  }
+  document.getElementById('import-file').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const data = JSON.parse(await file.text());
+      const ok = await modal({ title:'Import data?', body:'This will replace all current data. Continue?', confirmText:'Import', danger:true });
+      if (!ok) { e.target.value = ''; return; }
+      state = Object.assign(structuredClone(defaultState), data);
+      saveState(); setTheme(state.theme);
+      edHtml.ta.value = state.workbench.html; edHtml.updateGutter();
+      edCss.ta.value = state.workbench.css; edCss.updateGutter();
+      edJs.ta.value = state.workbench.js; edJs.updateGutter();
+      updateWorkbench();
+      renderSnippetSelect();
+      renderPrompts(); renderPromptHistory();
+      renderNotes();
+      if (state.activeNoteId) loadNote(state.activeNoteId);
+      toast('Data imported', 'success');
+    } catch { toast('Invalid JSON file', 'error'); }
+    e.target.value = '';
+  });
+  async function resetAllData() {
+    const ok = await modal({ title:'Reset everything?', body:'All workbench code, prompts, and notes will be permanently deleted.', confirmText:'Reset', danger:true });
+    if (!ok) return;
+    state = structuredClone(defaultState);
+    saveState(); setTheme(state.theme);
+    edHtml.ta.value = state.workbench.html; edHtml.updateGutter();
+    edCss.ta.value = state.workbench.css; edCss.updateGutter();
+    edJs.ta.value = state.workbench.js; edJs.updateGutter();
+    updateWorkbench(); renderSnippetSelect();
+    clearPrompt(); renderPrompts();
+    clearNoteEditor(); renderNotes();
+    toast('All data reset', 'success');
+  }
+
+  // First-time hint
+  setTimeout(() => toast('Press Ctrl+K for command palette', 'info', 3500), 800);
+</script>
+
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+</html>

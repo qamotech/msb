@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pic2Sheet Pro · Intelligent Vision to Spreadsheet Engine</title>
+    <!-- SheetJS (XLSX) -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <!-- Tesseract.js -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <style>
+        :root {
+            --bg-grad: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            --card-bg: rgba(30, 41, 59, 0.75);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --accent-dim: rgba(56, 189, 248, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --radius-sm: 6px;
+        }
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: var(--bg-grad);
+            min-height: 100vh;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem 1rem;
+        }
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 2.2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .brand h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #fff;
+        }
+        .brand h1 span { color: var(--accent); }
+        .brand p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-top: 0.2rem;
+        }
+        .pipeline-config {
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .select-input, .input-text {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 0.45rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .select-input:focus, .input-text:focus {
+            border-color: var(--accent);
+        }
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 850px) {
+            .workspace-grid { grid-template-columns: 1fr; }
+        }
+        .panel {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .panel-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dropzone {
+            border: 2px dashed rgba(56, 189, 248, 0.35);
+            border-radius: var(--radius-md);
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--accent-dim);
+            position: relative;
+        }
+        .dropzone:hover, .dropzone.dragover {
+            border-color: var(--accent);
+            background: rgba(56, 189, 248, 0.25);
+        }
+        .dropzone input { display: none; }
+        .interactive-canvas-container {
+            position: relative;
+            width: 100%;
+            max-height: 380px;
+            overflow: auto;
+            border-radius: var(--radius-sm);
+            background: #090d16;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--card-border);
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        .filter-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--accent);
+            color: #000;
+            font-weight: 600;
+        }
+        .batch-list {
+            max-height: 110px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .batch-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.4rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+        }
+        .batch-item.active {
+            border-left: 3px solid var(--accent);
+            background: rgba(56, 189, 248, 0.08);
+        }
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 0.5rem;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.3rem 0.6rem;
+        }
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
+        .data-table-container {
+            overflow: auto;
+            max-height: 380px;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm);
+            background: #090d16;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+        th, td {
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            padding: 0.5rem 0.75rem;
+            min-width: 90px;
+        }
+        th {
+            background: rgba(30, 41, 59, 0.9);
+            position: sticky;
+            top: 0;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        td[contenteditable="true"] {
+            outline: none;
+            background: rgba(255, 255, 255, 0.01);
+        }
+        td[contenteditable="true"]:focus {
+            background: rgba(56, 189, 248, 0.1);
+            box-shadow: inset 0 0 0 1px var(--accent);
+        }
+        .raw-text-container {
+            width: 100%;
+            height: 380px;
+            background: #090d16;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm);
+            color: #38bdf8;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.82rem;
+            padding: 0.8rem;
+            resize: none;
+            display: none;
+        }
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            padding: 0.65rem 1.2rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+        .btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #0f172a;
+            border-color: var(--accent);
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: var(--accent-hover);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+            border-color: var(--success);
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .status-box {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .progress-bar-container {
+            width: 140px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            display: none;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.2s;
+        }
+        .badge {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 4px;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.75rem;
+        }
+        .danger-text { color: var(--danger); cursor: pointer; }
+    </style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="brand">
+            <h1>📸 Pic2Sheet <span>PRO</span></h1>
+            <p>High-precision Image OCR, Visual Preprocessing & Tabular Data Studio</p>
+        </div>
+        <div class="pipeline-config">
+            <select class="select-input" id="ocrLang" title="OCR Language">
+                <option value="eng">English (eng)</option>
+                <option value="spa">Spanish (spa)</option>
+                <option value="fra">French (fra)</option>
+                <option value="deu">German (deu)</option>
+                <option value="chi_sim">Chinese Sim (chi_sim)</option>
+                <option value="jpn">Japanese (jpn)</option>
+            </select>
+            <select class="select-input" id="parseStrategy" title="Parsing Strategy">
+                <option value="auto">Strategy: Auto Delimited</option>
+                <option value="tsv">Strategy: Tabs / Spacing</option>
+                <option value="csv">Strategy: Comma Separated</option>
+                <option value="kv">Strategy: Key-Value Form</option>
+                <option value="line">Strategy: Line Indexed</option>
+            </select>
+            <input type="text" class="input-text" id="customDelim" placeholder="Custom Delim" style="width: 100px;">
+        </div>
+    </header>
+
+    <div class="workspace-grid">
+        <!-- Panel 1: Image Studio -->
+        <div class="panel">
+            <div class="panel-title">
+                <span>Input / Visual Preprocessing</span>
+                <span id="imageMeta" class="badge">No file loaded</span>
+            </div>
+            
+            <div class="dropzone" id="dropZone">
+                <p><strong>Click to browse</strong> or drag & drop images</p>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Direct Paste (Ctrl+V) & Multi-file Supported</p>
+                <input type="file" id="fileInput" accept="image/*" multiple>
+            </div>
+
+            <div class="batch-list" id="batchList" style="display: none;"></div>
+
+            <div class="filter-controls" id="filterControls" style="display: none;">
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Filters:</span>
+                <button class="filter-btn active" data-filter="none">None</button>
+                <button class="filter-btn" data-filter="grayscale">Grayscale</button>
+                <button class="filter-btn" data-filter="threshold">Binarize</button>
+                <button class="filter-btn" data-filter="invert">Invert</button>
+                <button class="filter-btn" data-filter="contrast">High Contrast</button>
+                <button class="filter-btn" id="rotateBtn">↻ 90°</button>
+            </div>
+
+            <div class="interactive-canvas-container" id="canvasContainer" style="display: none;">
+                <canvas id="imageCanvas"></canvas>
+            </div>
+        </div>
+
+        <!-- Panel 2: Spreadsheet Workspace -->
+        <div class="panel">
+            <div class="panel-title">
+                <div class="tabs">
+                    <button class="tab-btn active" id="tabTable">Interactive Table</button>
+                    <button class="tab-btn" id="tabRaw">Raw Extracted Text</button>
+                </div>
+                <span id="dataStats" class="badge">0 Rows · 0 Cols</span>
+            </div>
+
+            <div class="data-table-container" id="tableWrapper">
+                <table id="dataTable">
+                    <thead>
+                        <tr><th>#</th><th>Column A</th><th>Column B</th><th>Column C</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No extracted data yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <textarea class="raw-text-container" id="rawText" placeholder="Raw OCR text will stream here..."></textarea>
+
+            <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                <button class="btn" id="addRowBtn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">+ Add Row</button>
+                <button class="btn" id="addColBtn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">+ Add Col</button>
+                <button class="btn" id="clearTableBtn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">Clear Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action & Progress Bar -->
+    <div class="action-bar">
+        <div class="status-box">
+            <div class="progress-bar-container" id="progressBarContainer">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+            <span id="statusText">System Ready.</span>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" id="extractBtn" disabled>⚡ Run Vision Engine</button>
+            <button class="btn btn-success" id="exportXlsxBtn" disabled>📊 Export XLSX</button>
+            <button class="btn" id="exportCsvBtn" disabled>📄 Export CSV</button>
+            <button class="btn" id="exportJsonBtn" disabled>{ } JSON</button>
+            <button class="btn danger-text" id="resetAllBtn">Reset</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(() => {
+    'use strict';
+
+    // Application State
+    const state = {
+        files: [],
+        currentIndex: -1,
+        image: null,
+        rotation: 0,
+        activeFilter: 'none',
+        worker: null,
+        isProcessing: false,
+        tableData: []
+    };
+
+    // DOM References
+    const DOM = {
+        fileInput: document.getElementById('fileInput'),
+        dropZone: document.getElementById('dropZone'),
+        batchList: document.getElementById('batchList'),
+        filterControls: document.getElementById('filterControls'),
+        canvasContainer: document.getElementById('canvasContainer'),
+        imageCanvas: document.getElementById('imageCanvas'),
+        rotateBtn: document.getElementById('rotateBtn'),
+        imageMeta: document.getElementById('imageMeta'),
+        ocrLang: document.getElementById('ocrLang'),
+        parseStrategy: document.getElementById('parseStrategy'),
+        customDelim: document.getElementById('customDelim'),
+        tabTable: document.getElementById('tabTable'),
+        tabRaw: document.getElementById('tabRaw'),
+        tableWrapper: document.getElementById('tableWrapper'),
+        dataTable: document.getElementById('dataTable'),
+        rawText: document.getElementById('rawText'),
+        dataStats: document.getElementById('dataStats'),
+        statusText: document.getElementById('statusText'),
+        progressBarContainer: document.getElementById('progressBarContainer'),
+        progressBarFill: document.getElementById('progressBarFill'),
+        extractBtn: document.getElementById('extractBtn'),
+        exportXlsxBtn: document.getElementById('exportXlsxBtn'),
+        exportCsvBtn: document.getElementById('exportCsvBtn'),
+        exportJsonBtn: document.getElementById('exportJsonBtn'),
+        resetAllBtn: document.getElementById('resetAllBtn'),
+        addRowBtn: document.getElementById('addRowBtn'),
+        addColBtn: document.getElementById('addColBtn'),
+        clearTableBtn: document.getElementById('clearTableBtn')
+    };
+
+    // --- Image Processing & Canvas Pipeline ---
+    function renderImagePipeline() {
+        if (!state.image) return;
+        const canvas = DOM.imageCanvas;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+        const rads = (state.rotation * Math.PI) / 180;
+        const isRotated = state.rotation === 90 || state.rotation === 270;
+        const width = isRotated ? state.image.height : state.image.width;
+        const height = isRotated ? state.image.width : state.image.height;
+
+        canvas.width = width;
+        canvas.height = height;
+
+        ctx.save();
+        ctx.translate(width / 2, height / 2);
+        ctx.rotate(rads);
+        ctx.drawImage(state.image, -state.image.width / 2, -state.image.height / 2);
+        ctx.restore();
+
+        if (state.activeFilter !== 'none') {
+            const imgData = ctx.getImageData(0, 0, width, height);
+            const d = imgData.data;
+
+            for (let i = 0; i < d.length; i += 4) {
+                const r = d[i], g = d[i + 1], b = d[i + 2];
+                let gray = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                if (state.activeFilter === 'grayscale') {
+                    d[i] = d[i + 1] = d[i + 2] = gray;
+                } else if (state.activeFilter === 'threshold') {
+                    const v = gray >= 128 ? 255 : 0;
+                    d[i] = d[i + 1] = d[i + 2] = v;
+                } else if (state.activeFilter === 'invert') {
+                    d[i] = 255 - r;
+                    d[i + 1] = 255 - g;
+                    d[i + 2] = 255 - b;
+                } else if (state.activeFilter === 'contrast') {
+                    const factor = (259 * (128 + 255)) / (255 * (259 - 128));
+                    d[i] = factor * (r - 128) + 128;
+                    d[i + 1] = factor * (g - 128) + 128;
+                    d[i + 2] = factor * (b - 128) + 128;
+                }
+            }
+            ctx.putImageData(imgData, 0, 0);
+        }
+    }
+
+    function loadActiveImage() {
+        if (state.currentIndex < 0 || state.currentIndex >= state.files.length) return;
+        const file = state.files[state.currentIndex];
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                state.image = img;
+                state.rotation = 0;
+                DOM.imageMeta.textContent = `${file.name} (${img.width}x${img.height})`;
+                DOM.filterControls.style.display = 'flex';
+                DOM.canvasContainer.style.display = 'flex';
+                DOM.extractBtn.disabled = false;
+                renderImagePipeline();
+                renderBatchUI();
+                setStatus(`Loaded: ${file.name}`);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function handleFiles(fileList) {
+        const validFiles = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+        if (!validFiles.length) {
+            setStatus('⚠️ No valid image files provided.', 'danger');
+            return;
+        }
+        state.files.push(...validFiles);
+        if (state.currentIndex === -1) {
+            state.currentIndex = 0;
+        }
+        DOM.batchList.style.display = state.files.length > 1 ? 'flex' : 'none';
+        loadActiveImage();
+    }
+
+    function renderBatchUI() {
+        if (state.files.length <= 1) {
+            DOM.batchList.style.display = 'none';
+            return;
+        }
+        DOM.batchList.style.display = 'flex';
+        DOM.batchList.innerHTML = '';
+        state.files.forEach((f, idx) => {
+            const item = document.createElement('div');
+            item.className = `batch-item ${idx === state.currentIndex ? 'active' : ''}`;
+            item.innerHTML = `
+                <span>${idx + 1}. ${f.name}</span>
+                <span style="font-size:0.7rem; color:var(--text-muted);">${(f.size/1024).toFixed(0)} KB</span>
+            `;
+            item.onclick = () => {
+                state.currentIndex = idx;
+                loadActiveImage();
+            };
+            DOM.batchList.appendChild(item);
+        });
+    }
+
+    // --- Parser Engine ---
+    function parseTextToMatrix(text, strategy, customDelim = '') {
+        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        if (!lines.length) return [["No Data Detected"]];
+
+        if (strategy === 'line') {
+            return [['Index', 'Value'], ...lines.map((l, i) => [i + 1, l])];
+        }
+
+        if (strategy === 'kv') {
+            const rows = [['Key / Property', 'Value']];
+            lines.forEach(line => {
+                const sepIdx = line.indexOf(':') !== -1 ? line.indexOf(':') : line.indexOf('-');
+                if (sepIdx !== -1) {
+                    rows.push([line.substring(0, sepIdx).trim(), line.substring(sepIdx + 1).trim()]);
+                } else {
+                    rows.push(['Data', line]);
+                }
+            });
+            return rows;
+        }
+
+        let delimiter = null;
+        if (customDelim) {
+            delimiter = customDelim;
+        } else if (strategy === 'tsv') {
+            delimiter = /\t+|\s{2,}/;
+        } else if (strategy === 'csv') {
+            delimiter = ',';
+        } else {
+            // Auto detection: inspect first 5 lines for tab, comma, semicolon or multi-spaces
+            const sample = lines.slice(0, 5).join('\n');
+            const tabCount = (sample.match(/\t/g) || []).length;
+            const semiCount = (sample.match(/;/g) || []).length;
+            const commaCount = (sample.match(/,/g) || []).length;
+            const multiSpaceCount = (sample.match(/\s{2,}/g) || []).length;
+
+            if (tabCount >= 2) delimiter = '\t';
+            else if (semiCount >= 2) delimiter = ';';
+            else if (commaCount >= 2) delimiter = ',';
+            else if (multiSpaceCount >= 2) delimiter = /\s{2,}/;
+            else delimiter = /\s+/;
+        }
+
+        const matrix = lines.map(line => {
+            return line.split(delimiter).map(cell => cell.trim());
+        });
+
+        // Normalize Matrix Col Widths
+        const maxCols = Math.max(...matrix.map(row => row.length));
+        return matrix.map(row => {
+            while (row.length < maxCols) row.push('');
+            return row;
+        });
+    }
+
+    // --- Table UI & Data Sync ---
+    function renderTable() {
+        const table = DOM.dataTable;
+        table.innerHTML = '';
+
+        if (!state.tableData.length) {
+            table.innerHTML = '<tr><td style="text-align:center;color:var(--text-muted);">No Data Available</td></tr>';
+            DOM.dataStats.textContent = '0 Rows · 0 Cols';
+            toggleExportButtons(false);
+            return;
+        }
+
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        const firstRow = state.tableData[0];
+
+        // Header
+        headerRow.innerHTML = '<th>#</th>';
+        firstRow.forEach((_, colIdx) => {
+            const th = document.createElement('th');
+            th.textContent = `Col ${colIdx + 1}`;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Body
+        const tbody = document.createElement('tbody');
+        state.tableData.forEach((row, rIdx) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td style="color:var(--text-muted);font-weight:600;">${rIdx + 1}</td>`;
+
+            row.forEach((cellVal, cIdx) => {
+                const td = document.createElement('td');
+                td.contentEditable = 'true';
+                td.textContent = cellVal;
+                td.addEventListener('blur', () => {
+                    state.tableData[rIdx][cIdx] = td.textContent.trim();
+                });
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        DOM.dataStats.textContent = `${state.tableData.length} Rows · ${firstRow.length} Cols`;
+        toggleExportButtons(true);
+    }
+
+    function toggleExportButtons(enabled) {
+        DOM.exportXlsxBtn.disabled = !enabled;
+        DOM.exportCsvBtn.disabled = !enabled;
+        DOM.exportJsonBtn.disabled = !enabled;
+    }
+
+    function setStatus(text, level = 'normal') {
+        DOM.statusText.textContent = text;
+        DOM.statusText.style.color = level === 'danger' ? 'var(--danger)' : 'var(--text-muted)';
+    }
+
+    function setProgress(pct) {
+        if (pct < 0 || pct >= 100) {
+            DOM.progressBarContainer.style.display = 'none';
+        } else {
+            DOM.progressBarContainer.style.display = 'block';
+            DOM.progressBarFill.style.width = `${Math.round(pct)}%`;
+        }
+    }
+
+    // --- Optical Character Recognition Pipeline ---
+    async function executeOCR() {
+        if (!state.image || state.isProcessing) return;
+        state.isProcessing = true;
+        DOM.extractBtn.disabled = true;
+        setProgress(0);
+        setStatus('Initializing Optical Engine...');
+
+        try {
+            const lang = DOM.ocrLang.value;
+            const worker = await Tesseract.createWorker(lang, 1, {
+                logger: m => {
+                    if (m.status === 'recognizing text') {
+                        setProgress(m.progress * 100);
+                        setStatus(`Recognizing: ${Math.round(m.progress * 100)}%`);
+                    }
+                }
+            });
+
+            const canvas = DOM.imageCanvas;
+            const { data } = await worker.recognize(canvas);
+            await worker.terminate();
+
+            DOM.rawText.value = data.text;
+            const strategy = DOM.parseStrategy.value;
+            const customDelim = DOM.customDelim.value;
+            
+            state.tableData = parseTextToMatrix(data.text, strategy, customDelim);
+            renderTable();
+            setProgress(100);
+            setStatus(`Extraction complete. Identified ${state.tableData.length} rows.`);
+
+        } catch (err) {
+            console.error(err);
+            setStatus(`OCR Error: ${err.message}`, 'danger');
+        } finally {
+            state.isProcessing = false;
+            DOM.extractBtn.disabled = false;
+            setTimeout(() => setProgress(-1), 1000);
+        }
+    }
+
+    // --- Exporters ---
+    function exportSpread
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    

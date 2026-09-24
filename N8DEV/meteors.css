@@ -1,0 +1,60 @@
+
+    /* Meteors & Asteroids */
+    .meteor-shower {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .meteor {
+      position: absolute;
+      width: 250px;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(0, 242, 254, 0.8), transparent);
+      border-radius: 50%;
+      filter: drop-shadow(0 0 12px rgba(0, 242, 254, 1));
+      animation: meteor-fall 4s linear infinite;
+      opacity: 0;
+      transform: rotate(-45deg);
+    }
+    
+    .asteroid {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #a3a9ba;
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      box-shadow: -2px -2px 4px rgba(0,0,0,0.8) inset, 0 0 10px rgba(163, 169, 186, 0.4);
+      animation: asteroid-drift 30s linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes meteor-fall {
+      0% { transform: rotate(-45deg) translateX(0); opacity: 1; }
+      15% { opacity: 0; }
+      100% { transform: rotate(-45deg) translateX(-2500px); opacity: 0; }
+    }
+    
+    @keyframes asteroid-drift {
+      0% { transform: translate(110vw, -10vh) rotate(0deg); opacity: 0; }
+      5% { opacity: 1; }
+      95% { opacity: 1; }
+      100% { transform: translate(-10vw, 110vh) rotate(360deg); opacity: 0; }
+    }
+
+    .meteor:nth-child(1) { top: 17%; left: 43%; animation-delay: 2.3s; animation-duration: 4s; }
+    .meteor:nth-child(2) { top: 34%; left: 66%; animation-delay: 4.6s; animation-duration: 5s; }
+    .meteor:nth-child(3) { top: 51%; left: 89%; animation-delay: 6.8999999999999995s; animation-duration: 3s; }
+    .meteor:nth-child(4) { top: 68%; left: 112%; animation-delay: 9.2s; animation-duration: 4s; }
+    .meteor:nth-child(5) { top: 85%; left: 35%; animation-delay: 11.5s; animation-duration: 5s; }
+    .meteor:nth-child(6) { top: 2%; left: 58%; animation-delay: 13.799999999999999s; animation-duration: 3s; }
+    .meteor:nth-child(7) { top: 19%; left: 81%; animation-delay: 1.0999999999999979s; animation-duration: 4s; }
+    .meteor:nth-child(8) { top: 36%; left: 104%; animation-delay: 3.3999999999999986s; animation-duration: 5s; }
+    .meteor:nth-child(9) { top: 53%; left: 27%; animation-delay: 5.699999999999999s; animation-duration: 3s; }
+    .meteor:nth-child(10) { top: 70%; left: 50%; animation-delay: 8.0s; animation-duration: 4s; }
+    .asteroid:nth-child(11) { top: 10vh; animation-delay: 4.7s; animation-duration: 30s; width: 5px; height: 5px; }
+    .asteroid:nth-child(12) { top: 40vh; animation-delay: 9.4s; animation-duration: 35s; width: 6px; height: 6px; }
+    .asteroid:nth-child(13) { top: 70vh; animation-delay: 14.100000000000001s; animation-duration: 40s; width: 7px; height: 7px; }
+    .asteroid:nth-child(14) { top: 0vh; animation-delay: 18.8s; animation-duration: 45s; width: 8px; height: 8px; }
+    .asteroid:nth-child(15) { top: 30vh; animation-delay: 23.5s; animation-duration: 50s; width: 9px; height: 9px; }
