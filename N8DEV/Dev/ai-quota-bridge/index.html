@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; connect-src https://generativelanguage.googleapis.com https://api.openai.com https://api.groq.com https://openrouter.ai https://*.together.xyz http://localhost:11434; script-src 'self' 'unsafe-inline';">
+<meta name="robots" content="noindex, nofollow">
+<title>AI Quota Bridge — Multi-Provider Offload</title>
+<style>
+  :root {
+    --bg: #181818; --surface: #222; --surface2: #2a2a2a;
+    --accent: #339cff; --ok: #40c977; --err: #fa423e; --warn: #f5a623;
+    --ink: #e0e0e0; --ink-dim: #999; --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system-ui, sans-serif; padding: 20px; max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.4em; margin-bottom: 4px; }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--ink-dim); font-size: .85em; margin-bottom: 20px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border-radius: var(--radius); padding: 16px; }
+  .card h2 { font-size: 1em; margin-bottom: 12px; color: var(--accent); }
+  label { display: block; font-size: .78em; color: var(--ink-dim); margin: 10px 0 4px; }
+  input, textarea, select { width: 100%; background: var(--surface2); color: var(--ink); border: 1px solid #3a3a3a; border-radius: 6px; padding: 8px; font-size: .9em; font-family: inherit; }
+  textarea { resize: vertical; min-height: 70px; }
+  button { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 9px 16px; font-size: .9em; cursor: pointer; margin-top: 10px; margin-right: 6px; }
+  button.secondary { background: var(--surface2); border: 1px solid #444; }
+  button.tiny { padding: 4px 10px; font-size: .78em; margin-top: 0; }
+  button:hover { filter: brightness(1.15); }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  .status { font-size: .8em; margin-top: 8px; padding: 6px 10px; border-radius: 6px; display: none; }
+  .status.ok { display: block; background: #1a3325; color: var(--ok); }
+  .status.err { display: block; background: #3a1a1a; color: var(--err); }
+  .status.warn { display: block; background: #3a2e14; color: var(--warn); }
+  .stats { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+  .stat { background: var(--surface2); border-radius: 6px; padding: 8px 14px; text-align: center; flex: 1; min-width: 90px; }
+  .stat b { display: block; font-size: 1.3em; color: var(--accent); }
+  .stat small { color: var(--ink-dim); font-size: .68em; }
+  .log { background: #111; border-radius: 6px; padding: 10px; font-family: Consolas, monospace; font-size: .75em; max-height: 220px; overflow-y: auto; margin-top: 10px; white-space: pre-wrap; word-break: break-word; }
+  .log .t-ok { color: var(--ok); } .log .t-err { color: var(--err); } .log .t-info { color: var(--ink-dim); }
+  .relay-box { width: 100%; height: 90px; background: #111; color: #9f9; font-family: Consolas, monospace; font-size: .75em; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .7em; background: var(--surface2); margin-left: 6px; }
+  .badge.live { background: #1a3325; color: var(--ok); }
+  details { margin-top: 10px; }
+  summary { cursor: pointer; color: var(--ink-dim); font-size: .8em; }
+  pre { background: #111; padding: 10px; border-radius: 6px; font-size: .72em; overflow-x: auto; margin-top: 6px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .row > * { flex: 1; }
+  .chip-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .chip { background: var(--surface2); border: 1px solid #3a3a3a; border-radius: 14px; padding: 3px 10px; font-size: .74em; cursor: pointer; }
+  .chip:hover { border-color: var(--accent); }
+  .chip .x { color: var(--err); margin-left: 6px; cursor: pointer; }
+  .provider-block { display: none; border-left: 2px solid #333; padding-left: 10px; margin-top: 8px; }
+  .provider-block.active { display: block; }
+  .toggle-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .toggle-row label { margin: 0; }
+  .toggle-row input[type=checkbox] { width: auto; }
+  #resultRendered { background: #111; border-radius: 6px; padding: 10px; font-size: .85em; min-height: 120px; max-height: 400px; overflow-y: auto; display: none; }
+  #resultRendered h1, #resultRendered h2, #resultRendered h3 { color: var(--accent); margin: 8px 0 4px; }
+  #resultRendered p { margin: 6px 0; }
+  #resultRendered code { background: #222; padding: 1px 5px; border-radius: 4px; font-size: .9em; }
+  #resultRendered pre { background: #000; }
+  #resultRendered pre code { background: none; padding: 0; }
+  #resultRendered ul, #resultRendered ol { margin: 6px 0 6px 20px; }
+  #resultRendered a { color: var(--accent); }
+  .convo { max-height: 260px; overflow-y: auto; margin-top: 8px; }
+  .turn { border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; font-size: .82em; white-space: pre-wrap; word-break: break-word; }
+  .turn.user { background: #1c2a3a; }
+  .turn.assistant { background: var(--surface2); }
+  .turn b { display: block; font-size: .72em; color: var(--ink-dim); margin-bottom: 3px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<h1>⚡ AI Quota <span>Bridge</span></h1>
+<div class="sub">Offload AI tasks to secondary providers to conserve your primary agent's quota. Cached, deduplicated, multi-provider.</div>
+
+<div class="grid">
+  <!-- LEFT COLUMN -->
+  <div>
+    <div class="card">
+      <h2>⚙️ Configuration</h2>
+      <label>Mode</label>
+      <select id="mode">
+        <option value="api">API Mode — direct provider call (automated)</option>
+        <option value="bridge">Bridge Mode — gemini.google.com relay (no key needed)</option>
+      </select>
+
+      <div id="apiConfig">
+        <label>Provider</label>
+        <select id="provider">
+          <option value="gemini">Google Gemini</option>
+          <option value="openai">OpenAI-compatible (OpenAI, Groq, Together, OpenRouter, etc.)</option>
+          <option value="ollama">Ollama (local, no key needed)</option>
+        </select>
+
+        <div class="provider-block" id="pb-gemini">
+          <label>Gemini API Key <span class="badge">stored locally only</span></label>
+          <input type="password" id="apiKey" placeholder="AIza...">
+          <label>Model</label>
+          <select id="apiModel">
+            <option value="gemini-2.0-flash">gemini-2.0-flash (fast, generous free quota)</option>
+            <option value="gemini-2.0-flash-lite">gemini-2.0-flash-lite (highest free quota)</option>
+            <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+          </select>
+        </div>
+
+        <div class="provider-block" id="pb-openai">
+          <label>Base URL</label>
+          <input type="text" id="oaBaseUrl" placeholder="https://api.openai.com/v1" value="https://api.openai.com/v1">
+          <label>API Key <span class="badge">stored locally only</span></label>
+          <input type="password" id="oaKey" placeholder="sk-...">
+          <label>Model</label>
+          <input type="text" id="oaModel" placeholder="gpt-4o-mini" value="gpt-4o-mini">
+        </div>
+
+        <div class="provider-block" id="pb-ollama">
+          <label>Ollama Base URL</label>
+          <input type="text" id="olBaseUrl" placeholder="http://localhost:11434" value="http://localhost:11434">
+          <label>Model</label>
+          <input type="text" id="olModel" placeholder="llama3.1" value="llama3.1">
+        </div>
+
+        <div class="toggle-row">
+          <input type="checkbox" id="streamToggle">
+          <label style="margin:0">Stream response (live output)</label>
+        </div>
+
+        <label>Fallback chain <span class="badge">optional</span></label>
+        <div class="row">
+          <select id="fbProvider">
+            <option value="gemini">gemini</option>
+            <option value="openai">openai</option>
+            <option value="ollama">ollama</option>
+          </select>
+          <button class="secondary tiny" onclick="addFallback()">+ Add</button>
+        </div>
+        <div class="chip-list" id="fallbackChips"></div>
+      </div>
+
+      <div id="bridgeConfig" style="display:none">
+        <label>Relay timeout (seconds waiting for pasted response)</label>
+        <input type="number" id="relayTimeout" value="120" min="10" max="600">
+      </div>
+
+      <label>System prompt / persona <span class="badge">prepended to every task</span></label>
+      <textarea id="systemPrompt" placeholder="e.g. You are a terse code reviewer. Answer in bullet points only."></textarea>
+
+      <button onclick="saveConfig()">💾 Save Config</button>
+      <div id="cfgStatus" class="status"></div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2>📊 Quota Saved</h2>
+      <div class="stats">
+        <div class="stat"><b id="stTasks">0</b><small>tasks offloaded</small></div>
+        <div class="stat"><b id="stCacheHits">0</b><small>cache hits (free)</small></div>
+        <div class="stat"><b id="stTokens">0</b><small>est. tokens saved</small></div>
+        <div class="stat"><b id="stRetries">0</b><small>fallback retries</small></div>
+      </div>
+      <button class="secondary" onclick="clearCache()">🗑 Clear Cache</button>
+      <button class="secondary" onclick="exportState()">⬇ Export State</button>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2>📋 Prompt Templates</h2>
+      <div class="sub">Save reusable prompts — pick one to prefill the task box.</div>
+      <div class="row">
+        <input type="text" id="tplName" placeholder="Template name (e.g. Summarize)">
+        <button class="secondary tiny" onclick="saveTemplate()">+ Save current prompt</button>
+      </div>
+      <div class="chip-list" id="tplChips"></div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2>🤖 Agent API <span class="badge">for Codex / automation</span></h2>
+      <div class="sub">Your AI agent can drive this app programmatically via the console or a relay file:</div>
+      <details open>
+        <summary>Console API (agent runs this in DevTools)</summary>
+        <pre>// Submit a task and await the result:
+const result = await window.QuotaBridge.submit(
+  "Summarize: <paste text or question here>"
+);
+console.log(result);
+
+// Batch:
+const answers = await window.QuotaBridge.submitMany([
+  "What is X?", "Explain Y in 2 sentences"
+]);
+
+// Multi-turn conversation:
+await window.QuotaBridge.chat("Explain closures in JS");
+await window.QuotaBridge.chat("Now give an example"); // remembers context
+
+// Agent checks quota stats:
+window.QuotaBridge.stats()</pre>
+      </details>
+      <details>
+        <summary>File relay (agent writes tasks.json, app polls it)</summary>
+        <pre>1. Agent writes: C:\Users\qamel\.codex\bridge\tasks.json
+   [{"id":"t1","prompt":"..."}]
+2. This app polls the folder (pick file below)
+3. App writes answers to: answers.json
+4. Agent reads answers.json — zero agent quota used</pre>
+        <label>Watch folder</label>
+        <input type="text" id="watchDir" value="C:\Users\qamel\.codex\bridge">
+        <button class="secondary" onclick="togglePolling()" id="pollBtn">▶ Start Polling</button>
+        <div id="pollStatus" class="status"></div>
+      </details>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div>
+    <div class="card">
+      <h2>📨 Manual / Bridge Task</h2>
+
+      <div class="toggle-row">
+        <input type="checkbox" id="convoToggle" onchange="toggleConvoMode()">
+        <label style="margin:0">Conversation mode (multi-turn, keeps context)</label>
+      </div>
+
+      <label>Prompt to send</label>
+      <textarea id="prompt" placeholder="Enter the task to offload..." oninput="updateTokenEstimate()"></textarea>
+      <div id="tokenEstimate" style="font-size:.72em;color:var(--ink-dim);margin-top:4px">~0 tokens (~0 chars)</div>
+
+      <button onclick="runTask()" id="runBtn">🚀 Run Task</button>
+      <button class="secondary" onclick="resetConvo()" id="resetConvoBtn" style="display:none">🔄 New Conversation</button>
+      <div id="taskStatus" class="status"></div>
+
+      <div id="bridgeRelay" style="display:none">
+        <label>Step 1 — Copy this prompt → paste into gemini.google.com</label>
+        <textarea class="relay-box" id="relayOut" readonly></textarea>
+        <button class="secondary" onclick="copyRelay()">📋 Copy Prompt</button>
+        <button class="secondary" onclick="window.open('https://gemini.google.com','_blank','noopener,noreferrer,width=900,height=700')">🌐 Open Gemini</button>
+        <label>Step 2 — Paste Gemini's response here</label>
+        <textarea class="relay-box" id="relayIn" placeholder="Paste Gemini response..."></textarea>
+        <button onclick="receiveRelay()">✅ Submit Response</button>
+      </div>
+
+      <div id="convoView" class="convo" style="display:none"></div>
+
+      <div class="toggle-row">
+        <input type="checkbox" id="mdToggle" checked onchange="renderResult()">
+        <label style="margin:0">Render Markdown</label>
+      </div>
+      <label>Result</label>
+      <textarea id="result" readonly style="min-height:120px"></textarea>
+      <div id="resultRendered"></div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2>📜 Activity Log</h2>
+      <div class="log" id="log"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   AI Quota Bridge — single-file app
+   Modes: api (direct provider call) | bridge (manual/automation relay)
+   Providers: Gemini | OpenAI-compatible | Ollama (local)
+   Features: cache, dedup, stats, console API, file relay, streaming,
+             system prompt, templates, token estimate, conversation mode,
+             markdown rendering, retry + fallback chain
+   ═══════════════════════════════════════════════════════════ */
+
+const LS = 'qbridge_';
+/* Keys are stored separately from state (never serialized into the main state blob)
+   so they don't show up in exports and are isolated from normal state reads. */
+const KEY_STORE = 'qbridge_keys_';
+function loadKeys() { try { return JSON.parse(localStorage.getItem(KEY_STORE)) || {}; } catch { return {}; } }
+function saveKeys(k) { try { localStorage.setItem(KEY_STORE, JSON.stringify(k)); } catch {} }
+function getKey(name) { return loadKeys()[name] || ''; }
+function setKey(name, val) { const k = loadKeys(); k[name] = val; saveKeys(k); }
+
+const state = load() || {
+  config: { fallbackChain: [] },
+  cache: {},
+  stats: { tasks: 0, cacheHits: 0, tokens: 0, retries: 0 },
+  log: [],
+  templates: {},
+  convo: []
+};
+state.config.fallbackChain = state.config.fallbackChain || [];
+state.templates = state.templates || {};
+state.convo = state.convo || [];
+
+function load() { try { return JSON.parse(localStorage.getItem(LS + 'state')); } catch { return null; } }
+function save() {
+  /* Strip keys before persisting — they live in KEY_STORE only */
+  const safe = JSON.parse(JSON.stringify(state));
+  delete safe.config.apiKey; delete safe.config.oaKey;
+  try { localStorage.setItem(LS + 'state', JSON.stringify(safe)); } catch { /* sandboxed — in-memory only */ }
+}
+
+function log(msg) {
+  const ts = new Date().toLocaleTimeString();
+  state.log.unshift(`[${ts}] ${msg}`);
+  if (state.log.length > 200) state.log.pop();
+  save();
+  document.getElementById('log').innerHTML = state.log
+    .map(l => l.includes('[ERR]') ? `<span class="t-err">${esc(l)}</span>`
+       : l.includes('[OK]')  ? `<span class="t-ok">${esc(l)}</span>`
+       : `<span class="t-info">${esc(l)}</span>`).join('\n');
+}
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function show(id, cls, msg) { const el = document.getElementById(id); el.className = 'status ' + cls; el.textContent = msg; }
+
+/* ── Config ─────────────────────────────────────────────── */
+function saveConfig() {
+  /* Validate oaBaseUrl: must be https and not private/loopback (#18) */
+  const rawBase = document.getElementById('oaBaseUrl').value.trim();
+  if (rawBase) {
+    try {
+      const u = new URL(rawBase);
+      const isPrivate = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(u.hostname);
+      if (u.protocol !== 'https:' && !isPrivate) {
+        show('cfgStatus', 'warn', '⚠ Base URL should use https:// for security');
+      }
+    } catch { show('cfgStatus', 'err', '✗ Invalid Base URL'); return; }
+  }
+
+  /* Store API keys separately — not in the main state object (#1) */
+  const apiKeyVal = document.getElementById('apiKey').value.trim();
+  const oaKeyVal  = document.getElementById('oaKey').value.trim();
+  if (apiKeyVal) setKey('apiKey', apiKeyVal);
+  if (oaKeyVal)  setKey('oaKey', oaKeyVal);
+
+  state.config = {
+    mode: document.getElementById('mode').value,
+    provider: document.getElementById('provider').value,
+    /* apiKey / oaKey intentionally omitted — read from KEY_STORE at call time */
+    apiModel: document.getElementById('apiModel').value,
+    oaBaseUrl: rawBase,
+    oaModel: document.getElementById('oaModel').value.trim(),
+    olBaseUrl: document.getElementById('olBaseUrl').value.trim(),
+    olModel: document.getElementById('olModel').value.trim(),
+    stream: document.getElementById('streamToggle').checked,
+    relayTimeout: +document.getElementById('relayTimeout').value || 120,
+    watchDir: document.getElementById('watchDir').value,
+    systemPrompt: document.getElementById('systemPrompt').value,
+    fallbackChain: state.config.fallbackChain || []
+  };
+  save();
+  applyMode();
+  show('cfgStatus', 'ok', '✓ Config saved');
+  log('[OK] Config saved (mode=' + state.config.mode + ', provider=' + state.config.provider + ')');
+}
+
+function applyMode() {
+  const c = state.config;
+  const m = c.mode || 'api';
+  document.getElementById('apiConfig').style.display  = m === 'api' ? '' : 'none';
+  document.getElementById('bridgeConfig').style.display = m === 'bridge' ? '' : 'none';
+  document.getElementById('bridgeRelay').style.display  = m === 'bridge' ? '' : 'none';
+  document.getElementById('mode').value = m;
+
+  const p = c.provider || 'gemini';
+  document.getElementById('provider').value = p;
+  ['gemini','openai','ollama'].forEach(id => {
+    document.getElementById('pb-' + id).classList.toggle('active', id === p);
+  });
+
+  const storedApiKey = getKey('apiKey');
+  const storedOaKey  = getKey('oaKey');
+  if (storedApiKey) document.getElementById('apiKey').value = storedApiKey;
+  if (c.apiModel) document.getElementById('apiModel').value = c.apiModel;
+  if (c.oaBaseUrl) document.getElementById('oaBaseUrl').value = c.oaBaseUrl;
+  if (storedOaKey) document.getElementById('oaKey').value = storedOaKey;
+  if (c.oaModel) document.getElementById('oaModel').value = c.oaModel;
+  if (c.olBaseUrl) document.getElementById('olBaseUrl').value = c.olBaseUrl;
+  if (c.olModel) document.getElementById('olModel').value = c.olModel;
+  document.getElementById('streamToggle').checked = !!c.stream;
+  if (c.systemPrompt) document.getElementById('systemPrompt').value = c.systemPrompt;
+  renderFallbackChips();
+}
+
+document.getElementById('provider').addEventListener('change', () => {
+  ['gemini','openai','ollama'].forEach(id => {
+    document.getElementById('pb-' + id).classList.toggle('active', id === document.getElementById('provider').value);
+  });
+});
+
+/* ── 1. Fallback chain ──────────────────────────────────── */
+function addFallback() {
+  const p = document.getElementById('fbProvider').value;
+  state.config.fallbackChain = state.config.fallbackChain || [];
+  state.config.fallbackChain.push(p);
+  save();
+  renderFallbackChips();
+}
+function removeFallback(i) {
+  state.config.fallbackChain.splice(i, 1);
+  save();
+  renderFallbackChips();
+}
+function renderFallbackChips() {
+  const chain = state.config.fallbackChain || [];
+  document.getElementById('fallbackChips').innerHTML = chain.length
+    ? chain.map((p, i) => `<span class="chip">${i+1}. ${esc(p)}<span class="x" onclick="removeFallback(${i})">✕</span></span>`).join('')
+    : '<span style="color:var(--ink-dim);font-size:.75em">No fallback — single provider only</span>';
+}
+
+/* ── 2. Prompt templates ────────────────────────────────── */
+function saveTemplate() {
+  const name = document.getElementById('tplName').value.trim();
+  const prompt = document.getElementById('prompt').value;
+  if (!name || !prompt) return show('cfgStatus', 'err', '✗ Need a template name and a prompt in the task box');
+  state.templates[name] = prompt;
+  save();
+  document.getElementById('tplName').value = '';
+  renderTemplateChips();
+  log('[OK] Template saved: ' + name);
+}
+function useTemplate(name) {
+  document.getElementById('prompt').value = state.templates[name];
+  updateTokenEstimate();
+}
+function deleteTemplate(name) {
+  delete state.templates[name];
+  save();
+  renderTemplateChips();
+}
+function renderTemplateChips() {
+  const names = Object.keys(state.templates);
+  document.getElementById('tplChips').innerHTML = names.length
+    ? names.map(n => `<span class="chip" onclick="useTemplate('${esc(n).replace(/'/g,"\\'")}')">${esc(n)}<span class="x" onclick="event.stopPropagation();deleteTemplate('${esc(n).replace(/'/g,"\\'")}')">✕</span></span>`).join('')
+    : '<span style="color:var(--ink-dim);font-size:.75em">No saved templates yet</span>';
+}
+
+/* ── 3. Token estimator (rough: ~4 chars/token) ─────────── */
+function updateTokenEstimate() {
+  const text = (document.getElementById('systemPrompt').value || '') + document.getElementById('prompt').value;
+  const chars = text.length;
+  const tokens = Math.ceil(chars / 4);
+  document.getElementById('tokenEstimate').textContent = `~${tokens.toLocaleString()} tokens (~${chars.toLocaleString()} chars)`;
+}
+
+/* ── 4. Conversation mode ───────────────────────────────── */
+function toggleConvoMode() {
+  const on = document.getElementById('convoToggle').checked;
+  document.getElementById('convoView').style.display = on ? '' : 'none';
+  document.getElementById('resetConvoBtn').style.display = on ? '' : 'none';
+  if (on) renderConvo();
+}
+function resetConvo() {
+  state.convo = []; save();
+  renderConvo();
+  log('[OK] Conversation reset');
+}
+function renderConvo() {
+  document.getElementById('convoView').innerHTML = state.convo
+    .map(t => `<div class="turn ${t.role}"><b>${t.role}</b>${esc(t.content)}</div>`).join('');
+}
+
+/* ── 5. Markdown rendering (lightweight, no deps) ───────── */
+function renderMarkdown(md) {
+  const blocks = [];
+  let html = esc(md);
+  html = html.replace(/```([\s\S]*?)```/g, (m, code) => {
+    blocks.push(`<pre><code>${code.replace(/^\n/, '')}</code></pre>`);
+    return ` ${blocks.length - 1} `;
+  });
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  html = html.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+  html = html.replace(/\*([^*]+)\*/g, '<i>$1</i>');
+  /* #6: only allow http/https URLs in markdown links to prevent javascript: XSS */
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, url) => {
+    const safe = /^https?:\/\//i.test(url.trim());
+    return safe ? `<a href="${url.trim()}" target="_blank" rel="noopener noreferrer">${label}</a>` : label;
+  });
+  html = html.replace(/^\s*[-*] (.*)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>(?:\n?<li>|.)*?<\/li>)(?=\n(?!<li>)|$)/gs, m => '<ul>' + m.replace(/\n/g, '') + '</ul>');
+  html = html.replace(/\n{2,}/g, '</p><p>');
+  html = '<p>' + html.replace(/\n/g, '<br>') + '</p>';
+  html = html.replace(/ (\d+) /g, (m, i) => blocks[+i]);
+  return html;
+}
+function renderResult() {
+  const md = document.getElementById('result').value;
+  const on = document.getElementById('mdToggle').checked;
+  document.getElementById('resultRendered').style.display = on && md ? '' : 'none';
+  document.getElementById('result').style.display = on && md ? 'none' : '';
+  if (on && md) {
+    /* #7: use a template element to parse, then move children — avoids live script execution */
+    const tpl = document.createElement('template');
+    tpl.innerHTML = renderMarkdown(md);
+    const target = document.getElementById('resultRendered');
+    target.replaceChildren(...tpl.content.childNodes);
+  }
+}
+
+/* ── Cache (#5: SHA-256 keys via Web Crypto to prevent 32-bit collisions) ── */
+async function cacheKey(prompt, systemPrompt) {
+  const norm = (systemPrompt || '') + '||' + prompt.toLowerCase().replace(/\s+/g, ' ').trim();
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(norm));
+  return 'k' + Array.from(new Uint8Array(buf)).slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/* ── Task runner ────────────────────────────────────────── */
+let pendingRelay = null;
+
+async function runTask() {
+  const prompt = document.getElementById('prompt').value.trim();
+  if (!prompt) return show('taskStatus', 'err', '✗ Enter a prompt first');
+  document.getElementById('runBtn').disabled = true;
+  show('taskStatus', 'warn', '⏳ Working...');
+  try {
+    const convoMode = document.getElementById('convoToggle').checked;
+    const result = convoMode ? await chat(prompt) : await submit(prompt);
+    document.getElementById('result').value = result;
+    renderResult();
+    show('taskStatus', 'ok', '✓ Done — quota saved');
+  } catch (e) {
+    show('taskStatus', 'err', '✗ ' + e.message);
+  } finally {
+    document.getElementById('runBtn').disabled = false;
+  }
+}
+
+async function submit(prompt, onChunk, skipCache = false) {
+  const systemPrompt = state.config.systemPrompt || '';
+  /* #10: conversation mode passes skipCache=true so history turns never get a stale hit */
+  const key = skipCache ? null : await cacheKey(prompt, systemPrompt);
+  if (key && !onChunk && state.cache[key]) {
+    state.stats.cacheHits++;
+    updateStats();
+    log('[OK] Cache hit — 0 quota used');
+    return state.cache[key];
+  }
+  const mode = state.config.mode || 'api';
+  let answer;
+  if (mode === 'api') {
+    answer = await callWithFallback(prompt, systemPrompt, onChunk);
+  } else {
+    answer = await bridgeRelay(prompt);
+  }
+  if (key) state.cache[key] = answer;
+  state.stats.tasks++;
+  state.stats.tokens += Math.ceil((systemPrompt.length + prompt.length + answer.length) / 4);
+  updateStats(); save();
+  log('[OK] Task complete (' + answer.length + ' chars)');
+  return answer;
+}
+
+/* ── 6. Multi-turn conversation (#21: structured messages array, #10: skip cache) */
+async function chat(userMsg) {
+  state.convo.push({ role: 'user', content: userMsg });
+  renderConvo(); save();
+  /* Pass history as a structured messages array rather than a flat string.
+     Providers that support it (OpenAI/Ollama) receive it natively in callProvider.
+     For Gemini (which uses a different format), we fall back to concatenation. */
+  const systemPrompt = state.config.systemPrompt || '';
+  const provider = state.config.provider || 'gemini';
+  let answer;
+  if (provider === 'openai' || provider === 'ollama') {
+    answer = await callProviderConvo(provider, state.convo, systemPrompt);
+  } else {
+    /* Gemini fallback: structured text turns */
+    const history = state.convo.map(t => `${t.role === 'user' ? 'User' : 'Assistant'}: ${t.content}`).join('\n\n');
+    answer = await submit(history + '\n\nAssistant:', null, true /* skipCache */);
+  }
+  state.convo.push({ role: 'assistant', content: answer });
+  renderConvo(); save();
+  return answer;
+}
+
+async function callProviderConvo(providerName, messages, systemPrompt) {
+  const { oaBaseUrl, oaKey, oaModel, olBaseUrl, olModel, stream } = state.config;
+  const resolvedOaKey = oaKey || getKey('oaKey');
+  if (providerName === 'openai') {
+    if (!resolvedOaKey) throw new Error('No API key set for OpenAI-compatible provider');
+    const msgs = [];
+    if (systemPrompt) msgs.push({ role: 'system', content: systemPrompt });
+    msgs.push(...messages);
+    const url = (oaBaseUrl || 'https://api.openai.com/v1').replace(/\/$/, '') + '/chat/completions';
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 30000);
+    const res = await fetch(url, {
+      method: 'POST', signal: ctrl.signal,
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + resolvedOaKey },
+      body: JSON.stringify({ model: oaModel || 'gpt-4o-mini', messages: msgs })
+    });
+    clearTimeout(tid);
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error('OpenAI ' + res.status + ': ' + (e.error?.message || res.statusText)); }
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content || '';
+  }
+  if (providerName === 'ollama') {
+    const msgs = [];
+    if (systemPrompt) msgs.push({ role: 'system', content: systemPrompt });
+    msgs.push(...messages);
+    const url = (olBaseUrl || 'http://localhost:11434').replace(/\/$/, '') + '/api/chat';
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 30000);
+    const res = await fetch(url, {
+      method: 'POST', signal: ctrl.signal,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: olModel || 'llama3.1', messages: msgs, stream: false })
+    });
+    clearTimeout(tid);
+    if (!res.ok) throw new Error('Ollama ' + res.status + ': ' + res.statusText);
+    const data = await res.json();
+    return data.message?.content || '';
+  }
+  throw new Error('Unknown provider: ' + providerName);
+}
+
+/* ── 8. Retry with backoff + provider fallback chain ────── */
+async function callWithFallback(prompt, systemPrompt, onChunk) {
+  const primary = state.config.provider || 'gemini';
+  const chain = [primary, ...(state.config.fallbackChain || []).filter(p => p !== primary)];
+  let lastErr;
+  for (let i = 0; i < chain.length; i++) {
+    const providerName = chain[i];
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        if (i > 0 || attempt > 0) {
+          state.stats.retries++;
+          log('Retrying via ' + providerName + ' (attempt ' + (attempt + 1) + ')');
+        }
+        return await callProvider(providerName, prompt, systemPrompt, onChunk);
+      } catch (e) {
+        lastErr = e;
+        log('[ERR] ' + providerName + ': ' + e.message);
+        if (attempt === 0) await sleep(800 * (attempt + 1));
+      }
+    }
+  }
+  throw lastErr || new Error('All providers failed');
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function callProvider(providerName, prompt, systemPrompt, onChunk) {
+  if (providerName === 'gemini') return geminiAPI(prompt, systemPrompt);
+  if (providerName === 'openai') return openaiAPI(prompt, systemPrompt, onChunk);
+  if (providerName === 'ollama') return ollamaAPI(prompt, systemPrompt, onChunk);
+  throw new Error('Unknown provider: ' + providerName);
+}
+
+/* ── Provider: Gemini (#2: key in x-goog-api-key header, not URL; #8: timeout) */
+async function geminiAPI(prompt, systemPrompt) {
+  const apiKey = state.config.apiKey || getKey('apiKey');
+  const { apiModel } = state.config;
+  if (!apiKey) throw new Error('No Gemini API key set (aistudio.google.com → Get API key, free)');
+  /* Key moved to header to keep it out of browser history / server logs */
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${apiModel}:generateContent`;
+  const body = { contents: [{ parts: [{ text: prompt }] }] };
+  if (systemPrompt) body.systemInstruction = { parts: [{ text: systemPrompt }] };
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), 30000);
+  const res = await fetch(url, {
+    method: 'POST', signal: ctrl.signal,
+    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+    body: JSON.stringify(body)
+  });
+  clearTimeout(tid);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error('Gemini API ' + res.status + ': ' + (err.error?.message || res.statusText));
+  }
+  const data = await res.json();
+  const text = data.candidates?.[0]?.content?.parts?.map(p => p.text).join('');
+  if (!text) throw new Error('Empty response from Gemini');
+  return text;
+}
+
+/* ── Provider: OpenAI-compatible (#8: fetch timeout via AbortController) */
+async function openaiAPI(prompt, systemPrompt, onChunk) {
+  const { oaBaseUrl, oaModel, stream } = state.config;
+  const oaKey = state.config.oaKey || getKey('oaKey');
+  if (!oaKey) throw new Error('No API key set for OpenAI-compatible provider');
+  const messages = [];
+  if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
+  messages.push({ role: 'user', content: prompt });
+  const url = (oaBaseUrl || 'https://api.openai.com/v1').replace(/\/$/, '') + '/chat/completions';
+  const useStream = stream && typeof onChunk === 'function';
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), 30000);
+  const res = await fetch(url, {
+    method: 'POST', signal: useStream ? undefined : ctrl.signal,
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oaKey },
+    body: JSON.stringify({ model: oaModel || 'gpt-4o-mini', messages, stream: useStream })
+  });
+  clearTimeout(tid);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error('OpenAI-compatible API ' + res.status + ': ' + (err.error?.message || res.statusText));
+  }
+  if (useStream) return readSSEStream(res, onChunk);
+  const data = await res.json();
+  const text = data.choices?.[0]?.message?.content;
+  if (!text) throw new Error('Empty response from provider');
+  return text;
+}
+
+/* ── Provider: Ollama (local) (#8: fetch timeout) */
+async function ollamaAPI(prompt, systemPrompt, onChunk) {
+  const { olBaseUrl, olModel, stream } = state.config;
+  const url = (olBaseUrl || 'http://localhost:11434').replace(/\/$/, '') + '/api/chat';
+  const messages = [];
+  if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
+  messages.push({ role: 'user', content: prompt });
+  const useStream = stream && typeof onChunk === 'function';
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), 30000);
+  const res = await fetch(url, {
+    method: 'POST', signal: useStream ? undefined : ctrl.signal,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: olModel || 'llama3.1', messages, stream: useStream })
+  });
+  clearTimeout(tid);
+  if (!res.ok) throw new Error('Ollama ' + res.status + ': ' + res.statusText + ' (is `ollama serve` running?)');
+  if (!useStream) {
+    const data = await res.json();
+    return data.message?.content || '';
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let full = '';
+  let buf = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop();
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      const obj = JSON.parse(line);
+      const piece = obj.message?.content || '';
+      full += piece;
+      onChunk(piece, full);
+    }
+  }
+  return full;
+}
+
+/* ── 7. Streaming helper for SSE (OpenAI-style) ─────────── */
+async function readSSEStream(res, onChunk) {
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let full = '';
+  let buf = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop();
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith('data:')) continue;
+      const data = trimmed.slice(5).trim();
+      if (data === '[DONE]') continue;
+      try {
+        const obj = JSON.parse(data);
+        const piece = obj.choices?.[0]?.delta?.content || '';
+        if (piece) { full += piece; onChunk(piece, full); }
+      } catch {}
+    }
+  }
+  return full;
+}
+
+/* Live streaming wired into the manual Run Task button */
+async function runTaskStreaming() {
+  const prompt = document.getElementById('prompt').value.trim();
+  if (!prompt) return show('taskStatus', 'err', '✗ Enter a prompt first');
+  const resultBox = document.getElementById('result');
+  resultBox.value = '';
+  document.getElementById('runBtn').disabled = true;
+  show('taskStatus', 'warn', '⏳ Streaming...');
+  try {
+    const systemPrompt = state.config.systemPrompt || '';
+    const answer = await callWithFallback(prompt, systemPrompt, (piece, full) => {
+      resultBox.value = full;
+    });
+    state.stats.tasks++;
+    state.stats.tokens += Math.ceil((systemPrompt.length + prompt.length + answer.length) / 4);
+    updateStats();
+    renderResult();
+    show('taskStatus', 'ok', '✓ Done (streamed) — quota saved');
+    log('[OK] Streamed task complete (' + answer.length + ' chars)');
+  } catch (e) {
+    show('taskStatus', 'err', '✗ ' + e.message);
+    log('[ERR] ' + e.message);
+  } finally {
+    document.getElementById('runBtn').disabled = false;
+  }
+}
+
+/* ── Mode 2: Bridge relay (manual copy/paste, no automation) */
+async function bridgeRelay(prompt) {
+  document.getElementById('bridgeRelay').style.display = '';
+  document.getElementById('relayOut').value = prompt;
+  document.getElementById('relayIn').value = '';
+  log('Bridge: prompt ready — paste into Gemini, then paste response back');
+  const timeoutMs = (state.config.relayTimeout || 120) * 1000;
+  return new Promise((resolve, reject) => {
+    pendingRelay = { resolve, reject, timer: setTimeout(() => {
+      pendingRelay = null;
+      reject(new Error('Relay timeout — no response pasted within ' + (timeoutMs/1000) + 's'));
+    }, timeoutMs) };
+  });
+}
+
+function receiveRelay() {
+  const text = document.getElementById('relayIn').value.trim();
+  if (!text || !pendingRelay) return;
+  clearTimeout(pendingRelay.timer);
+  const r = pendingRelay; pendingRelay = null;
+  r.resolve(text);
+}
+
+function copyRelay() {
+  const ta = document.getElementById('relayOut');
+  ta.select(); document.execCommand('copy');
+  log('[OK] Prompt copied to clipboard');
+}
+
+/* ── File relay polling (for Codex / external agents) ───── */
+let pollTimer = null;
+function togglePolling() {
+  if (pollTimer) {
+    clearInterval(pollTimer); pollTimer = null;
+    document.getElementById('pollBtn').textContent = '▶ Start Polling';
+    show('pollStatus', 'warn', 'Polling stopped');
+    return;
+  }
+  show('pollStatus', 'err', '✗ Browsers cannot watch arbitrary folders directly. Use the Console API (window.QuotaBridge) or grant folder access:');
+  pickDir();
+}
+
+async function pickDir() {
+  if (!window.showDirectoryPicker) return;
+  try {
+    const dir = await showDirectoryPicker({ mode: 'readwrite' });
+    show('pollStatus', 'ok', '✓ Watching: ' + dir.name);
+    pollTimer = setInterval(() => pollDir(dir), 2000);
+    document.getElementById('pollBtn').textContent = '⏹ Stop Polling';
+    log('[OK] File relay watching folder');
+  } catch (e) { /* user cancelled */ }
+}
+
+async function pollDir(dir) {
+  try {
+    const fh = await dir.getFileHandle('tasks.json', { create: false });
+    const tasks = JSON.parse(await fh.getFile().then(f => f.text()));
+    if (!Array.isArray(tasks) || !tasks.length) return;
+    const answers = [];
+    for (const t of tasks) {
+      try { answers.push({ id: t.id, ok: true, result: await submit(t.prompt) }); }
+      catch (e) { answers.push({ id: t.id, ok: false, error: e.message }); }
+    }
+    const out = await dir.getFileHandle('answers.json', { create: true });
+    const w = await out.createWritable(); await w.write(JSON.stringify(answers, null, 2)); await w.close();
+    log('[OK] File relay: ' + answers.length + ' task(s) answered → answers.json');
+    await dir.removeEntry('tasks.json');
+  } catch { /* no tasks.json yet */ }
+}
+
+/* ── Stats & misc ───────────────────────────────────────── */
+function updateStats() {
+  document.getElementById('stTasks').textContent = state.stats.tasks;
+  document.getElementById('stCacheHits').textContent = state.stats.cacheHits;
+  document.getElementById('stTokens').textContent = state.stats.tokens.toLocaleString();
+  document.getElementById('stRetries').textContent = state.stats.retries || 0;
+  save();
+}
+function clearCache() { state.cache = {}; save(); log('[OK] Cache cleared'); location.reload(); }
+function exportState() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'qbridge-state.json'; a.click();
+}
+
+/* ── Public agent API ───────────────────────────────────── */
+window.QuotaBridge = {
+  submit,
+  chat,
+  submitMany: async (prompts) => {
+    const out = [];
+    for (const p of prompts) out.push(await submit(p));
+    return out;
+  },
+  resetConvo,
+  stats: () => ({ ...state.stats, cacheSize: Object.keys(state.cache).length, mode: state.config.mode, provider: state.config.provider }),
+  clearCache
+};
+
+/* ── Init ───────────────────────────────────────────────── */
+document.getElementById('mode').addEventListener('change', saveConfig);
+document.getElementById('streamToggle').addEventListener('change', () => {
+  const btn = document.getElementById('runBtn');
+  btn.onclick = document.getElementById('streamToggle').checked ? runTaskStreaming : runTask;
+});
+applyMode();
+renderTemplateChips();
+renderFallbackChips();
+updateStats();
+updateTokenEstimate();
+document.getElementById('runBtn').onclick = document.getElementById('streamToggle').checked ? runTaskStreaming : runTask;
+log('[OK] AI Quota Bridge ready (multi-provider)');
+</script>
+</body>
+</html>
