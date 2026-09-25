@@ -1788,7 +1788,9 @@ function renderMarkdownPreview(){
   html=html.replace(/`(.*?)`/g,'<code style="background:rgba(255,255,255,.1);padding:2px 5px;border-radius:4px;color:var(--violet)">$1</code>');
   html=html.replace(/^- (.*$)/gm,'<li style="margin-left:18px;line-height:1.6">$1</li>');
   html=html.replace(/\n\n/g,'<p style="line-height:1.5;color:var(--text);margin:9px 0">');
-  box.innerHTML=html;
+  const tpl=document.createElement('template');
+  tpl.innerHTML=html;
+  box.replaceChildren(tpl.content.cloneNode(true));
 }
 
 /* ARCHITECTURE DIAGRAM */
@@ -1873,7 +1875,7 @@ $('#screenshotBtn').onclick=()=>{
     const a=document.createElement('a');
     a.href=canvas.toDataURL('image/png');
     a.download=`${(state.name||'axiom').toLowerCase().replace(/\s+/g,'-')}-snapshot.png`;
-    a.click(); toast('✅ Screenshot PNG Captured & Downloaded');
+    a.click(); canvas.width=0; toast('✅ Screenshot PNG Captured & Downloaded');
   }catch(e){toast('⚠️ Sandbox origin constraint prevented canvas capture');}
 };
 
@@ -1933,8 +1935,8 @@ $('#customW').oninput=$('#customH').oninput=()=>{
 $('#rotateBtn').onclick=()=>{const w=preview.style.width||preview.clientWidth+'px',h=preview.style.height||preview.clientHeight+'px';preview.style.width=h;preview.style.height=w;toast('🔄 Rotated Preview Orientation');};
 $('#popOutBtn').onclick=()=>{
   const doc=composeDocument();
-  const win=window.open('','_blank','width=1000,height=700');
-  if(win){win.document.write(doc);win.document.close();}
+  const win=window.open('','_blank','noopener,noreferrer,width=1000,height=700');
+  if(win){win.document.open();win.document.write(doc);win.document.close();}
   toast('↗ Preview opened in new window');
 };
 

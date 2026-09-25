@@ -94,6 +94,9 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
+      .sos-btn {
+        animation: none !important;
+      }
     }
 
     /* ==========================================================================
@@ -1221,7 +1224,8 @@
       currentView = viewName;
       $$('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === viewName));
       $$('.view-panel').forEach(p => p.classList.toggle('active', p.id === `v-${viewName}`));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
 
       if (viewName === 'dashboard') renderDashboard();
       else if (viewName === 'meds') renderMeds();

@@ -438,10 +438,34 @@ function deleteTemplate(name) {
 }
 function renderTemplateChips() {
   const names = Object.keys(state.templates);
-  document.getElementById('tplChips').innerHTML = names.length
-    ? names.map(n => `<span class="chip" onclick="useTemplate('${esc(n).replace(/'/g,"\\'")}')">${esc(n)}<span class="x" onclick="event.stopPropagation();deleteTemplate('${esc(n).replace(/'/g,"\\'")}')">✕</span></span>`).join('')
-    : '<span style="color:var(--ink-dim);font-size:.75em">No saved templates yet</span>';
+  const container = document.getElementById('tplChips');
+  container.innerHTML = '';
+  if (!names.length) {
+    const hint = document.createElement('span');
+    hint.style.cssText = 'color:var(--ink-dim);font-size:.75em';
+    hint.textContent = 'No saved templates yet';
+    container.appendChild(hint);
+    return;
+  }
+  names.forEach(n => {
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.dataset.tplName = n;
+    chip.textContent = n;
+    const x = document.createElement('span');
+    x.className = 'x';
+    x.textContent = '✕';
+    x.dataset.tplDelete = n;
+    chip.appendChild(x);
+    container.appendChild(chip);
+  });
 }
+document.getElementById('tplChips').addEventListener('click', e => {
+  const del = e.target.dataset.tplDelete;
+  if (del !== undefined) { e.stopPropagation(); deleteTemplate(del); return; }
+  const chip = e.target.closest('[data-tpl-name]');
+  if (chip) useTemplate(chip.dataset.tplName);
+});
 
 /* ── 3. Token estimator (rough: ~4 chars/token) ─────────── */
 function updateTokenEstimate() {
@@ -877,11 +901,12 @@ async function pollDir(dir) {
     const fh = await dir.getFileHandle('tasks.json', { create: false });
     const tasks = JSON.parse(await fh.getFile().then(f => f.text()));
     if (!Array.isArray(tasks) || !tasks.length) return;
-    const answers = [];
-    for (const t of tasks) {
-      try { answers.push({ id: t.id, ok: true, result: await submit(t.prompt) }); }
-      catch (e) { answers.push({ id: t.id, ok: false, error: e.message }); }
-    }
+    const answers = await Promise.allSettled(tasks.map(t => submit(t.prompt)))
+      .then(results => results.map((r, i) =>
+        r.status === 'fulfilled'
+          ? { id: tasks[i].id, ok: true, result: r.value }
+          : { id: tasks[i].id, ok: false, error: r.reason?.message }
+      ));
     const out = await dir.getFileHandle('answers.json', { create: true });
     const w = await out.createWritable(); await w.write(JSON.stringify(answers, null, 2)); await w.close();
     log('[OK] File relay: ' + answers.length + ' task(s) answered → answers.json');
@@ -895,7 +920,6 @@ function updateStats() {
   document.getElementById('stCacheHits').textContent = state.stats.cacheHits;
   document.getElementById('stTokens').textContent = state.stats.tokens.toLocaleString();
   document.getElementById('stRetries').textContent = state.stats.retries || 0;
-  save();
 }
 function clearCache() { state.cache = {}; save(); updateStats(); log('[OK] Cache cleared'); }
 function exportState() {
