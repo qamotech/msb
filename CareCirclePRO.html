@@ -1115,11 +1115,17 @@
 
     function saveState() {
       try {
-        const cutoff = new Date();
-        cutoff.setUTCDate(cutoff.getUTCDate() - 90);
-        const cutoffStr = cutoff.toISOString().slice(0, 10);
+        const cutoff90 = new Date();
+        cutoff90.setUTCDate(cutoff90.getUTCDate() - 90);
+        const cutoff90Str = cutoff90.toISOString().slice(0, 10);
         for (const k of Object.keys(state.taken)) {
-          if (k < cutoffStr) delete state.taken[k];
+          if (k < cutoff90Str) delete state.taken[k];
+        }
+        const cutoff365 = new Date();
+        cutoff365.setUTCDate(cutoff365.getUTCDate() - 365);
+        const cutoff365Str = cutoff365.toISOString().slice(0, 10);
+        for (const k of Object.keys(state.moods)) {
+          if (k < cutoff365Str) delete state.moods[k];
         }
         localStorage.setItem('carecircle_grams_data', JSON.stringify(state));
       } catch (e) { console.error('Save error', e); }
@@ -1967,14 +1973,24 @@
         renderCare();
         toast('Task deleted');
       }
-      else if (act === 'setMood') {
+      else if (act === ‘setMood’) {
         const score = parseInt(btn.dataset.score, 10);
         const T = today();
-        state.moods[T] = { score, note: prompt('Add a quick note about Grams’s day:', state.moods[T]?.note || '') || '' };
-        saveState();
-        renderCare();
-        if (currentView === 'dashboard') renderDashboard();
-        toast(`Logged mood: ${MOODL[score]} 😊`);
+        const existing = state.moods[T]?.note || ‘’;
+        openModal(`
+          <h3 class="serif" style="margin-bottom:10px">Log Today’s Mood — ${MOODL[score]}</h3>
+          <div class="form-group"><label>Quick note about Grams’s day (optional)</label>
+            <textarea id="mood-note-txt" rows="3" style="width:100%;resize:vertical">${esc(existing)}</textarea>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:14px">
+            <button class="btn" style="flex:1" onclick="
+              state.moods[‘${T}’] = { score: ${score}, note: document.getElementById(‘mood-note-txt’).value };
+              saveState(); closeModal(); renderCare();
+              if(currentView === ‘dashboard’) renderDashboard();
+              toast(‘Logged mood: ${MOODL[score]}’);
+            ">Save</button>
+            <button class="btn ghost2" onclick="closeModal()">Cancel</button>
+          </div>`);
       }
       else if (act === 'mealFilter') {
         mealFilter = btn.dataset.f;

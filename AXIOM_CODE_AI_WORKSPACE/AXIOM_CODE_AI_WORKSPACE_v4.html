@@ -1451,8 +1451,13 @@ function checkGhostAutocomplete(){
 }
 function spawnOpticalSpark(){
   const spark=document.createElement('div'); spark.className='optical-spark';
-  spark.style.left=Math.min(600,Math.max(30,(editor.selectionStart%40)*8))+'px';
-  spark.style.top=Math.min(300,Math.max(20,Math.floor(editor.selectionStart/40)*16))+'px';
+  const before=editor.value.slice(0,editor.selectionStart);
+  const lines=before.split('\n');
+  const col=lines[lines.length-1].length;
+  const ln=lines.length;
+  const charW=7, lineH=parseInt(getComputedStyle(editor).lineHeight||20,10);
+  spark.style.left=Math.max(4,Math.min(600,col*charW-editor.scrollLeft))+'px';
+  spark.style.top=Math.max(4,Math.min(400,(ln-1)*lineH-editor.scrollTop))+'px';
   $('#editorLayerBox').appendChild(spark);
   setTimeout(()=>spark.remove(),400);
 }
@@ -1509,6 +1514,7 @@ function highlightSyntax(code='',type='html'){
   return html;
 }
 
+let _heavyStatsTimer = null;
 function updateEditorStats(){
   const code=editor.value, count=code.split('\n').length;
   const bms=state.bookmarks[state.active]||[];
@@ -1527,10 +1533,13 @@ function updateEditorStats(){
   const start=editor.selectionStart, before=code.slice(0,start);
   const ln=before.split('\n').length, col=start-(before.lastIndexOf('\n')+1)+1;
   $('#cursorStatus').textContent=`Ln ${ln}, Col ${col}`;
-  syntaxOverlay.innerHTML=highlightSyntax(code,fileType(state.active))+'<br><br>';
-  syntaxOverlay.style.transform=`translate(-${editor.scrollLeft}px, -${editor.scrollTop}px)`;
   ghostOverlay.style.transform=`translate(-${editor.scrollLeft}px, -${editor.scrollTop}px)`;
-  drawMinimap(code); runHeuristicLinter(); bindColorSwatches();
+  clearTimeout(_heavyStatsTimer);
+  _heavyStatsTimer=setTimeout(()=>{
+    syntaxOverlay.innerHTML=highlightSyntax(code,fileType(state.active))+'<br><br>';
+    syntaxOverlay.style.transform=`translate(-${editor.scrollLeft}px, -${editor.scrollTop}px)`;
+    drawMinimap(code); runHeuristicLinter(); bindColorSwatches();
+  },120);
 }
 
 function drawMinimap(code=''){

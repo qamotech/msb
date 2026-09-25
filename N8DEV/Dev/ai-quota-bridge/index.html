@@ -271,10 +271,11 @@ const LS = 'qbridge_';
 /* Keys are stored separately from state (never serialized into the main state blob)
    so they don't show up in exports and are isolated from normal state reads. */
 const KEY_STORE = 'qbridge_keys_';
+let _keysCache = null;
 function loadKeys() { try { return JSON.parse(localStorage.getItem(KEY_STORE)) || {}; } catch { return {}; } }
-function saveKeys(k) { try { localStorage.setItem(KEY_STORE, JSON.stringify(k)); } catch {} }
-function getKey(name) { return loadKeys()[name] || ''; }
-function setKey(name, val) { const k = loadKeys(); k[name] = val; saveKeys(k); }
+function saveKeys(k) { _keysCache = k; try { localStorage.setItem(KEY_STORE, JSON.stringify(k)); } catch {} }
+function getKey(name) { if (!_keysCache) _keysCache = loadKeys(); return _keysCache[name] || ''; }
+function setKey(name, val) { const k = _keysCache || loadKeys(); k[name] = val; saveKeys(k); }
 
 const state = load() || {
   config: { fallbackChain: [] },
@@ -401,10 +402,19 @@ function removeFallback(i) {
 }
 function renderFallbackChips() {
   const chain = state.config.fallbackChain || [];
-  document.getElementById('fallbackChips').innerHTML = chain.length
-    ? chain.map((p, i) => `<span class="chip">${i+1}. ${esc(p)}<span class="x" onclick="removeFallback(${i})">✕</span></span>`).join('')
-    : '<span style="color:var(--ink-dim);font-size:.75em">No fallback — single provider only</span>';
+  const container = document.getElementById('fallbackChips');
+  if (!chain.length) {
+    container.innerHTML = '<span style="color:var(--ink-dim);font-size:.75em">No fallback — single provider only</span>';
+    return;
+  }
+  container.innerHTML = chain.map((p, i) =>
+    `<span class="chip" data-fb-index="${i}">${i+1}. ${esc(p)}<span class="x" data-fb-remove="${i}">✕</span></span>`
+  ).join('');
 }
+document.getElementById('fallbackChips').addEventListener('click', e => {
+  const rm = e.target.dataset.fbRemove;
+  if (rm !== undefined) removeFallback(parseInt(rm, 10));
+});
 
 /* ── 2. Prompt templates ────────────────────────────────── */
 function saveTemplate() {
@@ -455,7 +465,10 @@ function resetConvo() {
 }
 function renderConvo() {
   document.getElementById('convoView').innerHTML = state.convo
-    .map(t => `<div class="turn ${t.role}"><b>${t.role}</b>${esc(t.content)}</div>`).join('');
+    .map(t => {
+      const role = t.role === 'assistant' ? 'assistant' : 'user';
+      return `<div class="turn ${role}"><b>${role}</b>${esc(t.content)}</div>`;
+    }).join('');
 }
 
 /* ── 5. Markdown rendering (lightweight, no deps) ───────── */
@@ -823,9 +836,16 @@ function receiveRelay() {
 }
 
 function copyRelay() {
-  const ta = document.getElementById('relayOut');
-  ta.select(); document.execCommand('copy');
-  log('[OK] Prompt copied to clipboard');
+  const text = document.getElementById('relayOut').value;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => log('[OK] Prompt copied to clipboard')).catch(() => {
+      document.getElementById('relayOut').select(); document.execCommand('copy');
+      log('[OK] Prompt copied (fallback)');
+    });
+  } else {
+    document.getElementById('relayOut').select(); document.execCommand('copy');
+    log('[OK] Prompt copied to clipboard');
+  }
 }
 
 /* ── File relay polling (for Codex / external agents) ───── */
