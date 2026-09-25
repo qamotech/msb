@@ -296,11 +296,13 @@ function save() {
   try { localStorage.setItem(LS + 'state', JSON.stringify(safe)); } catch { /* sandboxed — in-memory only */ }
 }
 
+let _logSaveTimer = null;
 function log(msg) {
   const ts = new Date().toLocaleTimeString();
   state.log.unshift(`[${ts}] ${msg}`);
   if (state.log.length > 200) state.log.pop();
-  save();
+  clearTimeout(_logSaveTimer);
+  _logSaveTimer = setTimeout(save, 500);
   document.getElementById('log').innerHTML = state.log
     .map(l => l.includes('[ERR]') ? `<span class="t-err">${esc(l)}</span>`
        : l.includes('[OK]')  ? `<span class="t-ok">${esc(l)}</span>`
@@ -567,13 +569,14 @@ async function chat(userMsg) {
     answer = await submit(history + '\n\nAssistant:', null, true /* skipCache */);
   }
   state.convo.push({ role: 'assistant', content: answer });
+  if (state.convo.length > 40) state.convo = state.convo.slice(-40);
   renderConvo(); save();
   return answer;
 }
 
 async function callProviderConvo(providerName, messages, systemPrompt) {
-  const { oaBaseUrl, oaKey, oaModel, olBaseUrl, olModel, stream } = state.config;
-  const resolvedOaKey = oaKey || getKey('oaKey');
+  const { oaBaseUrl, oaModel, olBaseUrl, olModel, stream } = state.config;
+  const resolvedOaKey = getKey('oaKey');
   if (providerName === 'openai') {
     if (!resolvedOaKey) throw new Error('No API key set for OpenAI-compatible provider');
     const msgs = [];
@@ -646,7 +649,7 @@ async function callProvider(providerName, prompt, systemPrompt, onChunk) {
 
 /* ── Provider: Gemini (#2: key in x-goog-api-key header, not URL; #8: timeout) */
 async function geminiAPI(prompt, systemPrompt) {
-  const apiKey = state.config.apiKey || getKey('apiKey');
+  const apiKey = getKey('apiKey');
   const { apiModel } = state.config;
   if (!apiKey) throw new Error('No Gemini API key set (aistudio.google.com → Get API key, free)');
   /* Key moved to header to keep it out of browser history / server logs */
@@ -682,9 +685,9 @@ async function openaiAPI(prompt, systemPrompt, onChunk) {
   const url = (oaBaseUrl || 'https://api.openai.com/v1').replace(/\/$/, '') + '/chat/completions';
   const useStream = stream && typeof onChunk === 'function';
   const ctrl = new AbortController();
-  const tid = setTimeout(() => ctrl.abort(), 30000);
+  const tid = setTimeout(() => ctrl.abort(), useStream ? 120000 : 30000);
   const res = await fetch(url, {
-    method: 'POST', signal: useStream ? undefined : ctrl.signal,
+    method: 'POST', signal: ctrl.signal,
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oaKey },
     body: JSON.stringify({ model: oaModel || 'gpt-4o-mini', messages, stream: useStream })
   });
@@ -709,9 +712,9 @@ async function ollamaAPI(prompt, systemPrompt, onChunk) {
   messages.push({ role: 'user', content: prompt });
   const useStream = stream && typeof onChunk === 'function';
   const ctrl = new AbortController();
-  const tid = setTimeout(() => ctrl.abort(), 30000);
+  const tid = setTimeout(() => ctrl.abort(), useStream ? 120000 : 30000);
   const res = await fetch(url, {
-    method: 'POST', signal: useStream ? undefined : ctrl.signal,
+    method: 'POST', signal: ctrl.signal,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ model: olModel || 'llama3.1', messages, stream: useStream })
   });

@@ -1239,8 +1239,13 @@ function queueSave(){
   $('#saveState').textContent='saving…';
   saveTimer=setTimeout(()=>{
     vault.projects[state.id]=state;
-    localStorage.setItem('axiom-vault-v4',JSON.stringify(vault));
-    $('#saveState').textContent='saved';
+    try {
+      localStorage.setItem('axiom-vault-v4',JSON.stringify(vault));
+      $('#saveState').textContent='saved';
+    } catch(e) {
+      $('#saveState').textContent='⚠ quota';
+      toast('⚠️ Storage full — vault not saved. Export or delete a project to free space.');
+    }
     updateStorageProfiler();
   },350);
 }
@@ -1268,7 +1273,7 @@ function takeAutoGuardSnapshot(){
   const entry={time:Date.now(),projName:state.name,files:clone(state.files)};
   recoveryLog.unshift(entry);
   if(recoveryLog.length>25) recoveryLog=recoveryLog.slice(0,25);
-  localStorage.setItem('axiom-recovery-sandbox',JSON.stringify(recoveryLog));
+  try { localStorage.setItem('axiom-recovery-sandbox',JSON.stringify(recoveryLog)); } catch { /* quota — skip snapshot */ }
   renderRecoverySandbox();
 }
 /* #11: store interval ID so it can be cleared if needed (e.g. on page unload) */

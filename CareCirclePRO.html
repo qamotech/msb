@@ -1178,22 +1178,22 @@
       box.appendChild(el);
       setTimeout(() => el.remove(), 3200);
     }
+    const _revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+          _revealObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
     function observe(container) {
       if (!container) return;
-      const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.style.opacity = '1';
-            e.target.style.transform = 'translateY(0)';
-            obs.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.1 });
       container.querySelectorAll('.reveal').forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(12px)';
         el.style.transition = 'opacity .4s cubic-bezier(.2,.7,.3,1), transform .4s cubic-bezier(.2,.7,.3,1)';
-        obs.observe(el);
+        _revealObserver.observe(el);
       });
     }
 
@@ -1228,7 +1228,9 @@
     /* ---------- 7. MODALS SYSTEM ---------- */
     function openModal(html) {
       const c = $('#modal-container');
-      c.innerHTML = `<div class="modal-box">${html}</div>`;
+      const tpl = document.createElement('template');
+      tpl.innerHTML = `<div class="modal-box">${html}</div>`;
+      c.replaceChildren(tpl.content.cloneNode(true));
       c.classList.add('active');
     }
     function closeModal() {
