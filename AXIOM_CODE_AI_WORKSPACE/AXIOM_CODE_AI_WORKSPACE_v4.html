@@ -1056,9 +1056,11 @@ document.addEventListener('visibilitychange', ()=>{
   if(document.hidden){
     if(elecRafId){ cancelAnimationFrame(elecRafId); elecRafId=null; }
     if(loopsRafId){ cancelAnimationFrame(loopsRafId); loopsRafId=null; }
+    if(confTimer){ cancelAnimationFrame(confTimer); confTimer=null; }
   } else {
     if(!loopsRafId) loopsRafId=requestAnimationFrame(animateLoops);
     if(electricEnabled && !elecRafId) elecRafId=requestAnimationFrame(animateElectricity);
+    if(confParticles.length && !confTimer) confTimer=requestAnimationFrame(animateConfetti);
   }
 });
 
@@ -1115,6 +1117,7 @@ function animateConfetti(){
     confCtx.restore();
     if(p.y>confCanvas.height) confParticles.splice(i,1);
   });
+  if(document.hidden){ confTimer=null; return; }
   confTimer=requestAnimationFrame(animateConfetti);
 }
 

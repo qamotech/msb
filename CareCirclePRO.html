@@ -1103,7 +1103,11 @@
         const raw = localStorage.getItem('carecircle_grams_data');
         if (raw) {
           const parsed = JSON.parse(raw);
-          return { ...DEFAULT_STATE, ...parsed };
+          const merged = JSON.parse(JSON.stringify(DEFAULT_STATE));
+          for (const key of Object.keys(DEFAULT_STATE)) {
+            if (parsed[key] !== undefined) merged[key] = parsed[key];
+          }
+          return merged;
         }
       } catch (e) { console.warn('Could not parse local storage', e); }
       return JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -1111,6 +1115,12 @@
 
     function saveState() {
       try {
+        const cutoff = new Date();
+        cutoff.setUTCDate(cutoff.getUTCDate() - 90);
+        const cutoffStr = cutoff.toISOString().slice(0, 10);
+        for (const k of Object.keys(state.taken)) {
+          if (k < cutoffStr) delete state.taken[k];
+        }
         localStorage.setItem('carecircle_grams_data', JSON.stringify(state));
       } catch (e) { console.error('Save error', e); }
       updatePillsBadge();

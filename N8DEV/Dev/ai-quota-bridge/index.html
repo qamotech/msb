@@ -874,22 +874,19 @@ function updateStats() {
   document.getElementById('stRetries').textContent = state.stats.retries || 0;
   save();
 }
-function clearCache() { state.cache = {}; save(); log('[OK] Cache cleared'); location.reload(); }
+function clearCache() { state.cache = {}; save(); updateStats(); log('[OK] Cache cleared'); }
 function exportState() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = 'qbridge-state.json'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
 /* ── Public agent API ───────────────────────────────────── */
 window.QuotaBridge = {
   submit,
   chat,
-  submitMany: async (prompts) => {
-    const out = [];
-    for (const p of prompts) out.push(await submit(p));
-    return out;
-  },
+  submitMany: async (prompts) => Promise.all(prompts.map(p => submit(p))),
   resetConvo,
   stats: () => ({ ...state.stats, cacheSize: Object.keys(state.cache).length, mode: state.config.mode, provider: state.config.provider }),
   clearCache
@@ -907,6 +904,9 @@ renderFallbackChips();
 updateStats();
 updateTokenEstimate();
 document.getElementById('runBtn').onclick = document.getElementById('streamToggle').checked ? runTaskStreaming : runTask;
+window.addEventListener('unhandledrejection', e => {
+  log('[ERR] Unhandled: ' + (e.reason?.message || String(e.reason)));
+});
 log('[OK] AI Quota Bridge ready (multi-provider)');
 </script>
 </body>
