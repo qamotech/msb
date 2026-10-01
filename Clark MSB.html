@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Magic School Bus Virtual Classroom</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800;900&display=swap');
+
+    :root {
+      --bg: #070B19;
+      --panel: rgba(16, 25, 53, 0.7);
+      --border: rgba(56, 189, 248, 0.3);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --yellow: #facc15;
+      --yellow-glow: 0 0 25px rgba(250, 204, 21, 0.6);
+      --blue: #38bdf8;
+      --blue-glow: 0 0 25px rgba(56, 189, 248, 0.6);
+      --purple: #a855f7;
+      --green: #22c55e;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #172033 0%, var(--bg) 100%);
+      color: var(--text);
+      overflow-x: hidden;
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* Random Star Background */
+    #space-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: var(--bg);
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      animation: stardrift 60s linear infinite;
+    }
+
+    @keyframes stardrift {
+      from { background-position: 0 0; }
+      to { background-position: -1000px 1000px; }
+    }
+
+    /* Effects on all links */
+    a, button, .nav-item {
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    a:hover {
+      text-shadow: var(--blue-glow);
+      color: var(--blue);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: rgba(8, 12, 26, 0.85);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+      box-shadow: 5px 0 30px rgba(0,0,0,0.5);
+    }
+
+    /* Futuristic Bus Remix */
+    .bus-brand {
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(250, 204, 21, 0.05) 0%, transparent 100%);
+    }
+
+    .futuristic-bus {
+      width: 120px;
+      height: 70px;
+      background: linear-gradient(135deg, #fde047, #ca8a04);
+      border-radius: 30px 40px 15px 15px;
+      position: relative;
+      box-shadow: var(--yellow-glow), inset -5px -5px 15px rgba(0,0,0,0.3);
+      margin-bottom: 1rem;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .futuristic-bus:hover {
+      transform: scale(1.1) rotate(-3deg);
+    }
+    .bus-window {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 50px;
+      height: 25px;
+      background: linear-gradient(135deg, #7dd3fc, #0284c7);
+      border-radius: 10px 20px 5px 5px;
+      box-shadow: inset 2px 2px 5px rgba(255,255,255,0.5);
+      overflow: hidden;
+    }
+    .bus-window::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -20px;
+      width: 20px;
+      height: 60px;
+      background: rgba(255,255,255,0.4);
+      transform: rotate(45deg);
+      animation: window-shine 4s infinite;
+    }
+    @keyframes window-shine {
+      0% { left: -50px; }
+      20% { left: 100px; }
+      100% { left: 100px; }
+    }
+    .bus-wheel {
+      width: 24px;
+      height: 24px;
+      background: #1e293b;
+      border: 3px solid #94a3b8;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -10px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+      animation: spin 3s linear infinite;
+    }
+    .bus-wheel.left { left: 15px; }
+    .bus-wheel.right { right: 20px; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    .brand-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      background: linear-gradient(to right, #facc15, #f87171);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+    }
+
+    /* Navigation */
+    .nav-menu {
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    
+    .nav-category {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      padding-left: 0.5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
+      color: var(--text);
+      font-weight: 500;
+      background: transparent;
+      border: 1px solid transparent;
+      text-decoration: none;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: var(--panel);
+      border-color: var(--border);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transform: translateX(5px);
+    }
+    .nav-item.active {
+      color: var(--yellow);
+      border-color: var(--yellow);
+      box-shadow: var(--yellow-glow);
+    }
+
+    /* Main Area */
+    .main-content {
+      flex: 1;
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+      perspective: 1000px;
+      padding: 2rem;
+    }
+
+    /* Science Lab View */
+    .view-section {
+      display: none;
+      opacity: 0;
+      transform: scale(0.95) translateY(20px);
+      transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .view-section.active {
+      display: block;
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .lab-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .lab-title {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: var(--blue-glow);
+      margin-bottom: 1rem;
+    }
+
+    .experiments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .experiment-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s;
+    }
+    .experiment-card::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .experiment-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: var(--blue);
+      box-shadow: var(--blue-glow);
+    }
+    .experiment-card:hover::before {
+      opacity: 1;
+      transform: rotate(45deg);
+    }
+
+    .exp-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .exp-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      color: var(--yellow);
+    }
+    .exp-desc {
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Floating Lizard */
+    #floating-lizard {
+      position: fixed;
+      font-size: 3rem;
+      bottom: 100px;
+      right: 100px;
+      z-index: 100;
+      cursor: pointer;
+      user-select: none;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+      animation: float-lizard 6s ease-in-out infinite;
+      transition: filter 0.3s, transform 0.2s;
+    }
+    #floating-lizard:hover {
+      filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.8));
+    }
+    #floating-lizard:active {
+      transform: scale(0.9);
+    }
+    @keyframes float-lizard {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(10deg); }
+    }
+
+    /* Custom Context Menu */
+    #lizard-menu {
+      position: fixed;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--purple);
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      min-width: 200px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(168, 85, 247, 0.4);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.9);
+      transition: all 0.2s;
+    }
+    #lizard-menu.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+    .menu-item {
+      padding: 0.8rem 1.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+    .menu-item:hover {
+      background: rgba(168, 85, 247, 0.2);
+      color: var(--yellow);
+      padding-left: 2rem;
+    }
+
+    /* Flying Bus Animation */
+    .flying-bus-overlay {
+      position: fixed;
+      top: 50%;
+      left: -300px;
+      transform: translateY(-50%);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      pointer-events: none;
+    }
+    .flying-bus-overlay.fly {
+      animation: bus-fly 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes bus-fly {
+      0% { left: -300px; transform: translateY(-50%) rotate(10deg) scale(0.5); opacity: 0;}
+      40% { left: 40%; transform: translateY(-50%) rotate(0deg) scale(1.5); opacity: 1;}
+      60% { left: 60%; transform: translateY(-50%) rotate(0deg) scale(1.5); opacity: 1;}
+      100% { left: 120vw; transform: translateY(-50%) rotate(-10deg) scale(0.5); opacity: 0;}
+    }
+    .be-beep {
+      background: #fff;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 2rem;
+      font-weight: 900;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .be-beep::before {
+      content: '';
+      position: absolute;
+      left: -15px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-width: 10px 20px 10px 0;
+      border-style: solid;
+      border-color: transparent #fff transparent transparent;
+    }
+    
+    .giant-bus-emoji {
+      font-size: 8rem;
+      filter: drop-shadow(0 0 40px var(--yellow));
+    }
+
+    /* Scroll Driven Parallax Element */
+    .parallax-section {
+      margin-top: 5rem;
+      height: 600px;
+      position: relative;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 0 20px 50px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .parallax-bg {
+      position: absolute;
+      inset: -50px;
+      background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') center/cover;
+      z-index: 1;
+      transition: transform 0.1s linear;
+    }
+    .parallax-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 3rem;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .parallax-content h2 {
+      font-size: 3rem;
+      color: var(--yellow);
+      margin-bottom: 1rem;
+      text-shadow: var(--yellow-glow);
+    }
+
+    /* Random Pulse Class */
+    .random-pulse {
+      animation: pulse-wild 1s ease-in-out;
+    }
+    @keyframes pulse-wild {
+      0% { transform: scale(1); filter: hue-rotate(0deg); }
+      50% { transform: scale(1.2); filter: hue-rotate(90deg) brightness(1.5); }
+      100% { transform: scale(1); filter: hue-rotate(0deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="space-bg"></div>
+
+  <div class="app-container">
+    
+    <aside class="sidebar">
+      <div class="bus-brand">
+        <div class="futuristic-bus">
+          <div class="bus-window"></div>
+          <div class="bus-wheel left"></div>
+          <div class="bus-wheel right"></div>
+        </div>
+        <div class="brand-title">Magic School Bus</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">Virtual Classroom</div>
+      </div>
+
+      <div class="nav-menu">
+        <div class="nav-category">Main</div>
+        <div class="nav-item" onclick="switchView('dashboard')">
+          <span>📊</span> Dashboard
+        </div>
+        
+        <div class="nav-category">Classroom</div>
+        <div class="nav-item" onclick="switchView('classroom')">
+          <span>👨‍🎓</span> Student Portal
+        </div>
+        
+        <div class="nav-category">Science</div>
+        <div class="nav-item active" onclick="switchView('lab')">
+          <span>🔬</span> Science Lab
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      
+      <!-- Science Lab View -->
+      <section id="view-lab" class="view-section active">
+        <div class="lab-header">
+          <h1 class="lab-title">The Science Lab</h1>
+          <p style="color: var(--text-muted); font-size: 1.2rem;">All your experiments consolidated in one wild place.</p>
+        </div>
+
+        <div class="experiments-grid">
+          <div class="experiment-card anim-target">
+            <div class="exp-icon">⚡</div>
+            <h3 class="exp-title">Electricity Lab</h3>
+            <p class="exp-desc">Explore circuits, current, and shocking discoveries with Ms. Frizzle's high-voltage generators!</p>
+          </div>
+          
+          <div class="experiment-card anim-target">
+            <div class="exp-icon">🦠</div>
+            <h3 class="exp-title">Microbe Safari</h3>
+            <p class="exp-desc">Shrink down to microscopic size and observe the wild life inside a single drop of pond water.</p>
+          </div>
+          
+          <div class="experiment-card anim-target">
+            <div class="exp-icon">🚀</div>
+            <h3 class="exp-title">Galactic Explorer</h3>
+            <p class="exp-desc">Launch into the solar system. Discover planetary gravity, orbits, and cosmic phenomena.</p>
+          </div>
+
+          <div class="experiment-card anim-target">
+            <div class="exp-icon">🌋</div>
+            <h3 class="exp-title">Volcano Core</h3>
+            <p class="exp-desc">Dive deep into the Earth's mantle to study magma dynamics and tectonic shifts.</p>
+          </div>
+        </div>
+
+        <!-- Scroll Driven Parallax Element -->
+        <div class="parallax-section" id="parallax-box">
+          <div class="parallax-bg" id="parallax-bg"></div>
+          <div class="parallax-content">
+            <h2>The Cosmic Voyage</h2>
+            <p>Scroll up and down to travel through the mesmerizing cosmos!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard View (Placeholder) -->
+      <section id="view-dashboard" class="view-section">
+        <h1 class="lab-title">Dashboard Overview</h1>
+        <p>Your broader category for Bus and Teacher utilities.</p>
+      </section>
+
+      <!-- Classroom View (Placeholder) -->
+      <section id="view-classroom" class="view-section">
+        <h1 class="lab-title">Classroom Portal</h1>
+        <p>Your broader category for Students, Grading, and Worksheets.</p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Floating Lizard -->
+  <div id="floating-lizard" title="I'm Liz! Click me 3 times fast, or Right-Click!">🦎</div>
+
+  <!-- Lizard Context Menu -->
+  <div id="lizard-menu">
+    <div class="menu-item" onclick="featureMsg('Shrink Bus')">🚌 Shrink Bus</div>
+    <div class="menu-item" onclick="featureMsg('Space Mode')">🚀 Space Mode</div>
+    <div class="menu-item" onclick="featureMsg('X-Ray Vision')">🦴 X-Ray Vision</div>
+    <div class="menu-item" onclick="featureMsg('Weather Control')">🌪️ Weather Control</div>
+    <div class="menu-item" onclick="featureMsg('Dino Mode')">🦖 Dino Mode</div>
+    <div class="menu-item" onclick="featureMsg('Time Travel')">⏳ Time Travel</div>
+    <div class="menu-item" onclick="featureMsg('Ocean Mode')">🌊 Ocean Mode</div>
+    <div class="menu-item" onclick="featureMsg('Glow Mode')">✨ Glow Mode</div>
+  </div>
+
+  <script>
+    // View Switcher
+    function switchView(viewId) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      
+      const target = document.getElementById('view-' + viewId);
+      if(target) {
+        // slight delay for animation
+        setTimeout(() => target.classList.add('active'), 50);
+      }
+      
+      event.currentTarget.classList.add('active');
+    }
+
+    // Scroll Parallax Effect
+    const mainContent = document.querySelector('.main-content');
+    const parallaxBg = document.getElementById('parallax-bg');
+    
+    mainContent.addEventListener('scroll', () => {
+      const scrollY = mainContent.scrollTop;
+      parallaxBg.style.transform = `translateY(${scrollY * 0.4}px)`;
+    });
+
+    // Random purposeful animations every 10 seconds
+    setInterval(() => {
+      const elements = document.querySelectorAll('.anim-target');
+      if(elements.length > 0) {
+        const randomEl = elements[Math.floor(Math.random() * elements.length)];
+        randomEl.classList.add('random-pulse');
+        setTimeout(() => randomEl.classList.remove('random-pulse'), 1000);
+      }
+    }, 10000);
+
+    // Lizard Logic
+    const lizard = document.getElementById('floating-lizard');
+    const lizardMenu = document.getElementById('lizard-menu');
+    let lizardClicks = 0;
+    let lizardTimer;
+
+    lizard.addEventListener('click', (e) => {
+      lizardClicks++;
+      clearTimeout(lizardTimer);
+      
+      if(lizardClicks >= 3) {
+        triggerFlyingBus();
+        lizardClicks = 0;
+      } else {
+        lizardTimer = setTimeout(() => { lizardClicks = 0; }, 500);
+      }
+      lizardMenu.classList.remove('active');
+    });
+
+    lizard.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      lizardMenu.style.left = `${e.clientX}px`;
+      lizardMenu.style.top = `${e.clientY}px`;
+      lizardMenu.classList.add('active');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if(e.target !== lizard && !lizardMenu.contains(e.target)) {
+        lizardMenu.classList.remove('active');
+      }
+    });
+
+    function featureMsg(featureName) {
+      alert(`Liz activated: ${featureName}!`);
+      lizardMenu.classList.remove('active');
+    }
+
+    function triggerFlyingBus() {
+      // prevent multiple buses
+      if(document.querySelector('.flying-bus-overlay')) return;
+      
+      const overlay = document.createElement('div');
+      overlay.className = 'flying-bus-overlay fly';
+      overlay.innerHTML = `
+        <div class="giant-bus-emoji">🚌</div>
+        <div class="be-beep">Be-beep - Be-beeep!</div>
+      `;
+      document.body.appendChild(overlay);
+      
+      // audio beep sound representation (simulated)
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      osc.start();
+      setTimeout(() => osc.stop(), 300);
+      
+      setTimeout(() => {
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.type = 'square';
+        osc2.frequency.setValueAtTime(440, audioCtx.currentTime);
+        gain2.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        osc2.start();
+        setTimeout(() => osc2.stop(), 500);
+      }, 400);
+
+      setTimeout(() => {
+        overlay.remove();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
