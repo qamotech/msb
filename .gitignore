@@ -2,3 +2,17 @@
 .agent-projects/
 scratch/
 *.log
+node_modules
+
+# Local organization and confidential material
+/private/
+/documents/
+/DRIVE FOLDER/
+/client_sync/
+/.tmp.drivedownload/
+/.tmp.driveupload/
+/Organization/
+/Downloads-Launcher.html
+.env
+.env.*
+!.env.example

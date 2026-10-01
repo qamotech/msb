@@ -13,51 +13,31 @@
     <meta property="og:description" content="Play, Make & Learn in a safe, fun environment." />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>Kid Hub 64 — Play, Make & Learn</title>
     <style>
       :root {
-        --bg: #fff7e9;
-        --bg2: #e7f8ff;
-        --card: #fff;
-        --soft: #fffaf2;
-        --ink: #273654;
-        --muted: #6f7890;
-        --line: #e5e8f0;
-        --pink: #ff5f7e;
-        --blue: #20a9ec;
-        --yellow: #ffc63c;
-        --green: #2bc678;
-        --purple: #8a6ee7;
-        --orange: #ff914d;
-        --shadow: 0 18px 55px #33476b1f;
-        --font: ui-rounded, "Nunito", "Segoe UI", system-ui, sans-serif;
+        --bg: #F3E8FF;
+        --bg2: #E0F2FE;
+        --card: rgba(255, 255, 255, 0.85);
+        --soft: #FFFBEB;
+        --ink: #1E1B4B;
+        --muted: #334155;
+        --line: rgba(255, 255, 255, 0.9);
+        --pink: #F472B6;
+        --blue: #38BDF8;
+        --yellow: #FDE047;
+        --green: #6EE7B7;
+        --purple: #C084FC;
+        --orange: #FB923C;
+        --shadow: 0 10px 40px rgba(192, 132, 252, 0.15);
+        --font: 'Fredoka', 'Quicksand', 'Nunito', sans-serif;
       }
-      :root[data-theme="space"] {
-        --bg: #161a35;
-        --bg2: #292859;
-        --card: #242947;
-        --soft: #303657;
-        --ink: #f7f5ff;
-        --muted: #c6c8dc;
-        --line: #42496d;
-        --pink: #ff70a6;
-        --blue: #57c9ff;
-        --yellow: #ffd86d;
-        --green: #56dda0;
-        --purple: #aa96ff;
-        --shadow: 0 20px 60px #06071966;
-      }
-      :root[data-theme="ocean"] {
-        --bg: #e5fbff;
-        --bg2: #e1f8ee;
-        --card: #fff;
-        --soft: #effcf8;
-        --ink: #17475b;
-        --muted: #567c8c;
-        --line: #cde7e6;
-        --pink: #ff718c;
-        --blue: #009fd1;
-        --green: #18b589;
+      h1, h2, h3, h4, h5, h6 {
+        text-shadow: 0 3px 0 rgba(0,0,0,0.06);
+        letter-spacing: 0.5px;
       }
       * {
         box-sizing: border-box;
@@ -69,16 +49,25 @@
       body {
         margin: 0;
         min-height: 100dvh;
-        background-color: #a8e6cf;
+        background-color: var(--bg);
         background-image: 
-          radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.4) 0%, transparent 50%),
-          radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 50%),
-          url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10q15 20 30 0t30 0q15 20 30 0' fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='4'/%3E%3C/svg%3E");
-        background-size: 100% 100%, 100% 100%, 150px 150px;
+          radial-gradient(circle at 15% 25%, rgba(244, 114, 182, 0.35) 0%, transparent 45%),
+          radial-gradient(circle at 85% 75%, rgba(56, 189, 248, 0.35) 0%, transparent 45%),
+          radial-gradient(circle at 50% 50%, rgba(192, 132, 252, 0.25) 0%, transparent 65%);
+        background-attachment: fixed;
         color: var(--ink);
-        font: 700 18px/1.5 var(--font);
+        font: 700 18px/1.7 var(--font);
         transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         overflow-x: hidden;
+        letter-spacing: 0.3px;
+      }
+      #bubbles-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
       }
       body::before {
         content: "";
@@ -112,11 +101,12 @@
         width: min(1200px, calc(100% - 32px));
         min-height: calc(100dvh - 32px);
         margin: 16px auto;
-        background: #fffffffa;
-        backdrop-filter: blur(12px);
-        border: 6px solid #ffffff;
-        border-radius: 40px;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.1), inset 0 0 0 4px rgba(255,255,255,0.5);
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 3px solid rgba(255, 255, 255, 0.9);
+        border-radius: 36px;
+        box-shadow: var(--shadow), inset 0 0 0 4px rgba(255,255,255,0.4);
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -164,15 +154,18 @@
         gap: 7px;
       }
       .pill {
-        height: 42px;
-        padding: 0 12px;
+        height: 44px;
+        padding: 0 16px;
         display: flex;
         align-items: center;
-        gap: 6px;
-        border: 1px solid var(--line);
-        border-radius: 15px;
-        background: var(--soft);
+        gap: 8px;
+        border: 2px solid rgba(255,255,255,0.8);
+        border-radius: 9999px;
+        background: rgba(255,255,255,0.6);
+        backdrop-filter: blur(5px);
         white-space: nowrap;
+        font-weight: 800;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
       }
       .profile {
         border: 0;
@@ -220,24 +213,38 @@
         border-radius: 25px;
       }
       .welcome {
-        padding: 25px;
-        background: linear-gradient(135deg, var(--pink), #ff91a2);
+        padding: 35px;
+        background: 
+          linear-gradient(135deg, rgba(255, 95, 126, 0.85), rgba(255, 145, 162, 0.85)),
+          url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='60' cy='60' r='50' fill='rgba(255,255,255,0.1)'/%3E%3C/svg%3E") fixed center/240px 240px,
+          url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='40,10 70,70 10,70' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E") fixed top right/150px 150px,
+          url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='10' y='10' width='20' height='20' rx='5' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E") fixed bottom left/100px 100px;
+        background-color: var(--pink);
         color: #fff;
-        min-height: 175px;
+        min-height: 220px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         position: relative;
         overflow: hidden;
+        border-radius: 35px;
+        box-shadow: 0 20px 40px rgba(255, 95, 126, 0.4), inset 0 0 0 2px rgba(255,255,255,0.3);
+        transform: translateZ(0);
       }
       .welcome:after {
         content: "✨";
         position: absolute;
-        right: 25px;
-        top: 17px;
-        font-size: 70px;
-        opacity: 0.2;
+        right: 35px;
+        top: 25px;
+        font-size: 90px;
+        opacity: 0.3;
+        animation: floatHero 4s ease-in-out infinite;
       }
+      @keyframes floatHero {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-15px) rotate(10deg); }
+      }
+
       .eyebrow {
         text-transform: uppercase;
         letter-spacing: 0.13em;
@@ -277,20 +284,23 @@
         margin: 0;
       }
       .btn {
-        border: 2px solid rgba(0,0,0,0.1);
-        border-radius: 20px;
-        background: var(--ink);
-        color: var(--card);
-        padding: 12px 20px;
+        border: 3px solid rgba(255, 255, 255, 0.8);
+        border-radius: 9999px;
+        background: var(--pink);
+        color: white;
+        padding: 12px 24px;
         font-weight: 900;
         font-size: 1.1rem;
         margin-top: 12px;
-        transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s;
-        box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+        box-shadow: 0 6px 0 var(--purple), 0 8px 16px rgba(0,0,0,0.08);
+      }
+      .btn:hover {
+        transform: scale(1.05) translateY(-2px);
       }
       .btn:active {
-        transform: translateY(4px);
-        box-shadow: 0 0 0 rgba(0,0,0,0.15);
+        transform: scale(0.96) translateY(2px);
+        box-shadow: 0 2px 0 var(--purple), 0 4px 8px rgba(0,0,0,0.05);
       }
       .btn.pink {
         background: var(--pink);
@@ -393,20 +403,21 @@
       }
       .card {
         min-height: 180px;
-        background: var(--card);
-        border: 4px solid var(--line);
-        border-radius: 28px;
-        padding: 20px;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border: 3px solid rgba(255, 255, 255, 0.9);
+        border-radius: 32px;
+        padding: 24px;
         text-align: left;
         position: relative;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+        box-shadow: var(--shadow);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
         cursor: pointer;
       }
       .card:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 20px 30px rgba(0,0,0,0.1);
-        border-color: var(--blue);
+        transform: translateY(-8px) scale(1.04);
+        box-shadow: 0 15px 40px rgba(244, 114, 182, 0.25);
+        border-color: var(--pink);
       }
       .card-icon {
         width: 51px;
@@ -478,9 +489,12 @@
         gap: 12px;
       }
       .side {
-        background: var(--card);
-        border: 1px solid var(--line);
-        padding: 16px;
+        background: rgba(255,255,255,0.5);
+        backdrop-filter: blur(8px);
+        border: 3px solid rgba(255,255,255,0.7);
+        border-radius: 32px;
+        padding: 20px;
+        box-shadow: var(--shadow);
       }
       .side h3 {
         font-size: 0.9rem;
@@ -537,16 +551,20 @@
         aspect-ratio: 1;
         display: grid;
         place-items: center;
-        background: var(--soft);
-        border-radius: 12px;
-        font-size: 1.2rem;
+        background: rgba(255,255,255,0.6);
+        border-radius: 16px;
+        font-size: 1.4rem;
         filter: grayscale(1);
-        opacity: 0.3;
+        opacity: 0.4;
+        border: 2px solid transparent;
       }
       .badge.on {
         filter: none;
         opacity: 1;
-        background: #fff2b9;
+        background: var(--yellow);
+        border-color: rgba(255,255,255,0.9);
+        box-shadow: 0 4px 12px rgba(253, 224, 71, 0.4);
+        transform: scale(1.05);
       }
       .empty {
         text-align: center;
@@ -1715,31 +1733,111 @@
       }
       footer a:hover { text-decoration: underline; }
 
+    
+/* 84 Improvements: Micro-animations, responsive, typography, skeleton loaders, glassmorphism enhancements */
+.hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.hover-lift:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(0,0,0,0.2); }
+.skeleton { background: linear-gradient(90deg, var(--soft) 25%, var(--line) 50%, var(--soft) 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: 4px; }
+@keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.tooltip { position: relative; }
+.tooltip:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--card); padding: 4px 8px; border-radius: 4px; font-size: 11px; white-space: nowrap; z-index: 1000; pointer-events: none; }
+.table-row-hover { transition: background 0.15s ease; cursor: pointer; }
+.table-row-hover:hover { background: rgba(0,0,0,0.05) !important; }
+.btn-primary:active, .btn-secondary:active, .card:active { transform: scale(0.95); }
+.glass-panel { backdrop-filter: blur(24px) saturate(150%); }
+.feature-badge { background: linear-gradient(135deg, var(--pink), var(--yellow)); color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.gap-2 { gap: 8px; } .gap-3 { gap: 12px; } .gap-4 { gap: 16px; }
+.p-4 { padding: 16px; } .p-6 { padding: 24px; }
+.mt-4 { margin-top: 16px; } .mb-4 { margin-bottom: 16px; }
+.text-gradient { background: linear-gradient(135deg, var(--blue), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+@media(max-width: 1024px) { .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media(max-width: 768px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+.slide-in-right { animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes slideInRight { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.scale-in { animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.animate-spin-slow { animation: spin 3s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.animate-bounce-slight { animation: bounceSlight 2s infinite ease-in-out; }
+@keyframes bounceSlight { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    
+/* --- 24 ENHANCEMENTS: Global Styles, Effects & Animations --- */
+.card { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.card:hover { transform: translateY(-10px) scale(1.03); box-shadow: 0 25px 40px rgba(0,0,0,0.12); }
+.btn { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; position: relative; }
+.btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; background: rgba(255,255,255,0.2); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.4s ease, height 0.4s ease; }
+.btn:active::before { width: 300px; height: 300px; }
+.logo { animation: pulseGlow 3s infinite alternate; }
+@keyframes pulseGlow { from { box-shadow: 0 8px 18px #ff5f7e44; } to { box-shadow: 0 12px 28px #ff5f7e88; } }
+.fav { transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+.fav:hover { transform: scale(1.2) rotate(-10deg); }
+.ring { box-shadow: inset 0 0 15px rgba(0,0,0,0.05); }
+.mission { transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+.mission:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(245, 216, 120, 0.4); border-color: #ffd700; }
+.top { backdrop-filter: blur(20px); background: rgba(255,255,255,0.85); border-bottom: 2px solid var(--line); }
+.stats .pill { box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: all 0.2s; }
+.stats .pill:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.06); }
+.app { border: 8px solid rgba(255,255,255,0.9); box-shadow: 0 35px 80px rgba(0,0,0,0.15), inset 0 0 20px rgba(255,255,255,1); }
+::selection { background: var(--pink); color: white; }
+.card-progress i { position: relative; overflow: hidden; }
+.card-progress i::after { content: ''; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmerProgress 2s infinite; }
+@keyframes shimmerProgress { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+.book { transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+.book:hover { transform: translateX(8px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.recent div { transition: all 0.2s ease; }
+.recent div:hover { background: var(--card); transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.badge { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.badge:hover { transform: scale(1.2) rotate(5deg); filter: grayscale(0) drop-shadow(0 5px 10px rgba(255, 215, 0, 0.5)); opacity: 1; }
+/* --- End of Enhancements --- */
+
+    
+/* --- 84 ENHANCEMENTS & PARALLAX BACKGROUND --- */
+body {
+  animation: parallaxBg linear both;
+  animation-timeline: scroll(root block);
+}
+@keyframes parallaxBg {
+  from { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
+  to { background-position: 20% 50%, -20% 80%, 15% 15%, 0% 100%; }
+}
+.merged-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; box-shadow: 0 4px 30px rgba(0,0,0,0.05); }
+.merged-header .round { margin-left: 8px; border: 1px solid var(--line); display: flex; justify-content: center; align-items: center; font-size: 1.1rem; background: var(--soft); color: var(--ink); cursor: pointer; transition: all 0.2s; }
+.merged-header .round:hover { background: var(--card); transform: scale(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.app { transition: border-color 0.4s ease, box-shadow 0.4s ease; border-radius: 44px; }
+.card { border: 2px solid var(--line); overflow: hidden; }
+.card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 60%); opacity:0; transition:opacity 0.5s; pointer-events:none; }
+.card:hover::before { opacity: 0.15; }
+.stat-value { font-size: 2rem; font-weight: 900; letter-spacing: -1px; }
+.btn-primary { background: linear-gradient(135deg, var(--blue), #4f46e5); color: white; border: none; box-shadow: 0 8px 20px rgba(32, 169, 236, 0.4); text-transform: uppercase; letter-spacing: 1px; }
+.btn-primary:hover { box-shadow: 0 12px 28px rgba(32, 169, 236, 0.6); }
+::-webkit-scrollbar { width: 12px; }
+::-webkit-scrollbar-track { background: var(--bg2); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 10px; border: 3px solid var(--bg2); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink); }
+/* Focus accessibility improvements */
+:focus-visible { outline: 3px dashed var(--pink); outline-offset: 4px; border-radius: 4px; }
+/* Refined Typography */
+h1, h2, h3 { letter-spacing: -0.02em; }
+p { line-height: 1.6; }
+/* End of 84 Enhancements */
+
     </style>
   </head>
   <body>
+    <canvas id="bubbles-canvas"></canvas>
     <div class="app">
 
-      <header class="main-header">
+            <header class="top merged-header">
         <div class="brand">
           <div class="logo">🚀</div>
           <div>
             <h1>Kid Hub 64</h1>
             <small>Play, Make & Learn</small>
-          </div>
-        </div>
-        <div class="header-controls">
-          <button class="ctrl-btn" id="themeToggle" aria-label="Toggle Dark Mode" onclick="app.toggleDarkMode()">🌙</button>
-          <button class="ctrl-btn" id="fullscreenToggle" aria-label="Toggle Fullscreen" onclick="app.toggleFullscreen()">⛶</button>
-        </div>
-      </header>
-
-      <header class="top">
-        <div class="brand">
-          <div class="logo">🎈</div>
-          <div>
-            <h1>Kid Hub</h1>
-            <small>Play • Make • Learn</small>
           </div>
         </div>
         <div class="stats">
@@ -1749,15 +1847,11 @@
             ⏱️ <b id="timer">∞</b><span class="limit-label"> left</span>
           </div>
           <button class="pill profile" onclick="ui.open('settings')">
-            <span id="topAvatar">🦊</span
-            ><b class="name" id="topName">Explorer</b></button
-          ><button
-            class="round settings-icon"
-            onclick="ui.open('settings')"
-            aria-label="Settings"
-          >
-            ⚙️
+            <span id="topAvatar">🦊</span><b class="name" id="topName">Explorer</b>
           </button>
+          <button class="round" id="themeToggle" aria-label="Toggle Dark Mode" onclick="app.toggleDarkMode()">🌙</button>
+          <button class="round" id="fullscreenToggle" aria-label="Toggle Fullscreen" onclick="app.toggleFullscreen()">⛶</button>
+          <button class="round settings-icon" onclick="ui.open('settings')" aria-label="Settings">⚙️</button>
         </div>
       </header>
       <main>
@@ -1966,6 +2060,68 @@
                   <div class="card-icon">🧠</div>
                   <h3>Memory Match</h3>
                   <p>Flip cards, find pairs, and sharpen your focus.</p>
+                </article>
+
+                <article class="card" tabindex="0" role="button" data-id="coding" data-cat="learn" data-search="code programming logic blocks" style="--c: #4f46e5" onclick="app.show('coding')">
+                  <button class="fav" data-fav="coding" aria-label="Favorite Coding Logic">♡</button>
+                  <div class="card-icon">💻</div>
+                  <h3>Code Logic</h3>
+                  <p>Learn programming blocks and guide your robot.</p>
+                </article>
+                <article class="card" tabindex="0" role="button" data-id="space" data-cat="learn" data-search="space planets stars galaxy" style="--c: #9333ea" onclick="app.show('space')">
+                  <button class="fav" data-fav="space" aria-label="Favorite Space Explorer">♡</button>
+                  <div class="card-icon">🪐</div>
+                  <h3>Space Explorer</h3>
+                  <p>Discover planets, stars, and intergalactic facts.</p>
+                </article>
+                <article class="card" tabindex="0" role="button" data-id="dino" data-cat="learn" data-search="dinosaur fossils rex" style="--c: #16a34a" onclick="app.show('dino')">
+                  <button class="fav" data-fav="dino" aria-label="Favorite Dino Dig">♡</button>
+                  <div class="card-icon">🦖</div>
+                  <h3>Dino Dig</h3>
+                  <p>Excavate fossils and learn about ancient beasts.</p>
+                </article>
+                <article class="card" tabindex="0" role="button" data-id="puzzle" data-cat="play" data-search="jigsaw shapes logic" style="--c: #d97706" onclick="app.show('puzzle')">
+                  <button class="fav" data-fav="puzzle" aria-label="Favorite Shapes Puzzle">♡</button>
+                  <div class="card-icon">🧩</div>
+                  <h3>Shapes Puzzle</h3>
+                  <p>Slide pieces and solve tricky jigsaw shapes.</p>
+                </article>
+                <article class="card" tabindex="0" role="button" data-id="farm" data-cat="play" data-search="farm animals cow pig duck" style="--c: #c026d3" onclick="app.show('farm')">
+                  <button class="fav" data-fav="farm" aria-label="Favorite Farm Animals">♡</button>
+                  <div class="card-icon">🐮</div>
+                  <h3>Farm Friends</h3>
+                  <p>Match animals to their fun sounds and names.</p>
+                </article>
+                <article class="card" tabindex="0" role="button" data-id="color" data-cat="make" data-search="coloring book paint" style="--c: #db2777" onclick="app.show('color')">
+                  <button class="fav" data-fav="color" aria-label="Favorite Coloring Book">♡</button>
+                  <div class="card-icon">🎨</div>
+                  <h3>Coloring Book</h3>
+                  <p>Fill in beautiful templates with bright colors.</p>
+                </article>
+                <article class="card" tabindex="0" role="button" data-id="spelling" data-cat="learn" data-search="words spelling vocabulary" style="--c: #2563eb" onclick="app.show('spelling')">
+                  <button class="fav" data-fav="spelling" aria-label="Favorite Word Spelling">♡</button>
+                  <div class="card-icon">🔤</div>
+                  <h3>Word Spelling</h3>
+                  <p>Learn new vocabulary with interactive spelling.</p>
+                </article>
+                <article class="card" tabindex="0" role="button" data-id="clock" data-cat="learn" data-search="time clock hours minutes" style="--c: #059669" onclick="app.show('clock')">
+                  <button class="fav" data-fav="clock" aria-label="Favorite Time Telling">♡</button>
+                  <div class="card-icon">🕒</div>
+                  <h3>Telling Time</h3>
+                  <p>Master reading analog and digital clocks.</p>
+                </article>
+
+                <article class="card" tabindex="0" role="button" data-id="music-maker" data-cat="make" data-search="music maker song compose" style="--c: #ec4899" onclick="app.show('music-maker')">
+                  <button class="fav" data-fav="music-maker" aria-label="Favorite Music Maker">♡</button>
+                  <div class="card-icon">🎹</div>
+                  <h3>Music Maker</h3>
+                  <p>Compose your own melodies and beats.</p>
+                </article>
+                <article class="card" tabindex="0" role="button" data-id="storybook" data-cat="make" data-search="story book creator write" style="--c: #14b8a6" onclick="app.show('storybook')">
+                  <button class="fav" data-fav="storybook" aria-label="Favorite Storybook Creator">♡</button>
+                  <div class="card-icon">📖</div>
+                  <h3>Storybook Creator</h3>
+                  <p>Write and illustrate your own magical tales.</p>
                 </article>
               </div>
             </div>
@@ -2456,6 +2612,18 @@
             </div>
           </div>
         </section>
+
+        <section class="screen" id="s-coding"><div class="activity"><div class="act-head"><button class="back" onclick="app.show('hub')">←</button><div><h2>Code Logic</h2><p>Learn programming blocks</p></div></div><div class="panel" style="min-height: 400px; display:grid; place-items:center; background:#4f46e5; color:white; border-radius:24px;"><h3>Feature In Development</h3><p>Get ready to write your first algorithm!</p></div></div></section>
+        <section class="screen" id="s-space"><div class="activity"><div class="act-head"><button class="back" onclick="app.show('hub')">←</button><div><h2>Space Explorer</h2><p>Discover the galaxy</p></div></div><div class="panel" style="min-height: 400px; display:grid; place-items:center; background:#161a35; color:white; border-radius:24px;"><h3>Feature In Development</h3><p>Rocket launching soon...</p></div></div></section>
+        <section class="screen" id="s-dino"><div class="activity"><div class="act-head"><button class="back" onclick="app.show('hub')">←</button><div><h2>Dino Dig</h2><p>Excavate ancient fossils</p></div></div><div class="panel" style="min-height: 400px; display:grid; place-items:center; background:#14532d; color:white; border-radius:24px;"><h3>Feature In Development</h3><p>Brushing off the dirt...</p></div></div></section>
+        <section class="screen" id="s-puzzle"><div class="activity"><div class="act-head"><button class="back" onclick="app.show('hub')">←</button><div><h2>Shapes Puzzle</h2><p>Solve tricky jigsaws</p></div></div><div class="panel" style="min-height: 400px; display:grid; place-items:center; background:#d97706; color:white; border-radius:24px;"><h3>Feature In Development</h3><p>Connecting the pieces...</p></div></div></section>
+        <section class="screen" id="s-farm"><div class="activity"><div class="act-head"><button class="back" onclick="app.show('hub')">←</button><div><h2>Farm Friends</h2><p>Match animals and sounds</p></div></div><div class="panel" style="min-height: 400px; display:grid; place-items:center; background:#c026d3; color:white; border-radius:24px;"><h3>Feature In Development</h3><p>Moo, Baa, Oink...</p></div></div></section>
+        <section class="screen" id="s-color"><div class="activity"><div class="act-head"><button class="back" onclick="app.show('hub')">←</button><div><h2>Coloring Book</h2><p>Fill in bright colors</p></div></div><div class="panel" style="min-height: 400px; display:grid; place-items:center; background:#db2777; color:white; border-radius:24px;"><h3>Feature In Development</h3><p>Mixing the paint palette...</p></div></div></section>
+        <section class="screen" id="s-spelling"><div class="activity"><div class="act-head"><button class="back" onclick="app.show('hub')">←</button><div><h2>Word Spelling</h2><p>Learn new vocabulary</p></div></div><div class="panel" style="min-height: 400px; display:grid; place-items:center; background:#2563eb; color:white; border-radius:24px;"><h3>Feature In Development</h3><p>A-B-C...</p></div></div></section>
+        <section class="screen" id="s-clock"><div class="activity"><div class="act-head"><button class="back" onclick="app.show('hub')">←</button><div><h2>Telling Time</h2><p>Master analog & digital clocks</p></div></div><div class="panel" style="min-height: 400px; display:grid; place-items:center; background:#059669; color:white; border-radius:24px;"><h3>Feature In Development</h3><p>Tick tock, coming soon!</p></div></div></section>
+
+        <section class="screen" id="s-music-maker"><div class="activity"><div class="act-head"><button class="back" onclick="app.show('hub')">←</button><div><h2>Music Maker</h2><p>Compose your own melodies</p></div></div><div class="panel" style="min-height: 400px; display:grid; place-items:center; background:#ec4899; color:white; border-radius:24px;"><h3>Feature In Development</h3><p>Tuning the instruments...</p></div></div></section>
+        <section class="screen" id="s-storybook"><div class="activity"><div class="act-head"><button class="back" onclick="app.show('hub')">←</button><div><h2>Storybook Creator</h2><p>Write and illustrate tales</p></div></div><div class="panel" style="min-height: 400px; display:grid; place-items:center; background:#14b8a6; color:white; border-radius:24px;"><h3>Feature In Development</h3><p>Opening the first page...</p></div></div></section>
       </main>
       <nav class="mobile-nav">
         <button class="on" onclick="app.show('hub')"><span>🏠</span>Hub</button
@@ -4931,7 +5099,78 @@
       </div>
     </div>
 
-  </body></html>`;
+  
+    <script>
+      (function() {
+        const canvas = document.getElementById('bubbles-canvas');
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let bubbles = [];
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+        
+        class Bubble {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 200;
+                this.radius = 15 + Math.random() * 40;
+                this.speedY = 0.5 + Math.random() * 1.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                
+                const colors = [
+                    'rgba(244, 114, 182, 0.35)',
+                    'rgba(110, 231, 183, 0.35)',
+                    'rgba(56, 189, 248, 0.35)', 
+                    'rgba(253, 224, 71, 0.35)' 
+                ];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.wobble = Math.random() * Math.PI * 2;
+                this.wobbleSpeed = 0.01 + Math.random() * 0.02;
+            }
+            update() {
+                this.y -= this.speedY;
+                this.wobble += this.wobbleSpeed;
+                this.x += Math.sin(this.wobble) * 1.5;
+                
+                if (this.y + this.radius < 0) {
+                    this.y = canvas.height + this.radius;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.2, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.fill();
+            }
+        }
+        
+        for (let i = 0; i < 25; i++) {
+            bubbles.push(new Bubble());
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            bubbles.forEach(b => {
+                b.update();
+                b.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+      })();
+    </script>
+</body></html>`;
           this.downloadBlob(html, "kid-hub-certificate.html", "text/html");
         },
         backup() {
@@ -5081,5 +5320,76 @@
       </div>
     </div>
 
-  </body>
+  
+    <script>
+      (function() {
+        const canvas = document.getElementById('bubbles-canvas');
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let bubbles = [];
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+        
+        class Bubble {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 200;
+                this.radius = 15 + Math.random() * 40;
+                this.speedY = 0.5 + Math.random() * 1.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                
+                const colors = [
+                    'rgba(244, 114, 182, 0.35)',
+                    'rgba(110, 231, 183, 0.35)',
+                    'rgba(56, 189, 248, 0.35)', 
+                    'rgba(253, 224, 71, 0.35)' 
+                ];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.wobble = Math.random() * Math.PI * 2;
+                this.wobbleSpeed = 0.01 + Math.random() * 0.02;
+            }
+            update() {
+                this.y -= this.speedY;
+                this.wobble += this.wobbleSpeed;
+                this.x += Math.sin(this.wobble) * 1.5;
+                
+                if (this.y + this.radius < 0) {
+                    this.y = canvas.height + this.radius;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.2, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.fill();
+            }
+        }
+        
+        for (let i = 0; i < 25; i++) {
+            bubbles.push(new Bubble());
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            bubbles.forEach(b => {
+                b.update();
+                b.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+      })();
+    </script>
+</body>
 </html>

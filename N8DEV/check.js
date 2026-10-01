@@ -1512,9 +1512,9 @@ turtleBtn.addEventListener("contextmenu", (e) => {
         [25, "HomeHub", "Experiments & Archives", "homehub.html"],
         [
           26,
-          "Mecha Strike: Transformer Protocol",
+          "N8 SHIFT: Transform Protocol",
           "Games & Simulations",
-          "mecha-strike.html",
+          "../standalone-sites/n8-shift.html",
         ],
         [
           28,
