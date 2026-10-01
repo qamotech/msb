@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liar and The Lamb - Cyber-Scriptural 2.5D Fighter</title>
+    <link rel="manifest" href="LL/manifest.json">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M23 70C10 53 15 30 34 25c8-2 13 1 16 7 3-6 8-9 16-7 19 5 24 28 11 45-8 10-18 17-27 24-9-7-19-14-27-24Z' fill='%23f7fffd' stroke='%2362f5db' stroke-width='4'/%3E%3Cpath d='M57 17 46 48h14l-8 35 25-43H63l8-23Z' fill='%23ff435f'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M23 70C10 53 15 30 34 25c8-2 13 1 16 7 3-6 8-9 16-7 19 5 24 28 11 45-8 10-18 17-27 24-9-7-19-14-27-24Z' fill='%23f7fffd' stroke='%2362f5db' stroke-width='4'/%3E%3Cpath d='M57 17 46 48h14l-8 35 25-43H63l8-23Z' fill='%23ff435f'/%3E%3C/svg%3E">
+    <style>
+        :root {
+            --bg: #04070b;
+            --surface: #0a1018;
+            --surface2: #101a26;
+            --line: #263647;
+            --text: #f4f8fb;
+            --muted: #8b9cad;
+            --lamb: #62f5db;
+            --lamb-light: #effffc;
+            --liar: #ff435f;
+            --liar-hot: #ff9a62;
+            --gold: #ffd36c;
+            --purple: #a87cff;
+            --blue: #5ca8ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial Black', Impact, ui-sans-serif, system-ui, sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        body {
+            background-color: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        /* --- QAMLOT MEDIA INTRO OVERLAY --- */
+        #qamlot-intro {
+            position: absolute;
+            inset: 0;
+            z-index: 200;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.4s ease-out;
+        }
+
+        #qamlot-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            opacity: 0.85;
+        }
+
+        .qamlot-overlay {
+            z-index: 210;
+            text-align: center;
+            pointer-events: none;
+            background: rgba(4, 7, 11, 0.75);
+            padding: 35px 55px;
+            border-radius: 14px;
+            border: 2px solid var(--lamb);
+            box-shadow: 0 0 50px rgba(98, 245, 219, 0.5);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            animation: qamlotPulse 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes qamlotPulse {
+            0% {
+                transform: scale(0.97);
+                opacity: 0.85;
+            }
+
+            100% {
+                transform: scale(1.03);
+                opacity: 1;
+            }
+        }
+
+        .qamlot-tag {
+            font-size: 13px;
+            letter-spacing: 5px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .qamlot-title {
+            font-size: clamp(32px, 5vw, 68px);
+            letter-spacing: 6px;
+            background: linear-gradient(180deg, #fff, var(--lamb));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .qamlot-prompt {
+            font-size: 15px;
+            letter-spacing: 4px;
+            color: var(--lamb-light);
+            margin-top: 15px;
+        }
+
+        /* --- START SCREEN --- */
+        #start-screen {
+            position: absolute;
+            inset: 0;
+            z-index: 100;
+            background: #000;
+            transition: opacity 0.4s ease-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 20px;
+        }
+
+        .title-wrapper {
+            z-index: 10;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-top: 2vh;
+        }
+
+        .logo-emblem {
+            width: 75px;
+            height: 75px;
+            display: grid;
+            place-items: center;
+            border-radius: 20px;
+            border: 2px solid rgba(98, 245, 219, 0.4);
+            background: linear-gradient(145deg, #132d32, #0b1119);
+            box-shadow: 0 0 35px rgba(98, 245, 219, 0.5), inset 0 0 20px rgba(98, 245, 219, 0.2);
+            animation: emblemPulse 2.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes emblemPulse {
+            0% {
+                transform: scale(0.96);
+                box-shadow: 0 0 20px rgba(98, 245, 219, 0.3);
+            }
+
+            100% {
+                transform: scale(1.06);
+                box-shadow: 0 0 45px rgba(98, 245, 219, 0.85);
+            }
+        }
+
+        .main-title {
+            font-size: clamp(36px, 6vw, 84px);
+            letter-spacing: 6px;
+            background: linear-gradient(180deg, #ffffff 20%, var(--lamb) 60%, var(--liar) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 10px 30px rgba(0, 0, 0, 0.9);
+            text-transform: uppercase;
+        }
+
+        .sub-tagline {
+            font-size: clamp(12px, 1.8vw, 16px);
+            letter-spacing: 5px;
+            color: var(--muted);
+        }
+
+        .menu-wrapper {
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            width: min(540px, 94vw);
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 15px 30px;
+            font-size: 19px;
+            color: #fff;
+            background: rgba(10, 16, 24, 0.85);
+            border: 2px solid var(--lamb);
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 20px rgba(98, 245, 219, 0.25);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-main:hover {
+            background: var(--lamb);
+            color: #04070b;
+            box-shadow: 0 0 35px rgba(98, 245, 219, 0.8);
+            transform: scale(1.03);
+        }
+
+        .selection-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .select-group {
+            flex: 1;
+        }
+
+        .select-label {
+            font-size: 10px;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .select-btn {
+            width: 100%;
+            padding: 10px 8px;
+            font-size: 11px;
+            background: rgba(16, 27, 39, 0.8);
+            border: 1px solid var(--line);
+            color: var(--muted);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: 0.2s;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .select-btn.active,
+        .select-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 15px rgba(255, 211, 108, 0.3);
+        }
+
+        /* --- GAME ENGINE CONTAINER & HUD --- */
+        #game-container {
+            position: relative;
+            display: none;
+            z-index: 10;
+            border: 3px solid var(--line);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(98, 245, 219, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            width: min(1024px, 100vw);
+            height: min(576px, 56.25vw);
+        }
+
+        #ui-layer {
+            position: absolute;
+            inset: 0;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .fighter-hud {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .hud-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: #eafcff;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        .hud-p1-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hud-p1-name {
+            color: var(--lamb);
+        }
+
+        .hud-p2-name {
+            color: var(--liar);
+        }
+
+        .health-bar-container {
+            position: relative;
+            width: 100%;
+            height: 22px;
+            background: #081018;
+            border: 2px solid var(--line);
+            transform: skewX(-15deg);
+            overflow: hidden;
+        }
+
+        .health-bar {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--lamb), var(--lamb-light));
+            width: 100%;
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 10px var(--lamb);
+        }
+
+        #enemy-health {
+            background: linear-gradient(90deg, var(--liar-hot), var(--liar));
+            right: 0;
+            box-shadow: 0 0 10px var(--liar);
+        }
+
+        .tension-bar-container {
+            position: relative;
+            width: 80%;
+            height: 10px;
+            background: #081018;
+            border: 1px solid var(--line);
+            transform: skewX(-15deg);
+            overflow: hidden;
+        }
+
+        #p1-hud {
+            align-items: flex-start;
+        }
+
+        #p2-hud {
+            align-items: flex-end;
+        }
+
+        #p2-hud .tension-bar-container {
+            align-self: flex-end;
+        }
+
+        .tension-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.15s ease-out;
+        }
+
+        #p1-tension {
+            background: linear-gradient(90deg, var(--gold), var(--lamb));
+        }
+
+        #p2-tension {
+            background: linear-gradient(90deg, var(--purple), var(--liar));
+            float: right;
+        }
+
+        .timer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timer {
+            font-size: 34px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6), 2px 2px 0 #000;
+        }
+
+        .round-tag {
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--muted);
+        }
+
+        /* Game Over Banner */
+        #game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            text-align: center;
+            z-index: 50;
+            pointer-events: auto;
+            background: rgba(4, 7, 11, 0.94);
+            padding: 35px 50px;
+            border: 2px solid var(--lamb);
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(98, 245, 219, 0.4);
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+        }
+
+        #winner-text {
+            font-size: 46px;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, #fff, var(--lamb));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .restart-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            font-size: 15px;
+            background: var(--lamb);
+            color: #04070b;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 2px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        /* --- MOBILE TOUCH CONTROLS OVERLAY --- */
+        #touch-controls {
+            position: absolute;
+            inset: 0;
+            z-index: 30;
+            pointer-events: none;
+            display: none;
+        }
+
+        .touch-group {
+            position: absolute;
+            bottom: 20px;
+            pointer-events: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        #touch-left {
+            left: 20px;
+        }
+
+        #touch-right {
+            right: 20px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            width: 220px;
+        }
+
+        .t-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: rgba(16, 26, 38, 0.75);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            font-size: 12px;
+            display: grid;
+            place-items: center;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            touch-action: none;
+        }
+
+        .t-btn:active {
+            background: var(--lamb);
+            color: #000;
+            transform: scale(0.92);
+        }
+
+        .t-btn.special {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .t-btn.ultimate {
+            border-color: var(--liar);
+            color: var(--liar);
+            width: 65px;
+            height: 65px;
+            font-weight: bold;
+        }
+
+        #gamepad-badge {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: var(--gold);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--gold);
+            display: none;
+            z-index: 20;
+        }
+
+        .asset-status {
+            font-size: 9px;
+            letter-spacing: 1.4px;
+            color: var(--lamb);
+            opacity: .85;
+            text-align: center;
+            margin-top: 10px
+        }
+
+        .controls-hint {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            color: #cfe9ef;
+            background: rgba(3, 9, 15, .72);
+            border: 1px solid rgba(98, 245, 219, .3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            letter-spacing: .7px;
+            white-space: nowrap;
+            pointer-events: none
+        }
+
+        @media(max-width:700px) {
+            .controls-hint {
+                display: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- QAMLOT MEDIA CINEMATIC INTRO -->
+    <div id="qamlot-intro" onclick="dismissQamlotIntro()">
+        <video id="qamlot-video" autoplay loop muted playsinline>
+            <source src="https://raw.githubusercontent.com/qamotech/ll/main/QMedia.mp4#t=3.2,10.0" type="video/mp4">
+            <source src="QMedia.mp4#t=3.2,10.0" type="video/mp4">
+        </video>
+        <div class="qamlot-overlay">
+            <div class="qamlot-tag">QAMLOT MEDIA PRESENTS</div>
+            <div class="qamlot-title">LIAR & THE LAMB</div>
+            <div class="qamlot-prompt">CLICK OR PRESS ANY KEY TO ENTER</div>
+        </div>
+    </div>
+
+    <!-- START SCREEN -->
+    <div id="start-screen">
+        <video id="bg-video" autoplay loop muted playsinline>
+            <source src="https://raw.githubusercontent.com/qamotech/ll/main/QMedia.mp4#t=3.2,10.0" type="video/mp4">
+            <source src="QMedia.mp4#t=3.2,10.0" type="video/mp4">
+        </video>
+        <div class="title-wrapper">
+            <div class="logo-emblem">
+                <svg viewBox="0 0 100 100" width="48" height="48">
+                    <path
+                        d="M23 70C10 53 15 30 34 25c8-2 13 1 16 7 3-6 8-9 16-7 19 5 24 28 11 45-8 10-18 17-27 24-9-7-19-14-27-24Z"
+                        fill="#f7fffd" stroke="#62f5db" stroke-width="4" />
+                    <path d="M57 17 46 48h14l-8 35 25-43H63l8-23Z" fill="#ff435f" />
+                </svg>
+            </div>
+            <h1 class="main-title">LIAR & THE LAMB</h1>
+            <div class="sub-tagline">BIBLICAL HIGH-FANTASY COMBAT</div>
+        </div>
+
+        <div class="menu-wrapper">
+            <button class="btn-main" onclick="startGame('1p')">▶ 1 PLAYER vs AI</button>
+            <button class="btn-main" onclick="startGame('2p')">⚔ 2 PLAYER VERSUS</button>
+
+            <div class="selection-row">
+                <div class="select-group">
+                    <div class="select-label">SCRIPTURE BUFF</div>
+                    <select id="buff-select" class="select-btn" title="Scripture Buff Selection"
+                        aria-label="Scripture Buff Selection">
+                        <option value="armor">Armor of God (+25% Guard)</option>
+                        <option value="eagles">Wings of Eagles (+15% Speed)</option>
+                        <option value="faith">Shield of Faith (+20% Health)</option>
+                        <option value="sword">Sword of Spirit (+15% Dmg)</option>
+                    </select>
+                </div>
+                <div class="select-group">
+                    <div class="select-label">STAGE ARENA</div>
+                    <select id="stage-select" class="select-btn" title="Stage Arena Selection"
+                        aria-label="Stage Arena Selection">
+                        <option value="tempest">The Tempest Sea</option>
+                        <option value="mount">Mount Transfiguration</option>
+                        <option value="abyss">The Abyss</option>
+                        <option value="garden">Garden of Choice</option>
+                        <option value="colosseum">Judgment Colosseum</option>
+                        <option value="heaven">Heaven Gate Summit</option>
+                    </select>
+                </div>
+                <div class="select-group">
+                    <div class="select-label">AI DIFFICULTY</div>
+                    <select id="ai-select" class="select-btn" title="AI Difficulty Selection"
+                        aria-label="AI Difficulty Selection">
+                        <option value="apprentice">Apprentice</option>
+                        <option value="warrior" selected>Warrior</option>
+                        <option value="divine">Divine AI</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="selection-row">
+                <button class="select-btn active" onclick="setRoster('lamb_vs_liar', this)">LAMB vs LIAR</button>
+                <button class="select-btn" onclick="setRoster('lion_vs_wolf', this)">LION vs WOLF</button>
+                <button class="select-btn" onclick="setRoster('archangel_vs_leviathan', this)">ARCHANGEL vs
+                    LEVIATHAN</button>
+            </div>
+            <div class="asset-status">36 COMBAT STATES • 6 VECTOR RELICS • LIVE SVG ENGINE</div>
+        </div>
+    </div>
+
+    <!-- GAME CANVAS CONTAINER -->
+    <div id="game-container">
+        <div id="gamepad-badge">🎮 GAMEPAD CONNECTED</div>
+
+        <div id="ui-layer">
+            <div class="fighter-hud" id="p1-hud">
+                <div class="hud-header">
+                    <div class="hud-p1-title">
+                        <svg viewBox="0 0 100 100" width="22" height="22">
+                            <path
+                                d="M23 70C10 53 15 30 34 25c8-2 13 1 16 7 3-6 8-9 16-7 19 5 24 28 11 45-8 10-18 17-27 24-9-7-19-14-27-24Z"
+                                fill="#f7fffd" stroke="#62f5db" stroke-width="4" />
+                            <path d="M57 17 46 48h14l-8 35 25-43H63l8-23Z" fill="#ff435f" />
+                        </svg>
+                        <span id="p1-name" class="hud-p1-name">THE LAMB</span>
+                    </div>
+                </div>
+                <div class="health-bar-container">
+                    <div class="health-bar" id="p1-health"></div>
+                </div>
+                <div class="tension-bar-container">
+                    <div class="tension-bar" id="p1-tension"></div>
+                </div>
+            </div>
+
+            <div class="timer-container">
+                <div class="round-tag">ROUND 1</div>
+                <div class="timer" id="match-timer">99</div>
+            </div>
+
+            <div class="fighter-hud" id="p2-hud">
+                <div class="hud-header">
+                    <span id="p2-name" class="hud-p2-name">THE LIAR</span>
+                </div>
+                <div class="health-bar-container">
+                    <div class="health-bar" id="p2-health"></div>
+                </div>
+                <div class="tension-bar-container">
+                    <div class="tension-bar" id="p2-tension"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOUCH CONTROLS FOR MOBILE -->
+        <div id="touch-controls">
+            <div class="touch-group" id="touch-left">
+                <div class="t-btn" id="tb-left">←</div>
+                <div class="t-btn" id="tb-right">→</div>
+                <div class="t-btn" id="tb-up">↑</div>
+                <div class="t-btn" id="tb-down">↓</div>
+            </div>
+            <div class="touch-group" id="touch-right">
+                <div class="t-btn" id="tb-light">L</div>
+                <div class="t-btn" id="tb-heavy">H</div>
+                <div class="t-btn special" id="tb-special">SP</div>
+                <div class="t-btn" id="tb-dash">DASH</div>
+                <div class="t-btn" id="tb-guard">GRD</div>
+                <div class="t-btn ultimate" id="tb-ult">ULT</div>
+            </div>
+        </div>
+
+        <div id="game-over">
+            <div id="winner-text">VICTORY</div>
+            <button class="restart-btn" onclick="resetMatch()">REMATCH</button>
+        </div>
+
+        <div class="controls-hint">P1: A/D move • W jump • S crouch • C guard • Space/F/Q/E attacks &nbsp;|&nbsp; P2:
+            Arrows • Enter/.///Shift</div>
+        <canvas id="gameCanvas" width="1024" height="576"></canvas>
+    </div>
+
+    <script>
+        // Dismiss Intro & Control Video
+        function dismissQamlotIntro() {
+            const intro = document.getElementById('qamlot-intro');
+            const vid = document.getElementById('qamlot-video');
+            const bgVid = document.getElementById('bg-video');
+            if (intro) {
+                intro.style.pointerEvents = 'none';
+                intro.style.display = 'none';
+                intro.style.zIndex = '-1';
+                if (vid) { try { vid.pause(); } catch (e) { } }
+                if (bgVid) { try { bgVid.pause(); } catch (e) { } }
+            }
+        }
+
+        function toggleBgVideo() {
+            const bgVid = document.getElementById('bg-video');
+            const qVid = document.getElementById('qamlot-video');
+            if (bgVid) {
+                if (bgVid.paused) {
+                    bgVid.play().catch(() => { });
+                } else {
+                    bgVid.pause();
+                }
+            }
+            if (qVid) {
+                if (qVid.paused) {
+                    qVid.play().catch(() => { });
+                } else {
+                    qVid.pause();
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const bgVid = document.getElementById('bg-video');
+            const qVid = document.getElementById('qamlot-video');
+
+            [bgVid, qVid].forEach(v => {
+                if (v) {
+                    v.addEventListener('timeupdate', () => {
+                        if (v.currentTime >= 10.0 || v.currentTime < 3.2) {
+                            v.currentTime = 3.2;
+                        }
+                    });
+                    v.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (v.paused) {
+                            v.play().catch(() => { });
+                        } else {
+                            v.pause();
+                        }
+                    });
+                }
+            });
+        });
+
+        window.addEventListener('keydown', dismissQamlotIntro);
+
+        // ==========================================
+        // WEB AUDIO API PROCEDURAL SOUND SYNTHESIZER
+        // ==========================================
+        class SoundEngine {
+            constructor() { this.ctx = null; }
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+            playPunch() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(160, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.12);
+                gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.12);
+            }
+            playSlash() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(450, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, this.ctx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.15);
+            }
+            playBeam() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(900, this.ctx.currentTime + 0.25);
+                gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.25);
+            }
+            playBlock() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(650, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.08);
+            }
+            playUltimate() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(120, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(20, this.ctx.currentTime + 0.65);
+                gain.gain.setValueAtTime(0.6, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.65);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.65);
+            }
+        }
+        const audio = new SoundEngine();
+
+        // ==========================================
+        // GAME STATE & CONFIG
+        // ==========================================
+        let gameMode = '1p';
+        let currentRoster = 'lamb_vs_liar';
+        let currentStage = 'tempest';
+        let aiDifficulty = 'warrior';
+        let currentBuff = 'armor';
+
+        function setRoster(rosterKey, el) {
+            currentRoster = rosterKey;
+            document.querySelectorAll('.selection-row .select-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function startGame(mode) {
+            dismissQamlotIntro();
+            gameMode = mode;
+            currentStage = document.getElementById('stage-select').value;
+            aiDifficulty = document.getElementById('ai-select').value;
+            currentBuff = document.getElementById('buff-select').value;
+            audio.init();
+
+            const startScreen = document.getElementById('start-screen');
+            const bgVid = document.getElementById('bg-video');
+            const gameContainer = document.getElementById('game-container');
+
+            if (bgVid) { try { bgVid.pause(); } catch (e) { } }
+            startScreen.style.pointerEvents = 'none';
+            startScreen.style.display = 'none';
+            startScreen.style.zIndex = '-1';
+
+            gameContainer.style.display = 'block';
+            gameContainer.style.zIndex = '10';
+
+            setupTouchControls();
+            setupMatch();
+            animate();
+        }
+
+        // ==========================================
+        // TOUCH CONTROLS FOR MOBILE
+        // ==========================================
+        function setupTouchControls() {
+            const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+            if (isTouch) {
+                document.getElementById('touch-controls').style.display = 'block';
+
+                const bindTouch = (id, keyName) => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    el.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        keys[keyName] = true;
+                        if (keyName === 'a') player1.facing = -1;
+                        if (keyName === 'd') player1.facing = 1;
+                        if (keyName === 'w') player1.jump();
+                        if (keyName === 's') player1.crouch(true);
+                        if (keyName === 'Shift') player1.dash(player1.facing);
+                        if (keyName === 'c') player1.guard(true);
+                        if (keyName === ' ') player1.triggerAttack('lightAttack');
+                        if (keyName === 'f') player1.triggerAttack('heavyAttack');
+                        if (keyName === 'q') player1.triggerAttack('specialAttack');
+                        if (keyName === 'e') player1.triggerAttack('ultimateAttack');
+                    });
+                    el.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        keys[keyName] = false;
+                        if (keyName === 's') player1.crouch(false);
+                        if (keyName === 'c') player1.guard(false);
+                    });
+                };
+
+                bindTouch('tb-left', 'a');
+                bindTouch('tb-right', 'd');
+                bindTouch('tb-up', 'w');
+                bindTouch('tb-down', 's');
+                bindTouch('tb-light', ' ');
+                bindTouch('tb-heavy', 'f');
+                bindTouch('tb-special', 'q');
+                bindTouch('tb-dash', 'Shift');
+                bindTouch('tb-guard', 'c');
+                bindTouch('tb-ult', 'e');
+            }
+        }
+
+        // ==========================================
+        // GAMEPAD CONTROLLER API INTEGRATION
+        // ==========================================
+        window.addEventListener('gamepadconnected', () => {
+            document.getElementById('gamepad-badge').style.display = 'block';
+        });
+
+        function pollGamepads() {
+            try {
+                const rawGps = navigator.getGamepads ? navigator.getGamepads() : [];
+                const gamepads = Array.from(rawGps).filter(Boolean);
+                const gp1 = gamepads[0];
+                if (gp1 && player1) {
+                    const lx = gp1.axes[0];
+                    const ly = gp1.axes[1];
+                    if (lx < -0.4) { keys['a'] = true; player1.facing = -1; } else if (lx > 0.4) { keys['d'] = true; player1.facing = 1; }
+                    if (ly > 0.5) player1.crouch(true); else player1.crouch(false);
+
+                    if (gp1.buttons[0] && gp1.buttons[0].pressed) player1.triggerAttack('lightAttack');
+                    if (gp1.buttons[2] && gp1.buttons[2].pressed) player1.triggerAttack('lightAttack');
+                    if (gp1.buttons[3] && gp1.buttons[3].pressed) player1.triggerAttack('heavyAttack');
+                    if (gp1.buttons[4] && gp1.buttons[4].pressed) player1.triggerAttack('specialAttack');
+                    if (gp1.buttons[5] && gp1.buttons[5].pressed) player1.triggerAttack('ultimateAttack');
+                    if (gp1.buttons[1] && gp1.buttons[1].pressed) player1.dash(player1.facing);
+                    if ((gp1.buttons[6] && gp1.buttons[6].pressed) || (gp1.buttons[7] && gp1.buttons[7].pressed)) player1.guard(true); else player1.guard(false);
+                }
+            } catch (e) { }
+        }
+
+        // ==========================================
+        // VECTOR SVG SPRITE CACHE ENGINE
+        // ==========================================
+        const spriteCache = new Map();
+
+        function getSprite(svgStr) {
+            if (spriteCache.has(svgStr)) return spriteCache.get(svgStr);
+            const img = new Image();
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+            spriteCache.set(svgStr, img);
+            return img;
+        }
+
+        const COMBAT_ASSETS = { "lamb": { "idle": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Wool Base -->\n                <circle cx=\"50\" cy=\"50\" r=\"30\" fill=\"#ffffff\" filter=\"drop-shadow(0 0 4px #ffffff)\"/>\n                <circle cx=\"25\" cy=\"40\" r=\"15\" fill=\"#f4f4f4\"/>\n                <circle cx=\"75\" cy=\"40\" r=\"15\" fill=\"#f4f4f4\"/>\n                <!-- Sunglasses -->\n                <rect x=\"30\" y=\"42\" width=\"18\" height=\"10\" rx=\"2\" fill=\"#00ffcc\"/>\n                <rect x=\"52\" y=\"42\" width=\"18\" height=\"10\" rx=\"2\" fill=\"#00ffcc\"/>\n                <path d=\"M48 45 L52 45 M30 45 L20 40 M70 45 L80 40\" stroke=\"#111\" stroke-width=\"2\"/>\n                <!-- Sword resting -->\n                <path d=\"M75,80 L90,20\" stroke=\"#00ffcc\" stroke-width=\"4\" filter=\"drop-shadow(0 0 5px #00ffcc)\"/>\n                <path d=\"M75,80 L90,20\" stroke=\"#fff\" stroke-width=\"2\"/>\n            </svg>" ,"dash" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Motion Lines -->\n                <line x1=\"5\" y1=\"30\" x2=\"40\" y2=\"30\" stroke=\"#00ffcc\" stroke-width=\"2\" opacity=\"0.6\"/>\n                <line x1=\"10\" y1=\"50\" x2=\"35\" y2=\"50\" stroke=\"#00ffcc\" stroke-width=\"3\" opacity=\"0.8\"/>\n                <line x1=\"2\" y1=\"70\" x2=\"45\" y2=\"70\" stroke=\"#00ffcc\" stroke-width=\"2\" opacity=\"0.6\"/>\n                <!-- Skewed Body for speed -->\n                <g transform=\"skewX(-20) translate(20, 0)\">\n                    <circle cx=\"50\" cy=\"50\" r=\"28\" fill=\"#ffffff\"/>\n                    <rect x=\"35\" y=\"42\" width=\"25\" height=\"8\" rx=\"2\" fill=\"#00ffcc\"/>\n                </g>\n            </svg>" ,"crouch" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Ground Dust -->\n                <ellipse cx=\"40\" cy=\"85\" rx=\"30\" ry=\"5\" fill=\"#333\"/>\n                <ellipse cx=\"20\" cy=\"80\" rx=\"15\" ry=\"8\" fill=\"#444\"/>\n                <!-- Compressed Body -->\n                <ellipse cx=\"60\" cy=\"70\" rx=\"35\" ry=\"20\" fill=\"#ffffff\" filter=\"drop-shadow(0 0 4px #ffffff)\"/>\n                <rect x=\"50\" y=\"65\" width=\"20\" height=\"8\" rx=\"2\" fill=\"#00ffcc\"/>\n            </svg>" ,"guard" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Body tucked behind -->\n                <circle cx=\"40\" cy=\"50\" r=\"25\" fill=\"#aaa\"/>\n                <rect x=\"25\" y=\"40\" width=\"15\" height=\"8\" rx=\"2\" fill=\"#00ffcc\"/>\n                <!-- Massive Shield -->\n                <path d=\"M50,10 L90,10 L90,40 Q90,90 50,95 Q50,90 50,40 Z\" fill=\"#1a1a1a\" stroke=\"#cca600\" stroke-width=\"4\"/>\n                <path d=\"M50,10 L90,10 L90,40 Q90,90 50,95 Z\" fill=\"#ffcc00\" opacity=\"0.2\"/>\n                <!-- Impact Spark -->\n                <circle cx=\"85\" cy=\"45\" r=\"10\" fill=\"#fff\" filter=\"blur(2px)\"/>\n                <path d=\"M70,45 L100,45 M85,30 L85,60 M75,35 L95,55 M75,55 L95,35\" stroke=\"#00ffcc\" stroke-width=\"2\"/>\n            </svg>" ,"attack" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Body leaning into strike -->\n                <circle cx=\"35\" cy=\"60\" r=\"25\" fill=\"#ffffff\"/>\n                <!-- Sword Arc (Smear frame) -->\n                <path d=\"M20,90 Q10,20 60,10 Q95,15 95,60\" fill=\"none\" stroke=\"#00ffcc\" stroke-width=\"12\" opacity=\"0.4\" stroke-linecap=\"round\"/>\n                <path d=\"M30,85 Q20,25 60,15 Q90,20 90,60\" fill=\"none\" stroke=\"#fff\" stroke-width=\"4\" stroke-linecap=\"round\" filter=\"drop-shadow(0 0 5px #00ffcc)\"/>\n                <!-- Spark at tip -->\n                <circle cx=\"90\" cy=\"60\" r=\"6\" fill=\"#fff\" filter=\"drop-shadow(0 0 8px #00ffcc)\"/>\n            </svg>" ,"ultimate" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Holy Aura -->\n                <circle cx=\"50\" cy=\"50\" r=\"45\" fill=\"#00ffcc\" opacity=\"0.1\"/>\n                <circle cx=\"50\" cy=\"50\" r=\"35\" fill=\"#00ffcc\" opacity=\"0.2\"/>\n                <!-- Floating Body -->\n                <circle cx=\"50\" cy=\"50\" r=\"20\" fill=\"#ffffff\" filter=\"drop-shadow(0 0 10px #fff)\"/>\n                <!-- Exploding Cross -->\n                <rect x=\"46\" y=\"5\" width=\"8\" height=\"90\" fill=\"#fff\" filter=\"drop-shadow(0 0 8px #00ffcc)\"/>\n                <rect x=\"5\" y=\"46\" width=\"90\" height=\"8\" fill=\"#fff\" filter=\"drop-shadow(0 0 8px #00ffcc)\"/>\n            </svg> "} ,"liar" : {"idle" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Demon Body -->\n                <path d=\"M30,30 Q50,15 70,30 L65,75 Q50,95 35,75 Z\" fill=\"#cc0000\"/>\n                <!-- Horns -->\n                <path d=\"M35,32 Q15,10 30,5 Q40,20 45,30 Z\" fill=\"#111\"/>\n                <path d=\"M65,32 Q85,10 70,5 Q60,20 55,30 Z\" fill=\"#111\"/>\n                <!-- Glowing Eyes -->\n                <polygon points=\"40,50 48,45 48,52\" fill=\"#ffcc00\"/>\n                <polygon points=\"60,50 52,45 52,52\" fill=\"#ffcc00\"/>\n                <!-- Tail ticking -->\n                <path d=\"M60,80 Q80,90 90,70 Q95,60 85,55\" fill=\"none\" stroke=\"#cc0000\" stroke-width=\"4\"/>\n                <polygon points=\"85,55 95,50 90,65\" fill=\"#cc0000\"/>\n            </svg>" ,"dash" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Shadow/Smoke Trail -->\n                <path d=\"M10,50 Q30,30 40,60 T70,50\" fill=\"none\" stroke=\"#440000\" stroke-width=\"15\" stroke-linecap=\"round\" opacity=\"0.6\"/>\n                <path d=\"M5,60 Q25,40 45,70 T80,60\" fill=\"none\" stroke=\"#111\" stroke-width=\"10\" stroke-linecap=\"round\" opacity=\"0.8\"/>\n                <!-- Dissolving Body -->\n                <path d=\"M60,30 Q80,20 90,40 L80,80 Q60,90 50,70 Z\" fill=\"#cc0000\" transform=\"skewX(-15)\"/>\n                <polygon points=\"75,50 82,46 80,52\" fill=\"#ffcc00\"/>\n            </svg>" ,"crouch" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Low profile body -->\n                <path d=\"M20,75 Q50,60 80,80 L70,95 Q50,90 30,95 Z\" fill=\"#cc0000\"/>\n                <!-- Claws digging into ground -->\n                <path d=\"M75,80 L85,95 M80,80 L92,92 M85,75 L95,85\" stroke=\"#fff\" stroke-width=\"2\"/>\n                <!-- Sparks on ground -->\n                <circle cx=\"90\" cy=\"90\" r=\"3\" fill=\"#ff3333\"/>\n                <circle cx=\"95\" cy=\"95\" r=\"2\" fill=\"#ffcc00\"/>\n                <!-- Eye -->\n                <polygon points=\"65,72 72,68 70,74\" fill=\"#ffcc00\"/>\n            </svg>" ,"guard" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Hunkered Body -->\n                <path d=\"M30,40 Q50,20 70,40 L65,90 Q50,100 35,90 Z\" fill=\"#660000\"/>\n                <!-- Hardened Arms Blocking -->\n                <rect x=\"25\" y=\"45\" width=\"60\" height=\"15\" rx=\"5\" fill=\"#111\" transform=\"rotate(30 50 50)\"/>\n                <rect x=\"15\" y=\"45\" width=\"60\" height=\"15\" rx=\"5\" fill=\"#111\" transform=\"rotate(-30 50 50)\"/>\n                <!-- Red aura/shield -->\n                <circle cx=\"50\" cy=\"55\" r=\"40\" fill=\"none\" stroke=\"#ff3333\" stroke-width=\"2\" opacity=\"0.5\" stroke-dasharray=\"10, 5\"/>\n            </svg>" ,"attack" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Attacking Body -->\n                <path d=\"M20,40 Q40,30 50,50 L40,80 Q20,90 10,70 Z\" fill=\"#cc0000\"/>\n                <!-- Triple Claw/Trident Slash -->\n                <path d=\"M40,20 Q70,40 90,80\" fill=\"none\" stroke=\"#ff3333\" stroke-width=\"6\" stroke-linecap=\"round\" filter=\"drop-shadow(0 0 4px #ff0000)\"/>\n                <path d=\"M50,15 Q80,35 100,75\" fill=\"none\" stroke=\"#fff\" stroke-width=\"3\" stroke-linecap=\"round\" filter=\"drop-shadow(0 0 6px #ff3333)\"/>\n                <path d=\"M30,25 Q60,45 80,85\" fill=\"none\" stroke=\"#aa0000\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n            </svg>" ,"ultimate" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Center Body -->\n                <path d=\"M40,40 Q50,20 60,40 L55,70 Q50,80 45,70 Z\" fill=\"#111\"/>\n                <polygon points=\"48,45 52,45 50,50\" fill=\"#ffcc00\"/>\n                <!-- Upward Eruption -->\n                <path d=\"M20,100 Q40,50 10,10\" fill=\"none\" stroke=\"#ff3333\" stroke-width=\"8\" opacity=\"0.8\" filter=\"blur(1px)\"/>\n                <path d=\"M50,100 Q50,40 50,5\" fill=\"none\" stroke=\"#fff\" stroke-width=\"12\" filter=\"drop-shadow(0 0 10px #ff3333)\"/>\n                <path d=\"M80,100 Q60,50 90,10\" fill=\"none\" stroke=\"#ff3333\" stroke-width=\"8\" opacity=\"0.8\" filter=\"blur(1px)\"/>\n                <!-- Base fire -->\n                <ellipse cx=\"50\" cy=\"90\" rx=\"40\" ry=\"10\" fill=\"#ff0000\" opacity=\"0.5\" filter=\"blur(4px)\"/>\n            </svg> "} ,"lion" : {"idle" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Golden Mane -->\n                <path d=\"M50,10 L75,25 L85,55 L70,85 L50,90 L30,85 L15,55 L25,25 Z\" fill=\"#cc9900\" filter=\"drop-shadow(0 0 4px #cc9900)\"/>\n                <path d=\"M50,20 L65,30 L75,55 L65,75 L50,80 L35,75 L25,55 L35,30 Z\" fill=\"#ffcc00\"/>\n                <!-- Face -->\n                <ellipse cx=\"50\" cy=\"50\" rx=\"15\" ry=\"20\" fill=\"#e6b800\"/>\n                <polygon points=\"42,45 48,43 46,47\" fill=\"#fff\"/>\n                <polygon points=\"58,45 52,43 54,47\" fill=\"#fff\"/>\n                <!-- Resting Scepter -->\n                <rect x=\"80\" y=\"20\" width=\"4\" height=\"70\" fill=\"#fff\" filter=\"drop-shadow(0 0 5px #ffcc00)\"/>\n                <circle cx=\"82\" cy=\"15\" r=\"6\" fill=\"#ffcc00\"/>\n            </svg>" ,"dash" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Heavy Motion Lines -->\n                <rect x=\"0\" y=\"30\" width=\"50\" height=\"4\" fill=\"#ffcc00\" opacity=\"0.4\"/>\n                <rect x=\"10\" y=\"50\" width=\"40\" height=\"8\" fill=\"#ffcc00\" opacity=\"0.7\"/>\n                <rect x=\"0\" y=\"70\" width=\"60\" height=\"4\" fill=\"#ffcc00\" opacity=\"0.4\"/>\n                <!-- Charging Body -->\n                <g transform=\"skewX(-25) translate(30, 0)\">\n                    <path d=\"M40,20 L70,30 L75,70 L40,80 Z\" fill=\"#cc9900\"/>\n                    <path d=\"M45,30 L60,35 L65,65 L45,70 Z\" fill=\"#ffcc00\"/>\n                    <circle cx=\"70\" cy=\"50\" r=\"10\" fill=\"#fff\" filter=\"drop-shadow(0 0 10px #ffcc00)\"/>\n                </g>\n            </svg>" ,"crouch" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Golden Dust/Sparks -->\n                <circle cx=\"20\" cy=\"85\" r=\"4\" fill=\"#ffcc00\"/>\n                <circle cx=\"30\" cy=\"80\" r=\"3\" fill=\"#fff\"/>\n                <ellipse cx=\"45\" cy=\"90\" rx=\"35\" ry=\"4\" fill=\"#cc9900\" opacity=\"0.5\"/>\n                <!-- Crouching Heavy Body -->\n                <path d=\"M30,85 Q50,60 80,75 Q90,85 85,90 L30,95 Z\" fill=\"#ffcc00\"/>\n                <path d=\"M40,80 Q60,65 75,75 Q80,80 75,85 L40,88 Z\" fill=\"#cc9900\"/>\n            </svg>" ,"guard" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Center Body -->\n                <circle cx=\"50\" cy=\"50\" r=\"20\" fill=\"#cc9900\"/>\n                <!-- Majestic Wings Wrapping Around -->\n                <path d=\"M50,15 Q80,5 95,40 Q85,80 50,90\" fill=\"none\" stroke=\"#ffcc00\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n                <path d=\"M50,15 Q20,5 5,40 Q15,80 50,90\" fill=\"none\" stroke=\"#ffcc00\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n                <!-- Hard Light Shield -->\n                <circle cx=\"50\" cy=\"50\" r=\"45\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" filter=\"drop-shadow(0 0 8px #ffcc00)\"/>\n                <path d=\"M50,5 L50,95 M5,50 L95,50\" stroke=\"#ffcc00\" stroke-width=\"1\" opacity=\"0.5\"/>\n            </svg>" ,"attack" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Heavy Body Torque -->\n                <circle cx=\"40\" cy=\"60\" r=\"25\" fill=\"#cc9900\"/>\n                <!-- Massive Staff Arc -->\n                <path d=\"M10,80 Q30,10 90,30\" fill=\"none\" stroke=\"#ffcc00\" stroke-width=\"10\" stroke-linecap=\"round\" opacity=\"0.5\"/>\n                <path d=\"M20,70 Q40,20 85,40\" fill=\"none\" stroke=\"#fff\" stroke-width=\"4\" stroke-linecap=\"round\" filter=\"drop-shadow(0 0 8px #ffcc00)\"/>\n                <!-- Impact Burst -->\n                <circle cx=\"85\" cy=\"40\" r=\"12\" fill=\"#fff\" filter=\"blur(2px)\"/>\n                <polygon points=\"85,20 90,35 105,40 90,45 85,60 80,45 65,40 80,35\" fill=\"#ffcc00\"/>\n            </svg>" ,"ultimate" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Shockwaves -->\n                <circle cx=\"50\" cy=\"50\" r=\"45\" fill=\"none\" stroke=\"#ffcc00\" stroke-width=\"4\" opacity=\"0.4\"/>\n                <circle cx=\"50\" cy=\"50\" r=\"30\" fill=\"none\" stroke=\"#fff\" stroke-width=\"6\" filter=\"drop-shadow(0 0 10px #ffcc00)\"/>\n                <!-- Roaring Face -->\n                <path d=\"M35,35 L65,35 L50,70 Z\" fill=\"#cc9900\"/>\n                <circle cx=\"40\" cy=\"40\" r=\"4\" fill=\"#fff\"/>\n                <circle cx=\"60\" cy=\"40\" r=\"4\" fill=\"#fff\"/>\n                <!-- Sound Beam -->\n                <path d=\"M50,60 L20,95 L80,95 Z\" fill=\"#fff\" opacity=\"0.8\" filter=\"blur(2px)\"/>\n            </svg> "} ,"wolf" : {"idle" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Hunched Feral Body -->\n                <path d=\"M25,60 Q40,30 65,40 L60,75 Q40,85 20,70 Z\" fill=\"#222\"/>\n                <!-- Jagged Fur -->\n                <path d=\"M25,60 L15,50 L30,55 L20,40 L35,48 Z\" fill=\"#444\"/>\n                <path d=\"M65,40 L75,30 L65,45 L80,45 L65,55 Z\" fill=\"#444\"/>\n                <!-- Piercing Ice Eyes -->\n                <polygon points=\"50,48 56,46 54,50\" fill=\"#00aaff\" filter=\"drop-shadow(0 0 3px #00aaff)\"/>\n                <polygon points=\"62,50 68,48 66,52\" fill=\"#00aaff\" filter=\"drop-shadow(0 0 3px #00aaff)\"/>\n                <!-- Twin Daggers Pointed Down -->\n                <path d=\"M60,65 L70,95 M35,70 L40,95\" stroke=\"#777\" stroke-width=\"3\"/>\n            </svg>" ,"dash" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Afterimages -->\n                <path d=\"M10,40 Q30,30 50,40 L45,70 Q25,80 5,60 Z\" fill=\"#00aaff\" opacity=\"0.1\"/>\n                <path d=\"M20,45 Q40,35 60,45 L55,75 Q35,85 15,65 Z\" fill=\"#00aaff\" opacity=\"0.3\"/>\n                <!-- Main Body -->\n                <g transform=\"skewX(-30) translate(30, 0)\">\n                    <path d=\"M30,50 Q50,40 70,50 L65,80 Q45,90 25,70 Z\" fill=\"#222\"/>\n                    <rect x=\"50\" y=\"55\" width=\"10\" height=\"3\" fill=\"#00aaff\"/>\n                </g>\n                <!-- Speed Lines -->\n                <line x1=\"5\" y1=\"50\" x2=\"90\" y2=\"50\" stroke=\"#00aaff\" stroke-width=\"1\" opacity=\"0.5\"/>\n            </svg>" ,"crouch" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Extremely Low Profile -->\n                <path d=\"M10,85 Q40,70 85,85 L80,95 L10,95 Z\" fill=\"#222\"/>\n                <path d=\"M20,80 Q50,65 75,80 L70,88 L25,88 Z\" fill=\"#444\"/>\n                <!-- Claw Marks on Ground -->\n                <path d=\"M75,95 L95,95 M80,90 L92,90\" stroke=\"#00aaff\" stroke-width=\"2\"/>\n                <!-- Glowing Eye Trail -->\n                <path d=\"M80,75 L40,75\" stroke=\"#00aaff\" stroke-width=\"2\" opacity=\"0.8\" filter=\"blur(1px)\"/>\n            </svg>" ,"guard" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Swirling Shadow Vortex -->\n                <path d=\"M50,10 C80,10 90,40 70,80 C50,110 20,80 30,40 C40,10 50,10 50,10 Z\" fill=\"#111\" stroke=\"#333\" stroke-width=\"4\"/>\n                <path d=\"M50,20 C70,20 80,45 65,75 C50,95 30,75 35,45 Z\" fill=\"#222\"/>\n                <!-- Energy Deflection -->\n                <path d=\"M85,30 Q60,50 90,70\" fill=\"none\" stroke=\"#00aaff\" stroke-width=\"3\" filter=\"drop-shadow(0 0 5px #00aaff)\"/>\n                <circle cx=\"75\" cy=\"50\" r=\"3\" fill=\"#fff\"/>\n            </svg>" ,"attack" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Dark Silhouette -->\n                <path d=\"M20,50 Q40,30 60,60 Z\" fill=\"#222\"/>\n                <!-- 'X' Cross Slash -->\n                <path d=\"M30,20 L90,80\" stroke=\"#00aaff\" stroke-width=\"8\" stroke-linecap=\"round\" opacity=\"0.6\" filter=\"blur(1px)\"/>\n                <path d=\"M35,25 L85,75\" stroke=\"#fff\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n                <path d=\"M90,20 L30,80\" stroke=\"#00aaff\" stroke-width=\"8\" stroke-linecap=\"round\" opacity=\"0.6\" filter=\"blur(1px)\"/>\n                <path d=\"M85,25 L35,75\" stroke=\"#fff\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n                <!-- Intersection Spark -->\n                <circle cx=\"60\" cy=\"50\" r=\"8\" fill=\"#fff\" filter=\"drop-shadow(0 0 10px #00aaff)\"/>\n            </svg>" ,"ultimate" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Massive Crescent Moon -->\n                <path d=\"M80,20 A40,40 0 1,0 80,80 A30,30 0 1,1 80,20 Z\" fill=\"#00aaff\" opacity=\"0.3\" filter=\"blur(2px)\"/>\n                <path d=\"M78,22 A38,38 0 1,0 78,78 A28,28 0 1,1 78,22 Z\" fill=\"#fff\" filter=\"drop-shadow(0 0 8px #00aaff)\"/>\n                <!-- Wolf Silhouette Slashing Through -->\n                <path d=\"M10,90 L90,10\" stroke=\"#111\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n                <polygon points=\"40,50 60,30 70,40\" fill=\"#222\"/>\n                <!-- Blood/Energy Splatter -->\n                <circle cx=\"75\" cy=\"25\" r=\"3\" fill=\"#00aaff\"/>\n                <circle cx=\"85\" cy=\"35\" r=\"2\" fill=\"#fff\"/>\n            </svg> "} ,"archangel" : {"idle" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Folded Wings -->\n                <path d=\"M50,30 Q20,20 15,60 Q30,80 50,60\" fill=\"none\" stroke=\"#fff\" stroke-width=\"3\" opacity=\"0.8\"/>\n                <path d=\"M50,30 Q80,20 85,60 Q70,80 50,60\" fill=\"none\" stroke=\"#fff\" stroke-width=\"3\" opacity=\"0.8\"/>\n                <!-- Platinum Armor Body -->\n                <path d=\"M40,40 L60,40 L55,75 L45,75 Z\" fill=\"#e6e6e6\"/>\n                <circle cx=\"50\" cy=\"35\" r=\"10\" fill=\"#fff\" filter=\"drop-shadow(0 0 5px #00e5ff)\"/>\n                <!-- Hovering Halo -->\n                <ellipse cx=\"50\" cy=\"15\" rx=\"15\" ry=\"4\" fill=\"none\" stroke=\"#ffcc00\" stroke-width=\"2\" filter=\"drop-shadow(0 0 3px #ffcc00)\"/>\n                <!-- Resting Spear -->\n                <line x1=\"75\" y1=\"10\" x2=\"60\" y2=\"90\" stroke=\"#00e5ff\" stroke-width=\"4\" filter=\"drop-shadow(0 0 4px #00e5ff)\"/>\n                <line x1=\"75\" y1=\"10\" x2=\"60\" y2=\"90\" stroke=\"#fff\" stroke-width=\"2\"/>\n            </svg>" ,"dash" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Light Trails -->\n                <line x1=\"5\" y1=\"40\" x2=\"50\" y2=\"40\" stroke=\"#00e5ff\" stroke-width=\"2\" opacity=\"0.5\"/>\n                <line x1=\"10\" y1=\"60\" x2=\"60\" y2=\"60\" stroke=\"#00e5ff\" stroke-width=\"3\" opacity=\"0.7\"/>\n                <line x1=\"0\" y1=\"50\" x2=\"40\" y2=\"50\" stroke=\"#fff\" stroke-width=\"1\" opacity=\"0.8\"/>\n                <!-- Propelled Body -->\n                <g transform=\"skewX(-35) translate(40, 0)\">\n                    <path d=\"M30,30 L60,40 L50,70 L20,60 Z\" fill=\"#e6e6e6\"/>\n                    <path d=\"M20,30 Q0,50 15,80\" fill=\"none\" stroke=\"#fff\" stroke-width=\"4\"/>\n                    <!-- Thrusting Spear -->\n                    <line x1=\"20\" y1=\"50\" x2=\"90\" y2=\"50\" stroke=\"#00e5ff\" stroke-width=\"6\" filter=\"drop-shadow(0 0 5px #00e5ff)\"/>\n                    <line x1=\"20\" y1=\"50\" x2=\"90\" y2=\"50\" stroke=\"#fff\" stroke-width=\"2\"/>\n                </g>\n            </svg>" ,"crouch" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Ground Gliding Sparks -->\n                <ellipse cx=\"40\" cy=\"85\" rx=\"30\" ry=\"2\" fill=\"#00e5ff\" opacity=\"0.6\" filter=\"blur(1px)\"/>\n                <circle cx=\"80\" cy=\"85\" r=\"3\" fill=\"#fff\"/>\n                <circle cx=\"90\" cy=\"82\" r=\"2\" fill=\"#00e5ff\"/>\n                <!-- Kneeling / Gliding Form -->\n                <path d=\"M30,75 Q50,55 70,75 L60,85 Q45,85 25,85 Z\" fill=\"#e6e6e6\"/>\n                <!-- Wing wrapping low -->\n                <path d=\"M20,60 Q40,65 75,70\" fill=\"none\" stroke=\"#fff\" stroke-width=\"4\" opacity=\"0.8\"/>\n            </svg>" ,"guard" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Spherical Light Shield -->\n                <circle cx=\"50\" cy=\"50\" r=\"40\" fill=\"#00e5ff\" opacity=\"0.1\" filter=\"blur(2px)\"/>\n                <circle cx=\"50\" cy=\"50\" r=\"35\" fill=\"none\" stroke=\"#00e5ff\" stroke-width=\"2\" filter=\"drop-shadow(0 0 5px #00e5ff)\"/>\n                <!-- Crossed Wings inside shield -->\n                <path d=\"M25,25 Q50,75 75,25\" fill=\"none\" stroke=\"#fff\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n                <path d=\"M25,75 Q50,25 75,75\" fill=\"none\" stroke=\"#fff\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n                <circle cx=\"50\" cy=\"50\" r=\"10\" fill=\"#fff\" filter=\"drop-shadow(0 0 8px #ffcc00)\"/>\n            </svg>" ,"attack" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Body lunging -->\n                <path d=\"M15,60 L35,30 L45,55 Z\" fill=\"#e6e6e6\"/>\n                <!-- Massive Piercing Line -->\n                <line x1=\"20\" y1=\"45\" x2=\"95\" y2=\"45\" stroke=\"#00e5ff\" stroke-width=\"8\" filter=\"drop-shadow(0 0 6px #00e5ff)\"/>\n                <line x1=\"10\" y1=\"45\" x2=\"100\" y2=\"45\" stroke=\"#fff\" stroke-width=\"3\"/>\n                <!-- Impact Star -->\n                <polygon points=\"90,35 95,43 105,45 95,47 90,55 85,47 75,45 85,43\" fill=\"#fff\" filter=\"drop-shadow(0 0 4px #00e5ff)\"/>\n            </svg>" ,"ultimate" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Floating Caster -->\n                <circle cx=\"50\" cy=\"30\" r=\"12\" fill=\"#fff\" filter=\"drop-shadow(0 0 8px #ffcc00)\"/>\n                <path d=\"M30,10 Q50,40 70,10\" fill=\"none\" stroke=\"#ffcc00\" stroke-width=\"2\"/>\n                <!-- Orbital Strike Beam -->\n                <rect x=\"40\" y=\"0\" width=\"20\" height=\"100\" fill=\"#00e5ff\" opacity=\"0.4\" filter=\"blur(3px)\"/>\n                <rect x=\"45\" y=\"0\" width=\"10\" height=\"100\" fill=\"#fff\" filter=\"drop-shadow(0 0 10px #00e5ff)\"/>\n                <rect x=\"48\" y=\"0\" width=\"4\" height=\"100\" fill=\"#fff\"/>\n            </svg> "} ,"leviathan" : {"idle" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Coiled Serpentine Body -->\n                <path d=\"M25,80 Q10,50 40,30 T80,40 T60,80 T35,85\" fill=\"none\" stroke=\"#003366\" stroke-width=\"14\" stroke-linecap=\"round\"/>\n                <path d=\"M25,80 Q10,50 40,30 T80,40 T60,80 T35,85\" fill=\"none\" stroke=\"#0a192f\" stroke-width=\"10\" stroke-linecap=\"round\"/>\n                <!-- Bioluminescent Scales / Spikes -->\n                <path d=\"M35,22 L42,12 L48,22\" fill=\"#00ffaa\"/>\n                <path d=\"M75,32 L88,25 L80,40\" fill=\"#00ffaa\"/>\n                <path d=\"M68,82 L75,95 L60,88\" fill=\"#00ffaa\"/>\n                <!-- Glowing Eye -->\n                <circle cx=\"30\" cy=\"35\" r=\"4\" fill=\"#00ffaa\" filter=\"drop-shadow(0 0 4px #00ffaa)\"/>\n            </svg>" ,"dash" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Water Surge -->\n                <path d=\"M10,50 Q40,20 90,50 Q40,80 10,50 Z\" fill=\"#003366\" opacity=\"0.6\"/>\n                <path d=\"M15,50 Q45,30 80,50 Q45,70 15,50 Z\" fill=\"#0a192f\"/>\n                <!-- Bioluminescent Core Pushing Forward -->\n                <ellipse cx=\"65\" cy=\"50\" rx=\"15\" ry=\"6\" fill=\"#00ffaa\" filter=\"drop-shadow(0 0 8px #00ffaa)\"/>\n                <line x1=\"5\" y1=\"50\" x2=\"35\" y2=\"50\" stroke=\"#00ffaa\" stroke-width=\"2\" opacity=\"0.5\"/>\n            </svg>" ,"crouch" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Submerging into ground/water -->\n                <ellipse cx=\"50\" cy=\"85\" rx=\"40\" ry=\"10\" fill=\"#003366\"/>\n                <ellipse cx=\"50\" cy=\"85\" rx=\"30\" ry=\"6\" fill=\"#0a192f\"/>\n                <!-- Dorsal Fins breaching surface -->\n                <path d=\"M30,80 L40,65 L50,82\" fill=\"#00ffaa\"/>\n                <path d=\"M55,83 L65,72 L75,85\" fill=\"#00ffaa\"/>\n                <!-- Ripple effect -->\n                <ellipse cx=\"50\" cy=\"85\" rx=\"45\" ry=\"12\" fill=\"none\" stroke=\"#00ffaa\" stroke-width=\"1\" opacity=\"0.6\"/>\n            </svg>" ,"guard" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Coiled tightly -->\n                <circle cx=\"50\" cy=\"50\" r=\"30\" fill=\"#0a192f\" stroke=\"#003366\" stroke-width=\"8\"/>\n                <!-- Swirling Whirlpool Shield -->\n                <path d=\"M50,15 A35,35 0 0,1 85,50\" fill=\"none\" stroke=\"#00ffaa\" stroke-width=\"4\" stroke-linecap=\"round\"/>\n                <path d=\"M85,50 A35,35 0 0,1 50,85\" fill=\"none\" stroke=\"#00ffaa\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n                <path d=\"M50,85 A35,35 0 0,1 15,50\" fill=\"none\" stroke=\"#00ffaa\" stroke-width=\"4\" stroke-linecap=\"round\"/>\n                <path d=\"M15,50 A35,35 0 0,1 50,15\" fill=\"none\" stroke=\"#00ffaa\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n                <!-- Center dense shell -->\n                <circle cx=\"50\" cy=\"50\" r=\"15\" fill=\"#002244\"/>\n            </svg>" ,"attack" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Anchored Body -->\n                <path d=\"M10,80 Q20,50 40,60 T30,90 Z\" fill=\"#0a192f\"/>\n                <!-- Snapping Tail/Water Whip -->\n                <path d=\"M30,70 Q60,90 90,20\" fill=\"none\" stroke=\"#003366\" stroke-width=\"12\" stroke-linecap=\"round\" opacity=\"0.5\"/>\n                <path d=\"M35,65 Q65,80 95,15\" fill=\"none\" stroke=\"#00ffaa\" stroke-width=\"4\" stroke-linecap=\"round\" filter=\"drop-shadow(0 0 5px #00ffaa)\"/>\n                <!-- Splashing droplets -->\n                <circle cx=\"85\" cy=\"30\" r=\"3\" fill=\"#00ffaa\"/>\n                <circle cx=\"75\" cy=\"20\" r=\"2\" fill=\"#fff\"/>\n            </svg>" ,"ultimate" :"<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Massive rising water pillar -->\n                <path d=\"M20,100 Q10,50 40,10 T80,10 Q90,50 80,100 Z\" fill=\"#003366\" opacity=\"0.4\"/>\n                <path d=\"M30,100 Q20,60 45,20 T70,20 Q80,60 70,100 Z\" fill=\"#0a192f\"/>\n                <!-- Jaws / Swirling currents inside -->\n                <path d=\"M35,40 Q50,60 65,40\" fill=\"none\" stroke=\"#00ffaa\" stroke-width=\"6\" stroke-linecap=\"round\" filter=\"drop-shadow(0 0 8px #00ffaa)\"/>\n                <path d=\"M30,60 Q50,80 70,60\" fill=\"none\" stroke=\"#00ffaa\" stroke-width=\"4\" stroke-linecap=\"round\"/>\n                <!-- Fangs -->\n                <polygon points=\"40,43 45,55 50,45\" fill=\"#fff\"/>\n                <polygon points=\"60,43 55,55 50,45\" fill=\"#fff\"/>\n            </svg> " }};
+        const UTILITY_ASSETS = { "the_lamb": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Wool Aura / Fluff -->\n                <circle cx=\"50\" cy=\"50\" r=\"35\" fill=\"#ffffff\" filter=\"drop-shadow(0 0 5px #ffffff)\"/>\n                <circle cx=\"25\" cy=\"40\" r=\"18\" fill=\"#f4f4f4\"/>\n                <circle cx=\"75\" cy=\"40\" r=\"18\" fill=\"#f4f4f4\"/>\n                <circle cx=\"30\" cy=\"70\" r=\"15\" fill=\"#e0e0e0\"/>\n                <circle cx=\"70\" cy=\"70\" r=\"15\" fill=\"#e0e0e0\"/>\n                <circle cx=\"50\" cy=\"25\" r=\"20\" fill=\"#ffffff\"/>\n                \n                <!-- Ears -->\n                <ellipse cx=\"15\" cy=\"55\" rx=\"12\" ry=\"6\" fill=\"#e0e0e0\" transform=\"rotate(-20 15 55)\"/>\n                <ellipse cx=\"85\" cy=\"55\" rx=\"12\" ry=\"6\" fill=\"#e0e0e0\" transform=\"rotate(20 85 55)\"/>\n                \n                <!-- Sunglasses (Electric Blue / Nike Vibe) -->\n                <rect x=\"26\" y=\"42\" width=\"22\" height=\"14\" rx=\"4\" fill=\"#00ffcc\"/>\n                <rect x=\"52\" y=\"42\" width=\"22\" height=\"14\" rx=\"4\" fill=\"#00ffcc\"/>\n                <path d=\"M48 46 L52 46\" stroke=\"#111\" stroke-width=\"3\"/>\n                <path d=\"M26 46 L18 40\" stroke=\"#111\" stroke-width=\"3\"/>\n                <path d=\"M74 46 L82 40\" stroke=\"#111\" stroke-width=\"3\"/>\n\n                <!-- Snout & Mouth -->\n                <ellipse cx=\"50\" cy=\"68\" rx=\"16\" ry=\"12\" fill=\"#dcdcdc\"/>\n                <polygon points=\"45,65 55,65 50,70\" fill=\"#222\"/>\n                <path d=\"M50 70 L50 75 Q45 78 40 75\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/>\n                <path d=\"M50 70 L50 75 Q55 78 60 75\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/>\n            </svg>", "the_liar": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Demonic Head Shape -->\n                <path d=\"M20,35 Q50,15 80,35 L72,80 Q50,105 28,80 Z\" fill=\"#cc0000\"/>\n                <path d=\"M30,40 Q50,25 70,40 L65,75 Q50,95 35,75 Z\" fill=\"#aa0000\"/>\n                \n                <!-- Horns -->\n                <path d=\"M30,38 Q10,10 25,5 Q38,20 42,32 Z\" fill=\"#111\"/>\n                <path d=\"M70,38 Q90,10 75,5 Q62,20 58,32 Z\" fill=\"#111\"/>\n                \n                <!-- Furious Eyes -->\n                <polygon points=\"32,55 46,46 48,52\" fill=\"#ffcc00\"/>\n                <polygon points=\"68,55 54,46 52,52\" fill=\"#ffcc00\"/>\n                \n                <!-- Snarling Mouth -->\n                <path d=\"M40,78 Q50,88 60,78\" fill=\"none\" stroke=\"#111\" stroke-width=\"4\"/>\n                <polygon points=\"42,79 46,85 48,79\" fill=\"#fff\"/>\n                <polygon points=\"58,79 54,85 52,79\" fill=\"#fff\"/>\n            </svg>", "lion_of_judah": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Golden Mane -->\n                <path d=\"M50,5 L70,15 L90,30 L85,60 L70,90 L50,95 L30,90 L15,60 L10,30 L30,15 Z\" fill=\"#cc9900\"/>\n                <path d=\"M50,15 L65,25 L80,35 L75,55 L65,80 L50,85 L35,80 L25,55 L20,35 L35,25 Z\" fill=\"#ffcc00\"/>\n                \n                <!-- Face -->\n                <ellipse cx=\"50\" cy=\"55\" rx=\"20\" ry=\"25\" fill=\"#e6b800\"/>\n                \n                <!-- Eyes & Nose -->\n                <polygon points=\"38,48 45,45 45,50\" fill=\"#fff\"/>\n                <polygon points=\"62,48 55,45 55,50\" fill=\"#fff\"/>\n                <polygon points=\"45,60 55,60 50,68\" fill=\"#333\"/>\n                \n                <!-- Muzzle -->\n                <path d=\"M50 68 Q40 75 35 70\" fill=\"none\" stroke=\"#333\" stroke-width=\"2\"/>\n                <path d=\"M50 68 Q60 75 65 70\" fill=\"none\" stroke=\"#333\" stroke-width=\"2\"/>\n            </svg>", "sword_of_the_spirit": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Holy Glow -->\n                <polygon points=\"48,20 52,20 50,2\" fill=\"#00ffcc\" opacity=\"0.6\" filter=\"blur(3px)\"/>\n                \n                <!-- Blade -->\n                <polygon points=\"46,25 54,25 50,5\" fill=\"#f4f4f4\"/>\n                <rect x=\"48\" y=\"25\" width=\"4\" height=\"45\" fill=\"#dcdcdc\"/>\n                <rect x=\"49\" y=\"5\" width=\"2\" height=\"65\" fill=\"#00ffcc\"/> <!-- Energy core -->\n                \n                <!-- Crossguard & Hilt -->\n                <rect x=\"30\" y=\"70\" width=\"40\" height=\"6\" rx=\"2\" fill=\"#cca600\"/>\n                <polygon points=\"30,70 25,65 30,76\" fill=\"#cca600\"/>\n                <polygon points=\"70,70 75,65 70,76\" fill=\"#cca600\"/>\n                <rect x=\"45\" y=\"76\" width=\"10\" height=\"18\" fill=\"#333\"/>\n                <circle cx=\"50\" cy=\"95\" r=\"5\" fill=\"#cca600\"/>\n            </svg>", "shield_of_faith": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Shield Base -->\n                <path d=\"M15,20 L85,20 L85,45 Q85,90 50,95 Q15,90 15,45 Z\" fill=\"#1a1a1a\" stroke=\"#cca600\" stroke-width=\"5\"/>\n                <path d=\"M22,25 L78,25 L78,45 Q78,85 50,88 Q22,85 22,45 Z\" fill=\"#2a2a2a\"/>\n                \n                <!-- Golden Cross -->\n                <rect x=\"45\" y=\"32\" width=\"10\" height=\"46\" fill=\"#ffcc00\" filter=\"drop-shadow(0 0 8px rgba(255, 204, 0, 0.8))\"/>\n                <rect x=\"30\" y=\"45\" width=\"40\" height=\"10\" fill=\"#ffcc00\" filter=\"drop-shadow(0 0 8px rgba(255, 204, 0, 0.8))\"/>\n                \n                <!-- Inner Cross Highlight -->\n                <rect x=\"48\" y=\"34\" width=\"4\" height=\"42\" fill=\"#fff\"/>\n                <rect x=\"32\" y=\"48\" width=\"36\" height=\"4\" fill=\"#fff\"/>\n            </svg>", "tempest_engine_fx": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n                <!-- Dark Clouds -->\n                <path d=\"M20,50 Q30,30 50,35 Q65,20 80,40 Q95,55 75,70 L25,70 Q5,60 20,50 Z\" fill=\"#2c3e50\"/>\n                <path d=\"M30,55 Q40,40 55,45 Q65,35 75,50 Q85,60 70,65 L35,65 Q20,60 30,55 Z\" fill=\"#34495e\"/>\n                \n                <!-- Lightning Strike -->\n                <polygon points=\"45,50 65,50 50,68 65,68 35,95 45,72 30,72\" fill=\"#00ffcc\" filter=\"drop-shadow(0 0 5px #00ffcc)\"/>\n                \n                <!-- Splashing Water Base -->\n                <path d=\"M10,85 Q25,75 40,85 T70,85 T90,85 L90,95 L10,95 Z\" fill=\"#0a192f\"/>\n                <path d=\"M20,80 Q35,70 50,80 T80,80 L80,95 L20,95 Z\" fill=\"#112240\"/>\n            </svg>" };
+        const STATE_LABELS = { "lamb": { "idle": "IDLE STANCE", "dash": "KINETIC DASH", "crouch": "TACTICAL SLIDE (LOW)", "guard": "HEAVY BLOCK", "attack": "SWORD STRIKE (LIGHT)", "ultimate": "ULTIMATE: DIVINE BURST" }, "liar": { "idle": "IDLE STANCE", "dash": "SHADOW STEP (DASH)", "crouch": "PREDATOR SLIDE", "guard": "HARDENED GUARD", "attack": "HELLFIRE SLASH (HEAVY)", "ultimate": "ULTIMATE: ABYSSAL ERUPTION" }, "lion": { "idle": "ROYAL STANCE", "dash": "GOLDEN CHARGE", "crouch": "LION'S POUNCE (LOW)", "guard": "WINGED AEGIS", "attack": "SCEPTER SMASH (HEAVY)", "ultimate": "ULTIMATE: WRATHFUL ROAR" }, "wolf": { "idle": "FERAL STANCE", "dash": "PHANTOM SPRINT", "crouch": "SHADOW CRAWL", "guard": "CLOAK OF SHADOWS", "attack": "CROSS FANG STRIKE", "ultimate": "ULTIMATE: LUNAR EXECUTION" }, "archangel": { "idle": "SERAPHIC STANCE", "dash": "HALO DASH", "crouch": "CELESTIAL GLIDE (LOW)", "guard": "AEGIS OF LIGHT", "attack": "SPEAR OF JUSTICE", "ultimate": "ULTIMATE: JUDGEMENT" }, "leviathan": { "idle": "ABYSSAL STANCE", "dash": "TIDAL SURGE", "crouch": "UNDERTOW (SUBMERGE)", "guard": "CORAL CARAPACE", "attack": "RIPTIDE WHIP", "ultimate": "ULTIMATE: DEEP MAW" } };
+
+        function getCharacterSVG(char, pose) {
+            const states = COMBAT_ASSETS[char] || COMBAT_ASSETS.lamb;
+            return states[pose] || states.idle;
+        }
+        function getUtilitySprite(key) { return getSprite(UTILITY_ASSETS[key]); }
+
+        // ==========================================
+        // ENGINE & FIGHTER LOGIC
+        // ==========================================
+        const canvas = document.getElementById('gameCanvas');
+        const c = canvas.getContext('2d');
+        const GROUND_LEVEL = 470;
+
+        class Fighter {
+            constructor({ position, character, color, name, isP1 }) {
+                this.position = position;
+                this.velocity = { x: 0, y: 0 };
+                this.character = character;
+                this.color = color;
+                this.name = name;
+                this.isP1 = isP1;
+                this.width = 70;
+                this.height = 150;
+                this.maxHealth = 100;
+                this.health = this.maxHealth;
+                this.tension = 0;
+                this.speed = 7;
+                this.facing = isP1 ? 1 : -1;
+                this.pose = 'idle';
+                this.poseTimer = null;
+                this.attackId = 0;
+                this.hitAttackId = -1;
+                this.isGuarding = false;
+                this.isAttacking = false;
+                this.isInvincible = false;
+                this.attackBox = { x: 0, y: 0, width: 90, height: 60, damage: 10 };
+
+                if (isP1) {
+                    if (currentBuff === 'eagles') this.speed = 8.5;
+                    if (currentBuff === 'faith') { this.maxHealth = 120; this.health = this.maxHealth; }
+                }
+            }
+
+            update() {
+                this.position.x += this.velocity.x;
+                this.position.y += this.velocity.y;
+
+                if (this.position.y + this.height + this.velocity.y >= GROUND_LEVEL) {
+                    this.velocity.y = 0;
+                    this.position.y = GROUND_LEVEL - this.height;
+                } else {
+                    this.velocity.y += 0.8;
+                }
+
+                if (this.position.x <= 0) this.position.x = 0;
+                if (this.position.x + this.width >= canvas.width) this.position.x = canvas.width - this.width;
+
+                this.attackBox.x = this.position.x + (this.facing === 1 ? this.width : -90);
+                this.attackBox.y = this.position.y + 30;
+
+                this.draw();
+            }
+
+            draw() {
+                c.save();
+                const svgStr = getCharacterSVG(this.character, this.pose);
+                const spriteImg = getSprite(svgStr);
+
+                if (spriteImg.complete && spriteImg.naturalWidth > 0) {
+                    if (this.facing === -1) {
+                        c.translate(this.position.x + this.width, this.position.y);
+                        c.scale(-1, 1);
+                        c.drawImage(spriteImg, -28, -18, 128, 160);
+                    } else {
+                        c.drawImage(spriteImg, this.position.x - 30, this.position.y - 18, 128, 160);
+                    }
+                } else {
+                    c.fillStyle = this.color;
+                    c.fillRect(this.position.x, this.position.y, this.width, this.height);
+                }
+                if (this.isGuarding) drawUtilityEffect('shield_of_faith', this.position.x + this.width / 2, this.position.y + 65, 76, .62);
+                if (this.isAttacking && this.pose === 'attack') drawUtilityEffect('sword_of_the_spirit', this.attackBox.x + this.attackBox.width / 2, this.attackBox.y + 25, 54, .78);
+                c.restore();
+            }
+
+            jump() {
+                if (this.position.y >= GROUND_LEVEL - this.height - 5) {
+                    this.velocity.y = -16;
+                }
+            }
+
+            setPose(pose, duration = 0) {
+                clearTimeout(this.poseTimer);
+                this.pose = pose;
+                if (duration) this.poseTimer = setTimeout(() => { if (!this.isGuarding && !this.isAttacking) this.pose = 'idle'; }, duration);
+            }
+            crouch(down) { if (!this.isAttacking) this.setPose(down ? 'crouch' : 'idle'); }
+            dash(dir) {
+                if (this.isAttacking) return;
+                this.velocity.x = 24 * dir;
+                this.setPose('dash', 190);
+                burst(this.position.x + this.width / 2, this.position.y + 100, this.color, 8);
+                setTimeout(() => { this.velocity.x = 0; }, 150);
+            }
+            guard(g) { this.isGuarding = g; if (!this.isAttacking) this.setPose(g ? 'guard' : 'idle'); }
+
+            triggerAttack(type) {
+                if (this.isAttacking || this.isGuarding) return;
+                if (type === 'ultimateAttack' && this.tension < 100) return;
+                this.isAttacking = true;
+                this.attackId++;
+                const mult = (this.isP1 && currentBuff === 'sword') ? 1.15 : 1;
+                const config = {
+                    lightAttack: [10, 170, 'attack', 'punch'], heavyAttack: [22, 310, 'attack', 'slash'],
+                    specialAttack: [16, 360, 'ultimate', 'beam'], ultimateAttack: [38, 620, 'ultimate', 'ultimate']
+                }[type];
+                if (!config) { this.isAttacking = false; return; }
+                this.attackBox.damage = Math.floor(config[0] * mult);
+                this.attackBox.width = type === 'specialAttack' ? 155 : type === 'ultimateAttack' ? 220 : 90;
+                this.setPose(config[2]);
+                audio['play' + config[3][0].toUpperCase() + config[3].slice(1)]();
+                if (type === 'ultimateAttack') this.tension = 0;
+                burst(this.position.x + this.width / 2 + this.facing * 45, this.position.y + 65, this.color, type === 'ultimateAttack' ? 24 : 10);
+                setTimeout(() => { this.isAttacking = false; this.attackBox.width = 90; this.setPose('idle'); }, config[1]);
+            }
+        }
+
+        // ==========================================
+        // MATCH CONTROLLER & LOOP
+        // ==========================================
+        let player1, player2;
+        let matchActive = false;
+        let animId = null;
+        let particles = [];
+        let screenFlash = 0;
+        function burst(x, y, color, count = 10) {
+            for (let i = 0; i < count; i++) particles.push({ x, y, vx: (Math.random() - .5) * 12, vy: (Math.random() - .6) * 10, life: 28 + Math.random() * 18, color });
+        }
+        function drawParticles() {
+            particles = particles.filter(p => p.life-- > 0);
+            for (const p of particles) { p.x += p.vx; p.y += p.vy; p.vy += .3; c.globalAlpha = Math.min(1, p.life / 15); c.fillStyle = p.color; c.fillRect(p.x, p.y, 3, 3) } c.globalAlpha = 1;
+        }
+        function drawUtilityEffect(key, x, y, size, alpha = 1) { const img = getUtilitySprite(key); if (img.complete && img.naturalWidth) { c.save(); c.globalAlpha = alpha; c.translate(x, y); c.drawImage(img, -size / 2, -size / 2, size, size); c.restore() } }
+        function healthPercent(f) { return (f.health / f.maxHealth) * 100 }
+        const keys = {};
+
+        function setupMatch() {
+            let p1Char = 'lamb', p2Char = 'liar';
+            let p1Color = '#62f5db', p2Color = '#ff435f';
+            let p1Name = 'THE LAMB', p2Name = 'THE LIAR';
+
+            if (currentRoster === 'lion_vs_wolf') {
+                p1Char = 'lion'; p2Char = 'wolf';
+                p1Color = '#ffcc00'; p2Color = '#00aaff';
+                p1Name = 'LION OF JUDAH'; p2Name = 'SHADOW WOLF';
+            } else if (currentRoster === 'archangel_vs_leviathan') {
+                p1Char = 'archangel'; p2Char = 'leviathan';
+                p1Color = '#00e5ff'; p2Color = '#00ffaa';
+                p1Name = 'THE ARCHANGEL'; p2Name = 'THE LEVIATHAN';
+            }
+
+            document.getElementById('p1-name').innerText = p1Name;
+            document.getElementById('p2-name').innerText = p2Name;
+
+            player1 = new Fighter({ position: { x: 180, y: 0 }, character: p1Char, color: p1Color, name: p1Name, isP1: true });
+            player2 = new Fighter({ position: { x: 770, y: 0 }, character: p2Char, color: p2Color, name: p2Name, isP1: false });
+            matchActive = true;
+        }
+
+        function resetMatch() {
+            setupMatch();
+            document.getElementById('game-over').style.display = 'none';
+            document.getElementById('p1-health').style.width = '100%';
+            document.getElementById('p2-health').style.width = '100%';
+            document.getElementById('p1-tension').style.width = '0%';
+            document.getElementById('p2-tension').style.width = '0%';
+            if (!animId) animate();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+            if (!player1) return;
+            if (e.key === 'a') player1.facing = -1;
+            if (e.key === 'd') player1.facing = 1;
+            if (e.key === 'w') player1.jump();
+            if (e.key === 's') player1.crouch(true);
+            if (e.key === 'c') player1.guard(true);
+            if (e.key === 'q') player1.triggerAttack('specialAttack');
+            if (e.key === 'e') player1.triggerAttack('ultimateAttack');
+            if (e.key === 'Shift') player1.dash(player1.facing);
+            if (e.key === ' ') player1.triggerAttack('lightAttack');
+            if (e.key === 'f') player1.triggerAttack('heavyAttack');
+
+            if (gameMode === '2p' && player2) {
+                if (e.key === 'ArrowLeft') player2.facing = -1;
+                if (e.key === 'ArrowRight') player2.facing = 1;
+                if (e.key === 'ArrowUp') player2.jump();
+                if (e.key === 'ArrowDown') player2.crouch(true);
+                if (e.key === 'Enter') player2.triggerAttack('lightAttack');
+                if (e.key === '.') player2.triggerAttack('heavyAttack');
+                if (e.key === '/') player2.triggerAttack('specialAttack');
+                if (e.key === 'Shift') player2.triggerAttack('ultimateAttack');
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+            if (player1 && e.key === 's') player1.crouch(false);
+            if (player1 && e.key === 'c') player1.guard(false);
+            if (player2 && e.key === 'ArrowDown') player2.crouch(false);
+        });
+
+        function handleInput() {
+            pollGamepads();
+
+            if (player1) {
+                if (keys['a']) player1.velocity.x = -player1.speed;
+                else if (keys['d']) player1.velocity.x = player1.speed;
+                else player1.velocity.x = 0;
+            }
+
+            if (player2) {
+                if (gameMode === '2p') {
+                    if (keys['ArrowLeft']) player2.velocity.x = -player2.speed;
+                    else if (keys['ArrowRight']) player2.velocity.x = player2.speed;
+                    else player2.velocity.x = 0;
+                } else {
+                    const dx = player1.position.x - player2.position.x;
+                    const speedMod = aiDifficulty === 'divine' ? 1.0 : aiDifficulty === 'warrior' ? 0.75 : 0.5;
+                    if (Math.abs(dx) > 80) {
+                        player2.velocity.x = Math.sign(dx) * (player2.speed * speedMod);
+                        player2.facing = Math.sign(dx);
+                    } else {
+                        player2.velocity.x = 0;
+                        if (Math.random() < (aiDifficulty === 'divine' ? 0.06 : 0.03)) player2.triggerAttack('lightAttack');
+                    }
+                }
+            }
+        }
+
+        function checkHits() {
+            if (!player1 || !player2) return;
+
+            if (player1.isAttacking) {
+                if (player1.attackBox.x + player1.attackBox.width >= player2.position.x &&
+                    player1.attackBox.x <= player2.position.x + player2.width) {
+                    player1.isAttacking = false;
+                    let dmg = player1.attackBox.damage;
+                    if (player2.isGuarding) { dmg = Math.floor(dmg * 0.3); audio.playBlock(); }
+                    player2.health = Math.max(0, player2.health - dmg);
+                    player1.tension = Math.min(100, player1.tension + 22);
+                    burst(player2.position.x + 35, player2.position.y + 55, player1.color, 14); screenFlash = 5;
+                    document.getElementById('p2-health').style.width = healthPercent(player2) + '%';
+                    document.getElementById('p1-tension').style.width = player1.tension + '%';
+                }
+            }
+            if (player2.isAttacking) {
+                if (player2.attackBox.x + player2.attackBox.width >= player1.position.x &&
+                    player2.attackBox.x <= player1.position.x + player1.width) {
+                    player2.isAttacking = false;
+                    let dmg = player2.attackBox.damage;
+                    if (player1.isGuarding) {
+                        dmg = Math.floor(dmg * (currentBuff === 'armor' ? 0.15 : 0.3));
+                        audio.playBlock();
+                    }
+                    player1.health = Math.max(0, player1.health - dmg);
+                    player2.tension = Math.min(100, player2.tension + 22);
+                    burst(player1.position.x + 35, player1.position.y + 55, player2.color, 14); screenFlash = 5;
+                    document.getElementById('p1-health').style.width = healthPercent(player1) + '%';
+                    document.getElementById('p2-tension').style.width = player2.tension + '%';
+                }
+            }
+
+            if (player1.health <= 0 || player2.health <= 0) {
+                matchActive = false;
+                document.getElementById('winner-text').innerText = player1.health > 0 ? `${player1.name} WINS` : `${player2.name} WINS`;
+                document.getElementById('game-over').style.display = 'block';
+            }
+        }
+
+        function animate() {
+            if (!matchActive) {
+                animId = null;
+                return;
+            }
+            animId = requestAnimationFrame(animate);
+
+            handleInput();
+
+            if (currentStage === 'abyss') c.fillStyle = '#1c090d';
+            else if (currentStage === 'mount') c.fillStyle = '#262010';
+            else if (currentStage === 'garden') c.fillStyle = '#091c14';
+            else if (currentStage === 'heaven') c.fillStyle = '#0f1826';
+            else c.fillStyle = '#071019';
+
+            c.fillRect(0, 0, canvas.width, canvas.height);
+
+            c.fillStyle = '#0d1f30';
+            c.fillRect(0, GROUND_LEVEL, canvas.width, canvas.height - GROUND_LEVEL);
+            drawUtilityEffect('tempest_engine_fx', canvas.width / 2, 210, 330, currentStage === 'tempest' ? .18 : .07);
+            drawParticles();
+            if (screenFlash > 0) { c.fillStyle = 'rgba(255,255,255,' + (screenFlash-- * .035) + ')'; c.fillRect(0, 0, canvas.width, canvas.height); }
+
+            if (player1) player1.update();
+            if (player2) player2.update();
+
+            checkHits();
+        }
+    </script>
+</body>
+
+</html>

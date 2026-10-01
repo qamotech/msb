@@ -1,0 +1,54 @@
+# Antigravity Ignore File
+# Prevents phantom token drain during background indexing
+
+# Dependencies
+node_modules/
+bower_components/
+vendor/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+
+# Version control
+.git/
+.svn/
+.hg/
+
+# IDE / Editor
+.idea/
+.vscode/
+.vs/
+
+# Testing & Coverage
+coverage/
+__snapshots__/
+.nyc_output/
+
+# Minified / Binary assets
+*.min.js
+*.min.css
+*.map
+*.pdf
+*.zip
+*.tar.gz
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.ico
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.mp4
+*.webm
+
+# Logs & temp
+*.log
+tmp/
+temp/
+.cache/

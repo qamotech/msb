@@ -1,0 +1,158 @@
+{
+ "generated": "2026-10-01T17:53:04.843Z",
+ "fingerprint": "5f522e5206bd",
+ "root": "C:\\Users\\qamel\\Downloads\\context-hub",
+ "totals": {
+  "files": 11,
+  "bytes": 517402
+ },
+ "files": [
+  {
+   "path": "notes/profile.md",
+   "category": "notes",
+   "title": "User profile & working style",
+   "summary": "Who the user is, their stack, and how they want agents to work — applies to every task",
+   "pin": true,
+   "tags": [
+    "profile",
+    "preferences"
+   ],
+   "bytes": 1103,
+   "tokens": 276,
+   "sha1": "557a37c71cba",
+   "modified": "2026-10-01"
+  },
+  {
+   "path": "notes/web-app-standards.md",
+   "category": "notes",
+   "title": "Web app standards (security, perf, a11y, correctness)",
+   "summary": "Checklist every new or edited single-file HTML app must follow — from the 2026-09-24 portfolio review",
+   "pin": true,
+   "tags": [
+    "standards",
+    "html",
+    "security",
+    "performance",
+    "accessibility"
+   ],
+   "bytes": 1727,
+   "tokens": 432,
+   "sha1": "173225407c5e",
+   "modified": "2026-10-01"
+  },
+  {
+   "path": "tools/EmojiKit.html",
+   "category": "tools",
+   "title": "EmojiKit — Free Emoji Library & Customizer",
+   "summary": "Free, dependency-free emoji library and image customizer for developers and AI. Search, copy, export PNG/SVG/JSON.",
+   "pin": false,
+   "tags": [],
+   "bytes": 55322,
+   "tokens": 13831,
+   "sha1": "60ebe0b23220",
+   "modified": "2026-09-24"
+  },
+  {
+   "path": "tools/game-asset-engine.html",
+   "category": "tools",
+   "title": "Game Asset Engine (Super-Sampled & Optimized)",
+   "summary": "Sections: Optimized SVG Asset Engine",
+   "pin": false,
+   "tags": [],
+   "bytes": 5471,
+   "tokens": 1368,
+   "sha1": "e98af5c001fe",
+   "modified": "2026-09-24"
+  },
+  {
+   "path": "tools/liar-and-the-lamb/index.html",
+   "category": "tools",
+   "title": "Liar and The Lamb - Cyber-Scriptural 2.5D Fighter",
+   "summary": "Sections: LIAR & THE LAMB",
+   "pin": false,
+   "tags": [],
+   "bytes": 97441,
+   "tokens": 24361,
+   "sha1": "859a75b8bb97",
+   "modified": "2026-09-24"
+  },
+  {
+   "path": "tools/liar-and-the-lamb/LL/index.html",
+   "category": "tools",
+   "title": "Liar and The Lamb - Cyber-Scriptural 2.5D Fighter",
+   "summary": "Sections: LIAR & THE LAMB",
+   "pin": false,
+   "tags": [],
+   "bytes": 88512,
+   "tokens": 22128,
+   "sha1": "3a4b38900525",
+   "modified": "2026-09-24"
+  },
+  {
+   "path": "tools/lightnin-library/SVG Lib DS 01.html",
+   "category": "tools",
+   "title": "⚡ SVGlow – Dynamic Visual Library",
+   "summary": "Sections: ⚡ SVGlow",
+   "pin": false,
+   "tags": [],
+   "bytes": 38422,
+   "tokens": 9606,
+   "sha1": "cb6e08d5e6d0",
+   "modified": "2026-09-24"
+  },
+  {
+   "path": "tools/lightnin-library/svg_motion_library_v2_1 GEM.html",
+   "category": "tools",
+   "title": "SVG Animation Library: Extended Edition",
+   "summary": "Sections: SVG Motion & FX Library v2.1",
+   "pin": false,
+   "tags": [],
+   "bytes": 28675,
+   "tokens": 7169,
+   "sha1": "d7361a00f9db",
+   "modified": "2026-09-24"
+  },
+  {
+   "path": "tools/lightnin-library/voltmotion_svg_library GPT 01.html",
+   "category": "tools",
+   "title": "VoltMotion SVG Library",
+   "summary": "Sections: VoltMotion SVG Library · Effect",
+   "pin": false,
+   "tags": [],
+   "bytes": 56251,
+   "tokens": 14063,
+   "sha1": "722b842ba34e",
+   "modified": "2026-09-24"
+  },
+  {
+   "path": "tools/masterPrompt-upd8.html",
+   "category": "tools",
+   "title": "masterPrompt — Animated AI Webbuilding Command Deck",
+   "summary": "Use masterPrompt — Animated AI Webbuilding Command Deck, a practical standalone browser tool from the N8 CyberDev collection.",
+   "pin": false,
+   "tags": [],
+   "bytes": 105687,
+   "tokens": 26422,
+   "sha1": "59b390bab04d",
+   "modified": "2026-09-30"
+  },
+  {
+   "path": "tools/ThemeStudio.html",
+   "category": "tools",
+   "title": "Theme Studio — build & customize design tokens",
+   "summary": "Sections: Design tokens, live · Heading two",
+   "pin": false,
+   "tags": [],
+   "bytes": 38791,
+   "tokens": 9698,
+   "sha1": "a777c7425ca4",
+   "modified": "2026-09-24"
+  }
+ ],
+ "warnings": {
+  "duplicates": [],
+  "emptyFolders": [],
+  "unsorted": [],
+  "quarantined": 0
+ }
+}

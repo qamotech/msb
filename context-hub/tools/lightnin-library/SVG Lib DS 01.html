@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>⚡ SVGlow – Dynamic Visual Library</title>
+    <style>
+        /* ── Reset & Base ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0b0d1a;
+            color: #d0d9ff;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ── Header ── */
+        .header {
+            text-align: center;
+            max-width: 1000px;
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f9e05d, #ff8a5c, #b06eff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 60px rgba(176, 110, 255, 0.25);
+        }
+        .header p {
+            font-size: 1.15rem;
+            color: #8892c0;
+            margin-top: 0.5rem;
+            letter-spacing: 0.3px;
+        }
+        .header .badge {
+            display: inline-block;
+            margin-top: 0.75rem;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            background: rgba(176, 110, 255, 0.15);
+            border: 1px solid rgba(176, 110, 255, 0.25);
+            font-size: 0.8rem;
+            color: #b89eff;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Grid ── */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: rgba(18, 22, 45, 0.70);
+            backdrop-filter: blur(6px);
+            border-radius: 28px;
+            padding: 1.5rem 1.5rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            transition: transform 0.25s ease, border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(176, 110, 255, 0.20);
+        }
+        .card .label {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #bcc6f0;
+            margin-bottom: 1rem;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card .label small {
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: #6a74a8;
+            letter-spacing: 0.2px;
+        }
+        .card .svg-wrap {
+            width: 100%;
+            aspect-ratio: 1/1;
+            max-height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            background: radial-gradient(ellipse at center, #11162e, #080b18);
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        .card .svg-wrap svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* ── Glow filter (applied to SVGs) ── */
+        .glow-filter {
+            filter: drop-shadow(0 0 6px rgba(176, 110, 255, 0.3));
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 740px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            .card .svg-wrap {
+                max-height: 220px;
+            }
+        }
+        @media (min-width: 1200px) {
+            .gallery {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* ── Footer ── */
+        .footer {
+            margin-top: 3.5rem;
+            font-size: 0.75rem;
+            color: #3d4670;
+            text-align: center;
+            letter-spacing: 0.4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding-top: 2rem;
+            max-width: 800px;
+        }
+        .footer span {
+            color: #6a74a8;
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 6px;
+            background: #0b0d1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2d3566;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════════════ HEADER ════════════ -->
+    <header class="header">
+        <h1>⚡ SVGlow</h1>
+        <p>lightning &bull; orbits &bull; motion &bull; effects &bull; &nbsp; <span style="color:#6a74a8;">∞</span></p>
+        <div class="badge">✦ single‑file SVG library ✦</div>
+    </header>
+
+    <!-- ════════════ GALLERY ════════════ -->
+    <div class="gallery" id="gallery">
+
+        <!-- ─── 1. FORKED LIGHTNING ─── -->
+        <div class="card">
+            <div class="label">⚡ Forked <small>branching discharge</small></div>
+            <div class="svg-wrap">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="glow1" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="4" result="blur" />
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                        <linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%"   stop-color="#f9e05d" />
+                            <stop offset="50%"  stop-color="#ff8a5c" />
+                            <stop offset="100%" stop-color="#b06eff" stop-opacity="0.6" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Main bolt -->
+                    <path d="M 100 0 L 92 68 L 108 74 L 82 130 L 104 122 L 74 200"
+                    stroke="url(#lg1)" stroke-width="3.2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round"
+                    filter="url(#glow1)">
+                    <animate attributeName="stroke-dasharray"
+                    values="0 400; 400 0" dur="0.18s" repeatCount="indefinite" />
+                </path>
+                <!-- Branch 1 -->
+                <path d="M 92 68 L 56 96 L 70 102 L 40 140"
+                stroke="#ffb07c" stroke-width="1.8" fill="none"
+                stroke-linecap="round" stroke-linejoin="round"
+                filter="url(#glow1)" opacity="0.8">
+                <animate attributeName="stroke-dasharray"
+                values="0 200; 200 0" dur="0.22s" repeatCount="indefinite" />
+            </path>
+            <!-- Branch 2 -->
+            <path d="M 108 74 L 140 100 L 126 108 L 152 148"
+            stroke="#ffb07c" stroke-width="1.8" fill="none"
+            stroke-linecap="round" stroke-linejoin="round"
+            filter="url(#glow1)" opacity="0.8">
+            <animate attributeName="stroke-dasharray"
+            values="0 200; 200 0" dur="0.26s" repeatCount="indefinite" />
+        </path>
+        <!-- Glow aura -->
+        <circle cx="100" cy="100" r="42" fill="none" stroke="#b06eff" stroke-width="0.6" opacity="0.15">
+            <animate attributeName="r" values="36;48;36" dur="1.2s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.08;0.22;0.08" dur="1.2s" repeatCount="indefinite" />
+        </circle>
+    </svg>
+</div>
+</div>
+
+<!-- ─── 2. SHEET LIGHTNING ─── -->
+<div class="card">
+    <div class="label">☁️ Sheet <small>diffuse glow</small></div>
+    <div class="svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="sheetGrad" cx="50%" cy="40%" r="60%">
+                    <stop offset="0%"   stop-color="#f9e05d" stop-opacity="0.5" />
+                    <stop offset="40%"  stop-color="#b06eff" stop-opacity="0.25" />
+                    <stop offset="100%" stop-color="#0b0d1a" stop-opacity="0" />
+                </radialGradient>
+                <filter id="sheetBlur">
+                    <feGaussianBlur stdDeviation="8" />
+                </filter>
+            </defs>
+            <!-- Base glow -->
+            <ellipse cx="100" cy="80" rx="90" ry="70" fill="url(#sheetGrad)" filter="url(#sheetBlur)">
+                <animate attributeName="rx" values="80;100;80" dur="2.4s" repeatCount="indefinite" />
+                <animate attributeName="ry" values="60;80;60" dur="2.8s" repeatCount="indefinite" />
+            </ellipse>
+            <!-- Internal filaments -->
+            <g opacity="0.6">
+                <path d="M 40 60 L 70 50 L 85 70 L 110 45 L 135 65 L 160 50"
+                stroke="#ffe28a" stroke-width="1.4" fill="none" stroke-linecap="round">
+                <animate attributeName="stroke-opacity" values="0.2;0.9;0.2" dur="0.6s" repeatCount="indefinite" />
+            </path>
+            <path d="M 30 90 L 65 80 L 80 100 L 115 75 L 140 95 L 170 85"
+            stroke="#ffb07c" stroke-width="1.2" fill="none" stroke-linecap="round">
+            <animate attributeName="stroke-opacity" values="0.1;0.7;0.1" dur="0.8s" repeatCount="indefinite" />
+        </path>
+        <path d="M 50 120 L 75 105 L 95 125 L 125 110 L 150 130"
+        stroke="#d4a0ff" stroke-width="1" fill="none" stroke-linecap="round">
+        <animate attributeName="stroke-opacity" values="0.3;0.8;0.3" dur="0.5s" repeatCount="indefinite" />
+    </path>
+</g>
+<!-- Pulsing core -->
+<circle cx="100" cy="80" r="6" fill="#ffe28a" opacity="0.5">
+    <animate attributeName="r" values="4;10;4" dur="1s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1s" repeatCount="indefinite" />
+</circle>
+</svg>
+</div>
+</div>
+
+<!-- ─── 3. BALL LIGHTNING ─── -->
+<div class="card">
+    <div class="label">🌀 Ball <small>orb with trail</small></div>
+    <div class="svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="ballGrad" cx="40%" cy="35%" r="60%">
+                    <stop offset="0%"   stop-color="#ffffff" />
+                    <stop offset="25%"  stop-color="#f9e05d" />
+                    <stop offset="65%"  stop-color="#b06eff" />
+                    <stop offset="100%" stop-color="#4a2b7a" />
+                </radialGradient>
+                <filter id="ballGlow">
+                    <feGaussianBlur stdDeviation="6" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <!-- Trail -->
+            <path d="M 60 100 Q 80 70 100 100 Q 120 130 140 100"
+            stroke="#b06eff" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.25"
+            filter="url(#ballGlow)">
+            <animate attributeName="stroke-dasharray"
+            values="0 200; 200 200" dur="1.4s" repeatCount="indefinite" />
+        </path>
+        <!-- Main sphere -->
+        <circle cx="100" cy="100" r="22" fill="url(#ballGrad)" filter="url(#ballGlow)">
+            <animate attributeName="cx" values="60;140;60" dur="2.8s" repeatCount="indefinite" />
+            <animate attributeName="cy" values="100;60;100" dur="2.8s" repeatCount="indefinite" />
+        </circle>
+        <!-- Inner spark -->
+        <circle cx="100" cy="100" r="6" fill="#fff" opacity="0.6">
+            <animate attributeName="cx" values="60;140;60" dur="2.8s" repeatCount="indefinite" />
+            <animate attributeName="cy" values="100;60;100" dur="2.8s" repeatCount="indefinite" />
+            <animate attributeName="r" values="4;8;4" dur="0.5s" repeatCount="indefinite" />
+        </circle>
+        <!-- Orbiting sparks -->
+        <g>
+            <circle cx="100" cy="100" r="3" fill="#ffe28a">
+                <animate attributeName="cx" values="60;140;60" dur="2.8s" repeatCount="indefinite" />
+                <animate attributeName="cy" values="100;60;100" dur="2.8s" repeatCount="indefinite" />
+                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="0.9s" repeatCount="indefinite" additive="sum"/>
+            </circle>
+        </g>
+    </svg>
+</div>
+</div>
+
+<!-- ─── 4. RIBBON LIGHTNING ─── -->
+<div class="card">
+    <div class="label">🎀 Ribbon <small>wavy cascade</small></div>
+    <div class="svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="ribbonGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%"   stop-color="#f9e05d" />
+                    <stop offset="40%"  stop-color="#ff6b9d" />
+                    <stop offset="80%"  stop-color="#b06eff" />
+                </linearGradient>
+                <filter id="ribbonGlow">
+                    <feGaussianBlur stdDeviation="3.5" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <!-- Main ribbon path -->
+            <path d="M 30 10 Q 80 40 60 80 Q 40 120 90 140 Q 140 160 120 200"
+            stroke="url(#ribbonGrad)" stroke-width="2.8" fill="none"
+            stroke-linecap="round" stroke-linejoin="round"
+            filter="url(#ribbonGlow)">
+            <animate attributeName="stroke-dasharray"
+            values="0 400; 400 400" dur="0.35s" repeatCount="indefinite" />
+        </path>
+        <!-- Parallel ribbons -->
+        <path d="M 50 10 Q 100 40 80 80 Q 60 120 110 140 Q 160 160 140 200"
+        stroke="#ff8a5c" stroke-width="1.6" fill="none"
+        stroke-linecap="round" stroke-linejoin="round" opacity="0.6"
+        filter="url(#ribbonGlow)">
+        <animate attributeName="stroke-dasharray"
+        values="0 400; 400 400" dur="0.45s" repeatCount="indefinite" />
+    </path>
+    <path d="M 10 20 Q 60 60 40 100 Q 20 140 70 160 Q 120 180 100 200"
+    stroke="#b06eff" stroke-width="1.4" fill="none"
+    stroke-linecap="round" stroke-linejoin="round" opacity="0.5"
+    filter="url(#ribbonGlow)">
+    <animate attributeName="stroke-dasharray"
+    values="0 400; 400 400" dur="0.55s" repeatCount="indefinite" />
+</path>
+<!-- Spark nodes -->
+<circle cx="60" cy="80" r="2.5" fill="#fff" opacity="0.7">
+    <animate attributeName="opacity" values="0;1;0" dur="0.5s" repeatCount="indefinite" />
+</circle>
+<circle cx="90" cy="140" r="2.5" fill="#fff" opacity="0.7">
+    <animate attributeName="opacity" values="0;1;0" dur="0.7s" repeatCount="indefinite" />
+</circle>
+</svg>
+</div>
+</div>
+
+<!-- ─── 5. CIRCULAR ORBIT ─── -->
+<div class="card">
+    <div class="label">● Circular <small>planetary</small></div>
+    <div class="svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="starGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#f9e05d" />
+                    <stop offset="100%" stop-color="#ff8a5c" />
+                </radialGradient>
+                <filter id="orbitGlow">
+                    <feGaussianBlur stdDeviation="2" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <!-- Orbit ring -->
+            <circle cx="100" cy="100" r="60" fill="none" stroke="#3d4670" stroke-width="0.8" stroke-dasharray="4 6" opacity="0.5" />
+            <circle cx="100" cy="100" r="60" fill="none" stroke="#6a74a8" stroke-width="0.4" opacity="0.15" />
+            <!-- Central body -->
+            <circle cx="100" cy="100" r="14" fill="url(#starGrad)" filter="url(#orbitGlow)" />
+            <!-- Orbiting body -->
+            <g>
+                <circle cx="100" cy="100" r="0" fill="none">
+                    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="3s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="160" cy="100" r="5" fill="#6ac9ff" filter="url(#orbitGlow)">
+                    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="3s" repeatCount="indefinite" />
+                </circle>
+                <!-- Trail -->
+                <circle cx="160" cy="100" r="8" fill="none" stroke="#6ac9ff" stroke-width="0.8" opacity="0.2">
+                    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="3s" repeatCount="indefinite" />
+                </circle>
+            </g>
+            <!-- second orbiter (moon) -->
+            <g>
+                <circle cx="100" cy="100" r="0" fill="none">
+                    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="-360 100 100" dur="1.6s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="130" cy="100" r="2.5" fill="#ffb07c" opacity="0.7">
+                    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="-360 100 100" dur="1.6s" repeatCount="indefinite" />
+                </circle>
+            </g>
+        </svg>
+    </div>
+</div>
+
+<!-- ─── 6. ELLIPTICAL ORBIT ─── -->
+<div class="card">
+    <div class="label">⬮ Elliptical <small>eccentric</small></div>
+    <div class="svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="ellGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#b06eff" />
+                    <stop offset="100%" stop-color="#4a2b7a" />
+                </radialGradient>
+                <filter id="ellGlow">
+                    <feGaussianBlur stdDeviation="2.5" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <!-- Ellipse path -->
+            <ellipse cx="100" cy="100" rx="70" ry="40" fill="none" stroke="#3d4670" stroke-width="0.8" stroke-dasharray="3 5" opacity="0.4" />
+            <!-- Focus point -->
+            <circle cx="100" cy="100" r="8" fill="url(#ellGrad)" filter="url(#ellGlow)" />
+            <!-- Orbiting body -->
+            <g>
+                <ellipse cx="100" cy="100" rx="70" ry="40" fill="none">
+                    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="4.5s" repeatCount="indefinite" />
+                </ellipse>
+                <circle cx="170" cy="100" r="5" fill="#6ac9ff" filter="url(#ellGlow)">
+                    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="4.5s" repeatCount="indefinite" />
+                </circle>
+                <!-- speed variation indicator -->
+                <circle cx="170" cy="100" r="10" fill="none" stroke="#6ac9ff" stroke-width="0.6" opacity="0.15">
+                    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="4.5s" repeatCount="indefinite" />
+                </circle>
+            </g>
+        </svg>
+    </div>
+</div>
+
+<!-- ─── 7. SPIRAL ORBIT ─── -->
+<div class="card">
+    <div class="label">🌀 Spiral <small>inward dance</small></div>
+    <div class="svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="spiralGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#f9e05d" />
+                    <stop offset="100%" stop-color="#ff6b9d" />
+                </radialGradient>
+                <filter id="spiralGlow">
+                    <feGaussianBlur stdDeviation="2" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <!-- Spiral trail (drawn by JS) -->
+            <path id="spiralTrail" d="M 100 100" stroke="#b06eff" stroke-width="0.8" fill="none" opacity="0.2" />
+            <!-- Center -->
+            <circle cx="100" cy="100" r="6" fill="url(#spiralGrad)" filter="url(#spiralGlow)" />
+            <!-- Orbiting body with spiral path -->
+            <g id="spiralGroup">
+                <circle cx="100" cy="100" r="0" fill="none">
+                    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="720 100 100" dur="4s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="160" cy="100" r="4.5" fill="#ff8a5c" filter="url(#spiralGlow)">
+                    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="720 100 100" dur="4s" repeatCount="indefinite" />
+                    <animate attributeName="cx" values="160;100" dur="4s" repeatCount="indefinite" />
+                </circle>
+            </g>
+            <!-- Static spiral guide -->
+            <path d="M 100 100 Q 130 60 160 100 Q 190 140 150 150 Q 110 160 100 130 Q 90 100 110 90 Q 130 80 140 100"
+            stroke="#3d4670" stroke-width="0.5" fill="none" opacity="0.15" />
+        </svg>
+    </div>
+</div>
+
+<!-- ─── 8. LISSAJOUS MOTION ─── -->
+<div class="card">
+    <div class="label">✦ Lissajous <small>figure‑8 wave</small></div>
+    <div class="svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="lissGlow">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <linearGradient id="lissGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#6ac9ff" />
+                    <stop offset="100%" stop-color="#b06eff" />
+                </linearGradient>
+            </defs>
+            <!-- Background trace -->
+            <path id="lissTrace" d="M 100 100" stroke="#3d4670" stroke-width="0.6" fill="none" opacity="0.15" />
+            <!-- Animated point -->
+            <circle id="lissPoint" cx="100" cy="100" r="5" fill="url(#lissGrad)" filter="url(#lissGlow)">
+                <animate attributeName="cx" values="100;160;100;40;100" dur="4s" repeatCount="indefinite" />
+                <animate attributeName="cy" values="100;40;100;160;100" dur="4s" repeatCount="indefinite" />
+            </circle>
+            <!-- Glow aura -->
+            <circle cx="100" cy="100" r="12" fill="none" stroke="#b06eff" stroke-width="0.5" opacity="0.15">
+                <animate attributeName="cx" values="100;160;100;40;100" dur="4s" repeatCount="indefinite" />
+                <animate attributeName="cy" values="100;40;100;160;100" dur="4s" repeatCount="indefinite" />
+            </circle>
+            <!-- Axis guides -->
+            <line x1="20" y1="100" x2="180" y2="100" stroke="#1f2545" stroke-width="0.5" stroke-dasharray="2 4" />
+            <line x1="100" y1="20" x2="100" y2="180" stroke="#1f2545" stroke-width="0.5" stroke-dasharray="2 4" />
+        </svg>
+    </div>
+</div>
+
+<!-- ─── 9. PENDULUM WAVE ─── -->
+<div class="card">
+    <div class="label">⏳ Pendulum <small>wave interference</small></div>
+    <div class="svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="pendGlow">
+                    <feGaussianBlur stdDeviation="1.5" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <!-- Pivot -->
+            <circle cx="100" cy="12" r="4" fill="#6a74a8" />
+            <!-- Pendulum bobs -->
+            <g id="pend1">
+                <line x1="100" y1="12" x2="100" y2="120" stroke="#6a74a8" stroke-width="0.8" />
+                <circle cx="100" cy="120" r="6" fill="#f9e05d" filter="url(#pendGlow)">
+                    <animateTransform attributeName="transform" type="rotate"
+                    values="-25 100 12; 25 100 12; -25 100 12"
+                    dur="2.4s" repeatCount="indefinite" />
+                </circle>
+            </g>
+            <g id="pend2">
+                <line x1="100" y1="12" x2="100" y2="150" stroke="#6a74a8" stroke-width="0.7" />
+                <circle cx="100" cy="150" r="5" fill="#6ac9ff" filter="url(#pendGlow)">
+                    <animateTransform attributeName="transform" type="rotate"
+                    values="18 100 12; -18 100 12; 18 100 12"
+                    dur="3s" repeatCount="indefinite" />
+                </circle>
+            </g>
+            <g id="pend3">
+                <line x1="100" y1="12" x2="100" y2="170" stroke="#6a74a8" stroke-width="0.6" />
+                <circle cx="100" cy="170" r="4" fill="#b06eff" filter="url(#pendGlow)">
+                    <animateTransform attributeName="transform" type="rotate"
+                    values="-12 100 12; 12 100 12; -12 100 12"
+                    dur="2s" repeatCount="indefinite" />
+                </circle>
+            </g>
+            <!-- Wave guide -->
+            <path d="M 60 120 Q 80 110 100 120 Q 120 130 140 120" stroke="#3d4670" stroke-width="0.4" fill="none" opacity="0.2" />
+        </svg>
+    </div>
+</div>
+
+<!-- ─── 10. PARTICLE SYSTEM ─── -->
+<div class="card">
+    <div class="label">✦ Particles <small>glow swarm</small></div>
+    <div class="svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="partGlow">
+                    <feGaussianBlur stdDeviation="2.5" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <radialGradient id="partGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#fff" />
+                    <stop offset="100%" stop-color="#b06eff" stop-opacity="0" />
+                </radialGradient>
+            </defs>
+            <!-- Particle field (JS animated) -->
+            <g id="particleField">
+                <!-- 20 particles generated by JS -->
+            </g>
+            <!-- Core glow -->
+            <circle cx="100" cy="100" r="25" fill="url(#partGrad)" opacity="0.15">
+                <animate attributeName="r" values="20;30;20" dur="2s" repeatCount="indefinite" />
+            </circle>
+        </svg>
+    </div>
+</div>
+
+<!-- ─── 11. BOUNCING BALL ─── -->
+<div class="card">
+    <div class="label">⚫ Bounce <small>elastic motion</small></div>
+    <div class="svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="bounceGrad" cx="40%" cy="35%" r="55%">
+                    <stop offset="0%" stop-color="#f9e05d" />
+                    <stop offset="60%" stop-color="#ff6b9d" />
+                    <stop offset="100%" stop-color="#4a2b7a" />
+                </radialGradient>
+                <filter id="bounceGlow">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <!-- Ground -->
+            <line x1="20" y1="180" x2="180" y2="180" stroke="#2d3566" stroke-width="1.5" />
+            <line x1="20" y1="182" x2="180" y2="182" stroke="#1f2545" stroke-width="0.5" />
+            <!-- Bouncing ball -->
+            <circle cx="100" cy="50" r="14" fill="url(#bounceGrad)" filter="url(#bounceGlow)">
+                <animate attributeName="cy" values="50;170;50" dur="1.2s" repeatCount="indefinite"
+                calcMode="spline" keySplines="0.45 0 0.9 0.55; 0.55 0.45 1 0.45" />
+                <animate attributeName="r" values="14;12;14" dur="1.2s" repeatCount="indefinite"
+                calcMode="spline" keySplines="0.45 0 0.9 0.55; 0.55 0.45 1 0.45" />
+            </circle>
+            <!-- Shadow -->
+            <ellipse cx="100" cy="180" rx="16" ry="3" fill="#1f2545" opacity="0.3">
+                <animate attributeName="rx" values="16;10;16" dur="1.2s" repeatCount="indefinite"
+                calcMode="spline" keySplines="0.45 0 0.9 0.55; 0.55 0.45 1 0.45" />
+                <animate attributeName="opacity" values="0.3;0.15;0.3" dur="1.2s" repeatCount="indefinite"
+                calcMode="spline" keySplines="0.45 0 0.9 0.55; 0.55 0.45 1 0.45" />
+            </ellipse>
+            <!-- motion blur trail -->
+            <circle cx="100" cy="50" r="14" fill="none" stroke="#b06eff" stroke-width="0.8" opacity="0.1">
+                <animate attributeName="cy" values="50;170;50" dur="1.2s" repeatCount="indefinite"
+                calcMode="spline" keySplines="0.45 0 0.9 0.55; 0.55 0.45 1 0.45" />
+                <animate attributeName="r" values="20;16;20" dur="1.2s" repeatCount="indefinite"
+                calcMode="spline" keySplines="0.45 0 0.9 0.55; 0.55 0.45 1 0.45" />
+            </circle>
+        </svg>
+    </div>
+</div>
+
+<!-- ─── 12. WAVE PATTERN ─── -->
+<div class="card">
+    <div class="label">〰️ Wave <small>propagation</small></div>
+    <div class="svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="waveGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#6ac9ff" />
+                    <stop offset="50%" stop-color="#b06eff" />
+                    <stop offset="100%" stop-color="#ff6b9d" />
+                </linearGradient>
+                <filter id="waveGlow">
+                    <feGaussianBlur stdDeviation="2" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <!-- Multiple sine waves -->
+            <g stroke="url(#waveGrad)" fill="none" stroke-linecap="round">
+                <path d="M 10 60 Q 30 30 50 60 T 90 60 T 130 60 T 170 60 T 190 60"
+                stroke-width="2.4" filter="url(#waveGlow)">
+                <animate attributeName="d"
+                values="M 10 60 Q 30 30 50 60 T 90 60 T 130 60 T 170 60 T 190 60;
+                M 10 60 Q 30 90 50 60 T 90 60 T 130 60 T 170 60 T 190 60;
+                M 10 60 Q 30 30 50 60 T 90 60 T 130 60 T 170 60 T 190 60"
+                dur="2s" repeatCount="indefinite" />
+            </path>
+            <path d="M 10 90 Q 35 60 60 90 T 110 90 T 160 90 T 190 90"
+            stroke-width="1.8" opacity="0.6">
+            <animate attributeName="d"
+            values="M 10 90 Q 35 60 60 90 T 110 90 T 160 90 T 190 90;
+            M 10 90 Q 35 120 60 90 T 110 90 T 160 90 T 190 90;
+            M 10 90 Q 35 60 60 90 T 110 90 T 160 90 T 190 90"
+            dur="2.4s" repeatCount="indefinite" />
+        </path>
+        <path d="M 10 120 Q 40 90 70 120 T 130 120 T 190 120"
+        stroke-width="1.2" opacity="0.4">
+        <animate attributeName="d"
+        values="M 10 120 Q 40 90 70 120 T 130 120 T 190 120;
+        M 10 120 Q 40 150 70 120 T 130 120 T 190 120;
+        M 10 120 Q 40 90 70 120 T 130 120 T 190 120"
+        dur="2.8s" repeatCount="indefinite" />
+    </path>
+</g>
+<!-- Center markers -->
+<circle cx="50" cy="60" r="2" fill="#6ac9ff" opacity="0.3">
+    <animate attributeName="cy" values="60;30;60" dur="2s" repeatCount="indefinite" />
+</circle>
+<circle cx="130" cy="60" r="2" fill="#b06eff" opacity="0.3">
+    <animate attributeName="cy" values="60;90;60" dur="2s" repeatCount="indefinite" />
+</circle>
+</svg>
+</div>
+</div>
+
+</div> <!-- /gallery -->
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer class="footer">
+    <span>⚡</span> &nbsp; SVGlow &bull; 12 dynamic visualizations &nbsp; <span>✦</span>
+    <br />
+    <span style="font-size:0.65rem;color:#2d3566;">forked · sheet · ball · ribbon · circular · elliptical · spiral · lissajous · pendulum · particles · bounce · wave</span>
+</footer>
+
+<!-- ════════════ JAVASCRIPT ════════════ -->
+<script>
+    (function() {
+        "use strict";
+
+        // ─── 1. SPIRAL ORBIT (enhance with JS trail) ───
+        const spiralTrail = document.getElementById('spiralTrail');
+        if (spiralTrail) {
+            let pts = [];
+            const total = 60;
+            for (let i = 0; i <= total; i++) {
+                const t = i / total;
+                const angle = t * 6 * Math.PI;
+                const radius = 60 - t * 55;
+                const cx = 100 + radius * Math.cos(angle);
+                const cy = 100 + radius * Math.sin(angle);
+                pts.push(cx, cy);
+            }
+            let d = 'M ' + pts.slice(0, 2).join(' ');
+            for (let i = 2; i < pts.length; i += 2) {
+                d += ' L ' + pts[i] + ' ' + pts[i + 1];
+            }
+            spiralTrail.setAttribute('d', d);
+        }
+
+        // ─── 2. LISSAJOUS trace (draw the full curve) ───
+        const lissTrace = document.getElementById('lissTrace');
+        if (lissTrace) {
+            const pts2 = [];
+            const steps2 = 120;
+            for (let i = 0; i <= steps2; i++) {
+                const t = i / steps2;
+                const angle = t * 2 * Math.PI;
+                const cx = 100 + 55 * Math.sin(angle * 3);
+                const cy = 100 + 55 * Math.sin(angle * 2 + Math.PI / 4);
+                pts2.push(cx, cy);
+            }
+            let d2 = 'M ' + pts2.slice(0, 2).join(' ');
+            for (let i = 2; i < pts2.length; i += 2) {
+                d2 += ' L ' + pts2[i] + ' ' + pts2[i + 1];
+            }
+            lissTrace.setAttribute('d', d2);
+        }
+
+        // ─── 3. PARTICLE SYSTEM ───
+        const particleField = document.getElementById('particleField');
+        if (particleField) {
+            const count = 28;
+            const colors = ['#f9e05d', '#ff8a5c', '#ff6b9d', '#b06eff', '#6ac9ff', '#6affb8'];
+            const frag = document.createDocumentFragment();
+
+            for (let i = 0; i < count; i++) {
+                const cx = 30 + Math.random() * 140;
+                const cy = 30 + Math.random() * 140;
+                const r = 1.5 + Math.random() * 3;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const dur = 1.2 + Math.random() * 2.8;
+                const dx = (Math.random() - 0.5) * 80;
+                const dy = (Math.random() - 0.5) * 80;
+
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', cx);
+                circle.setAttribute('cy', cy);
+                circle.setAttribute('r', r);
+                circle.setAttribute('fill', color);
+                circle.setAttribute('opacity', 0.3 + Math.random() * 0.5);
+                circle.setAttribute('filter', 'url(#partGlow)');
+
+                // Animate position
+                const animX = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+                animX.setAttribute('attributeName', 'cx');
+                animX.setAttribute('values', cx + ';' + (cx + dx) + ';' + cx);
+                animX.setAttribute('dur', dur + 's');
+                animX.setAttribute('repeatCount', 'indefinite');
+
+                const animY = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+                animY.setAttribute('attributeName', 'cy');
+                animY.setAttribute('values', cy + ';' + (cy + dy) + ';' + cy);
+                animY.setAttribute('dur', dur + 's');
+                animY.setAttribute('repeatCount', 'indefinite');
+
+                // Animate opacity
+                const animOp = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+                animOp.setAttribute('attributeName', 'opacity');
+                animOp.setAttribute('values', (0.2 + Math.random() * 0.3) + ';' + (0.7 + Math.random() * 0.3) + ';' + (
+                    0.2 + Math.random() * 0.3));
+                animOp.setAttribute('dur', (1 + Math.random() * 2) + 's');
+                animOp.setAttribute('repeatCount', 'indefinite');
+
+                // Animate radius (breathing)
+                const animR = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+                animR.setAttribute('attributeName', 'r');
+                animR.setAttribute('values', r + ';' + (r * 2.2) + ';' + r);
+                animR.setAttribute('dur', (1.5 + Math.random() * 2) + 's');
+                animR.setAttribute('repeatCount', 'indefinite');
+
+                circle.appendChild(animX);
+                circle.appendChild(animY);
+                circle.appendChild(animOp);
+                circle.appendChild(animR);
+                frag.appendChild(circle);
+            }
+            particleField.appendChild(frag);
+        }
+
+        // ─── 4. BONUS: add some sparkle to all cards ───
+        document.querySelectorAll('.card .svg-wrap').forEach(wrap => {
+            const svg = wrap.querySelector('svg');
+            if (svg && !svg.querySelector('.sparkle-overlay')) {
+                // optional subtle overlay sparkle – skip for performance
+            }
+        });
+
+        // ─── 5. Intersection Observer: pause animations off-screen? ───
+        // (optional, but we keep everything running for simplicity)
+
+        console.log('⚡ SVGlow ready – ' + document.querySelectorAll('.card').length + ' visualizations');
+    })();
+</script>
+
+</body>
+</html>

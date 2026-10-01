@@ -1,0 +1,1848 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EmojiKit — Free Emoji Library & Customizer</title>
+<meta name="description" content="Free, dependency-free emoji library and image customizer for developers and AI. Search, copy, export PNG/SVG/JSON.">
+<style>
+:root{
+  --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --line:#2a3242;
+  --fg:#e6edf3; --dim:#8b98a9; --acc:#4c8dff; --ok:#2ea043;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font:14px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:6px 10px}
+button:hover{border-color:#3d4a60;background:#222a38}
+button:active{transform:translateY(1px)}
+input,select,textarea{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:6px 9px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#2c3444;border-radius:8px}
+::-webkit-scrollbar-track{background:transparent}
+
+header{
+  position:sticky;top:0;z-index:30;display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  padding:10px 14px;border-bottom:1px solid var(--line);
+  background:rgba(13,17,23,.9);backdrop-filter:blur(10px);
+}
+header h1{margin:0;font-size:15px;letter-spacing:.4px;font-weight:700;white-space:nowrap}
+header h1 span{color:var(--acc)}
+#q{flex:1 1 240px;min-width:160px}
+.hdr-lab{display:flex;align-items:center;gap:6px;color:var(--dim);font-size:12px;white-space:nowrap}
+.hdr-lab select{padding:5px 7px;font-size:12px}
+
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:14px;padding:14px;align-items:start}
+@media(max-width:920px){.wrap{grid-template-columns:1fr}}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+
+/* ---- category chips ---- */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{font-size:12px;padding:4px 10px;border-radius:999px;color:var(--dim)}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+
+/* ---- emoji grid ---- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:3px}
+.cell{
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-size:26px;line-height:1;padding:0;background:transparent;border:1px solid transparent;border-radius:8px;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Twemoji Mozilla",sans-serif;
+  transition:background .08s,border-color .08s;
+}
+.cell:hover{background:var(--panel2);border-color:var(--line)}
+.cell.sel{border-color:var(--acc);background:#16233b}
+.count{color:var(--dim);font-size:12px;margin-top:10px;font-family:var(--mono)}
+
+/* ---- studio ---- */
+.studio{position:sticky;top:64px;display:flex;flex-direction:column;gap:12px}
+@media(max-width:920px){.studio{position:static}}
+.stage{
+  display:flex;align-items:center;justify-content:center;min-height:190px;padding:12px;border-radius:10px;
+  border:1px solid var(--line);
+  background-image:
+    linear-gradient(45deg,#1a2130 25%,transparent 25%),
+    linear-gradient(-45deg,#1a2130 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,#1a2130 75%),
+    linear-gradient(-45deg,transparent 75%,#1a2130 75%);
+  background-size:18px 18px;
+  background-position:0 0,0 9px,9px -9px,-9px 0;
+}
+#cv{max-width:100%;max-height:210px;display:block;image-rendering:auto}
+.ctrls{display:flex;flex-direction:column;gap:9px}
+.ctl{display:grid;grid-template-columns:66px 1fr 52px;align-items:center;gap:8px;font-size:12px;color:var(--dim)}
+.ctl input[type=range]{width:100%;accent-color:var(--acc);padding:0;background:none;border:0}
+.ctl .val{font-family:var(--mono);font-size:11px;text-align:right;color:var(--fg)}
+.rowbtns{display:flex;gap:6px;flex-wrap:wrap}
+.swatches{display:flex;gap:6px;align-items:center}
+.sw{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:15px;padding:0;background:var(--panel2)}
+.sw.on{border-color:var(--acc)}
+label.tog{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);cursor:pointer}
+textarea{width:100%;height:118px;resize:vertical;font-family:var(--mono);font-size:11px;line-height:1.5;white-space:pre;overflow:auto}
+.sect-title{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--dim);font-weight:600}
+hr.sep{border:0;border-top:1px solid var(--line);margin:2px 0}
+
+#toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
+  background:#1f2937;border:1px solid var(--line);color:var(--fg);
+  padding:9px 16px;border-radius:10px;font-size:13px;pointer-events:none;
+  opacity:0;transition:opacity .16s,transform .16s;z-index:100;box-shadow:0 8px 26px #0008;
+}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.muted{color:var(--dim);font-size:11px}
+a{color:var(--acc)}
+</style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+
+<header>
+  <h1>Emoji<span>Kit</span></h1>
+  <input id="q" type="search" placeholder="Search emoji…  ( / to focus )" autocomplete="off" spellcheck="false">
+  <span class="hdr-lab">copy as
+    <select id="fmt">
+      <option value="char">Emoji</option>
+      <option value="name">Name</option>
+      <option value="codepoints">Codepoints</option>
+      <option value="html">HTML entity</option>
+      <option value="js">JS escape</option>
+      <option value="python">Python escape</option>
+      <option value="json">JSON string</option>
+      <option value="url">URL encoded</option>
+    </select>
+  </span>
+  <button id="json" title="Download the whole library as JSON">⬇ emoji.json</button>
+</header>
+
+<main class="wrap">
+  <section class="panel">
+    <div class="chips" id="cats"></div>
+    <div class="grid" id="grid"></div>
+    <div class="count" id="count"></div>
+  </section>
+
+  <aside class="panel studio">
+    <div class="stage"><canvas id="cv" width="128" height="128"></canvas></div>
+
+    <div class="rowbtns">
+      <button id="copyPng">📋 Copy PNG</button>
+      <button id="dlPng">⬇ PNG</button>
+      <button id="dlSvg">⬇ SVG</button>
+    </div>
+
+    <hr class="sep">
+
+    <div class="ctrls">
+      <div class="ctl"><span>Size</span><input id="size" type="range" min="16" max="1024" step="1" value="256"><span class="val" id="sizeV">256</span></div>
+      <div class="ctl"><span>Padding</span><input id="pad" type="range" min="0" max="40" step="1" value="10"><span class="val" id="padV">10%</span></div>
+      <div class="ctl"><span>Radius</span><input id="rad" type="range" min="0" max="50" step="1" value="18"><span class="val" id="radV">18%</span></div>
+    </div>
+
+    <div class="rowbtns" style="align-items:center">
+      <label class="tog"><input type="checkbox" id="bgOn"> background</label>
+      <input type="color" id="bgCol" value="#1f6feb" style="width:38px;height:28px;padding:2px">
+      <label class="tog"><input type="checkbox" id="circle"> circle</label>
+      <button id="reset" style="margin-left:auto">Reset</button>
+    </div>
+
+    <div class="sect-title">Skin tone</div>
+    <div class="swatches" id="tones"></div>
+
+    <hr class="sep">
+
+    <div class="sect-title">Export snippet</div>
+    <div class="rowbtns">
+      <select id="kind" style="flex:1">
+        <option value="html">HTML &lt;img&gt;</option>
+        <option value="css">CSS background</option>
+        <option value="react">React component</option>
+        <option value="svg">SVG</option>
+        <option value="base64">Raw base64</option>
+        <option value="uri">Data URI</option>
+      </select>
+      <button id="copySnip">📋 Copy</button>
+    </div>
+    <textarea id="snip" readonly spellcheck="false"></textarea>
+    <div class="muted">Everything runs locally. No network, no dependencies, no tracking.</div>
+  </aside>
+</main>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   1. EMOJI DATA  —  char | name | keywords | category
+   categories: s=Smileys p=People n=Nature f=Food
+               t=Travel a=Activity o=Objects y=Symbols g=Flags
+   ============================================================ */
+const RAW = `
+😀|grinning face|face smile happy|s
+😃|grinning face with big eyes|face smile happy|s
+😄|grinning face with smiling eyes|face smile happy|s
+😁|beaming face with smiling eyes|face grin happy|s
+😆|grinning squinting face|face laugh happy|s
+😅|grinning face with sweat|face smile relief|s
+🤣|rolling on the floor laughing|face rofl lol|s
+😂|face with tears of joy|face laugh cry|s
+🙂|slightly smiling face|face smile|s
+🙃|upside-down face|face smile irony|s
+😉|winking face|face wink|s
+😊|smiling face with smiling eyes|face blush smile|s
+😇|smiling face with halo|face angel innocent|s
+🥰|smiling face with hearts|face love adore|s
+😍|smiling face with heart-eyes|face love|s
+🤩|star-struck|face wow star|s
+😘|face blowing a kiss|face love kiss|s
+😗|kissing face|face kiss|s
+😚|kissing face with closed eyes|face kiss|s
+😙|kissing face with smiling eyes|face kiss|s
+🥲|smiling face with tear|face sad happy|s
+😋|face savoring food|face yum tongue|s
+😛|face with tongue|face tongue|s
+😜|winking face with tongue|face tongue wink|s
+🤪|zany face|face crazy wild|s
+😝|squinting face with tongue|face tongue|s
+🤑|money-mouth face|face money rich|s
+🤗|smiling face with open hands|face hug|s
+🤭|face with hand over mouth|face oops giggle|s
+🤫|shushing face|face quiet secret|s
+🤔|thinking face|face think hmm|s
+🤐|zipper-mouth face|face secret quiet|s
+🤨|face with raised eyebrow|face skeptical doubt|s
+😐|neutral face|face blank|s
+😑|expressionless face|face blank|s
+😶|face without mouth|face silent|s
+😏|smirking face|face smug|s
+😒|unamused face|face meh|s
+🙄|face with rolling eyes|face eyeroll|s
+😬|grimacing face|face awkward|s
+🤥|lying face|face lie pinocchio|s
+😌|relieved face|face calm|s
+😔|pensive face|face sad|s
+😪|sleepy face|face tired|s
+🤤|drooling face|face drool|s
+😴|sleeping face|face sleep zzz|s
+😷|face with medical mask|face sick mask|s
+🤒|face with thermometer|face sick fever|s
+🤕|face with head-bandage|face hurt injured|s
+🤢|nauseated face|face sick gross|s
+🤮|face vomiting|face sick vomit|s
+🤧|sneezing face|face sick sneeze|s
+🥵|hot face|face heat sweating|s
+🥶|cold face|face freezing|s
+🥴|woozy face|face dizzy drunk|s
+😵|dizzy face|face dead knockout|s
+🤯|exploding head|face mindblown shock|s
+🤠|cowboy hat face|face cowboy|s
+🥳|partying face|face party celebrate|s
+🥸|disguised face|face disguise glasses|s
+😎|smiling face with sunglasses|face cool|s
+🤓|nerd face|face geek glasses|s
+🧐|face with monocle|face inspect|s
+😕|confused face|face puzzled|s
+😟|worried face|face sad|s
+🙁|slightly frowning face|face sad|s
+😮|face with open mouth|face surprise wow|s
+😯|hushed face|face surprise|s
+😲|astonished face|face shock|s
+😳|flushed face|face blush embarrassed|s
+🥺|pleading face|face please puppy|s
+😦|frowning face with open mouth|face sad|s
+😧|anguished face|face shock|s
+😨|fearful face|face scared|s
+😰|anxious face with sweat|face stress|s
+😥|sad but relieved face|face sad|s
+😢|crying face|face sad tear|s
+😭|loudly crying face|face sad cry|s
+😱|face screaming in fear|face scream horror|s
+😖|confounded face|face frustrated|s
+😣|persevering face|face struggle|s
+😞|disappointed face|face sad|s
+😓|downcast face with sweat|face sad sweat|s
+😩|weary face|face tired|s
+😫|tired face|face exhausted|s
+🥱|yawning face|face bored tired|s
+😤|face with steam from nose|face angry triumph|s
+😡|enraged face|face angry mad|s
+😠|angry face|face mad|s
+🤬|face with symbols on mouth|face swear cursing|s
+😈|smiling face with horns|face devil|s
+👿|angry face with horns|face devil|s
+💀|skull|dead death|s
+☠️|skull and crossbones|dead poison|s
+💩|pile of poo|poop crap|s
+🤡|clown face|clown|s
+👹|ogre|monster japanese|s
+👺|goblin|monster japanese|s
+👻|ghost|halloween boo|s
+👽|alien|ufo space|s
+👾|alien monster|game space invader|s
+🤖|robot|bot ai|s
+😺|grinning cat|cat smile|s
+😸|grinning cat with smiling eyes|cat smile|s
+😹|cat with tears of joy|cat laugh|s
+😻|smiling cat with heart-eyes|cat love|s
+😼|cat with wry smile|cat smirk|s
+😽|kissing cat|cat kiss|s
+🙀|weary cat|cat shock|s
+😿|crying cat|cat sad|s
+😾|pouting cat|cat angry|s
+🙈|see-no-evil monkey|monkey shy|s
+🙉|hear-no-evil monkey|monkey|s
+🙊|speak-no-evil monkey|monkey|s
+💋|kiss mark|lips love|s
+💌|love letter|heart mail|s
+💘|heart with arrow|love cupid|s
+💝|heart with ribbon|love gift|s
+💖|sparkling heart|love|s
+💗|growing heart|love|s
+💓|beating heart|love|s
+💞|revolving hearts|love|s
+💕|two hearts|love|s
+💟|heart decoration|love|s
+❣️|heart exclamation|love|s
+💔|broken heart|sad love|s
+❤️|red heart|love|s
+🧡|orange heart|love|s
+💛|yellow heart|love|s
+💚|green heart|love|s
+💙|blue heart|love|s
+💜|purple heart|love|s
+🤎|brown heart|love|s
+🖤|black heart|love|s
+🤍|white heart|love|s
+💯|hundred points|100 score perfect|s
+💢|anger symbol|angry|s
+💥|collision|boom explode|s
+💫|dizzy|star sparkle|s
+💦|sweat droplets|water splash|s
+💨|dashing away|wind fast|s
+🕳️|hole|empty|s
+💬|speech balloon|comment chat|s
+🗨️|left speech bubble|comment|s
+🗯️|right anger bubble|angry|s
+💭|thought balloon|think|s
+💤|zzz|sleep|s
+👋|waving hand|hello bye|p
+🤚|raised back of hand|stop|p
+🖐️|hand with fingers splayed|hand|p
+✋|raised hand|stop highfive|p
+🖖|vulcan salute|spock|p
+👌|OK hand|perfect okay|p
+🤌|pinched fingers|italian|p
+🤏|pinching hand|small tiny|p
+✌️|victory hand|peace win|p
+🤞|crossed fingers|luck hope|p
+🤟|love-you gesture|ily|p
+🤘|sign of the horns|rock metal|p
+🤙|call me hand|shaka|p
+👈|backhand index pointing left|point|p
+👉|backhand index pointing right|point|p
+👆|backhand index pointing up|point|p
+👇|backhand index pointing down|point|p
+☝️|index pointing up|point|p
+👍|thumbs up|like yes ok|p
+👎|thumbs down|dislike no|p
+✊|raised fist|power|p
+👊|oncoming fist|punch|p
+🤛|left-facing fist|bump|p
+🤜|right-facing fist|bump|p
+👏|clapping hands|applause clap|p
+🙌|raising hands|hooray praise|p
+👐|open hands|hug|p
+🤲|palms up together|pray|p
+🤝|handshake|deal agreement|p
+🙏|folded hands|please thanks pray|p
+✍️|writing hand|write|p
+💅|nail polish|manicure|p
+🤳|selfie|phone camera|p
+💪|flexed biceps|strong muscle|p
+🦾|mechanical arm|cyborg|p
+🦿|mechanical leg|cyborg|p
+🦵|leg|limb|p
+🦶|foot|limb|p
+👂|ear|hear|p
+🦻|ear with hearing aid|accessibility|p
+👃|nose|smell|p
+🧠|brain|mind think|p
+🫀|anatomical heart|organ|p
+🫁|lungs|organ breathe|p
+🦷|tooth|dentist|p
+🦴|bone|skeleton|p
+👀|eyes|look see|p
+👁️|eye|look|p
+👅|tongue|taste|p
+👄|mouth|lips|p
+👶|baby|child newborn|p
+🧒|child|kid|p
+👦|boy|kid|p
+👧|girl|kid|p
+🧑|person|human|p
+👱|person blond hair|blonde|p
+👨|man|male|p
+🧔|person beard|beard|p
+👩|woman|female|p
+🧓|older person|elder|p
+👴|old man|elder|p
+👵|old woman|elder|p
+🙍|person frowning|sad|p
+🙎|person pouting|angry|p
+🙅|person gesturing NO|no stop|p
+🙆|person gesturing OK|ok yes|p
+💁|person tipping hand|info sassy|p
+🙋|person raising hand|volunteer|p
+🧏|deaf person|accessibility|p
+🙇|person bowing|sorry respect|p
+🤦|person facepalming|doh|p
+🤷|person shrugging|whatever idk|p
+👮|police officer|cop|p
+🕵️|detective|spy|p
+💂|guard|soldier|p
+🥷|ninja|stealth|p
+👷|construction worker|build|p
+🤴|prince|royal|p
+👸|princess|royal|p
+👳|person wearing turban|sikh|p
+👲|person with skullcap|hat|p
+🧕|woman with headscarf|hijab|p
+🤵|person in tuxedo|groom suit|p
+👰|person with veil|bride|p
+🤰|pregnant woman|baby|p
+🤱|breast-feeding|baby|p
+👼|baby angel|cherub|p
+🎅|Santa Claus|christmas|p
+🤶|Mrs. Claus|christmas|p
+🦸|superhero|hero|p
+🦹|supervillain|villain|p
+🧙|mage|wizard|p
+🧚|fairy|pixie|p
+🧛|vampire|dracula|p
+🧜|merperson|mermaid|p
+🧝|elf|fantasy|p
+🧞|genie|fantasy|p
+🧟|zombie|undead|p
+💆|person getting massage|spa relax|p
+💇|person getting haircut|barber|p
+🚶|person walking|walk|p
+🧍|person standing|stand|p
+🧎|person kneeling|kneel|p
+🏃|person running|run fast|p
+💃|woman dancing|dance|p
+🕺|man dancing|dance|p
+🕴️|person in suit levitating|business|p
+👯|people with bunny ears|party dance|p
+🧖|person in steamy room|sauna|p
+🧗|person climbing|climb|p
+🤺|person fencing|sword|p
+🏇|horse racing|jockey|p
+⛷️|skier|snow ski|p
+🏂|snowboarder|snow|p
+🏌️|person golfing|golf|p
+🏄|person surfing|surf|p
+🚣|person rowing boat|row|p
+🏊|person swimming|swim|p
+⛹️|person bouncing ball|basketball|p
+🏋️|person lifting weights|gym|p
+🚴|person biking|bicycle|p
+🚵|person mountain biking|mtb|p
+🤸|person cartwheeling|gymnastics|p
+🤼|people wrestling|wrestle|p
+🤽|person playing water polo|polo|p
+🤾|person playing handball|handball|p
+🤹|person juggling|juggle|p
+🧘|person in lotus position|yoga meditate|p
+🛀|person taking bath|bath|p
+🛌|person in bed|sleep|p
+👭|women holding hands|friends|p
+👫|woman and man holding hands|friends|p
+👬|men holding hands|friends|p
+💏|kiss|couple love|p
+💑|couple with heart|love|p
+👪|family|home|p
+🗣️|speaking head|talk|p
+👤|bust in silhouette|user person|p
+👥|busts in silhouette|users people|p
+🫂|people hugging|hug|p
+👣|footprints|steps|p
+🐵|monkey face|animal|n
+🐒|monkey|animal|n
+🦍|gorilla|animal ape|n
+🦧|orangutan|animal ape|n
+🐶|dog face|animal pet|n
+🐕|dog|animal pet|n
+🦮|guide dog|animal service|n
+🐩|poodle|animal dog|n
+🐺|wolf|animal|n
+🦊|fox|animal|n
+🦝|raccoon|animal|n
+🐱|cat face|animal pet|n
+🐈|cat|animal pet|n
+🦁|lion|animal|n
+🐯|tiger face|animal|n
+🐅|tiger|animal|n
+🐆|leopard|animal|n
+🐴|horse face|animal|n
+🐎|horse|animal|n
+🦄|unicorn|animal magic|n
+🦓|zebra|animal|n
+🦌|deer|animal|n
+🦬|bison|animal|n
+🐮|cow face|animal|n
+🐂|ox|animal|n
+🐃|water buffalo|animal|n
+🐄|cow|animal|n
+🐷|pig face|animal|n
+🐖|pig|animal|n
+🐗|boar|animal|n
+🐽|pig nose|animal|n
+🐏|ram|animal|n
+🐑|ewe|animal sheep|n
+🐐|goat|animal|n
+🐪|camel|animal desert|n
+🐫|two-hump camel|animal desert|n
+🦙|llama|animal|n
+🦒|giraffe|animal|n
+🐘|elephant|animal|n
+🦣|mammoth|animal extinct|n
+🦏|rhinoceros|animal|n
+🦛|hippopotamus|animal|n
+🐭|mouse face|animal|n
+🐁|mouse|animal|n
+🐀|rat|animal|n
+🐹|hamster|animal pet|n
+🐰|rabbit face|animal|n
+🐇|rabbit|animal|n
+🐿️|chipmunk|animal|n
+🦫|beaver|animal|n
+🦔|hedgehog|animal|n
+🦇|bat|animal|n
+🐻|bear|animal|n
+🐨|koala|animal|n
+🐼|panda|animal|n
+🦥|sloth|animal|n
+🦦|otter|animal|n
+🦨|skunk|animal|n
+🦘|kangaroo|animal|n
+🦡|badger|animal|n
+🐾|paw prints|animal tracks|n
+🦃|turkey|bird animal|n
+🐔|chicken|bird animal|n
+🐓|rooster|bird animal|n
+🐣|hatching chick|bird baby|n
+🐤|baby chick|bird baby|n
+🐥|front-facing baby chick|bird baby|n
+🐦|bird|animal|n
+🐧|penguin|bird animal|n
+🕊️|dove|bird peace|n
+🦅|eagle|bird animal|n
+🦆|duck|bird animal|n
+🦢|swan|bird animal|n
+🦉|owl|bird animal|n
+🦤|dodo|bird extinct|n
+🪶|feather|bird|n
+🦩|flamingo|bird animal|n
+🦚|peacock|bird animal|n
+🦜|parrot|bird animal|n
+🐸|frog|animal|n
+🐊|crocodile|animal|n
+🐢|turtle|animal|n
+🦎|lizard|animal|n
+🐍|snake|animal|n
+🐲|dragon face|myth|n
+🐉|dragon|myth|n
+🦕|sauropod|dinosaur|n
+🦖|T-Rex|dinosaur|n
+🐳|spouting whale|sea animal|n
+🐋|whale|sea animal|n
+🐬|dolphin|sea animal|n
+🦭|seal|sea animal|n
+🐟|fish|sea animal|n
+🐠|tropical fish|sea animal|n
+🐡|blowfish|sea animal|n
+🦈|shark|sea animal|n
+🐙|octopus|sea animal|n
+🐚|shell|sea|n
+🐌|snail|bug|n
+🦋|butterfly|bug|n
+🐛|bug|insect|n
+🐜|ant|insect|n
+🐝|honeybee|insect|n
+🪲|beetle|insect|n
+🐞|lady beetle|insect|n
+🦗|cricket|insect|n
+🪳|cockroach|insect|n
+🕷️|spider|bug|n
+🕸️|spider web|bug|n
+🦂|scorpion|bug|n
+🦟|mosquito|bug|n
+🪰|fly|bug|n
+🪱|worm|bug|n
+🦠|microbe|germ virus|n
+💐|bouquet|flowers|n
+🌸|cherry blossom|flower|n
+💮|white flower|flower|n
+🏵️|rosette|flower|n
+🌹|rose|flower love|n
+🥀|wilted flower|flower dead|n
+🌺|hibiscus|flower|n
+🌻|sunflower|flower|n
+🌼|blossom|flower|n
+🌷|tulip|flower|n
+🌱|seedling|plant grow|n
+🪴|potted plant|plant|n
+🌲|evergreen tree|tree|n
+🌳|deciduous tree|tree|n
+🌴|palm tree|tree|n
+🌵|cactus|plant|n
+🌾|sheaf of rice|grain|n
+🌿|herb|plant leaf|n
+☘️|shamrock|plant|n
+🍀|four leaf clover|luck|n
+🍁|maple leaf|autumn|n
+🍂|fallen leaf|autumn|n
+🍃|leaf fluttering in wind|leaf|n
+🍄|mushroom|fungus|n
+🌰|chestnut|nut|n
+🦀|crab|sea|n
+🦞|lobster|sea|n
+🦐|shrimp|sea|n
+🦑|squid|sea|n
+🌍|globe showing Europe-Africa|world earth|n
+🌎|globe showing Americas|world earth|n
+🌏|globe showing Asia-Australia|world earth|n
+🌐|globe with meridians|world web|n
+🌑|new moon|moon|n
+🌒|waxing crescent moon|moon|n
+🌓|first quarter moon|moon|n
+🌔|waxing gibbous moon|moon|n
+🌕|full moon|moon|n
+🌖|waning gibbous moon|moon|n
+🌗|last quarter moon|moon|n
+🌘|waning crescent moon|moon|n
+🌙|crescent moon|moon night|n
+🌚|new moon face|moon|n
+🌛|first quarter moon face|moon|n
+🌜|last quarter moon face|moon|n
+🌡️|thermometer|temperature|n
+☀️|sun|sunny|n
+🌝|full moon face|moon|n
+🌞|sun with face|sunny|n
+⭐|star|favorite|n
+🌟|glowing star|sparkle|n
+🌠|shooting star|wish|n
+🌌|milky way|galaxy space|n
+☁️|cloud|weather|n
+⛅|sun behind cloud|weather|n
+⛈️|cloud with lightning and rain|storm|n
+🌤️|sun behind small cloud|weather|n
+🌥️|sun behind large cloud|weather|n
+🌦️|sun behind rain cloud|weather|n
+🌧️|cloud with rain|weather|n
+🌨️|cloud with snow|weather|n
+🌩️|cloud with lightning|weather|n
+🌪️|tornado|weather|n
+🌫️|fog|weather|n
+🌬️|wind face|weather|n
+🌈|rainbow|weather|n
+☂️|umbrella|rain|n
+☔|umbrella with rain drops|rain|n
+⚡|high voltage|lightning power|n
+❄️|snowflake|snow cold|n
+⛄|snowman without snow|winter|n
+🔥|fire|hot flame|n
+💧|droplet|water|n
+🌊|water wave|sea ocean|n
+🍇|grapes|fruit|f
+🍈|melon|fruit|f
+🍉|watermelon|fruit|f
+🍊|tangerine|fruit orange|f
+🍋|lemon|fruit|f
+🍌|banana|fruit|f
+🍍|pineapple|fruit|f
+🥭|mango|fruit|f
+🍎|red apple|fruit|f
+🍏|green apple|fruit|f
+🍐|pear|fruit|f
+🍑|peach|fruit|f
+🍒|cherries|fruit|f
+🍓|strawberry|fruit|f
+🫐|blueberries|fruit|f
+🥝|kiwi fruit|fruit|f
+🍅|tomato|vegetable|f
+🫒|olive|food|f
+🥥|coconut|fruit|f
+🥑|avocado|fruit|f
+🍆|eggplant|vegetable|f
+🥔|potato|vegetable|f
+🥕|carrot|vegetable|f
+🌽|ear of corn|vegetable|f
+🌶️|hot pepper|spicy|f
+🫑|bell pepper|vegetable|f
+🥒|cucumber|vegetable|f
+🥬|leafy green|vegetable|f
+🥦|broccoli|vegetable|f
+🧄|garlic|vegetable|f
+🧅|onion|vegetable|f
+🥜|peanuts|food|f
+🍞|bread|food|f
+🥐|croissant|food|f
+🥖|baguette bread|food|f
+🫓|flatbread|food|f
+🥨|pretzel|food|f
+🥯|bagel|food|f
+🥞|pancakes|food|f
+🧇|waffle|food|f
+🧀|cheese wedge|food|f
+🍖|meat on bone|food|f
+🍗|poultry leg|food|f
+🥩|cut of meat|food|f
+🥓|bacon|food|f
+🍔|hamburger|food burger|f
+🍟|french fries|food|f
+🍕|pizza|food|f
+🌭|hot dog|food|f
+🥪|sandwich|food|f
+🌮|taco|food|f
+🌯|burrito|food|f
+🫔|tamale|food|f
+🥙|stuffed flatbread|food|f
+🧆|falafel|food|f
+🥚|egg|food|f
+🍳|cooking|food egg|f
+🥘|shallow pan of food|paella|f
+🍲|pot of food|stew|f
+🫕|fondue|food|f
+🥣|bowl with spoon|cereal|f
+🥗|green salad|food|f
+🍿|popcorn|food movie|f
+🧈|butter|food|f
+🧂|salt|food|f
+🥫|canned food|food|f
+🍱|bento box|food|f
+🍘|rice cracker|food|f
+🍙|rice ball|food|f
+🍚|cooked rice|food|f
+🍛|curry rice|food|f
+🍜|steaming bowl|ramen noodles|f
+🍝|spaghetti|pasta|f
+🍠|roasted sweet potato|food|f
+🍢|oden|food|f
+🍣|sushi|food|f
+🍤|fried shrimp|food|f
+🍥|fish cake with swirl|food|f
+🥮|moon cake|food|f
+🍡|dango|food|f
+🥟|dumpling|food|f
+🥠|fortune cookie|food|f
+🥡|takeout box|food|f
+🦪|oyster|food|f
+🍦|soft ice cream|dessert|f
+🍧|shaved ice|dessert|f
+🍨|ice cream|dessert|f
+🍩|doughnut|dessert|f
+🍪|cookie|dessert|f
+🎂|birthday cake|dessert|f
+🍰|shortcake|dessert|f
+🧁|cupcake|dessert|f
+🥧|pie|dessert|f
+🍫|chocolate bar|dessert|f
+🍬|candy|sweet|f
+🍭|lollipop|sweet|f
+🍮|custard|dessert|f
+🍯|honey pot|sweet|f
+🍼|baby bottle|milk|f
+🥛|glass of milk|drink|f
+☕|hot beverage|coffee tea|f
+🫖|teapot|drink|f
+🍵|teacup without handle|tea|f
+🍶|sake|drink|f
+🍾|bottle with popping cork|champagne|f
+🍷|wine glass|drink|f
+🍸|cocktail glass|drink|f
+🍹|tropical drink|drink|f
+🍺|beer mug|drink|f
+🍻|clinking beer mugs|drink|f
+🥂|clinking glasses|cheers|f
+🥃|tumbler glass|whiskey|f
+🫗|pouring liquid|drink|f
+🥤|cup with straw|drink|f
+🧋|bubble tea|drink|f
+🧃|beverage box|drink|f
+🧉|mate|drink|f
+🧊|ice|cold|f
+🚗|automobile|car|t
+🚕|taxi|cab|t
+🚙|sport utility vehicle|car suv|t
+🚌|bus|transit|t
+🚎|trolleybus|transit|t
+🏎️|racing car|f1|t
+🚓|police car|t
+🚑|ambulance|t
+🚒|fire engine|t
+🚐|minibus|t
+🛻|pickup truck|t
+🚚|delivery truck|t
+🚛|articulated lorry|truck|t
+🚜|tractor|farm|t
+🏍️|motorcycle|t
+🛵|motor scooter|t
+🦽|manual wheelchair|accessibility|t
+🦼|motorized wheelchair|accessibility|t
+🛺|auto rickshaw|tuk tuk|t
+🚲|bicycle|bike|t
+🛴|kick scooter|t
+🛹|skateboard|t
+🛼|roller skate|t
+🚏|bus stop|t
+🛣️|motorway|road|t
+🛤️|railway track|t
+🛢️|oil drum|t
+⛽|fuel pump|gas|t
+🚨|police car light|alert|t
+🚥|horizontal traffic light|t
+🚦|vertical traffic light|t
+🛑|stop sign|t
+🚧|construction|barrier|t
+⚓|anchor|ship|t
+🛟|ring buoy|safety|t
+⛵|sailboat|t
+🛶|canoe|t
+🚤|speedboat|t
+🛳️|passenger ship|t
+⛴️|ferry|t
+🛥️|motor boat|t
+🚢|ship|t
+✈️|airplane|flight|t
+🛩️|small airplane|t
+🛫|airplane departure|t
+🛬|airplane arrival|t
+🪂|parachute|t
+💺|seat|t
+🚁|helicopter|t
+🚟|suspension railway|t
+🚠|mountain cableway|t
+🚡|aerial tramway|t
+🛰️|satellite|space|t
+🚀|rocket|space launch|t
+🛸|flying saucer|ufo|t
+🛎️|bellhop bell|hotel|t
+🧳|luggage|travel|t
+⌛|hourglass done|time|t
+⏳|hourglass not done|time|t
+⌚|watch|time|t
+⏰|alarm clock|time|t
+⏱️|stopwatch|time|t
+⏲️|timer clock|time|t
+🕰️|mantelpiece clock|time|t
+🕛|twelve o'clock|time|t
+🗺️|world map|travel|t
+🧭|compass|navigate|t
+🏔️|snow-capped mountain|t
+⛰️|mountain|t
+🌋|volcano|t
+🗻|mount fuji|t
+🏕️|camping|t
+🏖️|beach with umbrella|t
+🏜️|desert|t
+🏝️|desert island|t
+🏞️|national park|t
+🏟️|stadium|t
+🏛️|classical building|museum|t
+🏗️|building construction|t
+🧱|brick|t
+🪨|rock|t
+🪵|wood|t
+🛖|hut|t
+🏘️|houses|t
+🏚️|derelict house|t
+🏠|house|home|t
+🏡|house with garden|home|t
+🏢|office building|t
+🏣|Japanese post office|t
+🏥|hospital|t
+🏦|bank|t
+🏨|hotel|t
+🏩|love hotel|t
+🏪|convenience store|t
+🏫|school|t
+🏬|department store|t
+🏭|factory|t
+🏯|Japanese castle|t
+🏰|castle|t
+💒|wedding|t
+🗼|Tokyo tower|t
+🗽|Statue of Liberty|t
+⛪|church|t
+🕌|mosque|t
+🛕|Hindu temple|t
+🕍|synagogue|t
+⛩️|shinto shrine|t
+🕋|kaaba|t
+⛲|fountain|t
+⛺|tent|t
+🌁|foggy|t
+🌃|night with stars|t
+🏙️|cityscape|t
+🌄|sunrise over mountains|t
+🌅|sunrise|t
+🌆|cityscape at dusk|t
+🌇|sunset|t
+🌉|bridge at night|t
+♨️|hot springs|t
+🎠|carousel horse|t
+🛝|playground slide|t
+🎡|ferris wheel|t
+🎢|roller coaster|t
+💈|barber pole|t
+🎪|circus tent|t
+🎃|jack-o-lantern|halloween|a
+🎄|Christmas tree|holiday|a
+🎆|fireworks|celebration|a
+🎇|sparkler|celebration|a
+🧨|firecracker|explosive|a
+✨|sparkles|magic shine|a
+🎈|balloon|party|a
+🎉|party popper|celebrate|a
+🎊|confetti ball|celebrate|a
+🎋|tanabata tree|wish|a
+🎍|pine decoration|new year|a
+🎎|Japanese dolls|festival|a
+🎏|carp streamer|festival|a
+🎐|wind chime|festival|a
+🎑|moon viewing ceremony|festival|a
+🧿|nazar amulet|talisman|a
+🪬|hamsa|talisman|a
+🎀|ribbon|gift|a
+🎁|wrapped gift|present|a
+🎗️|reminder ribbon|awareness|a
+🎟️|admission tickets|a
+🎫|ticket|a
+🎖️|military medal|award|a
+🏆|trophy|win award|a
+🏅|sports medal|award|a
+🥇|1st place medal|gold|a
+🥈|2nd place medal|silver|a
+🥉|3rd place medal|bronze|a
+⚽|soccer ball|football|a
+⚾|baseball|sport|a
+🥎|softball|sport|a
+🏀|basketball|sport|a
+🏐|volleyball|sport|a
+🏈|american football|sport|a
+🏉|rugby football|sport|a
+🎾|tennis|sport|a
+🥏|flying disc|frisbee|a
+🎳|bowling|sport|a
+🏏|cricket game|sport|a
+🏑|field hockey|sport|a
+🏒|ice hockey|sport|a
+🥍|lacrosse|sport|a
+🏓|ping pong|table tennis|a
+🏸|badminton|sport|a
+🥊|boxing glove|sport|a
+🥋|martial arts uniform|karate|a
+🥅|goal net|sport|a
+⛳|flag in hole|golf|a
+⛸️|ice skate|sport|a
+🎣|fishing pole|sport|a
+🤿|diving mask|snorkel|a
+🎽|running shirt|sport|a
+🎿|skis|sport|a
+🛷|sled|sport|a
+🥌|curling stone|sport|a
+🎯|bullseye|target dart|a
+🪀|yo-yo|toy|a
+🪁|kite|toy|a
+🎱|pool 8 ball|billiards|a
+🔮|crystal ball|magic future|a
+🪄|magic wand|magic|a
+🧸|teddy bear|toy|a
+🪅|piñata|party|a
+🪩|mirror ball|disco|a
+🪆|nesting dolls|toy|a
+♠️|spade suit|cards|a
+♥️|heart suit|cards|a
+♦️|diamond suit|cards|a
+♣️|club suit|cards|a
+♟️|chess pawn|game|a
+🃏|joker|cards|a
+🀄|mahjong red dragon|game|a
+🎴|flower playing cards|game|a
+🎭|performing arts|theater|a
+🖼️|framed picture|art|a
+🎨|artist palette|art paint|a
+🧵|thread|sew|a
+🪡|sewing needle|sew|a
+🧶|yarn|knit|a
+🪢|knot|rope|a
+👓|glasses|eyewear|o
+🕶️|sunglasses|eyewear|o
+🥽|goggles|eyewear|o
+🥼|lab coat|science|o
+🦺|safety vest|o
+👔|necktie|clothes|o
+👕|t-shirt|clothes|o
+👖|jeans|clothes|o
+🧣|scarf|clothes|o
+🧤|gloves|clothes|o
+🧥|coat|clothes|o
+🧦|socks|clothes|o
+👗|dress|clothes|o
+👘|kimono|clothes|o
+🥻|sari|clothes|o
+🩱|one-piece swimsuit|clothes|o
+🩲|briefs|clothes|o
+🩳|shorts|clothes|o
+👙|bikini|clothes|o
+👚|woman's clothes|clothes|o
+🪭|folding hand fan|o
+👛|purse|o
+👜|handbag|o
+👝|clutch bag|o
+🛍️|shopping bags|o
+🎒|backpack|bag|o
+🩴|thong sandal|o
+👞|man's shoe|o
+👟|running shoe|o
+🥾|hiking boot|o
+🥿|flat shoe|o
+👠|high-heeled shoe|o
+👡|woman's sandal|o
+🩰|ballet shoes|o
+👢|woman's boot|o
+🪮|hair pick|o
+👑|crown|royal|o
+👒|woman's hat|o
+🎩|top hat|magic|o
+🎓|graduation cap|o
+🧢|billed cap|o
+🪖|military helmet|o
+⛑️|rescue worker's helmet|o
+📿|prayer beads|o
+💄|lipstick|makeup|o
+💍|ring|jewelry|o
+💎|gem stone|diamond|o
+🔇|muted speaker|sound|o
+🔈|speaker low volume|sound|o
+🔉|speaker medium volume|sound|o
+🔊|speaker high volume|sound|o
+📢|loudspeaker|announce|o
+📣|megaphone|announce|o
+📯|postal horn|o
+🔔|bell|notification|o
+🔕|bell with slash|mute|o
+🎼|musical score|music|o
+🎵|musical note|music|o
+🎶|musical notes|music|o
+🎙️|studio microphone|o
+🎚️|level slider|o
+🎛️|control knobs|o
+🎤|microphone|sing|o
+🎧|headphone|music|o
+📻|radio|o
+🎷|saxophone|music|o
+🪗|accordion|music|o
+🎸|guitar|music|o
+🎹|musical keyboard|piano|o
+🎺|trumpet|music|o
+🎻|violin|music|o
+🪕|banjo|music|o
+🥁|drum|music|o
+🪘|long drum|music|o
+📱|mobile phone|smartphone|o
+📲|mobile phone with arrow|o
+☎️|telephone|phone|o
+📞|telephone receiver|phone|o
+📟|pager|o
+📠|fax machine|o
+🔋|battery|power|o
+🪫|low battery|o
+🔌|electric plug|power|o
+💻|laptop|computer|o
+🖥️|desktop computer|o
+🖨️|printer|o
+⌨️|keyboard|o
+🖱️|computer mouse|o
+🖲️|trackball|o
+💽|computer disk|o
+💾|floppy disk|save|o
+💿|optical disk|cd|o
+📀|dvd|o
+🧮|abacus|calculate|o
+🎥|movie camera|film|o
+🎞️|film frames|o
+📽️|film projector|o
+🎬|clapper board|action|o
+📺|television|tv|o
+📷|camera|photo|o
+📸|camera with flash|photo|o
+📹|video camera|o
+📼|videocassette|o
+🔍|magnifying glass tilted left|search|o
+🔎|magnifying glass tilted right|search|o
+🕯️|candle|light|o
+💡|light bulb|idea|o
+🔦|flashlight|o
+🏮|red paper lantern|o
+🪔|diya lamp|o
+📔|notebook with decorative cover|o
+📕|closed book|o
+📖|open book|read|o
+📗|green book|o
+📘|blue book|o
+📙|orange book|o
+📚|books|library|o
+📓|notebook|o
+📒|ledger|o
+📃|page with curl|o
+📜|scroll|o
+📄|page facing up|document|o
+📰|newspaper|news|o
+🗞️|rolled-up newspaper|o
+📑|bookmark tabs|o
+🔖|bookmark|o
+🏷️|label|tag|o
+💰|money bag|o
+🪙|coin|money|o
+💴|yen banknote|money|o
+💵|dollar banknote|money|o
+💶|euro banknote|money|o
+💷|pound banknote|money|o
+💸|money with wings|o
+💳|credit card|o
+🧾|receipt|o
+✉️|envelope|mail|o
+📧|e-mail|mail|o
+📨|incoming envelope|mail|o
+📩|envelope with arrow|mail|o
+📤|outbox tray|o
+📥|inbox tray|o
+📦|package|box|o
+📫|closed mailbox with raised flag|o
+📪|closed mailbox with lowered flag|o
+📬|open mailbox with raised flag|o
+📭|open mailbox with lowered flag|o
+📮|postbox|o
+🗳️|ballot box with ballot|vote|o
+✏️|pencil|write|o
+✒️|black nib|o
+🖋️|fountain pen|o
+🖊️|pen|o
+🖌️|paintbrush|o
+🖍️|crayon|o
+📝|memo|note write|o
+💼|briefcase|work|o
+📁|file folder|o
+📂|open file folder|o
+🗂️|card index dividers|o
+📅|calendar|date|o
+📆|tear-off calendar|o
+🗒️|spiral notepad|o
+🗓️|spiral calendar|o
+📇|card index|o
+📈|chart increasing|growth|o
+📉|chart decreasing|loss|o
+📊|bar chart|stats|o
+📋|clipboard|o
+📌|pushpin|o
+📍|round pushpin|location|o
+📎|paperclip|o
+🖇️|linked paperclips|o
+📏|straight ruler|o
+📐|triangular ruler|o
+✂️|scissors|cut|o
+🗃️|card file box|o
+🗄️|file cabinet|o
+🗑️|wastebasket|trash|o
+🔒|locked|security|o
+🔓|unlocked|o
+🔏|locked with pen|o
+🔐|locked with key|o
+🔑|key|o
+🗝️|old key|o
+🔨|hammer|tool|o
+🪓|axe|tool|o
+⛏️|pick|tool|o
+⚒️|hammer and pick|tool|o
+🛠️|hammer and wrench|tool|o
+🗡️|dagger|weapon|o
+⚔️|crossed swords|weapon|o
+🔫|water pistol|gun|o
+🪃|boomerang|o
+🏹|bow and arrow|weapon|o
+🛡️|shield|defense|o
+🪚|carpentry saw|tool|o
+🔧|wrench|tool|o
+🪛|screwdriver|tool|o
+🔩|nut and bolt|tool|o
+⚙️|gear|settings|o
+🗜️|clamp|tool|o
+⚖️|balance scale|justice|o
+🦯|white cane|accessibility|o
+🔗|link|chain|o
+⛓️|chains|o
+🪝|hook|o
+🧰|toolbox|o
+🧲|magnet|o
+🪜|ladder|o
+⚗️|alembic|science|o
+🧪|test tube|science|o
+🧫|petri dish|science|o
+🧬|dna|science|o
+🔬|microscope|science|o
+🔭|telescope|science|o
+📡|satellite antenna|o
+💉|syringe|vaccine|o
+🩸|drop of blood|o
+💊|pill|medicine|o
+🩹|adhesive bandage|o
+🩼|crutch|o
+🩺|stethoscope|doctor|o
+🩻|X-ray|o
+🚪|door|o
+🛗|elevator|o
+🪞|mirror|o
+🪟|window|o
+🛏️|bed|o
+🛋️|couch and lamp|o
+🪑|chair|o
+🚽|toilet|o
+🪠|plunger|o
+🚿|shower|o
+🛁|bathtub|o
+🪤|mouse trap|o
+🪒|razor|o
+🧴|lotion bottle|o
+🧷|safety pin|o
+🧹|broom|o
+🧺|basket|o
+🧻|roll of paper|toilet paper|o
+🪣|bucket|o
+🧼|soap|o
+🫧|bubbles|o
+🪥|toothbrush|o
+🧽|sponge|o
+🧯|fire extinguisher|o
+🛒|shopping cart|o
+🚬|cigarette|smoking|o
+⚰️|coffin|death|o
+🪦|headstone|grave|o
+⚱️|funeral urn|o
+🗿|moai|statue|o
+🪧|placard|sign|o
+🪪|identification card|id|o
+🏧|ATM sign|money|y
+🚮|litter in bin sign|y
+🚰|potable water|y
+♿|wheelchair symbol|accessibility|y
+🚹|men's room|y
+🚺|women's room|y
+🚻|restroom|toilet|y
+🚼|baby symbol|y
+🚾|water closet|wc|y
+🛂|passport control|y
+🛃|customs|y
+🛄|baggage claim|y
+🛅|left luggage|y
+⚠️|warning|alert|y
+🚸|children crossing|y
+⛔|no entry|y
+🚫|prohibited|no|y
+🚳|no bicycles|y
+🚭|no smoking|y
+🚯|no littering|y
+🚱|non-potable water|y
+🚷|no pedestrians|y
+📵|no mobile phones|y
+🔞|no one under eighteen|adult|y
+☢️|radioactive|y
+☣️|biohazard|y
+⬆️|up arrow|y
+↗️|up-right arrow|y
+➡️|right arrow|y
+↘️|down-right arrow|y
+⬇️|down arrow|y
+↙️|down-left arrow|y
+⬅️|left arrow|y
+↖️|up-left arrow|y
+↕️|up-down arrow|y
+↔️|left-right arrow|y
+↩️|right arrow curving left|y
+↪️|left arrow curving right|y
+⤴️|right arrow curving up|y
+⤵️|right arrow curving down|y
+🔃|clockwise vertical arrows|y
+🔄|counterclockwise arrows button|refresh|y
+🔙|BACK arrow|y
+🔚|END arrow|y
+🔛|ON! arrow|y
+🔜|SOON arrow|y
+🔝|TOP arrow|y
+🛐|place of worship|y
+⚛️|atom symbol|science|y
+🕉️|om|y
+✡️|star of David|y
+☸️|wheel of dharma|y
+☯️|yin yang|y
+✝️|latin cross|y
+☦️|orthodox cross|y
+☪️|star and crescent|y
+☮️|peace symbol|y
+🕎|menorah|y
+🔯|dotted six-pointed star|y
+♈|Aries|zodiac|y
+♉|Taurus|zodiac|y
+♊|Gemini|zodiac|y
+♋|Cancer|zodiac|y
+♌|Leo|zodiac|y
+♍|Virgo|zodiac|y
+♎|Libra|zodiac|y
+♏|Scorpio|zodiac|y
+♐|Sagittarius|zodiac|y
+♑|Capricorn|zodiac|y
+♒|Aquarius|zodiac|y
+♓|Pisces|zodiac|y
+⛎|Ophiuchus|zodiac|y
+🔀|shuffle tracks button|y
+🔁|repeat button|loop|y
+🔂|repeat single button|y
+▶️|play button|y
+⏩|fast-forward button|y
+⏭️|next track button|y
+⏯️|play or pause button|y
+◀️|reverse button|y
+⏪|fast reverse button|y
+⏮️|last track button|y
+🔼|upwards button|y
+⏫|fast up button|y
+🔽|downwards button|y
+⏬|fast down button|y
+⏸️|pause button|y
+⏹️|stop button|y
+⏺️|record button|y
+⏏️|eject button|y
+🎦|cinema|y
+🔅|dim button|y
+🔆|bright button|y
+📶|antenna bars|signal|y
+🛜|wireless|wifi|y
+📳|vibration mode|y
+📴|mobile phone off|y
+♀️|female sign|y
+♂️|male sign|y
+⚧️|transgender symbol|y
+✖️|multiply|y
+➕|plus|y
+➖|minus|y
+➗|divide|y
+🟰|heavy equals sign|y
+♾️|infinity|y
+‼️|double exclamation mark|y
+⁉️|exclamation question mark|y
+❓|red question mark|y
+❔|white question mark|y
+❕|white exclamation mark|y
+❗|red exclamation mark|y
+〰️|wavy dash|y
+💱|currency exchange|y
+💲|heavy dollar sign|y
+⚕️|medical symbol|y
+♻️|recycling symbol|y
+⚜️|fleur-de-lis|y
+🔱|trident emblem|y
+📛|name badge|y
+🔰|Japanese symbol for beginner|y
+⭕|hollow red circle|y
+✅|check mark button|done|y
+☑️|check box with check|y
+✔️|check mark|y
+❌|cross mark|no|y
+❎|cross mark button|y
+➰|curly loop|y
+➿|double curly loop|y
+〽️|part alternation mark|y
+✳️|eight-spoked asterisk|y
+✴️|eight-pointed star|y
+❇️|sparkle|y
+©️|copyright|y
+®️|registered|y
+™️|trade mark|y
+#️⃣|keycap hash|y
+*️⃣|keycap asterisk|y
+0️⃣|keycap 0|y
+1️⃣|keycap 1|y
+2️⃣|keycap 2|y
+3️⃣|keycap 3|y
+4️⃣|keycap 4|y
+5️⃣|keycap 5|y
+6️⃣|keycap 6|y
+7️⃣|keycap 7|y
+8️⃣|keycap 8|y
+9️⃣|keycap 9|y
+🔠|input latin uppercase|y
+🔡|input latin lowercase|y
+🔢|input numbers|y
+🔣|input symbols|y
+🔤|input latin letters|y
+🅰️|A button|y
+🆎|AB button|y
+🅱️|B button|y
+🆑|CL button|y
+🆒|COOL button|y
+🆓|FREE button|y
+ℹ️|information|y
+🆔|ID button|y
+Ⓜ️|circled M|y
+🆕|NEW button|y
+🆖|NG button|y
+🅾️|O button|y
+🆗|OK button|y
+🅿️|P button|parking|y
+🆘|SOS button|help|y
+🆙|UP! button|y
+🆚|VS button|y
+🔴|red circle|y
+🟠|orange circle|y
+🟡|yellow circle|y
+🟢|green circle|y
+🔵|blue circle|y
+🟣|purple circle|y
+🟤|brown circle|y
+⚫|black circle|y
+⚪|white circle|y
+🟥|red square|y
+🟧|orange square|y
+🟨|yellow square|y
+🟩|green square|y
+🟦|blue square|y
+🟪|purple square|y
+🟫|brown square|y
+⬛|black large square|y
+⬜|white large square|y
+◼️|black medium square|y
+◻️|white medium square|y
+◾|black medium-small square|y
+◽|white medium-small square|y
+▪️|black small square|y
+▫️|white small square|y
+🔶|large orange diamond|y
+🔷|large blue diamond|y
+🔸|small orange diamond|y
+🔹|small blue diamond|y
+🔺|red triangle pointed up|y
+🔻|red triangle pointed down|y
+💠|diamond with a dot|y
+🔘|radio button|y
+🔳|white square button|y
+🔲|black square button|y
+🏁|chequered flag|race|g
+🚩|triangular flag|g
+🎌|crossed flags|g
+🏴|black flag|g
+🏳️|white flag|g
+🏳️‍🌈|rainbow flag|pride|g
+🏳️‍⚧️|transgender flag|pride|g
+🏴‍☠️|pirate flag|g
+🇺🇸|United States|usa flag|g
+🇬🇧|United Kingdom|uk flag|g
+🇨🇦|Canada|flag|g
+🇦🇺|Australia|flag|g
+🇮🇳|India|flag|g
+🇨🇳|China|flag|g
+🇯🇵|Japan|flag|g
+🇰🇷|South Korea|flag|g
+🇩🇪|Germany|flag|g
+🇫🇷|France|flag|g
+🇮🇹|Italy|flag|g
+🇪🇸|Spain|flag|g
+🇵🇹|Portugal|flag|g
+🇳🇱|Netherlands|flag|g
+🇧🇪|Belgium|flag|g
+🇨🇭|Switzerland|flag|g
+🇦🇹|Austria|flag|g
+🇸🇪|Sweden|flag|g
+🇳🇴|Norway|flag|g
+🇩🇰|Denmark|flag|g
+🇫🇮|Finland|flag|g
+🇮🇸|Iceland|flag|g
+🇮🇪|Ireland|flag|g
+🇵🇱|Poland|flag|g
+🇨🇿|Czechia|flag|g
+🇬🇷|Greece|flag|g
+🇹🇷|Turkey|flag|g
+🇷🇺|Russia|flag|g
+🇺🇦|Ukraine|flag|g
+🇮🇱|Israel|flag|g
+🇸🇦|Saudi Arabia|flag|g
+🇦🇪|United Arab Emirates|flag|g
+🇪🇬|Egypt|flag|g
+🇿🇦|South Africa|flag|g
+🇳🇬|Nigeria|flag|g
+🇰🇪|Kenya|flag|g
+🇲🇽|Mexico|flag|g
+🇧🇷|Brazil|flag|g
+🇦🇷|Argentina|flag|g
+🇨🇱|Chile|flag|g
+🇨🇴|Colombia|flag|g
+🇵🇪|Peru|flag|g
+🇸🇬|Singapore|flag|g
+🇲🇾|Malaysia|flag|g
+🇹🇭|Thailand|flag|g
+🇻🇳|Vietnam|flag|g
+🇮🇩|Indonesia|flag|g
+🇵🇭|Philippines|flag|g
+🇳🇿|New Zealand|flag|g
+`;
+
+/* ============================================================
+   2. PARSER + UTILITIES
+   ============================================================ */
+const CATS = {s:'Smileys',p:'People',n:'Nature',f:'Food',t:'Travel',a:'Activity',o:'Objects',y:'Symbols',g:'Flags'};
+
+const EMOJI = RAW.trim().split('\n').filter(Boolean).map((line,i)=>{
+  const p = line.split('|');
+  return { c:p[0], n:p[1]||'', k:p[2]||'', cat:p[3]||'s', i };
+});
+// precomputed search blob
+for (const e of EMOJI) e.q = (e.n+' '+e.k).toLowerCase();
+
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+/* --- codepoint conversions --- */
+const cps     = s => [...s].map(c=>'U+'+c.codePointAt(0).toString(16).toUpperCase().padStart(4,'0')).join(' ');
+const toHtml  = s => [...s].map(c=>'&#x'+c.codePointAt(0).toString(16).toUpperCase()+';').join('');
+const toJs    = s => [...s].map(c=>'\\u{'+c.codePointAt(0).toString(16).toUpperCase()+'}').join('');
+const toPy    = s => [...s].map(c=>'\\U'+c.codePointAt(0).toString(16).toUpperCase().padStart(8,'0')).join('');
+const toJson  = s => { let o=''; for(const ch of s){ const cp=ch.codePointAt(0);
+  if(cp>0xFFFF){ const h=0xD800+((cp-0x10000)>>10), l=0xDC00+((cp-0x10000)&0x3FF);
+    o+='\\u'+h.toString(16).padStart(4,'0')+'\\u'+l.toString(16).padStart(4,'0'); }
+  else o+='\\u'+cp.toString(16).padStart(4,'0'); } return '"'+o+'"'; };
+const toUrl   = s => encodeURIComponent(s);
+const slug    = s => s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+
+function formatEmoji(ch, name, fmt){
+  switch(fmt){
+    case 'name':       return name || ch;
+    case 'codepoints': return cps(ch);
+    case 'html':       return toHtml(ch);
+    case 'js':         return toJs(ch);
+    case 'python':     return toPy(ch);
+    case 'json':       return toJson(ch);
+    case 'url':        return toUrl(ch);
+    default:           return ch;
+  }
+}
+
+/* --- skin tones --- */
+const TONES = ['','🏻','🏼','🏽','🏾','🏿'];
+const TONE_BASES = new Set([...'👋🤚🖐✋🖖👌🤌🤏✌🤞🤟🤘🤙👈👉👆👇☝👍👎✊👊🤛🤜👏🙌👐🤲🙏✍💅🤳💪🦵🦶👂👃👶🧒👦👧🧑👱👨🧔👩🧓👴👵🙍🙎🙅🙆💁🙋🧏🙇🤦🤷👮🕵💂🥷👷🤴👸👳👲🧕🤵👰🤰🤱👼🎅🤶🦸🦹🧙🧚🧛🧜🧝🧞🧟💆💇🚶🧍🧎🏃💃🕺🧖🧗🏇⛷🏂🏌🏄🚣🏊⛹🏋🚴🚵🤸🤼🤽🤾🤹🧘🛀🛌👭👫👬💏💑']);
+function applyTone(ch, tone){
+  if(!tone) return ch;
+  const a = [...ch];
+  if(!TONE_BASES.has(a[0])) return ch;
+  return a[0] + tone + a.slice(1).join('').replace(/\uFE0F/g,'');
+}
+
+/* ============================================================
+   3. STATE
+   ============================================================ */
+const state = { emoji:'😀', name:'grinning face', tone:'', size:256, pad:.10, rad:.18, bgOn:false, bg:'#1f6feb', circle:false };
+
+const canvas = $('#cv'), ctx = canvas.getContext('2d');
+const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Twemoji Mozilla","EmojiOne Color",sans-serif';
+
+function current(){ return applyTone(state.emoji, state.tone); }
+
+function roundRect(c,x,y,w,h,r){
+  r = Math.max(0, Math.min(r, w/2, h/2));
+  c.beginPath();
+  if(c.roundRect) c.roundRect(x,y,w,h,r);
+  else {
+    c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r);
+    c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath();
+  }
+}
+
+/* ============================================================
+   4. RENDER
+   ============================================================ */
+function draw(){
+  const S = state.size;
+  canvas.width = canvas.height = S;
+  ctx.clearRect(0,0,S,S);
+
+  if(state.bgOn){
+    ctx.fillStyle = state.bg;
+    roundRect(ctx, 0, 0, S, S, state.circle ? S/2 : S*state.rad);
+    ctx.fill();
+  }
+
+  const ch = current();
+  const pad = S * state.pad;
+  const fs  = Math.max(1, S - pad*2);
+  ctx.font = fs + 'px ' + EMOJI_FONT;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = '#000';
+
+  const m = ctx.measureText(ch);
+  const asc  = m.actualBoundingBoxAscent  ?? fs*0.80;
+  const desc = m.actualBoundingBoxDescent ?? fs*0.20;
+  ctx.fillText(ch, S/2, S/2 + (asc - desc)/2);
+
+  updateSnippet();
+}
+
+/* ============================================================
+   5. GRID
+   ============================================================ */
+const grid = $('#grid'), countEl = $('#count');
+let activeCat = 'all', query = '';
+
+function buildChips(){
+  const box = $('#cats');
+  const mk = (key,label)=>{
+    const b = document.createElement('button');
+    b.className = 'chip' + (key===activeCat?' on':'');
+    b.textContent = label; b.dataset.cat = key;
+    b.onclick = ()=>{ activeCat = key; $$('.chip').forEach(c=>c.classList.toggle('on', c.dataset.cat===key)); renderGrid(); };
+    return b;
+  };
+  box.appendChild(mk('all','All'));
+  for(const k in CATS) box.appendChild(mk(k, CATS[k]));
+}
+
+function matches(e){
+  if(activeCat!=='all' && e.cat!==activeCat) return false;
+  if(!query) return true;
+  return e.q.includes(query) || e.c === query;
+}
+
+function renderGrid(){
+  const list = EMOJI.filter(matches);
+  const frag = document.createDocumentFragment();
+  for(const e of list){
+    const b = document.createElement('button');
+    b.className = 'cell' + (e.c===state.emoji ? ' sel' : '');
+    b.textContent = e.c;
+    b.title = e.n + '  ·  ' + cps(e.c);
+    b.dataset.c = e.c;
+    b.onclick = ()=> pick(e);
+    b.oncontextmenu = ev=>{ ev.preventDefault(); pick(e, true); };
+    frag.appendChild(b);
+  }
+  grid.replaceChildren(frag);
+  countEl.textContent = list.length.toLocaleString() + ' / ' + EMOJI.length.toLocaleString() + ' emoji';
+}
+
+function pick(e, silentSelect){
+  state.emoji = e.c;
+  state.name  = e.n;
+  if(!silentSelect){
+    $$('.cell.sel').forEach(n=>n.classList.remove('sel'));
+    const cur = grid.querySelector('.cell[data-c="'+CSS.escape(e.c)+'"]');
+    if(cur) cur.classList.add('sel');
+    draw();
+  }
+  copyText(formatEmoji(applyTone(e.c, state.tone), e.n, $('#fmt').value), 'Copied ' + e.c + '  ·  ' + e.n);
+}
+
+/* ============================================================
+   6. CONTROLS
+   ============================================================ */
+function bindRange(id, key, fmt, scale){
+  const el = $('#'+id), out = $('#'+id+'V');
+  el.addEventListener('input', ()=>{
+    const v = +el.value;
+    state[key] = scale ? v/100 : v;
+    out.textContent = fmt(v);
+    draw();
+  });
+}
+bindRange('size','size', v=>v, false);
+bindRange('pad','pad',  v=>v+'%', true);
+bindRange('rad','rad',  v=>v+'%', true);
+
+$('#bgOn').addEventListener('change', e=>{ state.bgOn = e.target.checked; draw(); });
+$('#bgCol').addEventListener('input', e=>{ state.bg = e.target.value; state.bgOn = true; $('#bgOn').checked = true; draw(); });
+$('#circle').addEventListener('change', e=>{ state.circle = e.target.checked; draw(); });
+$('#reset').addEventListener('click', ()=>{
+  Object.assign(state,{size:256,pad:.10,rad:.18,bgOn:false,bg:'#1f6feb',circle:false,tone:''});
+  $('#size').value=256; $('#sizeV').textContent='256';
+  $('#pad').value=10;   $('#padV').textContent='10%';
+  $('#rad').value=18;   $('#radV').textContent='18%';
+  $('#bgOn').checked=false; $('#circle').checked=false;
+  renderTones(); draw();
+});
+
+/* tone swatches */
+function renderTones(){
+  const box = $('#tones'); box.replaceChildren();
+  TONES.forEach((t,i)=>{
+    const b = document.createElement('button');
+    b.className = 'sw' + (t===state.tone?' on':'');
+    b.textContent = applyTone('✋', t) || '✋';
+    b.title = i===0 ? 'Default' : 'Skin tone ' + i;
+    b.onclick = ()=>{ state.tone = t; renderTones(); draw();
+      $$('.cell.sel').forEach(n=>n.classList.remove('sel'));
+      const cur = grid.querySelector('.cell[data-c="'+CSS.escape(state.emoji)+'"]');
+      if(cur) cur.classList.add('sel');
+    };
+    box.appendChild(b);
+  });
+}
+
+/* ============================================================
+   7. EXPORT
+   ============================================================ */
+function pngBlob(){ return new Promise(r=>canvas.toBlob(r,'image/png')); }
+
+async function copyPng(){
+  try{
+    const blob = await pngBlob();
+    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+    toast('PNG copied to clipboard');
+  }catch(err){
+    toast('Clipboard blocked — use ⬇ PNG');
+  }
+}
+
+function download(name, data, type){
+  const blob = data instanceof Blob ? data : new Blob([data], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 1500);
+}
+
+async function downloadPng(){
+  const blob = await pngBlob();
+  download('emoji-'+slug(state.name)+'-'+state.size+'.png', blob);
+  toast('PNG downloaded');
+}
+
+function svgString(){
+  const S = state.size, pad = S*state.pad, fs = Math.max(1, S - pad*2);
+  const bg = state.bgOn
+    ? `<rect width="${S}" height="${S}" rx="${state.circle ? S/2 : S*state.rad}" fill="${state.bg}"/>`
+    : '';
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">
+${bg}
+<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central"
+      font-size="${fs}" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif">${current()}</text>
+</svg>`;
+}
+
+function downloadSvg(){
+  download('emoji-'+slug(state.name)+'.svg', svgString(), 'image/svg+xml');
+  toast('SVG downloaded');
+}
+
+function buildSnippet(kind){
+  const uri = canvas.toDataURL('image/png');
+  const S = state.size, alt = state.name || 'emoji', cls = 'emoji-'+slug(state.name);
+  switch(kind){
+    case 'html':
+      return `<img src="${uri}"\n     width="${S}" height="${S}"\n     alt="${alt}">`;
+    case 'css':
+      return `.${cls} {\n  width: ${S}px;\n  height: ${S}px;\n  background: url("${uri}") center / contain no-repeat;\n}`;
+    case 'react':
+      return `export function Emoji(props) {\n  return (\n    <img\n      src="${uri}"\n      width={${S}}\n      height={${S}}\n      alt="${alt}"\n      {...props}\n    />\n  );\n}`;
+    case 'svg':
+      return svgString();
+    case 'base64':
+      return uri.split(',')[1];
+    case 'uri':
+      return uri;
+    default:
+      return '';
+  }
+}
+
+function updateSnippet(){ $('#snip').value = buildSnippet($('#kind').value); }
+$('#kind').addEventListener('change', updateSnippet);
+
+$('#copySnip').addEventListener('click', ()=> copyText($('#snip').value, 'Snippet copied'));
+$('#copyPng').addEventListener('click', copyPng);
+$('#dlPng').addEventListener('click', downloadPng);
+$('#dlSvg').addEventListener('click', downloadSvg);
+
+/* whole-library JSON */
+$('#json').addEventListener('click', ()=>{
+  const out = EMOJI.map(e=>({
+    emoji: e.c,
+    name: e.n,
+    keywords: e.k ? e.k.split(' ').filter(Boolean) : [],
+    category: CATS[e.cat] || e.cat,
+    codepoints: cps(e.c),
+    html: toHtml(e.c),
+    js: toJs(e.c),
+    python: toPy(e.c),
+    url: toUrl(e.c)
+  }));
+  download('emoji.json', JSON.stringify({version:1, count:out.length, emoji:out}, null, 1), 'application/json');
+  toast('emoji.json downloaded (' + out.length + ' entries)');
+});
+
+/* ============================================================
+   8. SEARCH / CLIPBOARD / TOAST
+   ============================================================ */
+let searchTimer;
+$('#q').addEventListener('input', e=>{
+  clearTimeout(searchTimer);
+  const v = e.target.value.trim().toLowerCase();
+  searchTimer = setTimeout(()=>{ query = v; renderGrid(); }, 60);
+});
+
+document.addEventListener('keydown', e=>{
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+  if(e.key === '/' && !typing){ e.preventDefault(); $('#q').focus(); }
+  if(e.key === 'Escape'){ $('#q').value=''; query=''; renderGrid(); $('#q').blur(); }
+});
+
+async function copyText(text, msg){
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch(_){
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); }catch(__){}
+    ta.remove();
+  }
+  if(msg) toast(msg);
+}
+
+let toastTimer;
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('on'), 1400);
+}
+
+/* ============================================================
+   9. BOOT
+   ============================================================ */
+buildChips();
+renderGrid();
+renderTones();
+draw();
+</script>
+
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+</html>

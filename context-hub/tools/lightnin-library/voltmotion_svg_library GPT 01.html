@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#060b12">
+<title>VoltMotion SVG Library</title>
+<style>
+:root{
+  --bg:#050912;--panel:#0b1320;--panel2:#101c2c;--line:#24344a;--text:#ecf8ff;
+  --muted:#8aa1b5;--accent:#67e8ff;--accent2:#9b7cff;--good:#7dffb2;--danger:#ff6b8a;
+  --radius:18px;--shadow:0 18px 60px #0008;--speed:1;--glow:1;--stroke:2.5px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 20% -10%,#153456 0,transparent 34%),
+    radial-gradient(circle at 90% 0,#281d55 0,transparent 30%),
+    linear-gradient(180deg,#070c14,#03060b 65%);
+}
+button,input,select{font:inherit}
+button{color:inherit}
+.app{max-width:1800px;margin:auto;padding:18px}
+header{
+  position:sticky;top:10px;z-index:20;display:grid;grid-template-columns:minmax(260px,1fr) auto;
+  gap:14px;align-items:center;padding:14px 16px;border:1px solid #ffffff16;border-radius:22px;
+  background:#07101ce8;backdrop-filter:blur(20px) saturate(140%);box-shadow:var(--shadow)
+}
+.brand{display:flex;gap:13px;align-items:center;min-width:0}
+.logo{
+  width:48px;height:48px;border-radius:15px;display:grid;place-items:center;flex:0 0 auto;
+  background:linear-gradient(145deg,#0c1e2d,#07111c);border:1px solid #72eaff55;box-shadow:inset 0 0 25px #51dfff18,0 0 22px #51dfff16
+}
+.logo svg{width:28px;height:28px;filter:drop-shadow(0 0 8px #73efff)}
+h1{margin:0;font-size:clamp(1.05rem,2vw,1.55rem);letter-spacing:.02em}
+.subtitle{margin-top:3px;color:var(--muted);font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.btn,.icon-btn{
+  border:1px solid #ffffff1a;background:linear-gradient(180deg,#162438,#0d1725);border-radius:12px;
+  padding:10px 13px;cursor:pointer;transition:.2s;box-shadow:inset 0 1px #fff1
+}
+.btn:hover,.icon-btn:hover{transform:translateY(-1px);border-color:#67e8ff66;box-shadow:0 8px 24px #0006,0 0 16px #67e8ff14}
+.btn.primary{background:linear-gradient(135deg,#167c95,#6551ba);border-color:#8cefff66}
+.btn.active{background:#17394a;border-color:#67e8ff88}
+.icon-btn{padding:10px 11px;min-width:42px}
+.toolbar{
+  margin:16px 0;display:grid;grid-template-columns:minmax(220px,1fr) minmax(160px,220px) repeat(3,minmax(125px,1fr));
+  gap:10px;padding:12px;border:1px solid #ffffff12;border-radius:18px;background:#09111bcc
+}
+.field{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:12px;background:#0d1827;border:1px solid #ffffff10;min-width:0}
+.field label{font-size:.72rem;color:var(--muted);white-space:nowrap}
+.field input[type="search"]{width:100%;background:transparent;border:0;outline:0;color:var(--text);min-width:0}
+.field select{width:100%;background:transparent;border:0;outline:0;color:var(--text);min-width:0}
+.field select option{background:#0d1827}
+.field input[type="range"]{width:100%;accent-color:var(--accent)}
+.field .value{font-size:.72rem;color:var(--accent);min-width:44px;text-align:right}
+.stats{display:flex;align-items:center;justify-content:space-between;margin:0 2px 12px;color:var(--muted);font-size:.8rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:14px}
+.card{
+  position:relative;overflow:hidden;min-height:286px;border-radius:var(--radius);border:1px solid #ffffff12;
+  background:linear-gradient(160deg,#101b2aeb,#07101ae8);box-shadow:0 14px 36px #0005;transition:.22s
+}
+.card:hover{transform:translateY(-3px);border-color:#67e8ff55;box-shadow:0 18px 42px #0007,0 0 28px #67e8ff0d}
+.preview{
+  height:190px;display:grid;place-items:center;position:relative;overflow:hidden;
+  background:
+    linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px),
+    radial-gradient(circle at 50% 45%,#15304b,#07101a 62%);
+  background-size:28px 28px,28px 28px,auto
+}
+.preview::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 65%,#07101b)}
+.preview svg{width:100%;height:100%;display:block;filter:saturate(1.1)}
+.card-body{padding:12px 13px 13px}
+.card-top{display:flex;justify-content:space-between;gap:8px;align-items:start}
+.card h3{font-size:.92rem;margin:0 0 4px}
+.card p{font-size:.72rem;color:var(--muted);margin:0;line-height:1.35}
+.badge{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 7px;border-radius:999px;background:#67e8ff13;color:#91edff;border:1px solid #67e8ff25;white-space:nowrap}
+.card-actions{display:flex;gap:7px;margin-top:11px}
+.card-actions button{flex:1;padding:8px 9px;border-radius:10px;border:1px solid #ffffff14;background:#101d2c;cursor:pointer;font-size:.72rem}
+.card-actions button:hover{border-color:#67e8ff77;color:#a6f4ff}
+.empty{display:none;text-align:center;padding:80px 20px;color:var(--muted)}
+.drawer{
+  position:fixed;z-index:60;right:14px;bottom:14px;width:min(520px,calc(100vw - 28px));max-height:calc(100vh - 28px);
+  border:1px solid #ffffff20;border-radius:22px;background:#08111df4;backdrop-filter:blur(22px);box-shadow:0 30px 80px #000b;
+  transform:translateY(calc(100% + 30px));opacity:0;transition:.28s;overflow:hidden
+}
+.drawer.open{transform:none;opacity:1}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:14px 15px;border-bottom:1px solid #ffffff12}
+.drawer-head h2{font-size:1rem;margin:0}
+.drawer-preview{height:290px;background:radial-gradient(circle,#122c45,#050a11 68%);display:grid;place-items:center}
+.drawer-preview svg{width:100%;height:100%}
+.drawer-code{position:relative}
+.drawer pre{margin:0;padding:14px;overflow:auto;max-height:250px;background:#04080d;color:#b9f6ff;font-size:.71rem;line-height:1.5;tab-size:2}
+.drawer-foot{display:flex;gap:8px;padding:12px;border-top:1px solid #ffffff12}
+.toast{position:fixed;left:50%;bottom:22px;z-index:100;transform:translate(-50%,120px);opacity:0;background:#0c1b28;border:1px solid #7eeaff55;padding:10px 14px;border-radius:12px;box-shadow:0 18px 50px #0009;transition:.25s;font-size:.82rem}
+.toast.show{transform:translate(-50%,0);opacity:1}
+footer{text-align:center;padding:28px 8px 10px;color:#6f8496;font-size:.72rem}
+.kbd{padding:2px 6px;border:1px solid #ffffff1c;border-bottom-width:2px;border-radius:6px;background:#111d2a;color:#b8cad7}
+@media(max-width:1100px){.toolbar{grid-template-columns:1fr 1fr 1fr}.field.search{grid-column:span 2}}
+@media(max-width:720px){
+  .app{padding:9px}.subtitle{display:none}header{top:6px;grid-template-columns:1fr;padding:10px}.header-actions{justify-content:stretch}.header-actions .btn{flex:1;padding:9px 7px;font-size:.72rem}
+  .toolbar{grid-template-columns:1fr 1fr;margin-top:10px}.field.search{grid-column:1/-1}.grid{grid-template-columns:1fr 1fr;gap:9px}.card{min-height:248px}.preview{height:155px}.card p{display:none}.card-actions button{font-size:.66rem;padding:7px 4px}
+}
+@media(max-width:470px){.grid{grid-template-columns:1fr}.preview{height:185px}.card p{display:block}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 100 100"><path d="M58 4 18 55h29l-8 41 43-57H54z" fill="none" stroke="#7cecff" stroke-width="8" stroke-linejoin="round"/></svg>
+    </div>
+    <div>
+      <h1>VoltMotion SVG Library</h1>
+      <div class="subtitle">Lightning, orbital systems, energy motion, particles, portals, trails, signals, and animated effects.</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn" id="pauseAll">⏸ Pause all</button>
+    <button class="btn" id="randomize">✦ Randomize</button>
+    <button class="btn primary" id="copyBundle">⧉ Copy library data</button>
+  </div>
+</header>
+
+<section class="toolbar" aria-label="Library controls">
+  <div class="field search"><span>⌕</span><input id="search" type="search" placeholder="Search lightning, orbit, portal, trail…" autocomplete="off"></div>
+  <div class="field"><label for="category">Category</label><select id="category"></select></div>
+  <div class="field"><label for="speed">Speed</label><input id="speed" type="range" min=".25" max="3" value="1" step=".05"><span class="value" id="speedVal">1.00×</span></div>
+  <div class="field"><label for="glow">Glow</label><input id="glow" type="range" min="0" max="2.5" value="1" step=".05"><span class="value" id="glowVal">1.00×</span></div>
+  <div class="field"><label for="stroke">Stroke</label><input id="stroke" type="range" min="1" max="8" value="2.5" step=".25"><span class="value" id="strokeVal">2.50</span></div>
+</section>
+
+<div class="stats"><span id="count">0 effects</span><span>Click any preview to inspect · <span class="kbd">Esc</span> closes inspector</span></div>
+<main class="grid" id="grid"></main>
+<div class="empty" id="empty">No effects match that search.</div>
+<footer>Pure inline SVG · No dependencies · Copy, edit, remix, and embed anywhere.</footer>
+</div>
+
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head"><h2 id="drawerTitle">Effect</h2><button class="icon-btn" id="closeDrawer" aria-label="Close">✕</button></div>
+  <div class="drawer-preview" id="drawerPreview"></div>
+  <div class="drawer-code"><pre><code id="drawerCode"></code></pre></div>
+  <div class="drawer-foot"><button class="btn primary" id="copySvg">Copy SVG</button><button class="btn" id="downloadSvg">Download .svg</button><button class="btn" id="copyData">Copy preset JSON</button></div>
+</aside>
+<div class="toast" id="toast">Copied</div>
+
+<script>
+(() => {
+'use strict';
+
+const C = {
+  cyan:'#78eeff', blue:'#4fa8ff', purple:'#aa83ff', pink:'#ff73d1', white:'#f5fdff',
+  gold:'#ffd36b', lime:'#82ffb0', red:'#ff6b80', orange:'#ff9c5f', dim:'#24415e'
+};
+const ns='http://www.w3.org/2000/svg';
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const pts=(cx,cy,r,n,phase=0)=>Array.from({length:n},(_,i)=>{const a=phase+i*Math.PI*2/n;return [cx+Math.cos(a)*r,cy+Math.sin(a)*r]});
+const pathFrom=arr=>arr.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+const rand=(a,b)=>a+Math.random()*(b-a);
+
+function shell(body, defs='', view='0 0 320 190', extra=''){
+  return `<svg xmlns="${ns}" viewBox="${view}" role="img" aria-label="Animated SVG effect" ${extra}>
+  <defs>
+    <filter id="glow"><feGaussianBlur stdDeviation="${(4*state.glow).toFixed(2)}" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="soft"><feGaussianBlur stdDeviation="${(10*state.glow).toFixed(2)}"/></filter>
+    <radialGradient id="core"><stop stop-color="#fff"/><stop offset=".2" stop-color="${C.cyan}"/><stop offset="1" stop-color="${C.blue}" stop-opacity="0"/></radialGradient>
+    <linearGradient id="energy" x1="0" x2="1"><stop stop-color="${C.purple}"/><stop offset=".5" stop-color="${C.cyan}"/><stop offset="1" stop-color="${C.white}"/></linearGradient>
+    ${defs}
+  </defs>
+  <style>
+    .a{animation-duration:calc(var(--d,1s)/${state.speed});animation-iteration-count:infinite;animation-timing-function:linear;transform-box:fill-box;transform-origin:center}
+    .pulse{animation-name:pulse}.spin{animation-name:spin}.spinR{animation-name:spinR}.dash{animation-name:dash}.flicker{animation-name:flicker}.float{animation-name:float}.wave{animation-name:wave}.scan{animation-name:scan}.orbit{animation-name:orbit}.shake{animation-name:shake}.blink{animation-name:blink}.stretch{animation-name:stretch}
+    @keyframes spin{to{transform:rotate(360deg)}}@keyframes spinR{to{transform:rotate(-360deg)}}@keyframes pulse{0%,100%{opacity:.35;transform:scale(.82)}50%{opacity:1;transform:scale(1.12)}}@keyframes dash{to{stroke-dashoffset:-180}}@keyframes flicker{0%,8%,12%,18%,60%,64%,100%{opacity:1}10%,15%,62%{opacity:.15}}@keyframes float{0%,100%{transform:translateY(-8px)}50%{transform:translateY(10px)}}@keyframes wave{0%,100%{transform:translateX(-10px) skewX(-6deg)}50%{transform:translateX(10px) skewX(6deg)}}@keyframes scan{0%{transform:translateX(-180px)}100%{transform:translateX(180px)}}@keyframes orbit{from{transform:rotate(0deg) translateX(var(--r,70px)) rotate(0deg)}to{transform:rotate(360deg) translateX(var(--r,70px)) rotate(-360deg)}}@keyframes shake{0%,100%{transform:translate(0)}20%{transform:translate(-4px,2px)}40%{transform:translate(4px,-2px)}60%{transform:translate(-2px,-3px)}80%{transform:translate(3px,3px)}}@keyframes blink{0%,48%,52%,100%{opacity:1}49%,51%{opacity:0}}@keyframes stretch{0%,100%{transform:scaleX(.5)}50%{transform:scaleX(1.25)}}
+  </style>${body}</svg>`;
+}
+
+function line(points,color=C.cyan,w=state.stroke,extra=''){
+ return `<path d="${pathFrom(points)}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`;
+}
+function boltPoints(x1=150,y1=12,x2=170,y2=178,segments=10,jitter=24){
+ const out=[[x1,y1]];
+ for(let i=1;i<segments;i++){const t=i/segments;out.push([x1+(x2-x1)*t+rand(-jitter,jitter),y1+(y2-y1)*t])}
+ out.push([x2,y2]); return out;
+}
+function particles(n=18,color=C.cyan){
+ return Array.from({length:n},(_,i)=>{
+   const x=rand(20,300), y=rand(15,175), r=rand(1,3), d=rand(.8,2.6), delay=rand(-3,0);
+   return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${color}" opacity="${rand(.25,.9).toFixed(2)}" class="a pulse" style="--d:${d}s;animation-delay:${delay}s"/>`;
+ }).join('');
+}
+function ring(cx=160,cy=95,rx=70,ry=70,color=C.cyan,w=state.stroke,extra=''){
+ return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="${color}" stroke-width="${w}" ${extra}/>`;
+}
+
+const generators={
+classicBolt:()=>{const p=boltPoints(158,8,140,182,11,22);return shell(`<circle cx="157" cy="9" r="22" fill="url(#core)" opacity=".38" class="a pulse" style="--d:.8s"/>${line(p,C.white,state.stroke*1.7,'filter="url(#glow)" class="a flicker" style="--d:1.8s"')}${line(p,C.cyan,state.stroke*.7)}`)},
+branchedBolt:()=>{const main=boltPoints(157,7,161,184,12,19);let b='';[3,5,7,8].forEach((idx,j)=>{const start=main[idx], dir=j%2?-1:1;const end=[start[0]+dir*rand(45,90),start[1]+rand(30,58)];b+=line(boltPoints(start[0],start[1],end[0],end[1],5,10),j%2?C.purple:C.blue,state.stroke*.75,'opacity=".85"')});return shell(`<g filter="url(#glow)" class="a flicker" style="--d:2.2s">${line(main,C.white,state.stroke*1.35)}${b}</g>`)},
+forkedBolt:()=>{const stem=boltPoints(160,10,158,92,6,16),a=boltPoints(158,92,82,181,7,16),b=boltPoints(158,92,238,181,7,16);return shell(`<g filter="url(#glow)" class="a flicker" style="--d:1.4s">${line(stem,C.white,state.stroke*1.25)}${line(a,C.cyan,state.stroke)}${line(b,C.purple,state.stroke)}</g>`)},
+horizontalArc:()=>{const p=boltPoints(18,98,302,90,15,19);return shell(`<g filter="url(#glow)">${line(p,C.white,state.stroke*1.4,'class="a dash" stroke-dasharray="14 8" style="--d:1.1s"')}${line(p,C.cyan,state.stroke*.65)}</g><circle cx="18" cy="98" r="18" fill="url(#core)" class="a pulse" style="--d:.8s"/><circle cx="302" cy="90" r="18" fill="url(#core)" class="a pulse" style="--d:.9s"/>`)},
+chainLightning:()=>{const nodes=[[30,95],[88,52],[145,108],[204,58],[286,98]];let s='';for(let i=0;i<nodes.length-1;i++)s+=line(boltPoints(...nodes[i],...nodes[i+1],5,10),i%2?C.purple:C.cyan,state.stroke,'class="a flicker" style="--d:'+(1+i*.15)+'s"');return shell(`<g filter="url(#glow)">${s}${nodes.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="${i===0||i===nodes.length-1?8:5}" fill="${i%2?C.purple:C.cyan}" class="a pulse" style="--d:${.8+i*.1}s"/>`).join('')}</g>`)},
+ballLightning:()=>shell(`<circle cx="160" cy="95" r="58" fill="url(#core)" opacity=".55" class="a pulse" style="--d:1.8s"/><circle cx="160" cy="95" r="26" fill="${C.white}" filter="url(#glow)" class="a pulse" style="--d:.85s"/>${particles(28,C.cyan)}<g class="a spin" style="--d:3s" filter="url(#glow)">${line(boltPoints(105,92,215,98,9,15),C.purple,state.stroke*.7)}</g>`) ,
+electricWeb:()=>{const center=[160,95],radials=12;let s='';for(let i=0;i<radials;i++){const a=i*Math.PI*2/radials,end=[160+Math.cos(a)*92,95+Math.sin(a)*72];s+=line(boltPoints(center[0],center[1],end[0],end[1],6,8),i%3===0?C.purple:C.cyan,state.stroke*.55)}for(let r=25;r<90;r+=22)s+=`<path d="${pathFrom(pts(160,95,r,radials,.12))} Z" fill="none" stroke="${C.blue}" stroke-width="${state.stroke*.35}" opacity=".55"/>`;return shell(`<g filter="url(#glow)" class="a pulse" style="--d:2.1s">${s}<circle cx="160" cy="95" r="6" fill="${C.white}"/></g>`)},
+teslaCoil:()=>{let arcs='';[-1,1].forEach((d,i)=>arcs+=line(boltPoints(160,57,160+d*120,22+i*130,10,20),i?C.purple:C.cyan,state.stroke*.85,'class="a flicker" style="--d:'+(1.5+i*.3)+'s"'));return shell(`<g filter="url(#glow)">${arcs}<circle cx="160" cy="68" r="27" fill="${C.dim}" stroke="${C.white}" stroke-width="2"/><circle cx="160" cy="68" r="18" fill="url(#core)" class="a pulse" style="--d:.9s"/><path d="M125 182h70l-12-95h-46z" fill="#101c2a" stroke="#3e617b" stroke-width="3"/><path d="M137 104h46M134 124h52M132 145h56" stroke="${C.cyan}" opacity=".6" class="a blink" style="--d:1.2s"/></g>`)},
+thunderRing:()=>shell(`<g filter="url(#glow)" class="a pulse" style="--d:1.5s">${ring(160,95,72,72,C.cyan,state.stroke*1.2,'stroke-dasharray="18 9" class="a dash" style="--d:1.2s"')}${line([[160,32],[138,88],[169,84],[146,158],[190,76],[158,81]],C.white,state.stroke*1.25)}</g>`) ,
+sheetLightning:()=>{let s='';for(let i=0;i<8;i++)s+=line(boltPoints(25+i*39,20,20+i*40,170,9,12),i%2?C.blue:C.cyan,state.stroke*.55,`opacity="${.35+i*.05}" class="a flicker" style="--d:${1+rand(0,1.5)}s;animation-delay:${rand(-2,0)}s"`);return shell(`<rect width="320" height="190" fill="${C.blue}" opacity=".04" class="a blink" style="--d:2.5s"/><g filter="url(#glow)">${s}</g>`)},
+coronaDischarge:()=>{let s='';for(let i=0;i<26;i++){const a=i*Math.PI*2/26,start=[160+Math.cos(a)*42,95+Math.sin(a)*42],end=[160+Math.cos(a)*rand(62,88),95+Math.sin(a)*rand(62,88)];s+=line(boltPoints(...start,...end,4,5),i%4===0?C.purple:C.cyan,state.stroke*.35)}return shell(`<circle cx="160" cy="95" r="41" fill="#0e1b2a" stroke="${C.white}" stroke-width="2"/><g filter="url(#glow)" class="a pulse" style="--d:1.1s">${s}</g>`)},
+plasmaRibbon:()=>{const d='M20 105 C70 10 110 180 160 90 S250 20 300 110';return shell(`<path d="${d}" fill="none" stroke="${C.purple}" stroke-width="${state.stroke*4}" opacity=".22" filter="url(#soft)"/><path d="${d}" fill="none" stroke="url(#energy)" stroke-width="${state.stroke}" stroke-dasharray="12 9" class="a dash" style="--d:1.4s" filter="url(#glow)"/><path d="M20 115 C75 25 105 170 160 100 S250 35 300 120" fill="none" stroke="${C.cyan}" stroke-width="${state.stroke*.55}" opacity=".65"/>`)},
+sparkShower:()=>{let s='';for(let i=0;i<38;i++){const a=rand(Math.PI*.1,Math.PI*.9),len=rand(20,95),x2=160+Math.cos(a)*len,y2=36+Math.sin(a)*len;s+=`<path d="M160 36 L${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="${i%5===0?C.white:C.gold}" stroke-width="${rand(.8,2.2).toFixed(1)}" stroke-linecap="round" class="a dash" stroke-dasharray="${rand(3,12).toFixed(1)} ${rand(8,18).toFixed(1)}" style="--d:${rand(.35,1.2).toFixed(2)}s;animation-delay:${rand(-2,0).toFixed(2)}s"/>`}return shell(`<g filter="url(#glow)">${s}<circle cx="160" cy="36" r="8" fill="${C.white}" class="a pulse" style="--d:.6s"/></g>`)},
+electricCage:()=>{let s='';for(let i=0;i<8;i++){const x=55+i*30;s+=line(boltPoints(x,28,x,164,9,9),i%2?C.purple:C.cyan,state.stroke*.5,`class="a flicker" style="--d:${1+i*.12}s"`)}return shell(`<ellipse cx="160" cy="28" rx="112" ry="18" fill="none" stroke="${C.white}" stroke-width="2"/><ellipse cx="160" cy="164" rx="112" ry="18" fill="none" stroke="${C.white}" stroke-width="2"/><g filter="url(#glow)">${s}</g>`)},
+electricHeart:()=>{const d='M160 162 C145 138 66 105 71 57 C75 18 128 19 160 59 C192 19 245 18 249 57 C254 105 175 138 160 162Z';return shell(`<path d="${d}" fill="${C.red}" opacity=".08" stroke="${C.pink}" stroke-width="${state.stroke*.8}" filter="url(#glow)" class="a pulse" style="--d:1.2s"/><path d="M78 98h41l16-31 21 62 18-44 14 24h54" fill="none" stroke="${C.white}" stroke-width="${state.stroke}" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="16 8" class="a dash" style="--d:1s" filter="url(#glow)"/>`)},
+circuitStrike:()=>{const d='M28 36h62v38h55v44h70v34h78';return shell(`<g filter="url(#glow)"><path d="${d}" fill="none" stroke="${C.cyan}" stroke-width="${state.stroke}" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="14 8" class="a dash" style="--d:1.25s"/>${[[28,36],[90,74],[145,118],[215,152],[293,152]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="${C.white}" class="a pulse" style="--d:.8s"/>`).join('')}</g><path d="M40 157h42v-27h39M201 53h47v32h31" fill="none" stroke="${C.dim}" stroke-width="2"/>`)},
+microArcs:()=>{let s='';for(let i=0;i<18;i++){const x=rand(30,290),y=rand(28,165),x2=x+rand(-35,35),y2=y+rand(-22,22);s+=line(boltPoints(x,y,x2,y2,4,6),i%3?C.cyan:C.purple,state.stroke*.45,`class="a flicker" style="--d:${rand(.45,1.6).toFixed(2)}s;animation-delay:${rand(-2,0).toFixed(2)}s"`)}return shell(`<g filter="url(#glow)">${s}</g>${particles(18,C.white)}`)},
+
+orbitSingle:()=>shell(`${ring(160,95,102,44,C.dim,1.5)}<circle cx="160" cy="95" r="25" fill="url(#core)" class="a pulse" style="--d:2s"/><g class="a spin" style="--d:2.4s;transform-origin:160px 95px"><circle cx="262" cy="95" r="8" fill="${C.cyan}" filter="url(#glow)"/></g>`) ,
+orbitDual:()=>shell(`<g class="a spin" style="--d:3.2s;transform-origin:160px 95px">${ring(160,95,108,42,C.cyan,state.stroke*.6)}<circle cx="268" cy="95" r="7" fill="${C.white}" filter="url(#glow)"/></g><g class="a spinR" style="--d:2.1s;transform-origin:160px 95px">${ring(160,95,72,72,C.purple,state.stroke*.6)}<circle cx="160" cy="23" r="6" fill="${C.purple}" filter="url(#glow)"/></g><circle cx="160" cy="95" r="18" fill="${C.blue}" class="a pulse" style="--d:1.3s" filter="url(#glow)"/>`) ,
+atomicOrbit:()=>{let o='';[0,60,120].forEach((deg,i)=>o+=`<g transform="rotate(${deg} 160 95)" class="a ${i%2?'spinR':'spin'}" style="--d:${2.8+i*.5}s;transform-origin:160px 95px">${ring(160,95,105,34,i===1?C.purple:C.cyan,state.stroke*.55)}<circle cx="265" cy="95" r="5" fill="${C.white}" filter="url(#glow)"/></g>`);return shell(`${o}<circle cx="160" cy="95" r="13" fill="${C.white}" filter="url(#glow)" class="a pulse" style="--d:1s"/>`)},
+orbitSwarm:()=>{let s='';for(let i=0;i<18;i++){const r=32+i*4.2,d=.9+i*.13,col=i%4===0?C.purple:C.cyan;s+=`<circle cx="160" cy="95" r="${rand(2,4).toFixed(1)}" fill="${col}" filter="url(#glow)" class="a orbit" style="--r:${r}px;--d:${d}s;animation-delay:${(-i*.17).toFixed(2)}s"/>`}return shell(`<circle cx="160" cy="95" r="18" fill="url(#core)" class="a pulse" style="--d:1.2s"/>${s}`)},
+precessingOrbit:()=>shell(`<g class="a spin" style="--d:4s;transform-origin:160px 95px"><g class="a wave" style="--d:1.9s">${ring(160,95,110,37,C.cyan,state.stroke*.7,'stroke-dasharray="7 8"')}<circle cx="270" cy="95" r="7" fill="${C.white}" filter="url(#glow)"/></g></g><g class="a spinR" style="--d:7s;transform-origin:160px 95px">${ring(160,95,75,58,C.purple,state.stroke*.55)}</g><circle cx="160" cy="95" r="17" fill="${C.blue}" class="a pulse" style="--d:1.5s"/>`) ,
+figureEightOrbit:()=>{const d='M60 95 C60 25 160 25 160 95 C160 165 260 165 260 95 C260 25 160 25 160 95 C160 165 60 165 60 95Z';return shell(`<path id="p8" d="${d}" fill="none" stroke="${C.dim}" stroke-width="2"/><circle r="7" fill="${C.cyan}" filter="url(#glow)"><animateMotion dur="${(4/state.speed).toFixed(2)}s" repeatCount="indefinite"><mpath href="#p8"/></animateMotion></circle><circle r="5" fill="${C.purple}" filter="url(#glow)"><animateMotion dur="${(3.1/state.speed).toFixed(2)}s" begin="-1.5s" repeatCount="indefinite"><mpath href="#p8"/></animateMotion></circle><circle cx="160" cy="95" r="12" fill="${C.white}" class="a pulse" style="--d:1.2s"/>`)},
+spiralOrbit:()=>{let d='M160 95';for(let i=1;i<=90;i++){const a=i*.42,r=i*1.25;d+=` L${(160+Math.cos(a)*r).toFixed(1)} ${(95+Math.sin(a)*r*.62).toFixed(1)}`};return shell(`<path id="spiralP" d="${d}" fill="none" stroke="${C.dim}" stroke-width="2"/><circle r="6" fill="${C.cyan}" filter="url(#glow)"><animateMotion dur="${(5/state.speed).toFixed(2)}s" repeatCount="indefinite"><mpath href="#spiralP"/></animateMotion></circle><circle cx="160" cy="95" r="10" fill="${C.white}" class="a pulse" style="--d:.8s"/>`)},
+cometOrbit:()=>{const d='M50 105 C80 20 245 10 278 92 C301 151 177 185 86 143 C50 126 43 111 50 105Z';return shell(`<path id="cometP" d="${d}" fill="none" stroke="${C.dim}" stroke-width="2"/><circle r="7" fill="${C.white}" filter="url(#glow)"><animateMotion dur="${(3.4/state.speed).toFixed(2)}s" repeatCount="indefinite"><mpath href="#cometP"/></animateMotion></circle><circle r="12" fill="${C.cyan}" opacity=".25" filter="url(#soft)"><animateMotion dur="${(3.4/state.speed).toFixed(2)}s" begin="-.08s" repeatCount="indefinite"><mpath href="#cometP"/></animateMotion></circle><circle cx="160" cy="95" r="20" fill="${C.purple}" opacity=".55" class="a pulse" style="--d:1.6s"/>`)},
+gyroRings:()=>shell(`<g class="a spin" style="--d:6s;transform-origin:160px 95px">${ring(160,95,112,38,C.cyan,state.stroke*.7)}<g transform="rotate(60 160 95)">${ring(160,95,112,38,C.purple,state.stroke*.7)}</g><g transform="rotate(120 160 95)">${ring(160,95,112,38,C.white,state.stroke*.45)}</g></g><circle cx="160" cy="95" r="22" fill="#0b1724" stroke="${C.cyan}" stroke-width="2" filter="url(#glow)"/>`) ,
+satelliteOrbit:()=>{const sat=`<g><rect x="-12" y="-7" width="24" height="14" rx="3" fill="#cbefff"/><rect x="-31" y="-5" width="16" height="10" fill="${C.blue}"/><rect x="15" y="-5" width="16" height="10" fill="${C.blue}"/><path d="M0-7V-18" stroke="${C.white}" stroke-width="2"/><circle cy="-21" r="3" fill="${C.cyan}"/></g>`;return shell(`${ring(160,95,108,43,C.dim,1.5)}<circle cx="160" cy="95" r="35" fill="${C.blue}" opacity=".32"/><circle cx="160" cy="95" r="27" fill="#0b1b2e" stroke="${C.cyan}" stroke-width="2"/><g transform="translate(160 95)" class="a orbit" style="--r:108px;--d:5s">${sat}</g>`)},
+orbitalNodes:()=>{let s='';for(let i=0;i<12;i++){const a=i*Math.PI*2/12,x=160+Math.cos(a)*94,y=95+Math.sin(a)*60;s+=`<circle cx="${x}" cy="${y}" r="${i%3===0?6:3.5}" fill="${i%2?C.cyan:C.purple}" class="a pulse" style="--d:${1+i*.08}s;animation-delay:${-i*.1}s" filter="url(#glow)"/>`}return shell(`${ring(160,95,94,60,C.dim,1.2,'stroke-dasharray="4 6"')}${s}<g class="a spin" style="--d:8s;transform-origin:160px 95px"><path d="M66 95L254 95M160 35V155" stroke="${C.blue}" opacity=".35"/></g>`)},
+
+waveMotion:()=>{let s='';for(let j=0;j<4;j++){let d='';for(let x=10;x<=310;x+=6){const y=58+j*26+Math.sin((x+j*18)/27)*13;d+=(x===10?'M':'L')+x+' '+y.toFixed(1)}s+=`<path d="${d}" fill="none" stroke="${[C.cyan,C.blue,C.purple,C.pink][j]}" stroke-width="${state.stroke*.7}" stroke-dasharray="12 7" class="a dash" style="--d:${1.2+j*.3}s" filter="url(#glow)"/>`}return shell(s)},
+bounceMotion:()=>{const d='M28 150 Q72 30 116 150 T204 150 T292 150';return shell(`<path id="bounceP" d="${d}" fill="none" stroke="${C.dim}" stroke-width="2" stroke-dasharray="5 7"/><circle r="10" fill="${C.cyan}" filter="url(#glow)"><animateMotion dur="${(2.3/state.speed).toFixed(2)}s" repeatCount="indefinite" keySplines=".4 0 .6 1" calcMode="spline"><mpath href="#bounceP"/></animateMotion></circle><path d="M20 160H300" stroke="${C.blue}" opacity=".3"/>`)},
+pendulum:()=>shell(`<path d="M160 20v18" stroke="${C.white}" stroke-width="4"/><g class="a wave" style="--d:2s;transform-origin:160px 38px"><path d="M160 38v103" stroke="${C.cyan}" stroke-width="${state.stroke}" filter="url(#glow)"/><circle cx="160" cy="150" r="20" fill="${C.purple}" stroke="${C.white}" stroke-width="2" filter="url(#glow)"/></g>`) ,
+vortex:()=>{let s='';for(let i=0;i<12;i++){const r=18+i*7;const o=(i*18)%360;s+=`<ellipse cx="160" cy="95" rx="${r}" ry="${r*.45}" fill="none" stroke="${i%3===0?C.purple:C.cyan}" stroke-width="${state.stroke*.35}" stroke-dasharray="10 8" transform="rotate(${o} 160 95)" class="a ${i%2?'spinR':'spin'}" style="--d:${1.8+i*.18}s;transform-origin:160px 95px" opacity="${.25+i*.05}"/>`}return shell(`${s}<circle cx="160" cy="95" r="12" fill="${C.white}" filter="url(#glow)" class="a pulse" style="--d:.9s"/>`)},
+boomerang:()=>{const d='M42 142 C105 17 248 20 280 85 C292 115 255 141 220 137 C177 132 154 98 180 75';return shell(`<path id="boomP" d="${d}" fill="none" stroke="${C.dim}" stroke-width="2" stroke-dasharray="5 6"/><path d="M-14 0 L0-7 16 0 0 7Z" fill="${C.cyan}" filter="url(#glow)"><animateMotion dur="${(2.8/state.speed).toFixed(2)}s" repeatCount="indefinite" rotate="auto"><mpath href="#boomP"/></animateMotion></path>`)},
+recoil:()=>shell(`<g class="a shake" style="--d:.65s"><path d="M55 105h160" stroke="${C.white}" stroke-width="${state.stroke*2}" stroke-linecap="round"/><path d="M215 105l-33-21v42z" fill="${C.cyan}" filter="url(#glow)"/></g><g class="a dash" style="--d:.6s">${[0,1,2].map(i=>`<path d="M235 ${85+i*20}h55" stroke="${C.gold}" stroke-width="${state.stroke*.7}" stroke-dasharray="8 10"/>`).join('')}</g>`) ,
+hover:()=>shell(`<ellipse cx="160" cy="159" rx="60" ry="9" fill="${C.cyan}" opacity=".2" filter="url(#soft)" class="a pulse" style="--d:1.8s"/><g class="a float" style="--d:2.2s"><path d="M110 110 L160 45 210 110 186 136h-52z" fill="#102437" stroke="${C.cyan}" stroke-width="2" filter="url(#glow)"/><circle cx="160" cy="100" r="13" fill="${C.white}" class="a pulse" style="--d:.8s"/></g>`) ,
+dashBurst:()=>{let s='';for(let i=0;i<16;i++){const y=24+i*9,len=rand(40,180),x=rand(0,120);s+=`<path d="M${x} ${y}h${len}" stroke="${i%4===0?C.white:C.cyan}" stroke-width="${rand(1,4).toFixed(1)}" stroke-linecap="round" stroke-dasharray="${rand(15,45).toFixed(1)} ${rand(12,28).toFixed(1)}" class="a dash" style="--d:${rand(.4,1.4).toFixed(2)}s"/>`}return shell(`<g filter="url(#glow)">${s}</g><path d="M245 95l-42-25v50z" fill="${C.purple}" class="a pulse" style="--d:.8s"/>`)},
+pathFollower:()=>{const d='M25 135 C55 25 125 25 150 95 S245 175 295 55';return shell(`<path id="motionP" d="${d}" fill="none" stroke="${C.dim}" stroke-width="2" stroke-dasharray="6 7"/><g><circle r="9" fill="${C.cyan}" filter="url(#glow)"/><path d="M-18 0h10" stroke="${C.white}" stroke-width="3"/><animateMotion dur="${(3.4/state.speed).toFixed(2)}s" repeatCount="indefinite" rotate="auto"><mpath href="#motionP"/></animateMotion></g>`)},
+morphBlob:()=>shell(`<path fill="url(#energy)" opacity=".72" filter="url(#glow)"><animate attributeName="d" dur="${(4/state.speed).toFixed(2)}s" repeatCount="indefinite" values="M87 100C72 45 127 15 177 38C226 61 260 111 220 151C179 190 104 167 87 100Z;M74 74C107 19 173 25 223 58C273 92 231 157 178 168C126 179 41 129 74 74Z;M96 45C151 13 227 47 235 103C243 159 176 179 120 157C64 135 41 77 96 45Z;M87 100C72 45 127 15 177 38C226 61 260 111 220 151C179 190 104 167 87 100Z"/></path><circle cx="160" cy="95" r="9" fill="${C.white}" class="a pulse" style="--d:1s"/>`),
+teleport:()=>{let bars='';for(let i=0;i<11;i++){const x=72+i*18,h=rand(45,145),y=95-h/2;bars+=`<rect x="${x}" y="${y.toFixed(1)}" width="5" height="${h.toFixed(1)}" rx="2.5" fill="${i%3===0?C.white:C.cyan}" opacity="${rand(.25,.9).toFixed(2)}" class="a stretch" style="--d:${rand(.5,1.4).toFixed(2)}s;transform-origin:${x+2.5}px 95px" filter="url(#glow)"/>`}return shell(`${bars}<ellipse cx="160" cy="95" rx="105" ry="28" fill="none" stroke="${C.purple}" stroke-width="2" class="a pulse" style="--d:1.2s"/>`)},
+driftParticles:()=>{let s='';for(let i=0;i<42;i++){const x=rand(-20,300),y=rand(15,175),r=rand(1,4);s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${i%5===0?C.purple:C.cyan}" opacity="${rand(.2,.85)}" filter="url(#glow)"><animate attributeName="cx" from="${x}" to="${x+rand(80,220)}" dur="${(rand(2,7)/state.speed).toFixed(2)}s" begin="${rand(-6,0).toFixed(2)}s" repeatCount="indefinite"/></circle>`}return shell(s)},
+shockwave:()=>{let s='';for(let i=0;i<5;i++)s+=`<circle cx="160" cy="95" r="10" fill="none" stroke="${i%2?C.purple:C.cyan}" stroke-width="${state.stroke}" opacity="0"><animate attributeName="r" values="8;120" dur="${((2+i*.2)/state.speed).toFixed(2)}s" begin="${(-i*.42).toFixed(2)}s" repeatCount="indefinite"/><animate attributeName="opacity" values=".95;0" dur="${((2+i*.2)/state.speed).toFixed(2)}s" begin="${(-i*.42).toFixed(2)}s" repeatCount="indefinite"/></circle>`;return shell(`<circle cx="160" cy="95" r="12" fill="${C.white}" filter="url(#glow)"/>${s}`)},
+radarSweep:()=>shell(`<circle cx="160" cy="95" r="78" fill="#0a2730" opacity=".5" stroke="${C.cyan}" stroke-width="2"/><circle cx="160" cy="95" r="50" fill="none" stroke="${C.cyan}" opacity=".25"/><circle cx="160" cy="95" r="24" fill="none" stroke="${C.cyan}" opacity=".25"/><path d="M160 95 L160 17 A78 78 0 0 1 218 43Z" fill="${C.cyan}" opacity=".28" filter="url(#soft)" class="a spin" style="--d:2.4s;transform-origin:160px 95px"/><path d="M82 95h156M160 17v156" stroke="${C.cyan}" opacity=".2"/><circle cx="204" cy="69" r="4" fill="${C.white}" class="a blink" style="--d:1s" filter="url(#glow)"/>`) ,
+scanLine:()=>shell(`<rect x="30" y="25" width="260" height="140" rx="14" fill="#071420" stroke="${C.dim}" stroke-width="2"/><g class="a scan" style="--d:2s"><rect x="145" y="34" width="30" height="122" fill="${C.cyan}" opacity=".12" filter="url(#soft)"/><path d="M160 34v122" stroke="${C.white}" stroke-width="${state.stroke}" filter="url(#glow)"/></g>${Array.from({length:7},(_,i)=>`<path d="M45 ${48+i*16}h230" stroke="${C.blue}" opacity=".12"/>`).join('')}`),
+signalPulse:()=>{let s='';for(let i=0;i<7;i++){const x=45+i*38;s+=`<rect x="${x}" y="${85-rand(10,65)}" width="8" height="${rand(20,120)}" rx="4" fill="${i%2?C.purple:C.cyan}" filter="url(#glow)" class="a stretch" style="--d:${.7+i*.12}s;transform-origin:${x+4}px 95px;transform-box:fill-box"/>`}return shell(`<g>${s}</g><path d="M28 95h264" stroke="${C.white}" opacity=".25"/>`)},
+heartbeat:()=>shell(`<path d="M20 98h75l18-34 22 70 21-95 26 91 19-54 18 22h81" fill="none" stroke="${C.red}" stroke-width="${state.stroke*1.15}" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="28 11" class="a dash" style="--d:1.35s" filter="url(#glow)"/><circle cx="160" cy="95" r="70" fill="none" stroke="${C.pink}" opacity=".12" class="a pulse" style="--d:1.35s"/>`) ,
+portal:()=>{let s='';for(let i=0;i<13;i++){const r=22+i*5.4;s+=`<ellipse cx="160" cy="95" rx="${r}" ry="${r*.72}" fill="none" stroke="${i%3===0?C.purple:C.cyan}" stroke-width="${state.stroke*.45}" stroke-dasharray="${4+i} ${8+i}" class="a ${i%2?'spinR':'spin'}" style="--d:${1+i*.18}s;transform-origin:160px 95px" opacity="${.2+i*.055}"/>`}return shell(`<ellipse cx="160" cy="95" rx="76" ry="55" fill="${C.blue}" opacity=".08" filter="url(#soft)"/>${s}<ellipse cx="160" cy="95" rx="24" ry="17" fill="${C.white}" opacity=".7" class="a pulse" style="--d:.8s" filter="url(#glow)"/>`)},
+wormhole:()=>{let s='';for(let i=0;i<14;i++){const scale=1-i*.055,y=95+i*1.2;s+=`<ellipse cx="160" cy="${y}" rx="${105*scale}" ry="${50*scale}" fill="none" stroke="${i%2?C.purple:C.cyan}" stroke-width="${state.stroke*.42}" opacity="${.15+i*.045}" stroke-dasharray="${8+i} ${12-i*.3}" class="a ${i%2?'spinR':'spin'}" style="--d:${1.2+i*.15}s;transform-origin:160px ${y}px"/>`}return shell(`<g transform="rotate(-12 160 95)">${s}</g>`)},
+meteor:()=>{let s='';for(let i=0;i<8;i++){const y=30+i*20,x=15+i*15;s+=`<path d="M${x} ${y} L${x+150} ${y+65}" stroke="${i%3===0?C.white:C.orange}" stroke-width="${rand(1,4)}" stroke-linecap="round" opacity="${rand(.3,.9)}" stroke-dasharray="${rand(18,65)} ${rand(15,35)}" class="a dash" style="--d:${rand(.45,1.2)}s" filter="url(#glow)"/>`}return shell(`${s}<circle cx="245" cy="145" r="15" fill="${C.gold}" class="a pulse" style="--d:.7s" filter="url(#glow)"/>`)},
+rocketTrail:()=>shell(`<g class="a float" style="--d:1.3s"><path d="M160 28 C142 48 138 80 142 112 H178 C182 80 178 48 160 28Z" fill="#dff9ff" stroke="${C.cyan}" stroke-width="2"/><path d="M142 82 125 113 144 106M178 82 195 113 176 106" fill="${C.blue}"/><circle cx="160" cy="69" r="9" fill="${C.purple}"/><path d="M148 112 C145 145 154 170 160 180 C166 170 175 145 172 112Z" fill="${C.orange}" filter="url(#glow)" class="a pulse" style="--d:.5s"/></g>`) ,
+flame:()=>shell(`<path fill="${C.orange}" opacity=".85" filter="url(#glow)"><animate attributeName="d" dur="${(1.7/state.speed).toFixed(2)}s" repeatCount="indefinite" values="M160 168C110 142 112 104 145 72C157 60 153 35 160 20C185 56 206 72 207 111C208 148 183 169 160 168Z;M160 168C121 153 106 116 139 84C160 64 145 44 167 21C173 58 210 81 202 119C195 151 177 165 160 168Z;M160 168C110 142 112 104 145 72C157 60 153 35 160 20C185 56 206 72 207 111C208 148 183 169 160 168Z"/></path><path d="M160 155C139 143 140 119 158 103C168 94 166 79 172 66C189 92 193 114 184 137C179 149 169 156 160 155Z" fill="${C.white}" opacity=".8" class="a pulse" style="--d:.8s"/>`) ,
+smoke:()=>{let s='';for(let i=0;i<16;i++){const x=160+rand(-28,28),y=170-rand(0,100),r=rand(8,28);s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${i%3===0?'#7890a3':'#3c5061'}" opacity="${rand(.08,.28)}" filter="url(#soft)" class="a float" style="--d:${rand(2,5)}s;animation-delay:${rand(-4,0)}s"/>`}return shell(`<path d="M147 180h26l-8-37h-10z" fill="#1a2a38"/>${s}`)},
+energyTunnel:()=>{let s='';for(let i=0;i<11;i++){const k=i/10,rx=120*(1-k)+8,ry=70*(1-k)+5;s+=`<ellipse cx="160" cy="95" rx="${rx}" ry="${ry}" fill="none" stroke="${i%3===0?C.white:i%2?C.purple:C.cyan}" stroke-width="${state.stroke*.45}" opacity="${.2+i*.065}" stroke-dasharray="${8+i*2} ${12+i}" class="a ${i%2?'spinR':'spin'}" style="--d:${1+i*.15}s;transform-origin:160px 95px"/>`}return shell(`${s}<circle cx="160" cy="95" r="8" fill="${C.white}" filter="url(#glow)"/>`)},
+gridPulse:()=>{let s='';for(let i=0;i<=10;i++){const x=30+i*26;s+=`<path d="M${x} 30v130" stroke="${C.cyan}" opacity=".18"/>`}for(let i=0;i<=6;i++){const y=30+i*21.6;s+=`<path d="M30 ${y}h260" stroke="${C.cyan}" opacity=".18"/>`}return shell(`<g transform="skewX(-12)">${s}</g><circle cx="160" cy="95" r="14" fill="${C.white}" filter="url(#glow)"/><circle cx="160" cy="95" r="8" fill="${C.purple}" class="a pulse" style="--d:1s"/><rect x="30" y="30" width="260" height="130" fill="none" stroke="${C.cyan}" stroke-width="2" class="a pulse" style="--d:2s"/>`)},
+laserSweep:()=>shell(`<path d="M36 150 L282 35" stroke="${C.red}" stroke-width="${state.stroke*2.2}" opacity=".18" filter="url(#soft)" class="a wave" style="--d:2s;transform-origin:160px 95px"/><path d="M36 150 L282 35" stroke="${C.white}" stroke-width="${state.stroke*.7}" filter="url(#glow)" class="a wave" style="--d:2s;transform-origin:160px 95px"/><circle cx="36" cy="150" r="12" fill="${C.red}" class="a pulse" style="--d:.7s"/>`) ,
+dataStream:()=>{let s='';for(let c=0;c<14;c++){const x=18+c*22;for(let r=0;r<9;r++){const y=10+r*22,txt=Math.random()>.5?'1':'0';s+=`<text x="${x}" y="${y}" fill="${c%4===0?C.white:C.lime}" font-size="${rand(8,13)}" opacity="${rand(.15,.9)}" class="a float" style="--d:${rand(1.2,3.8)}s;animation-delay:${rand(-3,0)}s">${txt}</text>`}}return shell(s)},
+neonLoader:()=>shell(`<circle cx="160" cy="95" r="58" fill="none" stroke="${C.dim}" stroke-width="12"/><circle cx="160" cy="95" r="58" fill="none" stroke="url(#energy)" stroke-width="${state.stroke*3}" stroke-linecap="round" stroke-dasharray="92 272" class="a spin" style="--d:1.25s;transform-origin:160px 95px" filter="url(#glow)"/><circle cx="160" cy="95" r="23" fill="${C.blue}" opacity=".35" class="a pulse" style="--d:1.25s"/>`) ,
+infinityFlow:()=>{const d='M55 95 C55 42 115 42 160 95 C205 148 265 148 265 95 C265 42 205 42 160 95 C115 148 55 148 55 95Z';return shell(`<path d="${d}" fill="none" stroke="${C.dim}" stroke-width="10" opacity=".35"/><path d="${d}" fill="none" stroke="url(#energy)" stroke-width="${state.stroke*1.2}" stroke-linecap="round" stroke-dasharray="22 16" class="a dash" style="--d:1.4s" filter="url(#glow)"/>`)},
+magneticField:()=>{let s='';for(let i=0;i<7;i++){const rx=35+i*13,ry=24+i*8;s+=`<path d="M160 ${95-ry} C${160+rx} ${95-ry} ${160+rx} ${95+ry} 160 ${95+ry} C${160-rx} ${95+ry} ${160-rx} ${95-ry} 160 ${95-ry}" fill="none" stroke="${i%2?C.blue:C.cyan}" stroke-width="${state.stroke*.4}" stroke-dasharray="8 7" class="a dash" style="--d:${1.2+i*.2}s" opacity="${.25+i*.08}"/>`}return shell(`<rect x="145" y="64" width="30" height="62" rx="10" fill="${C.red}"/><path d="M145 82h30" stroke="${C.white}" stroke-width="3"/>${s}`)},
+sonicRings:()=>{let s='';for(let i=0;i<6;i++){s+=`<path d="M160 95 A${18+i*18} ${18+i*18} 0 0 1 160 ${95-(18+i*18)}" fill="none" stroke="${i%2?C.purple:C.cyan}" stroke-width="${state.stroke*.75}" opacity="${.9-i*.11}" class="a pulse" style="--d:${1+i*.18}s;animation-delay:${-i*.2}s;transform-origin:160px 95px"/>`}return shell(`<path d="M72 76h28l38-30v98l-38-30H72Z" fill="#10263b" stroke="${C.cyan}" stroke-width="2"/>${s}`)},
+rain:()=>{let s='';for(let i=0;i<40;i++){const x=rand(-20,320),y=rand(-80,190),len=rand(10,30);s+=`<path d="M${x} ${y}l-8 ${len}" stroke="${i%7===0?C.white:C.blue}" stroke-width="${rand(.7,2)}" opacity="${rand(.25,.85)}"><animate attributeName="transform" values="translate(0 0);translate(-35 240)" dur="${(rand(.8,2.2)/state.speed).toFixed(2)}s" begin="${rand(-2,0)}s" repeatCount="indefinite"/></path>`}return shell(s)},
+snow:()=>{let s='';for(let i=0;i<36;i++){const x=rand(0,320),y=rand(-30,190),r=rand(1,4);s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${C.white}" opacity="${rand(.25,.9)}"><animate attributeName="transform" values="translate(0 0);translate(${rand(-35,35)} 230)" dur="${(rand(3,8)/state.speed).toFixed(2)}s" begin="${rand(-7,0)}s" repeatCount="indefinite"/></circle>`}return shell(s)},
+confetti:()=>{let s='';const colors=[C.cyan,C.purple,C.pink,C.gold,C.lime];for(let i=0;i<42;i++){const x=rand(0,320),y=rand(-40,180),w=rand(3,8),h=rand(6,14),rot=rand(0,360);s+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="${colors[i%colors.length]}" transform="rotate(${rot} ${x} ${y})"><animate attributeName="transform" values="translate(0 0) rotate(0 ${x} ${y});translate(${rand(-40,40)} 250) rotate(720 ${x} ${y})" dur="${(rand(2.5,6)/state.speed).toFixed(2)}s" begin="${rand(-6,0)}s" repeatCount="indefinite"/></rect>`}return shell(s)},
+plasmaWave:()=>{let s='';for(let i=0;i<7;i++){let d='';for(let x=10;x<=310;x+=5){const y=95+Math.sin(x/28+i*.65)*Math.cos(x/48-i*.3)*(18+i*2);d+=(x===10?'M':'L')+x+' '+y.toFixed(1)}s+=`<path d="${d}" fill="none" stroke="${i%2?C.purple:C.cyan}" stroke-width="${state.stroke*.4}" opacity="${.22+i*.08}" class="a wave" style="--d:${1.4+i*.12}s" filter="url(#glow)"/>`}return shell(s)},
+energyShield:()=>shell(`<path d="M160 18 L266 56 V105 C266 149 223 176 160 184 C97 176 54 149 54 105 V56Z" fill="${C.blue}" opacity=".08" stroke="${C.cyan}" stroke-width="${state.stroke}" class="a pulse" style="--d:2.1s" filter="url(#glow)"/><path d="M160 36 L245 67 V105 C245 137 210 158 160 166 C110 158 75 137 75 105V67Z" fill="none" stroke="${C.purple}" stroke-width="${state.stroke*.65}" stroke-dasharray="14 9" class="a dash" style="--d:1.4s"/><circle cx="160" cy="99" r="21" fill="${C.white}" opacity=".12" class="a pulse" style="--d:1s"/>`) ,
+quantumDots:()=>{let s='';for(let i=0;i<32;i++){const a=rand(0,Math.PI*2),r=rand(20,110),x=160+Math.cos(a)*r,y=95+Math.sin(a)*r*.65;s+=`<circle cx="${x}" cy="${y}" r="${rand(1.5,4)}" fill="${i%4===0?C.white:i%2?C.purple:C.cyan}" filter="url(#glow)" class="a pulse" style="--d:${rand(.6,2.4)}s;animation-delay:${rand(-2,0)}s"/>`}return shell(`${s}<circle cx="160" cy="95" r="9" fill="${C.white}" class="a pulse" style="--d:.8s"/>`)},
+electricText:()=>shell(`<text x="160" y="112" text-anchor="middle" font-family="system-ui,sans-serif" font-size="55" font-weight="900" letter-spacing="6" fill="none" stroke="${C.cyan}" stroke-width="${state.stroke*.55}" filter="url(#glow)" class="a flicker" style="--d:2.1s">VOLT</text><text x="160" y="112" text-anchor="middle" font-family="system-ui,sans-serif" font-size="55" font-weight="900" letter-spacing="6" fill="${C.white}" opacity=".15" class="a pulse" style="--d:1.4s">VOLT</text>`) ,
+energyArrow:()=>shell(`<path d="M30 82h170V50l90 45-90 45v-32H30Z" fill="${C.blue}" opacity=".15" stroke="${C.cyan}" stroke-width="${state.stroke*.8}" filter="url(#glow)" class="a wave" style="--d:1.3s"/><path d="M45 95h213" stroke="${C.white}" stroke-width="${state.stroke}" stroke-dasharray="22 12" class="a dash" style="--d:.8s" filter="url(#glow)"/>`) ,
+electricDNA:()=>{let s='';for(let i=0;i<=18;i++){const y=20+i*8.4,x1=160+Math.sin(i*.7)*55,x2=160-Math.sin(i*.7)*55;s+=`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${i%2?C.purple:C.cyan}" stroke-width="${state.stroke*.45}" opacity=".55"/><circle cx="${x1}" cy="${y}" r="3" fill="${C.white}"/><circle cx="${x2}" cy="${y}" r="3" fill="${C.white}"/>`}return shell(`<g class="a wave" style="--d:2.2s">${s}</g>`)},
+haloPulse:()=>shell(`<circle cx="160" cy="95" r="68" fill="none" stroke="${C.gold}" stroke-width="${state.stroke*2.5}" opacity=".3" filter="url(#soft)" class="a pulse" style="--d:1.8s"/><circle cx="160" cy="95" r="68" fill="none" stroke="${C.white}" stroke-width="${state.stroke*.55}" stroke-dasharray="16 10" class="a spin" style="--d:3s;transform-origin:160px 95px" filter="url(#glow)"/><circle cx="160" cy="95" r="11" fill="${C.gold}" class="a pulse" style="--d:.9s"/>`)
+};
+
+const presets=[
+['Classic Bolt','Lightning','A clean cloud-to-ground strike.','classicBolt'],
+['Branched Bolt','Lightning','Multi-branch natural lightning.','branchedBolt'],
+['Forked Bolt','Lightning','Symmetrical double fork strike.','forkedBolt'],
+['Horizontal Arc','Lightning','Fast electrical bridge between nodes.','horizontalArc'],
+['Chain Lightning','Lightning','Node-to-node chained discharge.','chainLightning'],
+['Ball Lightning','Lightning','Pulsing plasma sphere and sparks.','ballLightning'],
+['Electric Web','Lightning','Radial web of energized filaments.','electricWeb'],
+['Tesla Coil','Lightning','Animated coil with twin arcs.','teslaCoil'],
+['Thunder Ring','Lightning','Circular thunder sigil and bolt.','thunderRing'],
+['Sheet Lightning','Lightning','Wide atmospheric flash field.','sheetLightning'],
+['Corona Discharge','Lightning','Electrical corona around a conductor.','coronaDischarge'],
+['Plasma Ribbon','Lightning','Flexible flowing plasma filament.','plasmaRibbon'],
+['Spark Shower','Lightning','Bursting hot metal sparks.','sparkShower'],
+['Electric Cage','Lightning','Vertical energized containment field.','electricCage'],
+['Electric Heart','Lightning','Heartbeat waveform with electric glow.','electricHeart'],
+['Circuit Strike','Lightning','Circuit-board electrical traversal.','circuitStrike'],
+['Micro Arcs','Lightning','Randomized small plasma arcs.','microArcs'],
+
+['Single Orbit','Orbit','Simple planet and satellite orbit.','orbitSingle'],
+['Dual Orbit','Orbit','Counter-rotating orbital tracks.','orbitDual'],
+['Atomic Orbit','Orbit','Three-axis electron system.','atomicOrbit'],
+['Orbital Swarm','Orbit','Dense synchronized micro-orbit swarm.','orbitSwarm'],
+['Precessing Orbit','Orbit','Tilting and rotating precession effect.','precessingOrbit'],
+['Figure Eight','Orbit','Continuous lemniscate orbital path.','figureEightOrbit'],
+['Spiral Orbit','Orbit','Inward and outward spiral travel.','spiralOrbit'],
+['Comet Orbit','Orbit','Comet body with trailing glow.','cometOrbit'],
+['Gyroscope Rings','Orbit','Layered mechanical gyro rings.','gyroRings'],
+['Satellite Orbit','Orbit','Detailed satellite around a planet.','satelliteOrbit'],
+['Orbital Nodes','Orbit','Distributed node array around an ellipse.','orbitalNodes'],
+
+['Wave Motion','Movement','Four layered traveling waves.','waveMotion'],
+['Bounce Motion','Movement','Object moving over a bounce path.','bounceMotion'],
+['Pendulum','Movement','Smooth oscillating pendulum motion.','pendulum'],
+['Vortex','Movement','Rotating layered energy vortex.','vortex'],
+['Boomerang','Movement','Curved returning flight path.','boomerang'],
+['Recoil','Movement','Impact recoil with speed lines.','recoil'],
+['Hover','Movement','Floating sci-fi object and ground glow.','hover'],
+['Dash Burst','Movement','High-speed directional line burst.','dashBurst'],
+['Path Follower','Movement','Object following a complex curve.','pathFollower'],
+['Morph Blob','Movement','Continuously morphing organic shape.','morphBlob'],
+['Teleport','Movement','Vertical disintegration beam.','teleport'],
+['Particle Drift','Movement','Ambient sideways particle flow.','driftParticles'],
+
+['Shockwave','Pulse','Expanding impact wave rings.','shockwave'],
+['Radar Sweep','Pulse','Rotating radar cone and target ping.','radarSweep'],
+['Scan Line','Pulse','Horizontal data scanner.','scanLine'],
+['Signal Pulse','Pulse','Responsive signal equalizer bars.','signalPulse'],
+['Heartbeat','Pulse','Neon electrocardiogram animation.','heartbeat'],
+['Halo Pulse','Pulse','Radiant circular halo effect.','haloPulse'],
+['Neon Loader','Pulse','Compact circular progress loader.','neonLoader'],
+['Sonic Rings','Pulse','Directional acoustic pulse rings.','sonicRings'],
+
+['Portal','Portal','Rotating dimensional ring portal.','portal'],
+['Wormhole','Portal','Layered depth tunnel distortion.','wormhole'],
+['Energy Tunnel','Portal','Forward moving energy corridor.','energyTunnel'],
+['Grid Pulse','Portal','Glowing perspective grid core.','gridPulse'],
+['Infinity Flow','Portal','Infinite loop energy circulation.','infinityFlow'],
+
+['Meteor Shower','Trail','Multiple burning meteor streaks.','meteor'],
+['Rocket Trail','Trail','Hovering rocket with flame trail.','rocketTrail'],
+['Flame','Trail','Morphing animated fire.','flame'],
+['Smoke Plume','Trail','Layered drifting smoke particles.','smoke'],
+['Laser Sweep','Trail','Oscillating laser beam.','laserSweep'],
+['Rain','Trail','Diagonal animated rainfall.','rain'],
+['Snow','Trail','Soft parallax snowfall.','snow'],
+['Confetti','Trail','Celebratory falling particles.','confetti'],
+
+['Data Stream','Signal','Falling binary data field.','dataStream'],
+['Magnetic Field','Signal','Animated magnetic flux lines.','magneticField'],
+['Plasma Wave','Signal','Interference-style plasma waves.','plasmaWave'],
+['Energy Shield','Signal','Pulsing defensive force field.','energyShield'],
+['Quantum Dots','Signal','Random quantum particle cloud.','quantumDots'],
+['Electric Text','Signal','Flickering neon text treatment.','electricText'],
+['Energy Arrow','Signal','Directional motion indicator.','energyArrow'],
+['Electric DNA','Signal','Animated helical strand system.','electricDNA']
+].map((p,i)=>({id:i+1,name:p[0],category:p[1],description:p[2],generator:p[3]}));
+
+const state={speed:1,glow:1,stroke:2.5,paused:false,selected:null,query:'',category:'All'};
+const $=s=>document.querySelector(s);
+const grid=$('#grid'),count=$('#count'),empty=$('#empty'),drawer=$('#drawer'),toast=$('#toast');
+const categories=['All',...new Set(presets.map(p=>p.category))];
+$('#category').innerHTML=categories.map(c=>`<option>${c}</option>`).join('');
+
+function render(){
+  const q=state.query.trim().toLowerCase();
+  const items=presets.filter(p=>(state.category==='All'||p.category===state.category)&&(!q||`${p.name} ${p.category} ${p.description}`.toLowerCase().includes(q)));
+  grid.innerHTML=items.map(p=>`<article class="card" data-id="${p.id}">
+    <div class="preview" title="Inspect ${esc(p.name)}">${generators[p.generator]()}</div>
+    <div class="card-body">
+      <div class="card-top"><div><h3>${esc(p.name)}</h3><p>${esc(p.description)}</p></div><span class="badge">${esc(p.category)}</span></div>
+      <div class="card-actions"><button data-act="inspect">Inspect</button><button data-act="copy">Copy SVG</button></div>
+    </div>
+  </article>`).join('');
+  count.textContent=`${items.length} effect${items.length===1?'':'s'} · ${presets.length} total`;
+  empty.style.display=items.length?'none':'block';
+  if(state.paused) setAnimations(false);
+}
+function getPreset(id){return presets.find(p=>p.id===Number(id))}
+function svgFor(p){return generators[p.generator]()}
+function inspect(p){
+  state.selected=p;const svg=svgFor(p);
+  $('#drawerTitle').textContent=`${p.name} · ${p.category}`;
+  $('#drawerPreview').innerHTML=svg;
+  $('#drawerCode').textContent=svg;
+  drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');
+}
+function closeDrawer(){drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true')}
+function showToast(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),1400)}
+async function copyText(text,msg='Copied'){
+  try{await navigator.clipboard.writeText(text);showToast(msg)}
+  catch{const ta=document.createElement('textarea');ta.value=text;document.body.append(ta);ta.select();document.execCommand('copy');ta.remove();showToast(msg)}
+}
+function download(name,text,type='image/svg+xml'){
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)
+}
+function setAnimations(run){
+ document.querySelectorAll('svg').forEach(svg=>{try{run?svg.unpauseAnimations():svg.pauseAnimations()}catch(e){}});
+ document.querySelectorAll('.a').forEach(el=>el.style.animationPlayState=run?'running':'paused');
+}
+grid.addEventListener('click',e=>{
+  const card=e.target.closest('.card');if(!card)return;const p=getPreset(card.dataset.id);
+  const act=e.target.closest('button')?.dataset.act;
+  if(act==='copy') copyText(svgFor(p),`${p.name} SVG copied`);
+  else inspect(p);
+});
+$('#search').addEventListener('input',e=>{state.query=e.target.value;render()});
+$('#category').addEventListener('change',e=>{state.category=e.target.value;render()});
+[['speed','speedVal','speed','×'],['glow','glowVal','glow','×'],['stroke','strokeVal','stroke','']].forEach(([id,out,key,suffix])=>{
+  $('#'+id).addEventListener('input',e=>{state[key]=Number(e.target.value);$('#'+out).textContent=Number(e.target.value).toFixed(2)+suffix;render();if(state.selected)inspect(state.selected)});
+});
+$('#pauseAll').addEventListener('click',()=>{
+  state.paused=!state.paused;setAnimations(!state.paused);
+  $('#pauseAll').textContent=state.paused?'▶ Resume all':'⏸ Pause all';
+  $('#pauseAll').classList.toggle('active',state.paused);
+});
+$('#randomize').addEventListener('click',()=>{
+  state.speed=Number(rand(.55,2.2).toFixed(2));state.glow=Number(rand(.35,2.2).toFixed(2));state.stroke=Number(rand(1.5,5.5).toFixed(2));
+  $('#speed').value=state.speed;$('#glow').value=state.glow;$('#stroke').value=state.stroke;
+  $('#speedVal').textContent=state.speed.toFixed(2)+'×';$('#glowVal').textContent=state.glow.toFixed(2)+'×';$('#strokeVal').textContent=state.stroke.toFixed(2);
+  render();showToast('Visual parameters randomized');
+});
+$('#copyBundle').addEventListener('click',()=>copyText(JSON.stringify(presets,null,2),'Library preset data copied'));
+$('#closeDrawer').addEventListener('click',closeDrawer);
+$('#copySvg').addEventListener('click',()=>state.selected&&copyText(svgFor(state.selected),`${state.selected.name} SVG copied`));
+$('#copyData').addEventListener('click',()=>state.selected&&copyText(JSON.stringify(state.selected,null,2),'Preset JSON copied'));
+$('#downloadSvg').addEventListener('click',()=>state.selected&&download(state.selected.name.toLowerCase().replace(/\s+/g,'-')+'.svg',svgFor(state.selected)));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();$('#search').focus()}});
+drawer.addEventListener('click',e=>{if(e.target===drawer)closeDrawer()});
+render();
+})();
+</script>
+</body>
+</html>

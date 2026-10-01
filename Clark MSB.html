@@ -60,7 +60,6 @@
       to { background-position: -1000px 1000px; }
     }
 
-    /* Effects on all links */
     a, button, .nav-item {
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -71,7 +70,6 @@
       color: var(--blue);
     }
 
-    /* Sidebar */
     .sidebar {
       width: 280px;
       background: rgba(8, 12, 26, 0.85);
@@ -83,7 +81,6 @@
       box-shadow: 5px 0 30px rgba(0,0,0,0.5);
     }
 
-    /* Futuristic Bus Remix */
     .bus-brand {
       padding: 2rem 1.5rem;
       display: flex;
@@ -159,7 +156,6 @@
       text-transform: uppercase;
     }
 
-    /* Navigation */
     .nav-menu {
       padding: 1.5rem 1rem;
       display: flex;
@@ -202,7 +198,6 @@
       box-shadow: var(--yellow-glow);
     }
 
-    /* Main Area */
     .main-content {
       flex: 1;
       position: relative;
@@ -212,7 +207,6 @@
       padding: 2rem;
     }
 
-    /* Science Lab View */
     .view-section {
       display: none;
       opacity: 0;
@@ -239,43 +233,43 @@
 
     .experiments-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       gap: 2rem;
+      margin-bottom: 4rem;
     }
 
     .experiment-card {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 2rem;
-      backdrop-filter: blur(10px);
-      position: relative;
       overflow: hidden;
       transition: all 0.4s;
-    }
-    .experiment-card::before {
-      content: '';
-      position: absolute;
-      top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.4s;
-      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
     }
     .experiment-card:hover {
       transform: translateY(-10px) scale(1.02);
       border-color: var(--blue);
       box-shadow: var(--blue-glow);
     }
-    .experiment-card:hover::before {
-      opacity: 1;
-      transform: rotate(45deg);
+    
+    .exp-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--border);
+      transition: transform 0.5s;
+    }
+    .experiment-card:hover .exp-img {
+      transform: scale(1.05);
     }
 
-    .exp-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
+    .exp-content {
+      padding: 1.5rem;
+      position: relative;
+      z-index: 2;
+      background: var(--panel);
     }
     .exp-title {
       font-size: 1.5rem;
@@ -288,7 +282,48 @@
       line-height: 1.6;
     }
 
-    /* Floating Lizard */
+    /* Iframe Container */
+    .iframe-container {
+      width: 100%;
+      height: calc(100vh - 4rem);
+      border: 2px solid var(--blue);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--blue-glow);
+      display: none;
+    }
+    .iframe-container.active {
+      display: block;
+    }
+    .iframe-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #fff;
+    }
+    
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: var(--yellow);
+      color: #000;
+      font-weight: bold;
+      border-radius: 30px;
+      margin-bottom: 20px;
+      border: none;
+      cursor: pointer;
+      box-shadow: var(--yellow-glow);
+    }
+    
+    .view-switcher-content {
+      display: block;
+    }
+    .view-switcher-content.hidden {
+      display: none;
+    }
+
     #floating-lizard {
       position: fixed;
       font-size: 3rem;
@@ -312,7 +347,6 @@
       50% { transform: translateY(-30px) rotate(10deg); }
     }
 
-    /* Custom Context Menu */
     #lizard-menu {
       position: fixed;
       background: rgba(15, 23, 42, 0.95);
@@ -348,7 +382,6 @@
       padding-left: 2rem;
     }
 
-    /* Flying Bus Animation */
     .flying-bus-overlay {
       position: fixed;
       top: 50%;
@@ -395,9 +428,7 @@
       filter: drop-shadow(0 0 40px var(--yellow));
     }
 
-    /* Scroll Driven Parallax Element */
     .parallax-section {
-      margin-top: 5rem;
       height: 600px;
       position: relative;
       border-radius: 30px;
@@ -411,7 +442,7 @@
     .parallax-bg {
       position: absolute;
       inset: -50px;
-      background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') center/cover;
+      background: url('file:///C:/Users/qamel/.gemini/antigravity-ide/brain/cea3cc7d-6dbd-45c3-a30f-f1f38e649a8d/msb_volcano_core_1790883188425.jpg') center/cover;
       z-index: 1;
       transition: transform 0.1s linear;
     }
@@ -432,7 +463,6 @@
       text-shadow: var(--yellow-glow);
     }
 
-    /* Random Pulse Class */
     .random-pulse {
       animation: pulse-wild 1s ease-in-out;
     }
@@ -447,7 +477,7 @@
 
   <div id="space-bg"></div>
 
-  <div class="app-container">
+  <div class="app-container" style="display:flex; width: 100vw;">
     
     <aside class="sidebar">
       <div class="bus-brand">
@@ -468,80 +498,143 @@
         
         <div class="nav-category">Classroom</div>
         <div class="nav-item" onclick="switchView('classroom')">
-          <span>👨‍🎓</span> Student Portal
+          <span>👨‍🎓</span> Classic Classroom
         </div>
         
         <div class="nav-category">Science</div>
         <div class="nav-item active" onclick="switchView('lab')">
           <span>🔬</span> Science Lab
         </div>
+        
+        <div class="nav-category">Resources</div>
+        <div class="nav-item" onclick="switchView('worksheets')">
+          <span>📝</span> Worksheets
+        </div>
       </div>
     </aside>
 
     <main class="main-content">
       
+      <!-- Dashboard View -->
+      <section id="view-dashboard" class="view-section">
+        <div class="view-switcher-content" id="dashboard-hub">
+            <h1 class="lab-title">Educator Hub</h1>
+            <div class="experiments-grid" style="grid-template-columns: 1fr;">
+              <div class="experiment-card" onclick="openModule('modules/frizzle-educator-hub.html')">
+                <div class="exp-content">
+                  <h3 class="exp-title">Access Educator Hub</h3>
+                  <p class="exp-desc">Manage your lessons, utilities, and grading systems in one central place.</p>
+                </div>
+              </div>
+            </div>
+        </div>
+      </section>
+
+      <!-- Classroom View -->
+      <section id="view-classroom" class="view-section">
+        <div class="view-switcher-content" id="classroom-hub">
+            <h1 class="lab-title">Classic Classroom</h1>
+            <div class="experiments-grid" style="grid-template-columns: 1fr;">
+              <div class="experiment-card" onclick="openModule('modules/msb-classic-classroom.html')">
+                <div class="exp-content">
+                  <h3 class="exp-title">Enter the Classroom</h3>
+                  <p class="exp-desc">Access the Student Portal, learning modules, and classroom resources.</p>
+                </div>
+              </div>
+            </div>
+        </div>
+      </section>
+
+      <!-- Worksheets View -->
+      <section id="view-worksheets" class="view-section">
+        <div class="view-switcher-content" id="worksheets-hub">
+            <h1 class="lab-title">Worksheets & Packets</h1>
+            <div class="experiments-grid">
+              <div class="experiment-card" onclick="openModule('modules/MSB_Science_Packets_Complete.html')">
+                <div class="exp-content">
+                  <h3 class="exp-title">Science Packets Complete</h3>
+                  <p class="exp-desc">Access all the printable and interactive science packets.</p>
+                </div>
+              </div>
+              <div class="experiment-card" onclick="openModule('modules/frizz-worksheet-generator.html')">
+                <div class="exp-content">
+                  <h3 class="exp-title">Worksheet Generator</h3>
+                  <p class="exp-desc">Create custom worksheets and quizzes for your students.</p>
+                </div>
+              </div>
+            </div>
+        </div>
+      </section>
+
       <!-- Science Lab View -->
       <section id="view-lab" class="view-section active">
-        <div class="lab-header">
-          <h1 class="lab-title">The Science Lab</h1>
-          <p style="color: var(--text-muted); font-size: 1.2rem;">All your experiments consolidated in one wild place.</p>
+        
+        <!-- Lab Grid -->
+        <div class="view-switcher-content" id="lab-grid">
+          <div class="lab-header">
+            <h1 class="lab-title">The Science Lab</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem;">All your experiments consolidated in one wild place.</p>
+          </div>
+
+          <div class="experiments-grid">
+            <div class="experiment-card anim-target" onclick="openModule('modules/msb-galactic-lab.html')">
+              <img src="file:///C:/Users/qamel/.gemini/antigravity-ide/brain/cea3cc7d-6dbd-45c3-a30f-f1f38e649a8d/msb_galactic_lab_1790883150875.jpg" alt="Galactic Lab" class="exp-img">
+              <div class="exp-content">
+                <h3 class="exp-title">Galactic Explorer</h3>
+                <p class="exp-desc">Launch into the solar system. Discover planetary gravity, orbits, and cosmic phenomena in 4K.</p>
+              </div>
+            </div>
+            
+            <div class="experiment-card anim-target" onclick="openModule('modules/electricity-overview.html')">
+              <img src="file:///C:/Users/qamel/.gemini/antigravity-ide/brain/cea3cc7d-6dbd-45c3-a30f-f1f38e649a8d/msb_electricity_lab_1790883177665.jpg" alt="Electricity Lab" class="exp-img">
+              <div class="exp-content">
+                <h3 class="exp-title">Electricity Lab</h3>
+                <p class="exp-desc">Explore circuits, current, and shocking discoveries with Ms. Frizzle's high-voltage generators!</p>
+              </div>
+            </div>
+            
+            <div class="experiment-card anim-target" onclick="alert('Microbe Safari feature coming soon! Check the Galactic Lab instead.')">
+              <img src="file:///C:/Users/qamel/.gemini/antigravity-ide/brain/cea3cc7d-6dbd-45c3-a30f-f1f38e649a8d/msb_microbe_safari_1790883160236.jpg" alt="Microbe Safari" class="exp-img">
+              <div class="exp-content">
+                <h3 class="exp-title">Microbe Safari</h3>
+                <p class="exp-desc">Shrink down to microscopic size and observe the wild life inside a single drop of pond water.</p>
+              </div>
+            </div>
+
+            <div class="experiment-card anim-target" onclick="alert('Volcano Core feature coming soon! Check the Galactic Lab instead.')">
+              <img src="file:///C:/Users/qamel/.gemini/antigravity-ide/brain/cea3cc7d-6dbd-45c3-a30f-f1f38e649a8d/msb_volcano_core_1790883188425.jpg" alt="Volcano Core" class="exp-img">
+              <div class="exp-content">
+                <h3 class="exp-title">Volcano Core</h3>
+                <p class="exp-desc">Dive deep into the Earth's mantle to study magma dynamics and tectonic shifts.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="parallax-section" id="parallax-box">
+            <div class="parallax-bg" id="parallax-bg"></div>
+            <div class="parallax-content">
+              <h2>The Cosmic Voyage</h2>
+              <p>Scroll up and down to travel through the mesmerizing cosmos!</p>
+            </div>
+          </div>
         </div>
 
-        <div class="experiments-grid">
-          <div class="experiment-card anim-target">
-            <div class="exp-icon">⚡</div>
-            <h3 class="exp-title">Electricity Lab</h3>
-            <p class="exp-desc">Explore circuits, current, and shocking discoveries with Ms. Frizzle's high-voltage generators!</p>
-          </div>
-          
-          <div class="experiment-card anim-target">
-            <div class="exp-icon">🦠</div>
-            <h3 class="exp-title">Microbe Safari</h3>
-            <p class="exp-desc">Shrink down to microscopic size and observe the wild life inside a single drop of pond water.</p>
-          </div>
-          
-          <div class="experiment-card anim-target">
-            <div class="exp-icon">🚀</div>
-            <h3 class="exp-title">Galactic Explorer</h3>
-            <p class="exp-desc">Launch into the solar system. Discover planetary gravity, orbits, and cosmic phenomena.</p>
-          </div>
-
-          <div class="experiment-card anim-target">
-            <div class="exp-icon">🌋</div>
-            <h3 class="exp-title">Volcano Core</h3>
-            <p class="exp-desc">Dive deep into the Earth's mantle to study magma dynamics and tectonic shifts.</p>
+        <!-- Iframe Module View -->
+        <div class="view-switcher-content hidden" id="module-viewer">
+          <button class="back-btn" onclick="closeModule()">
+            <span>⬅️</span> Back to Hub
+          </button>
+          <div class="iframe-container" id="iframe-wrap">
+            <iframe id="module-frame" src=""></iframe>
           </div>
         </div>
 
-        <!-- Scroll Driven Parallax Element -->
-        <div class="parallax-section" id="parallax-box">
-          <div class="parallax-bg" id="parallax-bg"></div>
-          <div class="parallax-content">
-            <h2>The Cosmic Voyage</h2>
-            <p>Scroll up and down to travel through the mesmerizing cosmos!</p>
-          </div>
-        </div>
       </section>
-
-      <!-- Dashboard View (Placeholder) -->
-      <section id="view-dashboard" class="view-section">
-        <h1 class="lab-title">Dashboard Overview</h1>
-        <p>Your broader category for Bus and Teacher utilities.</p>
-      </section>
-
-      <!-- Classroom View (Placeholder) -->
-      <section id="view-classroom" class="view-section">
-        <h1 class="lab-title">Classroom Portal</h1>
-        <p>Your broader category for Students, Grading, and Worksheets.</p>
-      </section>
-
     </main>
   </div>
 
-  <!-- Floating Lizard -->
   <div id="floating-lizard" title="I'm Liz! Click me 3 times fast, or Right-Click!">🦎</div>
 
-  <!-- Lizard Context Menu -->
   <div id="lizard-menu">
     <div class="menu-item" onclick="featureMsg('Shrink Bus')">🚌 Shrink Bus</div>
     <div class="menu-item" onclick="featureMsg('Space Mode')">🚀 Space Mode</div>
@@ -554,21 +647,41 @@
   </div>
 
   <script>
-    // View Switcher
     function switchView(viewId) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       
       const target = document.getElementById('view-' + viewId);
       if(target) {
-        // slight delay for animation
         setTimeout(() => target.classList.add('active'), 50);
       }
       
       event.currentTarget.classList.add('active');
+      closeModule();
     }
 
-    // Scroll Parallax Effect
+    function openModule(url) {
+      document.querySelectorAll('.view-switcher-content').forEach(el => {
+        if(el.parentElement.classList.contains('active')) {
+          el.classList.add('hidden');
+        }
+      });
+      document.getElementById('module-viewer').classList.remove('hidden');
+      document.getElementById('iframe-wrap').classList.add('active');
+      document.getElementById('module-frame').src = url;
+    }
+
+    function closeModule() {
+      document.querySelectorAll('.view-switcher-content').forEach(el => {
+        if(el.id !== 'module-viewer') {
+          el.classList.remove('hidden');
+        }
+      });
+      document.getElementById('module-viewer').classList.add('hidden');
+      document.getElementById('iframe-wrap').classList.remove('active');
+      document.getElementById('module-frame').src = '';
+    }
+
     const mainContent = document.querySelector('.main-content');
     const parallaxBg = document.getElementById('parallax-bg');
     
@@ -577,7 +690,6 @@
       parallaxBg.style.transform = `translateY(${scrollY * 0.4}px)`;
     });
 
-    // Random purposeful animations every 10 seconds
     setInterval(() => {
       const elements = document.querySelectorAll('.anim-target');
       if(elements.length > 0) {
@@ -587,7 +699,6 @@
       }
     }, 10000);
 
-    // Lizard Logic
     const lizard = document.getElementById('floating-lizard');
     const lizardMenu = document.getElementById('lizard-menu');
     let lizardClicks = 0;
@@ -613,7 +724,6 @@
       lizardMenu.classList.add('active');
     });
 
-    // Close menu when clicking outside
     document.addEventListener('click', (e) => {
       if(e.target !== lizard && !lizardMenu.contains(e.target)) {
         lizardMenu.classList.remove('active');
@@ -626,7 +736,6 @@
     }
 
     function triggerFlyingBus() {
-      // prevent multiple buses
       if(document.querySelector('.flying-bus-overlay')) return;
       
       const overlay = document.createElement('div');
@@ -637,29 +746,30 @@
       `;
       document.body.appendChild(overlay);
       
-      // audio beep sound representation (simulated)
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      osc.start();
-      setTimeout(() => osc.stop(), 300);
-      
-      setTimeout(() => {
-        const osc2 = audioCtx.createOscillator();
-        const gain2 = audioCtx.createGain();
-        osc2.connect(gain2);
-        gain2.connect(audioCtx.destination);
-        osc2.type = 'square';
-        osc2.frequency.setValueAtTime(440, audioCtx.currentTime);
-        gain2.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        osc2.start();
-        setTimeout(() => osc2.stop(), 500);
-      }, 400);
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        osc.start();
+        setTimeout(() => osc.stop(), 300);
+        
+        setTimeout(() => {
+          const osc2 = audioCtx.createOscillator();
+          const gain2 = audioCtx.createGain();
+          osc2.connect(gain2);
+          gain2.connect(audioCtx.destination);
+          osc2.type = 'square';
+          osc2.frequency.setValueAtTime(440, audioCtx.currentTime);
+          gain2.gain.setValueAtTime(0.1, audioCtx.currentTime);
+          osc2.start();
+          setTimeout(() => osc2.stop(), 500);
+        }, 400);
+      } catch(e) {}
 
       setTimeout(() => {
         overlay.remove();

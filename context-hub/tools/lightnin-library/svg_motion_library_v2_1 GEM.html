@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Animation Library: Extended Edition</title>
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: #1f2833;
+            --text-main: #66fcf1;
+            --text-sub: #c5c6c7;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+        }
+        p.subtitle {
+            color: var(--text-sub);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(102, 252, 241, 0.2);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #fff;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* FIX: Target only the SVGs inside the cards, not the global defs SVG */
+        .card svg {
+            width: 100%;
+            height: 250px;
+            background-color: #000;
+            border-radius: 8px;
+            display: block;
+        }
+        
+        /* CSS Animations */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+            52% { opacity: 0.2; }
+            54% { opacity: 0.9; }
+            56% { opacity: 0.1; }
+            60% { opacity: 1; }
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+        @keyframes dash-reverse {
+            to { stroke-dashoffset: 1000; }
+        }
+        @keyframes rotate-css {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .lightning { animation: flicker 3s infinite; }
+        .lightning-fast { animation: flicker 1.5s infinite; }
+        .draw-path { 
+            stroke-dasharray: 1000; 
+            stroke-dashoffset: 1000; 
+            animation: dash 3s linear infinite; 
+        }
+        .neon-wave {
+            stroke-dasharray: 50 150;
+            stroke-dashoffset: 0;
+            animation: dash-reverse 2s linear infinite;
+        }
+        .ekg-line {
+            stroke-dasharray: 600;
+            stroke-dashoffset: 600;
+            animation: dash 2.5s linear infinite;
+        }
+        .dna-path {
+            stroke-dasharray: 30 10;
+            animation: dash 3s linear infinite;
+        }
+        .dna-path-reverse {
+            stroke-dasharray: 30 10;
+            animation: dash-reverse 3s linear infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>SVG Motion & FX Library v2.1</h1>
+    <p class="subtitle">20 Unique Scalable Vector Animations (Black bar fixed!)</p>
+
+    <!-- Global SVG Filters & Gradients -->
+    <!-- FIX: Added z-index:-1 and pointer-events:none to be absolutely sure it stays hidden -->
+    <svg width="0" height="0" style="position:absolute; width:0; height:0; z-index:-1; pointer-events:none;">
+        <defs>
+            <!-- Glowing Filters -->
+            <filter id="glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+            <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="5" result="blur" />
+                <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+            <filter id="glow-orange" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+            <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+            <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+
+            <!-- Gradients -->
+            <radialGradient id="shield-grad" cx="50%" cy="50%" r="50%">
+                <stop offset="70%" stop-color="#0ff" stop-opacity="0" />
+                <stop offset="95%" stop-color="#0ff" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="#0ff" stop-opacity="0.8" />
+            </radialGradient>
+            
+            <linearGradient id="radar-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0f0" stop-opacity="0.8"/>
+                <stop offset="100%" stop-color="#0f0" stop-opacity="0"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div class="grid">
+        
+        <!-- 1. Forked Lightning -->
+        <div class="card">
+            <h3>1. Forked Lightning</h3>
+            <svg viewBox="0 0 300 250">
+                <g class="lightning" filter="url(#glow-cyan)" stroke="#66fcf1" fill="none" stroke-linejoin="round" stroke-linecap="round">
+                    <path d="M150,0 L130,60 L160,80 L110,150 L140,160 L100,250" stroke-width="4" />
+                    <path d="M160,80 L190,110 L180,140" stroke-width="2" class="lightning-fast" />
+                    <path d="M110,150 L80,180 L90,210" stroke-width="2" />
+                </g>
+            </svg>
+        </div>
+
+        <!-- 2. Plasma Core -->
+        <div class="card">
+            <h3>2. Plasma Core</h3>
+            <svg viewBox="0 0 300 250">
+                <g filter="url(#glow-purple)" stroke="#b829ea" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="150" cy="125" r="20" fill="#b829ea" />
+                    <g style="transform-origin: 150px 125px; animation: rotate-css 5s linear infinite;">
+                        <path d="M150,125 L120,60 L150,10 L140,0" stroke-width="2" class="lightning" />
+                        <path d="M150,125 L180,180 L160,230 L170,250" stroke-width="2" class="lightning-fast" />
+                        <path d="M150,125 L210,100 L260,110 L300,90" stroke-width="2" class="lightning" />
+                        <path d="M150,125 L80,150 L30,130 L0,160" stroke-width="2" class="lightning-fast" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 3. Chain Lightning -->
+        <div class="card">
+            <h3>3. Chain Lightning</h3>
+            <svg viewBox="0 0 300 250">
+                <circle cx="40" cy="125" r="8" fill="#fff" filter="url(#glow-cyan)" />
+                <circle cx="150" cy="50" r="8" fill="#fff" filter="url(#glow-cyan)" />
+                <circle cx="260" cy="180" r="8" fill="#fff" filter="url(#glow-cyan)" />
+                <g filter="url(#glow-cyan)" stroke="#fff" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M40,125 L70,90 L110,110 L150,50" class="draw-path" />
+                    <path d="M150,50 L190,100 L220,80 L260,180" class="draw-path" style="animation-delay: -1.5s;" />
+                </g>
+            </svg>
+        </div>
+
+        <!-- 4. Atomic Orbit -->
+        <div class="card">
+            <h3>4. Atomic Orbit</h3>
+            <svg viewBox="0 0 300 250">
+                <g filter="url(#glow-cyan)">
+                    <circle cx="150" cy="125" r="10" fill="#66fcf1" />
+                    <!-- Orbit 1 -->
+                    <g transform="rotate(30 150 125)">
+                        <ellipse cx="150" cy="125" rx="100" ry="30" fill="none" stroke="#66fcf1" stroke-width="1" opacity="0.5"/>
+                        <circle cx="250" cy="125" r="4" fill="#fff">
+                            <animateTransform attributeName="transform" type="rotate" from="0 150 125" to="360 150 125" dur="3s" repeatCount="indefinite" />
+                        </circle>
+                    </g>
+                    <!-- Orbit 2 -->
+                    <g transform="rotate(90 150 125)">
+                        <ellipse cx="150" cy="125" rx="100" ry="30" fill="none" stroke="#66fcf1" stroke-width="1" opacity="0.5"/>
+                        <circle cx="250" cy="125" r="4" fill="#fff">
+                            <animateTransform attributeName="transform" type="rotate" from="0 150 125" to="360 150 125" dur="4s" repeatCount="indefinite" />
+                        </circle>
+                    </g>
+                    <!-- Orbit 3 -->
+                    <g transform="rotate(150 150 125)">
+                        <ellipse cx="150" cy="125" rx="100" ry="30" fill="none" stroke="#66fcf1" stroke-width="1" opacity="0.5"/>
+                        <circle cx="250" cy="125" r="4" fill="#fff">
+                            <animateTransform attributeName="transform" type="rotate" from="0 150 125" to="360 150 125" dur="2.5s" repeatCount="indefinite" />
+                        </circle>
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 5. Solar System -->
+        <div class="card">
+            <h3>5. Solar System</h3>
+            <svg viewBox="0 0 300 250">
+                <circle cx="150" cy="125" r="15" fill="#f39c12" filter="url(#glow-orange)" />
+                <g fill="none" stroke="#555" stroke-width="1" stroke-dasharray="4 4">
+                    <circle cx="150" cy="125" r="40" />
+                    <circle cx="150" cy="125" r="70" />
+                    <circle cx="150" cy="125" r="100" />
+                </g>
+                <g style="transform-origin: 150px 125px;">
+                    <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="4s" repeatCount="indefinite" />
+                    <circle cx="190" cy="125" r="5" fill="#3498db" />
+                </g>
+                <g style="transform-origin: 150px 125px;">
+                    <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="7s" repeatCount="indefinite" />
+                    <circle cx="220" cy="125" r="8" fill="#e74c3c" />
+                </g>
+                <g style="transform-origin: 150px 125px;">
+                    <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="12s" repeatCount="indefinite" />
+                    <circle cx="250" cy="125" r="10" fill="#9b59b6" />
+                    <g style="transform-origin: 250px 125px;">
+                        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="2s" repeatCount="indefinite" />
+                        <circle cx="265" cy="125" r="2" fill="#fff" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 6. Infinity Orbit -->
+        <div class="card">
+            <h3>6. Infinity Orbit</h3>
+            <svg viewBox="0 0 300 250">
+                <path id="infinity" d="M150,125 C 100,50 0,50 50,125 C 100,200 200,50 250,125 C 300,200 200,200 150,125 Z" fill="none" stroke="#e91e63" stroke-width="2" opacity="0.3" filter="url(#glow-purple)"/>
+                <circle r="6" fill="#fff" filter="url(#glow-purple)">
+                    <animateMotion dur="4s" repeatCount="indefinite">
+                        <mpath href="#infinity" />
+                    </animateMotion>
+                </circle>
+            </svg>
+        </div>
+
+        <!-- 7. Pulsing Neon Wave -->
+        <div class="card">
+            <h3>7. Pulsing Neon Wave</h3>
+            <svg viewBox="0 0 300 250">
+                <path d="M0,125 Q 37.5,25 75,125 T 150,125 T 225,125 T 300,125" fill="none" stroke="#0f0" stroke-width="4" filter="url(#glow-green)" class="neon-wave" />
+                <path d="M0,125 Q 37.5,225 75,125 T 150,125 T 225,125 T 300,125" fill="none" stroke="#b829ea" stroke-width="4" filter="url(#glow-purple)" class="neon-wave" style="animation-direction: normal; animation-duration: 3s;" />
+            </svg>
+        </div>
+
+        <!-- 8. Warp Speed (Fixed) -->
+        <div class="card">
+            <h3>8. Warp Speed / Starfield</h3>
+            <svg viewBox="0 0 300 250">
+                <defs>
+                    <g id="star">
+                        <line x1="10" y1="0" x2="30" y2="0" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+                    </g>
+                </defs>
+                <g filter="url(#glow-cyan)">
+                    <g transform="translate(150, 125)">
+                        <!-- Using multiple stars moving outwards -->
+                        <g><use href="#star" transform="rotate(0)"><animateTransform attributeName="transform" type="translate" from="0,0" to="150,0" dur="1s" repeatCount="indefinite" additive="sum"/></use></g>
+                        <g><use href="#star" transform="rotate(45)"><animateTransform attributeName="transform" type="translate" from="20,0" to="150,0" dur="1.2s" repeatCount="indefinite" additive="sum"/></use></g>
+                        <g><use href="#star" transform="rotate(90)"><animateTransform attributeName="transform" type="translate" from="10,0" to="150,0" dur="0.8s" repeatCount="indefinite" additive="sum"/></use></g>
+                        <g><use href="#star" transform="rotate(135)"><animateTransform attributeName="transform" type="translate" from="30,0" to="150,0" dur="1.5s" repeatCount="indefinite" additive="sum"/></use></g>
+                        <g><use href="#star" transform="rotate(180)"><animateTransform attributeName="transform" type="translate" from="5,0" to="150,0" dur="0.9s" repeatCount="indefinite" additive="sum"/></use></g>
+                        <g><use href="#star" transform="rotate(225)"><animateTransform attributeName="transform" type="translate" from="15,0" to="150,0" dur="1.1s" repeatCount="indefinite" additive="sum"/></use></g>
+                        <g><use href="#star" transform="rotate(270)"><animateTransform attributeName="transform" type="translate" from="0,0" to="150,0" dur="1.4s" repeatCount="indefinite" additive="sum"/></use></g>
+                        <g><use href="#star" transform="rotate(315)"><animateTransform attributeName="transform" type="translate" from="25,0" to="150,0" dur="0.7s" repeatCount="indefinite" additive="sum"/></use></g>
+                    </g>
+                </g>
+                <circle cx="150" cy="125" r="5" fill="#000" />
+            </svg>
+        </div>
+
+        <!-- 9. Radar Sweep -->
+        <div class="card">
+            <h3>9. Radar Sweep</h3>
+            <svg viewBox="0 0 300 250">
+                <circle cx="150" cy="125" r="100" fill="none" stroke="#0f0" stroke-width="2" opacity="0.3"/>
+                <circle cx="150" cy="125" r="66" fill="none" stroke="#0f0" stroke-width="1" opacity="0.2"/>
+                <circle cx="150" cy="125" r="33" fill="none" stroke="#0f0" stroke-width="1" opacity="0.2"/>
+                <line x1="50" y1="125" x2="250" y2="125" stroke="#0f0" stroke-width="1" opacity="0.2"/>
+                <line x1="150" y1="25" x2="150" y2="225" stroke="#0f0" stroke-width="1" opacity="0.2"/>
+                <g style="transform-origin: 150px 125px;">
+                    <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite"/>
+                    <path d="M150,125 L150,25 A100,100 0 0,1 250,125 Z" fill="url(#radar-grad)" />
+                    <line x1="150" y1="125" x2="150" y2="25" stroke="#0f0" stroke-width="2" filter="url(#glow-green)"/>
+                </g>
+                <circle cx="210" cy="90" r="3" fill="#0f0" filter="url(#glow-green)">
+                    <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" />
+                </circle>
+            </svg>
+        </div>
+
+        <!-- 10. Heartbeat EKG -->
+        <div class="card">
+            <h3>10. Heartbeat (EKG)</h3>
+            <svg viewBox="0 0 300 250">
+                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#333" stroke-width="1"/>
+                </pattern>
+                <rect width="300" height="250" fill="url(#grid)" />
+                <path d="M 0,125 L 60,125 L 80,75 L 100,175 L 120,50 L 140,200 L 160,125 L 300,125" fill="none" stroke="#0f0" stroke-width="3" filter="url(#glow-green)" stroke-linejoin="round" class="ekg-line"/>
+            </svg>
+        </div>
+
+        <!-- 11. Pendulum Swing -->
+        <div class="card">
+            <h3>11. Pendulum Swing</h3>
+            <svg viewBox="0 0 300 250">
+                <line x1="50" y1="20" x2="250" y2="20" stroke="#555" stroke-width="4" stroke-linecap="round"/>
+                <g>
+                    <animateTransform attributeName="transform" type="rotate" values="45 150 20; -45 150 20; 45 150 20" dur="2s" repeatCount="indefinite" keyTimes="0; 0.5; 1" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1" calcMode="spline" />
+                    <line x1="150" y1="20" x2="150" y2="180" stroke="#fff" stroke-width="2"/>
+                    <circle cx="150" cy="180" r="15" fill="#e91e63" filter="url(#glow-purple)"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 12. DNA Helix -->
+        <div class="card">
+            <h3>12. DNA Helix</h3>
+            <svg viewBox="0 0 300 250">
+                <g filter="url(#glow-cyan)" stroke-width="3" fill="none">
+                    <path d="M 30,50 Q 80,125 150,125 T 270,200" stroke="#66fcf1" class="dna-path" />
+                    <path d="M 30,200 Q 80,125 150,125 T 270,50" stroke="#b829ea" class="dna-path-reverse" filter="url(#glow-purple)"/>
+                    <line x1="70" y1="100" x2="70" y2="150" stroke="#fff" stroke-width="1" opacity="0.5"/>
+                    <line x1="110" y1="115" x2="110" y2="135" stroke="#fff" stroke-width="1" opacity="0.5"/>
+                    <line x1="190" y1="115" x2="190" y2="135" stroke="#fff" stroke-width="1" opacity="0.5"/>
+                    <line x1="230" y1="100" x2="230" y2="150" stroke="#fff" stroke-width="1" opacity="0.5"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 13. Hypnotic Spiral -->
+        <div class="card">
+            <h3>13. Hypnotic Spiral</h3>
+            <svg viewBox="0 0 300 250">
+                <g style="transform-origin: 150px 125px; animation: rotate-css 4s linear infinite;">
+                    <path d="M 150,125 A 10,10 0 0,1 160,135 A 20,20 0 0,1 140,145 A 30,30 0 0,1 130,115 A 40,40 0 0,1 170,105 A 50,50 0 0,1 180,155 A 60,60 0 0,1 120,165 A 70,70 0 0,1 110,95 A 80,80 0 0,1 190,85 A 90,90 0 0,1 200,175 A 100,100 0 0,1 100,185" fill="none" stroke="#ffeb3b" stroke-width="4" filter="url(#glow-orange)" stroke-linecap="round"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 14. Bouncing Ball -->
+        <div class="card">
+            <h3>14. Bouncing Ball</h3>
+            <svg viewBox="0 0 300 250">
+                <line x1="20" y1="220" x2="280" y2="220" stroke="#66fcf1" stroke-width="3" filter="url(#glow-cyan)"/>
+                <circle cx="150" cy="50" r="15" fill="#fff" filter="url(#glow-cyan)">
+                    <animate attributeName="cy" values="50; 205; 50" dur="1.5s" repeatCount="indefinite" keyTimes="0; 0.5; 1" keySplines="0.5 0 1 1; 0 0 0.5 1" calcMode="spline" />
+                    <animateTransform attributeName="transform" type="scale" values="1 1; 1.2 0.8; 1 1" dur="1.5s" repeatCount="indefinite" keyTimes="0; 0.5; 1" keySplines="0.5 0 1 1; 0 0 0.5 1" calcMode="spline" additive="sum" />
+                </circle>
+            </svg>
+        </div>
+
+        <!-- 15. Wormhole / Tunnel -->
+        <div class="card">
+            <h3>15. Wormhole Tunnel</h3>
+            <svg viewBox="0 0 300 250">
+                <g filter="url(#glow-purple)" fill="none" stroke="#b829ea" stroke-width="2">
+                    <circle cx="150" cy="125" r="0">
+                        <animate attributeName="r" values="0; 150" dur="2s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="1; 0" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="150" cy="125" r="0">
+                        <animate attributeName="r" values="0; 150" dur="2s" repeatCount="indefinite" begin="0.66s"/>
+                        <animate attributeName="opacity" values="1; 0" dur="2s" repeatCount="indefinite" begin="0.66s"/>
+                    </circle>
+                    <circle cx="150" cy="125" r="0">
+                        <animate attributeName="r" values="0; 150" dur="2s" repeatCount="indefinite" begin="1.33s"/>
+                        <animate attributeName="opacity" values="1; 0" dur="2s" repeatCount="indefinite" begin="1.33s"/>
+                    </circle>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 16. Target Lock-On -->
+        <div class="card">
+            <h3>16. Target Lock-On</h3>
+            <svg viewBox="0 0 300 250">
+                <g stroke="#f44336" fill="none" stroke-width="3" filter="url(#glow-red)" style="transform-origin: 150px 125px;">
+                    <animateTransform attributeName="transform" type="rotate" values="0; 90; 90; 180" dur="3s" keyTimes="0; 0.2; 0.8; 1" repeatCount="indefinite" />
+                    <circle cx="150" cy="125" r="50" stroke-dasharray="20 10"/>
+                    <path d="M 150,55 L 150,25 M 150,195 L 150,225 M 80,125 L 50,125 M 220,125 L 250,125" stroke-linecap="round"/>
+                    <circle cx="150" cy="125" r="5" fill="#f44336">
+                        <animate attributeName="opacity" values="0;1;0;1" dur="1s" repeatCount="indefinite"/>
+                    </circle>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 17. Energy Shield -->
+        <div class="card">
+            <h3>17. Forcefield Shield</h3>
+            <svg viewBox="0 0 300 250">
+                <circle cx="150" cy="125" r="80" fill="url(#shield-grad)" filter="url(#glow-cyan)" />
+                <g style="transform-origin: 150px 125px;">
+                    <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="5s" repeatCount="indefinite"/>
+                    <circle cx="150" cy="125" r="80" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="10 40 30 20" opacity="0.6"/>
+                    <circle cx="150" cy="125" r="75" fill="none" stroke="#66fcf1" stroke-width="1" stroke-dasharray="50 50" opacity="0.8">
+                        <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="3s" repeatCount="indefinite" additive="sum"/>
+                    </circle>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 18. Meteor Shower -->
+        <div class="card">
+            <h3>18. Meteor Shower</h3>
+            <svg viewBox="0 0 300 250">
+                <defs>
+                    <g id="meteor">
+                        <line x1="0" y1="0" x2="-40" y2="-40" stroke="#ff9800" stroke-width="3" stroke-linecap="round" filter="url(#glow-orange)"/>
+                        <circle cx="0" cy="0" r="3" fill="#fff" />
+                    </g>
+                </defs>
+                <g>
+                    <use href="#meteor" x="100" y="-50">
+                        <animate attributeName="x" values="200; -50" dur="1.5s" repeatCount="indefinite" />
+                        <animate attributeName="y" values="-50; 200" dur="1.5s" repeatCount="indefinite" />
+                    </use>
+                    <use href="#meteor" x="250" y="-100">
+                        <animate attributeName="x" values="350; -50" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+                        <animate attributeName="y" values="-100; 300" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+                    </use>
+                    <use href="#meteor" x="150" y="-20">
+                        <animate attributeName="x" values="250; -50" dur="1s" repeatCount="indefinite" begin="1.2s"/>
+                        <animate attributeName="y" values="-20; 280" dur="1s" repeatCount="indefinite" begin="1.2s"/>
+                    </use>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 19. Magnetic Field Lines -->
+        <div class="card">
+            <h3>19. Magnetic Field</h3>
+            <svg viewBox="0 0 300 250">
+                <rect x="135" y="75" width="30" height="100" fill="#333" rx="5"/>
+                <rect x="135" y="75" width="30" height="50" fill="#f44336" rx="5" />
+                <g fill="none" stroke="#0ff" stroke-width="1.5" opacity="0.6" filter="url(#glow-cyan)">
+                    <path d="M 150,75 C 50,0 50,250 150,175" stroke-dasharray="10 5">
+                        <animate attributeName="stroke-dashoffset" values="15; 0" dur="1s" repeatCount="indefinite" linear="true"/>
+                    </path>
+                    <path d="M 150,75 C 100,25 100,225 150,175" stroke-dasharray="10 5">
+                        <animate attributeName="stroke-dashoffset" values="15; 0" dur="1s" repeatCount="indefinite" linear="true"/>
+                    </path>
+                    <path d="M 150,75 C 250,0 250,250 150,175" stroke-dasharray="10 5">
+                        <animate attributeName="stroke-dashoffset" values="0; 15" dur="1s" repeatCount="indefinite" linear="true"/>
+                    </path>
+                    <path d="M 150,75 C 200,25 200,225 150,175" stroke-dasharray="10 5">
+                        <animate attributeName="stroke-dashoffset" values="0; 15" dur="1s" repeatCount="indefinite" linear="true"/>
+                    </path>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 20. Vortex / Tornado -->
+        <div class="card">
+            <h3>20. Vortex / Tornado</h3>
+            <svg viewBox="0 0 300 250">
+                <g fill="none" stroke="#b829ea" stroke-width="2" filter="url(#glow-purple)">
+                    <ellipse cx="150" cy="50" rx="80" ry="15">
+                        <animate attributeName="cx" values="150; 160; 140; 150" dur="2s" repeatCount="indefinite"/>
+                    </ellipse>
+                    <ellipse cx="150" cy="80" rx="60" ry="12">
+                        <animate attributeName="cx" values="150; 130; 170; 150" dur="2s" repeatCount="indefinite" begin="0.2s"/>
+                    </ellipse>
+                    <ellipse cx="150" cy="110" rx="45" ry="9">
+                        <animate attributeName="cx" values="150; 165; 135; 150" dur="2s" repeatCount="indefinite" begin="0.4s"/>
+                    </ellipse>
+                    <ellipse cx="150" cy="140" rx="30" ry="6">
+                        <animate attributeName="cx" values="150; 140; 160; 150" dur="2s" repeatCount="indefinite" begin="0.6s"/>
+                    </ellipse>
+                    <ellipse cx="150" cy="170" rx="15" ry="3">
+                        <animate attributeName="cx" values="150; 155; 145; 150" dur="2s" repeatCount="indefinite" begin="0.8s"/>
+                    </ellipse>
+                    <path d="M 150,185 L 150,220" stroke-dasharray="5 5">
+                         <animate attributeName="d" values="M 150,185 L 140,220; M 150,185 L 160,220; M 150,185 L 140,220" dur="0.5s" repeatCount="indefinite"/>
+                    </path>
+                </g>
+            </svg>
+        </div>
+
+    </div>
+
+</body>
+</html>
