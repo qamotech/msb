@@ -1,4 +1,4 @@
-.codeboarding/
+documents/
 .agent-projects/
 scratch/
 *.log
@@ -16,3 +16,8 @@ node_modules
 .env
 .env.*
 !.env.example
+.codeboarding/
+desktop.ini
+*.exe
+archive/
+html-source-files/
