@@ -1263,7 +1263,7 @@
                 <button class="nav-btn" style="border-color: var(--neon-cyan); color: var(--neon-cyan);" onclick="exportCSV()">
                     <span>📥</span> EXPORT CSV
                 </button>
-                <button class="nav-btn btn-crimson" onclick="clearLog()">
+                <button class="nav-btn btn-crimson" id="btn-purge-vault" onclick="clearLog()">
                     <span>⚠️</span> PURGE VAULT
                 </button>
             </div>
@@ -1568,20 +1568,44 @@
     function addLotInput(containerId, className) {
         const container = document.getElementById(containerId);
         const count = container.querySelectorAll(`.${className}`).length + 1;
+        const row = document.createElement('div');
+        row.className = 'lot-input-row';
+        row.style.display = 'flex';
+        row.style.gap = '6px';
+        row.style.alignItems = 'center';
+
         const input = document.createElement('input');
         input.type = 'text';
         input.className = className;
+        input.style.flex = '1';
         input.placeholder = `LOT CODE #${count}`;
         input.oninput = saveState;
-        container.appendChild(input);
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'btn-delete-entry';
+        delBtn.title = 'Remove lot code';
+        delBtn.style.height = '38px';
+        delBtn.style.minWidth = '38px';
+        delBtn.innerHTML = '✕';
+        delBtn.onclick = function() {
+            row.remove();
+            saveState();
+            showToast("LOT CODE REMOVED");
+        };
+
+        row.appendChild(input);
+        row.appendChild(delBtn);
+        container.appendChild(row);
         input.focus();
     }
 
     function clearStandardInputs() {
         document.querySelectorAll('#view-universal .calc-input').forEach(inp => inp.value = '');
-        document.querySelectorAll('.standard-lot-input').forEach((inp, idx) => {
-            if (idx > 0) inp.remove(); else inp.value = '';
-        });
+        const container = document.getElementById('standard-lots-container');
+        if (container) {
+            container.innerHTML = '<input type="text" class="standard-lot-input" placeholder="LOT CODE #1" oninput="saveState()">';
+        }
         document.getElementById('standard-loc').value = '';
         calculateUniversal();
         saveState();
@@ -1745,7 +1769,7 @@
             triggerPowerSurge();
             showToast(`${data.name} LOGGED TO VAULT`);
         } else {
-            alert("No counts entered to log.");
+            showToast("ENTER COUNTS BEFORE LOGGING");
         }
     }
 
@@ -1774,7 +1798,7 @@
         const c = parseInt(document.getElementById('carton-c').value) || 0;
         const total = (p * 6800) + (r * 1360) + (b * 170) + c;
 
-        if (total === 0) return alert("NO CARTON COUNT ENTERED TO LOG.");
+        if (total === 0) return showToast("NO CARTON COUNT ENTERED TO LOG");
 
         const lot = document.getElementById('carton-lot').value.trim().toUpperCase() || 'N/A';
         const loc = document.getElementById('carton-loc').value.trim().toUpperCase() || 'N/A';
@@ -1805,6 +1829,7 @@
         document.getElementById('carton-lot').value = '';
         document.getElementById('carton-loc').value = '';
         calculateCartons();
+        showToast("CARTON INPUTS CLEARED");
     }
 
     /* =====================================================================
@@ -1844,7 +1869,7 @@
         const u = parseInt(document.getElementById('brites-inp-u').value) || 0;
         const total = (p * spec.P) + (r * spec.R) + u;
 
-        if (total === 0) return alert("NO BRITES COUNT ENTERED TO LOG.");
+        if (total === 0) return showToast("NO BRITES COUNT ENTERED TO LOG");
 
         const loc = document.getElementById('brites-loc').value.trim().toUpperCase() || 'N/A';
         const time = new Date().toLocaleTimeString();
@@ -1872,6 +1897,7 @@
         document.getElementById('brites-inp-u').value = '';
         document.getElementById('brites-loc').value = '';
         calculateBrites();
+        showToast("BRITES INPUTS CLEARED");
     }
 
     /* =====================================================================
@@ -1880,17 +1906,30 @@
     function addCustomParameter() {
         const container = document.getElementById('custom-parameters-container');
         const row = document.createElement('div');
+        row.className = 'custom-param-row';
         row.style.display = 'grid';
-        row.style.gridTemplateColumns = '2fr 1fr 1fr 34px';
+        row.style.gridTemplateColumns = '2fr 1fr 1fr 38px';
         row.style.gap = '6px';
         row.style.alignItems = 'center';
         row.innerHTML = `
             <input type="text" placeholder="Tier Name (e.g. Pallet)" class="cust-p-name" oninput="calculateCustom(); saveState();">
             <input type="number" placeholder="Multiplier" class="cust-p-mult" oninput="calculateCustom(); saveState();">
             <input type="number" placeholder="Qty" class="cust-p-qty" oninput="calculateCustom(); saveState();">
-            <button class="btn-delete-entry" style="height: 36px;" onclick="this.parentElement.remove(); calculateCustom(); saveState();">✕</button>
+            <button type="button" class="btn-delete-entry" title="Delete tier row" style="height: 38px; min-width: 38px; display: inline-flex; align-items: center; justify-content: center;" onclick="removeCustomRow(this)">✕</button>
         `;
         container.appendChild(row);
+    }
+
+    function removeCustomRow(btn) {
+        const row = btn.closest('.custom-param-row') || btn.parentElement;
+        if (row) row.remove();
+        const container = document.getElementById('custom-parameters-container');
+        if (container && container.children.length === 0) {
+            addCustomParameter();
+        }
+        calculateCustom();
+        saveState();
+        showToast("TIER ROW REMOVED");
     }
 
     function calculateCustom() {
@@ -1905,7 +1944,7 @@
 
     function logCustomCount() {
         const total = parseInt(document.getElementById('custom-total').innerText.replace(/,/g, '')) || 0;
-        if (total === 0) return alert("NO CUSTOM COUNT COMPUTED.");
+        if (total === 0) return showToast("ENTER QUANTITIES BEFORE LOGGING");
 
         const brand = document.getElementById('custom-brand').value.trim().toUpperCase() || 'CUSTOM ITEM';
         const loc = document.getElementById('custom-location').value.trim().toUpperCase() || 'N/A';
@@ -1937,6 +1976,7 @@
         addCustomParameter();
         document.getElementById('custom-total').innerText = '0';
         saveState();
+        showToast("CUSTOM CALCULATOR RESET");
     }
 
     /* =====================================================================
@@ -2012,7 +2052,7 @@
             triggerPowerSurge();
             showToast(`${brand.name} LOGGED TO VAULT`);
         } else {
-            alert("No count entered. Enter filled or empty quantities before logging.");
+            showToast("ENTER QUANTITIES BEFORE LOGGING");
         }
     }
 
@@ -2033,8 +2073,7 @@
             return;
         }
 
-        dataset.forEach((row, idx) => {
-            const originalIndex = filteredData ? actionLog.indexOf(row) : (actionLog.length - 1 - idx);
+        dataset.forEach((row) => {
             const tr = document.createElement('tr');
             
             let typeColor = 'var(--neon-cyan)';
@@ -2047,36 +2086,42 @@
                 <td>${row.time}</td>
                 <td style="font-weight: 700;">${row.brand}</td>
                 <td style="color: ${typeColor}; font-weight: 700;">${row.type}</td>
-                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${row.lots}">${row.lots}</td>
-                <td>${row.loc}</td>
-                <td style="text-align: right; color: #fff; font-weight: 700; text-shadow: 0 0 6px ${typeColor};">${row.total.toLocaleString()}</td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${row.lots || ''}">${row.lots || 'N/A'}</td>
+                <td>${row.loc || 'N/A'}</td>
+                <td style="text-align: right; color: #fff; font-weight: 700; text-shadow: 0 0 6px ${typeColor};">${(row.total || 0).toLocaleString()}</td>
                 <td style="text-align: center;">
-                    <button class="btn-delete-entry" title="Delete record" onclick="deleteVaultEntry(${originalIndex})">✕</button>
+                    <button type="button" class="btn-delete-entry" title="Delete record ${row.id}" style="min-width: 32px; min-height: 32px; display: inline-flex; align-items: center; justify-content: center;" onclick="deleteVaultEntry('${row.id}')">✕</button>
                 </td>
             `;
             tbody.appendChild(tr);
         });
     }
 
-    function deleteVaultEntry(index) {
-        if (confirm(`DELETE RECORD ${actionLog[index].id}?`)) {
-            actionLog.splice(index, 1);
-            persistVaultLogs();
-            showToast("RECORD REMOVED");
+    function deleteVaultEntry(id) {
+        if (!id) return;
+        const idx = actionLog.findIndex(r => r.id === id);
+        if (idx === -1) {
+            console.warn("Record not found:", id);
+            return;
         }
+        actionLog.splice(idx, 1);
+        localStorage.setItem('cyberCountLog_v4', JSON.stringify(actionLog));
+        filterVaultLogs();
+        updateHUDTotals();
+        showToast(`RECORD ${id} DELETED`);
     }
 
     function filterVaultLogs() {
-        const query = document.getElementById('vault-search-input').value.trim().toLowerCase();
-        const typeFilter = document.getElementById('vault-type-filter').value;
+        const query = (document.getElementById('vault-search-input')?.value || '').trim().toLowerCase();
+        const typeFilter = document.getElementById('vault-type-filter')?.value || 'ALL';
 
         const filtered = actionLog.slice().reverse().filter(row => {
             const matchesType = (typeFilter === 'ALL') || (row.type === typeFilter);
             const matchesQuery = !query || 
-                row.brand.toLowerCase().includes(query) ||
-                row.lots.toLowerCase().includes(query) ||
-                row.loc.toLowerCase().includes(query) ||
-                row.id.toLowerCase().includes(query);
+                (row.brand && row.brand.toLowerCase().includes(query)) ||
+                (row.lots && row.lots.toLowerCase().includes(query)) ||
+                (row.loc && row.loc.toLowerCase().includes(query)) ||
+                (row.id && row.id.toLowerCase().includes(query));
             return matchesType && matchesQuery;
         });
 
@@ -2100,18 +2145,52 @@
         document.getElementById('global-records').innerText = actionLog.length;
     }
 
+    /* Safe Two-Step Purge Confirmation (Zero Blocking Modals) */
+    let purgePending = false;
+    let purgeTimeout = null;
     function clearLog() {
-        if (actionLog.length === 0) return alert("VAULT IS ALREADY EMPTY.");
-        if (confirm("WARNING: PURGE ALL SHIFT DATA VAULT RECORDS? THIS CANNOT BE UNDONE.")) {
+        const btn = document.getElementById('btn-purge-vault');
+        if (!actionLog || actionLog.length === 0) {
+            showToast("DATA VAULT IS ALREADY EMPTY");
+            return;
+        }
+        if (!purgePending) {
+            purgePending = true;
+            if (btn) {
+                btn.dataset.origText = btn.innerHTML;
+                btn.innerHTML = '<span>⚠️</span> CLICK AGAIN TO CONFIRM PURGE';
+                btn.style.background = 'var(--neon-crimson)';
+                btn.style.color = '#fff';
+            }
+            showToast("CLICK PURGE AGAIN TO CONFIRM");
+            purgeTimeout = setTimeout(() => {
+                purgePending = false;
+                if (btn && btn.dataset.origText) {
+                    btn.innerHTML = btn.dataset.origText;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }
+            }, 4000);
+        } else {
+            clearTimeout(purgeTimeout);
+            purgePending = false;
+            if (btn && btn.dataset.origText) {
+                btn.innerHTML = btn.dataset.origText;
+                btn.style.background = '';
+                btn.style.color = '';
+            }
             actionLog = [];
             persistVaultLogs();
             showToast("DATA VAULT PURGED");
         }
     }
 
-    /* One-Click Shift Report Clipboard Exporter (UI Improvement 4) */
+    /* Resilient Shift Report Exporter (Works on HTTPS and file:// protocols) */
     function copyShiftReportToClipboard() {
-        if (actionLog.length === 0) return alert("DATA VAULT IS EMPTY. NOTHING TO EXPORT.");
+        if (!actionLog || actionLog.length === 0) {
+            showToast("DATA VAULT IS EMPTY. NOTHING TO EXPORT.");
+            return;
+        }
 
         let shiftFilled = 0;
         let shiftEmpty = 0;
@@ -2140,15 +2219,58 @@
         });
         text += `========================================================\n`;
 
-        navigator.clipboard.writeText(text).then(() => {
-            showToast("SHIFT REPORT COPIED TO CLIPBOARD!");
-        }).catch(err => {
-            alert("Clipboard permission unavailable. Downloading file instead.");
-        });
+        function tryFallbackCopy() {
+            try {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                const success = document.execCommand('copy');
+                document.body.removeChild(ta);
+                if (success) {
+                    showToast("SHIFT REPORT COPIED TO CLIPBOARD!");
+                    return true;
+                }
+            } catch (e) {}
+            return false;
+        }
+
+        function downloadReportFile() {
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Shift_Report_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("SHIFT REPORT DOWNLOADED AS FILE");
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("SHIFT REPORT COPIED TO CLIPBOARD!");
+            }).catch(() => {
+                if (!tryFallbackCopy()) {
+                    downloadReportFile();
+                }
+            });
+        } else {
+            if (!tryFallbackCopy()) {
+                downloadReportFile();
+            }
+        }
     }
 
     function exportCSV() {
-        if (actionLog.length === 0) return alert("DATA VAULT IS EMPTY.");
+        if (!actionLog || actionLog.length === 0) {
+            showToast("DATA VAULT IS EMPTY");
+            return;
+        }
         let csv = "SaveID,Time,Brand,Type,Lots,Location,Breakdown,Total\n";
         actionLog.forEach(row => {
             const cleanLots = (row.lots || '').replace(/,/g, ';');
