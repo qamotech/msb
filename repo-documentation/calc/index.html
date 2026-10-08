@@ -289,7 +289,7 @@
             box-shadow: 0 0 16px rgba(0, 240, 255, 0.5), inset 0 0 8px rgba(0, 240, 255, 0.3);
         }
 
-        /* Fullscreen Button special styling */
+        /* Fullscreen & External Browser Buttons */
         #fs-btn {
             background: linear-gradient(180deg, rgba(0, 240, 255, 0.18) 0%, rgba(7, 31, 48, 0.95) 100%);
             border: 1px solid var(--neon-cyan);
@@ -308,6 +308,24 @@
             stroke: #000;
         }
 
+        #ext-browser-btn {
+            background: linear-gradient(180deg, rgba(0, 255, 102, 0.15) 0%, rgba(7, 36, 20, 0.95) 100%);
+            border: 1px solid var(--neon-emerald);
+            color: var(--neon-emerald);
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #ext-browser-btn:hover {
+            background: var(--neon-emerald);
+            color: #000;
+            box-shadow: 0 0 18px var(--neon-emerald);
+        }
+        #ext-browser-btn:hover svg {
+            stroke: #000;
+        }
+
         /* Fullscreen & Immersive Viewport Mode Styles */
         :fullscreen,
         :-webkit-full-screen,
@@ -318,10 +336,11 @@
             overflow-y: auto !important;
             overflow-x: hidden !important;
             background-color: var(--armor-darkest) !important;
-            padding: 16px !important;
+            padding: 12px !important;
             box-sizing: border-box !important;
         }
 
+        /* Edge-to-Edge Cockpit View Mode */
         html.app-fullscreen-mode,
         body.app-fullscreen-mode {
             position: fixed !important;
@@ -333,11 +352,33 @@
             height: 100vh !important;
             z-index: 999999 !important;
             margin: 0 !important;
-            padding: 16px !important;
+            padding: 10px 14px !important;
             box-sizing: border-box !important;
             overflow-y: auto !important;
             overflow-x: hidden !important;
-            background: var(--armor-darkest) !important;
+            background: radial-gradient(circle at 50% 0%, rgba(0, 150, 255, 0.18) 0%, transparent 60%), #05080e !important;
+        }
+
+        body.app-fullscreen-mode .mech-panel {
+            margin-bottom: 12px !important;
+            padding: 12px 14px !important;
+        }
+
+        body.app-fullscreen-mode header {
+            padding-bottom: 8px !important;
+        }
+
+        body.app-fullscreen-mode .hud-telemetry {
+            margin-top: 8px !important;
+            padding: 8px 12px !important;
+        }
+
+        body.app-fullscreen-mode .hud-cell {
+            padding: 8px 12px !important;
+        }
+
+        body.app-fullscreen-mode .calculator-dual-grid {
+            gap: 12px !important;
         }
 
         /* Input Controls */
@@ -864,7 +905,11 @@
                 </h1>
                 <div class="subhead">EDISON HWY FACILITY // BEVERAGE LOGISTICS PROTOCOL v4.0</div>
             </div>
-            <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="nav-btn" onclick="openInFullBrowser()" id="ext-browser-btn" title="Open in dedicated external browser window for full physical monitor display">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span>OPEN IN FULL BROWSER</span>
+                </button>
                 <button class="nav-btn" onclick="toggleFullScreen()" id="fs-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
                     <span>FULLSCREEN</span>
@@ -2389,12 +2434,24 @@
         }
     }
 
+    function openInFullBrowser() {
+        const width = window.screen.availWidth || 1920;
+        const height = window.screen.availHeight || 1080;
+        const features = `width=${width},height=${height},left=0,top=0,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes`;
+        const newWin = window.open(window.location.href, '_blank', features);
+        if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+            showToast("POPUP RESTRICTED — OPEN DIRECTLY IN CHROME OR EDGE");
+        } else {
+            showToast("LAUNCHED IN FULL BROWSER // PRESS F11 FOR FULL MONITOR");
+        }
+    }
+
     function enterImmersiveMode() {
         isImmersiveMode = true;
         document.body.classList.add('app-fullscreen-mode');
         document.documentElement.classList.add('app-fullscreen-mode');
         updateFullscreenUI();
-        showToast("FULLSCREEN ENGAGED");
+        showToast("COCKPIT VIEW ENGAGED // USE 'OPEN IN FULL BROWSER' FOR FULL MONITOR");
     }
 
     function exitImmersiveMode() {
@@ -2407,12 +2464,10 @@
 
     async function toggleFullScreen() {
         if (!isFullScreen()) {
-            // Attempt native fullscreen first
             try {
                 await enterNativeFullscreen();
                 showToast("FULLSCREEN ENGAGED");
             } catch (err) {
-                // Seamlessly fall back to immersive viewport mode in restricted/embedded environments
                 console.info("Native fullscreen restricted/unavailable, using immersive viewport mode:", err);
                 enterImmersiveMode();
             }
