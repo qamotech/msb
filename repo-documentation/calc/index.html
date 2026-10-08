@@ -295,11 +295,49 @@
             border: 1px solid var(--neon-cyan);
             color: var(--neon-cyan);
             font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         #fs-btn:hover, #fs-btn.active {
             background: var(--neon-cyan);
             color: #000;
             box-shadow: 0 0 18px var(--neon-cyan);
+        }
+        #fs-btn:hover svg, #fs-btn.active svg {
+            stroke: #000;
+        }
+
+        /* Fullscreen & Immersive Viewport Mode Styles */
+        :fullscreen,
+        :-webkit-full-screen,
+        :-moz-full-screen,
+        :-ms-fullscreen {
+            width: 100vw !important;
+            height: 100vh !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            background-color: var(--armor-darkest) !important;
+            padding: 16px !important;
+            box-sizing: border-box !important;
+        }
+
+        html.app-fullscreen-mode,
+        body.app-fullscreen-mode {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 999999 !important;
+            margin: 0 !important;
+            padding: 16px !important;
+            box-sizing: border-box !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            background: var(--armor-darkest) !important;
         }
 
         /* Input Controls */
@@ -828,7 +866,8 @@
             </div>
             <div style="display: flex; gap: 8px;">
                 <button class="nav-btn" onclick="toggleFullScreen()" id="fs-btn">
-                    <span>⛶</span> FULLSCREEN
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                    <span>FULLSCREEN</span>
                 </button>
             </div>
         </div>
@@ -2301,9 +2340,14 @@
         toast.timer = setTimeout(() => toast.style.display = 'none', 2800);
     }
 
-    /* Fullscreen Toggle & Event Sync */
+    /* Dual-Mode Fullscreen Engine (Native API + Immersive Viewport Mode) */
+    let isImmersiveMode = false;
+
+    const FS_ENTER_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>`;
+    const FS_EXIT_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>`;
+
     function isFullScreen() {
-        return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || isImmersiveMode);
     }
 
     function updateFullscreenUI() {
@@ -2311,55 +2355,105 @@
         if (!btn) return;
         if (isFullScreen()) {
             btn.classList.add('active');
-            btn.innerHTML = '<span>🗗</span> EXIT FULLSCREEN';
+            btn.innerHTML = `${FS_EXIT_SVG} <span>EXIT FULLSCREEN</span>`;
         } else {
             btn.classList.remove('active');
-            btn.innerHTML = '<span>⛶</span> FULLSCREEN';
+            btn.innerHTML = `${FS_ENTER_SVG} <span>FULLSCREEN</span>`;
         }
     }
 
+    async function enterNativeFullscreen() {
+        const doc = document.documentElement;
+        if (doc.requestFullscreen) {
+            await doc.requestFullscreen();
+        } else if (doc.webkitRequestFullscreen) {
+            await doc.webkitRequestFullscreen();
+        } else if (doc.mozRequestFullScreen) {
+            await doc.mozRequestFullScreen();
+        } else if (doc.msRequestFullscreen) {
+            await doc.msRequestFullscreen();
+        } else {
+            throw new Error("Native fullscreen not available");
+        }
+    }
+
+    async function exitNativeFullscreen() {
+        if (document.exitFullscreen) {
+            await document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            await document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            await document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            await document.msExitFullscreen();
+        }
+    }
+
+    function enterImmersiveMode() {
+        isImmersiveMode = true;
+        document.body.classList.add('app-fullscreen-mode');
+        document.documentElement.classList.add('app-fullscreen-mode');
+        updateFullscreenUI();
+        showToast("FULLSCREEN ENGAGED");
+    }
+
+    function exitImmersiveMode() {
+        isImmersiveMode = false;
+        document.body.classList.remove('app-fullscreen-mode');
+        document.documentElement.classList.remove('app-fullscreen-mode');
+        updateFullscreenUI();
+        showToast("EXITED FULLSCREEN");
+    }
+
     async function toggleFullScreen() {
-        try {
-            if (!isFullScreen()) {
-                const doc = document.documentElement;
-                if (doc.requestFullscreen) {
-                    await doc.requestFullscreen();
-                } else if (doc.webkitRequestFullscreen) {
-                    await doc.webkitRequestFullscreen();
-                } else if (doc.mozRequestFullScreen) {
-                    await doc.mozRequestFullScreen();
-                } else if (doc.msRequestFullscreen) {
-                    await doc.msRequestFullscreen();
-                }
+        if (!isFullScreen()) {
+            // Attempt native fullscreen first
+            try {
+                await enterNativeFullscreen();
                 showToast("FULLSCREEN ENGAGED");
-            } else {
-                if (document.exitFullscreen) {
-                    await document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    await document.webkitExitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    await document.mozCancelFullScreen();
-                } else if (document.msExitFullscreen) {
-                    await document.msExitFullscreen();
-                }
-                showToast("EXITED FULLSCREEN");
+            } catch (err) {
+                // Seamlessly fall back to immersive viewport mode in restricted/embedded environments
+                console.info("Native fullscreen restricted/unavailable, using immersive viewport mode:", err);
+                enterImmersiveMode();
             }
-        } catch (err) {
-            console.warn("Fullscreen toggle error:", err);
-            showToast("FULLSCREEN RESTRICTED BY BROWSER ENVIRONMENT");
+        } else {
+            if (isImmersiveMode) {
+                exitImmersiveMode();
+            } else {
+                try {
+                    await exitNativeFullscreen();
+                    showToast("EXITED FULLSCREEN");
+                } catch (err) {
+                    exitImmersiveMode();
+                }
+            }
         }
         updateFullscreenUI();
     }
 
-    document.addEventListener('fullscreenchange', updateFullscreenUI);
-    document.addEventListener('webkitfullscreenchange', updateFullscreenUI);
-    document.addEventListener('mozfullscreenchange', updateFullscreenUI);
-    document.addEventListener('MSFullscreenChange', updateFullscreenUI);
+    function onNativeFullscreenChange() {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+            if (isImmersiveMode) {
+                exitImmersiveMode();
+            } else {
+                updateFullscreenUI();
+            }
+        } else {
+            updateFullscreenUI();
+        }
+    }
+
+    document.addEventListener('fullscreenchange', onNativeFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', onNativeFullscreenChange);
+    document.addEventListener('mozfullscreenchange', onNativeFullscreenChange);
+    document.addEventListener('MSFullscreenChange', onNativeFullscreenChange);
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'F11') {
             e.preventDefault();
             toggleFullScreen();
+        } else if (e.key === 'Escape' && isImmersiveMode) {
+            exitImmersiveMode();
         }
     });
 
