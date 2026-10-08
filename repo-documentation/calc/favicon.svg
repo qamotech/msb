@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="cyberPlate" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#162234"/>
+      <stop offset="100%" stop-color="#0a0f18"/>
+    </linearGradient>
+    <linearGradient id="neonCyanGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f3ff"/>
+      <stop offset="100%" stop-color="#0088cc"/>
+    </linearGradient>
+    <linearGradient id="voltGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff066"/>
+      <stop offset="100%" stop-color="#ff9900"/>
+    </linearGradient>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="1.5" flood-color="#00f3ff" flood-opacity="0.8"/>
+    </filter>
+    <filter id="boltGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#ffaa00" flood-opacity="0.9"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Industrial Hex Shield -->
+  <polygon points="32,3 57,17.5 57,46.5 32,61 7,46.5 7,17.5" fill="url(#cyberPlate)" stroke="#00f3ff" stroke-width="2.5" stroke-linejoin="round"/>
+  
+  <!-- Inner Circuit Border -->
+  <polygon points="32,7.5 52.5,19.5 52.5,44.5 32,56.5 11.5,44.5 11.5,19.5" fill="none" stroke="#1f364d" stroke-width="1.2" stroke-dasharray="4,2"/>
+
+  <!-- Bolt Rivets -->
+  <circle cx="32" cy="7" r="1.5" fill="#ffaa00"/>
+  <circle cx="53" cy="19.5" r="1.5" fill="#00f3ff"/>
+  <circle cx="53" cy="44.5" r="1.5" fill="#ffaa00"/>
+  <circle cx="32" cy="57" r="1.5" fill="#00f3ff"/>
+  <circle cx="11" cy="44.5" r="1.5" fill="#ffaa00"/>
+  <circle cx="11" cy="19.5" r="1.5" fill="#00f3ff"/>
+
+  <!-- Stylized Industrial Beverage Can Silhouette -->
+  <!-- Can Rim -->
+  <path d="M24 16 C24 14.5, 40 14.5, 40 16 L39 18 C39 19, 25 19, 25 18 Z" fill="#4d6480" stroke="#00f3ff" stroke-width="1"/>
+  <!-- Can Tab / Opening -->
+  <ellipse cx="32" cy="16.5" rx="3.5" ry="1.2" fill="#0a0f18" stroke="#ffaa00" stroke-width="0.8"/>
+  
+  <!-- Can Body with chamfered bevels -->
+  <path d="M22 21 C22 19, 42 19, 42 21 L41 46 C41 48.5, 23 48.5, 23 46 Z" fill="#0f1926" stroke="#00f3ff" stroke-width="1.8" filter="url(#neonGlow)"/>
+
+  <!-- Horizontal Can Grooves -->
+  <line x1="23" y1="24" x2="41" y2="24" stroke="#1a2d42" stroke-width="1.2"/>
+  <line x1="23.5" y1="44" x2="40.5" y2="44" stroke="#1a2d42" stroke-width="1.2"/>
+
+  <!-- Dynamic Electric Lightning Bolt Over Can Body -->
+  <polygon points="35,17 24,32 32,32 28,47 41,29 33,29" fill="url(#voltGold)" stroke="#ffffff" stroke-width="0.8" stroke-linejoin="miter" filter="url(#boltGlow)"/>
+</svg>
