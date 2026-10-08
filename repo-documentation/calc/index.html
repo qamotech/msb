@@ -336,7 +336,7 @@
             overflow-y: auto !important;
             overflow-x: hidden !important;
             background-color: var(--armor-darkest) !important;
-            padding: 12px !important;
+            padding: 10px 14px !important;
             box-sizing: border-box !important;
         }
 
@@ -359,26 +359,98 @@
             background: radial-gradient(circle at 50% 0%, rgba(0, 150, 255, 0.18) 0%, transparent 60%), #05080e !important;
         }
 
+        :fullscreen .mech-panel,
+        :-webkit-full-screen .mech-panel,
         body.app-fullscreen-mode .mech-panel {
             margin-bottom: 12px !important;
             padding: 12px 14px !important;
         }
 
+        :fullscreen header,
+        :-webkit-full-screen header,
         body.app-fullscreen-mode header {
             padding-bottom: 8px !important;
         }
 
+        :fullscreen .hud-telemetry,
+        :-webkit-full-screen .hud-telemetry,
         body.app-fullscreen-mode .hud-telemetry {
             margin-top: 8px !important;
             padding: 8px 12px !important;
         }
 
+        :fullscreen .hud-cell,
+        :-webkit-full-screen .hud-cell,
         body.app-fullscreen-mode .hud-cell {
             padding: 8px 12px !important;
         }
 
+        :fullscreen .calculator-dual-grid,
+        :-webkit-full-screen .calculator-dual-grid,
         body.app-fullscreen-mode .calculator-dual-grid {
             gap: 12px !important;
+        }
+
+        /* Fullscreen Diagnostic Notice Banner for Embedded Preview Environments */
+        .fs-notice-banner {
+            background: linear-gradient(180deg, rgba(255, 170, 0, 0.18) 0%, rgba(20, 14, 4, 0.95) 100%);
+            border: 1px solid var(--neon-amber);
+            border-left: 5px solid var(--neon-amber);
+            border-radius: 6px;
+            padding: 10px 16px;
+            margin: 10px 0 14px 0;
+            box-shadow: 0 0 16px rgba(255, 170, 0, 0.25);
+            animation: fadeInNotice 0.3s ease;
+        }
+        @keyframes fadeInNotice {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fs-notice-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 0.92rem;
+            color: #ffdda1;
+            font-family: var(--font-mono);
+        }
+        .fs-notice-title {
+            color: var(--neon-amber);
+            font-weight: 800;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .fs-action-btn {
+            background: rgba(255, 170, 0, 0.2);
+            border: 1px solid var(--neon-amber);
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .fs-action-btn:hover {
+            background: var(--neon-amber);
+            color: #000;
+            box-shadow: 0 0 10px var(--neon-amber);
+        }
+        .fs-close-btn {
+            background: transparent;
+            border: none;
+            color: #a8947a;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 2px 6px;
+        }
+        .fs-close-btn:hover {
+            color: #fff;
         }
 
         /* Input Controls */
@@ -961,6 +1033,21 @@
             </button>
         </nav>
     </header>
+
+    <!-- Embedded Split-Pane Container Diagnostic Banner -->
+    <aside id="fs-notice-banner" class="fs-notice-banner" style="display: none;" aria-live="polite">
+        <div class="fs-notice-content">
+            <div>
+                <span class="fs-notice-title">⚡ MONITOR FULLSCREEN NOTICE:</span>
+                <span>IDE container detected (1600x731). Chromium confines embedded preview tabs to the split editor pane. For 100% borderless monitor display (1920x1080), double-click <strong>launch-fullscreen.bat</strong> or open directly in Chrome/Edge.</span>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <button class="fs-action-btn" onclick="copyFilePath()" title="Copy local file path to clipboard">COPY PATH</button>
+                <button class="fs-action-btn" onclick="openInFullBrowser()" title="Launch dedicated external window">LAUNCH BROWSER</button>
+                <button class="fs-close-btn" onclick="dismissFsNotice()" title="Dismiss notice">✕</button>
+            </div>
+        </div>
+    </aside>
 
     <!-- =============================================================== -->
     <!-- VIEW 1: UNIVERSAL BEVERAGE CONSTRUCT (STREAMLINED SINGLE DECK) -->
@@ -2434,6 +2521,32 @@
         }
     }
 
+    function isEmbeddedContainer() {
+        return !!(
+            window.innerWidth < (screen.availWidth - 80) || 
+            window.innerHeight < (screen.availHeight - 120) || 
+            window.self !== window.top
+        );
+    }
+
+    function dismissFsNotice() {
+        const banner = document.getElementById('fs-notice-banner');
+        if (banner) banner.style.display = 'none';
+    }
+
+    function copyFilePath() {
+        const path = window.location.href;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(path).then(() => {
+                showToast("COPIED FILE PATH TO CLIPBOARD");
+            }).catch(() => {
+                prompt("Copy file path below:", path);
+            });
+        } else {
+            prompt("Copy file path below:", path);
+        }
+    }
+
     function openInFullBrowser() {
         const width = window.screen.availWidth || 1920;
         const height = window.screen.availHeight || 1080;
@@ -2442,7 +2555,7 @@
         if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
             showToast("POPUP RESTRICTED — OPEN DIRECTLY IN CHROME OR EDGE");
         } else {
-            showToast("LAUNCHED IN FULL BROWSER // PRESS F11 FOR FULL MONITOR");
+            showToast("LAUNCHED IN DEDICATED WINDOW // PRESS F11 FOR FULL MONITOR");
         }
     }
 
@@ -2451,51 +2564,58 @@
         document.body.classList.add('app-fullscreen-mode');
         document.documentElement.classList.add('app-fullscreen-mode');
         updateFullscreenUI();
-        showToast("COCKPIT VIEW ENGAGED // USE 'OPEN IN FULL BROWSER' FOR FULL MONITOR");
     }
 
     function exitImmersiveMode() {
         isImmersiveMode = false;
         document.body.classList.remove('app-fullscreen-mode');
         document.documentElement.classList.remove('app-fullscreen-mode');
+        dismissFsNotice();
         updateFullscreenUI();
         showToast("EXITED FULLSCREEN");
     }
 
     async function toggleFullScreen() {
         if (!isFullScreen()) {
+            enterImmersiveMode();
+
+            let nativeOk = false;
             try {
                 await enterNativeFullscreen();
-                showToast("FULLSCREEN ENGAGED");
+                nativeOk = true;
             } catch (err) {
-                console.info("Native fullscreen restricted/unavailable, using immersive viewport mode:", err);
-                enterImmersiveMode();
+                console.info("Native fullscreen restricted/unavailable, active in cockpit mode:", err);
+            }
+
+            if (isEmbeddedContainer()) {
+                const banner = document.getElementById('fs-notice-banner');
+                if (banner) banner.style.display = 'block';
+                showToast("COCKPIT VIEW ENGAGED // SEE MONITOR FULLSCREEN NOTICE");
+            } else {
+                showToast(nativeOk ? "100% MONITOR FULLSCREEN ENGAGED" : "COCKPIT FULLSCREEN ENGAGED");
             }
         } else {
-            if (isImmersiveMode) {
-                exitImmersiveMode();
-            } else {
-                try {
-                    await exitNativeFullscreen();
-                    showToast("EXITED FULLSCREEN");
-                } catch (err) {
-                    exitImmersiveMode();
-                }
+            exitImmersiveMode();
+            try {
+                await exitNativeFullscreen();
+            } catch (err) {
+                console.info("Exit native fullscreen notice:", err);
             }
         }
         updateFullscreenUI();
     }
 
     function onNativeFullscreenChange() {
-        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-            if (isImmersiveMode) {
-                exitImmersiveMode();
-            } else {
-                updateFullscreenUI();
-            }
-        } else {
-            updateFullscreenUI();
+        const hasNative = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        if (!hasNative && !isImmersiveMode) {
+            document.body.classList.remove('app-fullscreen-mode');
+            document.documentElement.classList.remove('app-fullscreen-mode');
+            dismissFsNotice();
+        } else if (hasNative) {
+            document.body.classList.add('app-fullscreen-mode');
+            document.documentElement.classList.add('app-fullscreen-mode');
         }
+        updateFullscreenUI();
     }
 
     document.addEventListener('fullscreenchange', onNativeFullscreenChange);
@@ -2507,8 +2627,10 @@
         if (e.key === 'F11') {
             e.preventDefault();
             toggleFullScreen();
-        } else if (e.key === 'Escape' && isImmersiveMode) {
-            exitImmersiveMode();
+        } else if (e.key === 'Escape') {
+            if (isFullScreen()) {
+                toggleFullScreen();
+            }
         }
     });
 
