@@ -1,0 +1,2302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow">
+    <title>CYBER-COUNT CALCUN8R v4.0 // EDISON HWY</title>
+    <!-- Fonts for Sci-Fi Mechanical & Electrified UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Heavy Mechanical Gunmetal Palette */
+            --armor-darkest: #07090e;
+            --armor-dark: #0f141d;
+            --armor-plate: #161e2b;
+            --armor-light: #263347;
+            --metal-rim: #3b4d68;
+            --metal-highlight: #5b7294;
+            --bolt-color: #8fa5c4;
+
+            /* High-Voltage Electrifying Neon Accents */
+            --neon-cyan: #00f0ff;
+            --neon-emerald: #00ff66;
+            --neon-amber: #ffaa00;
+            --neon-plasma: #b026ff;
+            --neon-crimson: #ff2255;
+            --laser-blue: #0077ff;
+
+            /* HUD Displays & Glows */
+            --hud-glass: rgba(10, 16, 26, 0.88);
+            --hud-border: rgba(0, 240, 255, 0.45);
+            --electric-glow: 0 0 14px rgba(0, 240, 255, 0.55), 0 0 28px rgba(0, 240, 255, 0.25);
+            --amber-glow: 0 0 14px rgba(255, 170, 0, 0.6), 0 0 28px rgba(255, 170, 0, 0.25);
+            --emerald-glow: 0 0 14px rgba(0, 255, 102, 0.6), 0 0 28px rgba(0, 255, 102, 0.25);
+
+            /* Typography */
+            --font-display: 'Orbitron', -apple-system, sans-serif;
+            --font-ui: 'Rajdhani', -apple-system, sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--armor-darkest);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 150, 255, 0.12) 0%, transparent 60%),
+                linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+            background-size: 100% 100%, 36px 36px, 36px 36px;
+            color: #d8e6f8;
+            font-family: var(--font-ui);
+            font-size: 18px;
+            margin: 0;
+            padding: 16px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Power Rail Conduit running at top */
+        .power-conduit {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-plasma), var(--neon-cyan), var(--neon-emerald), var(--neon-amber), var(--neon-cyan));
+            background-size: 300% 100%;
+            animation: conduitFlow 6s linear infinite;
+            box-shadow: 0 0 12px var(--neon-cyan);
+            margin-bottom: 12px;
+            border-radius: 2px;
+        }
+
+        @keyframes conduitFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        /* Industrial Hazard Warning Stripe */
+        .hazard-stripe {
+            background: repeating-linear-gradient(
+                -45deg,
+                #000,
+                #000 12px,
+                var(--neon-amber) 12px,
+                var(--neon-amber) 24px
+            );
+            height: 8px;
+            width: 100%;
+            border-radius: 2px;
+            box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 0 8px rgba(255,170,0,0.3);
+            margin: 8px 0;
+        }
+
+        /* Mechanical Heavy Armor Panels */
+        .mech-panel {
+            background: linear-gradient(165deg, var(--armor-plate) 0%, var(--armor-dark) 60%, var(--armor-darkest) 100%);
+            border: 2px solid var(--metal-rim);
+            border-top: 2px solid var(--metal-highlight);
+            border-bottom: 3px solid #000;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 18px;
+            position: relative;
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                inset 0 0 24px rgba(0, 0, 0, 0.75),
+                0 8px 24px rgba(0, 0, 0, 0.65);
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .mech-panel.electric-border {
+            border-color: rgba(0, 240, 255, 0.45);
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 0 20px rgba(0, 240, 255, 0.08),
+                0 0 18px rgba(0, 240, 255, 0.18),
+                0 8px 25px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Rivet bolts in corners */
+        .mech-panel::before, .mech-panel::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, var(--bolt-color) 30%, #111 90%);
+            border-radius: 50%;
+            box-shadow: 0 0 2px #000;
+        }
+        .mech-panel::before { top: 6px; left: 6px; }
+        .mech-panel::after { top: 6px; right: 6px; }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+            color: #ffffff;
+            text-shadow: var(--electric-glow);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        h2 {
+            font-size: 1.55rem;
+            letter-spacing: 1.5px;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+        }
+
+        .subhead {
+            font-family: var(--font-mono);
+            color: var(--neon-cyan);
+            font-size: 1rem;
+            letter-spacing: 2.5px;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .voltage-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 255, 102, 0.14);
+            border: 1px solid var(--neon-emerald);
+            color: var(--neon-emerald);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            letter-spacing: 1px;
+            animation: pulseFlicker 3s infinite;
+        }
+
+        @keyframes pulseFlicker {
+            0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(0, 255, 102, 0.4); }
+            50% { opacity: 0.85; box-shadow: 0 0 3px rgba(0, 255, 102, 0.2); }
+        }
+
+        /* Top HUD Telemetry Bar */
+        .hud-telemetry {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            background: var(--hud-glass);
+            border: 1px solid var(--hud-border);
+            border-radius: 6px;
+            padding: 14px;
+            margin-top: 14px;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .hud-cell {
+            background: rgba(0, 0, 0, 0.55);
+            border-left: 4px solid var(--neon-cyan);
+            padding: 10px 14px;
+            border-radius: 4px;
+        }
+        .hud-cell.amber { border-left-color: var(--neon-amber); }
+        .hud-cell.emerald { border-left-color: var(--neon-emerald); }
+        .hud-cell.plasma { border-left-color: var(--neon-plasma); }
+
+        .hud-cell-label {
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #9cb8dd;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .hud-cell-value {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-cyan);
+            line-height: 1.1;
+        }
+        .hud-cell.amber .hud-cell-value { color: var(--neon-amber); text-shadow: var(--amber-glow); }
+        .hud-cell.emerald .hud-cell-value { color: var(--neon-emerald); text-shadow: var(--emerald-glow); }
+        .hud-cell.plasma .hud-cell-value { color: #f2afff; text-shadow: 0 0 10px var(--neon-plasma); }
+
+        /* Tactical Navigation & Mode Switchers */
+        .nav-switchers {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 14px 0 6px 0;
+            padding-bottom: 4px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(180deg, var(--armor-plate) 0%, var(--armor-dark) 100%);
+            border: 1px solid var(--metal-rim);
+            color: #b8d0ed;
+            font-family: var(--font-display);
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            padding: 11px 18px;
+            min-height: 46px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--neon-cyan);
+            color: #fff;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(180deg, #0f354f 0%, #071f30 100%);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 16px rgba(0, 240, 255, 0.5), inset 0 0 8px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Fullscreen Button special styling */
+        #fs-btn {
+            background: linear-gradient(180deg, rgba(0, 240, 255, 0.18) 0%, rgba(7, 31, 48, 0.95) 100%);
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            font-weight: 800;
+        }
+        #fs-btn:hover, #fs-btn.active {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 18px var(--neon-cyan);
+        }
+
+        /* Input Controls */
+        label {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #a8c4e6;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+
+        input[type="text"], input[type="number"], select {
+            background: #06090e;
+            border: 1px solid var(--metal-rim);
+            border-radius: 4px;
+            color: var(--neon-cyan);
+            font-family: var(--font-mono);
+            font-size: 1.15rem;
+            font-weight: 700;
+            padding: 12px 14px;
+            min-height: 48px;
+            width: 100%;
+            transition: all 0.2s;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        input[type="number"] {
+            text-align: center;
+            font-size: 1.45rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 14px rgba(0, 240, 255, 0.55), inset 0 0 6px rgba(0, 240, 255, 0.2);
+            color: #fff;
+        }
+
+        select {
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            letter-spacing: 1px;
+            background-color: #0b111a;
+            color: #fff;
+            border: 1px solid var(--neon-cyan);
+        }
+
+        select option {
+            background: #090e17;
+            color: #e1ecfa;
+            padding: 10px;
+            font-size: 1rem;
+        }
+
+        /* Buttons */
+        .btn-action {
+            background: linear-gradient(180deg, #2a3c54 0%, #151f2e 100%);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 4px;
+            color: #ffffff;
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            padding: 14px 22px;
+            min-height: 52px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6), 0 0 8px rgba(0, 240, 255, 0.25);
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-action:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-cyan);
+            transform: translateY(-1px);
+        }
+
+        .btn-action:active {
+            transform: translateY(1px);
+            box-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        .btn-amber {
+            border-color: var(--neon-amber);
+            color: var(--neon-amber);
+            background: linear-gradient(180deg, #3d2c14 0%, #1d1408 100%);
+        }
+        .btn-amber:hover {
+            background: var(--neon-amber);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-amber);
+        }
+
+        .btn-crimson {
+            border-color: var(--neon-crimson);
+            color: var(--neon-crimson);
+            background: linear-gradient(180deg, #3d141d 0%, #1a080c 100%);
+        }
+        .btn-crimson:hover {
+            background: var(--neon-crimson);
+            color: #fff;
+            box-shadow: 0 0 20px var(--neon-crimson);
+        }
+
+        .btn-small {
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            min-height: 38px;
+            width: auto;
+            letter-spacing: 1px;
+        }
+
+        /* Dual Columns Layout */
+        .calculator-dual-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .sub-panel {
+            background: rgba(8, 12, 18, 0.75);
+            border: 1px solid var(--armor-light);
+            border-radius: 6px;
+            padding: 16px;
+            position: relative;
+        }
+
+        .sub-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--metal-rim);
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge-spec {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--neon-cyan);
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+        .badge-spec.amber {
+            background: rgba(255, 170, 0, 0.15);
+            color: var(--neon-amber);
+            border-color: rgba(255, 170, 0, 0.4);
+        }
+
+        .inputs-matrix {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .inputs-matrix.three-col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .input-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .input-cell label {
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #bad3f5;
+            text-align: center;
+        }
+
+        /* Result readout box with electric Nixie style */
+        .result-hud-box {
+            background: #030508;
+            border: 1px solid var(--metal-rim);
+            border-left: 5px solid var(--neon-cyan);
+            padding: 12px 18px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.9);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .result-hud-box.amber { border-left-color: var(--neon-amber); }
+        .result-hud-box.emerald { border-left-color: var(--neon-emerald); }
+
+        .result-hud-label {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #b5cfee;
+            letter-spacing: 1px;
+        }
+
+        .result-hud-number {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: var(--electric-glow);
+            line-height: 1;
+        }
+        .result-hud-box.amber .result-hud-number { color: var(--neon-amber); text-shadow: var(--amber-glow); }
+        .result-hud-box.emerald .result-hud-number { color: var(--neon-emerald); text-shadow: var(--emerald-glow); }
+
+        /* Formula Explainer Ribbon */
+        .formula-ribbon {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px dashed var(--metal-rim);
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            color: #a7c1e3;
+            margin: 12px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .formula-line {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .formula-highlight {
+            color: var(--neon-cyan);
+            font-weight: 800;
+            font-size: 1.05rem;
+        }
+        .formula-highlight.amber { color: var(--neon-amber); }
+        .formula-highlight.emerald { color: var(--neon-emerald); }
+
+        /* Real-Time Pallet Stack Tier Meter */
+        .stack-meter-container {
+            background: #05080e;
+            border: 1px solid var(--armor-light);
+            border-radius: 4px;
+            padding: 10px 14px;
+            margin-top: 10px;
+        }
+        .stack-meter-title {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #8da6c7;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .tier-progress-track {
+            height: 14px;
+            background: #111722;
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex;
+            border: 1px solid #1c2738;
+        }
+        .tier-segment {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        .tier-p { background: var(--laser-blue); }
+        .tier-r { background: var(--neon-cyan); }
+        .tier-c { background: var(--neon-amber); }
+        .tier-u { background: var(--neon-emerald); }
+
+        /* Multi-Brand Matrix Grid Mode */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 16px;
+        }
+
+        .brand-card {
+            background: linear-gradient(170deg, var(--armor-plate) 0%, var(--armor-dark) 100%);
+            border: 1px solid var(--metal-rim);
+            border-top: 3px solid var(--neon-cyan);
+            border-radius: 6px;
+            padding: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .brand-card.amber-top { border-top-color: var(--neon-amber); }
+        .brand-card.emerald-top { border-top-color: var(--neon-emerald); }
+        .brand-card.plasma-top { border-top-color: var(--neon-plasma); }
+
+        /* Quick Flavor Chips */
+        .flavor-chips-rack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 8px 0;
+        }
+        .flavor-chip {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: #c7dbf2;
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+        }
+        .flavor-chip:hover, .flavor-chip.active {
+            background: rgba(0, 240, 255, 0.25);
+            border-color: var(--neon-cyan);
+            color: #fff;
+        }
+
+        /* Data Vault & Action Log Table */
+        .log-table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--metal-rim);
+            border-radius: 6px;
+            background: #03060a;
+            max-height: 480px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table.log-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            text-align: left;
+            font-family: var(--font-mono);
+            min-width: 650px;
+        }
+
+        table.log-table th {
+            background: #0d1420;
+            color: var(--neon-cyan);
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            padding: 12px 14px;
+            border-bottom: 2px solid var(--metal-rim);
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        table.log-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            transition: background 85ms ease;
+        }
+
+        table.log-table tr:hover td {
+            background: rgba(0, 240, 255, 0.08);
+        }
+
+        .btn-delete-entry {
+            background: transparent;
+            border: 1px solid var(--neon-crimson);
+            color: var(--neon-crimson);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            min-height: 32px;
+            min-width: 32px;
+            transition: all 0.2s;
+        }
+        .btn-delete-entry:hover {
+            background: var(--neon-crimson);
+            color: #fff;
+        }
+
+        /* Power Surge Flash Effect */
+        @keyframes powerSurgeFlash {
+            0% { filter: brightness(1); }
+            30% { filter: brightness(1.7) drop-shadow(0 0 30px var(--neon-cyan)); }
+            100% { filter: brightness(1); }
+        }
+        .surge-active {
+            animation: powerSurgeFlash 0.5s ease-out;
+        }
+
+        /* RESPONSIVE BREAKPOINTS (Tablet & Mobile UX) */
+        @media (max-width: 900px) {
+            .calculator-dual-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+            .mech-panel {
+                padding: 14px 10px;
+                margin-bottom: 14px;
+            }
+            .hud-telemetry {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+                padding: 10px;
+            }
+            .hud-cell {
+                padding: 8px 10px;
+            }
+            .hud-cell-value {
+                font-size: 1.55rem;
+            }
+            .hud-cell-label {
+                font-size: 0.76rem;
+            }
+            .nav-switchers {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .brand-loc-grid, .vault-filter-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            .matrix-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 6px;
+                font-size: 16px;
+            }
+            h1 {
+                font-size: 1.35rem;
+            }
+            .subhead {
+                font-size: 0.85rem;
+                letter-spacing: 1px;
+            }
+            .inputs-matrix {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px;
+            }
+            .inputs-matrix.three-col {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .inputs-matrix.three-col .input-cell:last-child {
+                grid-column: span 2;
+            }
+            .hud-telemetry {
+                grid-template-columns: 1fr 1fr;
+            }
+            .result-hud-number {
+                font-size: 1.7rem;
+            }
+            .result-hud-label {
+                font-size: 0.95rem;
+            }
+            .btn-action {
+                font-size: 0.95rem;
+                padding: 12px 16px;
+            }
+            .flavor-chip {
+                padding: 4px 10px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Reduced Motion Compliance */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="power-conduit"></div>
+
+    <!-- MAIN SYSTEM HEADER -->
+    <header class="mech-panel electric-border" style="padding-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <h1>
+                    <span>⚡ CYBER-COUNT CALCUN8R</span>
+                    <span class="voltage-indicator">⚡ 480V THREE-PHASE // OPERATIONAL</span>
+                </h1>
+                <div class="subhead">EDISON HWY FACILITY // BEVERAGE LOGISTICS PROTOCOL v4.0</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="nav-btn" onclick="toggleFullScreen()" id="fs-btn">
+                    <span>⛶</span> FULLSCREEN
+                </button>
+            </div>
+        </div>
+
+        <div class="hazard-stripe"></div>
+
+        <!-- GLOBAL SHIFT METRICS HUD -->
+        <div class="hud-telemetry">
+            <div class="hud-cell">
+                <span class="hud-cell-label">SHIFT LOGGED FILLED CANS</span>
+                <span class="hud-cell-value" id="global-filled">0</span>
+            </div>
+            <div class="hud-cell amber">
+                <span class="hud-cell-label">SHIFT LOGGED EMPTY CANS</span>
+                <span class="hud-cell-value" id="global-empty">0</span>
+            </div>
+            <div class="hud-cell emerald">
+                <span class="hud-cell-label">SHIFT PACKAGING CARTONS</span>
+                <span class="hud-cell-value" id="global-cartons">0</span>
+            </div>
+            <div class="hud-cell plasma">
+                <span class="hud-cell-label">DATA VAULT TOTAL RECORDS</span>
+                <span class="hud-cell-value" id="global-records">0</span>
+            </div>
+        </div>
+
+        <!-- MODE NAVIGATION SWITCHER (UI Improvement 1) -->
+        <nav class="nav-switchers" aria-label="System operational modules">
+            <button class="nav-btn active" id="nav-universal" onclick="switchView('universal')">
+                <span>🎛️</span> UNIVERSAL DECK
+            </button>
+            <button class="nav-btn" id="nav-matrix" onclick="switchView('matrix')">
+                <span>▦</span> MULTI-BRAND MATRIX
+            </button>
+            <button class="nav-btn" id="nav-cartons" onclick="switchView('cartons')">
+                <span>📦</span> CARTON CALCS (BELLE VIE)
+            </button>
+            <button class="nav-btn" id="nav-brites" onclick="switchView('brites')">
+                <span>🥫</span> BRITES SPEC INSPECTOR
+            </button>
+            <button class="nav-btn" id="nav-custom" onclick="switchView('custom')">
+                <span>⚙️</span> CUSTOM MULTIPLIER
+            </button>
+            <button class="nav-btn" id="nav-vault" onclick="scrollToVault()">
+                <span>💾</span> DATA VAULT [LOGS]
+            </button>
+        </nav>
+    </header>
+
+    <!-- =============================================================== -->
+    <!-- VIEW 1: UNIVERSAL BEVERAGE CONSTRUCT (STREAMLINED SINGLE DECK) -->
+    <!-- =============================================================== -->
+    <main id="view-universal" class="mech-panel electric-border">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <h2>UNIVERSAL BEVERAGE CONSTRUCT</h2>
+            <span class="badge-spec" id="active-brand-spec">12 oz 202 // 24-PACK</span>
+        </div>
+        <p style="color: #7b94b5; font-size: 0.85rem; margin: 4px 0 12px 0;">SELECT PRODUCT PROFILE TO ENGAGE ARITHMETIC MULTIPLIERS</p>
+
+        <!-- Brand Selector Dropdown -->
+        <div class="brand-loc-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+            <div>
+                <label style="font-family: var(--font-mono); font-size: 0.75rem; color: #8ea6c7;">SELECT BEVERAGE LINE & PACK FORMAT:</label>
+                <select id="brand-select" onchange="updateBrandContext()">
+                    <!-- Populated dynamically via JS -->
+                </select>
+            </div>
+            <div>
+                <label style="font-family: var(--font-mono); font-size: 0.75rem; color: #8ea6c7;">LOCATION(S) / STAGING LANE:</label>
+                <input type="text" id="standard-loc" placeholder="E.G. BAY 4 / ROW C" oninput="saveState()">
+            </div>
+        </div>
+
+        <!-- Flavor quick-select tags rack -->
+        <div style="margin-top: 10px;">
+            <label style="font-family: var(--font-mono); font-size: 0.75rem; color: #8ea6c7;">KNOWN FLAVORS & VARIETIES (CLICK TO STAMP LOT):</label>
+            <div class="flavor-chips-rack" id="flavor-chips-rack"></div>
+        </div>
+
+        <!-- Lot Codes Container -->
+        <div style="margin-top: 8px;">
+            <label style="font-family: var(--font-mono); font-size: 0.75rem; color: #8ea6c7;">LOT CODE(S):</label>
+            <div id="standard-lots-container" style="display: flex; flex-direction: column; gap: 6px;">
+                <input type="text" class="standard-lot-input" placeholder="LOT CODE #1" oninput="saveState()">
+            </div>
+            <button class="nav-btn btn-small" style="margin-top: 6px;" onclick="addLotInput('standard-lots-container', 'standard-lot-input')">[+] ADD ADDITIONAL LOT</button>
+        </div>
+
+        <!-- Dual Column Arithmetic Grids -->
+        <div class="calculator-dual-grid">
+            <!-- FILLED CANS CALCULATOR -->
+            <div class="sub-panel">
+                <div class="sub-panel-header">
+                    <h3 style="color: #fff; font-size: 1.05rem;">FILLED CANS</h3>
+                    <span class="badge-spec" id="f-pack-spec">24-PACK</span>
+                </div>
+
+                <div class="inputs-matrix">
+                    <div class="input-cell">
+                        <label id="lbl-f-p">P (x2400)</label>
+                        <input type="number" min="0" id="inp-f-p" class="calc-input filled-input" placeholder="0">
+                    </div>
+                    <div class="input-cell">
+                        <label id="lbl-f-r">R (x240)</label>
+                        <input type="number" min="0" id="inp-f-r" class="calc-input filled-input" placeholder="0">
+                    </div>
+                    <div class="input-cell">
+                        <label id="lbl-f-c">C (x24)</label>
+                        <input type="number" min="0" id="inp-f-c" class="calc-input filled-input" placeholder="0">
+                    </div>
+                    <div class="input-cell">
+                        <label id="lbl-f-u">U (x1)</label>
+                        <input type="number" min="0" id="inp-f-u" class="calc-input filled-input" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="result-hud-box">
+                    <span class="result-hud-label">FILLED CAN TOTAL:</span>
+                    <span class="result-hud-number" id="tot-standard-filled">0</span>
+                </div>
+
+                <!-- Live Formula Ribbon (UI Improvement 3) -->
+                <div class="formula-ribbon" id="formula-ribbon-filled">
+                    <div class="formula-line">
+                        <span>CALCULATION:</span>
+                        <span id="formula-text-filled" class="formula-highlight">(0×P) + (0×R) + (0×C) + 0 = 0</span>
+                    </div>
+                    <div class="formula-line">
+                        <span>CASE EQUIVALENT:</span>
+                        <span id="case-equiv-filled" class="formula-highlight">0.00 CASES</span>
+                    </div>
+                </div>
+
+                <!-- Pallet Tier Stack Meter -->
+                <div class="stack-meter-container">
+                    <div class="stack-meter-title">
+                        <span>TIER COMPOSITION</span>
+                        <span id="stack-percent-filled">0% ROW</span>
+                    </div>
+                    <div class="tier-progress-track">
+                        <div class="tier-segment tier-p" id="bar-f-p" style="width: 0%;"></div>
+                        <div class="tier-segment tier-r" id="bar-f-r" style="width: 0%;"></div>
+                        <div class="tier-segment tier-c" id="bar-f-c" style="width: 0%;"></div>
+                        <div class="tier-segment tier-u" id="bar-f-u" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EMPTY CANS CALCULATOR -->
+            <div class="sub-panel">
+                <div class="sub-panel-header">
+                    <h3 style="color: var(--neon-amber); font-size: 1.05rem;">EMPTY CANS</h3>
+                    <span class="badge-spec amber" id="e-pack-spec">12 oz / 202</span>
+                </div>
+
+                <div class="inputs-matrix three-col">
+                    <div class="input-cell">
+                        <label id="lbl-e-p">P (x8169)</label>
+                        <input type="number" min="0" id="inp-e-p" class="calc-input empty-input" placeholder="0">
+                    </div>
+                    <div class="input-cell">
+                        <label id="lbl-e-r">R (x389)</label>
+                        <input type="number" min="0" id="inp-e-r" class="calc-input empty-input" placeholder="0">
+                    </div>
+                    <div class="input-cell">
+                        <label id="lbl-e-u">U (x1)</label>
+                        <input type="number" min="0" id="inp-e-u" class="calc-input empty-input" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="result-hud-box amber">
+                    <span class="result-hud-label">EMPTY CAN TOTAL:</span>
+                    <span class="result-hud-number" id="tot-standard-empty">0</span>
+                </div>
+
+                <!-- Live Formula Ribbon (Empty) -->
+                <div class="formula-ribbon" id="formula-ribbon-empty">
+                    <div class="formula-line">
+                        <span>CALCULATION:</span>
+                        <span id="formula-text-empty" class="formula-highlight amber">(0×P) + (0×R) + 0 = 0</span>
+                    </div>
+                    <div class="formula-line">
+                        <span>PALLET EQUIVALENT:</span>
+                        <span id="pallet-equiv-empty" class="formula-highlight amber">0.00 PALLETS</span>
+                    </div>
+                </div>
+
+                <!-- Pallet Tier Stack Meter (Empty) -->
+                <div class="stack-meter-container">
+                    <div class="stack-meter-title">
+                        <span>EMPTY PALLET COMPOSITION</span>
+                        <span id="stack-percent-empty">0% CAPACITY</span>
+                    </div>
+                    <div class="tier-progress-track">
+                        <div class="tier-segment tier-p" id="bar-e-p" style="width: 0%;"></div>
+                        <div class="tier-segment tier-r" id="bar-e-r" style="width: 0%;"></div>
+                        <div class="tier-segment tier-u" id="bar-e-u" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submission Trigger -->
+        <div style="margin-top: 18px; display: flex; gap: 12px;">
+            <button class="btn-action" id="btn-log-standard" onclick="logStandardCount()">
+                <span>⚡</span> LOG CURRENT INVENTORY TO DATA VAULT
+            </button>
+            <button class="nav-btn btn-crimson" style="width: 140px; justify-content: center;" onclick="clearStandardInputs()">
+                CLEAR
+            </button>
+        </div>
+    </main>
+
+    <!-- =============================================================== -->
+    <!-- VIEW 2: MULTI-BRAND MATRIX GRID (UI Improvement 1)             -->
+    <!-- =============================================================== -->
+    <section id="view-matrix" class="mech-panel electric-border" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h2>MULTI-BRAND WAREHOUSE MATRIX</h2>
+            <span class="voltage-indicator">PARALLEL STAGING ENGINE</span>
+        </div>
+        <p style="color: #7b94b5; font-size: 0.85rem; margin-bottom: 16px;">
+            EXECUTE DIRECT ON-PALLET COUNTS FOR FREQUENT PRODUCTS SIMULTANEOUSLY WITHOUT CHANGING DROPDOWNS.
+        </p>
+
+        <div class="matrix-grid" id="matrix-cards-container">
+            <!-- Dynamically generated brand cards go here -->
+        </div>
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- VIEW 3: BELLE VIE CARTON CALCULATOR (UI Improvement 2)         -->
+    <!-- =============================================================== -->
+    <section id="view-cartons" class="mech-panel" style="display: none; border-color: var(--neon-emerald);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <h2 style="color: var(--neon-emerald);">📦 BELLE VIE // PACKAGING CARTON ENGINE</h2>
+            <span class="badge-spec" style="border-color: var(--neon-emerald); color: var(--neon-emerald);">
+                BOX: 170 | ROW: 1,360 | PALLET: 6,800
+            </span>
+        </div>
+        <p style="color: #8fa5c4; font-size: 0.85rem; margin: 4px 0 16px 0;">
+            SPECIALIZED CALCULATOR FOR UNPACKED/FLAT PACKAGING CARTON LOGISTICS AND RECONCILIATION.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+            <div>
+                <label style="font-family: var(--font-mono); font-size: 0.75rem;">LOT / BATCH REF:</label>
+                <input type="text" id="carton-lot" placeholder="E.G. CARTON-BV-2026">
+            </div>
+            <div>
+                <label style="font-family: var(--font-mono); font-size: 0.75rem;">STORAGE BAY / LOCATION:</label>
+                <input type="text" id="carton-loc" placeholder="E.G. AISLE 9 / CORNER">
+            </div>
+        </div>
+
+        <div class="inputs-matrix">
+            <div class="input-cell">
+                <label>PALLETS (x6,800)</label>
+                <input type="number" min="0" id="carton-p" class="calc-input" placeholder="0" oninput="calculateCartons()">
+            </div>
+            <div class="input-cell">
+                <label>ROWS (x1,360)</label>
+                <input type="number" min="0" id="carton-r" class="calc-input" placeholder="0" oninput="calculateCartons()">
+            </div>
+            <div class="input-cell">
+                <label>BOXES (x170)</label>
+                <input type="number" min="0" id="carton-b" class="calc-input" placeholder="0" oninput="calculateCartons()">
+            </div>
+            <div class="input-cell">
+                <label>CARTONS (x1)</label>
+                <input type="number" min="0" id="carton-c" class="calc-input" placeholder="0" oninput="calculateCartons()">
+            </div>
+        </div>
+
+        <div class="result-hud-box emerald" style="margin-top: 12px;">
+            <span class="result-hud-label">TOTAL CARTONS COUNT:</span>
+            <span class="result-hud-number" id="carton-total-display">0</span>
+        </div>
+
+        <div class="formula-ribbon">
+            <div class="formula-line">
+                <span>FORMULA:</span>
+                <span id="carton-formula-text" class="formula-highlight emerald">(0 × 6800) + (0 × 1360) + (0 × 170) + 0 = 0 CARTONS</span>
+            </div>
+            <div class="formula-line">
+                <span>FULL PALLETS EQUIVALENT:</span>
+                <span id="carton-pallet-equiv" class="formula-highlight emerald">0.00 PALLETS</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 14px; display: flex; gap: 10px;">
+            <button class="btn-action" style="border-color: var(--neon-emerald); color: var(--neon-emerald);" onclick="logCartonCount()">
+                <span>📦</span> LOG CARTON COUNT TO VAULT
+            </button>
+            <button class="nav-btn btn-crimson" style="width: 140px; justify-content: center;" onclick="clearCartonInputs()">
+                CLEAR
+            </button>
+        </div>
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- VIEW 4: BRITES EMPTY CAN SPEC INSPECTOR (UI Improvement 2)     -->
+    <!-- =============================================================== -->
+    <section id="view-brites" class="mech-panel" style="display: none; border-color: var(--neon-amber);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <h2 style="color: var(--neon-amber);">🥫 BRITES // CAN METRIC ARCHIVE & COUNTER</h2>
+            <span class="badge-spec amber">STANDARD ALUMINUM SPECIFICATIONS</span>
+        </div>
+        <p style="color: #8fa5c4; font-size: 0.85rem; margin: 4px 0 16px 0;">
+            OFFICIAL REFERENCE METRICS ACROSS ALDI / EDISON HWY CAN SPECS. SELECT CAN BODY TYPE TO CALCULATE TIER VOLUMES.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 14px;">
+            <div>
+                <label style="font-family: var(--font-mono); font-size: 0.75rem;">SELECT BRITES BODY SPECIFICATION:</label>
+                <select id="brites-spec-select" onchange="updateBritesContext()">
+                    <option value="brites-250">250ml / 200 neck — 12,144 / Pallet (528 / Row, 23 Rows)</option>
+                    <option value="brites-12-std">12 oz / 202 neck standard — 8,169 / Pallet (389 / Row, 21 Rows)</option>
+                    <option value="brites-12-sleek">12 oz / 202 neck sleek — 8,096 / Pallet (506 / Row, 16 Rows)</option>
+                    <option value="brites-16">16 oz / 202 neck — 6,224 / Pallet (389 / Row, 16 Rows)</option>
+                    <option value="brites-19.2">568ml / 19.2 oz / 202 neck — 5,057 / Pallet (389 / Row, 13 Rows)</option>
+                </select>
+            </div>
+            <div>
+                <label style="font-family: var(--font-mono); font-size: 0.75rem;">LOCATION / TRAILER / SILO:</label>
+                <input type="text" id="brites-loc" placeholder="E.G. STAGING SILO 2">
+            </div>
+        </div>
+
+        <div class="inputs-matrix three-col">
+            <div class="input-cell">
+                <label id="brites-lbl-p">PALLETS (x12,144)</label>
+                <input type="number" min="0" id="brites-inp-p" class="calc-input" placeholder="0" oninput="calculateBrites()">
+            </div>
+            <div class="input-cell">
+                <label id="brites-lbl-r">ROWS (x528)</label>
+                <input type="number" min="0" id="brites-inp-r" class="calc-input" placeholder="0" oninput="calculateBrites()">
+            </div>
+            <div class="input-cell">
+                <label>UNITS (x1)</label>
+                <input type="number" min="0" id="brites-inp-u" class="calc-input" placeholder="0" oninput="calculateBrites()">
+            </div>
+        </div>
+
+        <div class="result-hud-box amber" style="margin-top: 12px;">
+            <span class="result-hud-label">CALCULATED BRITES EMPTY CANS:</span>
+            <span class="result-hud-number" id="brites-total-display">0</span>
+        </div>
+
+        <div class="formula-ribbon">
+            <div class="formula-line">
+                <span>FORMULA:</span>
+                <span id="brites-formula-text" class="formula-highlight amber">(0 × P) + (0 × R) + 0 = 0</span>
+            </div>
+            <div class="formula-line">
+                <span>SPECS CHECK:</span>
+                <span id="brites-check-text" class="formula-highlight amber">23 ROWS TIER STRUCTURE</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 14px; display: flex; gap: 10px;">
+            <button class="btn-action btn-amber" onclick="logBritesCount()">
+                <span>🥫</span> LOG BRITES INVENTORY COUNT
+            </button>
+            <button class="nav-btn btn-crimson" style="width: 140px; justify-content: center;" onclick="clearBritesInputs()">
+                CLEAR
+            </button>
+        </div>
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- VIEW 5: CUSTOM CONSTRUCT // ARBITRARY MULTIPLIER COUNTER       -->
+    <!-- =============================================================== -->
+    <section id="view-custom" class="mech-panel" style="display: none; border-color: var(--neon-plasma);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <h2 style="color: #e49fff;">⚙️ CUSTOM CONSTRUCT // ADAPTIVE COUNTER</h2>
+            <span class="badge-spec" style="border-color: var(--neon-plasma); color: #f2afff;">CUSTOM ARITHMETIC</span>
+        </div>
+        <p style="color: #8fa5c4; font-size: 0.85rem; margin: 4px 0 16px 0;">
+            BUILD DYNAMIC MULTIPLIERS FOR UNLISTED PRODUCTS, DRUMS, PARTIAL PALLETS, OR AD-HOC PACKS.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+            <div>
+                <label style="font-family: var(--font-mono); font-size: 0.75rem;">CUSTOM ITEM / DESCRIPTION:</label>
+                <input type="text" id="custom-brand" placeholder="E.G. BOURBON CREAM SODA (BCS)">
+            </div>
+            <div>
+                <label style="font-family: var(--font-mono); font-size: 0.75rem;">LOCATION / BAY:</label>
+                <input type="text" id="custom-location" placeholder="E.G. VAULT A-1">
+            </div>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+            <label style="font-family: var(--font-mono); font-size: 0.75rem;">LOT CODE(S):</label>
+            <input type="text" id="custom-lot" placeholder="E.G. LOT-CUSTOM-99">
+        </div>
+
+        <div style="margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label style="font-family: var(--font-mono); font-size: 0.75rem;">CUSTOM PARAMETER MULTIPLIERS:</label>
+                <button class="nav-btn btn-small" onclick="addCustomParameter()">[+] ADD ROW</button>
+            </div>
+            <div id="custom-parameters-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+
+        <div class="result-hud-box" style="border-left-color: var(--neon-plasma); margin-top: 14px;">
+            <span class="result-hud-label">CUSTOM COMPUTED TOTAL:</span>
+            <span class="result-hud-number" id="custom-total" style="color: #f2afff; text-shadow: 0 0 10px var(--neon-plasma);">0</span>
+        </div>
+
+        <div style="margin-top: 14px; display: flex; gap: 10px;">
+            <button class="btn-action" style="border-color: var(--neon-plasma); color: #f2afff;" onclick="logCustomCount()">
+                <span>⚙️</span> LOG CUSTOM COUNT TO VAULT
+            </button>
+            <button class="nav-btn btn-crimson" style="width: 140px; justify-content: center;" onclick="resetCustomCalculator()">
+                RESET
+            </button>
+        </div>
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- DATA VAULT 2.0 // ACTION LOG & EXPORT ENGINE (UI Improvement 4) -->
+    <!-- =============================================================== -->
+    <section class="mech-panel electric-border" id="data-vault-panel" style="margin-top: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <h2>DATA VAULT // AUDIT & SHIFT HANDOVER LOG</h2>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="nav-btn" style="border-color: var(--neon-emerald); color: var(--neon-emerald);" onclick="copyShiftReportToClipboard()">
+                    <span>📋</span> COPY SHIFT REPORT
+                </button>
+                <button class="nav-btn" style="border-color: var(--neon-cyan); color: var(--neon-cyan);" onclick="exportCSV()">
+                    <span>📥</span> EXPORT CSV
+                </button>
+                <button class="nav-btn btn-crimson" onclick="clearLog()">
+                    <span>⚠️</span> PURGE VAULT
+                </button>
+            </div>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div class="vault-filter-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin: 14px 0;">
+            <div>
+                <input type="text" id="vault-search-input" placeholder="🔍 SEARCH LOGS (BRAND, LOT, LOCATION, OR TYPE)..." oninput="filterVaultLogs()">
+            </div>
+            <div>
+                <select id="vault-type-filter" onchange="filterVaultLogs()">
+                    <option value="ALL">ALL TYPES (FILLED, EMPTY, CARTONS)</option>
+                    <option value="Filled">FILLED CANS ONLY</option>
+                    <option value="Empty">EMPTY CANS ONLY</option>
+                    <option value="Carton">CARTONS ONLY</option>
+                    <option value="Custom">CUSTOM ONLY</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Log Table -->
+        <div class="log-table-wrap">
+            <table class="log-table" id="logTable">
+                <thead>
+                    <tr>
+                        <th style="width: 120px;">RECORD ID</th>
+                        <th style="width: 90px;">TIME</th>
+                        <th>BRAND / ITEM</th>
+                        <th style="width: 100px;">TYPE</th>
+                        <th>LOT CODE(S)</th>
+                        <th>LOCATION</th>
+                        <th style="text-align: right;">COUNT</th>
+                        <th style="width: 40px; text-align: center;">DEL</th>
+                    </tr>
+                </thead>
+                <tbody id="logBody">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" style="position: fixed; bottom: 20px; right: 20px; background: rgba(8, 14, 24, 0.95); border: 2px solid var(--neon-cyan); color: #fff; padding: 12px 20px; border-radius: 6px; box-shadow: var(--electric-glow); font-family: var(--font-display); font-size: 0.85rem; display: none; z-index: 9999; letter-spacing: 1px;">
+        DATA LOGGED
+    </div>
+
+<script>
+    /* =====================================================================
+       VERIFIED INVENTORY CONFIGURATION (From ALDI & Edison Hwy Metrics)
+       ===================================================================== */
+    const inventoryConfig = {
+        "popz": {
+            name: "POPZ (24-Pack / 12 oz 202)",
+            spec: "12 oz 202 // 24-Pack",
+            category: "Soda",
+            flavors: ["Lemon Lime", "Raspberry Rose", "Cherry Lime", "Strawberry Lemon", "Cola", "Dr Popz"],
+            filled: { P: 2400, R: 240, C: 24, U: 1, rows: 10, caseCt: 24, tcc: 100 },
+            empty: { P: 8169, R: 389, U: 1, rows: 21, specName: "12 oz / 202 Neck" }
+        },
+        "popz-seasonal-12": {
+            name: "SEASONAL POPZ (12-Pack / Fall, Summer, Winter)",
+            spec: "12 oz 202 // 12-Pack",
+            category: "Soda",
+            flavors: ["Spiced Apple Cider", "Pomegranate Orange", "Cranberry", "Red White & Blue", "Rainbow Sherbet", "Orange Vanilla", "Orange Mandarin", "Passion Fruit Orange Guava", "Berry Blast"],
+            filled: { P: 2400, R: 240, C: 12, U: 1, rows: 10, caseCt: 12, tcc: 200 },
+            empty: { P: 8169, R: 389, U: 1, rows: 21, specName: "12 oz / 202 Neck" }
+        },
+        "frost": {
+            name: "FROST & SUMMER FROST (12-Pack / 16 oz 202)",
+            spec: "16 oz 202 // 12-Pack",
+            category: "Sparkling Water",
+            flavors: ["Strawberry Citrus", "Black Raspberry", "Blue Raspberry", "Pineapple Mango", "Red White & Blue", "Strawberry Watermelon"],
+            filled: { P: 1680, R: 240, C: 12, U: 1, rows: 7, caseCt: 12, tcc: 140 },
+            empty: { P: 6224, R: 389, U: 1, rows: 16, specName: "16 oz / 202 Neck" }
+        },
+        "gridlock-sleek": {
+            name: "GRIDLOCK (12-Pack / 12 oz Sleek) [VERIFIED]",
+            spec: "12 oz Sleek // 12-Pack",
+            category: "Energy",
+            flavors: ["Paradise", "Original", "Sunrise", "Ultra White"],
+            filled: { P: 1680, R: 240, C: 12, U: 1, rows: 7, caseCt: 12, tcc: 140 },
+            empty: { P: 8096, R: 506, U: 1, rows: 16, specName: "12 oz / 202 Neck Sleek" }
+        },
+        "gridlock-16": {
+            name: "GRIDLOCK (12-Pack / 16 oz Standard)",
+            spec: "16 oz 202 // 12-Pack",
+            category: "Energy",
+            flavors: ["Paradise", "Original", "Sunrise", "Ultra White"],
+            filled: { P: 1680, R: 240, C: 12, U: 1, rows: 7, caseCt: 12, tcc: 140 },
+            empty: { P: 6224, R: 389, U: 1, rows: 16, specName: "16 oz / 202 Neck" }
+        },
+        "waves": {
+            name: "WAVES (24-Pack / 12 oz Sleek)",
+            spec: "12 oz Sleek // 24-Pack",
+            category: "Flavored Water",
+            flavors: ["Berry", "Peach", "Kiwi Guava", "Watermelon", "Orange", "Tropical"],
+            filled: { P: 2496, R: 312, C: 24, U: 1, rows: 8, caseCt: 24, tcc: 104 },
+            empty: { P: 8096, R: 506, U: 1, rows: 16, specName: "12 oz / 202 Neck Sleek" }
+        },
+        "natures-nectar-12": {
+            name: "NATURE'S NECTAR (12-Pack / 250ml)",
+            spec: "250ml // 12-Pack",
+            category: "Juice / Sparkling",
+            flavors: ["Grapefruit", "Blackberry", "Clementine"],
+            filled: { P: 2496, R: 312, C: 12, U: 1, rows: 8, caseCt: 12, tcc: 208 },
+            empty: { P: 12144, R: 528, U: 1, rows: 23, specName: "250ml / 200 Neck" }
+        },
+        "natures-nectar-24": {
+            name: "NATURE'S NECTAR (24-Pack / 250ml)",
+            spec: "250ml // 24-Pack",
+            category: "Juice / Sparkling",
+            flavors: ["Grapefruit", "Blackberry", "Clementine"],
+            filled: { P: 2496, R: 312, C: 24, U: 1, rows: 8, caseCt: 24, tcc: 104 },
+            empty: { P: 12144, R: 528, U: 1, rows: 23, specName: "250ml / 200 Neck" }
+        },
+        "bellevie-24": {
+            name: "BELLE VIE (24-Pack / 12 oz 202)",
+            spec: "12 oz 202 // 24-Pack",
+            category: "Sparkling Water",
+            flavors: ["Pure", "Lime", "Strawberry", "Blackberry", "Lemon", "Grapefruit"],
+            filled: { P: 2400, R: 240, C: 24, U: 1, rows: 10, caseCt: 24, tcc: 100 },
+            empty: { P: 8169, R: 389, U: 1, rows: 21, specName: "12 oz / 202 Neck" }
+        },
+        "bellevie-12": {
+            name: "BELLE VIE (12-Pack / 12 oz 202)",
+            spec: "12 oz 202 // 12-Pack",
+            category: "Sparkling Water",
+            flavors: ["Pure", "Lime", "Strawberry", "Blackberry", "Lemon", "Grapefruit"],
+            filled: { P: 2400, R: 240, C: 12, U: 1, rows: 10, caseCt: 12, tcc: 200 },
+            empty: { P: 8169, R: 389, U: 1, rows: 21, specName: "12 oz / 202 Neck" }
+        },
+        "popz-tea": {
+            name: "POPZ TEA (12-Pack / 12 oz Sleek)",
+            spec: "12 oz Sleek // 12-Pack",
+            category: "Iced Tea",
+            flavors: ["Half and Half", "Raspberry", "Sweet Tea", "Peach"],
+            filled: { P: 2496, R: 312, C: 12, U: 1, rows: 8, caseCt: 12, tcc: 208 },
+            empty: { P: 8096, R: 506, U: 1, rows: 16, specName: "12 oz / 202 Neck Sleek" }
+        },
+        "vivee": {
+            name: "VIVEE (24-Pack / 12 oz Sleek)",
+            spec: "12 oz Sleek // 24-Pack",
+            category: "Sleek Sparkling",
+            flavors: ["Berry", "Citrus", "Pure"],
+            filled: { P: 2496, R: 312, C: 24, U: 1, rows: 8, caseCt: 24, tcc: 104 },
+            empty: { P: 8096, R: 506, U: 1, rows: 16, specName: "12 oz / 202 Neck Sleek" }
+        }
+    };
+
+    /* Brites Empty Can Specifics */
+    const britesSpecs = {
+        "brites-250": { name: "250ml / 200 neck", P: 12144, R: 528, rows: 23 },
+        "brites-12-std": { name: "12 oz / 202 neck standard", P: 8169, R: 389, rows: 21 },
+        "brites-12-sleek": { name: "12 oz / 202 neck sleek", P: 8096, R: 506, rows: 16 },
+        "brites-16": { name: "16 oz / 202 neck", P: 6224, R: 389, rows: 16 },
+        "brites-19.2": { name: "568ml / 19.2 oz / 202 neck", P: 5057, R: 389, rows: 13 }
+    };
+
+    let actionLog = JSON.parse(localStorage.getItem('cyberCountLog_v4')) || [];
+
+    /* =====================================================================
+       INITIALIZATION
+       ===================================================================== */
+    function init() {
+        populateBrandDropdown();
+        setupInputListeners();
+        buildMatrixGridCards();
+        updateBrandContext(false);
+        updateBritesContext();
+        loadSavedState();
+        renderLogTable();
+        updateHUDTotals();
+
+        if (document.getElementById('custom-parameters-container').children.length === 0) {
+            addCustomParameter();
+        }
+    }
+
+    function populateBrandDropdown() {
+        const select = document.getElementById('brand-select');
+        select.innerHTML = '';
+        for (const [key, data] of Object.entries(inventoryConfig)) {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = data.name;
+            select.appendChild(opt);
+        }
+    }
+
+    function setupInputListeners() {
+        document.querySelectorAll('#view-universal .calc-input').forEach(input => {
+            input.addEventListener('input', () => {
+                calculateUniversal();
+                saveState();
+            });
+        });
+    }
+
+    /* =====================================================================
+       UNIVERSAL VIEW CALCULATIONS & DYNAMICS
+       ===================================================================== */
+    function updateBrandContext(clearData = true) {
+        const key = document.getElementById('brand-select').value;
+        const brand = inventoryConfig[key];
+        if (!brand) return;
+
+        document.getElementById('active-brand-spec').innerText = brand.spec;
+        document.getElementById('f-pack-spec').innerText = `CASE: ${brand.filled.caseCt} CANS`;
+        document.getElementById('e-pack-spec').innerText = brand.empty.specName;
+
+        // Update Labels with exact multipliers
+        document.getElementById('lbl-f-p').innerText = `P (x${brand.filled.P.toLocaleString()})`;
+        document.getElementById('lbl-f-r').innerText = `R (x${brand.filled.R.toLocaleString()})`;
+        document.getElementById('lbl-f-c').innerText = `C (x${brand.filled.C})`;
+        document.getElementById('lbl-f-u').innerText = `U (x1)`;
+
+        document.getElementById('lbl-e-p').innerText = `P (x${brand.empty.P.toLocaleString()})`;
+        document.getElementById('lbl-e-r').innerText = `R (x${brand.empty.R.toLocaleString()})`;
+        document.getElementById('lbl-e-u').innerText = `U (x1)`;
+
+        // Render flavor chips
+        const chipsContainer = document.getElementById('flavor-chips-rack');
+        chipsContainer.innerHTML = '';
+        brand.flavors.forEach(flavor => {
+            const chip = document.createElement('span');
+            chip.className = 'flavor-chip';
+            chip.innerText = flavor;
+            chip.onclick = () => {
+                const firstLot = document.querySelector('.standard-lot-input');
+                if (firstLot) {
+                    firstLot.value = `${flavor.toUpperCase()} // LOT-${new Date().getMonth()+1}${new Date().getDate()}`;
+                    saveState();
+                }
+            };
+            chipsContainer.appendChild(chip);
+        });
+
+        if (clearData) {
+            document.querySelectorAll('#view-universal .calc-input').forEach(inp => inp.value = '');
+        }
+
+        calculateUniversal();
+        saveState();
+    }
+
+    function calculateUniversal() {
+        const key = document.getElementById('brand-select').value;
+        const brand = inventoryConfig[key];
+        if (!brand) return;
+
+        // Filled Inputs
+        const fp = parseInt(document.getElementById('inp-f-p').value) || 0;
+        const fr = parseInt(document.getElementById('inp-f-r').value) || 0;
+        const fc = parseInt(document.getElementById('inp-f-c').value) || 0;
+        const fu = parseInt(document.getElementById('inp-f-u').value) || 0;
+
+        const filledTotal = (fp * brand.filled.P) + (fr * brand.filled.R) + (fc * brand.filled.C) + fu;
+        document.getElementById('tot-standard-filled').innerText = filledTotal.toLocaleString();
+
+        // Formula Ribbon (Filled)
+        document.getElementById('formula-text-filled').innerText = 
+            `(${fp}×${brand.filled.P}) + (${fr}×${brand.filled.R}) + (${fc}×${brand.filled.C}) + ${fu} = ${filledTotal.toLocaleString()} CANS`;
+        const caseEquiv = (filledTotal / brand.filled.C).toFixed(2);
+        document.getElementById('case-equiv-filled').innerText = `${caseEquiv} CASES EQUIV (${brand.filled.caseCt}/CS)`;
+
+        // Visual Stack Tier Meter (Filled)
+        const partialRowUnits = (fc * brand.filled.C) + fu;
+        const rowCapacity = brand.filled.R;
+        const pctOfRow = Math.min(100, Math.round((partialRowUnits / rowCapacity) * 100));
+        document.getElementById('stack-percent-filled').innerText = `${pctOfRow}% OF NEXT ROW`;
+
+        const totalFilledCalc = Math.max(1, filledTotal);
+        document.getElementById('bar-f-p').style.width = `${((fp * brand.filled.P) / totalFilledCalc) * 100}%`;
+        document.getElementById('bar-f-r').style.width = `${((fr * brand.filled.R) / totalFilledCalc) * 100}%`;
+        document.getElementById('bar-f-c').style.width = `${((fc * brand.filled.C) / totalFilledCalc) * 100}%`;
+        document.getElementById('bar-f-u').style.width = `${(fu / totalFilledCalc) * 100}%`;
+
+        // Empty Inputs
+        const ep = parseInt(document.getElementById('inp-e-p').value) || 0;
+        const er = parseInt(document.getElementById('inp-e-r').value) || 0;
+        const eu = parseInt(document.getElementById('inp-e-u').value) || 0;
+
+        const emptyTotal = (ep * brand.empty.P) + (er * brand.empty.R) + eu;
+        document.getElementById('tot-standard-empty').innerText = emptyTotal.toLocaleString();
+
+        // Formula Ribbon (Empty)
+        document.getElementById('formula-text-empty').innerText = 
+            `(${ep}×${brand.empty.P}) + (${er}×${brand.empty.R}) + ${eu} = ${emptyTotal.toLocaleString()} CANS`;
+        const palletEquiv = (emptyTotal / brand.empty.P).toFixed(2);
+        document.getElementById('pallet-equiv-empty').innerText = `${palletEquiv} PALLETS EQUIV (${brand.empty.rows} ROWS/PL)`;
+
+        // Visual Stack Tier Meter (Empty)
+        const totalEmptyCalc = Math.max(1, emptyTotal);
+        document.getElementById('bar-e-p').style.width = `${((ep * brand.empty.P) / totalEmptyCalc) * 100}%`;
+        document.getElementById('bar-e-r').style.width = `${((er * brand.empty.R) / totalEmptyCalc) * 100}%`;
+        document.getElementById('bar-e-u').style.width = `${(eu / totalEmptyCalc) * 100}%`;
+        document.getElementById('stack-percent-empty').innerText = `${palletEquiv} PALLETS`;
+    }
+
+    function addLotInput(containerId, className) {
+        const container = document.getElementById(containerId);
+        const count = container.querySelectorAll(`.${className}`).length + 1;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = className;
+        input.placeholder = `LOT CODE #${count}`;
+        input.oninput = saveState;
+        container.appendChild(input);
+        input.focus();
+    }
+
+    function clearStandardInputs() {
+        document.querySelectorAll('#view-universal .calc-input').forEach(inp => inp.value = '');
+        document.querySelectorAll('.standard-lot-input').forEach((inp, idx) => {
+            if (idx > 0) inp.remove(); else inp.value = '';
+        });
+        document.getElementById('standard-loc').value = '';
+        calculateUniversal();
+        saveState();
+        showToast("UNIVERSAL INPUTS CLEARED");
+    }
+
+    /* =====================================================================
+       MULTI-BRAND MATRIX ENGINE (UI Improvement 1)
+       ===================================================================== */
+    const matrixBrands = [
+        { id: "popz", key: "popz", topClass: "" },
+        { id: "frost", key: "frost", topClass: "amber-top" },
+        { id: "gridlock", key: "gridlock-sleek", topClass: "emerald-top" },
+        { id: "waves", key: "waves", topClass: "plasma-top" },
+        { id: "natures-nectar", key: "natures-nectar-12", topClass: "amber-top" },
+        { id: "bellevie", key: "bellevie-24", topClass: "" },
+        { id: "tea", key: "popz-tea", topClass: "plasma-top" },
+        { id: "vivee", key: "vivee", topClass: "emerald-top" }
+    ];
+
+    function buildMatrixGridCards() {
+        const container = document.getElementById('matrix-cards-container');
+        container.innerHTML = '';
+
+        matrixBrands.forEach(item => {
+            const data = inventoryConfig[item.key];
+            if (!data) return;
+
+            const card = document.createElement('div');
+            card.className = `brand-card ${item.topClass}`;
+            card.id = `card-${item.id}`;
+            card.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h3 style="font-size: 1rem; color: #fff;">${data.name}</h3>
+                        <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #7f99ba;">${data.spec}</span>
+                    </div>
+                    <span class="badge-spec" style="font-size: 0.7rem;">${data.category}</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                    <input type="text" id="mat-${item.id}-lot" placeholder="LOT CODE" style="font-size: 0.8rem; padding: 6px;">
+                    <input type="text" id="mat-${item.id}-loc" placeholder="LOCATION" style="font-size: 0.8rem; padding: 6px;">
+                </div>
+
+                <!-- Filled row -->
+                <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 4px; border-left: 3px solid var(--neon-cyan);">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-family: var(--font-mono); margin-bottom: 4px;">
+                        <span>FILLED (P:${data.filled.P} / R:${data.filled.R} / C:${data.filled.C})</span>
+                        <span id="mat-${item.id}-f-tot" style="font-weight: 700; color: var(--neon-cyan);">0</span>
+                    </div>
+                    <div class="inputs-matrix" style="margin-bottom: 0;">
+                        <input type="number" id="mat-${item.id}-f-p" placeholder="P" min="0" oninput="calcMatrixBrand('${item.id}', '${item.key}')">
+                        <input type="number" id="mat-${item.id}-f-r" placeholder="R" min="0" oninput="calcMatrixBrand('${item.id}', '${item.key}')">
+                        <input type="number" id="mat-${item.id}-f-c" placeholder="C" min="0" oninput="calcMatrixBrand('${item.id}', '${item.key}')">
+                        <input type="number" id="mat-${item.id}-f-u" placeholder="U" min="0" oninput="calcMatrixBrand('${item.id}', '${item.key}')">
+                    </div>
+                </div>
+
+                <!-- Empty row -->
+                <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 4px; border-left: 3px solid var(--neon-amber);">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-family: var(--font-mono); margin-bottom: 4px;">
+                        <span style="color: var(--neon-amber);">EMPTY (P:${data.empty.P} / R:${data.empty.R})</span>
+                        <span id="mat-${item.id}-e-tot" style="font-weight: 700; color: var(--neon-amber);">0</span>
+                    </div>
+                    <div class="inputs-matrix three-col" style="margin-bottom: 0;">
+                        <input type="number" id="mat-${item.id}-e-p" placeholder="P" min="0" oninput="calcMatrixBrand('${item.id}', '${item.key}')">
+                        <input type="number" id="mat-${item.id}-e-r" placeholder="R" min="0" oninput="calcMatrixBrand('${item.id}', '${item.key}')">
+                        <input type="number" id="mat-${item.id}-e-u" placeholder="U" min="0" oninput="calcMatrixBrand('${item.id}', '${item.key}')">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                    <button class="nav-btn btn-small" style="flex: 1; justify-content: center; border-color: var(--neon-cyan); color: #fff;" onclick="logMatrixCard('${item.id}', '${item.key}')">
+                        ⚡ LOG
+                    </button>
+                    <button class="nav-btn btn-small btn-crimson" style="width: 70px; justify-content: center;" onclick="clearMatrixCard('${item.id}')">
+                        RESET
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function calcMatrixBrand(cardId, brandKey) {
+        const data = inventoryConfig[brandKey];
+        if (!data) return;
+
+        const fp = parseInt(document.getElementById(`mat-${cardId}-f-p`).value) || 0;
+        const fr = parseInt(document.getElementById(`mat-${cardId}-f-r`).value) || 0;
+        const fc = parseInt(document.getElementById(`mat-${cardId}-f-c`).value) || 0;
+        const fu = parseInt(document.getElementById(`mat-${cardId}-f-u`).value) || 0;
+        const fTotal = (fp * data.filled.P) + (fr * data.filled.R) + (fc * data.filled.C) + fu;
+        document.getElementById(`mat-${cardId}-f-tot`).innerText = fTotal.toLocaleString();
+
+        const ep = parseInt(document.getElementById(`mat-${cardId}-e-p`).value) || 0;
+        const er = parseInt(document.getElementById(`mat-${cardId}-e-r`).value) || 0;
+        const eu = parseInt(document.getElementById(`mat-${cardId}-e-u`).value) || 0;
+        const eTotal = (ep * data.empty.P) + (er * data.empty.R) + eu;
+        document.getElementById(`mat-${cardId}-e-tot`).innerText = eTotal.toLocaleString();
+    }
+
+    function clearMatrixCard(cardId) {
+        document.querySelectorAll(`#card-${cardId} input`).forEach(inp => inp.value = '');
+        document.getElementById(`mat-${cardId}-f-tot`).innerText = '0';
+        document.getElementById(`mat-${cardId}-e-tot`).innerText = '0';
+        showToast(`RESET ${cardId.toUpperCase()}`);
+    }
+
+    function logMatrixCard(cardId, brandKey) {
+        const data = inventoryConfig[brandKey];
+        const lot = document.getElementById(`mat-${cardId}-lot`).value.trim().toUpperCase() || 'N/A';
+        const loc = document.getElementById(`mat-${cardId}-loc`).value.trim().toUpperCase() || 'N/A';
+
+        const fp = parseInt(document.getElementById(`mat-${cardId}-f-p`).value) || 0;
+        const fr = parseInt(document.getElementById(`mat-${cardId}-f-r`).value) || 0;
+        const fc = parseInt(document.getElementById(`mat-${cardId}-f-c`).value) || 0;
+        const fu = parseInt(document.getElementById(`mat-${cardId}-f-u`).value) || 0;
+        const fTotal = (fp * data.filled.P) + (fr * data.filled.R) + (fc * data.filled.C) + fu;
+
+        const ep = parseInt(document.getElementById(`mat-${cardId}-e-p`).value) || 0;
+        const er = parseInt(document.getElementById(`mat-${cardId}-e-r`).value) || 0;
+        const eu = parseInt(document.getElementById(`mat-${cardId}-e-u`).value) || 0;
+        const eTotal = (ep * data.empty.P) + (er * data.empty.R) + eu;
+
+        const time = new Date().toLocaleTimeString();
+        let logged = false;
+
+        if (fTotal > 0) {
+            actionLog.push({
+                id: createSaveID(data.name),
+                time,
+                brand: data.name,
+                type: 'Filled',
+                lots: lot,
+                loc,
+                breakdown: `${fp}p / ${fr}r / ${fc}c / ${fu}u`,
+                total: fTotal
+            });
+            logged = true;
+        }
+
+        if (eTotal > 0) {
+            actionLog.push({
+                id: createSaveID(data.name),
+                time,
+                brand: data.name,
+                type: 'Empty',
+                lots: lot,
+                loc,
+                breakdown: `${ep}p / ${er}r / ${eu}u`,
+                total: eTotal
+            });
+            logged = true;
+        }
+
+        if (logged) {
+            persistVaultLogs();
+            clearMatrixCard(cardId);
+            triggerPowerSurge();
+            showToast(`${data.name} LOGGED TO VAULT`);
+        } else {
+            alert("No counts entered to log.");
+        }
+    }
+
+    /* =====================================================================
+       BELLE VIE CARTON CALCULATOR (UI Improvement 2)
+       ===================================================================== */
+    function calculateCartons() {
+        const p = parseInt(document.getElementById('carton-p').value) || 0;
+        const r = parseInt(document.getElementById('carton-r').value) || 0;
+        const b = parseInt(document.getElementById('carton-b').value) || 0;
+        const c = parseInt(document.getElementById('carton-c').value) || 0;
+
+        const totalCartons = (p * 6800) + (r * 1360) + (b * 170) + c;
+        document.getElementById('carton-total-display').innerText = totalCartons.toLocaleString();
+
+        document.getElementById('carton-formula-text').innerText = 
+            `(${p} × 6,800) + (${r} × 1,360) + (${b} × 170) + ${c} = ${totalCartons.toLocaleString()} CARTONS`;
+        document.getElementById('carton-pallet-equiv').innerText = 
+            `${(totalCartons / 6800).toFixed(2)} PALLETS (5 ROWS / 40 BOXES PER PALLET)`;
+    }
+
+    function logCartonCount() {
+        const p = parseInt(document.getElementById('carton-p').value) || 0;
+        const r = parseInt(document.getElementById('carton-r').value) || 0;
+        const b = parseInt(document.getElementById('carton-b').value) || 0;
+        const c = parseInt(document.getElementById('carton-c').value) || 0;
+        const total = (p * 6800) + (r * 1360) + (b * 170) + c;
+
+        if (total === 0) return alert("NO CARTON COUNT ENTERED TO LOG.");
+
+        const lot = document.getElementById('carton-lot').value.trim().toUpperCase() || 'N/A';
+        const loc = document.getElementById('carton-loc').value.trim().toUpperCase() || 'N/A';
+        const time = new Date().toLocaleTimeString();
+
+        actionLog.push({
+            id: createSaveID("CARTON"),
+            time,
+            brand: "BELLE VIE (PACKAGING CARTONS)",
+            type: "Carton",
+            lots: lot,
+            loc,
+            breakdown: `${p}p / ${r}r / ${b}b / ${c}c`,
+            total
+        });
+
+        persistVaultLogs();
+        clearCartonInputs();
+        triggerPowerSurge();
+        showToast("BELLE VIE CARTONS LOGGED");
+    }
+
+    function clearCartonInputs() {
+        document.getElementById('carton-p').value = '';
+        document.getElementById('carton-r').value = '';
+        document.getElementById('carton-b').value = '';
+        document.getElementById('carton-c').value = '';
+        document.getElementById('carton-lot').value = '';
+        document.getElementById('carton-loc').value = '';
+        calculateCartons();
+    }
+
+    /* =====================================================================
+       BRITES EMPTY SPEC INSPECTOR (UI Improvement 2)
+       ===================================================================== */
+    function updateBritesContext() {
+        const key = document.getElementById('brites-spec-select').value;
+        const spec = britesSpecs[key];
+        if (!spec) return;
+
+        document.getElementById('brites-lbl-p').innerText = `PALLETS (x${spec.P.toLocaleString()})`;
+        document.getElementById('brites-lbl-r').innerText = `ROWS (x${spec.R.toLocaleString()})`;
+        document.getElementById('brites-check-text').innerText = `${spec.rows} ROWS PER PALLET STRUCTURE`;
+        calculateBrites();
+    }
+
+    function calculateBrites() {
+        const key = document.getElementById('brites-spec-select').value;
+        const spec = britesSpecs[key];
+        if (!spec) return;
+
+        const p = parseInt(document.getElementById('brites-inp-p').value) || 0;
+        const r = parseInt(document.getElementById('brites-inp-r').value) || 0;
+        const u = parseInt(document.getElementById('brites-inp-u').value) || 0;
+
+        const total = (p * spec.P) + (r * spec.R) + u;
+        document.getElementById('brites-total-display').innerText = total.toLocaleString();
+        document.getElementById('brites-formula-text').innerText = 
+            `(${p} × ${spec.P.toLocaleString()}) + (${r} × ${spec.R.toLocaleString()}) + ${u} = ${total.toLocaleString()} CANS`;
+    }
+
+    function logBritesCount() {
+        const key = document.getElementById('brites-spec-select').value;
+        const spec = britesSpecs[key];
+        const p = parseInt(document.getElementById('brites-inp-p').value) || 0;
+        const r = parseInt(document.getElementById('brites-inp-r').value) || 0;
+        const u = parseInt(document.getElementById('brites-inp-u').value) || 0;
+        const total = (p * spec.P) + (r * spec.R) + u;
+
+        if (total === 0) return alert("NO BRITES COUNT ENTERED TO LOG.");
+
+        const loc = document.getElementById('brites-loc').value.trim().toUpperCase() || 'N/A';
+        const time = new Date().toLocaleTimeString();
+
+        actionLog.push({
+            id: createSaveID("BRITES"),
+            time,
+            brand: `BRITES (${spec.name.toUpperCase()})`,
+            type: "Empty",
+            lots: "BRITES CAN LOT",
+            loc,
+            breakdown: `${p}p / ${r}r / ${u}u`,
+            total
+        });
+
+        persistVaultLogs();
+        clearBritesInputs();
+        triggerPowerSurge();
+        showToast("BRITES EMPTY CANS LOGGED");
+    }
+
+    function clearBritesInputs() {
+        document.getElementById('brites-inp-p').value = '';
+        document.getElementById('brites-inp-r').value = '';
+        document.getElementById('brites-inp-u').value = '';
+        document.getElementById('brites-loc').value = '';
+        calculateBrites();
+    }
+
+    /* =====================================================================
+       CUSTOM CONSTRUCT MULTIPLIERS
+       ===================================================================== */
+    function addCustomParameter() {
+        const container = document.getElementById('custom-parameters-container');
+        const row = document.createElement('div');
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = '2fr 1fr 1fr 34px';
+        row.style.gap = '6px';
+        row.style.alignItems = 'center';
+        row.innerHTML = `
+            <input type="text" placeholder="Tier Name (e.g. Pallet)" class="cust-p-name" oninput="calculateCustom(); saveState();">
+            <input type="number" placeholder="Multiplier" class="cust-p-mult" oninput="calculateCustom(); saveState();">
+            <input type="number" placeholder="Qty" class="cust-p-qty" oninput="calculateCustom(); saveState();">
+            <button class="btn-delete-entry" style="height: 36px;" onclick="this.parentElement.remove(); calculateCustom(); saveState();">✕</button>
+        `;
+        container.appendChild(row);
+    }
+
+    function calculateCustom() {
+        let total = 0;
+        document.querySelectorAll('#custom-parameters-container > div').forEach(row => {
+            const mult = parseInt(row.querySelector('.cust-p-mult').value) || 0;
+            const qty = parseInt(row.querySelector('.cust-p-qty').value) || 0;
+            total += (mult * qty);
+        });
+        document.getElementById('custom-total').innerText = total.toLocaleString();
+    }
+
+    function logCustomCount() {
+        const total = parseInt(document.getElementById('custom-total').innerText.replace(/,/g, '')) || 0;
+        if (total === 0) return alert("NO CUSTOM COUNT COMPUTED.");
+
+        const brand = document.getElementById('custom-brand').value.trim().toUpperCase() || 'CUSTOM ITEM';
+        const loc = document.getElementById('custom-location').value.trim().toUpperCase() || 'N/A';
+        const lot = document.getElementById('custom-lot').value.trim().toUpperCase() || 'N/A';
+        const time = new Date().toLocaleTimeString();
+
+        actionLog.push({
+            id: createSaveID(brand),
+            time,
+            brand,
+            type: "Custom",
+            lots: lot,
+            loc,
+            breakdown: "Custom Multipliers",
+            total
+        });
+
+        persistVaultLogs();
+        resetCustomCalculator();
+        triggerPowerSurge();
+        showToast("CUSTOM COUNT LOGGED");
+    }
+
+    function resetCustomCalculator() {
+        document.getElementById('custom-brand').value = '';
+        document.getElementById('custom-location').value = '';
+        document.getElementById('custom-lot').value = '';
+        document.getElementById('custom-parameters-container').innerHTML = '';
+        addCustomParameter();
+        document.getElementById('custom-total').innerText = '0';
+        saveState();
+    }
+
+    /* =====================================================================
+       DATA VAULT 2.0 (LOGGING, SEARCH, SHIFT HANDOVER & PURGE)
+       ===================================================================== */
+    function createSaveID(prefix) {
+        const now = new Date();
+        const cleanPrefix = prefix.split(' ')[0].replace(/[^a-zA-Z]/g, '').substring(0, 5).toUpperCase() || 'LOG';
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        const hh = String(now.getHours()).padStart(2, '0');
+        const min = String(now.getMinutes()).padStart(2, '0');
+        return `ID_${cleanPrefix}_${mm}${dd}-${hh}${min}`;
+    }
+
+    function logStandardCount() {
+        const key = document.getElementById('brand-select').value;
+        const brand = inventoryConfig[key];
+        const loc = document.getElementById('standard-loc').value.trim().toUpperCase() || 'N/A';
+
+        // Lot codes aggregation
+        let lots = [];
+        document.querySelectorAll('.standard-lot-input').forEach(inp => {
+            if (inp.value.trim()) lots.push(inp.value.trim().toUpperCase());
+        });
+        const lotString = lots.length > 0 ? lots.join(' | ') : 'N/A';
+
+        const fp = parseInt(document.getElementById('inp-f-p').value) || 0;
+        const fr = parseInt(document.getElementById('inp-f-r').value) || 0;
+        const fc = parseInt(document.getElementById('inp-f-c').value) || 0;
+        const fu = parseInt(document.getElementById('inp-f-u').value) || 0;
+        const fTotal = (fp * brand.filled.P) + (fr * brand.filled.R) + (fc * brand.filled.C) + fu;
+
+        const ep = parseInt(document.getElementById('inp-e-p').value) || 0;
+        const er = parseInt(document.getElementById('inp-e-r').value) || 0;
+        const eu = parseInt(document.getElementById('inp-e-u').value) || 0;
+        const eTotal = (ep * brand.empty.P) + (er * brand.empty.R) + eu;
+
+        const time = new Date().toLocaleTimeString();
+        let logged = false;
+
+        if (fTotal > 0) {
+            actionLog.push({
+                id: createSaveID(brand.name),
+                time,
+                brand: brand.name,
+                type: 'Filled',
+                lots: lotString,
+                loc,
+                breakdown: `${fp}p / ${fr}r / ${fc}c / ${fu}u`,
+                total: fTotal
+            });
+            logged = true;
+        }
+
+        if (eTotal > 0) {
+            actionLog.push({
+                id: createSaveID(brand.name),
+                time,
+                brand: brand.name,
+                type: 'Empty',
+                lots: lotString,
+                loc,
+                breakdown: `${ep}p / ${er}r / ${eu}u`,
+                total: eTotal
+            });
+            logged = true;
+        }
+
+        if (logged) {
+            persistVaultLogs();
+            clearStandardInputs();
+            triggerPowerSurge();
+            showToast(`${brand.name} LOGGED TO VAULT`);
+        } else {
+            alert("No count entered. Enter filled or empty quantities before logging.");
+        }
+    }
+
+    function persistVaultLogs() {
+        localStorage.setItem('cyberCountLog_v4', JSON.stringify(actionLog));
+        renderLogTable();
+        updateHUDTotals();
+    }
+
+    function renderLogTable(filteredData = null) {
+        const tbody = document.getElementById('logBody');
+        tbody.innerHTML = '';
+
+        const dataset = filteredData || actionLog.slice().reverse();
+
+        if (dataset.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #5f7594; padding: 24px;">NO RECORDS LOGGED IN DATA VAULT</td></tr>`;
+            return;
+        }
+
+        dataset.forEach((row, idx) => {
+            const originalIndex = filteredData ? actionLog.indexOf(row) : (actionLog.length - 1 - idx);
+            const tr = document.createElement('tr');
+            
+            let typeColor = 'var(--neon-cyan)';
+            if (row.type === 'Empty') typeColor = 'var(--neon-amber)';
+            if (row.type === 'Carton') typeColor = 'var(--neon-emerald)';
+            if (row.type === 'Custom') typeColor = 'var(--neon-plasma)';
+
+            tr.innerHTML = `
+                <td style="color: var(--neon-cyan); font-weight: 700;">${row.id}</td>
+                <td>${row.time}</td>
+                <td style="font-weight: 700;">${row.brand}</td>
+                <td style="color: ${typeColor}; font-weight: 700;">${row.type}</td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${row.lots}">${row.lots}</td>
+                <td>${row.loc}</td>
+                <td style="text-align: right; color: #fff; font-weight: 700; text-shadow: 0 0 6px ${typeColor};">${row.total.toLocaleString()}</td>
+                <td style="text-align: center;">
+                    <button class="btn-delete-entry" title="Delete record" onclick="deleteVaultEntry(${originalIndex})">✕</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function deleteVaultEntry(index) {
+        if (confirm(`DELETE RECORD ${actionLog[index].id}?`)) {
+            actionLog.splice(index, 1);
+            persistVaultLogs();
+            showToast("RECORD REMOVED");
+        }
+    }
+
+    function filterVaultLogs() {
+        const query = document.getElementById('vault-search-input').value.trim().toLowerCase();
+        const typeFilter = document.getElementById('vault-type-filter').value;
+
+        const filtered = actionLog.slice().reverse().filter(row => {
+            const matchesType = (typeFilter === 'ALL') || (row.type === typeFilter);
+            const matchesQuery = !query || 
+                row.brand.toLowerCase().includes(query) ||
+                row.lots.toLowerCase().includes(query) ||
+                row.loc.toLowerCase().includes(query) ||
+                row.id.toLowerCase().includes(query);
+            return matchesType && matchesQuery;
+        });
+
+        renderLogTable(filtered);
+    }
+
+    function updateHUDTotals() {
+        let filledTotal = 0;
+        let emptyTotal = 0;
+        let cartonTotal = 0;
+
+        actionLog.forEach(row => {
+            if (row.type === 'Filled') filledTotal += row.total;
+            if (row.type === 'Empty') emptyTotal += row.total;
+            if (row.type === 'Carton') cartonTotal += row.total;
+        });
+
+        document.getElementById('global-filled').innerText = filledTotal.toLocaleString();
+        document.getElementById('global-empty').innerText = emptyTotal.toLocaleString();
+        document.getElementById('global-cartons').innerText = cartonTotal.toLocaleString();
+        document.getElementById('global-records').innerText = actionLog.length;
+    }
+
+    function clearLog() {
+        if (actionLog.length === 0) return alert("VAULT IS ALREADY EMPTY.");
+        if (confirm("WARNING: PURGE ALL SHIFT DATA VAULT RECORDS? THIS CANNOT BE UNDONE.")) {
+            actionLog = [];
+            persistVaultLogs();
+            showToast("DATA VAULT PURGED");
+        }
+    }
+
+    /* One-Click Shift Report Clipboard Exporter (UI Improvement 4) */
+    function copyShiftReportToClipboard() {
+        if (actionLog.length === 0) return alert("DATA VAULT IS EMPTY. NOTHING TO EXPORT.");
+
+        let shiftFilled = 0;
+        let shiftEmpty = 0;
+        let shiftCartons = 0;
+
+        actionLog.forEach(l => {
+            if (l.type === 'Filled') shiftFilled += l.total;
+            if (l.type === 'Empty') shiftEmpty += l.total;
+            if (l.type === 'Carton') shiftCartons += l.total;
+        });
+
+        let text = `========================================================\n`;
+        text += `EDISON HWY // SHIFT INVENTORY AUDIT REPORT\n`;
+        text += `DATE: ${new Date().toLocaleDateString()} | GENERATED: ${new Date().toLocaleTimeString()}\n`;
+        text += `========================================================\n`;
+        text += `SHIFT SUMMARY TOTALS:\n`;
+        text += `  • FILLED CANS:    ${shiftFilled.toLocaleString()} CANS\n`;
+        text += `  • EMPTY CANS:     ${shiftEmpty.toLocaleString()} CANS\n`;
+        text += `  • PACKAGING CTNS: ${shiftCartons.toLocaleString()} CARTONS\n`;
+        text += `  • TOTAL RECORDS:  ${actionLog.length}\n`;
+        text += `--------------------------------------------------------\n`;
+        text += `DETAILED LOGGED ENTRIES:\n`;
+
+        actionLog.forEach((row, i) => {
+            text += `[${i+1}] ${row.time} | ${row.brand} | ${row.type.toUpperCase()} | TOTAL: ${row.total.toLocaleString()} | LOT: ${row.lots} | LOC: ${row.loc}\n`;
+        });
+        text += `========================================================\n`;
+
+        navigator.clipboard.writeText(text).then(() => {
+            showToast("SHIFT REPORT COPIED TO CLIPBOARD!");
+        }).catch(err => {
+            alert("Clipboard permission unavailable. Downloading file instead.");
+        });
+    }
+
+    function exportCSV() {
+        if (actionLog.length === 0) return alert("DATA VAULT IS EMPTY.");
+        let csv = "SaveID,Time,Brand,Type,Lots,Location,Breakdown,Total\n";
+        actionLog.forEach(row => {
+            const cleanLots = (row.lots || '').replace(/,/g, ';');
+            const cleanBrand = (row.brand || '').replace(/,/g, ' ');
+            csv += `"${row.id}","${row.time}","${cleanBrand}","${row.type}","${cleanLots}","${row.loc}","${row.breakdown || ''}",${row.total}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `EDISON_INVENTORY_${new Date().toISOString().slice(0,10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("CSV EXPORT DOWNLOADED");
+    }
+
+    /* =====================================================================
+       VIEW NAVIGATION & FX
+       ===================================================================== */
+    function switchView(viewName) {
+        document.querySelectorAll('.nav-switchers button').forEach(b => b.classList.remove('active'));
+        document.getElementById(`nav-${viewName}`).classList.add('active');
+
+        document.getElementById('view-universal').style.display = (viewName === 'universal') ? 'block' : 'none';
+        document.getElementById('view-matrix').style.display = (viewName === 'matrix') ? 'block' : 'none';
+        document.getElementById('view-cartons').style.display = (viewName === 'cartons') ? 'block' : 'none';
+        document.getElementById('view-brites').style.display = (viewName === 'brites') ? 'block' : 'none';
+        document.getElementById('view-custom').style.display = (viewName === 'custom') ? 'block' : 'none';
+
+        if (viewName === 'universal') calculateUniversal();
+        if (viewName === 'cartons') calculateCartons();
+        if (viewName === 'brites') calculateBrites();
+        if (viewName === 'custom') calculateCustom();
+    }
+
+    function scrollToVault() {
+        document.getElementById('data-vault-panel').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function triggerPowerSurge() {
+        document.body.classList.add('surge-active');
+        setTimeout(() => document.body.classList.remove('surge-active'), 500);
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        clearTimeout(toast.timer);
+        toast.timer = setTimeout(() => toast.style.display = 'none', 2800);
+    }
+
+    /* Fullscreen Toggle & Event Sync */
+    function isFullScreen() {
+        return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+    }
+
+    function updateFullscreenUI() {
+        const btn = document.getElementById('fs-btn');
+        if (!btn) return;
+        if (isFullScreen()) {
+            btn.classList.add('active');
+            btn.innerHTML = '<span>🗗</span> EXIT FULLSCREEN';
+        } else {
+            btn.classList.remove('active');
+            btn.innerHTML = '<span>⛶</span> FULLSCREEN';
+        }
+    }
+
+    async function toggleFullScreen() {
+        try {
+            if (!isFullScreen()) {
+                const doc = document.documentElement;
+                if (doc.requestFullscreen) {
+                    await doc.requestFullscreen();
+                } else if (doc.webkitRequestFullscreen) {
+                    await doc.webkitRequestFullscreen();
+                } else if (doc.mozRequestFullScreen) {
+                    await doc.mozRequestFullScreen();
+                } else if (doc.msRequestFullscreen) {
+                    await doc.msRequestFullscreen();
+                }
+                showToast("FULLSCREEN ENGAGED");
+            } else {
+                if (document.exitFullscreen) {
+                    await document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    await document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    await document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    await document.msExitFullscreen();
+                }
+                showToast("EXITED FULLSCREEN");
+            }
+        } catch (err) {
+            console.warn("Fullscreen toggle error:", err);
+            showToast("FULLSCREEN RESTRICTED BY BROWSER ENVIRONMENT");
+        }
+        updateFullscreenUI();
+    }
+
+    document.addEventListener('fullscreenchange', updateFullscreenUI);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenUI);
+    document.addEventListener('mozfullscreenchange', updateFullscreenUI);
+    document.addEventListener('MSFullscreenChange', updateFullscreenUI);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'F11') {
+            e.preventDefault();
+            toggleFullScreen();
+        }
+    });
+
+    /* State Preservation */
+    function saveState() {
+        const state = {
+            brand: document.getElementById('brand-select').value,
+            loc: document.getElementById('standard-loc').value,
+            fp: document.getElementById('inp-f-p').value,
+            fr: document.getElementById('inp-f-r').value,
+            fc: document.getElementById('inp-f-c').value,
+            fu: document.getElementById('inp-f-u').value,
+            ep: document.getElementById('inp-e-p').value,
+            er: document.getElementById('inp-e-r').value,
+            eu: document.getElementById('inp-e-u').value
+        };
+        localStorage.setItem('cyberCountState_v4', JSON.stringify(state));
+    }
+
+    function loadSavedState() {
+        const state = JSON.parse(localStorage.getItem('cyberCountState_v4'));
+        if (state) {
+            if (state.brand && inventoryConfig[state.brand]) {
+                document.getElementById('brand-select').value = state.brand;
+            }
+            if (state.loc) document.getElementById('standard-loc').value = state.loc;
+            if (state.fp) document.getElementById('inp-f-p').value = state.fp;
+            if (state.fr) document.getElementById('inp-f-r').value = state.fr;
+            if (state.fc) document.getElementById('inp-f-c').value = state.fc;
+            if (state.fu) document.getElementById('inp-f-u').value = state.fu;
+            if (state.ep) document.getElementById('inp-e-p').value = state.ep;
+            if (state.er) document.getElementById('inp-e-r').value = state.er;
+            if (state.eu) document.getElementById('inp-e-u').value = state.eu;
+            updateBrandContext(false);
+        }
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>
