@@ -313,6 +313,24 @@
     @media print{#n8x-shell,#n8x-progress,#n8x-toast,#n8x-skip{display:none!important}}
   </style>
   <!-- N8-ENHANCEMENTS:HEAD:END -->
+<style id="qtd-immersive-css">
+/* Game-only, edge-to-edge: no launcher or practice chrome over the board */
+#kh-kit, #kh-practice-toggle, #kh-practice { display: none !important; }
+html, body { width: 100%; height: 100%; height: 100dvh; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; overscroll-behavior: none; }
+#app-container { width: 100vw; height: 100vh; height: 100dvh; border-radius: 0; box-shadow: inset 0 0 0 2px #b100ff; }
+#game-canvas, .shop-btn { touch-action: none; -webkit-tap-highlight-color: transparent; }
+body.qtd-dragging, body.qtd-dragging * { cursor: grabbing !important; }
+/* Landscape phones: slimmer bars so the board gets the height */
+@media (max-height: 520px) {
+  #top-bar { height: 32px; min-height: 32px; padding: 0 8px; }
+  #top-bar .stat { font-size: 12px; letter-spacing: 0; }
+  #top-bar .ctrl-btn { padding: 3px 7px; font-size: 10px; }
+  #bottom-panel { height: 60px; min-height: 60px; padding: 3px 4px; gap: 5px; }
+  #bottom-panel button { padding-top: 4px !important; padding-bottom: 4px !important; }
+}
+</style>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
 
@@ -397,7 +415,7 @@
         <div id="upgrade-ui" class="panel-section">
             <div class="upg-info">
                 <h3 id="upg-name">TOWER</h3>
-                <div>Lvl: <span class="hl" id="upg-lvl">1</span>/3 | Dmg: <span class="hl" id="upg-dmg">0</span></div>
+                <div>Lvl: <span class="hl" id="upg-lvl">1</span>/<span id="upg-max">5</span> | Dmg: <span class="hl" id="upg-dmg">0</span></div>
                 <div>Rng: <span class="hl" id="upg-rng">0</span> | Target: <span class="hl c-cyan" id="upg-tgt">FIRST</span></div>
             </div>
             <div style="display:flex; flex-direction:column; gap:6px;">
@@ -424,8 +442,7 @@ const canvas = document.getElementById('game-canvas');
     canvas.width = C_WIDTH;
     canvas.height = C_HEIGHT;
 
-    // Keep distinct image slots so the procedural artwork remains the fallback
-    // without requesting legacy asset files that are no longer shipped.
+    // Legacy image slots stay empty; towers are drawn procedurally (drawElementTower).
     function createSpriteSlot() {
         return new Image();
     }
@@ -450,7 +467,7 @@ const canvas = document.getElementById('game-canvas');
         4: { name: 'Ice Tower', cost: 225, range: 185, fireRate: 52, damage: 20, pSpeed: 13, color: '#b8f6ff', img: towerAssets.ice, projectileImg: towerAssets.waterShot, effect: 'freeze', facing: -Math.PI / 2, drawW: 38, drawH: 58, muzzle: 26 },
         5: { name: 'Wind Tower', cost: 250, range: 230, fireRate: 35, damage: 28, pSpeed: 20, color: '#d9f6ff', img: towerAssets.wind, projectileImg: towerAssets.windShot, splash: 45, facing: 0, drawW: 48, drawH: 50, muzzle: 31, crop: { sx: 330, sy: 120, sw: 1030, sh: 1370 } },
         6: { name: 'Magnet Tower', cost: 300, range: 300, fireRate: 12, damage: 22, pSpeed: 18, color: '#ff7cff', img: towerAssets.magnet, projectileImg: towerAssets.magnetShot, facing: 0, drawW: 38, drawH: 38, muzzle: 22 },
-        7: { name: 'C4 Charge', cost: 450, range: 88, fireRate: 0, damage: 320, pSpeed: 0, color: '#ff9d2e', tactical: 'c4', pathOnly: true, splash: 145, jamMult: 0.35, maxLevel: 5, upgradeCosts: { 1: 450, 2: 900, 3: 3500, 4: 7000 }, drawW: 42, drawH: 42 },
+        7: { name: 'C4 Charge', cost: 450, range: 88, fireRate: 0, damage: 320, pSpeed: 0, color: '#ff9d2e', tactical: 'c4', pathOnly: true, splash: 145, jamMult: 0.35, maxLevel: 7, upgradeCosts: { 1: 450, 2: 900, 3: 3500, 4: 7000, 5: 12000, 6: 20000 }, drawW: 42, drawH: 42 },
         8: { name: 'Flashbang', cost: 500, range: 112, fireRate: 0, damage: 140, pSpeed: 0, color: '#f7fbff', tactical: 'flash', pathOnly: true, splash: 145, drawW: 34, drawH: 34 },
         9: { name: 'Eagle .50', cost: 550, range: 250, fireRate: 30, damage: 95, pSpeed: 28, color: '#ffd27a', weapon: 'pistol', drawW: 47, drawH: 32, muzzle: 30 },
         10: { name: 'P90 SMG', cost: 650, range: 215, fireRate: 6, damage: 24, pSpeed: 30, color: '#a7f7ff', weapon: 'smg', drawW: 58, drawH: 34, muzzle: 32 },
@@ -459,6 +476,8 @@ const canvas = document.getElementById('game-canvas');
         13: { name: 'Barrett .50', cost: 1400, range: 520, fireRate: 70, damage: 260, pSpeed: 42, color: '#f5f5ff', weapon: 'sniper', pierce: 1, drawW: 72, drawH: 34, muzzle: 38 },
         14: { name: 'Qamelot Prime Bomb', cost: 7500, range: 9999, fireRate: 0, damage: 999999, pSpeed: 0, color: '#b100ff', tactical: 'primeBomb', anywhere: true, drawW: 48, drawH: 48 }
     };
+    const TIER_NAMES = ['', 'Basic', 'Reinforced', 'Elite', 'Champion', 'Legend', 'Seismic', 'Doomsday'];
+    const towerMaxLevel = def => def.maxLevel || 5;
     const MAX_WAVE = 100;
     const ENEMY_TIERS = [
         { name: 'Scout', color: '#61e8ff', accent: '#dff9ff', hp: 1, speed: 1, reward: 1 },
@@ -771,10 +790,7 @@ const canvas = document.getElementById('game-canvas');
     };
 
     let pointer = { x: -100, y: -100, active: false };
-    canvas.addEventListener('mousemove', e => pointer = { ...getPointerPos(e), active: true });
-    canvas.addEventListener('touchmove', e => pointer = { ...getPointerPos(e), active: true });
-    canvas.addEventListener('click', e => handleCanvasClick(getPointerPos(e)));
-    canvas.addEventListener('mouseleave', () => pointer = { x: -100, y: -100, active: false });
+    // Canvas pointer input (mouse, touch, pen) is wired up by the controller below the game loop.
 
     function advancedWeaponsUnlocked() {
         return state.advancedUnlocked || state.wave > 30 || (state.wave === 30 && !state.waveActive);
@@ -870,6 +886,21 @@ const canvas = document.getElementById('game-canvas');
         }
     }
 
+    function placementValid(type, pos) {
+        const def = TOWER_DEFS[type];
+        if (!def) return false;
+        if (def.anywhere) return true;
+        if (Math.hypot(pos.x - corePos.x, pos.y - corePos.y) < corePos.radius + 30) return false;
+        let pathDistance = Infinity;
+        for (let i = 0; i < pathNodes.length - 1; i++) pathDistance = Math.min(pathDistance, distToSegment(pos, pathNodes[i], pathNodes[i + 1]));
+        if (def.pathOnly ? pathDistance >= 34 : pathDistance < 40) return false;
+        for (const t of towers) {
+            const spacing = def.pathOnly || TOWER_DEFS[t.type].pathOnly ? 32 : 45;
+            if (Math.hypot(t.x - pos.x, t.y - pos.y) < spacing) return false;
+        }
+        return true;
+    }
+
     function distToSegment(p, v, w) {
         let l2 = Math.pow(v.x - w.x, 2) + Math.pow(v.y - w.y, 2);
         if (l2 === 0) return Math.hypot(p.x - v.x, p.y - v.y);
@@ -957,8 +988,9 @@ const canvas = document.getElementById('game-canvas');
             
             let t = state.selectedTower;
             let def = TOWER_DEFS[t.type];
-            document.getElementById('upg-name').innerText = def.name.toUpperCase();
+            document.getElementById('upg-name').innerText = def.name.toUpperCase() + ' · ' + (TIER_NAMES[t.level] || '').toUpperCase();
             document.getElementById('upg-lvl').innerText = t.level;
+            document.getElementById('upg-max').innerText = towerMaxLevel(def);
             document.getElementById('upg-dmg').innerText = Math.floor(t.damage);
             document.getElementById('upg-rng').innerText = Math.floor(t.range);
             document.getElementById('upg-tgt').innerText = TARGET_MODES[t.targetMode];
@@ -970,12 +1002,13 @@ const canvas = document.getElementById('game-canvas');
             document.getElementById('upg-sell').innerText = sellVal;
             
             let btnUpg = document.getElementById('btn-d-upg');
-            const maxLevel = def.maxLevel || 3;
+            const maxLevel = towerMaxLevel(def);
             if (t.level >= maxLevel) {
                 btnUpg.innerText = "MAX LEVEL"; btnUpg.disabled = true;
             } else {
-                const c4Label = t.type === 7 && t.level === 3 ? 'MEGATON' : (t.type === 7 && t.level === 4 ? 'CRATER FIELD' : 'UPGRADE');
+                const c4Label = t.type === 7 && t.level === 3 ? 'MEGATON' : (t.type === 7 && t.level === 4 ? 'CRATER FIELD' : (TIER_NAMES[t.level + 1] || 'UPGRADE').toUpperCase());
                 btnUpg.innerHTML = `${c4Label}<br/>$${upgCost}`;
+                btnUpg.title = t.level + 1 >= 4 && !def.tactical ? 'Adds an extra shot per volley' : 'More damage and range';
                 btnUpg.disabled = state.gold < upgCost;
             }
         } else {
@@ -1006,14 +1039,15 @@ const canvas = document.getElementById('game-canvas');
 
     function getUpgradeCost(t) {
         const def = TOWER_DEFS[t.type];
-        return (def.upgradeCosts && def.upgradeCosts[t.level]) || def.cost * t.level;
+        if (def.upgradeCosts && def.upgradeCosts[t.level]) return def.upgradeCosts[t.level];
+        return t.level >= 3 ? Math.round(def.cost * t.level * 1.5) : def.cost * t.level;
     }
 
     function upgradeTower() {
         if (!state.selectedTower) return;
         let t = state.selectedTower;
         const def = TOWER_DEFS[t.type];
-        const maxLevel = def.maxLevel || 3;
+        const maxLevel = towerMaxLevel(def);
         if (t.level >= maxLevel) return;
         let cost = getUpgradeCost(t);
         if (state.gold >= cost) {
@@ -1036,12 +1070,15 @@ const canvas = document.getElementById('game-canvas');
                     t.damage *= 1.8;
                     t.range *= 1.15;
                     t.splash *= 1.18;
+                    if (t.level >= 6) addFCT(t.x, t.y - 38, t.level === 6 ? 'SEISMIC C4' : 'DOOMSDAY C4', '#ff4d6d');
                 }
             } else {
-                t.damage *= 1.8;
-                t.range *= 1.15;
+                const champion = t.level >= 4;
+                t.damage *= champion ? 2 : 1.8;
+                t.range *= champion ? 1.1 : 1.15;
                 if (t.splash) t.splash *= 1.12;
-                if(t.type !== 4) t.fireRate = Math.max(5, Math.floor(t.fireRate * 0.8));
+                if(t.type !== 4) t.fireRate = Math.max(4, Math.floor(t.fireRate * (champion ? 0.85 : 0.8)));
+                if (champion) addFCT(t.x, t.y - 42, TIER_NAMES[t.level].toUpperCase() + '!', t.level >= 5 ? '#ffd700' : '#9beeff');
             }
             spriteParticles.push({x: t.x, y: t.y, life: 40, maxLife: 40, type: 'levelup'});
             playSoundEffect('upgrade');
@@ -1176,6 +1213,8 @@ const canvas = document.getElementById('game-canvas');
 
         let baseAngle = Math.atan2(predY - t.y, predX - t.x);
         const muzzle = def.muzzle || 28;
+        const kind = projectileKind(t.type);
+        if (effectAnimations.length < 450) effectAnimations.push({ type: 'muzzle', x: t.x + Math.cos(baseAngle) * muzzle, y: t.y + Math.sin(baseAngle) * muzzle, color: def.color, life: 6, maxLife: 6 });
         const shotCount = def.pellets || 1;
         for (let s = 0; s < shotCount; s++) {
             const spreadOffset = shotCount === 1 ? 0 : (s - (shotCount - 1) / 2) * (def.spread || 0.14);
@@ -1189,8 +1228,8 @@ const canvas = document.getElementById('game-canvas');
                 damage: t.damage, color: def.color, effect: def.effect,
                 splash: def.splash || 0, level: t.level,
                 totalDist: flyDist, traveled: 0,
-                trail: [], angle: pAngle, projectileImg: def.projectileImg,
-                pierce: def.pierce || 0
+                trail: [{x: startX, y: startY}], angle: pAngle, projectileImg: def.projectileImg,
+                pierce: def.pierce || 0, kind, sx: startX, sy: startY, spin: Math.random() * 6, drawn: false
             });
         }
     }
@@ -1280,8 +1319,15 @@ const canvas = document.getElementById('game-canvas');
                 if (t.type === 5 && t.level >= 2) shots = 2;
                 if (t.type === 10 && t.level >= 3) shots = 2;
                 if (t.type === 12 && t.level >= 2) shots = 2;
-                for(let i=0; i<shots; i++) {
-                    setTimeout(() => spawnProjectile(t, target), i * 100);
+                if (t.level >= 4) shots += 1;
+                if (t.level >= 5) shots += 1;
+                spawnProjectile(t, target);
+                for(let i=1; i<shots; i++) {
+                    setTimeout(() => {
+                        if (state.gameState !== 'playing' || !towers.includes(t)) return;
+                        const aim = enemies.includes(target) ? target : enemies.find(e => Math.hypot(e.x - t.x, e.y - t.y) <= t.range);
+                        if (aim) spawnProjectile(t, aim);
+                    }, i * 100 / Math.max(1, state.speed));
                 }
             }
         });
@@ -1323,6 +1369,7 @@ const canvas = document.getElementById('game-canvas');
                         }
                     }
                 }
+                addShotTrace(p);
                 projectiles.splice(i, 1);
             }
         }
@@ -1527,22 +1574,296 @@ const canvas = document.getElementById('game-canvas');
         context.restore();
         return true;
     }
+    function qtdRR(c, x, y, w, h, r) {
+        c.beginPath();
+        if (c.roundRect) c.roundRect(x, y, w, h, r); else c.rect(x, y, w, h);
+    }
+    function qtdOrb(c, x, y, r, col) {
+        const g = c.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r);
+        g.addColorStop(0, '#ffffff'); g.addColorStop(0.45, col); g.addColorStop(1, 'rgba(0,0,0,0.35)');
+        c.save(); c.shadowColor = col; c.shadowBlur = r * 1.6; c.fillStyle = g;
+        c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill(); c.restore();
+    }
+
+    // Element crowns: what sits on top of each tower. y is the top of the masonry.
+    function drawElementTop(c, type, y, L, col, t) {
+        const s = 0.82 + L * 0.1;
+        c.save(); c.translate(0, y); c.scale(s, s);
+        switch (type) {
+            case 0: { // Electric: tesla coil
+                c.fillStyle = '#9aa3b5'; c.fillRect(-2, -12, 4, 12);
+                c.strokeStyle = '#d9b45a'; c.lineWidth = 1.5;
+                for (let i = 0; i < 4; i++) { c.beginPath(); c.ellipse(0, -2 - i * 3, 5 - i * 0.6, 1.4, 0, 0, Math.PI * 2); c.stroke(); }
+                qtdOrb(c, 0, -17, 6, col);
+                if (Math.floor(t / 4) % 3 !== 0) {
+                    c.strokeStyle = '#ffffff'; c.lineWidth = 1.2; c.shadowColor = col; c.shadowBlur = 8;
+                    const arcs = 2 + Math.min(L, 3);
+                    for (let k = 0; k < arcs; k++) {
+                        const a = (k / arcs) * Math.PI * 2 + t / 9;
+                        c.beginPath(); c.moveTo(Math.cos(a) * 6, -17 + Math.sin(a) * 6);
+                        c.lineTo(Math.cos(a + 0.3) * 10, -17 + Math.sin(a + 0.3) * 10 + 2);
+                        c.lineTo(Math.cos(a) * 14, -17 + Math.sin(a) * 14);
+                        c.stroke();
+                    }
+                }
+                break;
+            }
+            case 1: { // Fire: brazier
+                c.fillStyle = '#3a2a22'; c.beginPath(); c.moveTo(-10, -6); c.lineTo(10, -6); c.lineTo(6, 0); c.lineTo(-6, 0); c.closePath(); c.fill();
+                c.strokeStyle = '#d9b45a'; c.lineWidth = 1.2; c.stroke();
+                const f = Math.sin(t / 5) * 1.5;
+                const flame = (h, w, color) => { c.fillStyle = color; c.beginPath(); c.moveTo(-w, -6); c.quadraticCurveTo(-w * 1.1, -6 - h * 0.5, f * 0.6, -6 - h); c.quadraticCurveTo(w * 1.1, -6 - h * 0.5, w, -6); c.closePath(); c.fill(); };
+                c.save(); c.shadowColor = '#ff5a18'; c.shadowBlur = 12;
+                flame(16 + L * 2 + f, 9, '#ff3b10'); flame(11 + L + f, 6, '#ff9a1f'); flame(6 + f * 0.5, 3, '#fff2a8');
+                c.restore();
+                break;
+            }
+            case 2: { // Rock: boulder stack (L3+ adds a catapult arm)
+                const rock = (x, yy, r, shade) => { c.fillStyle = shade; c.beginPath(); c.arc(x, yy, r, 0, Math.PI * 2); c.fill(); c.strokeStyle = 'rgba(40,30,20,0.6)'; c.lineWidth = 1; c.stroke(); };
+                if (L >= 3) { c.strokeStyle = '#6b4a2b'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(-10, -2); c.lineTo(10, -20); c.stroke(); rock(11, -21, 3.5, '#cbb48c'); }
+                rock(-6, -4, 5, '#8c7a5b'); rock(6, -4, 5, '#9d8a68'); rock(0, -11, 6, '#b9a37d');
+                c.strokeStyle = 'rgba(60,45,30,0.7)'; c.beginPath(); c.moveTo(-2, -14); c.lineTo(1, -10); c.lineTo(-1, -7); c.stroke();
+                break;
+            }
+            case 3: { // Water: fountain dome
+                c.fillStyle = '#1f6f9a'; c.beginPath(); c.arc(0, -2, 9, Math.PI, 0); c.fill();
+                c.strokeStyle = '#9beeff'; c.lineWidth = 1.2; c.stroke();
+                c.strokeStyle = col; c.lineWidth = 2; c.globalAlpha = 0.85;
+                const jet = 12 + L * 2 + Math.sin(t / 6) * 1.5;
+                c.beginPath(); c.moveTo(0, -10); c.quadraticCurveTo(-6, -10 - jet, -11, -4); c.stroke();
+                c.beginPath(); c.moveTo(0, -10); c.quadraticCurveTo(6, -10 - jet, 11, -4); c.stroke();
+                c.globalAlpha = 1; qtdOrb(c, 0, -10 - jet * 0.55, 3.5, col);
+                break;
+            }
+            case 4: { // Ice: crystal shards
+                const shard = (x, h, w, lean) => { c.beginPath(); c.moveTo(x - w, 0); c.lineTo(x + lean, -h); c.lineTo(x + w, 0); c.closePath(); c.fill(); c.stroke(); };
+                const g = c.createLinearGradient(0, -24, 0, 0); g.addColorStop(0, '#ffffff'); g.addColorStop(1, col);
+                c.fillStyle = g; c.strokeStyle = '#5fc9e6'; c.lineWidth = 1; c.shadowColor = col; c.shadowBlur = 8;
+                shard(-6, 12, 3.5, -3); shard(6, 13, 3.5, 3); shard(0, 20 + L * 1.5, 4.5, 0);
+                break;
+            }
+            case 5: { // Wind: windmill
+                c.fillStyle = '#d9e2ea'; c.fillRect(-2, -12, 4, 12);
+                c.save(); c.translate(0, -13); c.rotate(t / (14 - L));
+                for (let k = 0; k < 4; k++) { c.rotate(Math.PI / 2); c.fillStyle = k % 2 ? '#ffffff' : col; qtdRR(c, -2, 2, 4, 13 + L, 1.5); c.fill(); c.strokeStyle = 'rgba(30,60,90,0.5)'; c.stroke(); }
+                c.restore();
+                qtdOrb(c, 0, -13, 2.6, '#9beeff');
+                break;
+            }
+            case 6: { // Magnet: horseshoe with field lines
+                c.lineCap = 'butt'; c.lineWidth = 6; c.strokeStyle = '#e0283c';
+                c.beginPath(); c.arc(0, -10, 8, Math.PI, 0, false); c.stroke();
+                c.beginPath(); c.moveTo(-8, -10); c.lineTo(-8, -3); c.moveTo(8, -10); c.lineTo(8, -3); c.stroke();
+                c.strokeStyle = '#e6edf5'; c.beginPath(); c.moveTo(-8, -4); c.lineTo(-8, 0); c.moveTo(8, -4); c.lineTo(8, 0); c.stroke();
+                c.strokeStyle = col; c.lineWidth = 1.2; c.globalAlpha = 0.5 + Math.sin(t / 7) * 0.3;
+                for (let k = 1; k <= Math.min(L, 3); k++) { c.beginPath(); c.arc(0, -10, 8 + k * 4, Math.PI * 1.15, Math.PI * 1.85); c.stroke(); }
+                c.globalAlpha = 1;
+                break;
+            }
+        }
+        c.restore();
+    }
+
+    // Elemental towers grow with every level: wooden hut -> stone keep -> battlements ->
+    // gold-trimmed champion with banners -> crowned legend with orbiting motes.
+    function drawElementTower(c, type, level) {
+        const def = TOWER_DEFS[type];
+        const col = def.color;
+        const L = Math.max(1, Math.min(5, level || 1));
+        const t = frameCount;
+        const w = 24 + L * 2.5, h = 16 + L * 5, base = 20, top = base - 6 - h;
+        c.save();
+        c.scale(0.9, 0.9);
+        // plinth
+        c.fillStyle = L >= 4 ? '#3a2f12' : '#1d2433';
+        qtdRR(c, -w / 2 - 5, base - 7, w + 10, 9, 3); c.fill();
+        if (L >= 4) { c.strokeStyle = '#ffd700'; c.lineWidth = 1.5; c.stroke(); }
+        // body
+        const g = c.createLinearGradient(-w / 2, 0, w / 2, 0);
+        if (L === 1) { g.addColorStop(0, '#4a2e18'); g.addColorStop(0.5, '#9a6a3d'); g.addColorStop(1, '#4a2e18'); }
+        else if (L <= 3) { g.addColorStop(0, '#3d4453'); g.addColorStop(0.5, '#9aa3b5'); g.addColorStop(1, '#3d4453'); }
+        else { g.addColorStop(0, '#4b5062'); g.addColorStop(0.5, '#eef1f8'); g.addColorStop(1, '#4b5062'); }
+        c.fillStyle = g; qtdRR(c, -w / 2, top, w, h, 2); c.fill();
+        c.strokeStyle = 'rgba(0,0,0,0.55)'; c.lineWidth = 1; c.stroke();
+        // planks (L1) or bricks (L2+)
+        c.strokeStyle = L === 1 ? 'rgba(40,20,8,0.6)' : 'rgba(30,35,45,0.4)';
+        c.beginPath();
+        if (L === 1) { for (let x = -w / 2 + 6; x < w / 2; x += 6) { c.moveTo(x, top + 2); c.lineTo(x, top + h); } }
+        else { for (let yy = top + 6, row = 0; yy < top + h; yy += 6, row++) { c.moveTo(-w / 2, yy); c.lineTo(w / 2, yy); for (let x = -w / 2 + (row % 2 ? 4 : 8); x < w / 2; x += 8) { c.moveTo(x, yy - 6); c.lineTo(x, yy); } } }
+        c.stroke();
+        // element band + door
+        c.fillStyle = col; c.globalAlpha = 0.85; c.fillRect(-w / 2, top + h * 0.42, w, L >= 3 ? 4 : 3); c.globalAlpha = 1;
+        c.fillStyle = '#120c08';
+        c.beginPath(); c.moveTo(-4, base - 6); c.lineTo(-4, base - 12); c.arc(0, base - 12, 4, Math.PI, 0); c.lineTo(4, base - 6); c.closePath(); c.fill();
+        // glowing windows
+        if (L >= 2) { c.save(); c.fillStyle = col; c.shadowColor = col; c.shadowBlur = 6; c.fillRect(-w / 4 - 1.5, top + 5, 3, 5); c.fillRect(w / 4 - 1.5, top + 5, 3, 5); c.restore(); }
+        // roofline
+        let capY = top;
+        if (L >= 3) {
+            const n = L >= 5 ? 5 : 4, cw = (w + 6) / (2 * n - 1);
+            c.fillStyle = L >= 4 ? '#d9dde8' : '#8a93a5';
+            c.fillRect(-w / 2 - 3, top - 4, w + 6, 4);
+            for (let i = 0; i < n; i++) c.fillRect(-w / 2 - 3 + i * 2 * cw, top - 9, cw, 5);
+            if (L >= 4) { c.strokeStyle = '#ffd700'; c.lineWidth = 1.2; c.strokeRect(-w / 2 - 3, top - 4, w + 6, 4); }
+            capY = top - 9;
+        } else if (L === 2) {
+            c.fillStyle = '#6b7385'; c.fillRect(-w / 2 - 2, top - 3, w + 4, 3); capY = top - 3;
+        } else {
+            c.fillStyle = '#6b4a2b'; c.beginPath(); c.moveTo(-w / 2 - 3, top + 1); c.lineTo(0, top - 6); c.lineTo(w / 2 + 3, top + 1); c.closePath(); c.fill(); capY = top - 2;
+        }
+        // champion banners
+        if (L >= 4) {
+            for (const sd of [-1, 1]) {
+                const fx = sd * (w / 2 + 1), fy = capY;
+                c.strokeStyle = '#e6e6e6'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(fx, top); c.lineTo(fx, fy - 14); c.stroke();
+                const wave = Math.sin(t / 8 + sd) * 2;
+                c.fillStyle = col; c.beginPath(); c.moveTo(fx, fy - 14); c.lineTo(fx + sd * 11, fy - 11 + wave); c.lineTo(fx, fy - 7); c.closePath(); c.fill();
+            }
+        }
+        drawElementTop(c, type, capY, L, col, t);
+        // legend crest + orbiting motes
+        if (L >= 5) {
+            c.save();
+            c.fillStyle = '#ffd700'; c.shadowColor = '#ffd700'; c.shadowBlur = 8;
+            c.beginPath(); c.moveTo(-7, top + 10); c.lineTo(-7, top + 4); c.lineTo(-3.5, top + 7); c.lineTo(0, top + 2); c.lineTo(3.5, top + 7); c.lineTo(7, top + 4); c.lineTo(7, top + 10); c.closePath(); c.fill();
+            c.globalCompositeOperation = 'lighter';
+            for (let i = 0; i < 3; i++) {
+                const a = t / 20 + i * 2.094;
+                c.fillStyle = col; c.shadowColor = col; c.shadowBlur = 10;
+                c.beginPath(); c.arc(Math.cos(a) * (w / 2 + 10), capY - 8 + Math.sin(a) * 6, 2.6, 0, Math.PI * 2); c.fill();
+            }
+            c.restore();
+        }
+        c.restore();
+    }
+
+    // Weapon emplacements get a mount that upgrades with them.
+    // ---- Projectiles: each tower fires something you can see ----
+    const PROJECTILE_KINDS = ['bolt', 'fireball', 'boulder', 'water', 'shard', 'gust', 'orb'];
+    function projectileKind(type) {
+        const def = TOWER_DEFS[type];
+        return def.weapon ? 'bullet-' + def.weapon : (PROJECTILE_KINDS[type] || 'orb');
+    }
+    function drawProjectileTrail(c, p) {
+        if (!p.trail || p.trail.length < 2 || p.kind === 'bolt') return;
+        const bullet = p.kind.startsWith('bullet');
+        c.save(); c.lineCap = 'round';
+        for (let i = 1; i < p.trail.length; i++) {
+            const a = i / p.trail.length;
+            c.globalAlpha = bullet ? 0.2 + a * 0.6 : 0.12 + a * 0.4;
+            c.strokeStyle = bullet ? '#fff1c1' : p.color;
+            c.lineWidth = bullet ? (p.kind === 'bullet-sniper' ? 3.5 : 2.2) : 3 + a * 6;
+            c.beginPath(); c.moveTo(p.trail[i - 1].x, p.trail[i - 1].y); c.lineTo(p.trail[i].x, p.trail[i].y); c.stroke();
+        }
+        c.restore();
+    }
+    // Drawn at the projectile's position, rotated to its heading (+x is forward).
+    function drawProjectileBody(c, p) {
+        const s = 1 + Math.min(4, (p.level || 1) - 1) * 0.1;
+        c.scale(s, s);
+        c.shadowColor = p.color; c.shadowBlur = 10;
+        switch (p.kind) {
+            case 'bolt': {
+                c.fillStyle = '#fffbe0'; qtdRR(c, -9, -3, 18, 6, 3); c.fill();
+                c.strokeStyle = p.color; c.lineWidth = 2;
+                c.beginPath(); c.moveTo(-14, 0); c.lineTo(-8, -4); c.lineTo(-2, 3); c.lineTo(4, -3); c.lineTo(11, 0); c.stroke();
+                break;
+            }
+            case 'fireball': {
+                c.fillStyle = '#ff5a18'; c.globalAlpha = 0.75;
+                c.beginPath(); c.moveTo(4, -7); c.quadraticCurveTo(-16, -6 + Math.sin(frameCount / 2) * 2, -20, 0); c.quadraticCurveTo(-16, 6, 4, 7); c.closePath(); c.fill();
+                c.globalAlpha = 1;
+                const g = c.createRadialGradient(2, -2, 0, 0, 0, 9);
+                g.addColorStop(0, '#ffffff'); g.addColorStop(0.35, '#ffd23f'); g.addColorStop(0.75, '#ff5a18'); g.addColorStop(1, 'rgba(255,60,0,0)');
+                c.fillStyle = g; c.beginPath(); c.arc(0, 0, 9, 0, Math.PI * 2); c.fill();
+                break;
+            }
+            case 'boulder': {
+                c.rotate(frameCount * 0.35 + (p.spin || 0));
+                c.shadowBlur = 4; c.shadowColor = 'rgba(0,0,0,0.6)';
+                c.fillStyle = '#a8946f'; c.strokeStyle = '#4b3a26'; c.lineWidth = 1.5;
+                c.beginPath();
+                for (let k = 0; k < 7; k++) { const a = k / 7 * Math.PI * 2, r = 7 + (k % 2 ? 1.5 : -0.5); c.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
+                c.closePath(); c.fill(); c.stroke();
+                c.beginPath(); c.moveTo(-3, -4); c.lineTo(0, 0); c.lineTo(-2, 4); c.stroke();
+                break;
+            }
+            case 'water': {
+                const g = c.createLinearGradient(-12, 0, 9, 0);
+                g.addColorStop(0, 'rgba(104,216,255,0.2)'); g.addColorStop(0.5, '#68d8ff'); g.addColorStop(1, '#e8fbff');
+                c.fillStyle = g;
+                c.beginPath(); c.moveTo(-14, 0); c.quadraticCurveTo(-2, -8, 6, -6); c.arc(3, 0, 6, -Math.PI / 2, Math.PI / 2); c.quadraticCurveTo(-2, 8, -14, 0); c.fill();
+                c.fillStyle = '#ffffff'; c.beginPath(); c.arc(5, -2, 1.8, 0, Math.PI * 2); c.fill();
+                break;
+            }
+            case 'shard': {
+                const g = c.createLinearGradient(-11, 0, 14, 0); g.addColorStop(0, '#9beeff'); g.addColorStop(1, '#ffffff');
+                c.fillStyle = g; c.strokeStyle = '#5fc9e6'; c.lineWidth = 1;
+                c.beginPath(); c.moveTo(14, 0); c.lineTo(0, 4.5); c.lineTo(-11, 0); c.lineTo(0, -4.5); c.closePath(); c.fill(); c.stroke();
+                break;
+            }
+            case 'gust': {
+                c.rotate(frameCount * 0.5);
+                c.lineCap = 'round'; c.lineWidth = 3;
+                c.strokeStyle = '#ffffff'; c.beginPath(); c.arc(0, 0, 10, 0, Math.PI * 1.2); c.stroke();
+                c.strokeStyle = p.color; c.beginPath(); c.arc(0, 0, 10, Math.PI, Math.PI * 2.2); c.stroke();
+                c.strokeStyle = '#9beeff'; c.lineWidth = 2; c.beginPath(); c.arc(0, 0, 5, Math.PI / 2, Math.PI * 1.7); c.stroke();
+                break;
+            }
+            case 'orb': {
+                qtdOrb(c, 0, 0, 6.5, p.color);
+                c.strokeStyle = '#ffffff'; c.lineWidth = 1.2; c.globalAlpha = 0.8;
+                c.beginPath(); c.ellipse(0, 0, 11, 4, frameCount / 6, 0, Math.PI * 2); c.stroke();
+                break;
+            }
+            default: { // bullets: a bright tracer slug
+                const kind = p.kind.slice(7);
+                const len = { sniper: 30, rifle: 20, pistol: 16, smg: 14, shotgun: 9 }[kind] || 14;
+                const w = kind === 'sniper' ? 4 : 3;
+                const g = c.createLinearGradient(-len, 0, 4, 0);
+                g.addColorStop(0, 'rgba(255,200,90,0)'); g.addColorStop(0.6, p.color); g.addColorStop(1, '#ffffff');
+                c.fillStyle = g; qtdRR(c, -len, -w / 2, len + 4, w, w / 2); c.fill();
+                c.fillStyle = '#ffffff'; c.beginPath(); c.arc(3, 0, w * 0.75, 0, Math.PI * 2); c.fill();
+            }
+        }
+    }
+    // After a shot lands: a streak that lasts a few screen frames at any game speed,
+    // so even shots that hit within a single frame at 16x/32x are still seen.
+    function addShotTrace(p) {
+        if (effectAnimations.length > 450) return;
+        const bullet = p.kind && p.kind.startsWith('bullet');
+        if (bullet || !p.drawn) effectAnimations.push({ type: 'tracer', x1: p.sx, y1: p.sy, x2: p.x, y2: p.y, color: p.color, bullet, life: bullet ? 7 : 10, maxLife: bullet ? 7 : 10 });
+        if (!bullet) effectAnimations.push({ type: 'impact', x: p.x, y: p.y, color: p.color, life: 10, maxLife: 10 });
+    }
+
+    function drawWeaponMount(c, level, col) {
+        const L = Math.min(5, level || 1);
+        c.save();
+        c.fillStyle = L >= 4 ? '#3a2f12' : (L >= 2 ? '#2b3546' : '#1d2433');
+        qtdRR(c, -22, 12, 44, 9, 4); c.fill();
+        c.strokeStyle = L >= 4 ? '#ffd700' : (L >= 3 ? col : '#5b6476'); c.lineWidth = L >= 3 ? 1.8 : 1; c.stroke();
+        if (L >= 2) { c.fillStyle = '#5b6476'; c.fillRect(-3, 4, 6, 9); }
+        if (L >= 5) {
+            c.strokeStyle = '#ffd700'; c.globalAlpha = 0.6; c.setLineDash([4, 5]); c.lineDashOffset = -frameCount / 2;
+            c.beginPath(); c.ellipse(0, 16, 30, 9, 0, 0, Math.PI * 2); c.stroke(); c.setLineDash([]);
+        }
+        c.restore();
+    }
+
     function drawTowerType(context, type, level) {
         const def = TOWER_DEFS[type];
         if (!def) return;
         context.save();
         const pulse = 1 + Math.sin(frameCount / 14) * 0.012;
-        const levelBoost = 0;
+        const levelBoost = Math.min(4, (level || 1) - 1) * 2;
         context.scale(pulse, pulse);
-
-
-        if (def.weapon || def.tactical) {
+        if (def.weapon) {
+            drawWeaponMount(context, level, def.color);
             drawWeaponGlyph(context, type, def, level, levelBoost);
-        } else if (!drawImageCentered(context, def.img, (def.drawW || 48) + levelBoost, (def.drawH || 54) + levelBoost, -3, def.crop)) {
-            context.fillStyle = def.color;
-            context.beginPath();
-            context.arc(0, 0, 28, 0, Math.PI * 2);
-            context.fill();
+        } else if (def.tactical) {
+            drawWeaponGlyph(context, type, def, level, 0);
+        } else {
+            drawElementTower(context, type, level);
         }
         context.restore();
     }
@@ -1573,6 +1894,13 @@ const canvas = document.getElementById('game-canvas');
         ctx.fill();
         ctx.restore();
         if (state.selectedTower === t) {
+            if (!TOWER_DEFS[t.type].tactical) {
+                ctx.save();
+                ctx.strokeStyle = 'rgba(0, 255, 255, 0.35)'; ctx.fillStyle = 'rgba(0, 255, 255, 0.04)';
+                ctx.setLineDash([8, 8]); ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+                ctx.restore();
+            }
             ctx.fillStyle = 'rgba(0, 255, 255, 0.08)';
             ctx.strokeStyle = 'rgba(0, 255, 255, 0.6)';
             ctx.lineWidth = 2;
@@ -1586,6 +1914,14 @@ const canvas = document.getElementById('game-canvas');
     function drawTowerSprite(t) {
         ctx.save(); ctx.translate(t.x, t.y);
         drawTowerType(ctx, t.type, t.level);
+        if (t.level > 1) {
+            const n = t.level, gap = 7, x0 = -((n - 1) * gap) / 2;
+            for (let i = 0; i < n; i++) {
+                ctx.fillStyle = i >= 3 ? '#ffd700' : '#9beeff';
+                ctx.strokeStyle = '#020817'; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.arc(x0 + i * gap, 27, 2.6, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+            }
+        }
         ctx.restore();
     }
 
@@ -1752,7 +2088,8 @@ const canvas = document.getElementById('game-canvas');
         // Draw tower placement preview
         if (state.selectedShopType !== null && pointer.active && pointer.x >= 0 && pointer.y >= 0 && pointer.x <= C_WIDTH && pointer.y <= C_HEIGHT) {
             let def = TOWER_DEFS[state.selectedShopType];
-            ctx.fillStyle = def.tactical === 'primeBomb' ? 'rgba(177, 0, 255, 0.08)' : (def.pathOnly ? 'rgba(255, 215, 0, 0.08)' : 'rgba(0, 255, 255, 0.08)'); ctx.strokeStyle = def.tactical === 'primeBomb' ? '#b100ff' : (def.pathOnly ? '#ffd700' : '#00ffff');
+            const okSpot = placementValid(state.selectedShopType, pointer);
+            ctx.fillStyle = !okSpot ? 'rgba(255, 51, 85, 0.12)' : def.tactical === 'primeBomb' ? 'rgba(177, 0, 255, 0.08)' : (def.pathOnly ? 'rgba(255, 215, 0, 0.08)' : 'rgba(57, 255, 136, 0.10)'); ctx.strokeStyle = !okSpot ? '#ff3355' : def.tactical === 'primeBomb' ? '#b100ff' : (def.pathOnly ? '#ffd700' : '#39ff88');
             ctx.beginPath(); ctx.arc(pointer.x, pointer.y, def.range, 0, Math.PI*2); ctx.fill(); ctx.stroke();
             
             ctx.save(); ctx.translate(pointer.x, pointer.y); ctx.globalAlpha = 0.6;
@@ -1792,7 +2129,8 @@ const canvas = document.getElementById('game-canvas');
 
         // Draw projectiles
         projectiles.forEach(p => {
-            if (p.projectileImg === towerAssets.electricShot && p.trail && p.trail.length > 1) {
+            drawProjectileTrail(ctx, p);
+            if (p.kind === 'bolt' && p.trail && p.trail.length > 1) {
                 ctx.save();
                 ctx.lineCap = 'round';
                 ctx.shadowColor = '#f6ff9a';
@@ -1817,13 +2155,8 @@ const canvas = document.getElementById('game-canvas');
             ctx.save();
             ctx.translate(p.x, p.y);
             ctx.rotate(p.angle || Math.atan2(p.vy, p.vx));
-            if (p.projectileImg && p.projectileImg.complete && p.projectileImg.naturalWidth) {
-                const size = p.projectileImg === towerAssets.windShot ? 58 : (p.projectileImg === towerAssets.fireShot ? 42 : 34);
-                drawImageCentered(ctx, p.projectileImg, size, size, 0);
-            } else {
-                ctx.fillStyle = p.color; ctx.shadowBlur = 10; ctx.shadowColor = p.color;
-                ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI*2); ctx.fill();
-            }
+            drawProjectileBody(ctx, p);
+            p.drawn = true;
             ctx.restore();
         });
 
@@ -1848,6 +2181,24 @@ const canvas = document.getElementById('game-canvas');
                 ctx.shadowColor = fx.color;
                 ctx.shadowBlur = 18;
                 ctx.beginPath(); ctx.arc(fx.x, fx.y, r * 0.78, 0, Math.PI*2); ctx.stroke();
+            } else if (fx.type === 'muzzle') {
+                ctx.globalCompositeOperation = 'lighter';
+                const r = 7 + (1 - pct) * 9;
+                const g = ctx.createRadialGradient(fx.x, fx.y, 0, fx.x, fx.y, r);
+                g.addColorStop(0, 'rgba(255,255,255,0.95)'); g.addColorStop(0.45, fx.color); g.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = g; ctx.beginPath(); ctx.arc(fx.x, fx.y, r, 0, Math.PI * 2); ctx.fill();
+            } else if (fx.type === 'tracer') {
+                ctx.globalCompositeOperation = 'lighter';
+                ctx.globalAlpha = pct * 0.8;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = fx.bullet ? '#fff1c1' : fx.color;
+                ctx.lineWidth = fx.bullet ? 2.5 : 4;
+                ctx.beginPath(); ctx.moveTo(fx.x1, fx.y1); ctx.lineTo(fx.x2, fx.y2); ctx.stroke();
+                ctx.fillStyle = fx.color; ctx.beginPath(); ctx.arc(fx.x2, fx.y2, 3 + (1 - pct) * 5, 0, Math.PI * 2); ctx.fill();
+            } else if (fx.type === 'impact') {
+                ctx.globalCompositeOperation = 'lighter';
+                ctx.strokeStyle = fx.color; ctx.lineWidth = 3 * pct + 1;
+                ctx.beginPath(); ctx.arc(fx.x, fx.y, 5 + (1 - pct) * 16, 0, Math.PI * 2); ctx.stroke();
             } else if (fx.type === 'lightning') {
                 ctx.globalCompositeOperation = 'lighter';
                 ctx.strokeStyle = fx.color;
@@ -1960,6 +2311,141 @@ const canvas = document.getElementById('game-canvas');
         drawPreviews();
         requestAnimationFrame(gameLoop);
     };
+
+    // ---- Pointer input: tap-to-place and drag-and-drop for mouse, touch and pen ----
+    (() => {
+        const LIFT = 48;          // touch drags hold the tower above the finger so it stays visible
+        const DRAG_START = 10;    // px of movement before a press becomes a drag
+        let drag = null, suppressClickUntil = 0;   // swallows only the stray click a drag release produces
+        const toCanvas = (cx, cy) => {
+            const r = canvas.getBoundingClientRect();
+            return { x: (cx - r.left) * (C_WIDTH / r.width), y: (cy - r.top) * (C_HEIGHT / r.height),
+                     inside: cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom };
+        };
+        const liftFor = d => (d && d.touch && d.moved && state.selectedShopType !== null) ? LIFT : 0;
+
+        document.querySelectorAll('.shop-btn[data-type]').forEach(btn => {
+            btn.addEventListener('pointerdown', e => {
+                if (e.button > 0 || state.gameState !== 'playing') return;
+                const type = Number(btn.dataset.type), def = TOWER_DEFS[type];
+                if (!def || def.tactical === 'primeBomb') return;      // the bomb fires on tap
+                if (btn.hasPointerCapture && btn.hasPointerCapture(e.pointerId)) btn.releasePointerCapture(e.pointerId);
+                drag = { type, fromShop: true, id: e.pointerId, sx: e.clientX, sy: e.clientY, moved: false, touch: e.pointerType !== 'mouse' };
+            });
+            btn.addEventListener('contextmenu', e => e.preventDefault());
+        });
+
+        canvas.addEventListener('pointerdown', e => {
+            if (e.button > 0) return;
+            if (canvas.hasPointerCapture && canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
+            const p = toCanvas(e.clientX, e.clientY);
+            drag = { fromShop: false, id: e.pointerId, sx: e.clientX, sy: e.clientY, moved: false, touch: e.pointerType !== 'mouse' };
+            if (drag.touch && state.selectedShopType !== null) pointer = { x: p.x, y: p.y, active: true };
+        });
+        canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+        addEventListener('pointermove', e => {
+            if (!drag) {
+                if (e.pointerType === 'mouse' && e.target === canvas) { const p = toCanvas(e.clientX, e.clientY); pointer = { x: p.x, y: p.y, active: true }; }
+                return;
+            }
+            if (e.pointerId !== drag.id) return;
+            if (!drag.moved && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > DRAG_START) {
+                drag.moved = true;
+                if (drag.fromShop) {
+                    if (state.selectedShopType !== drag.type) selectTower(drag.type);
+                    if (state.selectedShopType !== drag.type) { drag = null; return; }   // not enough gold / locked
+                    document.body.classList.add('qtd-dragging');
+                }
+            }
+            if (drag.moved || drag.touch) {
+                const p = toCanvas(e.clientX, e.clientY);
+                pointer = { x: p.x, y: p.y - liftFor(drag), active: p.inside };
+            }
+        }, { passive: true });
+
+        const finish = e => {
+            if (!drag || e.pointerId !== drag.id) return;
+            const d = drag; drag = null;
+            document.body.classList.remove('qtd-dragging');
+            const p = toCanvas(e.clientX, e.clientY);
+            if (d.fromShop) {
+                if (!d.moved) { selectTower(d.type); return; }         // a tap selects on lift; the button's click repeats it harmlessly
+                suppressClickUntil = performance.now() + 400;
+                if (p.inside) handleCanvasClick({ x: p.x, y: p.y - liftFor(d) });
+            } else if (p.inside) {
+                handleCanvasClick({ x: p.x, y: p.y - liftFor(d) });
+            }
+            if (d.touch) pointer = { x: -100, y: -100, active: false };
+        };
+        addEventListener('pointerup', finish);
+        addEventListener('pointercancel', e => { if (drag && e.pointerId === drag.id) { drag = null; document.body.classList.remove('qtd-dragging'); } });
+        canvas.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !drag) pointer = { x: -100, y: -100, active: false }; });
+        // A drag that started on a shop button must not re-select it when the finger lifts.
+        addEventListener('pointerdown', () => { suppressClickUntil = 0; }, true);   // a new press is a new gesture
+        addEventListener('click', e => { if (performance.now() < suppressClickUntil) { suppressClickUntil = 0; e.stopPropagation(); e.preventDefault(); } }, true);
+    })();
+
+    // ---- Always fullscreen: enter on the first tap/key, re-enter after an accidental exit ----
+    (() => {
+        const root = document.documentElement;
+        const isFs = () => document.fullscreenElement || document.webkitFullscreenElement;
+        let wakeLock = null;
+        const goFullscreen = () => {
+            if (isFs()) return;
+            const req = root.requestFullscreen || root.webkitRequestFullscreen;
+            if (!req) return;                                           // iPhone Safari: the 100dvh layout fills the screen instead
+            try {
+                const pending = req.call(root, { navigationUI: 'hide' });
+                if (pending && pending.then) pending.then(() => {
+                    if (screen.orientation && screen.orientation.lock && matchMedia('(pointer: coarse)').matches) screen.orientation.lock('landscape').catch(() => {});
+                }).catch(() => {});
+            } catch (_) {}
+        };
+        const keepAwake = () => {
+            if (!navigator.wakeLock || wakeLock || document.hidden) return;
+            navigator.wakeLock.request('screen').then(l => { wakeLock = l; l.addEventListener('release', () => { wakeLock = null; }); }).catch(() => {});
+        };
+        const onGesture = () => { goFullscreen(); keepAwake(); };
+        addEventListener('pointerup', onGesture, true);
+        addEventListener('keydown', e => { if (e.key !== 'Escape') onGesture(); }, true);
+        // Try right away too; browsers that allow it go fullscreen instantly.
+        goFullscreen();
+        // Auto-pause when the game is hidden (app switch, phone lock, other tab).
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && state.gameState === 'playing' && !state.isPaused) document.getElementById('btn-pause').click();
+            if (!document.hidden) keepAwake();
+        });
+    })();
+
+    // ---- Haptics on phones/tablets ----
+    (() => {
+        const baseSfx = playSoundEffect;
+        const buzz = { place: 18, upgrade: [20, 40, 30] };
+        playSoundEffect = function(name) {
+            if (buzz[name] && navigator.vibrate) { try { navigator.vibrate(buzz[name]); } catch (_) {} }
+            return baseSfx.apply(this, arguments);
+        };
+    })();
+
+    // ---- Keyboard shortcuts ----
+    (() => {
+        const SHOP_ORDER = [2, 0, 3, 1, 4, 5, 6];   // same order as the shop bar
+        addEventListener('keydown', e => {
+            if (e.ctrlKey || e.metaKey || e.altKey || (e.target.closest && e.target.closest('input, textarea'))) return;
+            if (state.gameState !== 'playing') {
+                if ((e.key === 'Enter' || e.key === ' ') && document.getElementById('overlay-btn').offsetParent) { e.preventDefault(); startGame(); }
+                return;
+            }
+            const k = e.key.toLowerCase();
+            if (k >= '1' && k <= '7' && k.length === 1) selectTower(SHOP_ORDER[Number(k) - 1]);
+            else if (k === ' ' || k === 'enter') { e.preventDefault(); if (!state.waveActive) startWave(); }
+            else if (k === 'u') upgradeTower();
+            else if (k === 't') cycleTarget();
+            else if (k === 'p') document.getElementById('btn-pause').click();
+            else if (k === 'escape') deselectAll();
+        });
+    })();
 
 
 </script>
