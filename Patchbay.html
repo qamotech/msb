@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Patchbay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#EEF2F3; --ink:#14232D; --ink-2:#4A5C67; --rule:#C9D3D8; --plate:#F8FAFA;
+  --enamel:#1E3A4C; --enamel-2:#274A5F; --enamel-ink:#DCE7EC; --brass:#A9802B; --brass-hi:#D9B464;
+  --live:#2E9D57; --auth:#D68A1C; --fail:#C8423B; --pend:#3C7FB8; --hole:#0A141A;
+  --focus:#3C7FB8;
+  --display:"Big Shoulders Display","Arial Narrow","Roboto Condensed",sans-serif;
+  --body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0E181E; --ink:#E1E9ED; --ink-2:#97A9B3; --rule:#2A3B45; --plate:#16242C;
+  --enamel:#183040; --enamel-2:#21404F; --brass:#D4AE5C; --focus:#7DB3E6; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --ground:#0E181E; --ink:#E1E9ED; --ink-2:#97A9B3; --rule:#2A3B45; --plate:#16242C;
+  --enamel:#183040; --enamel-2:#21404F; --brass:#D4AE5C; --focus:#7DB3E6; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:clamp(16px,3vw,32px)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3{font-family:var(--display);font-weight:900;line-height:1;margin:0;letter-spacing:.005em}
+p{margin:0}
+.muted{color:var(--ink-2)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-block:18px;border-bottom:1px solid var(--rule)}
+.mark{font-family:var(--display);font-weight:900;font-size:30px;line-height:1;display:flex;align-items:center;gap:10px}
+.mark svg{width:30px;height:30px}
+.tally{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto;font-size:14px}
+.tally span{display:inline-flex;align-items:center;gap:7px}
+.lamp{width:10px;height:10px;border-radius:50%;background:var(--c,#888);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 25%,transparent);flex:none}
+.lamp.live{--c:var(--live)} .lamp.auth{--c:var(--auth)} .lamp.failed{--c:var(--fail)} .lamp.pending{--c:var(--pend)}
+.iconbtn{border:1px solid var(--rule);background:var(--plate);border-radius:8px;padding:7px 12px;font-size:14px}
+
+/* intro */
+.intro{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:end;padding-block:clamp(28px,5vw,56px) 24px}
+.intro h1{font-size:clamp(44px,9vw,124px);text-transform:none}
+.intro p{max-width:56ch;font-size:17px}
+@media (max-width:820px){.intro{grid-template-columns:1fr}}
+
+/* board */
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
+@media (max-width:1020px){.stage{grid-template-columns:1fr}}
+.board{position:relative;background:linear-gradient(180deg,var(--enamel-2),var(--enamel));color:var(--enamel-ink);border-radius:14px;padding:22px 22px 26px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 18px 40px -24px rgba(10,20,26,.6)}
+.board::before,.board::after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#c9d3d8,#6e7f88);top:9px;left:9px;box-shadow:calc(100% * 0) 0 0 transparent}
+.board::after{left:auto;right:9px}
+.board-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.board-head h2{font-size:28px;color:#fff}
+.hint{font-size:14px;opacity:.85}
+.row{display:grid;grid-template-columns:118px minmax(0,1fr);gap:12px;align-items:start;padding-block:12px;border-top:1px solid rgba(255,255,255,.09)}
+.row:first-of-type{border-top:0}
+.row-name{font-family:var(--display);font-weight:700;font-size:19px;color:var(--brass-hi);padding-top:14px}
+.jacks{display:flex;flex-wrap:wrap;gap:8px 6px}
+@media (max-width:560px){.row{grid-template-columns:1fr}.row-name{padding-top:0}}
+.jack{position:relative;width:84px;background:none;border:0;padding:4px 2px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;border-radius:8px;color:inherit}
+.jack .lamp{width:8px;height:8px;box-shadow:none;opacity:.95}
+.jack .lamp.live{box-shadow:0 0 8px var(--live)}
+.socket{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,var(--hole) 0 38%,#3a2c10 39% 44%,var(--brass) 45% 68%,var(--brass-hi) 69% 74%,#6b5320 75%);box-shadow:0 2px 3px rgba(0,0,0,.4);transition:transform .15s ease}
+.plate{font-size:12px;line-height:1.2;text-align:center;background:rgba(255,255,255,.92);color:#14232D;padding:3px 5px;border-radius:3px;min-height:30px;display:flex;align-items:center;justify-content:center;width:100%;font-weight:600}
+.jack[data-status="auth"] .plate,.jack[data-status="failed"] .plate{background:rgba(255,255,255,.55)}
+.jack[data-status="failed"] .socket{filter:grayscale(1) brightness(.7)}
+.jack:hover .socket{transform:scale(1.07)}
+.jack.armed .socket{box-shadow:0 0 0 4px #fff,0 0 18px 4px var(--brass-hi)}
+.jack.armed .lamp{animation:blink .7s steps(2) infinite}
+.jack.on .socket{background:radial-gradient(circle,#2a2a2a 0 30%,#151515 31% 44%,var(--brass) 45% 68%,var(--brass-hi) 69% 74%,#6b5320 75%)}
+.jack.selected .plate{outline:2px solid var(--brass-hi)}
+@keyframes blink{50%{opacity:.15}}
+.cords{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.cords path{fill:none;stroke-width:5;stroke-linecap:round;filter:drop-shadow(0 3px 2px rgba(0,0,0,.35))}
+.cords path.draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw .55s cubic-bezier(.3,.7,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);max-width:calc(100vw - 32px);z-index:20;background:var(--ink);color:var(--ground);padding:10px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s}
+.toast.show{opacity:1}
+
+/* side: mission */
+.mission{background:var(--plate);border:1px solid var(--rule);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px;position:sticky;top:12px}
+.mission h2{font-size:26px}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--rule);background:transparent;border-radius:999px;padding:5px 11px;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.chip:hover{border-color:var(--ink-2)}
+ol.steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+ol.steps li::marker{font-family:var(--display);font-weight:700}
+.step{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.x{border:0;background:none;color:var(--ink-2);font-size:18px;line-height:1;padding:0 4px}
+.x:hover{color:var(--fail)}
+.empty{font-size:14px;color:var(--ink-2);border:1px dashed var(--rule);border-radius:8px;padding:12px}
+.skillpills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font-size:12px;background:color-mix(in srgb,var(--brass) 16%,transparent);border-radius:4px;padding:2px 4px 2px 7px;display:inline-flex;align-items:center;gap:2px}
+label.f{font-size:13px;font-weight:600;display:block;margin-bottom:4px}
+input[type=text],input[type=search],textarea{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--ground);border:1px solid var(--rule);border-radius:8px;padding:8px 10px}
+textarea{min-height:190px;resize:vertical;font-size:13px;line-height:1.5}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--ground);border-radius:8px;padding:8px 14px;font-size:14px;font-weight:600}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+
+/* sections */
+section.block{padding-block:clamp(40px,6vw,72px) 0}
+.block-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.block-head h2{font-size:clamp(34px,5vw,52px)}
+.block-head p{max-width:60ch}
+
+/* inspector */
+.inspector{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:24px;background:var(--plate);border:1px solid var(--rule);border-radius:12px;padding:22px}
+@media (max-width:760px){.inspector{grid-template-columns:1fr}}
+.inspector h3{font-size:40px;margin-bottom:6px}
+.status-line{display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:12px}
+.io{display:grid;gap:10px;font-size:15px}
+.io b{font-weight:600}
+.tools{display:flex;flex-wrap:wrap;gap:5px}
+.tools code{font-size:12px;background:var(--ground);border:1px solid var(--rule);border-radius:4px;padding:2px 6px;font-family:ui-monospace,Consolas,monospace}
+
+/* directory */
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filters input{max-width:260px}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:12px;background:var(--plate)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:600;color:var(--ink-2);font-size:13px}
+tr:last-child td{border-bottom:0}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+th.n{text-align:right}
+.st{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+
+/* chart */
+.chart{background:var(--plate);border:1px solid var(--rule);border-radius:12px;padding:18px 18px 10px;overflow-x:auto}
+.chart svg{display:block;min-width:560px;width:100%}
+.chart text{fill:var(--ink);font-family:var(--body);font-size:12px}
+.chart .val{fill:var(--ink-2);font-variant-numeric:tabular-nums}
+.chart rect.bar{fill:var(--brass)}
+.chart rect.bar:hover{fill:var(--enamel-2)}
+.chart line{stroke:var(--rule)}
+
+/* skills */
+.rack{columns:3 300px;column-gap:20px}
+.group{break-inside:avoid;margin-bottom:20px;border-top:2px solid var(--ink);padding-top:8px}
+.group h3{font-size:22px;display:flex;justify-content:space-between;align-items:baseline}
+.group h3 small{font-family:var(--body);font-weight:500;font-size:13px;color:var(--ink-2)}
+.group ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:4px}
+.sk{border:1px solid var(--rule);background:var(--plate);border-radius:5px;padding:3px 8px;font-size:13px}
+.sk[aria-pressed="true"]{background:var(--brass);border-color:var(--brass);color:#14232D}
+.sk:hover{border-color:var(--ink-2)}
+
+/* saved */
+.saved{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.save{border:1px solid var(--rule);border-radius:10px;padding:14px;background:var(--plate);display:flex;flex-direction:column;gap:8px}
+.save h3{font-size:22px}
+
+footer{padding-block:56px 40px;font-size:14px;color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.cords path.draw{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="mark" aria-label="Patchbay">
+      <svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="8" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="22" cy="21" r="6" fill="none" stroke="currentColor" stroke-width="3"/><path d="M8 15 C8 26 22 4 22 15" fill="none" stroke="#A9802B" stroke-width="3" stroke-linecap="round"/></svg>
+      Patchbay
+    </div>
+    <div class="tally" id="tally" aria-label="Line status counts"></div>
+    <button class="iconbtn" id="themeBtn" type="button">Theme: system</button>
+  </header>
+
+  <div class="intro">
+    <h1>Every line Claude can reach, on one board</h1>
+    <p class="muted">This session has <strong id="liveCount">—</strong> live connectors, <strong id="skillCount">—</strong> skills, and a handful of lines waiting on sign-in. Patch two jacks together to chain them into a mission, add skills from the rack, and copy the finished prompt straight into Claude Code.</p>
+  </div>
+
+  <div class="stage">
+    <div class="board" id="board">
+      <div class="board-head">
+        <h2>Switchboard</h2>
+        <p class="hint" id="hint">Pick a jack to start a cord. Pick a second jack to connect.</p>
+      </div>
+      <div id="rows"></div>
+      <svg class="cords" id="cords" aria-hidden="true"></svg>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <aside class="mission" aria-labelledby="missionTitle">
+      <h2 id="missionTitle">Mission</h2>
+      <div>
+        <label class="f" id="presetLbl">Start from a recipe</label>
+        <div class="presets" id="presets" role="group" aria-labelledby="presetLbl"></div>
+      </div>
+      <div>
+        <label class="f" for="mname">Name</label>
+        <input type="text" id="mname" value="Untitled mission" maxlength="80">
+      </div>
+      <div>
+        <label class="f">Cords</label>
+        <ol class="steps" id="steps"></ol>
+        <p class="empty" id="stepsEmpty">No cords yet. Choose a recipe or patch two live jacks.</p>
+      </div>
+      <div>
+        <label class="f">Skills</label>
+        <div class="skillpills" id="pills"></div>
+        <p class="empty" id="pillsEmpty">Add skills from the rack below.</p>
+      </div>
+      <div>
+        <label class="f" for="prompt">Prompt for Claude Code</label>
+        <textarea id="prompt" readonly></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn" id="copyBtn" type="button">Copy prompt</button>
+        <button class="btn ghost" id="saveBtn" type="button">Save mission</button>
+        <button class="btn ghost" id="clearBtn" type="button">Clear board</button>
+      </div>
+    </aside>
+  </div>
+
+  <section class="block" aria-labelledby="inspTitle">
+    <div class="block-head">
+      <h2 id="inspTitle">Line inspector</h2>
+      <p class="muted">Focus or hover any jack to see what it reads, what it writes, and a sample of its tools.</p>
+    </div>
+    <div class="inspector" id="inspector"></div>
+  </section>
+
+  <section class="block" aria-labelledby="dirTitle">
+    <div class="block-head">
+      <h2 id="dirTitle">Exchange directory</h2>
+      <div class="filters">
+        <div role="group" aria-label="Filter by status" id="statusFilter" class="presets"></div>
+        <input type="search" id="dirSearch" placeholder="Search lines" aria-label="Search lines">
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th scope="col">Line</th><th scope="col">Exchange</th><th scope="col">Status</th><th scope="col" class="n">Tools</th><th scope="col">What to do</th></tr></thead>
+        <tbody id="dirBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="trafTitle">
+    <div class="block-head">
+      <h2 id="trafTitle">Line capacity</h2>
+      <p class="muted">Tools exposed by each live connector. More tools usually means finer-grained control, not more value.</p>
+    </div>
+    <div class="chart" id="chart"></div>
+  </section>
+
+  <section class="block" aria-labelledby="rackTitle">
+    <div class="block-head">
+      <h2 id="rackTitle">Skill rack</h2>
+      <div class="filters">
+        <input type="search" id="skillSearch" placeholder="Search skills" aria-label="Search skills">
+      </div>
+    </div>
+    <p class="muted" style="margin-bottom:18px;max-width:60ch">Click a skill to add it to the mission. Skills set how Claude works; connectors set what it can touch.</p>
+    <div class="rack" id="rack"></div>
+  </section>
+
+  <section class="block" aria-labelledby="savedTitle">
+    <div class="block-head">
+      <h2 id="savedTitle">Saved missions</h2>
+      <p class="muted">Kept in this browser only.</p>
+    </div>
+    <div class="saved" id="saved"></div>
+  </section>
+
+  <footer>Snapshot of the connectors and skills available to Claude Code on 11 Oct 2026. Lines marked “needs sign-in” are authorized in claude.ai connector settings; local servers are fixed through <code>/mcp</code> in a terminal session.</footer>
+</div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch{ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
+};
+
+/* ---------- data: lines ---------- */
+const FAMS = ['Google','Design','Build','Documents','Web & search','Session'];
+const L = (id, name, fam, status, tools, out, inn, sample) => ({id, name, fam, status, tools, out, in: inn, sample: sample || []});
+const LINES = [
+  L('gmail','Gmail','Google','live',30,'find the relevant threads and messages','draft (not send) an email from it',['search_threads','get_thread','create_draft','label_thread','reply','list_labels']),
+  L('gcal','Calendar','Google','live',9,'pull the events in the time window','create or update calendar events from it',['list_events','search_events','suggest_time','create_event','respond_to_event']),
+  L('drive','Drive','Google','live',11,'find and read the source files','save the result as a new Drive file',['search_files','read_file_content','list_recent_files','create_file','copy_file']),
+  L('sheets','Sheets','Google','live',9,'read the rows and ranges','write it into a structured sheet',['get_spreadsheet','get_values','append_values','update_values','update_formulas']),
+  L('gdocs','Docs','Google','live',2,'read the document','write it up in a Google Doc',['read_doc','update_doc']),
+  L('gws','Workspace CLI','Google','live',15,'search across Gmail, Drive and Calendar','file it through the Workspace admin tools',['gmail_search','drive_search','calendar_list_events','sheets_read','docs_read']),
+  L('figma','Figma','Design','live',41,'pull design context, variables and screenshots','generate the screens or a FigJam diagram in Figma',['get_design_context','get_variable_defs','get_screenshot','use_figma','generate_diagram','create_shader']),
+  L('canva','Canva','Design','live',40,'read designs and brand kits','generate a Canva design from it',['search-designs','list-brand-kits','generate-design','resize-design','export-design','remove-background']),
+  L('viz','Inline visuals','Design','live',4,'','render an inline chart or diagram in chat',['show_widget','read_me']),
+  L('artifact','Artifacts','Design','live',1,'read a published Artifact page','publish it as a private Artifact page',['publish','read','list','read_db','write_db']),
+  L('replit','Replit','Build','live',13,'read an existing Repl’s files','build and host a running app from it',['create_app_from_prompt','update_app_using_prompt','read_app_file','publish_app']),
+  L('context7','Library docs','Build','live',2,'fetch current docs for the libraries involved','',['resolve-library-id','query-docs']),
+  L('terminal','Terminal','Build','live',5,'read the terminal output','run the command in a terminal tab',['read_terminal','run_in_terminal','open_terminal_tab']),
+  L('sched','Scheduled tasks','Build','live',6,'','run it on a recurring schedule',['create_scheduled_task','list_task_runs','run_scheduled_task']),
+  L('llama','LlamaParse','Documents','live',27,'parse documents and extract structured fields','index it for retrieval',['parseFile','extractFileTurbo','classifyFile','splitFile','createIndex','retrieveFromIndex']),
+  L('cdocs','Claude Docs','Documents','live',8,'read a living Claude Doc','build a living Claude Doc with sections',['batch','update','read','query','export']),
+  L('pdf','PDF viewer','Documents','live',3,'open and read the PDF','annotate it or fill the PDF form fields',['display_pdf','interact','list_pdfs']),
+  L('openseo','OpenSEO','Web & search','live',76,'pull keyword, SERP, backlink and audit data','track it in a rank tracker or saved report',['research_keywords','get_serp_results','run_site_audit','get_backlinks_overview','get_search_console_performance','run_ai_visibility_check']),
+  L('browser','Built-in browser','Web & search','live',22,'read live pages in the browser pane','open and verify it in the browser pane',['navigate','get_page_text','read_page','computer','resize_window','read_console_messages']),
+  L('chrome','Chrome','Web & search','live',21,'read pages from your logged-in Chrome','fill it into a web form, with your confirmation',['tabs_context_mcp','navigate','read_page','form_input','gif_creator']),
+  L('bu','Browser Use','Web & search','live',2,'script a headless browser session over CDP','',['browser_exec','browser_screenshot']),
+  L('registry','Connector registry','Session','live',3,'search for connectors that cover a gap','',['search_mcp_registry','suggest_connectors','list_connectors']),
+  L('ccd','Desktop app','Session','live',62,'read sessions, panes and settings','open it in a split view or pane',['show_pane','list_sessions','open_session_in','set_session_title','get_settings']),
+  Object.assign(L('dc','Desktop Commander','Session','failed',0,'',''), {why:'Connection timed out after 30 seconds'}),
+  // needs sign-in
+  ...[['github','GitHub','Build'],['linear','Linear','Build'],['atlassian','Atlassian','Build'],['datadog','Datadog','Build'],['pagerduty','PagerDuty','Build'],
+     ['slack','Slack','Session'],['notion','Notion','Documents'],['asana','Asana','Session'],['clickup','ClickUp','Session'],['monday','monday.com','Session'],
+     ['figmap','Figma plugin','Design'],['canvap','Canva plugin','Design'],['adobe','Adobe','Design'],
+     ['hubspot','HubSpot','Web & search'],['ahrefs','Ahrefs','Web & search'],['similarweb','Similarweb','Web & search'],['amplitude','Amplitude','Web & search'],['amplitudeeu','Amplitude EU','Web & search'],
+     ['klaviyo','Klaviyo','Web & search'],['supermetrics','Supermetrics','Web & search'],['intercom','Intercom','Session'],['pendo','Pendo','Web & search'],
+     ['apollo','Apollo','Web & search'],['calendly','Calendly','Google'],['clay','Clay','Web & search'],['close','Close','Web & search'],['crunchbase','Crunchbase','Web & search'],
+     ['hex','Hex','Documents'],['docusign','DocuSign','Documents'],['egnyte','Egnyte','Documents']]
+    .map(([id,name,fam]) => L(id,name,fam,'auth',0,'','')),
+  // failed
+  ...[['definite','Definite','Documents','Endpoint not found'],['bigquery','BigQuery','Documents','Auth server lacks client registration'],['box','Box','Documents','Auth server lacks client registration'],
+     ['zoom','Zoom (sales)','Session','Auth server lacks client registration'],['zoomdocs','Zoom docs','Session','Token rejected (401)'],['zoommcp','Zoom MCP','Session','Token rejected (401)'],['zoomwb','Zoom whiteboard','Session','Token rejected (401)']]
+    .map(([id,name,fam,why]) => Object.assign(L(id,name,fam,'failed',0,'',''), {why}))
+];
+const byId = Object.fromEntries(LINES.map(l => [l.id, l]));
+const STATUS = {live:'Live', auth:'Needs sign-in', failed:'Failed to connect', pending:'Connecting'};
+const fixFor = l => l.status === 'auth' ? 'Authorize it in claude.ai connector settings.'
+  : l.status === 'failed' ? `${l.why}. Fix the server config, then retry via /mcp.`
+  : l.status === 'pending' ? 'Still starting up. It should appear shortly.'
+  : [l.out && 'Reads', l.in && 'Writes'].filter(Boolean).join(' and ') + '.';
+
+/* ---------- data: skills ---------- */
+const SKILLS = {
+  'Design & front-end':['frontend-design','impeccable','design-taste-frontend','high-end-visual-design','minimalist-ui','redesign-existing-projects','ui-ux-pro-max','emil-design-eng','artifact-design','artifact-diagramming','dataviz','algorithmic-art','anthropic-skills:canvas-design','anthropic-skills:theme-factory'],
+  'Motion':['animate','find-animation-opportunities','improve-animations'],
+  'Engineering':['engineering:architecture','engineering:code-review','engineering:debug','engineering:deploy-checklist','engineering:documentation','engineering:incident-response','engineering:system-design','engineering:tech-debt','engineering:testing-strategy','code-review','simplify','security-review','diagnosing-bugs','webapp-testing','run','claude-api'],
+  'Superpowers':['superpowers:brainstorming','superpowers:writing-plans','superpowers:executing-plans','superpowers:test-driven-development','superpowers:systematic-debugging','superpowers:verification-before-completion','superpowers:dispatching-parallel-agents','superpowers:subagent-driven-development','superpowers:using-git-worktrees','superpowers:requesting-code-review','superpowers:finishing-a-development-branch'],
+  '10x Team':['10x-Team:cto','10x-Team:principal-architect','10x-Team:staff-engineer','10x-Team:senior-engineer','10x-Team:sde','10x-Team:qa-engineer','10x-Team:security-engineer','10x-Team:sre','10x-Team:devops-engineer','10x-Team:dba','10x-Team:product-manager','10x-Team:engineering-manager'],
+  'Documents & office':['anthropic-skills:docx','anthropic-skills:xlsx','anthropic-skills:pptx','anthropic-skills:pdf','anthropic-skills:docs','pdf-viewer:annotate','pdf-viewer:fill-form','pdf-viewer:sign','adobe-for-creativity:adobe-anypdf','adobe-for-creativity:adobe-create-pdfs-from-data'],
+  'Research & web data':['anthropic-skills:deep-research','brightdata-plugin:live-research','brightdata-plugin:scrape','brightdata-plugin:search','brightdata-plugin:competitive-intel','brightdata-plugin:brand-listening','brightdata-plugin:price-comparison','brightdata-plugin:design-mirror','brightdata-plugin:rag-pipeline'],
+  'SEO':['searchfit-seo:seo-audit','searchfit-seo:on-page-seo','searchfit-seo:technical-seo','searchfit-seo:keyword-clustering','searchfit-seo:content-strategy','searchfit-seo:schema-markup','searchfit-seo:ai-visibility','searchfit-seo:internal-linking','searchfit-seo:broken-links','searchfit-seo:create-content'],
+  'Marketing':['marketing:campaign-plan','marketing:content-creation','marketing:draft-content','marketing:email-sequence','marketing:brand-review','marketing:competitive-brief','marketing:performance-report','postiz:postiz'],
+  'Sales':['sales:daily-briefing','sales:account-research','sales:call-prep','sales:call-summary','sales:draft-outreach','sales:pipeline-review','sales:forecast','sales:deal-review','sales:handle-objection','sales:inbox-sweep','sales:weekly-wrap','sales:win-loss-review'],
+  'Product':['product-management:write-spec','product-management:roadmap-update','product-management:sprint-planning','product-management:stakeholder-update','product-management:synthesize-research','product-management:metrics-review','product-management:brainstorm'],
+  'Data':['data:analyze','data:build-dashboard','data:create-viz','data:explore-data','data:sql-queries','data:statistical-analysis','data:validate-data'],
+  'Finance':['finance:reconciliation','finance:variance-analysis','finance:financial-statements','finance:journal-entry','finance:close-management','finance:audit-support','finance:sox-testing'],
+  'Legal':['legal:review-contract','legal:triage-nda','legal:compliance-check','legal:legal-risk-assessment','legal:vendor-check','legal:brief','legal:meeting-briefing'],
+  'UX research':['design:accessibility-review','design:design-critique','design:design-handoff','design:design-system','design:ux-copy','design:user-research','design:research-synthesis'],
+  'Productivity':['anthropic-skills:morning','productivity:task-management','productivity:memory-management','anthropic-skills:consolidate-memory','anthropic-skills:schedule','loop','schedule','anthropic-skills:google-workspace'],
+  'Platforms':['zoom-plugin:build-zoom-meeting-app','zoom-plugin:build-zoom-bot','unity:new-unity-project','unity:optimize-web','base44:base44-cli','fastly-agent-toolkit:fastly','anthropic-skills:mcp-builder','anthropic-skills:web-artifacts-builder','skill-creator','plugin-authoring']
+};
+const TOTAL_SKILLS = 330; // all skills listed in the session, of which the rack shows a curated slice
+
+/* ---------- recipes ---------- */
+const RECIPES = [
+  {name:'Morning brief', cords:[['gcal','gdocs'],['gmail','gdocs']], skills:['anthropic-skills:morning']},
+  {name:'Inbox to tracker', cords:[['gmail','sheets']], skills:['productivity:task-management']},
+  {name:'Invoice intake', cords:[['drive','llama'],['llama','sheets']], skills:['finance:reconciliation']},
+  {name:'SEO sprint', cords:[['openseo','cdocs'],['browser','openseo']], skills:['searchfit-seo:seo-audit','searchfit-seo:keyword-clustering']},
+  {name:'Design to app', cords:[['figma','replit'],['replit','browser']], skills:['frontend-design','webapp-testing']},
+  {name:'Launch kit', cords:[['cdocs','canva'],['canva','artifact']], skills:['marketing:campaign-plan']},
+  {name:'Docs-grounded build', cords:[['context7','terminal']], skills:['superpowers:test-driven-development','claude-api']},
+  {name:'Weekly report', cords:[['sheets','viz'],['sheets','sched']], skills:['data:build-dashboard','dataviz']}
+];
+
+/* ---------- state ---------- */
+const state = {cords:[], skills:[], name:'Untitled mission', armed:null, focus:'figma', recipe:null};
+const CORD_COLORS = ['#B23A32','#1A1A1A','#C9A24B','#2F6B8F','#4E7D3A'];
+
+/* ---------- board ---------- */
+const board = $('#board'), rowsEl = $('#rows'), cordsSvg = $('#cords');
+function renderBoard(){
+  rowsEl.innerHTML = FAMS.map(f => {
+    const ls = LINES.filter(l => l.fam === f);
+    return `<div class="row"><div class="row-name">${esc(f)}</div><div class="jacks">${ls.map(l =>
+      `<button type="button" class="jack" data-id="${l.id}" data-status="${l.status}" aria-label="${esc(l.name)}, ${STATUS[l.status]}">
+        <span class="lamp ${l.status}"></span><span class="socket"></span><span class="plate">${esc(l.name)}</span></button>`).join('')}</div></div>`;
+  }).join('');
+}
+function socketCenter(id){
+  const s = board.querySelector(`.jack[data-id="${id}"] .socket`);
+  if(!s) return null;
+  const b = board.getBoundingClientRect(), r = s.getBoundingClientRect();
+  return {x: r.left - b.left + r.width/2, y: r.top - b.top + r.height/2};
+}
+function drawCords(animateLast){
+  const w = board.clientWidth, h = board.clientHeight;
+  cordsSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  cordsSvg.innerHTML = state.cords.map((c, i) => {
+    const a = socketCenter(c[0]), b = socketCenter(c[1]);
+    if(!a || !b) return '';
+    const d = Math.hypot(b.x - a.x, b.y - a.y), sag = Math.min(140, 24 + d * .3);
+    const vert = 1 - Math.min(1, Math.abs(b.x - a.x) / (d || 1) * 1.6);
+    const bow = vert * Math.min(150, 46 + d * .3) * (i % 2 ? -1 : 1);
+    const p = `M${a.x} ${a.y} C${a.x + bow} ${a.y + sag} ${b.x + bow} ${b.y + sag} ${b.x} ${b.y}`;
+    const len = Math.round(d * 1.6 + sag * 1.4);
+    const cls = animateLast && i === state.cords.length - 1 ? 'draw' : '';
+    return `<path class="${cls}" style="--len:${len}" stroke="${CORD_COLORS[i % CORD_COLORS.length]}" d="${p}"/>`
+      + `<circle cx="${a.x}" cy="${a.y}" r="7" fill="#2a2a2a"/><circle cx="${b.x}" cy="${b.y}" r="7" fill="#2a2a2a"/>`;
+  }).join('');
+  board.querySelectorAll('.jack').forEach(j => j.classList.toggle('on', state.cords.some(c => c.includes(j.dataset.id))));
+}
+let toastT;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3200);
+}
+function arm(id){
+  state.armed = id;
+  board.querySelectorAll('.jack').forEach(j => j.classList.toggle('armed', j.dataset.id === id));
+  $('#hint').textContent = id ? `${byId[id].name} is armed. Pick where its output goes, or press Esc.` : 'Pick a jack to start a cord. Pick a second jack to connect.';
+}
+board.addEventListener('click', e => {
+  const j = e.target.closest('.jack'); if(!j) return;
+  const l = byId[j.dataset.id];
+  setFocus(l.id);
+  if(l.status !== 'live'){ toast(`${l.name}: ${fixFor(l)}`); return; }
+  if(!state.armed){
+    if(!l.out){ toast(`${l.name} only receives. Start the cord from a line that reads data.`); return; }
+    arm(l.id); return;
+  }
+  if(state.armed === l.id){ arm(null); return; }
+  if(!l.in){ toast(`${l.name} only reads. End the cord on a line that writes.`); return; }
+  addCord(state.armed, l.id); arm(null);
+});
+board.addEventListener('mouseover', e => { const j = e.target.closest('.jack'); if(j) setFocus(j.dataset.id); });
+board.addEventListener('focusin', e => { const j = e.target.closest('.jack'); if(j) setFocus(j.dataset.id); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && state.armed) arm(null); });
+
+function addCord(a, b){
+  if(state.cords.some(c => c[0] === a && c[1] === b)){ toast('That cord is already patched.'); return; }
+  state.cords.push([a, b]); state.recipe = null; update(true);
+  toast(`Patched ${byId[a].name} into ${byId[b].name}.`);
+}
+
+/* ---------- inspector ---------- */
+function setFocus(id){
+  if(state.focus === id) return;
+  state.focus = id;
+  board.querySelectorAll('.jack').forEach(j => j.classList.toggle('selected', j.dataset.id === id));
+  renderInspector();
+}
+function renderInspector(){
+  const l = byId[state.focus];
+  const recipes = RECIPES.filter(r => r.cords.flat().includes(l.id)).map(r => r.name);
+  $('#inspector').innerHTML = `
+    <div>
+      <h3>${esc(l.name)}</h3>
+      <p class="status-line"><span class="lamp ${l.status}"></span>${STATUS[l.status]} · ${esc(l.fam)}${l.tools ? ` · ${l.tools} tools` : ''}</p>
+      <p class="muted">${esc(fixFor(l))}</p>
+      ${recipes.length ? `<p style="margin-top:10px;font-size:14px">Used in: ${recipes.map(esc).join(', ')}</p>` : ''}
+    </div>
+    <div class="io">
+      ${l.out ? `<p><b>As a source</b>, it can ${esc(l.out)}.</p>` : ''}
+      ${l.in ? `<p><b>As a destination</b>, it can ${esc(l.in)}.</p>` : ''}
+      ${!l.out && !l.in ? `<p class="muted">Nothing to patch until this line is connected.</p>` : ''}
+      ${l.sample.length ? `<div class="tools">${l.sample.map(t => `<code>${esc(t)}</code>`).join('')}</div>` : ''}
+    </div>`;
+}
+
+/* ---------- mission ---------- */
+function promptText(){
+  if(!state.cords.length && !state.skills.length) return '';
+  const out = [`Mission: ${state.name}`, ''];
+  if(state.cords.length){
+    out.push('Steps:');
+    state.cords.forEach(([a, b], i) => {
+      const A = byId[a], B = byId[b];
+      out.push(`${i + 1}. Use ${A.name} to ${A.out}, then use ${B.name} to ${B.in}.`);
+    });
+    out.push('');
+  }
+  if(state.skills.length){ out.push('Load these skills first: ' + state.skills.map(s => '/' + s).join(', ') + '.', ''); }
+  out.push('Ground rules: show me what you found before writing anything. Ask before sending, publishing, sharing or deleting. Summarize what changed at the end with links.');
+  return out.join('\n');
+}
+function renderMission(){
+  const steps = $('#steps');
+  steps.innerHTML = state.cords.map(([a, b], i) =>
+    `<li><div class="step"><span>${esc(byId[a].name)} into ${esc(byId[b].name)}</span><button class="x" type="button" data-rm="${i}" aria-label="Remove cord ${esc(byId[a].name)} to ${esc(byId[b].name)}">×</button></div></li>`).join('');
+  $('#stepsEmpty').hidden = state.cords.length > 0;
+  $('#pills').innerHTML = state.skills.map(s => `<span class="pill">/${esc(s)}<button class="x" type="button" data-rmskill="${esc(s)}" aria-label="Remove ${esc(s)}">×</button></span>`).join('');
+  $('#pillsEmpty').hidden = state.skills.length > 0;
+  $('#prompt').value = promptText();
+  $('#presets').querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.r === state.recipe)));
+  document.querySelectorAll('.sk').forEach(b => b.setAttribute('aria-pressed', String(state.skills.includes(b.dataset.s))));
+}
+$('#steps').addEventListener('click', e => {
+  const b = e.target.closest('[data-rm]'); if(!b) return;
+  state.cords.splice(+b.dataset.rm, 1); state.recipe = null; update();
+});
+$('#pills').addEventListener('click', e => {
+  const b = e.target.closest('[data-rmskill]'); if(!b) return;
+  toggleSkill(b.dataset.rmskill);
+});
+$('#mname').addEventListener('input', e => { state.name = e.target.value.trim() || 'Untitled mission'; $('#prompt').value = promptText(); saveDraft(); });
+$('#presets').innerHTML = RECIPES.map(r => `<button type="button" class="chip" data-r="${esc(r.name)}" aria-pressed="false">${esc(r.name)}</button>`).join('');
+$('#presets').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if(!c) return;
+  const r = RECIPES.find(x => x.name === c.dataset.r);
+  loadMission({name: r.name, cords: r.cords, skills: r.skills}); state.recipe = r.name; renderMission();
+});
+function clean(m){
+  const ok = id => byId[id] && byId[id].status === 'live';
+  return {
+    name: typeof m?.name === 'string' ? m.name.slice(0, 80) : 'Untitled mission',
+    cords: Array.isArray(m?.cords) ? m.cords.filter(c => Array.isArray(c) && ok(c[0]) && ok(c[1]) && byId[c[0]].out && byId[c[1]].in) : [],
+    skills: Array.isArray(m?.skills) ? m.skills.filter(x => typeof x === 'string').slice(0, 40) : []
+  };
+}
+function loadMission(m){
+  m = clean(m);
+  state.cords = m.cords.map(c => c.slice()); state.skills = m.skills.slice(); state.name = m.name;
+  $('#mname').value = m.name; arm(null); update(true);
+}
+$('#copyBtn').addEventListener('click', async () => {
+  const t = promptText();
+  if(!t){ toast('Patch a cord or add a skill first. There is nothing to copy yet.'); return; }
+  try{ await navigator.clipboard.writeText(t); toast('Copied. Paste it into Claude Code.'); }
+  catch{ $('#prompt').select(); toast('Clipboard is blocked here. The prompt is selected, so press Ctrl+C.'); }
+});
+$('#clearBtn').addEventListener('click', () => { state.cords = []; state.skills = []; state.recipe = null; arm(null); update(); toast('Board cleared.'); });
+$('#saveBtn').addEventListener('click', () => {
+  if(!state.cords.length && !state.skills.length){ toast('Nothing to save yet. Patch a cord or add a skill.'); return; }
+  const saved = store.get('patchbay.saved', []);
+  saved.unshift({id: Date.now().toString(36), name: state.name, cords: state.cords, skills: state.skills, at: new Date().toISOString()});
+  store.set('patchbay.saved', saved.slice(0, 24)); renderSaved(); toast(`Saved “${state.name}”.`);
+});
+
+/* ---------- saved ---------- */
+function renderSaved(){
+  const saved = store.get('patchbay.saved', []).filter(m => m && typeof m.id === 'string').map(m => Object.assign(clean(m), {id: m.id, at: m.at}));
+  $('#saved').innerHTML = saved.length ? saved.map(m => `
+    <article class="save">
+      <h3>${esc(m.name)}</h3>
+      <p class="muted" style="font-size:13px">${m.cords.length} cord${m.cords.length === 1 ? '' : 's'}, ${m.skills.length} skill${m.skills.length === 1 ? '' : 's'} · ${esc(new Date(m.at).toLocaleDateString())}</p>
+      <p style="font-size:14px">${m.cords.map(([a, b]) => `${esc(byId[a]?.name || a)} into ${esc(byId[b]?.name || b)}`).join('; ') || 'Skills only'}</p>
+      <div class="actions"><button class="btn ghost" type="button" data-load="${esc(m.id)}">Load</button><button class="btn ghost" type="button" data-del="${esc(m.id)}">Remove</button></div>
+    </article>`).join('')
+    : `<p class="empty">No saved missions. Build one on the board and choose Save mission.</p>`;
+}
+$('#saved').addEventListener('click', e => {
+  const saved = store.get('patchbay.saved', []);
+  const ld = e.target.closest('[data-load]'), dl = e.target.closest('[data-del]');
+  if(ld){ const m = saved.find(x => x.id === ld.dataset.load); if(m){ loadMission(m); board.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'}); } }
+  if(dl){ store.set('patchbay.saved', saved.filter(x => x.id !== dl.dataset.del)); renderSaved(); }
+});
+
+/* ---------- directory ---------- */
+let dirFilter = 'all';
+const FILTERS = [['all','All'],['live','Live'],['auth','Needs sign-in'],['failed','Failed'],['pending','Connecting']];
+$('#statusFilter').innerHTML = FILTERS.map(([k, n]) => `<button type="button" class="chip" data-f="${k}" aria-pressed="${k === 'all'}">${n} (${k === 'all' ? LINES.length : LINES.filter(l => l.status === k).length})</button>`).join('');
+$('#statusFilter').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if(!c) return; dirFilter = c.dataset.f;
+  $('#statusFilter').querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', String(x === c))); renderDir();
+});
+$('#dirSearch').addEventListener('input', renderDir);
+function renderDir(){
+  const q = $('#dirSearch').value.trim().toLowerCase();
+  const order = {live:0, pending:1, auth:2, failed:3};
+  const rows = LINES.filter(l => (dirFilter === 'all' || l.status === dirFilter) && (!q || (l.name + ' ' + l.fam + ' ' + l.sample.join(' ')).toLowerCase().includes(q)))
+    .sort((a, b) => order[a.status] - order[b.status] || b.tools - a.tools || a.name.localeCompare(b.name));
+  $('#dirBody').innerHTML = rows.length ? rows.map(l => `<tr>
+    <td><strong>${esc(l.name)}</strong></td><td>${esc(l.fam)}</td>
+    <td><span class="st"><span class="lamp ${l.status}"></span>${STATUS[l.status]}</span></td>
+    <td class="n">${l.tools || '—'}</td><td>${esc(l.status === 'live' ? [l.out && 'Can ' + l.out, l.in && (l.out ? 'or ' : 'Can ') + l.in].filter(Boolean).join(' ') + '.' : fixFor(l))}</td></tr>`).join('')
+    : `<tr><td colspan="5" class="muted">No lines match “${esc(q)}”. Clear the search or pick another status.</td></tr>`;
+}
+
+/* ---------- chart ---------- */
+function renderChart(){
+  const data = LINES.filter(l => l.status === 'live').sort((a, b) => b.tools - a.tools);
+  const max = Math.max(...data.map(d => d.tools));
+  const W = 900, rowH = 22, labelW = 150, top = 6, H = top + data.length * rowH + 8, plotW = W - labelW - 50;
+  const x = v => labelW + (v / max) * plotW;
+  const ticks = [0, 20, 40, 60, 80].filter(t => t <= max + 4);
+  $('#chart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Tools per live connector; OpenSEO has the most at ${max}.">
+    ${ticks.map(t => `<line x1="${x(t)}" x2="${x(t)}" y1="${top}" y2="${H - 6}" stroke-dasharray="2 3"/>`).join('')}
+    ${data.map((d, i) => { const y = top + i * rowH; return `
+      <text x="${labelW - 10}" y="${y + 15}" text-anchor="end">${esc(d.name)}</text>
+      <rect class="bar" x="${labelW}" y="${y + 4}" width="${Math.max(2, x(d.tools) - labelW)}" height="${rowH - 8}" rx="2"><title>${esc(d.name)}: ${d.tools} tools</title></rect>
+      <text class="val" x="${x(d.tools) + 6}" y="${y + 15}">${d.tools}</text>`; }).join('')}
+  </svg>`;
+}
+
+/* ---------- skills ---------- */
+function renderRack(){
+  const q = $('#skillSearch').value.trim().toLowerCase();
+  const html = Object.entries(SKILLS).map(([g, list]) => {
+    const hits = list.filter(s => !q || s.toLowerCase().includes(q) || g.toLowerCase().includes(q));
+    if(!hits.length) return '';
+    return `<div class="group"><h3>${esc(g)}<small>${hits.length}</small></h3><ul>${hits.map(s =>
+      `<li><button type="button" class="sk" data-s="${esc(s)}" aria-pressed="${state.skills.includes(s)}">${esc(s.includes(':') ? s.split(':')[1] : s)}</button></li>`).join('')}</ul></div>`;
+  }).join('');
+  $('#rack').innerHTML = html || `<p class="empty">No skills match “${esc(q)}”. Try a broader word like design, seo or test.</p>`;
+}
+function toggleSkill(s){
+  const i = state.skills.indexOf(s);
+  i >= 0 ? state.skills.splice(i, 1) : state.skills.push(s);
+  state.recipe = null; renderMission(); saveDraft();
+}
+$('#rack').addEventListener('click', e => { const b = e.target.closest('.sk'); if(b) toggleSkill(b.dataset.s); });
+$('#skillSearch').addEventListener('input', renderRack);
+
+/* ---------- tally & theme ---------- */
+function renderTally(){
+  const c = k => LINES.filter(l => l.status === k).length;
+  $('#tally').innerHTML = ['live','pending','auth','failed'].filter(k => c(k)).map(k => `<span><span class="lamp ${k}"></span>${c(k)} ${STATUS[k].toLowerCase()}</span>`).join('');
+  $('#liveCount').textContent = c('live');
+  $('#skillCount').textContent = TOTAL_SKILLS + '+';
+}
+const THEMES = ['system','light','dark'];
+let theme = store.get('patchbay.theme', 'system');
+function applyTheme(){
+  if(theme === 'system') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', theme);
+  $('#themeBtn').textContent = 'Theme: ' + theme;
+}
+$('#themeBtn').addEventListener('click', () => { theme = THEMES[(THEMES.indexOf(theme) + 1) % 3]; store.set('patchbay.theme', theme); applyTheme(); });
+
+/* ---------- boot ---------- */
+function saveDraft(){ store.set('patchbay.draft', {name: state.name, cords: state.cords, skills: state.skills}); }
+function update(anim){ drawCords(anim); renderMission(); saveDraft(); }
+applyTheme(); renderTally(); renderBoard(); renderInspector(); renderDir(); renderChart(); renderRack(); renderSaved();
+board.querySelector('.jack[data-id="figma"]').classList.add('selected');
+const draft = store.get('patchbay.draft', null);
+if(draft) loadMission(draft);   // an empty draft means the board was cleared on purpose
+else { const r = RECIPES[4]; loadMission({name: r.name, cords: r.cords, skills: r.skills}); state.recipe = r.name; renderMission(); }
+new ResizeObserver(() => drawCords(false)).observe(board);
+document.fonts && document.fonts.ready.then(() => drawCords(false));
+})();
+</script>
+</body>
+</html>

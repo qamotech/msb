@@ -319,6 +319,10 @@
 html, body { width: 100%; height: 100%; height: 100dvh; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; overscroll-behavior: none; }
 #app-container { width: 100vw; height: 100vh; height: 100dvh; border-radius: 0; box-shadow: inset 0 0 0 2px #b100ff; }
 #game-canvas, .shop-btn { touch-action: none; -webkit-tap-highlight-color: transparent; }
+#qtd-rotate { display: none; }
+@media (orientation: portrait) and (max-width: 700px) { #qtd-rotate { display: flex; position: fixed; inset: 0; z-index: 9999; flex-direction: column; gap: 12px; align-items: center; justify-content: center; text-align: center; padding: 24px; background: #050816; color: #d0e0ff; font: 700 20px system-ui, sans-serif; } #qtd-rotate span { font-size: 64px; } }
+#qtd-back, #qtd-fs { text-decoration: none; opacity: .75; font-size: 14px; line-height: 1; }
+#qtd-back:hover, #qtd-fs:hover, #qtd-back:focus-visible, #qtd-fs:focus-visible { opacity: 1; }
 body.qtd-dragging, body.qtd-dragging * { cursor: grabbing !important; }
 /* Landscape phones: slimmer bars so the board gets the height */
 @media (max-height: 520px) {
@@ -334,9 +338,10 @@ body.qtd-dragging, body.qtd-dragging * { cursor: grabbing !important; }
 </head>
 <body>
 
+<div id="qtd-rotate" role="status"><span aria-hidden="true">📱↻</span>Turn your device sideways to play</div>
 <div id="app-container">
     <div id="top-bar">
-        <div class="stat-group">
+        <div class="stat-group"><a id="qtd-back" class="ctrl-btn" href="../studio.html#arcade" target="_top" aria-label="Back to KidHub">⬅️</a><button type="button" id="qtd-fs" class="ctrl-btn" aria-label="Toggle fullscreen">⛶</button>
             <div class="stat"><span class="stat-icon c-red">HP</span> <span id="ui-lives">25</span></div>
             <div class="stat"><span class="stat-icon c-gold">$</span> $<span id="ui-gold">600</span></div>
             <div class="stat"><span class="stat-icon c-cyan">W</span>: <span id="ui-wave">0</span></div>
@@ -467,7 +472,7 @@ const canvas = document.getElementById('game-canvas');
         4: { name: 'Ice Tower', cost: 225, range: 185, fireRate: 52, damage: 20, pSpeed: 13, color: '#b8f6ff', img: towerAssets.ice, projectileImg: towerAssets.waterShot, effect: 'freeze', facing: -Math.PI / 2, drawW: 38, drawH: 58, muzzle: 26 },
         5: { name: 'Wind Tower', cost: 250, range: 230, fireRate: 35, damage: 28, pSpeed: 20, color: '#d9f6ff', img: towerAssets.wind, projectileImg: towerAssets.windShot, splash: 45, facing: 0, drawW: 48, drawH: 50, muzzle: 31, crop: { sx: 330, sy: 120, sw: 1030, sh: 1370 } },
         6: { name: 'Magnet Tower', cost: 300, range: 300, fireRate: 12, damage: 22, pSpeed: 18, color: '#ff7cff', img: towerAssets.magnet, projectileImg: towerAssets.magnetShot, facing: 0, drawW: 38, drawH: 38, muzzle: 22 },
-        7: { name: 'C4 Charge', cost: 450, range: 88, fireRate: 0, damage: 320, pSpeed: 0, color: '#ff9d2e', tactical: 'c4', pathOnly: true, splash: 145, jamMult: 0.35, maxLevel: 7, upgradeCosts: { 1: 450, 2: 900, 3: 3500, 4: 7000, 5: 12000, 6: 20000 }, drawW: 42, drawH: 42 },
+        7: { name: 'C4 Charge', cost: 450, range: 88, fireRate: 0, damage: 320, pSpeed: 0, color: '#ff9d2e', tactical: 'c4', pathOnly: true, splash: 145, jamMult: 0.35, maxLevel: 7, upgradeCosts: { 1: 450, 2: 900, 3: 3500, 4: 7000, 5: 9000, 6: 12000 }, drawW: 42, drawH: 42 },
         8: { name: 'Flashbang', cost: 500, range: 112, fireRate: 0, damage: 140, pSpeed: 0, color: '#f7fbff', tactical: 'flash', pathOnly: true, splash: 145, drawW: 34, drawH: 34 },
         9: { name: 'Eagle .50', cost: 550, range: 250, fireRate: 30, damage: 95, pSpeed: 28, color: '#ffd27a', weapon: 'pistol', drawW: 47, drawH: 32, muzzle: 30 },
         10: { name: 'P90 SMG', cost: 650, range: 215, fireRate: 6, damage: 24, pSpeed: 30, color: '#a7f7ff', weapon: 'smg', drawW: 58, drawH: 34, muzzle: 32 },
@@ -802,13 +807,7 @@ const canvas = document.getElementById('game-canvas');
         const def = TOWER_DEFS[type];
         if (state.gold < def.cost) return;
         pointer = { x: -100, y: -100, active: false };
-        if (def.tactical === 'primeBomb') {
-            state.gold -= def.cost;
-            detonatePrimeBomb(C_WIDTH * 0.5, C_HEIGHT * 0.5, def);
-            deselectAll();
-            updateUI();
-            return;
-        }
+        // The Prime Bomb is aimed: tap or drag it onto the board to choose where it lands.
         state.selectedShopType = type;
         state.selectedTower = null;
         updateUI();
@@ -1277,7 +1276,7 @@ const canvas = document.getElementById('game-canvas');
                 state.gold += crowdBonus;
                 addFCT(t.x, t.y - 52, 'CROWD BONUS +$' + crowdBonus, '#ffd700');
             }
-            addFCT(t.x, t.y - 20, t.level >= 5 ? 'CRATER FIELD' : (t.level >= 4 ? 'MEGATON C4' : 'C4 DETONATED'), '#ffd700');
+            addFCT(t.x, t.y - 20, t.level >= 7 ? 'DOOMSDAY C4' : t.level >= 6 ? 'SEISMIC C4' : t.level >= 5 ? 'CRATER FIELD' : (t.level >= 4 ? 'MEGATON C4' : 'C4 DETONATED'), '#ffd700');
         } else if (def.tactical === 'flash') {
             const burst = (t.splash || def.splash) * (1 + (t.level - 1) * 0.22);
             addEffect(t.x, t.y, '#ffffff', burst, 'nova');
@@ -1315,7 +1314,7 @@ const canvas = document.getElementById('game-canvas');
                 t.cooldown = state.overdrive > 0 ? Math.max(4, t.fireRate * 0.45) : t.fireRate;
                 let shots = 1;
                 if (t.type === 1 && t.level >= 2) shots = 2;
-                if (t.type === 1 && t.level === 3) shots = 3;
+                if (t.type === 1 && t.level >= 3) shots = 3;
                 if (t.type === 5 && t.level >= 2) shots = 2;
                 if (t.type === 10 && t.level >= 3) shots = 2;
                 if (t.type === 12 && t.level >= 2) shots = 2;
@@ -1324,7 +1323,7 @@ const canvas = document.getElementById('game-canvas');
                 spawnProjectile(t, target);
                 for(let i=1; i<shots; i++) {
                     setTimeout(() => {
-                        if (state.gameState !== 'playing' || !towers.includes(t)) return;
+                        if (state.gameState !== 'playing' || state.isPaused || !towers.includes(t)) return;
                         const aim = enemies.includes(target) ? target : enemies.find(e => Math.hypot(e.x - t.x, e.y - t.y) <= t.range);
                         if (aim) spawnProjectile(t, aim);
                     }, i * 100 / Math.max(1, state.speed));
@@ -1337,8 +1336,9 @@ const canvas = document.getElementById('game-canvas');
         for (let i = projectiles.length - 1; i >= 0; i--) {
             let p = projectiles[i];
             let moveDist = Math.hypot(p.vx * dtFrames, p.vy * dtFrames);
-            p.x += p.vx * dtFrames;
-            p.y += p.vy * dtFrames;
+            const stepFrac = moveDist > 0 ? Math.min(1, Math.max(0, p.totalDist - p.traveled) / moveDist) : 1;   // stop at the aim point, even at 32x
+            p.x += p.vx * dtFrames * stepFrac;
+            p.y += p.vy * dtFrames * stepFrac;
             p.traveled += moveDist;
             
             p.trail.push({x: p.x, y: p.y});
@@ -1462,6 +1462,7 @@ const canvas = document.getElementById('game-canvas');
     }
 
     function addEffect(x, y, color, radius, type) {
+        if (effectAnimations.length > 400) effectAnimations.shift();
         effectAnimations.push({x, y, color, radius, type, maxLife: 20, life: 20});
     }
 
@@ -1470,6 +1471,7 @@ const canvas = document.getElementById('game-canvas');
     }
 
     function addFCT(x, y, text, color) {
+        if (fcts.length > 120) fcts.shift();
         fcts.push({x, y, text, color, life: 50, maxLife: 50, vy: -0.8});
     }
 
@@ -1761,7 +1763,7 @@ const canvas = document.getElementById('game-canvas');
     function drawProjectileBody(c, p) {
         const s = 1 + Math.min(4, (p.level || 1) - 1) * 0.1;
         c.scale(s, s);
-        c.shadowColor = p.color; c.shadowBlur = 10;
+        c.shadowColor = p.color; c.shadowBlur = projectiles.length > 90 ? 0 : 10;   // glow is costly when the sky is full
         switch (p.kind) {
             case 'bolt': {
                 c.fillStyle = '#fffbe0'; qtdRR(c, -9, -3, 18, 6, 3); c.fill();
@@ -2314,7 +2316,8 @@ const canvas = document.getElementById('game-canvas');
 
     // ---- Pointer input: tap-to-place and drag-and-drop for mouse, touch and pen ----
     (() => {
-        const LIFT = 48;          // touch drags hold the tower above the finger so it stays visible
+        const LIFT_PX = 64;       // touch drags hold the tower this many screen pixels above the finger
+        const LIFT = () => LIFT_PX * C_HEIGHT / Math.max(1, canvas.getBoundingClientRect().height);
         const DRAG_START = 10;    // px of movement before a press becomes a drag
         let drag = null, suppressClickUntil = 0;   // swallows only the stray click a drag release produces
         const toCanvas = (cx, cy) => {
@@ -2322,13 +2325,14 @@ const canvas = document.getElementById('game-canvas');
             return { x: (cx - r.left) * (C_WIDTH / r.width), y: (cy - r.top) * (C_HEIGHT / r.height),
                      inside: cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom };
         };
-        const liftFor = d => (d && d.touch && d.moved && state.selectedShopType !== null) ? LIFT : 0;
+        const liftFor = d => (d && d.touch && d.moved && state.selectedShopType !== null) ? LIFT() : 0;
+        window.qtdLift = LIFT;
 
         document.querySelectorAll('.shop-btn[data-type]').forEach(btn => {
             btn.addEventListener('pointerdown', e => {
                 if (e.button > 0 || state.gameState !== 'playing') return;
                 const type = Number(btn.dataset.type), def = TOWER_DEFS[type];
-                if (!def || def.tactical === 'primeBomb') return;      // the bomb fires on tap
+                if (!def) return;
                 if (btn.hasPointerCapture && btn.hasPointerCapture(e.pointerId)) btn.releasePointerCapture(e.pointerId);
                 drag = { type, fromShop: true, id: e.pointerId, sx: e.clientX, sy: e.clientY, moved: false, touch: e.pointerType !== 'mouse' };
             });
@@ -2406,9 +2410,14 @@ const canvas = document.getElementById('game-canvas');
             if (!navigator.wakeLock || wakeLock || document.hidden) return;
             navigator.wakeLock.request('screen').then(l => { wakeLock = l; l.addEventListener('release', () => { wakeLock = null; }); }).catch(() => {});
         };
-        const onGesture = () => { goFullscreen(); keepAwake(); };
+        let leftOnPurpose = false;   // Esc / back / the ⛶ button: stay out until they ask again
+        document.addEventListener('fullscreenchange', () => { if (!isFs()) leftOnPurpose = true; });
+        document.addEventListener('webkitfullscreenchange', () => { if (!isFs()) leftOnPurpose = true; });
+        const fsBtn = document.getElementById('qtd-fs');
+        if (fsBtn) fsBtn.onclick = () => { if (isFs()) (document.exitFullscreen || document.webkitExitFullscreen).call(document); else { leftOnPurpose = false; goFullscreen(); } };
+        const onGesture = e => { if (!leftOnPurpose && !(e && e.target && e.target.closest && e.target.closest('#qtd-back,#qtd-fs'))) goFullscreen(); keepAwake(); };
         addEventListener('pointerup', onGesture, true);
-        addEventListener('keydown', e => { if (e.key !== 'Escape') onGesture(); }, true);
+        addEventListener('keydown', e => { if (e.key !== 'Escape') onGesture(e); }, true);
         // Try right away too; browsers that allow it go fullscreen instantly.
         goFullscreen();
         // Auto-pause when the game is hidden (app switch, phone lock, other tab).
@@ -2432,14 +2441,14 @@ const canvas = document.getElementById('game-canvas');
     (() => {
         const SHOP_ORDER = [2, 0, 3, 1, 4, 5, 6];   // same order as the shop bar
         addEventListener('keydown', e => {
-            if (e.ctrlKey || e.metaKey || e.altKey || (e.target.closest && e.target.closest('input, textarea'))) return;
+            if (e.ctrlKey || e.metaKey || e.altKey || (e.target.closest && e.target.closest('input, textarea, select, button, a, [tabindex]'))) return;   // focused controls keep their own keys
             if (state.gameState !== 'playing') {
                 if ((e.key === 'Enter' || e.key === ' ') && document.getElementById('overlay-btn').offsetParent) { e.preventDefault(); startGame(); }
                 return;
             }
             const k = e.key.toLowerCase();
             if (k >= '1' && k <= '7' && k.length === 1) selectTower(SHOP_ORDER[Number(k) - 1]);
-            else if (k === ' ' || k === 'enter') { e.preventDefault(); if (!state.waveActive) startWave(); }
+            else if (k === ' ' || k === 'enter') { e.preventDefault(); if (!state.waveActive && !state.isPaused) startWave(); }
             else if (k === 'u') upgradeTower();
             else if (k === 't') cycleTarget();
             else if (k === 'p') document.getElementById('btn-pause').click();
