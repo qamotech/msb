@@ -1,26 +1,55 @@
-documents/
-.agent-projects/
-scratch/
-*.log
-node_modules
+# Tool / IDE configs
+.claude/
+.codex/
+.vscode/
+.idea/
+.agents/
 
-# Local organization and confidential material
-/private/
-/documents/
-/DRIVE FOLDER/
-/client_sync/
-/.tmp.drivedownload/
-/.tmp.driveupload/
-/Organization/
-/Downloads-Launcher.html
-.env
-.env.*
-!.env.example
-.codeboarding/
-desktop.ini
+# KidHub / project sub-repos (tracked in their own repos)
+.kidhub-upgrade/
+kidhub/
+pi/
+ccars/
+aug/
+work/
+Inbox/
+Artifacts/
+Conference_Photos/
+AI_TOOLY/
+Fr8OrdR-main/
+trucking-app-enhancements/
+IAM-Nonprofit-Gig/
+ARC Beverage Co. - Armory/
+ARCHIVE */
+.activity-repair/
+
+# Repo documentation tooling (audit/publish scripts + outputs)
+repo-documentation/
+
+# Binary / media files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.pdf
+*.winmd
 *.exe
-archive/
-html-source-files/
+*.pyc
+__pycache__/
 
-# Local-only agent context store (never publish)
-/context-hub/
+# More folders
+DRIVE FOLDER/
+Organization/
+documents/
+scratch/
+context-hub/
+
+# Misc files
+desktop.ini
+*.cmd
+*.pid
+server.cjs
+*.txt
+
+# Misc text clutter
+npp fixes.txt

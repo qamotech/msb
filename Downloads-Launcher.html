@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Downloads Launcher | Workspace Command Deck</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+  <style>
+    :root {
+      --font-stack: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+      --bg-base: #070b12;
+      --bg-surface: #0e1624;
+      --bg-card: rgba(16, 26, 42, 0.78);
+      --bg-card-hover: rgba(22, 36, 58, 0.92);
+      --border-subtle: #1e2c42;
+      --border-active: #33486b;
+      --text-main: #edf2f9;
+      --text-muted: #94a5bd;
+      --text-dim: #64748b;
+      
+      /* Category Accents */
+      --accent-tools: #10b981;
+      --accent-tools-bg: rgba(16, 185, 129, 0.12);
+      --accent-ai: #a855f7;
+      --accent-ai-bg: rgba(168, 85, 247, 0.12);
+      --accent-creative: #ec4899;
+      --accent-creative-bg: rgba(236, 72, 153, 0.12);
+      --accent-arcade: #f59e0b;
+      --accent-arcade-bg: rgba(245, 158, 11, 0.12);
+      --accent-edu: #38bdf8;
+      --accent-edu-bg: rgba(56, 189, 248, 0.12);
+
+      --cyan-glow: #06b6d4;
+      --mint-glow: #84edcd;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background: radial-gradient(circle at 50% 0%, #111d33 0%, var(--bg-base) 65%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font: inherit;
+      color: inherit;
+    }
+
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid var(--mint-glow);
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -60px;
+      left: 20px;
+      background: #ffffff;
+      color: #000000;
+      padding: 12px 18px;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      z-index: 999;
+      transition: top 0.2s;
+    }
+    .skip-link:focus {
+      top: 16px;
+    }
+
+    .wrapper {
+      max-width: 1540px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+
+    /* HEADER */
+    header.top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 36px;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #84edcd, #06b6d4);
+      color: #061e1b;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      box-shadow: 0 0 20px rgba(132, 237, 205, 0.35);
+    }
+
+    .hub-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      background: rgba(132, 237, 205, 0.12);
+      color: #84edcd;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(132, 237, 205, 0.25);
+    }
+
+    .hub-pill::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #84edcd;
+      box-shadow: 0 0 6px #84edcd;
+      display: inline-block;
+    }
+
+    nav.docs-nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    nav.docs-nav a {
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    nav.docs-nav a:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* HERO SECTION */
+    .hero-panel {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding: 20px 0 36px;
+    }
+
+    .hero-lead h1 {
+      font-size: clamp(32px, 3.8vw, 54px);
+      font-weight: 850;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+      background: linear-gradient(145deg, #ffffff 40%, #9cb3d3 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-lead h1 span.gradient-text {
+      background: linear-gradient(135deg, #84edcd 0%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-lead p {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 680px;
+      line-height: 1.6;
+    }
+
+    /* STATS BANNER */
+    .stats-strip {
+      display: flex;
+      gap: 14px;
+    }
+
+    .stat-tile {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      min-width: 120px;
+      text-align: right;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .stat-tile strong {
+      display: block;
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text-main);
+    }
+
+    .stat-tile span {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* SPOTLIGHT ROW */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin: 36px 0 16px;
+    }
+
+    .section-header h2 {
+      font-size: 20px;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-header .subtext {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .spotlight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 44px;
+    }
+
+    .spotlight-card {
+      background: linear-gradient(180deg, rgba(22, 36, 58, 0.6) 0%, rgba(13, 22, 35, 0.8) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: var(--radius-md);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .spotlight-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #84edcd, #38bdf8);
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .spotlight-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(132, 237, 205, 0.6);
+      box-shadow: 0 12px 30px rgba(6, 182, 212, 0.2);
+    }
+
+    .spotlight-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .spotlight-icon {
+      font-size: 20px;
+    }
+
+    .spotlight-card strong {
+      font-size: 15px;
+      font-weight: 700;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .spotlight-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 34px;
+    }
+
+    .spotlight-launch {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      background: rgba(132, 237, 205, 0.15);
+      color: #84edcd;
+      border: 1px solid rgba(132, 237, 205, 0.35);
+      transition: var(--transition);
+    }
+
+    .spotlight-card:hover .spotlight-launch {
+      background: #84edcd;
+      color: #061e1b;
+    }
+
+    /* TOOLBAR */
+    .controls-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 18px 24px;
+      margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(16px);
+      isolation: isolate;
+    }
+
+    .controls-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .category-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill-btn {
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .pill-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border-color: var(--border-active);
+    }
+
+    .pill-btn[aria-pressed="true"] {
+      background: #eaf2ff;
+      color: #070e18;
+      border-color: #eaf2ff;
+      font-weight: 750;
+      box-shadow: 0 4px 16px rgba(234, 242, 255, 0.25);
+    }
+
+    .pill-btn .pill-count {
+      font-size: 11px;
+      opacity: 0.8;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .pill-btn[aria-pressed="true"] .pill-count {
+      background: rgba(0, 0, 0, 0.15);
+      color: #070e18;
+    }
+
+    .search-and-tools {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box svg.search-icon {
+      position: absolute;
+      left: 14px;
+      width: 17px;
+      height: 17px;
+      fill: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 320px;
+      max-width: 100%;
+      background: #09101c;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px 42px 10px 40px;
+      color: var(--text-main);
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .search-input:focus {
+      border-color: var(--mint-glow);
+      background: #0d1626;
+      box-shadow: 0 0 16px rgba(132, 237, 205, 0.2);
+    }
+
+    .search-kbd {
+      position: absolute;
+      right: 12px;
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--text-dim);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+      display: none;
+    }
+    .clear-search-btn.active {
+      display: block;
+    }
+
+    .filter-dropdown {
+      background: #09101c;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .view-toggle {
+      display: flex;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .view-btn {
+      background: #09101c;
+      border: none;
+      padding: 9px 12px;
+      cursor: pointer;
+      color: var(--text-dim);
+      display: grid;
+      place-items: center;
+      transition: var(--transition);
+    }
+
+    .view-btn:hover {
+      color: var(--text-main);
+    }
+
+    .view-btn.active {
+      background: rgba(132, 237, 205, 0.15);
+      color: #84edcd;
+    }
+
+    .controls-subbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-dim);
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 12px;
+    }
+
+    .scope-filters {
+      display: flex;
+      gap: 12px;
+    }
+
+    .scope-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+
+    .scope-btn:hover {
+      color: var(--text-main);
+    }
+
+    .scope-btn.active {
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    /* APP GRID */
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    /* List View Modifier */
+    .apps-grid.list-view {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .app-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .app-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-active);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+      background: var(--bg-card-hover);
+    }
+
+    .card-preview-link {
+      display: block;
+      height: 160px;
+      background: #0d1624;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .apps-grid.list-view .card-preview-link {
+      display: none;
+    }
+
+    .card-preview-link img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      transition: transform 0.35s ease;
+    }
+
+    .app-card:hover .card-preview-link img {
+      transform: scale(1.05);
+    }
+
+    .preview-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #101c2e 0%, #080f1a 100%);
+      color: var(--text-dim);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-fallback-monogram {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      opacity: 0.85;
+    }
+
+    .preview-fallback-watermark {
+      position: absolute;
+      right: -10px;
+      bottom: -15px;
+      font-size: 80px;
+      opacity: 0.08;
+      pointer-events: none;
+      font-weight: 900;
+    }
+
+    .card-body {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .apps-grid.list-view .app-card {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .apps-grid.list-view .card-body {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 20px;
+      width: 100%;
+    }
+
+    .card-meta-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .category-badge {
+      font-size: 10px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 4px 9px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .cat-tools { background: var(--accent-tools-bg); color: var(--accent-tools); }
+    .cat-ai { background: var(--accent-ai-bg); color: var(--accent-ai); }
+    .cat-creative { background: var(--accent-creative-bg); color: var(--accent-creative); }
+    .cat-arcade { background: var(--accent-arcade-bg); color: var(--accent-arcade); }
+    .cat-edu { background: var(--accent-edu-bg); color: var(--accent-edu); }
+
+    .badge-offline {
+      font-size: 10px;
+      font-weight: 700;
+      color: #94a5bd;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .badge-root {
+      font-size: 10px;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 750;
+      line-height: 1.35;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .card-title a:hover {
+      color: #84edcd;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 18px;
+      min-height: 38px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .apps-grid.list-view .card-desc {
+      margin-bottom: 0;
+      min-height: auto;
+      max-width: 400px;
+    }
+
+    .card-footer {
+      margin-top: auto;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .apps-grid.list-view .card-footer {
+      margin-top: 0;
+      border-top: none;
+      padding-top: 0;
+      gap: 16px;
+    }
+
+    .card-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .launch-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 750;
+      color: #84edcd;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      background: rgba(132, 237, 205, 0.1);
+      transition: var(--transition);
+    }
+
+    .launch-action:hover {
+      background: #84edcd;
+      color: #061e1b;
+      text-decoration: none;
+    }
+
+    .notes-action {
+      font-size: 11px;
+      color: var(--text-dim);
+      padding: 6px 8px;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+    .notes-action:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .card-info-tags {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 11px;
+    }
+
+    /* EMPTY STATE */
+    #empty-state {
+      padding: 60px 20px;
+      text-align: center;
+      border: 1px dashed var(--border-subtle);
+      border-radius: var(--radius-lg);
+      background: rgba(16, 26, 42, 0.4);
+      margin-top: 20px;
+    }
+
+    #empty-state h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    #empty-state p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* FOOTER */
+    footer.page-footer {
+      margin-top: 80px;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      color: var(--text-dim);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    footer.page-footer a {
+      color: var(--text-muted);
+    }
+    footer.page-footer a:hover {
+      color: #84edcd;
+    }
+
+    /* REDUCED MOTION */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 1380px) {
+      .apps-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .spotlight-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 990px) {
+      .hero-panel { grid-template-columns: 1fr; }
+      .stats-strip { flex-wrap: wrap; }
+      .apps-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .spotlight-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .controls-row-top { flex-direction: column; align-items: stretch; }
+      .search-box { width: 100%; }
+      .search-input { width: 100%; }
+    }
+
+    @media (max-width: 600px) {
+      .wrapper { padding: 0 16px 60px; }
+      .apps-grid { grid-template-columns: 1fr; }
+      .spotlight-grid { grid-template-columns: 1fr; }
+      header.top-nav { flex-direction: column; align-items: start; gap: 14px; }
+      nav.docs-nav { flex-wrap: wrap; }
+      .apps-grid.list-view .card-body { flex-direction: column; align-items: start; }
+      footer.page-footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#library-content">Skip to app library</a>
+
+  <div class="wrapper">
+    <!-- TOP NAVBAR -->
+    <header class="top-nav">
+      <div class="brand-mark">
+        <div class="brand-icon">⚡</div>
+        <div>
+          <span>Downloads Workspace</span>
+          <span class="hub-pill">Active Hub</span>
+        </div>
+      </div>
+      <nav class="docs-nav" aria-label="Documentation and workspace links">
+        <a href="ContinuumOS.html" target="_blank" rel="noopener noreferrer" style="color:#84edcd; font-weight:700">⚡ ContinuumOS Engine</a>
+        <a href="QamoTech%20GitHub%20Sites%20Portal.html" target="_blank" rel="noopener noreferrer">🌐 Sites Portal</a>
+        <a href="Organization/PROJECT-INDEX.md" target="_blank" rel="noopener noreferrer">Project Index</a>
+        <a href="Organization/IMPLEMENTATION-STATUS.md" target="_blank" rel="noopener noreferrer">Status Report</a>
+        <a href="Organization/CLEANUP-REVIEW.md" target="_blank" rel="noopener noreferrer">Cleanup Review</a>
+        <a href="context-hub/CONTEXT.md" target="_blank" rel="noopener noreferrer">Context Hub</a>
+      </nav>
+    </header>
+
+    <main id="library-content">
+      <!-- HERO & STATS -->
+      <section class="hero-panel" aria-labelledby="hero-title">
+        <div class="hero-lead">
+          <h1 id="hero-title">Application Command Deck &amp; <span class="gradient-text">Workspace Hub</span></h1>
+          <p>
+            87 local single-file HTML applications, developer dashboards, creative synthesizers, 
+            interactive sandboxes, and learning portals — organized, verified, and instantly launchable.
+          </p>
+        </div>
+        <div class="stats-strip" role="region" aria-label="Workspace overview statistics">
+          <div class="stat-tile">
+            <strong id="stat-total">87</strong>
+            <span>Total Apps</span>
+          </div>
+          <div class="stat-tile">
+            <strong>5</strong>
+            <span>Categories</span>
+          </div>
+          <div class="stat-tile">
+            <strong>34</strong>
+            <span>Root Tools</span>
+          </div>
+          <div class="stat-tile">
+            <strong>66</strong>
+            <span>Offline Ready</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SPOTLIGHT / QUICK ACCESS -->
+      <section aria-labelledby="spotlight-title">
+        <div class="section-header">
+          <h2 id="spotlight-title">⭐ Keep Close — Quick Launch Spotlight</h2>
+          <span class="subtext">Core production workstations &amp; high-frequency tools</span>
+        </div>
+        <div class="spotlight-grid">
+          <div class="spotlight-card" style="border-color: rgba(6, 182, 212, 0.45); background: linear-gradient(180deg, rgba(6, 182, 212, 0.12) 0%, rgba(14, 22, 36, 0.9) 100%);">
+            <div>
+              <div class="spotlight-top">
+                <span class="spotlight-icon">⚡</span>
+                <strong style="color: #38bdf8;">ContinuumOS Engine</strong>
+              </div>
+              <p>Autonomous app evolution &amp; continuous optimization workbench</p>
+            </div>
+            <a class="spotlight-launch" href="ContinuumOS.html" target="_blank" rel="noopener noreferrer" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(139, 92, 246, 0.3)); border-color: rgba(6, 182, 212, 0.5);">Launch Studio ↗</a>
+          </div>
+          <div class="spotlight-card">
+            <div>
+              <div class="spotlight-top">
+                <span class="spotlight-icon">🚚</span>
+                <strong>Fr8OrdR</strong>
+              </div>
+              <p>Fleet management &amp; trucking logistics command center</p>
+            </div>
+            <a class="spotlight-launch" href="Fr8OrdR.html" target="_blank" rel="noopener noreferrer">Launch Spotlight ↗</a>
+          </div>
+          <div class="spotlight-card">
+            <div>
+              <div class="spotlight-top">
+                <span class="spotlight-icon">⚡</span>
+                <strong>NeuroPulse Cyberdeck</strong>
+              </div>
+              <p>Cybernetic audio synthesizer &amp; holo-deck</p>
+            </div>
+            <a class="spotlight-launch" href="NeuroPulse-Cyberdeck.html" target="_blank" rel="noopener noreferrer">Launch Spotlight ↗</a>
+          </div>
+          <div class="spotlight-card">
+            <div>
+              <div class="spotlight-top">
+                <span class="spotlight-icon">📊</span>
+                <strong>N8Sheetz</strong>
+              </div>
+              <p>Virtualized high-speed spreadsheet engine</p>
+            </div>
+            <a class="spotlight-launch" href="standalone-sites/N8Sheetz.html" target="_blank" rel="noopener noreferrer">Launch Spotlight ↗</a>
+          </div>
+          <div class="spotlight-card">
+            <div>
+              <div class="spotlight-top">
+                <span class="spotlight-icon">🤖</span>
+                <strong>AIWS Workshop</strong>
+              </div>
+              <p>Google AI Studio &amp; Gemini API workspace</p>
+            </div>
+            <a class="spotlight-launch" href="AIWS.html" target="_blank" rel="noopener noreferrer">Launch Spotlight ↗</a>
+          </div>
+          <div class="spotlight-card">
+            <div>
+              <div class="spotlight-top">
+                <span class="spotlight-icon">🔬</span>
+                <strong>Clark MSB Science Hub</strong>
+              </div>
+              <p>Virtual science classroom &amp; lesson portal</p>
+            </div>
+            <a class="spotlight-launch" href="Clark%20MSB.html" target="_blank" rel="noopener noreferrer">Launch Spotlight ↗</a>
+          </div>
+          <div class="spotlight-card">
+            <div>
+              <div class="spotlight-top">
+                <span class="spotlight-icon">💻</span>
+                <strong>AXIOM 2040 v4</strong>
+              </div>
+              <p>Supercharged AI coding environment</p>
+            </div>
+            <a class="spotlight-launch" href="AXIOM_CODE_AI_WORKSPACE/AXIOM_CODE_AI_WORKSPACE_v4.html" target="_blank" rel="noopener noreferrer">Launch Spotlight ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- MAIN CONTROLS & FILTER BAR -->
+      <section aria-labelledby="library-heading">
+        <div class="section-header">
+          <h2 id="library-heading">🚀 App Library</h2>
+          <span id="results-count" class="subtext" aria-live="polite">87 apps available</span>
+        </div>
+
+        <div class="controls-panel">
+          <div class="controls-row-top">
+            <div class="category-pills" role="group" aria-label="Filter by application category">
+              <button class="pill-btn" type="button" data-cat="All" aria-pressed="true">
+                <span>All Apps</span>
+                <span class="pill-count">87</span>
+              </button>
+              <button class="pill-btn" type="button" data-cat="Tools & Productivity" aria-pressed="false">
+                <span>🛠️ Tools & Productivity</span>
+                <span class="pill-count">39</span>
+              </button>
+              <button class="pill-btn" type="button" data-cat="AI & Prompts" aria-pressed="false">
+                <span>🧠 AI & Prompts</span>
+                <span class="pill-count">13</span>
+              </button>
+              <button class="pill-btn" type="button" data-cat="Creative & Audio" aria-pressed="false">
+                <span>🎵 Creative & Audio</span>
+                <span class="pill-count">13</span>
+              </button>
+              <button class="pill-btn" type="button" data-cat="Arcade & Games" aria-pressed="false">
+                <span>🕹️ Arcade & Games</span>
+                <span class="pill-count">13</span>
+              </button>
+              <button class="pill-btn" type="button" data-cat="Education & Kids" aria-pressed="false">
+                <span>🎓 Education & Kids</span>
+                <span class="pill-count">9</span>
+              </button>
+            </div>
+
+            <div class="search-and-tools">
+              <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24"><path d="M10 2a8 8 0 015.293 13.998l5.354 5.354a1 1 0 01-1.414 1.414l-5.354-5.354A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"/></svg>
+                <input id="search-input" class="search-input" type="search" placeholder="Search apps, tags, slugs..." autocomplete="off" aria-label="Search applications" />
+                <span class="search-kbd" id="search-kbd">/</span>
+                <button id="clear-search" class="clear-search-btn" aria-label="Clear search">✕</button>
+              </div>
+
+              <select id="sort-select" class="filter-dropdown" aria-label="Sort applications">
+                <option value="name-asc">Name (A → Z)</option>
+                <option value="name-desc">Name (Z → A)</option>
+                <option value="size-desc">Size (Largest first)</option>
+                <option value="size-asc">Size (Smallest first)</option>
+              </select>
+
+              <div class="view-toggle" role="group" aria-label="View layout toggle">
+                <button id="view-grid" class="view-btn active" title="Grid View" aria-label="Grid View">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>
+                </button>
+                <button id="view-list" class="view-btn" title="Compact List View" aria-label="Compact List View">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="controls-subbar">
+            <div class="scope-filters">
+              <span>Filter Scope:</span>
+              <button class="scope-btn active" data-scope="all">All Files (87)</button>
+              <button class="scope-btn" data-scope="root">Root Apps Only (34)</button>
+              <button class="scope-btn" data-scope="offline">Offline Ready Only (66)</button>
+            </div>
+            <div>
+              <span>Tip: Press <strong>/</strong> to search, <strong>Esc</strong> to clear.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- APP CARDS GRID -->
+        <div id="apps-grid" class="apps-grid">
+          <!-- Rendered dynamically via JavaScript for ultra-fast filtering -->
+        </div>
+
+        <div id="empty-state" hidden>
+          <h3>No applications matched your search</h3>
+          <p>Try clearing your search query or selecting "All Apps" to view everything in your workspace.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <div>
+        <strong>Downloads Workspace Launcher</strong> · Curated on local drive · Single-file architecture<br />
+        Preserves existing file URLs, browser storage partitions, and offline portability.
+      </div>
+      <div>
+        <a href="Organization/guides/sync-and-privacy.md" target="_blank" rel="noopener noreferrer">Storage &amp; Privacy Notes</a> · 
+        <a href="Organization/RESTORE.md" target="_blank" rel="noopener noreferrer">Restore Guide</a> · 
+        <a href="#library-content">Back to Top ↑</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- EMBEDDED APPLICATION DATA -->
+  <script>
+    const APPS_DATA = [{"title": "ContinuumOS — Autonomous App Evolution Engine", "url": "ContinuumOS.html", "category": "Tools & Productivity", "description": "Continuous upgrade workbench, standards auditor, telemetry benchmark sandbox, and infinite modification scheduler.", "screenshot": null, "slug": "continuumos", "is_root": true, "size_kb": 53.7, "offline": true, "notes_url": null}, {"title": "OmniBuild 4D — Pro Designer", "url": "standalone-sites/ob3d/index.html", "category": "Tools & Productivity", "description": "OmniBuild 4D — Pro Designer", "screenshot": null, "slug": "ob3d", "is_root": false, "size_kb": 292.7, "offline": true, "notes_url": "standalone-sites/ob3d/README.md"}, {"title": "Clark Family Projects | General Home Improvement", "url": "standalone-sites/CFP index.html", "category": "Tools & Productivity", "description": "Clark Family Projects — general home improvement site", "screenshot": null, "slug": "cfp-index", "is_root": false, "size_kb": 10.2, "offline": true, "notes_url": null}, {"title": "1POLY", "url": "1POLY.html", "category": "Tools & Productivity", "description": "Interactive tool · 1POLY", "screenshot": null, "slug": "1poly", "is_root": true, "size_kb": 1018.8, "offline": true, "notes_url": null}, {"title": "8 - Escape to the 8th", "url": "standalone-sites/82the8th.html", "category": "Arcade & Games", "description": "8 - Escape to the 8th", "screenshot": "Organization/screenshots/82the8th.png", "slug": "82the8th", "is_root": false, "size_kb": 38.3, "offline": true, "notes_url": "standalone-sites/apps/82the8th/README.md"}, {"title": "AgentBox OS", "url": "AgentBox-OS.html", "category": "AI & Prompts", "description": "A virtual computer that belongs to an AI: desktop, files, terminal, editor, paint and w...", "screenshot": null, "slug": "agentbox-os", "is_root": true, "size_kb": 601.4, "offline": false, "notes_url": null}, {"title": "Agentic Prompt Command Deck v2.0 | 58 Ultra-Refined AI Prompts", "url": "better_prompts_deck.html", "category": "AI & Prompts", "description": "Agentic Prompt Command Deck v2.0\n             58 Ultra-Refined Prompts", "screenshot": null, "slug": "better-prompts-deck", "is_root": true, "size_kb": 91.8, "offline": false, "notes_url": null}, {"title": "AI Quota Bridge — Gemini Offload", "url": "standalone-sites/AI_N8R_HUB.html", "category": "AI & Prompts", "description": "⚡ AI Quota", "screenshot": "Organization/screenshots/ai-n8r-hub.png", "slug": "ai-n8r-hub", "is_root": false, "size_kb": 17.9, "offline": true, "notes_url": "standalone-sites/apps/ai-n8r-hub/README.md"}, {"title": "AIWS App", "url": "AIWS.html", "category": "AI & Prompts", "description": "Interactive tool · AIWS", "screenshot": null, "slug": "aiws", "is_root": true, "size_kb": 567.1, "offline": true, "notes_url": null}, {"title": "AXIOM 2040 v4", "url": "AXIOM_CODE_AI_WORKSPACE/AXIOM_CODE_AI_WORKSPACE_v4.html", "category": "Tools & Productivity", "description": "Supercharged AI coding and development environment", "screenshot": null, "slug": "axiom_code_ai_workspace_v4", "is_root": false, "size_kb": 162.1, "offline": true, "notes_url": null}, {"title": "AXIOM 2040 v4 // Supercharged AI Coding Workspace", "url": "standalone-sites/AXIOM.html", "category": "Tools & Productivity", "description": "AXIOM 2040 v4 // Supercharged AI Coding Workspace", "screenshot": "Organization/screenshots/axiom.png", "slug": "axiom", "is_root": false, "size_kb": 127.4, "offline": false, "notes_url": "standalone-sites/apps/axiom/README.md"}, {"title": "Bookmarks", "url": "qamotech-github-bookmarks.html", "category": "Education & Kids", "description": "Bookmarks", "screenshot": null, "slug": "qamotech-github-bookmarks", "is_root": true, "size_kb": 7.0, "offline": true, "notes_url": null}, {"title": "BYLD — Build Your Life Daily", "url": "byld.html", "category": "Tools & Productivity", "description": "Interactive tool · byld", "screenshot": null, "slug": "byld", "is_root": true, "size_kb": 2754.3, "offline": true, "notes_url": null}, {"title": "Call of Duty: Shipment 8-bit", "url": "standalone-sites/cod8.html", "category": "Arcade & Games", "description": "Call of Duty: Shipment 8-bit", "screenshot": "Organization/screenshots/cod8.png", "slug": "cod8", "is_root": false, "size_kb": 18.1, "offline": true, "notes_url": "standalone-sites/apps/cod8/README.md"}, {"title": "CareCircle · Family Care Hub for Grams", "url": "standalone-sites/CareCirclePRO.html", "category": "Tools & Productivity", "description": "CareCircle · Family Care Hub for Grams", "screenshot": null, "slug": "carecirclepro", "is_root": false, "size_kb": 101.4, "offline": false, "notes_url": "standalone-sites/apps/carecirclepro/README.md"}, {"title": "Cartograph — Fantasy Map Generator", "url": "Cartograph.html", "category": "Arcade & Games", "description": "Carto graph", "screenshot": null, "slug": "cartograph", "is_root": true, "size_kb": 65.2, "offline": true, "notes_url": null}, {"title": "CDL Loadout Checklist", "url": "CDL-Checklist.html", "category": "Tools & Productivity", "description": "Printable, save-as-you-go checklist for getting a US commercial driver's license (CDL).", "screenshot": null, "slug": "cdl-checklist", "is_root": true, "size_kb": 35.1, "offline": false, "notes_url": null}, {"title": "CHAOS → MIND · Cybertronian Architect", "url": "standalone-sites/cyber-transl8r.html", "category": "Tools & Productivity", "description": "⚙️ ENCRYPTION CORE", "screenshot": "Organization/screenshots/cyber-transl8r.png", "slug": "cyber-transl8r", "is_root": false, "size_kb": 51.5, "offline": false, "notes_url": "standalone-sites/apps/cyber-transl8r/README.md"}, {"title": "Clark Family Projects | General Home Improvement", "url": "standalone-sites/CFP%20index.html", "category": "Tools & Productivity", "description": "Clark Family", "screenshot": "Organization/screenshots/cfp-index.png", "slug": "cfp-index", "is_root": false, "size_kb": 9.9, "offline": true, "notes_url": "standalone-sites/apps/cfp-index/README.md"}, {"title": "Claude Optimizer", "url": "Claude-Optimizer.html", "category": "AI & Prompts", "description": "Claude Optimizer - Estimate & shrink prompts, check context budgets, configure MCP serv...", "screenshot": null, "slug": "claude-optimizer", "is_root": true, "size_kb": 46.2, "offline": true, "notes_url": null}, {"title": "Clip Candy 🍿 — Funny Movie Soundboard", "url": "standalone-sites/ClipCandy.html", "category": "Creative & Audio", "description": "🍿 CLIP CANDY", "screenshot": "Organization/screenshots/clipcandy.png", "slug": "clipcandy", "is_root": false, "size_kb": 30.8, "offline": true, "notes_url": "standalone-sites/apps/clipcandy/README.md"}, {"title": "COD: SHIPMENT ENHANCED", "url": "standalone-sites/shipment-8bit-fps.html", "category": "Arcade & Games", "description": "CALL OF DUTY", "screenshot": "Organization/screenshots/shipment-8bit-fps.png", "slug": "shipment-8bit-fps", "is_root": false, "size_kb": 16.2, "offline": true, "notes_url": "standalone-sites/apps/shipment-8bit-fps/README.md"}, {"title": "CodeN8R // Electric AI Studio", "url": "standalone-sites/CodeN8R.html", "category": "AI & Prompts", "description": "Code", "screenshot": "Organization/screenshots/coden8r.png", "slug": "coden8r", "is_root": false, "size_kb": 127.0, "offline": true, "notes_url": "standalone-sites/apps/coden8r/README.md"}, {"title": "CodeN8R Capabilities Showcase", "url": "standalone-sites/CanICode.htm", "category": "Tools & Productivity", "description": "What Can I Code For You?", "screenshot": "Organization/screenshots/canicode.png", "slug": "canicode", "is_root": false, "size_kb": 15.8, "offline": true, "notes_url": "standalone-sites/apps/canicode/README.md"}, {"title": "COMBAT CARS - Sega Genesis Retro Edition", "url": "standalone-sites/CCars.html", "category": "Arcade & Games", "description": "COMBAT CARS", "screenshot": "Organization/screenshots/ccars.png", "slug": "ccars", "is_root": false, "size_kb": 36.3, "offline": true, "notes_url": "standalone-sites/apps/ccars/README.md"}, {"title": "Crumb to Coin", "url": "Crumb2Coin.html", "category": "Tools & Productivity", "description": "Interactive tool · Crumb2Coin", "screenshot": null, "slug": "crumb2coin", "is_root": true, "size_kb": 117.5, "offline": false, "notes_url": null}, {"title": "Crumb2Coin - Crypto Portfolio Tracker", "url": "Crumb2Coin-Tracker.html", "category": "Tools & Productivity", "description": "Turn your digital crumbs into coins. A single-file crypto portfolio tracker and financi...", "screenshot": null, "slug": "crumb2coin-tracker", "is_root": true, "size_kb": 6.6, "offline": true, "notes_url": null}, {"title": "EchoScribe — Audio → Styled Transcript", "url": "standalone-sites/EchoScribe.html", "category": "Creative & Audio", "description": "🎙️ EchoScribe", "screenshot": "Organization/screenshots/echoscribe.png", "slug": "echoscribe", "is_root": false, "size_kb": 44.5, "offline": true, "notes_url": "standalone-sites/apps/echoscribe/README.md"}, {"title": "Educ8 — The Future of Teaching", "url": "standalone-sites/Educ8.html", "category": "Education & Kids", "description": "Command Center", "screenshot": "Organization/screenshots/educ8.png", "slug": "educ8", "is_root": false, "size_kb": 147.8, "offline": false, "notes_url": "standalone-sites/apps/educ8/README.md"}, {"title": "File2Context | AI Context Builder", "url": "standalone-sites/2cntxt.html", "category": "AI & Prompts", "description": "File2Context", "screenshot": "Organization/screenshots/2cntxt.png", "slug": "2cntxt", "is_root": false, "size_kb": 29.8, "offline": false, "notes_url": "standalone-sites/apps/2cntxt/README.md"}, {"title": "Floating Squares & Central Lens", "url": "standalone-sites/lens-circle.html", "category": "Tools & Productivity", "description": "Floating Squares & Central Lens", "screenshot": "Organization/screenshots/lens-circle.png", "slug": "lens-circle", "is_root": false, "size_kb": 3.4, "offline": true, "notes_url": "standalone-sites/apps/lens-circle/README.md"}, {"title": "Fr8OrdR — Fleet Management", "url": "Fr8OrdR.html", "category": "Tools & Productivity", "description": "A premium single-file HTML logistics and trucking management dashboard. Track loads, ma...", "screenshot": null, "slug": "fr8ordr", "is_root": true, "size_kb": 393.2, "offline": true, "notes_url": null}, {"title": "Fr8OrdR — Fleet Management", "url": "trucking-app.html", "category": "Tools & Productivity", "description": "Fr8OrdR — Smart trucking fleet management for small business owners. Track loads, manag...", "screenshot": null, "slug": "trucking-app", "is_root": true, "size_kb": 1773.7, "offline": true, "notes_url": null}, {"title": "Front-End Developer Workbench", "url": "standalone-sites/front-end-developer-workbench.html", "category": "Tools & Productivity", "description": "Front-End Workbench", "screenshot": "Organization/screenshots/front-end-developer-workbench.png", "slug": "front-end-developer-workbench", "is_root": false, "size_kb": 41.7, "offline": true, "notes_url": "standalone-sites/apps/front-end-developer-workbench/README.md"}, {"title": "Game Asset Engine (Super-Sampled & Optimized)", "url": "standalone-sites/game-asset-engine.html", "category": "Creative & Audio", "description": "Optimized SVG Asset Engine", "screenshot": "Organization/screenshots/game-asset-engine.png", "slug": "game-asset-engine", "is_root": false, "size_kb": 4.7, "offline": true, "notes_url": "standalone-sites/apps/game-asset-engine/README.md"}, {"title": "Habit Grove — Grow a Tree for Every Habit", "url": "Habit-Grove.html", "category": "Tools & Productivity", "description": "Habit  Grove", "screenshot": null, "slug": "habit-grove", "is_root": true, "size_kb": 43.1, "offline": true, "notes_url": null}, {"title": "Infinite Growth — Partnership Command Center", "url": "Infinite%20Growth%20--%20Prospecting%20and%20Networking%20Command%20Center.html", "category": "Tools & Productivity", "description": "INFINITE GROWTH  · Partnership HQ", "screenshot": null, "slug": "infinite-growth----prospecting-and-networking-command-center", "is_root": true, "size_kb": 176.4, "offline": true, "notes_url": null}, {"title": "Invoice Forge", "url": "N8DEV/Business/invoice-forge.html", "category": "Tools & Productivity", "description": "Professional invoice & quote generator", "screenshot": null, "slug": "invoice-forge", "is_root": false, "size_kb": 103.5, "offline": true, "notes_url": null}, {"title": "Kid Hub 64 — Play, Make & Learn", "url": "standalone-sites/kidHub-64-feature-houndstooth-upgrade.html", "category": "Education & Kids", "description": "Kid Hub", "screenshot": "Organization/screenshots/kidhub-64-feature-houndstooth-upgrade.png", "slug": "kidhub-64-feature-houndstooth-upgrade", "is_root": false, "size_kb": 141.0, "offline": true, "notes_url": "standalone-sites/apps/kidhub-64-feature-houndstooth-upgrade/README.md"}, {"title": "KidHub 64 Portal", "url": "kidhub/index.html", "category": "Education & Kids", "description": "Interactive learning and adventure gaming platform for kids", "screenshot": null, "slug": "index", "is_root": false, "size_kb": 850.1, "offline": true, "notes_url": null}, {"title": "Kids Beat Maker", "url": "N8DEV/Kids/KidsBeat.html", "category": "Education & Kids", "description": "Kid-friendly rhythm and beat maker station", "screenshot": "Organization/screenshots/kidsbeat.png", "slug": "kidsbeat", "is_root": false, "size_kb": 59.5, "offline": true, "notes_url": "standalone-sites/apps/kidsbeat/README.md"}, {"title": "Lightnin Library Vault", "url": "Lightnin-Library-Vault.html", "category": "Tools & Productivity", "description": "A robust asset manager and file repository system for storing and previewing local PDFs...", "screenshot": null, "slug": "lightnin-library-vault", "is_root": true, "size_kb": 6.6, "offline": true, "notes_url": null}, {"title": "Living Ink - Navier-Stokes Fluid Sim", "url": "standalone-sites/living-ink-navier-stokes.html", "category": "Creative & Audio", "description": "Living Ink - Navier-Stokes Fluid Sim", "screenshot": "Organization/screenshots/living-ink-navier-stokes.png", "slug": "living-ink-navier-stokes", "is_root": false, "size_kb": 19.4, "offline": true, "notes_url": "standalone-sites/apps/living-ink-navier-stokes/README.md"}, {"title": "Local AI Prompt Enhancer Pro", "url": "standalone-sites/PromptGen.html", "category": "AI & Prompts", "description": "Local AI Prompt Enhancer Pro", "screenshot": "Organization/screenshots/promptgen.png", "slug": "promptgen", "is_root": false, "size_kb": 35.0, "offline": false, "notes_url": "standalone-sites/apps/promptgen/README.md"}, {"title": "LTD Summit 2026 - Ultimate Experience", "url": "ltd_summit_2026.html", "category": "Tools & Productivity", "description": "Interactive tool · ltd_summit_2026", "screenshot": null, "slug": "ltd-summit-2026", "is_root": true, "size_kb": 121.5, "offline": false, "notes_url": null}, {"title": "Margin — business cockpit", "url": "Margin.html", "category": "Tools & Productivity", "description": "Today", "screenshot": null, "slug": "margin", "is_root": true, "size_kb": 97.4, "offline": true, "notes_url": null}, {"title": "masterPrompt — Animated AI Webbuilding Command Deck", "url": "standalone-sites/masterPrompt-upd8.html", "category": "AI & Prompts", "description": "MASTER THE BUILD.", "screenshot": "Organization/screenshots/masterprompt-upd8.png", "slug": "masterprompt-upd8", "is_root": false, "size_kb": 103.1, "offline": true, "notes_url": "standalone-sites/apps/masterprompt-upd8/README.md"}, {"title": "Mecha-Transformer-Ninja ARPG Controller", "url": "standalone-sites/ninja-interactive-sandbox-broken-actions.html", "category": "Tools & Productivity", "description": "Mecha-Transformer-Ninja ARPG Controller", "screenshot": "Organization/screenshots/ninja-interactive-sandbox-broken-actions.png", "slug": "ninja-interactive-sandbox-broken-actions", "is_root": false, "size_kb": 23.1, "offline": true, "notes_url": "standalone-sites/apps/ninja-interactive-sandbox-broken-actions/README.md"}, {"title": "MECHATURTLE // Deep-Space Command Interface", "url": "Mechaturtle%20Command%20Interface.html", "category": "Tools & Productivity", "description": "🐢 MECHATURTLE  // DEEP-SPACE COMMAND", "screenshot": null, "slug": "mechaturtle-command-interface", "is_root": true, "size_kb": 49.3, "offline": false, "notes_url": null}, {"title": "Miyagi-Do: Shadow Defense", "url": "standalone-sites/CMT.html", "category": "Arcade & Games", "description": "MIYAGI-DO", "screenshot": "Organization/screenshots/cmt.png", "slug": "cmt", "is_root": false, "size_kb": 23.2, "offline": true, "notes_url": "standalone-sites/apps/cmt/README.md"}, {"title": "Miyagi-Do: Shadow Defense", "url": "standalone-sites/MT.html", "category": "Arcade & Games", "description": "MIYAGI-DO", "screenshot": "Organization/screenshots/mt.png", "slug": "mt", "is_root": false, "size_kb": 35.8, "offline": true, "notes_url": "standalone-sites/apps/mt/README.md"}, {"title": "MP4 → HTML Converter Pro", "url": "standalone-sites/Mp4_to_Html.html", "category": "Creative & Audio", "description": "🎬 MP4 → HTML", "screenshot": "Organization/screenshots/mp4-to-html.png", "slug": "mp4-to-html", "is_root": false, "size_kb": 37.0, "offline": true, "notes_url": "standalone-sites/apps/mp4-to-html/README.md"}, {"title": "N8 Patcher", "url": "standalone-sites/N8Patcher.html", "category": "Tools & Productivity", "description": "⚡ N8 Code Patcher", "screenshot": "Organization/screenshots/n8patcher.png", "slug": "n8patcher", "is_root": false, "size_kb": 91.0, "offline": true, "notes_url": "standalone-sites/apps/n8patcher/README.md"}, {"title": "N8 SHIFT: Transform Protocol", "url": "standalone-sites/n8-shift.html", "category": "Arcade & Games", "description": "N8 SHIFT", "screenshot": null, "slug": "n8-shift", "is_root": false, "size_kb": 101.4, "offline": false, "notes_url": "standalone-sites/apps/n8-shift/README.md"}, {"title": "N8DEV Development Hub", "url": "N8DEV/Dev/index.html", "category": "Tools & Productivity", "description": "Development collection & workspace tools", "screenshot": null, "slug": "index", "is_root": false, "size_kb": 8.4, "offline": true, "notes_url": null}, {"title": "N8Sheetz", "url": "standalone-sites/N8Sheetz.html", "category": "Tools & Productivity", "description": "N8Sheetz", "screenshot": "Organization/screenshots/n8sheetz.png", "slug": "n8sheetz", "is_root": false, "size_kb": 620.8, "offline": true, "notes_url": "standalone-sites/apps/n8sheetz/README.md"}, {"title": "NEURAL FORGE • AI Command Interface", "url": "standalone-sites/neural-forge.html", "category": "AI & Prompts", "description": "Turn scattered thoughts into executable reality.", "screenshot": "Organization/screenshots/neural-forge.png", "slug": "neural-forge", "is_root": false, "size_kb": 24.4, "offline": true, "notes_url": "standalone-sites/apps/neural-forge/README.md"}, {"title": "NeuroPulse (KidHub Edition)", "url": "kidhub/games/neuropulse.html", "category": "Creative & Audio", "description": "Sensory rhythm matrix and interactive sound synthesis", "screenshot": null, "slug": "neuropulse", "is_root": false, "size_kb": 113.2, "offline": true, "notes_url": null}, {"title": "NEUROPULSE // Cybernetic Audio-Visual Synthesizer & Holo-Deck", "url": "NeuroPulse-Cyberdeck.html", "category": "Creative & Audio", "description": "Interactive tool · NeuroPulse-Cyberdeck", "screenshot": null, "slug": "neuropulse-cyberdeck", "is_root": true, "size_kb": 115.8, "offline": true, "notes_url": null}, {"title": "NEXT RIGHT — Decision Load Reducer", "url": "standalone-sites/NEXT_RIGHT.html", "category": "Tools & Productivity", "description": "Stop deciding.", "screenshot": "Organization/screenshots/next-right.png", "slug": "next-right", "is_root": false, "size_kb": 34.8, "offline": true, "notes_url": "standalone-sites/apps/next-right/README.md"}, {"title": "Omni Architect - AI Environment Sandbox", "url": "Omni-Architect-Sandbox.html", "category": "Tools & Productivity", "description": "A multi-agent design environment sandbox for rapid web prototyping and architecture lay...", "screenshot": null, "slug": "omni-architect-sandbox", "is_root": true, "size_kb": 6.0, "offline": true, "notes_url": null}, {"title": "Orrery — Gravity Sandbox", "url": "Orrery.html", "category": "Arcade & Games", "description": "Orr e ry", "screenshot": null, "slug": "orrery", "is_root": true, "size_kb": 60.1, "offline": true, "notes_url": null}, {"title": "Patchbay", "url": "Patchbay.html", "category": "Creative & Audio", "description": "Every line Claude can reach, on one board", "screenshot": null, "slug": "patchbay", "is_root": true, "size_kb": 44.8, "offline": false, "notes_url": null}, {"title": "PopStorm Arcade", "url": "N8DEV/Arcade/PopStorm.html", "category": "Arcade & Games", "description": "Fast-paced balloon popping arcade challenge", "screenshot": null, "slug": "popstorm", "is_root": false, "size_kb": 177.2, "offline": true, "notes_url": null}, {"title": "Precision Alignment Laser Animation", "url": "standalone-sites/laser-measure-twice-paint-once.html", "category": "Tools & Productivity", "description": "Precision Alignment Laser Animation", "screenshot": "Organization/screenshots/laser-measure-twice-paint-once.png", "slug": "laser-measure-twice-paint-once", "is_root": false, "size_kb": 5.1, "offline": true, "notes_url": "standalone-sites/apps/laser-measure-twice-paint-once/README.md"}, {"title": "Pulsewerk — Drum Machine & Acid Bass", "url": "Pulsewerk.html", "category": "Creative & Audio", "description": "Kick", "screenshot": null, "slug": "pulsewerk", "is_root": true, "size_kb": 73.2, "offline": true, "notes_url": null}, {"title": "Qamelot Studio", "url": "standalone-sites/QamelotStudio.html", "category": "Creative & Audio", "description": "Qamelot Studio", "screenshot": "Organization/screenshots/qamelotstudio.png", "slug": "qamelotstudio", "is_root": false, "size_kb": 68.7, "offline": true, "notes_url": "standalone-sites/apps/qamelotstudio/README.md"}, {"title": "QamoTech // GitHub Sites & Live Web Apps Portal", "url": "QamoTech%20GitHub%20Sites%20Portal.html", "category": "Tools & Productivity", "description": "QamoTech // GitHub Sites & Web Apps", "screenshot": null, "slug": "qamotech-github-sites-portal", "is_root": true, "size_kb": 21.9, "offline": false, "notes_url": null}, {"title": "Quantum Synthiverse 2040 — Neural Matrix & Holographic Synth", "url": "standalone-sites/QuantumSynthiverse2040.html", "category": "Creative & Audio", "description": "Quantum Synthiverse 2040 — Neural Matrix & Holographic Synth", "screenshot": "Organization/screenshots/quantumsynthiverse2040.png", "slug": "quantumsynthiverse2040", "is_root": false, "size_kb": 33.3, "offline": false, "notes_url": "standalone-sites/apps/quantumsynthiverse2040/README.md"}, {"title": "React Artifact", "url": "standalone-sites/shipment-8bit-fps-original.html", "category": "Arcade & Games", "description": "React Artifact", "screenshot": "Organization/screenshots/shipment-8bit-fps-original.png", "slug": "shipment-8bit-fps-original", "is_root": false, "size_kb": 171.7, "offline": true, "notes_url": "standalone-sites/apps/shipment-8bit-fps-original/README.md"}, {"title": "Regex Forge — Regular Expression Workbench", "url": "Regex-Forge.html", "category": "Tools & Productivity", "description": "Interactive tool · Regex-Forge", "screenshot": null, "slug": "regex-forge", "is_root": true, "size_kb": 72.4, "offline": true, "notes_url": null}, {"title": "Relay Desk", "url": "Relay-Desk.html", "category": "Tools & Productivity", "description": "Strip", "screenshot": null, "slug": "relay-desk", "is_root": true, "size_kb": 36.5, "offline": false, "notes_url": null}, {"title": "SEO Architect Studio Pro | All-In-One SEO Optimization Suite", "url": "standalone-sites/seoDashWired.html", "category": "Tools & Productivity", "description": "SEO Architect Studio Pro | All-In-One SEO Optimization Suite", "screenshot": "Organization/screenshots/seodashwired.png", "slug": "seodashwired", "is_root": false, "size_kb": 69.0, "offline": true, "notes_url": "standalone-sites/apps/seodashwired/README.md"}, {"title": "SEO Pro Dashboard", "url": "standalone-sites/seoDash.html", "category": "Tools & Productivity", "description": "🚀 SEO Pro", "screenshot": "Organization/screenshots/seodash.png", "slug": "seodash", "is_root": false, "size_kb": 10.7, "offline": true, "notes_url": "standalone-sites/apps/seodash/README.md"}, {"title": "SiteForge Cyber Electric — Visual Web Builder", "url": "standalone-sites/site-forge-cyber-electric.html", "category": "Tools & Productivity", "description": "Live project preview", "screenshot": "Organization/screenshots/site-forge-cyber-electric.png", "slug": "site-forge-cyber-electric", "is_root": false, "size_kb": 72.1, "offline": true, "notes_url": "standalone-sites/apps/site-forge-cyber-electric/README.md"}, {"title": "Six-Pack — Launcher", "url": "Six-Pack.html", "category": "Tools & Productivity", "description": "Six - Pack", "screenshot": null, "slug": "six-pack", "is_root": true, "size_kb": 14.0, "offline": true, "notes_url": null}, {"title": "Tessera — Generative Pattern Studio", "url": "Tessera.html", "category": "Arcade & Games", "description": "Tess e ra", "screenshot": null, "slug": "tessera", "is_root": true, "size_kb": 48.2, "offline": true, "notes_url": null}, {"title": "The Frizz Files | A Magic School Bus Science Hub for Teachers", "url": "frizz-files-lesson-hub.html", "category": "Education & Kids", "description": "Science lessons worth  shrinking down  for.", "screenshot": null, "slug": "frizz-files-lesson-hub", "is_root": true, "size_kb": 86.4, "offline": false, "notes_url": null}, {"title": "The Magic School Bus Virtual Classroom", "url": "Clark%20MSB.html", "category": "Education & Kids", "description": "Educator Hub", "screenshot": null, "slug": "clark-msb", "is_root": true, "size_kb": 26.7, "offline": false, "notes_url": null}, {"title": "TurtleBot Nexus — Transforming Creative Workstation", "url": "standalone-sites/turtlebot-nexus.html", "category": "AI & Prompts", "description": "Build at", "screenshot": "Organization/screenshots/turtlebot-nexus.png", "slug": "turtlebot-nexus", "is_root": false, "size_kb": 49.1, "offline": true, "notes_url": "standalone-sites/apps/turtlebot-nexus/README.md"}, {"title": "Untitled interface", "url": "standalone-sites/untitled-interface.html", "category": "Tools & Productivity", "description": "Turn raw ideas into electric experiences.", "screenshot": "Organization/screenshots/untitled-interface.png", "slug": "untitled-interface", "is_root": false, "size_kb": 2.9, "offline": true, "notes_url": "standalone-sites/apps/untitled-interface/README.md"}, {"title": "US & CO. — The Couples Game", "url": "standalone-sites/US-and-CO-Enhanced.html", "category": "Arcade & Games", "description": "US & CO. — The Couples Game", "screenshot": "Organization/screenshots/us-and-co-enhanced.png", "slug": "us-and-co-enhanced", "is_root": false, "size_kb": 50.4, "offline": true, "notes_url": "standalone-sites/apps/us-and-co-enhanced/README.md"}, {"title": "Walking Water Field Trip", "url": "Walking-Water-Field-Trip.html", "category": "Education & Kids", "description": "A science-field-trip style interactive page for the walking water experiment: cups, wat...", "screenshot": null, "slug": "walking-water-field-trip", "is_root": true, "size_kb": 107.0, "offline": false, "notes_url": null}, {"title": "Win11 Fluent Turtle Bot Workspace", "url": "standalone-sites/turtlebot-main.html", "category": "AI & Prompts", "description": "Front-End Developer Workbench", "screenshot": "Organization/screenshots/turtlebot-main.png", "slug": "turtlebot-main", "is_root": false, "size_kb": 79.1, "offline": true, "notes_url": "standalone-sites/apps/turtlebot-main/README.md"}, {"title": "Wondertown Stories — Family Pretend Play", "url": "standalone-sites/wondertown-stories-production.html", "category": "Education & Kids", "description": "🧸 Toy Box", "screenshot": "Organization/screenshots/wondertown-stories-production.png", "slug": "wondertown-stories-production", "is_root": false, "size_kb": 51.5, "offline": true, "notes_url": "standalone-sites/apps/wondertown-stories-production/README.md"}, {"title": "You're Offline", "url": "standalone-sites/offline.html", "category": "Tools & Productivity", "description": "No Internet Connection", "screenshot": "Organization/screenshots/offline.png", "slug": "offline", "is_root": false, "size_kb": 2.2, "offline": true, "notes_url": "standalone-sites/apps/offline/README.md"}, {"title": "⚡ MASTER GAME SVG ASSET LIBRARY 🎨 — Ultimate 128+ Vector Asset Studio", "url": "standalone-sites/MASTER_GAME_SVG_ASSET_LIBRARY.html", "category": "Creative & Audio", "description": "MASTER GAME SVG ASSET LIBRARY", "screenshot": "Organization/screenshots/master-game-svg-asset-library.png", "slug": "master-game-svg-asset-library", "is_root": false, "size_kb": 17.1, "offline": true, "notes_url": "standalone-sites/apps/master-game-svg-asset-library/README.md"}, {"title": "⚡ NEXUS AI // The Ultimate Machine Intelligence Directory & Toolkit", "url": "NexusAiv4.8.html", "category": "Tools & Productivity", "description": "Every AI Model, Free Agent & API. \n       Unified In One Hyper-Catalog.", "screenshot": null, "slug": "nexusaiv4.8", "is_root": true, "size_kb": 66.4, "offline": false, "notes_url": null}, {"title": "🎵 Kids Beat Maker Pro 🚀", "url": "standalone-sites/KidsBeat.html", "category": "Creative & Audio", "description": "🎵 Kids Beat Maker Pro 🚀", "screenshot": "Organization/screenshots/kidsbeat.png", "slug": "kidsbeat", "is_root": false, "size_kb": 59.5, "offline": true, "notes_url": "standalone-sites/apps/kidsbeat/README.md"}];
+
+    const categoryIcons = {
+      "Tools & Productivity": "🛠️",
+      "AI & Prompts": "🧠",
+      "Creative & Audio": "🎵",
+      "Arcade & Games": "🕹️",
+      "Education & Kids": "🎓"
+    };
+
+    const categoryClass = {
+      "Tools & Productivity": "cat-tools",
+      "AI & Prompts": "cat-ai",
+      "Creative & Audio": "cat-creative",
+      "Arcade & Games": "cat-arcade",
+      "Education & Kids": "cat-edu"
+    };
+
+    // State
+    let currentCategory = "All";
+    let currentScope = "all";
+    let currentSort = "name-asc";
+    let searchQuery = "";
+    let isGridView = true;
+
+    // DOM Elements
+    const gridEl = document.getElementById("apps-grid");
+    const emptyEl = document.getElementById("empty-state");
+    const countEl = document.getElementById("results-count");
+    const searchInput = document.getElementById("search-input");
+    const searchKbd = document.getElementById("search-kbd");
+    const clearBtn = document.getElementById("clear-search");
+    const sortSelect = document.getElementById("sort-select");
+    const catButtons = document.querySelectorAll(".pill-btn");
+    const scopeButtons = document.querySelectorAll(".scope-btn");
+    const viewGridBtn = document.getElementById("view-grid");
+    const viewListBtn = document.getElementById("view-list");
+
+    function renderApps() {
+      const q = searchQuery.trim().toLowerCase();
+      
+      let filtered = APPS_DATA.filter(app => {
+        // Category check
+        if (currentCategory !== "All" && app.category !== currentCategory) return false;
+
+        // Scope check
+        if (currentScope === "root" && !app.is_root) return false;
+        if (currentScope === "offline" && !app.offline) return false;
+
+        // Search query check
+        if (q) {
+          const matchTarget = (app.title + " " + app.url + " " + app.description + " " + app.category + " " + app.slug).toLowerCase();
+          if (!matchTarget.includes(q)) return false;
+        }
+
+        return true;
+      });
+
+      // Sorting
+      filtered.sort((a, b) => {
+        if (currentSort === "name-asc") return a.title.localeCompare(b.title);
+        if (currentSort === "name-desc") return b.title.localeCompare(a.title);
+        if (currentSort === "size-desc") return (b.size_kb || 0) - (a.size_kb || 0);
+        if (currentSort === "size-asc") return (a.size_kb || 0) - (b.size_kb || 0);
+        return 0;
+      });
+
+      // Update counters
+      countEl.textContent = `${filtered.length} ${filtered.length === 1 ? "app" : "apps"} displayed`;
+      emptyEl.hidden = filtered.length !== 0;
+
+      // Construct DOM
+      const fragment = document.createDocumentFragment();
+
+      filtered.forEach(app => {
+        const card = document.createElement("article");
+        card.className = "app-card";
+        card.dataset.category = app.category;
+
+        const icon = categoryIcons[app.category] || "📦";
+        const catCls = categoryClass[app.category] || "cat-tools";
+        const monogram = (app.title || "App").replace(/[^a-zA-Z0-9]/g, "").slice(0, 2).toUpperCase() || "AP";
+
+        let previewHtml = "";
+        if (app.screenshot) {
+          previewHtml = `
+            <a class="card-preview-link" href="${app.url}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+              <img src="${app.screenshot}" alt="Preview of ${app.title}" loading="lazy" />
+            </a>
+          `;
+        } else {
+          previewHtml = `
+            <a class="card-preview-link" href="${app.url}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+              <div class="preview-fallback">
+                <span class="preview-fallback-monogram">${monogram}</span>
+                <span style="font-size:12px; font-weight:600; color:var(--text-dim);">${icon} ${app.category}</span>
+                <span class="preview-fallback-watermark">${monogram}</span>
+              </div>
+            </a>
+          `;
+        }
+
+        const offlineBadge = app.offline ? `<span class="badge-offline">Offline Ready</span>` : "";
+        const rootBadge = app.is_root ? `<span class="badge-root">Root</span>` : "";
+        const sizeTag = app.size_kb ? (app.size_kb >= 1024 ? `${(app.size_kb / 1024).toFixed(1)} MB` : `${app.size_kb} KB`) : "";
+        const notesLink = app.notes_url ? `<a class="notes-action" href="${app.notes_url}" target="_blank" rel="noopener noreferrer">Notes</a>` : "";
+
+        card.innerHTML = `
+          ${previewHtml}
+          <div class="card-body">
+            <div class="card-meta-top">
+              <span class="category-badge ${catCls}">${icon} ${app.category}</span>
+              <div style="display:flex; gap:6px;">
+                ${rootBadge}
+                ${offlineBadge}
+              </div>
+            </div>
+            <h3 class="card-title">
+              <a href="${app.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(app.title)}</a>
+            </h3>
+            <p class="card-desc">${escapeHtml(app.description)}</p>
+            <div class="card-footer">
+              <div class="card-info-tags">
+                <span>📁 ${sizeTag}</span>
+              </div>
+              <div class="card-actions-group">
+                ${notesLink}
+                <a class="launch-action" href="${app.url}" target="_blank" rel="noopener noreferrer">Launch App ↗</a>
+              </div>
+            </div>
+          </div>
+        `;
+
+        fragment.appendChild(card);
+      });
+
+      gridEl.innerHTML = "";
+      gridEl.appendChild(fragment);
+    }
+
+    function escapeHtml(str) {
+      return (str || "").replace(/[&<>"']/g, m => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[m]));
+    }
+
+    // Event Listeners
+    catButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentCategory = btn.dataset.cat;
+        catButtons.forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+        renderApps();
+      });
+    });
+
+    scopeButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentScope = btn.dataset.scope;
+        scopeButtons.forEach(b => b.classList.toggle("active", b === btn));
+        renderApps();
+      });
+    });
+
+    searchInput.addEventListener("input", e => {
+      searchQuery = e.target.value;
+      clearBtn.classList.toggle("active", searchQuery.length > 0);
+      searchKbd.style.display = searchQuery.length > 0 ? "none" : "block";
+      renderApps();
+    });
+
+    clearBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      searchQuery = "";
+      clearBtn.classList.remove("active");
+      searchKbd.style.display = "block";
+      searchInput.focus();
+      renderApps();
+    });
+
+    sortSelect.addEventListener("change", e => {
+      currentSort = e.target.value;
+      renderApps();
+    });
+
+    viewGridBtn.addEventListener("click", () => {
+      gridEl.classList.remove("list-view");
+      viewGridBtn.classList.add("active");
+      viewListBtn.classList.remove("active");
+    });
+
+    viewListBtn.addEventListener("click", () => {
+      gridEl.classList.add("list-view");
+      viewListBtn.classList.add("active");
+      viewGridBtn.classList.remove("active");
+    });
+
+    // Keyboard Shortcuts
+    window.addEventListener("keydown", e => {
+      if (e.key === "/" && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      } else if (e.key === "Escape" && document.activeElement === searchInput) {
+        searchInput.value = "";
+        searchQuery = "";
+        clearBtn.classList.remove("active");
+        searchKbd.style.display = "block";
+        searchInput.blur();
+        renderApps();
+      }
+    });
+
+    // Initial render
+    renderApps();
+  </script>
+</body>
+</html>
