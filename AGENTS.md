@@ -23,7 +23,15 @@ tree by default — scope to the relevant subfolder first.
 ## Known subfolders (top-level, non-exhaustive)
 `1POLY/`, `AIWS/`, `AXIOM_CODE_AI_WORKSPACE/`, `Aether/`, `Clark MSB/`, `Codex/`,
 `N8DEV/`, `context-hub/`, `n8sheetz-inspector/`, `n8sheetz-readability-inspector/`,
-`omni-architect-os/`, `scripts/`, `workflows/`
+`omni-architect-os/`, `scratch/`, `scripts/`, `work/`, `workflows/`
 
 When starting work, confirm which of these (or a new path) is in scope rather than
 scanning all of them.
+
+## Active Automation Engines
+- **ContinuumOS** (`ContinuumOS.html` & `scripts/continuum_upgrade_runner.py`):
+  Autonomous portfolio web app evolution and optimization engine. Scheduled background daemon runs every 10 minutes (`*/10 * * * *`), logging to `work/scheduled-projects/continuum-state.json` and `work/scheduled-projects/continuum-evolution.md`. Rollback backups reside in `scratch/continuum-backups/`. 26 active connected repositories (`npp`, `msb`, and `locmein` permanently excluded).
+
+## User Preferences
+- **Motion & Animations**: The user explicitly does **NOT** prefer reduced motion. Do not inject or enforce `@media (prefers-reduced-motion: reduce)` overrides or kill animations; preserve full, lively dynamic motion and smooth micro-animations across all projects.
+

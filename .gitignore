@@ -21,3 +21,6 @@ desktop.ini
 *.exe
 archive/
 html-source-files/
+
+# Local-only agent context store (never publish)
+/context-hub/

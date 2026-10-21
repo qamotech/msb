@@ -20,6 +20,13 @@ tree by default — scope to the relevant subfolder first.
 5. **Batch independent reads/searches** in one message instead of sequential
    round-trips.
 
+## Context hub (persistent local context)
+`context-hub/` holds the user's standing notes. At the start of non-trivial work read
+`context-hub/CONTEXT.md` (the index) and the **Pinned** notes (profile, web-app standards,
+workspace map, agent ground rules). For a specific topic run
+`node context-hub/.hub/hub.cjs find <words>` instead of globbing. It is read-only except
+`notes/`; never commit its contents anywhere.
+
 ## Known subfolders (top-level, non-exhaustive)
 `1POLY/`, `AIWS/`, `AXIOM_CODE_AI_WORKSPACE/`, `Aether/`, `Clark MSB/`, `Codex/`,
 `N8DEV/`, `context-hub/`, `n8sheetz-inspector/`, `n8sheetz-readability-inspector/`,

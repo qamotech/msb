@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="generator" content="ContinuumOS Autonomous Evolution Engine">
+
+  <meta property="og:title" content="Magic School Bus Classroom Science Hub">
+  <meta property="og:description" content="Magic School Bus Classroom Science Hub — High-performance single-file web application.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#060a17">
+  <meta name="color-scheme" content="dark light">
+
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23060a17'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%2338bdf8' stroke-width='3'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='28'%3E🚌%3C/text%3E%3C/svg%3E">
+  <link rel="alternate icon" href="favicon.svg" type="image/svg+xml">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Magic School Bus Virtual Classroom</title>
@@ -442,7 +455,7 @@
     .parallax-bg {
       position: absolute;
       inset: -50px;
-      background: url('file:///C:/Users/qamel/.gemini/antigravity-ide/brain/cea3cc7d-6dbd-45c3-a30f-f1f38e649a8d/msb_volcano_core_1790883188425.jpg') center/cover;
+      background: url('modules/clark-images/msb_volcano_core_1790883188425.jpg') center/cover;
       z-index: 1;
       transition: transform 0.1s linear;
     }
@@ -471,6 +484,34 @@
       50% { transform: scale(1.2); filter: hue-rotate(90deg) brightness(1.5); }
       100% { transform: scale(1); filter: hue-rotate(0deg); }
     }
+
+    /* Content stays reachable on small displays; decorations never set page width. */
+    body {width:100%;height:100dvh;overflow:hidden;}
+    .app-container {width:100%!important;min-width:0;}
+    .sidebar {flex:0 0 260px;overflow-y:auto;min-height:0;}
+    .main-content {min-width:0;min-height:0;perspective:none;}
+    .experiments-grid {grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));}
+    .parallax-section {min-height:320px;height:auto;padding:5rem 1rem;}
+    .parallax-content {max-width:100%;padding:clamp(1rem,4vw,3rem);overflow-wrap:anywhere;}
+    .parallax-content h2,.lab-title {font-size:clamp(1.8rem,4vw,3.5rem);}
+    .iframe-container {height:calc(100dvh - 130px);min-height:380px;}
+    .nav-item:focus-visible,.experiment-card:focus-visible {outline:3px solid var(--yellow);outline-offset:3px;}
+    @media(max-width:700px){
+      .app-container{flex-direction:column;}
+      .sidebar{flex:0 0 auto;width:100%;max-height:34dvh;}
+      .bus-brand{padding:.65rem;flex-direction:row;justify-content:center;gap:.75rem;}
+      .futuristic-bus,.bus-brand>div:last-child,.nav-category{display:none;}
+      .nav-menu{display:flex;gap:.3rem;padding:.5rem;flex-wrap:wrap;}
+      .nav-item{flex:1 1 130px;justify-content:center;padding:.5rem;font-size:.9rem;}
+      .main-content{padding:1rem;}
+      .experiments-grid{gap:1rem;margin-bottom:2rem;}
+      .iframe-container{height:calc(100dvh - 240px);min-height:260px;}
+      #floating-lizard{font-size:2rem;right:12px;bottom:12px;}
+    }
+  </style>
+
+  <style id="continuum-a11y-tokens">
+    :root { --a11y-touch-min: 44px; }
   </style>
 </head>
 <body>
@@ -492,22 +533,22 @@
 
       <div class="nav-menu">
         <div class="nav-category">Main</div>
-        <div class="nav-item" onclick="switchView('dashboard')">
+        <div class="nav-item" data-view="dashboard" onclick="switchView('dashboard')">
           <span>📊</span> Dashboard
         </div>
         
         <div class="nav-category">Classroom</div>
-        <div class="nav-item" onclick="switchView('classroom')">
+        <div class="nav-item" data-view="classroom" onclick="switchView('classroom')">
           <span>👨‍🎓</span> Classic Classroom
         </div>
         
         <div class="nav-category">Science</div>
-        <div class="nav-item active" onclick="switchView('lab')">
+        <div class="nav-item active" data-view="lab" onclick="switchView('lab')">
           <span>🔬</span> Science Lab
         </div>
         
         <div class="nav-category">Resources</div>
-        <div class="nav-item" onclick="switchView('worksheets')">
+        <div class="nav-item" data-view="worksheets" onclick="switchView('worksheets')">
           <span>📝</span> Worksheets
         </div>
       </div>
@@ -578,7 +619,7 @@
 
           <div class="experiments-grid">
             <div class="experiment-card anim-target" onclick="openModule('modules/msb-galactic-lab.html')">
-              <img src="file:///C:/Users/qamel/.gemini/antigravity-ide/brain/cea3cc7d-6dbd-45c3-a30f-f1f38e649a8d/msb_galactic_lab_1790883150875.jpg" alt="Galactic Lab" class="exp-img">
+              <img src="modules/clark-images/msb_galactic_lab_1790883150875.jpg" alt="Galactic Lab" class="exp-img">
               <div class="exp-content">
                 <h3 class="exp-title">Galactic Explorer</h3>
                 <p class="exp-desc">Launch into the solar system. Discover planetary gravity, orbits, and cosmic phenomena in 4K.</p>
@@ -586,26 +627,17 @@
             </div>
             
             <div class="experiment-card anim-target" onclick="openModule('modules/electricity-overview.html')">
-              <img src="file:///C:/Users/qamel/.gemini/antigravity-ide/brain/cea3cc7d-6dbd-45c3-a30f-f1f38e649a8d/msb_electricity_lab_1790883177665.jpg" alt="Electricity Lab" class="exp-img">
+              <img src="modules/clark-images/msb_electricity_lab_1790883177665.jpg" alt="Electricity Lab" class="exp-img">
               <div class="exp-content">
                 <h3 class="exp-title">Electricity Lab</h3>
                 <p class="exp-desc">Explore circuits, current, and shocking discoveries with Ms. Frizzle's high-voltage generators!</p>
               </div>
             </div>
             
-            <div class="experiment-card anim-target" onclick="alert('Microbe Safari feature coming soon! Check the Galactic Lab instead.')">
-              <img src="file:///C:/Users/qamel/.gemini/antigravity-ide/brain/cea3cc7d-6dbd-45c3-a30f-f1f38e649a8d/msb_microbe_safari_1790883160236.jpg" alt="Microbe Safari" class="exp-img">
+            <div class="experiment-card anim-target" onclick="openModule('frizz-files-lesson-hub.html')">
               <div class="exp-content">
-                <h3 class="exp-title">Microbe Safari</h3>
-                <p class="exp-desc">Shrink down to microscopic size and observe the wild life inside a single drop of pond water.</p>
-              </div>
-            </div>
-
-            <div class="experiment-card anim-target" onclick="alert('Volcano Core feature coming soon! Check the Galactic Lab instead.')">
-              <img src="file:///C:/Users/qamel/.gemini/antigravity-ide/brain/cea3cc7d-6dbd-45c3-a30f-f1f38e649a8d/msb_volcano_core_1790883188425.jpg" alt="Volcano Core" class="exp-img">
-              <div class="exp-content">
-                <h3 class="exp-title">Volcano Core</h3>
-                <p class="exp-desc">Dive deep into the Earth's mantle to study magma dynamics and tectonic shifts.</p>
+                <h3 class="exp-title">Frizz Files: Lessons & Activities</h3>
+                <p class="exp-desc">Browse episode lessons, experiments, printables, quizzes, and field-trip plans.</p>
               </div>
             </div>
           </div>
@@ -613,23 +645,25 @@
           <div class="parallax-section" id="parallax-box">
             <div class="parallax-bg" id="parallax-bg"></div>
             <div class="parallax-content">
-              <h2>The Cosmic Voyage</h2>
-              <p>Scroll up and down to travel through the mesmerizing cosmos!</p>
+              <h2>The Volcano Voyage</h2>
+              <p>Explore the Earth, then return to the lessons and experiments above.</p>
             </div>
           </div>
         </div>
 
+
+      </section>
         <!-- Iframe Module View -->
         <div class="view-switcher-content hidden" id="module-viewer">
           <button class="back-btn" onclick="closeModule()">
             <span>⬅️</span> Back to Hub
           </button>
+          <a id="module-direct" class="back-btn" target="_blank" rel="noopener">Open full page</a>
           <div class="iframe-container" id="iframe-wrap">
-            <iframe id="module-frame" src=""></iframe>
+            <iframe id="module-frame" src="about:blank" title="Classroom resource" allowfullscreen></iframe>
           </div>
         </div>
 
-      </section>
     </main>
   </div>
 
@@ -647,48 +681,66 @@
   </div>
 
   <script>
+    let currentView = 'lab';
+    let moduleTrigger = null;
+    const mainContent = document.querySelector('.main-content');
+    const parallaxBg = document.getElementById('parallax-bg');
+    const parallaxBox = document.getElementById('parallax-box');
+    const reducedMotion = { matches: false }; // Full dynamic motion preferred
     function switchView(viewId) {
-      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      
-      const target = document.getElementById('view-' + viewId);
-      if(target) {
-        setTimeout(() => target.classList.add('active'), 50);
-      }
-      
-      event.currentTarget.classList.add('active');
-      closeModule();
+      if (!document.getElementById('view-' + viewId)) return;
+      currentView = viewId;
+      closeModule(false);
+      mainContent.scrollTop = 0;
+      updateParallax();
     }
-
     function openModule(url) {
-      document.querySelectorAll('.view-switcher-content').forEach(el => {
-        if(el.parentElement.classList.contains('active')) {
-          el.classList.add('hidden');
-        }
-      });
+      moduleTrigger = document.activeElement;
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.getElementById('module-viewer').classList.remove('hidden');
       document.getElementById('iframe-wrap').classList.add('active');
       document.getElementById('module-frame').src = url;
+      document.getElementById('module-direct').href = url;
+      mainContent.scrollTop = 0;
+      document.querySelector('#module-viewer button').focus();
     }
-
-    function closeModule() {
-      document.querySelectorAll('.view-switcher-content').forEach(el => {
-        if(el.id !== 'module-viewer') {
-          el.classList.remove('hidden');
-        }
+    function closeModule(restoreFocus = true) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.toggle('active', el.id === 'view-' + currentView));
+      document.querySelectorAll('.nav-item').forEach(el => {
+        const active = el.dataset.view === currentView;
+        el.classList.toggle('active', active);
+        el.setAttribute('aria-current', active ? 'page' : 'false');
       });
       document.getElementById('module-viewer').classList.add('hidden');
       document.getElementById('iframe-wrap').classList.remove('active');
-      document.getElementById('module-frame').src = '';
+      document.getElementById('module-frame').src = 'about:blank';
+      if (restoreFocus && moduleTrigger?.isConnected) moduleTrigger.focus();
+      updateParallax();
     }
-
-    const mainContent = document.querySelector('.main-content');
-    const parallaxBg = document.getElementById('parallax-bg');
-    
+    function updateParallax() {
+      if (!parallaxBox.getClientRects().length || reducedMotion.matches) {
+        parallaxBg.style.transform = 'translateY(0px)'; return;
+      }
+      const viewport = mainContent.getBoundingClientRect();
+      const box = parallaxBox.getBoundingClientRect();
+      const offset = (viewport.top + viewport.height / 2 - box.top - box.height / 2) * 0.12;
+      // The image overscan is 50px; never translate beyond its coverage.
+      parallaxBg.style.transform = `translateY(${Math.max(-40, Math.min(40, offset))}px)`;
+    }
+    let parallaxFrame = 0;
     mainContent.addEventListener('scroll', () => {
-      const scrollY = mainContent.scrollTop;
-      parallaxBg.style.transform = `translateY(${scrollY * 0.4}px)`;
+      if (!parallaxFrame) parallaxFrame = requestAnimationFrame(() => { parallaxFrame = 0; updateParallax(); });
+    }, {passive: true});
+    window.addEventListener('resize', updateParallax);
+    reducedMotion.addEventListener('change', updateParallax);
+    document.querySelectorAll('.nav-item, .experiment-card').forEach(el => {
+      el.tabIndex = 0;
+      el.setAttribute('role', 'button');
+      el.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); el.click(); }
+      });
     });
+    updateParallax();
 
     setInterval(() => {
       const elements = document.querySelectorAll('.anim-target');
@@ -776,5 +828,16 @@
       }, 3000);
     }
   </script>
+
+<script>
+  // Continuum rAF Lifecycle Guard
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      window._continuum_paused = true;
+    } else {
+      window._continuum_paused = false;
+    }
+  });
+</script>
 </body>
 </html>

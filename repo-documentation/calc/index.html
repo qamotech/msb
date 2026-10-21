@@ -308,23 +308,7 @@
             stroke: #000;
         }
 
-        #ext-browser-btn {
-            background: linear-gradient(180deg, rgba(0, 255, 102, 0.15) 0%, rgba(7, 36, 20, 0.95) 100%);
-            border: 1px solid var(--neon-emerald);
-            color: var(--neon-emerald);
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        #ext-browser-btn:hover {
-            background: var(--neon-emerald);
-            color: #000;
-            box-shadow: 0 0 18px var(--neon-emerald);
-        }
-        #ext-browser-btn:hover svg {
-            stroke: #000;
-        }
+
 
         /* Fullscreen & Immersive Viewport Mode Styles */
         :fullscreen,
@@ -391,67 +375,7 @@
             gap: 12px !important;
         }
 
-        /* Fullscreen Diagnostic Notice Banner for Embedded Preview Environments */
-        .fs-notice-banner {
-            background: linear-gradient(180deg, rgba(255, 170, 0, 0.18) 0%, rgba(20, 14, 4, 0.95) 100%);
-            border: 1px solid var(--neon-amber);
-            border-left: 5px solid var(--neon-amber);
-            border-radius: 6px;
-            padding: 10px 16px;
-            margin: 10px 0 14px 0;
-            box-shadow: 0 0 16px rgba(255, 170, 0, 0.25);
-            animation: fadeInNotice 0.3s ease;
-        }
-        @keyframes fadeInNotice {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fs-notice-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-            font-size: 0.92rem;
-            color: #ffdda1;
-            font-family: var(--font-mono);
-        }
-        .fs-notice-title {
-            color: var(--neon-amber);
-            font-weight: 800;
-            letter-spacing: 1px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .fs-action-btn {
-            background: rgba(255, 170, 0, 0.2);
-            border: 1px solid var(--neon-amber);
-            color: #fff;
-            padding: 5px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: var(--font-mono);
-            font-size: 0.82rem;
-            font-weight: 700;
-            transition: all 0.2s;
-        }
-        .fs-action-btn:hover {
-            background: var(--neon-amber);
-            color: #000;
-            box-shadow: 0 0 10px var(--neon-amber);
-        }
-        .fs-close-btn {
-            background: transparent;
-            border: none;
-            color: #a8947a;
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 2px 6px;
-        }
-        .fs-close-btn:hover {
-            color: #fff;
-        }
+
 
         /* Input Controls */
         label {
@@ -978,10 +902,6 @@
                 <div class="subhead">EDISON HWY FACILITY // BEVERAGE LOGISTICS PROTOCOL v4.0</div>
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button class="nav-btn" onclick="openInFullBrowser()" id="ext-browser-btn" title="Open in dedicated external browser window for full physical monitor display">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    <span>OPEN IN FULL BROWSER</span>
-                </button>
                 <button class="nav-btn" onclick="toggleFullScreen()" id="fs-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
                     <span>FULLSCREEN</span>
@@ -1034,20 +954,6 @@
         </nav>
     </header>
 
-    <!-- Embedded Split-Pane Container Diagnostic Banner -->
-    <aside id="fs-notice-banner" class="fs-notice-banner" style="display: none;" aria-live="polite">
-        <div class="fs-notice-content">
-            <div>
-                <span class="fs-notice-title">⚡ MONITOR FULLSCREEN NOTICE:</span>
-                <span>IDE container detected (1600x731). Chromium confines embedded preview tabs to the split editor pane. For 100% borderless monitor display (1920x1080), double-click <strong>launch-fullscreen.bat</strong> or open directly in Chrome/Edge.</span>
-            </div>
-            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <button class="fs-action-btn" onclick="copyFilePath()" title="Copy local file path to clipboard">COPY PATH</button>
-                <button class="fs-action-btn" onclick="openInFullBrowser()" title="Launch dedicated external window">LAUNCH BROWSER</button>
-                <button class="fs-close-btn" onclick="dismissFsNotice()" title="Dismiss notice">✕</button>
-            </div>
-        </div>
-    </aside>
 
     <!-- =============================================================== -->
     <!-- VIEW 1: UNIVERSAL BEVERAGE CONSTRUCT (STREAMLINED SINGLE DECK) -->
@@ -2472,14 +2378,12 @@
         toast.timer = setTimeout(() => toast.style.display = 'none', 2800);
     }
 
-    /* Dual-Mode Fullscreen Engine (Native API + Immersive Viewport Mode) */
-    let isImmersiveMode = false;
-
+    /* Fullscreen Engine */
     const FS_ENTER_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>`;
     const FS_EXIT_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>`;
 
     function isFullScreen() {
-        return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || isImmersiveMode);
+        return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
     }
 
     function updateFullscreenUI() {
@@ -2494,143 +2398,50 @@
         }
     }
 
-    async function enterNativeFullscreen() {
-        const doc = document.documentElement;
-        if (doc.requestFullscreen) {
-            await doc.requestFullscreen();
-        } else if (doc.webkitRequestFullscreen) {
-            await doc.webkitRequestFullscreen();
-        } else if (doc.mozRequestFullScreen) {
-            await doc.mozRequestFullScreen();
-        } else if (doc.msRequestFullscreen) {
-            await doc.msRequestFullscreen();
-        } else {
-            throw new Error("Native fullscreen not available");
-        }
-    }
-
-    async function exitNativeFullscreen() {
-        if (document.exitFullscreen) {
-            await document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-            await document.webkitExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-            await document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-            await document.msExitFullscreen();
-        }
-    }
-
-    function isEmbeddedContainer() {
-        return !!(
-            window.innerWidth < (screen.availWidth - 80) || 
-            window.innerHeight < (screen.availHeight - 120) || 
-            window.self !== window.top
-        );
-    }
-
-    function dismissFsNotice() {
-        const banner = document.getElementById('fs-notice-banner');
-        if (banner) banner.style.display = 'none';
-    }
-
-    function copyFilePath() {
-        const path = window.location.href;
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(path).then(() => {
-                showToast("COPIED FILE PATH TO CLIPBOARD");
-            }).catch(() => {
-                prompt("Copy file path below:", path);
-            });
-        } else {
-            prompt("Copy file path below:", path);
-        }
-    }
-
-    function openInFullBrowser() {
-        const width = window.screen.availWidth || 1920;
-        const height = window.screen.availHeight || 1080;
-        const features = `width=${width},height=${height},left=0,top=0,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes`;
-        const newWin = window.open(window.location.href, '_blank', features);
-        if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
-            showToast("POPUP RESTRICTED — OPEN DIRECTLY IN CHROME OR EDGE");
-        } else {
-            showToast("LAUNCHED IN DEDICATED WINDOW // PRESS F11 FOR FULL MONITOR");
-        }
-    }
-
-    function enterImmersiveMode() {
-        isImmersiveMode = true;
-        document.body.classList.add('app-fullscreen-mode');
-        document.documentElement.classList.add('app-fullscreen-mode');
-        updateFullscreenUI();
-    }
-
-    function exitImmersiveMode() {
-        isImmersiveMode = false;
-        document.body.classList.remove('app-fullscreen-mode');
-        document.documentElement.classList.remove('app-fullscreen-mode');
-        dismissFsNotice();
-        updateFullscreenUI();
-        showToast("EXITED FULLSCREEN");
-    }
-
     async function toggleFullScreen() {
+        const doc = document.documentElement;
         if (!isFullScreen()) {
-            enterImmersiveMode();
-
-            let nativeOk = false;
             try {
-                await enterNativeFullscreen();
-                nativeOk = true;
+                if (doc.requestFullscreen) {
+                    await doc.requestFullscreen();
+                } else if (doc.webkitRequestFullscreen) {
+                    await doc.webkitRequestFullscreen();
+                } else if (doc.mozRequestFullScreen) {
+                    await doc.mozRequestFullScreen();
+                } else if (doc.msRequestFullscreen) {
+                    await doc.msRequestFullscreen();
+                }
             } catch (err) {
-                console.info("Native fullscreen restricted/unavailable, active in cockpit mode:", err);
-            }
-
-            if (isEmbeddedContainer()) {
-                const banner = document.getElementById('fs-notice-banner');
-                if (banner) banner.style.display = 'block';
-                showToast("COCKPIT VIEW ENGAGED // SEE MONITOR FULLSCREEN NOTICE");
-            } else {
-                showToast(nativeOk ? "100% MONITOR FULLSCREEN ENGAGED" : "COCKPIT FULLSCREEN ENGAGED");
+                console.warn("Fullscreen request failed:", err);
+                showToast("FULLSCREEN UNAVAILABLE IN THIS ENVIRONMENT");
             }
         } else {
-            exitImmersiveMode();
             try {
-                await exitNativeFullscreen();
+                if (document.exitFullscreen) {
+                    await document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    await document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    await document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    await document.msExitFullscreen();
+                }
             } catch (err) {
-                console.info("Exit native fullscreen notice:", err);
+                console.warn("Exit fullscreen failed:", err);
             }
         }
         updateFullscreenUI();
     }
 
-    function onNativeFullscreenChange() {
-        const hasNative = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-        if (!hasNative && !isImmersiveMode) {
-            document.body.classList.remove('app-fullscreen-mode');
-            document.documentElement.classList.remove('app-fullscreen-mode');
-            dismissFsNotice();
-        } else if (hasNative) {
-            document.body.classList.add('app-fullscreen-mode');
-            document.documentElement.classList.add('app-fullscreen-mode');
-        }
-        updateFullscreenUI();
-    }
-
-    document.addEventListener('fullscreenchange', onNativeFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', onNativeFullscreenChange);
-    document.addEventListener('mozfullscreenchange', onNativeFullscreenChange);
-    document.addEventListener('MSFullscreenChange', onNativeFullscreenChange);
+    document.addEventListener('fullscreenchange', updateFullscreenUI);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenUI);
+    document.addEventListener('mozfullscreenchange', updateFullscreenUI);
+    document.addEventListener('MSFullscreenChange', updateFullscreenUI);
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'F11') {
             e.preventDefault();
             toggleFullScreen();
-        } else if (e.key === 'Escape') {
-            if (isFullScreen()) {
-                toggleFullScreen();
-            }
         }
     });
 
