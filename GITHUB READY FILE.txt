@@ -1,0 +1,10 @@
+How to use this for other folders:
+Since your Downloads folder has many unrelated projects inside subfolders, I only ran it on the main HTML files directly in the root of the Downloads folder to keep from accidentally modifying other projects.
+
+If you are about to push a specific sub-project folder to GitHub (for example, the N8DEV or Fr8OrdR-main folders), I have left the script on your system so you can easily run it on any directory. You can run it by opening PowerShell and typing:
+
+# Run this inside whatever folder you are about to upload to GitHub:
+
+C:\Users\qamel\Downloads\Fix-GithubPages.ps1 -Recurse
+
+

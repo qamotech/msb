@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Agentic Prompt Command Deck v2.0 | 58 Ultra-Refined AI Prompts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Theme Design Tokens */
+    :root[data-theme="midnight"] {
+      --bg-dark: #090d16;
+      --bg-card: rgba(18, 24, 38, 0.75);
+      --bg-card-hover: rgba(28, 37, 58, 0.85);
+      --bg-input: rgba(0, 0, 0, 0.4);
+      --border-color: rgba(255, 255, 255, 0.09);
+      --border-highlight: rgba(99, 102, 241, 0.45);
+      --primary: #6366f1;
+      --primary-glow: rgba(99, 102, 241, 0.25);
+      --accent: #38bdf8;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-pink: #ec4899;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --mesh-1: rgba(99, 102, 241, 0.12);
+      --mesh-2: rgba(56, 189, 248, 0.08);
+    }
+
+    :root[data-theme="cyberpunk"] {
+      --bg-dark: #070714;
+      --bg-card: rgba(20, 15, 38, 0.8);
+      --bg-card-hover: rgba(36, 26, 66, 0.9);
+      --bg-input: rgba(10, 5, 20, 0.6);
+      --border-color: rgba(236, 72, 153, 0.25);
+      --border-highlight: #ec4899;
+      --primary: #ec4899;
+      --primary-glow: rgba(236, 72, 153, 0.35);
+      --accent: #a855f7;
+      --accent-green: #00ffcc;
+      --accent-amber: #ffaa00;
+      --accent-pink: #f43f5e;
+      --text-main: #ffffff;
+      --text-muted: #d8b4fe;
+      --text-dim: #9333ea;
+      --mesh-1: rgba(236, 72, 153, 0.18);
+      --mesh-2: rgba(168, 85, 247, 0.15);
+    }
+
+    :root[data-theme="oled"] {
+      --bg-dark: #000000;
+      --bg-card: #0a0a0a;
+      --bg-card-hover: #141414;
+      --bg-input: #000000;
+      --border-color: #262626;
+      --border-highlight: #525252;
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.2);
+      --accent: #60a5fa;
+      --accent-green: #22c55e;
+      --accent-amber: #eab308;
+      --accent-pink: #f43f5e;
+      --text-main: #ffffff;
+      --text-muted: #a3a3a3;
+      --text-dim: #525252;
+      --mesh-1: rgba(0, 0, 0, 0);
+      --mesh-2: rgba(0, 0, 0, 0);
+    }
+
+    :root[data-theme="light"] {
+      --bg-dark: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --bg-input: #ffffff;
+      --border-color: #e2e8f0;
+      --border-highlight: #6366f1;
+      --primary: #4f46e5;
+      --primary-glow: rgba(79, 70, 229, 0.15);
+      --accent: #0284c7;
+      --accent-green: #059669;
+      --accent-amber: #d97706;
+      --accent-pink: #db2777;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --mesh-1: rgba(99, 102, 241, 0.05);
+      --mesh-2: rgba(56, 189, 248, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, var(--mesh-1) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, var(--mesh-2) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 80px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      padding: 36px 0 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 28px;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .brand-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--text-main) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-title span.badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--primary-glow);
+      color: var(--primary);
+      border: 1px solid var(--border-highlight);
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      -webkit-text-fill-color: var(--primary);
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 6px;
+      max-width: 760px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 12px;
+    }
+
+    .stat-badge {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-badge strong {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Controls & Toolbar */
+    .controls-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px 16px 12px 44px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .toolbar-btn-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--border-highlight);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: #4f46e5;
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.825rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tag-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+
+    .tag-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    /* Cards Grid */
+    .prompts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(640px, 1fr));
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .prompts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .prompt-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+    }
+
+    .prompt-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--border-highlight);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .category-pill {
+      font-size: 0.725rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 3px 9px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .mode-pill {
+      font-size: 0.725rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      padding: 3px 9px;
+      border-radius: 4px;
+    }
+
+    .score-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 3px 9px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .cat-history { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .cat-system { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .cat-etl { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .cat-web { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .cat-code { background: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3); }
+    .cat-agent { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
+    .cat-advanced { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+    }
+
+    .icon-btn.starred {
+      color: var(--accent-amber);
+      border-color: rgba(245, 158, 11, 0.4);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    /* Card Section Blocks */
+    .naive-section {
+      background: rgba(239, 68, 68, 0.06);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .naive-label {
+      font-size: 0.725rem;
+      font-weight: 700;
+      color: #f87171;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .naive-text {
+      font-size: 0.875rem;
+      color: #fca5a5;
+      font-style: italic;
+    }
+
+    .variables-section {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px dashed var(--border-color);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .variables-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .var-inputs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+    }
+
+    .var-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .var-label {
+      font-size: 0.7rem;
+      font-family: 'Fira Code', monospace;
+      color: var(--text-muted);
+    }
+
+    .var-input {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 5px 10px;
+      color: var(--text-main);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .var-input:focus {
+      border-color: var(--primary);
+    }
+
+    .refined-section {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-highlight);
+      border-radius: 10px;
+      padding: 14px;
+      position: relative;
+    }
+
+    .refined-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .refined-label {
+      font-size: 0.725rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .token-pill {
+      font-size: 0.7rem;
+      font-family: 'Fira Code', monospace;
+      color: var(--text-dim);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .format-btn-group {
+      display: flex;
+      gap: 4px;
+    }
+
+    .fmt-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .fmt-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .refined-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.825rem;
+      color: var(--text-main);
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .why-box {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      border-left: 2px solid var(--accent);
+      padding-left: 10px;
+      flex: 1;
+    }
+
+    .copy-btn {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: #4f46e5;
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    /* Modal Styling */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-highlight);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 720px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .textarea-box {
+      width: 100%;
+      height: 120px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px;
+      color: var(--text-main);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.875rem;
+      outline: none;
+      resize: vertical;
+    }
+
+    .textarea-box:focus {
+      border-color: var(--primary);
+    }
+
+    /* Copy Drawer */
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 380px;
+      max-width: 90vw;
+      height: 100vh;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border-left: 1px solid var(--border-color);
+      padding: 24px;
+      z-index: 1500;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .drawer.active {
+      transform: translateX(0);
+    }
+
+    .drawer-history-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .drawer-item {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.8rem;
+    }
+
+    .drawer-item-title {
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .drawer-item-time {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--accent-green);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.875rem;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 3000;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <div>
+          <h1 class="brand-title">
+            Agentic Prompt Command Deck v2.0
+            <span class="badge">58 Ultra-Refined Prompts</span>
+          </h1>
+          <p class="subtitle">
+            Battle-tested prompts engineered for autonomous AI agents (Antigravity, Claude Code, Cursor, Codex) with 57 power-user features.
+          </p>
+        </div>
+
+        <div class="header-actions">
+          <div class="stats-bar">
+            <div class="stat-badge">Prompts: <strong id="total-count">58</strong></div>
+            <div class="stat-badge">Starred: <strong id="starred-count">0</strong></div>
+          </div>
+
+          <div class="toolbar-btn-group">
+            <button class="btn btn-primary" onclick="openSandboxModal()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Prompt Sandbox
+            </button>
+            <button class="btn" onclick="toggleDrawer()" title="View Copy History">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              History
+            </button>
+            <button class="btn" onclick="openShortcutsModal()" title="Keyboard Shortcuts (?)">
+              ?
+            </button>
+            <select id="theme-select" class="btn" onchange="changeTheme(this.value)">
+              <option value="midnight">Theme: Midnight</option>
+              <option value="cyberpunk">Theme: Cyberpunk</option>
+              <option value="oled">Theme: OLED Dark</option>
+              <option value="light">Theme: Crisp Light</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="controls-panel">
+      <div class="search-row">
+        <div class="search-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" class="search-input" placeholder="Search prompts by title, keywords, or goal (Press '/' to focus)...">
+        </div>
+        
+        <div class="toolbar-btn-group">
+          <button class="btn" onclick="batchCopyFiltered()">Batch Copy Filtered</button>
+          <button class="btn" onclick="exportPromptsJSON()">Export JSON</button>
+          <button class="btn" onclick="triggerImportJSON()">Import JSON</button>
+          <input type="file" id="import-file-input" style="display:none" onchange="handleImportJSON(event)">
+        </div>
+      </div>
+
+      <div class="filter-tags" id="filter-tags">
+        <button class="tag-btn active" data-cat="all">All Prompts (58)</button>
+        <button class="tag-btn" data-cat="History Refinements">History Refinements (3)</button>
+        <button class="tag-btn" data-cat="System & File Ops">System &amp; File Ops (8)</button>
+        <button class="tag-btn" data-cat="Data Engineering & ETL">Data Engineering &amp; ETL (8)</button>
+        <button class="tag-btn" data-cat="Web & UI/UX">Web &amp; UI/UX (8)</button>
+        <button class="tag-btn" data-cat="Code Quality & Testing">Code Quality &amp; Testing (8)</button>
+        <button class="tag-btn" data-cat="Agent Workflow">Agentic Workflows (8)</button>
+        <button class="tag-btn" data-cat="Advanced AI Engineering">Advanced AI Eng (15)</button>
+        <button class="tag-btn" data-cat="starred">Starred Only</button>
+      </div>
+    </div>
+
+    <div class="prompts-grid" id="prompts-grid"></div>
+  </div>
+
+  <!-- Sandbox Modal -->
+  <div class="modal-backdrop" id="sandbox-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">Interactive Prompt Refiner Sandbox</h2>
+        <button class="icon-btn" onclick="closeSandboxModal()">&times;</button>
+      </div>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">Paste a rough prompt below and click "Auto-Enhance" to apply standard agent rules (Context, Constraints, Verification).</p>
+      <textarea id="sandbox-input" class="textarea-box" placeholder="e.g. refactor my database migration script..."></textarea>
+      
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span class="token-pill" id="sandbox-token-count">Est. Tokens: 0</span>
+        <button class="btn btn-primary" onclick="enhanceRoughPrompt()">Auto-Enhance Prompt</button>
+      </div>
+
+      <div class="refined-section">
+        <div class="refined-header">
+          <span class="refined-label">Refined Output</span>
+          <button class="copy-btn" onclick="copySandboxOutput()">Copy Output</button>
+        </div>
+        <div class="refined-text" id="sandbox-output">Your enhanced prompt will appear here...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shortcuts Modal -->
+  <div class="modal-backdrop" id="shortcuts-modal">
+    <div class="modal-card" style="max-width:480px;">
+      <div class="modal-header">
+        <h2 class="modal-title">Keyboard Shortcuts</h2>
+        <button class="icon-btn" onclick="closeShortcutsModal()">&times;</button>
+      </div>
+      <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:0.9rem; color:var(--text-muted);">
+        <li><kbd style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; font-family:monospace;">/</kbd> Focus search input</li>
+        <li><kbd style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; font-family:monospace;">Esc</kbd> Clear search / Close modal</li>
+        <li><kbd style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; font-family:monospace;">?</kbd> Open keyboard shortcuts legend</li>
+        <li><kbd style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; font-family:monospace;">Ctrl + K</kbd> Open Prompt Sandbox</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- History Drawer -->
+  <div class="drawer" id="history-drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="font-weight:700; color:var(--text-main);">Copy History Log</h3>
+      <button class="icon-btn" onclick="toggleDrawer()">&times;</button>
+    </div>
+    <div class="drawer-history-list" id="drawer-history-list"></div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">Prompt copied to clipboard!</div>
+
+  <script>
+    const promptsData = [
+      // --- ACTUAL RECENT HISTORY REFINEMENTS (3) ---
+      {
+        id: 1,
+        title: "Standardized File Renaming Strategy",
+        category: "History Refinements",
+        catClass: "cat-history",
+        executionMode: "Autonomous /Goal",
+        score: 98,
+        naive: "rename all files aptly",
+        refined: `Scan directory [PATH] and execute a standardized file renaming strategy:
+1. DRY-RUN FIRST: Inspect target files and generate a preview table showing Old Name vs. Proposed New Name.
+2. NAMING CONVENTION: Format filenames as YYYY-MM_Category_Description.ext (e.g. 2024-03_Bank_Statement_0181.pdf).
+3. SAFETY & COLLISIONS: Automatically resolve duplicate names by appending a 3-digit zero-padded index (_001). Preserving file extensions.
+4. AUDIT TRAIL: Output a summary log upon completion. Wait for explicit confirmation before committing changes to disk.`,
+        why: "Provides explicit naming conventions (YYYY-MM), dry-run requirement, collision handling logic, and mandatory safety verification steps to prevent accidental data loss."
+      },
+      {
+        id: 2,
+        title: "Byte-Level & Structural Redundancy Removal",
+        category: "History Refinements",
+        catClass: "cat-history",
+        executionMode: "Autonomous /Goal",
+        score: 99,
+        naive: "remove redundancies",
+        refined: `Audit directory [PATH] for file redundancies and clean them up safely:
+1. HASH DEDUPLICATION: Compute MD5/SHA-256 hashes across all files to detect exact binary duplicates.
+2. METADATA AUDIT: For non-identical files with matching titles/types, compare creation dates, byte sizes, and page counts.
+3. DELETION MANIFEST: Output a CSV preview of all candidate files flagged for deletion along with the reference file being kept.
+4. ATOMIC REMOVAL: Only delete confirmed duplicate files upon user review, and keep an execution log in the working directory.`,
+        why: "Prevents loss of near-identical critical records by separating byte-exact deduplication from heuristic document matching."
+      },
+      {
+        id: 3,
+        title: "Multi-Source Data Discovery & Staging Pipeline",
+        category: "History Refinements",
+        catClass: "cat-history",
+        executionMode: "Autonomous /Goal",
+        score: 97,
+        naive: "Collect all tax and income info from this computer and all my google apps and move into a folder in my google drive called 'ALL TAX and INCOME DATA'",
+        refined: `Execute a multi-stage tax & financial document discovery and consolidation workflow:
+1. LOCAL DISCOVERY: Recursively scan C:\\Users\\[USERNAME] (limiting to Desktop, Documents, Downloads, excluding node_modules/AppData). Filter extensions (.pdf, .xlsx, .tax*, .csv) and keywords (W2, 1099, 1040, paystub, tax, income).
+2. SAFE STAGING: Create local directory 'C:\\Users\\[USERNAME]\\ALL TAX and INCOME DATA'. COPY (do not move) discovered files to prevent data loss.
+3. AUDIT MANIFEST: Generate transfer_manifest.csv containing [Original Path, Staged Path, File Size, Hash, Timestamp].
+4. CLOUD SYNC READINESS: Check for Google Drive Desktop local mount (G:\\ or virtual drives). If present, stage copies directly; otherwise, provide clear manual upload instructions.`,
+        why: "Decouples cloud auth from filesystem scanning, enforces copy-over-move to prevent data loss, and logs every file transition into an auditable manifest."
+      },
+
+      // --- SYSTEM & FILE OPERATIONS (8) ---
+      {
+        id: 4,
+        title: "Recursive Large-Directory Disk Space Cleanup",
+        category: "System & File Ops",
+        catClass: "cat-system",
+        executionMode: "One-Shot",
+        score: 95,
+        naive: "clean up my disk space",
+        refined: `Identify and clean safe disk space hoggers in target directory [PATH]:
+1. DISK AUDIT: Scan for top 20 largest folders/files. Highlight build caches (node_modules, target, .venv, __pycache__, .tmp).
+2. FILTER RULES: Ignore personal media, document files, or project source code (.js, .py, .go, .rs).
+3. PROPOSED PURGE LIST: Output a table of target directories, current size in GB, and purge safety rating (High/Medium/Low).
+4. EXECUTION: Provide one-click CLI cleanup commands for selected targets with dry-run flags.`,
+        why: "Guarantees source code and media safety while safely identifying rebuildable dev dependencies and cache junk."
+      },
+      {
+        id: 5,
+        title: "Cross-Platform Log Analyzer & Diagnostic Summarizer",
+        category: "System & File Ops",
+        catClass: "cat-system",
+        executionMode: "One-Shot",
+        score: 96,
+        naive: "check the log files and tell me what broke",
+        refined: `Analyze error log file [PATH_TO_LOG]:
+1. TIMELINE EXTRACTION: Parse timestamps and extract error sequences from [START_TIME] to [END_TIME].
+2. ERROR AGGREGATION: Group repeating stack traces by root exception class and message. Count frequency.
+3. ANOMALY DETECTION: Highlight preceding WARNING or INFO log lines that triggered the crash state.
+4. DIAGNOSTIC REPORT: Provide a markdown table with [Severity, Frequency, Root Cause Module, Suggested Fix].`,
+        why: "Transforms noisy, multi-thousand-line log dumps into actionable, categorized diagnostic tables."
+      },
+      {
+        id: 6,
+        title: "Automated Archive Unpacker & Structurer",
+        category: "System & File Ops",
+        catClass: "cat-system",
+        executionMode: "One-Shot",
+        score: 94,
+        naive: "unzip all these files and organize them",
+        refined: `Batch extract archives (.zip, .tar.gz, .7z) in directory [PATH]:
+1. ISOLATED EXTRACTION: Extract each archive into a dedicated folder matching the archive basename.
+2. SANITIZATION: Delete OS metadata files (.DS_Store, Thumbs.db, __MACOSX) post-extraction.
+3. CONSOLIDATION: If archives contain flat duplicate subfolders, flatten unnecessary nested directories.
+4. SUMMARY: Return a tree structure view of the cleaned extracted layout.`,
+        why: "Eliminates nested folder hell and cleans up annoying OS artifact files during bulk archive unpacking."
+      },
+      {
+        id: 7,
+        title: "Directory Structure Templatizer & Scaffolder",
+        category: "System & File Ops",
+        catClass: "cat-system",
+        executionMode: "Autonomous /Goal",
+        score: 97,
+        naive: "make project folders for my new web app",
+        refined: `Scaffold a modern project directory structure for [PROJECT_NAME]:
+1. DIRECTORY TREE: Create standard layout (src/components, src/assets, src/utils, public, tests, docs).
+2. CONFIG INITIALIZATION: Generate .gitignore, README.md, package.json, and tsconfig.json with modern best practices.
+3. ENVIRONMENT: Add .env.example with documented variable placeholders.
+4. VERIFICATION: Output the generated file tree and run initial git init.`,
+        why: "Scaffolds complete, battle-tested repository architecture without missing configuration boilerplate."
+      },
+      {
+        id: 8,
+        title: "Sensitive Credential & Secret Scanner",
+        category: "System & File Ops",
+        catClass: "cat-system",
+        executionMode: "One-Shot",
+        score: 99,
+        naive: "make sure I didn't put secret keys in code",
+        refined: `Perform a pre-commit secret security scan across repository [PATH]:
+1. PATTERN MATCHING: Search for API keys (AWS, OpenAI, GCP, Stripe, JWT tokens, RSA private keys, hardcoded passwords).
+2. IGNORE AUDIT: Verify .gitignore properly ignores .env, *.pem, *.key, and credentials.json.
+3. ANONYMIZATION: If secrets are found, display file path and obfuscated line (e.g. sk-proj-***1234) without echoing full secret.
+4. REMEDIATION: Generate replacement instructions using process.env or secure vault variables.`,
+        why: "Prevents API key leaks before committing code without exposing raw secrets in terminal logs."
+      },
+      {
+        id: 9,
+        title: "Bulk Environment Configuration Migrator",
+        category: "System & File Ops",
+        catClass: "cat-system",
+        executionMode: "One-Shot",
+        score: 95,
+        naive: "update env variables everywhere",
+        refined: `Migrate environment variables across project repos [LIST_OF_PATHS]:
+1. KEY COMPARISON: Diff target .env files against standard .env.example template.
+2. MISSING KEYS: Identify missing or deprecated keys without overwriting existing environment values.
+3. VALIDATION: Check that required variables conform to expected types (URL, boolean, port number).
+4. REPORT: Generate a checklist of updated files and any missing secrets requiring manual user input.`,
+        why: "Safely syncs complex environment variables across microservices or multi-app workspaces."
+      },
+      {
+        id: 10,
+        title: "File Extension & MIME Type Converter Pipeline",
+        category: "System & File Ops",
+        catClass: "cat-system",
+        executionMode: "One-Shot",
+        score: 93,
+        naive: "convert image files to webp",
+        refined: `Batch convert image assets in folder [PATH] to optimized WebP format:
+1. EXTENSION SELECTION: Target PNG, JPG, and JPEG images. Skip existing WebP files.
+2. QUALITY & SIZING: Maintain [QUALITY_PERCENT]% visual quality, generate responsive scaled variants (@1x, @2x) if requested.
+3. BACKUP: Store originals in an /originals_backup subfolder.
+4. MANIFEST: Output total space saved in MB and percentage reduction.`,
+        why: "Saves maximum web bandwidth while maintaining asset backups and generating high-density variants."
+      },
+      {
+        id: 11,
+        title: "Permission & Ownership Fixer Script",
+        category: "System & File Ops",
+        catClass: "cat-system",
+        executionMode: "One-Shot",
+        score: 96,
+        naive: "fix file permissions",
+        refined: `Audit and standardize POSIX / Windows permissions for workspace [PATH]:
+1. DIRECTORY & FILE PERMS: Apply 755 for executable scripts/directories and 644 for standard source files.
+2. EXECUTABLE BITS: Ensure build/run scripts (e.g. entrypoint.sh, gradlew) retain executable permissions.
+3. SECURITY AUDIT: Alert on world-writable files (777) or sensitive exposed credentials.
+4. DRY-RUN CHMOD: Display command preview before executing permissions updates.`,
+        why: "Resolves deployment permission issues safely without creating security vulnerabilities."
+      },
+
+      // --- DATA ENGINEERING & ETL (8) ---
+      {
+        id: 12,
+        title: "CSV/Excel Cleaning & Standardizer Pipeline",
+        category: "Data Engineering & ETL",
+        catClass: "cat-etl",
+        executionMode: "One-Shot",
+        score: 98,
+        naive: "clean up this messy excel spreadsheet",
+        refined: `Develop a Python data cleaning script for tabular dataset [FILE_PATH]:
+1. COLUMN NORMALIZATION: Standardize headers to snake_case (lowercase, alphanumeric + underscores).
+2. TYPE CASTING & PARSING: Parse dates into ISO-8601 (YYYY-MM-DD), strip currency symbols from numerical columns, convert text boolean fields.
+3. DEDUPLICATION & NULLS: Remove exact duplicate rows, report missing null rates per column, impute or drop based on rules.
+4. EXPORT: Save cleaned dataset as cleaned_[ORIGINAL_NAME].csv alongside a data quality summary markdown report.`,
+        why: "Transforms raw tabular spreadsheets into clean, schema-enforced DataFrames ready for analysis."
+      },
+      {
+        id: 13,
+        title: "SQL Query Optimizer & Index Advisor",
+        category: "Data Engineering & ETL",
+        catClass: "cat-etl",
+        executionMode: "One-Shot",
+        score: 97,
+        naive: "make this SQL query run faster",
+        refined: `Analyze and optimize SQL query [SQL_QUERY_OR_FILE]:
+1. EXPLAIN AUDIT: Identify costly full-table scans, implicit type conversions, and inefficient subqueries or JOINs.
+2. RESTRUCTURING: Rewrite query using CTEs, optimized WHERE clauses, and explicit target column selections instead of SELECT *.
+3. INDEXING PLAN: Propose CREATE INDEX statements for join keys, filter columns, and sort orders.
+4. BENCHMARK PLAN: Provide before/after query structure breakdown and estimated execution cost savings.`,
+        why: "Targeted SQL refactoring that slashes execution times and database resource utilization."
+      },
+      {
+        id: 14,
+        title: "JSON / Nested API Response Flattener",
+        category: "Data Engineering & ETL",
+        catClass: "cat-etl",
+        executionMode: "One-Shot",
+        score: 96,
+        naive: "convert json into a table",
+        refined: `Flatten complex deeply-nested JSON document [FILE_PATH] into a tabular relational format:
+1. SCHEMA DECONSTRUCTION: Extract root record entities and expand nested arrays into relational child tables.
+2. FOREIGN KEYS: Retain parent-child relationships using unique object IDs.
+3. OUTPUT FORMAT: Save primary table and relational sub-tables as CSV or Parquet files.
+4. DATA DICTIONARY: Output markdown data schema documenting field paths and data types.`,
+        why: "Handles complex API payloads and nested payloads without losing multi-level object relationships."
+      },
+      {
+        id: 15,
+        title: "BigQuery / Data Warehouse Dataform ELT Pipeline",
+        category: "Data Engineering & ETL",
+        catClass: "cat-etl",
+        executionMode: "Autonomous /Goal",
+        score: 99,
+        naive: "write a BigQuery transform script",
+        refined: `Build a production-grade SQLX / Dataform model for [DATASET.TABLE]:
+1. MATERIALIZATION: Set materialization strategy (table, view, incremental) with proper partition and cluster keys.
+2. DATA TRANSFORM: Construct clean staging layer with standard column aliases, casting, and null handling.
+3. ASSERTS & QUALITY: Define automated data quality checks (unique_key, non_null, accepted_values).
+4. DOCUMENTATION: Add inline column descriptions for data catalog discoverability.`,
+        why: "Ensures enterprise data warehouse standards, partitioning efficiency, and automated testing."
+      },
+      {
+        id: 16,
+        title: "Database Schema Migrator & Diff Generator",
+        category: "Data Engineering & ETL",
+        catClass: "cat-etl",
+        executionMode: "One-Shot",
+        score: 95,
+        naive: "compare these two database tables",
+        refined: `Generate schema diff and migration script between Source Table [TABLE_A] and Target Table [TABLE_B]:
+1. COLUMN DIFF: List added, modified, or dropped columns, data types, and nullability constraints.
+2. MIGRATION SQL: Output reversible ALTER TABLE migration scripts (Up and Down SQL).
+3. DATA COMPATIBILITY: Flag breaking changes (e.g. narrowing string length, type conversion data loss risks).
+4. SAFETY AUDIT: Highlight if table lock or zero-downtime strategy is required for production.`,
+        why: "Guarantees zero-downtime migration scripts and flags potential data-loss breaking changes."
+      },
+      {
+        id: 17,
+        title: "API Rate-Limited Data Scraper & Batch Ingester",
+        category: "Data Engineering & ETL",
+        catClass: "cat-etl",
+        executionMode: "Background Cron /Schedule",
+        score: 97,
+        naive: "fetch data from this API endpoint",
+        refined: `Build an asynchronous, rate-limited Python fetcher for API endpoint [API_URL]:
+1. PAGINATION & RETRIES: Implement cursor/page offset loop with exponential backoff and jitter for 429/50x errors.
+2. PERSISTENCE: Save raw responses directly into incremental JSONL / Parquet files in staging folder [FOLDER].
+3. RESUMABILITY: Check local state checkpoint before running to resume uninterrupted from failure points.
+4. PROGRESS DISPLAY: Show real-time progress bar with total records ingested and elapsed rate.`,
+        why: "Prevents API ban risks, handles network dropouts gracefully, and supports long-running ingest tasks."
+      },
+      {
+        id: 18,
+        title: "Synthetic Benchmark Dataset Generator",
+        category: "Data Engineering & ETL",
+        catClass: "cat-etl",
+        executionMode: "One-Shot",
+        score: 94,
+        naive: "generate test data for my app",
+        refined: `Generate realistic synthetic dataset with [ROW_COUNT] rows matching schema [SCHEMA_DEF]:
+1. REALISTIC DISTRIBUTIONS: Use Faker / synthetic generator for realistic names, emails, dates, and realistic numerical ranges.
+2. ANOMALY INJECTION: Optionally inject [PERCENTAGE]% intentional edge cases (nulls, duplicates, outliers) for stress testing.
+3. EXPORT: Save dataset in CSV, JSON, and SQL INSERT formats.
+4. VERIFICATION: Validate synthetic data conforms to schema constraints and non-null rules.`,
+        why: "Provides rich, boundary-testing dummy data for database stress testing and UI layout checks."
+      },
+      {
+        id: 19,
+        title: "Parquet Compression & Columnar Storage Converter",
+        category: "Data Engineering & ETL",
+        catClass: "cat-etl",
+        executionMode: "One-Shot",
+        score: 98,
+        naive: "convert my CSV files to Parquet",
+        refined: `Convert raw CSV dataset [PATH] to optimized Snappy-compressed Apache Parquet format:
+1. SCHEMA ENFORCEMENT: Explicitly define column data types (int64, float64, string, timestamp) to avoid type inferral errors.
+2. PARTITIONING: Partition output dataset by [PARTITION_COLUMN] for fast analytics querying.
+3. STORAGE SAVINGS: Calculate and print space reduction compared to original CSV files.
+4. READABILITY TEST: Verify output Parquet files can be read back cleanly by PyArrow / Pandas.`,
+        why: "Optimizes cloud analytical query speeds while drastically reducing storage costs."
+      },
+
+      // --- WEB & UI/UX DEVELOPMENT (8) ---
+      {
+        id: 20,
+        title: "Single-File HTML Dashboard Scaffolder",
+        category: "Web & UI/UX",
+        catClass: "cat-web",
+        executionMode: "Autonomous /Goal",
+        score: 99,
+        naive: "build a web dashboard HTML page",
+        refined: `Create a responsive, self-contained single-file HTML web app for [APP_PURPOSE]:
+1. DESIGN AESTHETICS: Dark-mode modern UI with CSS variables, smooth transitions, glassmorphism card styling, and Inter Google Font.
+2. CORE FEATURES: Interactive search/filter, dynamic DOM grid rendering, keyboard accessibility, toast feedback alerts.
+3. STANDARDS & ACCESSIBILITY: Include prefers-reduced-motion media query, meta robots noindex/nofollow, and semantic HTML5 tags with unique IDs.
+4. ZERO EXTERNAL LIBS: Write standard vanilla JavaScript & pure CSS without external heavy framework dependencies.`,
+        why: "Delivers breathtaking visual aesthetics and fast loading without framework compilation overhead."
+      },
+      {
+        id: 21,
+        title: "UI Component Accessibility & Keyboard Audit",
+        category: "Web & UI/UX",
+        catClass: "cat-web",
+        executionMode: "One-Shot",
+        score: 97,
+        naive: "make my website accessible",
+        refined: `Audit and refactor web page component [FILE_PATH] for WCAG 2.1 AA compliance:
+1. ARIA & SEMANTICS: Add missing aria-labels, role attributes, and proper heading hierarchy (H1 -> H2 -> H3).
+2. KEYBOARD NAVIGATION: Ensure all interactive controls have visible focus rings and support Tab / Shift+Tab / Enter / Space focus management.
+3. CONTRAST AUDIT: Verify text-to-background contrast ratios satisfy minimum 4.5:1 ratio.
+4. SCREEN READER TEST: Provide summary of screen reader announcement behavior for modal dialogs and dynamic updates.`,
+        why: "Ensures legal WCAG compliance and smooth accessibility for keyboard and screen-reader users."
+      },
+      {
+        id: 22,
+        title: "Responsive CSS Layout & Mobile Refactor",
+        category: "Web & UI/UX",
+        catClass: "cat-web",
+        executionMode: "One-Shot",
+        score: 96,
+        naive: "fix the layout on mobile phones",
+        refined: `Refactor CSS layout in [FILE_PATH] for full responsiveness across viewports (320px to 1920px):
+1. CSS GRID & FLEXBOX: Replace fixed static pixel widths with fluid clamp(), minmax(), and fr grid units.
+2. BREAKPOINTS: Add mobile-first media queries (@media (min-width: 640px), 1024px).
+3. TOUCH TARGETS: Ensure interactive buttons and links have a minimum 44x44px touch footprint.
+4. LAYOUT OVERFLOW: Fix horizontal scrolling bugs and text truncation clipping issues.`,
+        why: "Eliminates broken mobile views, awkward line wrapping, and unwanted horizontal scrollbars."
+      },
+      {
+        id: 23,
+        title: "Interactive Web Audio Synthesizer / Sound Engine",
+        category: "Web & UI/UX",
+        catClass: "cat-web",
+        executionMode: "One-Shot",
+        score: 95,
+        naive: "add sound effects to my web app",
+        refined: `Build a lightweight Web Audio API sound generator in JavaScript for [APPLICATION]:
+1. AUDIO CONTEXT UNLOCK: Add user-gesture context initialization handler to comply with browser autoplay policies.
+2. SYNTHESIZER VOICES: Implement synthesized UI sound effects (click, success chime, error alert) using Web Audio oscillators & gain nodes.
+3. VOLUME CONTROL: Provide global volume slider and mute toggle saved in localStorage.
+4. PERFORMANCE: Properly suspend AudioContext when idle and release resources on pagehide.`,
+        why: "Delivers crisp, zero-dependency audio feedback without loading external audio file assets."
+      },
+      {
+        id: 24,
+        title: "REST / GraphQL API Client with Local Caching",
+        category: "Web & UI/UX",
+        catClass: "cat-web",
+        executionMode: "One-Shot",
+        score: 97,
+        naive: "connect my HTML page to an API",
+        refined: `Create an inline JavaScript fetch module connecting to endpoint [API_URL]:
+1. ASYNC STATE HANDLING: Implement visual UI state indicators for Loading, Error, Empty Data, and Success states.
+2. CACHING & EXPIRATION: Store fetched payloads in IndexedDB / localStorage with configurable TTL expiration.
+3. ERROR BOUNDARY: Catch network dropouts and display friendly toast error fallback with retry button.
+4. SECURITY: Pass authorization headers securely; do not log raw secrets to browser console.`,
+        why: "Prevents UI freezing, white-screen flickers, and unhandled network failure states."
+      },
+      {
+        id: 25,
+        title: "CSS Animation & Micro-Interaction Polish",
+        category: "Web & UI/UX",
+        catClass: "cat-web",
+        executionMode: "One-Shot",
+        score: 94,
+        naive: "add animations to buttons",
+        refined: `Add smooth CSS micro-interactions to interactive elements in [FILE_PATH]:
+1. TRANSFORM EFFECTS: Add subtle scale(1.02) and translateY(-2px) hover effects on cards and buttons.
+2. HARDWARE ACCELERATION: Use transform and opacity properties exclusively to maintain 60fps rendering without trigger layout reflow.
+3. REDUCED MOTION: Wrap transitions in @media (prefers-reduced-motion: reduce) set to 0.01ms.
+4. HARMONIOUS TIMING: Use custom cubic-bezier(0.16, 1, 0.3, 1) transition curves for premium tactile feel.`,
+        why: "Elevates app feel to state-of-the-art visual standards while respecting motion sensitivity."
+      },
+      {
+        id: 26,
+        title: "Form Validation & Error Handling Engine",
+        category: "Web & UI/UX",
+        catClass: "cat-web",
+        executionMode: "One-Shot",
+        score: 96,
+        naive: "add validation to my contact form",
+        refined: `Implement robust client-side form validation for [FORM_ID] in vanilla JS:
+1. REAL-TIME FEEDBACK: Validate inputs on blur/input events with regex patterns (email, phone, URL, password strength).
+2. VISUAL STATES: Display clear error messages below invalid fields and highlight field borders with distinct error colors.
+3. SUBMIT GUARDS: Disable submit button during submission to prevent duplicate requests.
+4. SANITIZATION: Sanitize string inputs before DOM insertion to protect against XSS vulnerabilities.`,
+        why: "Prevents invalid data submissions, guards against XSS, and provides instant visual guidance."
+      },
+      {
+        id: 27,
+        title: "SVG Vector Graphic Generator & Library Component",
+        category: "Web & UI/UX",
+        catClass: "cat-web",
+        executionMode: "One-Shot",
+        score: 93,
+        naive: "make SVG icons for my project",
+        refined: `Generate scalable inline SVG code for [ICON_OR_DIAGRAM_CONCEPT]:
+1. VECTOR OPTIMIZATION: Clean path data, remove unnecessary metadata tags, group elements logically with descriptive IDs.
+2. STYLING & THEMING: Use viewBox="0 0 24 24", fill="none", stroke="currentColor" for effortless CSS color inheritance.
+3. ACCESSIBILITY: Add title element and aria-hidden="true" for decorative graphics.
+4. EMBEDDING: Output clean inline SVG snippets ready for HTML insertion.`,
+        why: "Produces crisp, resolution-independent vector graphics that inherit application CSS colors."
+      },
+
+      // --- CODE QUALITY & TESTING (8) ---
+      {
+        id: 28,
+        title: "Unit & Integration Test Suite Generator",
+        category: "Code Quality & Testing",
+        catClass: "cat-code",
+        executionMode: "One-Shot",
+        score: 98,
+        naive: "write tests for my code",
+        refined: `Create a comprehensive test suite (using Jest / PyTest / Vitest) for module [FILE_PATH]:
+1. HAPPY PATH: Test primary functions with standard expected inputs and verify correct return values/types.
+2. EDGE CASES: Cover null inputs, boundary values, empty arrays, unicode strings, and unexpected types.
+3. ERROR HANDLING: Verify exceptions and custom error types are thrown under failure conditions.
+4. COVERAGE TARGET: Ensure tests achieve minimum [COVERAGE_PERCENT]% branch coverage with clean descriptive test descriptions.`,
+        why: "Eliminates fragile code by locking down boundary conditions and error branch handling."
+      },
+      {
+        id: 29,
+        title: "Cyclomatic Complexity & Modular Refactoring",
+        category: "Code Quality & Testing",
+        catClass: "cat-code",
+        executionMode: "One-Shot",
+        score: 97,
+        naive: "clean up this long function",
+        refined: `Refactor high-complexity function [FUNCTION_NAME] in file [FILE_PATH]:
+1. COMPLEXITY ANALYSIS: Calculate current cyclomatic complexity and identify deeply nested IF/ELSE loops.
+2. DECOMPOSITION: Extract sub-logic into pure, single-responsibility helper functions.
+3. EARLY RETURNS: Guard clauses to flatten deeply nested logic branches.
+4. REGRESSION VERIFICATION: Run existing test suite before and after refactoring to ensure identical behavior.`,
+        why: "Drastically simplifies complex spaghetti functions into readable, maintainable, pure sub-functions."
+      },
+      {
+        id: 30,
+        title: "Strict TypeScript Type Annotator & Guard Implementer",
+        category: "Code Quality & Testing",
+        catClass: "cat-code",
+        executionMode: "One-Shot",
+        score: 99,
+        naive: "fix typescript errors",
+        refined: `Eliminate TypeScript compiler errors and 'any' types in file [FILE_PATH]:
+1. STRICT INTERFACES: Replace 'any' annotations with explicit interfaces and discriminated union types.
+2. TYPE GUARDS: Implement custom type predicates (isTargetType(obj): obj is Target) for runtime type checks.
+3. NULL SAFETY: Fix potential NullPointerException / undefined dereferencing bugs with optional chaining and nullish coalescing.
+4. LINTER PASS: Run local tsc --noEmit to confirm zero remaining compilation warnings.`,
+        why: "Provides compile-time safety and prevents runtime 'cannot read property of undefined' crashes."
+      },
+      {
+        id: 31,
+        title: "Memory Leak & Event Listener Lifecycle Auditor",
+        category: "Code Quality & Testing",
+        catClass: "cat-code",
+        executionMode: "One-Shot",
+        score: 96,
+        naive: "find why my app gets slow over time",
+        refined: `Audit codebase [PATH] for memory leaks and dangling event listeners:
+1. LIFECYCLE PURGE: Check that all addEventListener, setInterval, and rAF calls have corresponding remove/clear logic on unmount/pagehide.
+2. DOM REFERENCES: Identify detached DOM nodes kept alive by closure references.
+3. WEAK REFS: Propose WeakMap / WeakSet for object metadata mappings to allow proper garbage collection.
+4. PROFILES: Provide step-by-step instructions for verifying memory stability using Chrome DevTools Heap Snapshots.`,
+        why: "Fixes subtle web app memory leaks that cause browser tabs to lag and crash over extended use."
+      },
+      {
+        id: 32,
+        title: "API Endpoint Contract & Schema Validator",
+        category: "Code Quality & Testing",
+        catClass: "cat-code",
+        executionMode: "One-Shot",
+        score: 98,
+        naive: "validate my API request payload",
+        refined: `Implement runtime schema validation (using Zod / Pydantic) for API endpoint [ENDPOINT_NAME]:
+1. INPUT SCHEMAS: Define strict validation schemas for request query params, route params, and JSON body payloads.
+2. SANITIZATION: Coerce and sanitize field values (e.g. trim strings, transform timestamps).
+3. DETAILED ERRORS: Return formatted JSON error responses listing exact field paths and validation failure reasons.
+4. UNIT TESTS: Write unit tests verifying valid and invalid payloads against the schema rules.`,
+        why: "Protects backend infrastructure from malformed API payloads and produces informative error responses."
+      },
+      {
+        id: 33,
+        title: "Dependency Vulnerability & License Compliance Auditor",
+        category: "Code Quality & Testing",
+        catClass: "cat-code",
+        executionMode: "One-Shot",
+        score: 95,
+        naive: "update dependencies and check security",
+        refined: `Audit dependencies in manifest [package.json / requirements.txt / Cargo.toml]:
+1. VULNERABILITY SCAN: Run security audit to flag known CVE security vulnerabilities and high-severity advisories.
+2. LICENSE COMPLIANCE: Scan package licenses and highlight copyleft (GPL / AGPL) risks for commercial use.
+3. SAFE UPGRADE PLAN: Categorize updates into Patch, Minor, and Major breaking version steps.
+4. VERIFICATION: Generate CLI lockfile update commands and run test suite post-upgrade.`,
+        why: "Keeps package dependencies secure and up-to-date while avoiding copyleft licensing issues."
+      },
+      {
+        id: 34,
+        title: "Performance Profiling & Bottleneck Elimination",
+        category: "Code Quality & Testing",
+        catClass: "cat-code",
+        executionMode: "One-Shot",
+        score: 97,
+        naive: "profile my python code and speed it up",
+        refined: `Profile and optimize execution speed of Python / JS script [FILE_PATH]:
+1. BENCHMARK PROFILING: Run cProfile / Flamegraph analysis to locate top 3 time-consuming function calls.
+2. ALGORITHMIC REDUCTION: Replace O(N^2) nested loops with O(N) hash map / dictionary lookups.
+3. VECTORIZATION / CACHING: Apply LRU caching (@lru_cache) or NumPy vectorized operations where applicable.
+4. BENCHMARK COMPARISON: Report before/after execution timing benchmarks across 1,000 to 100,000 iteration runs.`,
+        why: "Transforms slow execution bottlenecks into high-speed algorithms based on empirical profiling data."
+      },
+      {
+        id: 35,
+        title: "Automated Documentation & Docstring Generator",
+        category: "Code Quality & Testing",
+        catClass: "cat-code",
+        executionMode: "One-Shot",
+        score: 94,
+        naive: "add comments to my code",
+        refined: `Generate comprehensive code documentation for module [FILE_PATH]:
+1. DOCSTRING FORMAT: Add JSDoc / Google-style Python docstrings for all exported classes, functions, and interfaces.
+2. PARAMETERS & RETURNS: Explicitly document @param types, descriptions, default values, and @returns specifications.
+3. USAGE EXAMPLES: Include executable code snippet examples within docstrings illustrating usage.
+4. ARCHITECTURE OVERVIEW: Add top-of-file markdown summary detailing module purpose and key dependencies.`,
+        why: "Provides crystal-clear inline IDE hover documentation and code maintainability."
+      },
+
+      // --- AGENTIC WORKFLOWS (8) ---
+      {
+        id: 36,
+        title: "Autonomous Overnight Goal Execution Directive",
+        category: "Agent Workflow",
+        catClass: "cat-agent",
+        executionMode: "Autonomous /Goal",
+        score: 99,
+        naive: "work on this task until it's completely finished",
+        refined: `Act as an autonomous principal software engineer to complete goal [GOAL_DESCRIPTION]:
+1. /GOAL MODE: Execute continuously without requesting intermediate confirmation for trivial steps.
+2. IMPLEMENTATION PLAN: First write implementation_plan.md outlining trade-offs, file diffs, and verification steps.
+3. ATOMIC COMMITS: Break complex sub-tasks into sequential checkpoints with build/test verification after each step.
+4. FINAL WALKTHROUGH: Write walkthrough.md with step-by-step CLI test commands proving clean completion.`,
+        why: "Triggers deep autonomous agent execution mode with structured plan artifacts and comprehensive validation."
+      },
+      {
+        id: 37,
+        title: "Interactive Goal Alignment & Design Interview",
+        category: "Agent Workflow",
+        catClass: "cat-agent",
+        executionMode: "Interactive /Grill-Me",
+        score: 98,
+        naive: "ask me questions before building this",
+        refined: `Execute an interactive /grill-me alignment session for feature [FEATURE_NAME]:
+1. CLARIFYING QUESTIONS: Ask up to 4 targeted, multiple-choice questions focusing on architecture choices, data storage, UI preferences, and edge case handling.
+2. RECOMMENDATIONS: Mark recommended design choices with '(Recommended)' based on modern best practices.
+3. REQUIREMENTS SUMMARY: Synthesize answers into a confirmed project spec before writing code.`,
+        why: "Resolves architectural ambiguities upfront through interactive UI multiple-choice selections."
+      },
+      {
+        id: 38,
+        title: "Dynamic Subagent Task Delegation",
+        category: "Agent Workflow",
+        catClass: "cat-agent",
+        executionMode: "Dynamic Subagent",
+        score: 97,
+        naive: "do multiple things at once",
+        refined: `Delegate parallel sub-tasks across dynamic agent sub-agents:
+1. DELEGATION BREAKDOWN: Spawn Subagent A to handle backend API refactoring, Subagent B to build frontend UI components, and Subagent C to write integration tests.
+2. ISOLATED CONTEXT: Provide each subagent with targeted file paths and clear completion criteria to minimize context window pollution.
+3. SYNTHESIS: Aggregate subagent deliverables, resolve conflicts, and run full workspace validation build.`,
+        why: "Maximizes parallelism while keeping the primary agent context window lean and uncluttered."
+      },
+      {
+        id: 39,
+        title: "Browser Automated UI Testing & Visual Audit",
+        category: "Agent Workflow",
+        catClass: "cat-agent",
+        executionMode: "One-Shot",
+        score: 96,
+        naive: "test my website in the browser",
+        refined: `Invoke the /browser subagent to audit web application at [URL_OR_LOCAL_PORT]:
+1. VIEWPORT TESTING: Test rendering across Desktop (1920x1080), Tablet (768x1024), and Mobile (375x812) viewports.
+2. INTERACTION FLOW: Click navigation links, submit sample form data, and open modal dialogs.
+3. CONSOLE & ERROR AUDIT: Monitor browser console for JS exceptions, 404 network errors, or visual clipping bugs.
+4. SCREENSHOT EVIDENCE: Capture WebP screenshots of key visual states and attach to visual_audit.md report.`,
+        why: "Leverages real browser rendering engines to visually verify UI component behavior and catch runtime errors."
+      },
+      {
+        id: 40,
+        title: "Recurring Scheduled Cron Maintenance Directive",
+        category: "Agent Workflow",
+        catClass: "cat-agent",
+        executionMode: "Background Cron /Schedule",
+        score: 95,
+        naive: "check on this server every 10 minutes",
+        refined: `Set up a recurring /schedule cron instruction for task [MAINTENANCE_TASK]:
+1. CRON EXPRESSION: Schedule job to run at '*/10 * * * *' (every 10 minutes).
+2. ACTION PROMPT: "Inspect deployment build logs, query health status endpoint, and aggregate error alerts."
+3. DAEMON MODE: Set IsDaemon=false for ongoing task monitoring until completion.
+4. NOTIFICATION: Alert user immediately if health checks fail twice consecutively.`,
+        why: "Replaces manual status checking loops with reliable background cron timer schedules."
+      },
+      {
+        id: 41,
+        title: "Agent Skill Extraction & Distillation",
+        category: "Agent Workflow",
+        catClass: "cat-agent",
+        executionMode: "One-Shot",
+        score: 98,
+        naive: "save what we just did as a reusable skill",
+        refined: `Package the completed interaction workflow into a custom Antigravity Agent Skill:
+1. SKILL LOCATION: Create skill folder in .agents/skills/[SKILL_NAME]/.
+2. SKILL.MD FRONTMATTER: Write SKILL.md with YAML metadata (name, description, trigger guidelines, dependencies).
+3. INSTRUCTIONS & SCRIPTS: Include step-by-step workflow instructions, sample CLI helper scripts, and edge-case handling rules.
+4. MANIFEST REGISTRATION: Validate skill layout so it is automatically discovered for future agent sessions.`,
+        why: "Preserves successful multi-step workflows into reusable agent skills for future projects."
+      },
+      {
+        id: 42,
+        title: "Root Cause Investigation & Log-First Debugger",
+        category: "Agent Workflow",
+        catClass: "cat-agent",
+        executionMode: "One-Shot",
+        score: 99,
+        naive: "fix this crash",
+        refined: `Investigate runtime exception in [APPLICATION_NAME]:
+1. LOG EXTRACTION: Read complete un-truncated error log before proposing any code edits.
+2. HYPOTHESIS JUSTIFICATION: Formulate explicit diagnostic hypothesis strictly backed by empirical log stack trace line numbers.
+3. NO SYMPTOM PATCHING: Avoid silent try/catch suppression or returning dummy values. Fix root upstream contract break.
+4. REGRESSION VERIFICATION: Re-run failing test case to demonstrate clean fix.`,
+        why: "Prevents quick symptom-patching and enforces empirical stack-trace-backed root-cause fixes."
+      },
+      {
+        id: 43,
+        title: "Comprehensive Code Review & Refactoring Deck",
+        category: "Agent Workflow",
+        catClass: "cat-agent",
+        executionMode: "One-Shot",
+        score: 97,
+        naive: "review my pull request",
+        refined: `Perform a comprehensive senior principal engineer code review on [DIFF_OR_BRANCH]:
+1. CODE QUALITY: Check for adherence to typing, modularity, DRY principles, and clean function signatures.
+2. SECURITY AUDIT: Scan for SQL injection, XSS vulnerabilities, unhandled null pointers, and missing input bounds.
+3. PERFORMANCE: Flag unnecessary memory allocations, database N+1 query loops, or blocking UI calls.
+4. ACTIONABLE FEEDBACK: Provide structured pull request review with line-by-line diff recommendations.`,
+        why: "Delivers senior-level code reviews catching security, performance, and design pattern issues."
+      },
+
+      // --- ADVANCED AI ENGINEERING (15 NEW PROMPTS) ---
+      {
+        id: 44,
+        title: "Multi-Repository Atomic Feature Migration",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "Autonomous /Goal",
+        score: 99,
+        naive: "migrate shared auth library across all our microservice repos",
+        refined: `Coordinate a multi-repository refactor for auth module across repos [REPO_LIST]:
+1. PARALLEL DELEGATION: Spawn isolated subagents per repository to update imports, config models, and dependency lockfiles.
+2. BREAKING CHANGE AUDIT: Flag signature alterations in [OLD_FUNCTION] -> [NEW_FUNCTION] and replace all invocation call-sites.
+3. VERIFICATION PASS: Execute local test suites per repo independently to confirm zero compilation errors.
+4. SUMMARY MATRIX: Generate a markdown table summarizing PR branch names, test status, and migration diffs.`,
+        why: "Coordinates cross-repo dependencies smoothly without polluting primary agent context windows."
+      },
+      {
+        id: 45,
+        title: "AST-Based Code Transformer & Codemod Generator",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 98,
+        naive: "replace old callback code with async await everywhere",
+        refined: `Build an AST codemod (using jscodeshift / Babel / libcst) targeting directory [PATH]:
+1. PATTERN RECOGNITION: Target all instances of legacy callback syntax function(err, result) and Promise .then() chains.
+2. AST MUTATION: Transform target AST nodes into modern async/await try-catch blocks cleanly.
+3. PRESERVE COMMENTS: Ensure existing inline docstrings and comments are preserved in original code positions.
+4. DRY-RUN VERIFICATION: Run codemod in dry-run mode and display before/after git diff previews.`,
+        why: "Eliminates risky regex search-and-replace by mutating program syntax trees directly."
+      },
+      {
+        id: 46,
+        title: "Automated Pull Request Summary & Changelog Generator",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 96,
+        naive: "write a PR description for my commit changes",
+        refined: `Analyze git commit range [START_COMMIT]..[END_COMMIT] and generate a PR description:
+1. SUMMARY OF CHANGES: Provide high-level bulleted summary of features, refactors, and bug fixes.
+2. TECHNICAL DEEP DIVE: Outline architectural trade-offs, added dependencies, and modified database schemas.
+3. TESTING PLAN: List exact CLI commands and manual test steps for code reviewer verification.
+4. CONVENTIONAL COMMITS: Format output using standard Conventional Commits changelog taxonomy.`,
+        why: "Saves developer time while providing complete documentation for pull request reviewers."
+      },
+      {
+        id: 47,
+        title: "Rust / C++ Memory Safety & Lifetime Profiler",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 99,
+        naive: "fix borrow checker error in my rust code",
+        refined: `Analyze memory lifetime and borrowing lifetime error in file [FILE_PATH]:
+1. LIFETIME DIAGNOSIS: Explain exact lifetime mismatch causing borrow checker reject (e.g. borrowed value does not live long enough).
+2. ZERO-COPY REFACTOR: Propose fix prioritizing zero-copy references before resorting to clone() allocations.
+3. UNSAFE AUDIT: Check for any unsafe blocks and verify invariant guarantees.
+4. CARGO CHECK: Run cargo clippy / cargo check to verify resolution.`,
+        why: "Resolves difficult Rust borrowing lifetime errors while preserving memory performance."
+      },
+      {
+        id: 48,
+        title: "Zero-Downtime Database Schema Rollback Generator",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 97,
+        naive: "write a safe database rollback script",
+        refined: `Construct a zero-downtime database migration & rollback strategy for table [TABLE_NAME]:
+1. EXPAND-AND-CONTRACT: Implement dual-write Phase 1 (add new column without dropping old column), Phase 2 (sync data), Phase 3 (contract/drop old).
+2. REVERSIBLE SQL: Output explicit UP and DOWN SQL files with non-blocking LOCK TIMEOUT guards.
+3. DATA SANITY: Include validation queries verifying record counts match between old and new structures.`,
+        why: "Eliminates production database locks and prevents data loss during schema migrations."
+      },
+      {
+        id: 49,
+        title: "Micro-Agent Swarm Orchestrator & Leader",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "Dynamic Subagent",
+        score: 99,
+        naive: "build a full-stack feature with frontend backend and tests",
+        refined: `Orchestrate a multi-agent swarm for full-stack feature [FEATURE_NAME]:
+1. AGENT A (BACKEND): Design OpenAPI specification, REST endpoints, and SQL database schema.
+2. AGENT B (FRONTEND): Build responsive UI components matching backend API contract schemas.
+3. AGENT C (QA): Construct E2E integration test suite validating request payloads.
+4. LEADER SYNTHESIS: Merge code artifacts, run integration suite, and present completion walkthrough.`,
+        why: "Parallelizes complex full-stack feature development across domain-specialized subagents."
+      },
+      {
+        id: 50,
+        title: "WebAssembly (Wasm) Module Builder & JS Bridge",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 96,
+        naive: "compile my C++/Rust code to WebAssembly for web",
+        refined: `Compile high-performance logic [SOURCE_FILE] to WebAssembly (Wasm):
+1. BINDINGS: Generate JS glue code bindings (wasm-bindgen / Emscripten) exposing exported functions.
+2. MEMORY MANIFEST: Manage SharedArrayBuffer / TypedArray memory passing between JS and Wasm module efficiently.
+3. FALLBACK: Provide pure JavaScript fallback implementation for browsers lacking Wasm features.
+4. SMOKE TEST: Create single-file HTML test page validating computation benchmarks.`,
+        why: "Unlocks near-native performance inside web browser runtimes with clean JavaScript glue code."
+      },
+      {
+        id: 51,
+        title: "Kubernetes Manifest & Helm Chart Generator",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 97,
+        naive: "write kubernetes files for my app",
+        refined: `Generate production-grade Kubernetes manifests / Helm chart for service [APP_NAME]:
+1. RESOURCES & PROBES: Define Deployment with Liveness/Readiness probes, HPA autoscaling, and CPU/memory limits.
+2. SECURITY CONTEXT: Set runAsNonRoot=true, readOnlyRootFilesystem=true, drop ALL capabilities.
+3. NETWORKING: Create ClusterIP Service and TLS Ingress routing rules.
+4. DRY-RUN VALIDATION: Run kubectl apply --dry-run=client to verify manifest syntax correctness.`,
+        why: "Ensures cloud-native Kubernetes deployments follow enterprise security and autoscaling standards."
+      },
+      {
+        id: 52,
+        title: "OAuth2 / OIDC Authentication Flow Implementer",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 98,
+        naive: "add login with Google / GitHub to my app",
+        refined: `Implement secure OAuth2 / OpenID Connect PKCE flow for provider [AUTH_PROVIDER]:
+1. PKCE SECURITY: Generate cryptographic code_verifier and code_challenge parameters.
+2. TOKEN EXCHANGE: Handle authorization code exchange for JWT access and refresh tokens securely.
+3. SESSION STORAGE: Store JWTs in HttpOnly SameSite=Strict cookies to eliminate XSS token theft.
+4. REFRESH ROTATION: Build automatic token refresh interceptor handling 401 unauthorized responses.`,
+        why: "Guards authentication flows against security vulnerabilities like XSS and CSRF attacks."
+      },
+      {
+        id: 53,
+        title: "GraphQL Schema & Resolver Generator",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 96,
+        naive: "build a GraphQL API",
+        refined: `Construct a GraphQL schema and resolver pipeline for domain [DOMAIN_MODEL]:
+1. SCHEMA DEFINITION: Write clean SDL defining Query, Mutation, and Subscription types with input objects.
+2. N+1 PREVENTER: Implement DataLoader batching in resolvers to eliminate database N+1 query performance bottlenecks.
+3. ERROR MAPPING: Return custom GraphQLError codes for authentication and validation errors.
+4. PLAYGROUND: Provide sample GraphQL queries and mutations for immediate execution testing.`,
+        why: "Prevents N+1 database queries while producing clean GraphQL schema SDL documentation."
+      },
+      {
+        id: 54,
+        title: "CI/CD Pipeline Workflow Scaffolder",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 97,
+        naive: "setup GitHub Actions build pipeline",
+        refined: `Build a production GitHub Actions CI/CD workflow (.github/workflows/main.yml) for [PROJECT_TYPE]:
+1. CACHING: Configure dependency caching (npm, pip, cargo) to accelerate runner execution speeds.
+2. MATRIX TESTING: Run linting, unit tests, and build matrix across Node/Python versions [VERSIONS].
+3. CONTAINER BUILD: Build multi-arch Docker image, scan with Trivy security scanner, and push to registry.
+4. NOTIFICATIONS: Post build status summary directly to PR checks dashboard.`,
+        why: "Slashes CI build times with dependency caching and enforces automated security scanning."
+      },
+      {
+        id: 55,
+        title: "Vector Search & Embedding Index Builder",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 99,
+        naive: "add semantic vector search to my documents",
+        refined: `Build a RAG vector search indexing script for document corpus [FOLDER]:
+1. CHUNKING & EMBEDDINGS: Chunk documents into 512-token passages with 50-token overlap; generate dense embeddings.
+2. VECTOR STORE: Index embeddings in vector database (Chroma / Qdrant / PGVector) with HNSW similarity index.
+3. HYBRID SEARCH: Combine BM25 keyword matching with vector cosine similarity for maximum retrieval precision.
+4. EVALUATION: Output top-k retrieval latency and accuracy score benchmark report.`,
+        why: "Maximizes retrieval precision in RAG applications using hybrid vector + keyword matching."
+      },
+      {
+        id: 56,
+        title: "Event-Driven Message Queue & Worker Consumer",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "Background Cron /Schedule",
+        score: 98,
+        naive: "setup background job queue with RabbitMQ / Redis",
+        refined: `Architect a resilient event-driven worker consumer processing queue [QUEUE_NAME]:
+1. DEAD LETTER QUEUE (DLQ): Route messages failing after 3 retries into dedicated DLQ for inspection.
+2. IDEMPOTENCY: Enforce message idempotency using unique transaction message IDs to prevent double execution.
+3. GRACEFUL SHUTDOWN: Intercept SIGTERM signals to finish active message processing before worker exit.
+4. MONITORING: Expose Prometheus metrics for queue depth and message processing rate.`,
+        why: "Handles background async tasks reliably without double-processing or losing failed queue messages."
+      },
+      {
+        id: 57,
+        title: "Chromium DevTools CDP Protocol Inspector Script",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 96,
+        naive: "automate browser inspection via devtools protocol",
+        refined: `Build a Chrome DevTools Protocol (CDP) automation script targeting [TARGET_URL]:
+1. NETWORK INTERCEPTION: Capture all network XHR/Fetch requests and log payload byte sizes.
+2. METRICS AUDIT: Extract Core Web Vitals (LCP, CLS, FID) and performance timeline metrics.
+3. DOM COVERAGE: Calculate unused CSS/JS code coverage percentages.
+4. HAR EXPORT: Export HTTP Archive (.har) recording for offline diagnostic analysis.`,
+        why: "Extracts deep browser performance and network metrics using low-level CDP protocols."
+      },
+      {
+        id: 58,
+        title: "System Architecture Diagram & C4 Model Generator",
+        category: "Advanced AI Engineering",
+        catClass: "cat-advanced",
+        executionMode: "One-Shot",
+        score: 99,
+        naive: "draw a architecture diagram for my project",
+        refined: `Generate a C4 Model system architecture specification for system [SYSTEM_NAME]:
+1. MERMAID DIAGRAMS: Output clean, syntax-error-free Mermaid.js code blocks for Context (Level 1) and Container (Level 2).
+2. DATA FLOW: Document data flows, protocol types (HTTPS, gRPC, WebSocket), and security boundaries.
+3. COMPONENT BREAKDOWN: Provide markdown tables listing component responsibilities and technology stack choices.
+4. EMBEDDING READINESS: Format diagram code blocks for seamless GitHub Markdown / Notion embedding.`,
+        why: "Transforms high-level app ideas into standard C4 architectural documentation."
+      }
+    ];
+
+    // State management
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let currentTheme = localStorage.getItem('deck_theme') || 'midnight';
+    let starredIds = new Set(JSON.parse(localStorage.getItem('starred_prompts') || '[]'));
+    let copyHistory = JSON.parse(localStorage.getItem('copy_history') || '[]');
+    let formatModes = {}; // promptId -> 'raw' | 'md' | 'json'
+    let varValues = {};   // promptId -> { VAR_NAME: val }
+
+    // DOM Elements
+    const grid = document.getElementById('prompts-grid');
+    const searchInput = document.getElementById('search-input');
+    const filterTags = document.getElementById('filter-tags');
+    const totalCountEl = document.getElementById('total-count');
+    const starredCountEl = document.getElementById('starred-count');
+    const themeSelect = document.getElementById('theme-select');
+    const toast = document.getElementById('toast');
+    const sandboxModal = document.getElementById('sandbox-modal');
+    const shortcutsModal = document.getElementById('shortcuts-modal');
+    const historyDrawer = document.getElementById('history-drawer');
+    const drawerList = document.getElementById('drawer-history-list');
+
+    // Theme initialization
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('deck_theme', theme);
+      themeSelect.value = theme;
+    }
+    function changeTheme(theme) { applyTheme(theme); }
+    applyTheme(currentTheme);
+
+    // Extraction helper for placeholders [VAR_NAME]
+    function extractPlaceholders(str) {
+      const matches = str.match(/\[[A-Z0-9_/\-]+\]/g);
+      if (!matches) return [];
+      return Array.from(new Set(matches.map(m => m.slice(1, -1))));
+    }
+
+    // Substitute placeholders
+    function substitutePromptText(promptObj) {
+      let text = promptObj.refined;
+      const vars = varValues[promptObj.id] || {};
+      Object.keys(vars).forEach(k => {
+        if (vars[k] && vars[k].trim() !== '') {
+          text = text.replaceAll(`[${k}]`, vars[k].trim());
+        }
+      });
+      return text;
+    }
+
+    // Format prompt text based on mode
+    function formatOutputText(text, mode, title) {
+      if (mode === 'md') {
+        return `\`\`\`markdown\n# ${title}\n${text}\n\`\`\``;
+      } else if (mode === 'json') {
+        return JSON.stringify({ title, prompt: text }, null, 2);
+      }
+      return text;
+    }
+
+    // Render Cards
+    function renderPrompts() {
+      grid.innerHTML = '';
+      
+      const filtered = promptsData.filter(item => {
+        if (currentCategory === 'starred') {
+          if (!starredIds.has(item.id)) return false;
+        } else if (currentCategory !== 'all' && item.category !== currentCategory) {
+          return false;
+        }
+
+        if (searchQuery.trim() !== '') {
+          const q = searchQuery.toLowerCase();
+          const matchTitle = item.title.toLowerCase().includes(q);
+          const matchNaive = item.naive.toLowerCase().includes(q);
+          const matchRefined = item.refined.toLowerCase().includes(q);
+          const matchWhy = item.why.toLowerCase().includes(q);
+          const matchCat = item.category.toLowerCase().includes(q);
+          const matchMode = item.executionMode.toLowerCase().includes(q);
+          return matchTitle || matchNaive || matchRefined || matchWhy || matchCat || matchMode;
+        }
+
+        return true;
+      });
+
+      totalCountEl.textContent = filtered.length;
+      starredCountEl.textContent = starredIds.size;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted); background: var(--bg-card); border-radius: 16px; border: 1px dashed var(--border-color);">
+            <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin-bottom: 6px;">No matching prompts found</h3>
+            <p style="font-size: 0.9rem;">Try adjusting your search query or switching category filters.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'prompt-card';
+        card.setAttribute('id', `prompt-card-${item.id}`);
+
+        const isStarred = starredIds.has(item.id);
+        const fmtMode = formatModes[item.id] || 'raw';
+        const placeholders = extractPlaceholders(item.refined);
+        const substitutedText = substitutePromptText(item);
+        const formattedText = formatOutputText(substitutedText, fmtMode, item.title);
+        const tokenEst = Math.round(formattedText.length / 4);
+
+        // Variables HTML
+        let varsHTML = '';
+        if (placeholders.length > 0) {
+          varsHTML = `
+            <div class="variables-section">
+              <div class="variables-title">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                Fill Variables
+              </div>
+              <div class="var-inputs-grid">
+                ${placeholders.map(v => {
+                  const val = (varValues[item.id] && varValues[item.id][v]) || '';
+                  return `
+                    <div class="var-field">
+                      <label class="var-label">[${escapeHtml(v)}]</label>
+                      <input type="text" class="var-input" value="${escapeHtml(val)}" placeholder="${escapeHtml(v)}" oninput="updateVar(${item.id}, '${escapeHtml(v)}', this.value)">
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div>
+              <div class="pill-group">
+                <span class="category-pill ${item.catClass}">${escapeHtml(item.category)}</span>
+                <span class="mode-pill">${escapeHtml(item.executionMode)}</span>
+                <span class="score-badge" title="Prompt Specificity & Safety Score">★ ${item.score}/100</span>
+              </div>
+              <h2 class="card-title">${escapeHtml(item.title)}</h2>
+            </div>
+            <div class="card-actions">
+              <button class="icon-btn ${isStarred ? 'starred' : ''}" title="Star Prompt" onclick="toggleStar(${item.id})">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="${isStarred ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="naive-section">
+            <div class="naive-label">Original / Naive Input</div>
+            <div class="naive-text">"${escapeHtml(item.naive)}"</div>
+          </div>
+
+          ${varsHTML}
+
+          <div class="refined-section">
+            <div class="refined-header">
+              <span class="refined-label">Pro Agentic Prompt</span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="token-pill">Est. Tokens: ${tokenEst}</span>
+                <div class="format-btn-group">
+                  <button class="fmt-btn ${fmtMode==='raw'?'active':''}" onclick="setFmt(${item.id}, 'raw')">Text</button>
+                  <button class="fmt-btn ${fmtMode==='md'?'active':''}" onclick="setFmt(${item.id}, 'md')">MD</button>
+                  <button class="fmt-btn ${fmtMode==='json'?'active':''}" onclick="setFmt(${item.id}, 'json')">JSON</button>
+                </div>
+              </div>
+            </div>
+            <div class="refined-text" id="prompt-text-${item.id}">${escapeHtml(formattedText)}</div>
+          </div>
+
+          <div class="card-footer">
+            <div class="why-box">
+              <strong>Why it works:</strong> ${escapeHtml(item.why)}
+            </div>
+            <button class="copy-btn" onclick="copyPromptCard(${item.id})">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              Copy Prompt
+            </button>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    // State Handlers
+    function updateVar(id, key, val) {
+      if (!varValues[id]) varValues[id] = {};
+      varValues[id][key] = val;
+      renderPrompts();
+    }
+
+    function setFmt(id, mode) {
+      formatModes[id] = mode;
+      renderPrompts();
+    }
+
+    function toggleStar(id) {
+      if (starredIds.has(id)) starredIds.delete(id);
+      else starredIds.add(id);
+      localStorage.setItem('starred_prompts', JSON.stringify(Array.from(starredIds)));
+      renderPrompts();
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function logCopy(title, text) {
+      copyHistory.unshift({ title, time: new Date().toLocaleTimeString(), text });
+      if (copyHistory.length > 20) copyHistory.pop();
+      localStorage.setItem('copy_history', JSON.stringify(copyHistory));
+      renderDrawer();
+    }
+
+    function copyPromptCard(id) {
+      const item = promptsData.find(p => p.id === id);
+      if (!item) return;
+      const text = formatOutputText(substitutePromptText(item), formatModes[id] || 'raw', item.title);
+      navigator.clipboard.writeText(text).then(() => {
+        logCopy(item.title, text);
+        showToast("Prompt copied to clipboard!");
+      });
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    // Sandbox Modal Logic
+    function openSandboxModal() { sandboxModal.classList.add('active'); }
+    function closeSandboxModal() { sandboxModal.classList.remove('active'); }
+    
+    document.getElementById('sandbox-input').addEventListener('input', (e) => {
+      const tokens = Math.round(e.target.value.length / 4);
+      document.getElementById('sandbox-token-count').textContent = `Est. Tokens: ${tokens}`;
+    });
+
+    function enhanceRoughPrompt() {
+      const rough = document.getElementById('sandbox-input').value.trim();
+      if (!rough) return;
+
+      const enhanced = `Act as an expert software engineer to accomplish the following objective:
+1. OBJECTIVE: ${rough}
+2. CONSTRAINTS & RULES:
+   - Preserve existing architecture and API contracts.
+   - Enforce clean typing, modular function boundaries, and error handling.
+   - Do not swallow exceptions or patch symptoms.
+3. EXECUTION PLAN:
+   - Perform a dry-run / implementation preview before mutating core code.
+   - Run unit test suite post-execution to verify zero regression breaks.
+4. VERIFICATION: Output step-by-step CLI validation commands showing clean completion.`;
+
+      document.getElementById('sandbox-output').textContent = enhanced;
+    }
+
+    function copySandboxOutput() {
+      const text = document.getElementById('sandbox-output').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        logCopy("Sandbox Custom Prompt", text);
+        showToast("Sandbox output copied!");
+      });
+    }
+
+    // Drawer Logic
+    function toggleDrawer() {
+      historyDrawer.classList.toggle('active');
+      renderDrawer();
+    }
+
+    function renderDrawer() {
+      drawerList.innerHTML = copyHistory.length === 0 ? '<p style="color:var(--text-dim); font-size:0.85rem;">No copy history yet.</p>' : '';
+      copyHistory.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'drawer-item';
+        div.innerHTML = `
+          <div class="drawer-item-title">${escapeHtml(item.title)}</div>
+          <div class="drawer-item-time">${escapeHtml(item.time)}</div>
+        `;
+        drawerList.appendChild(div);
+      });
+    }
+
+    // Shortcuts Modal
+    function openShortcutsModal() { shortcutsModal.classList.add('active'); }
+    function closeShortcutsModal() { shortcutsModal.classList.remove('active'); }
+
+    // Batch Copy Filtered
+    function batchCopyFiltered() {
+      const filtered = promptsData.filter(item => {
+        if (currentCategory === 'starred') return starredIds.has(item.id);
+        if (currentCategory !== 'all' && item.category !== currentCategory) return false;
+        return true;
+      });
+
+      const batchText = filtered.map(item => `# ${item.title}\n${substitutePromptText(item)}\n`).join('\n---\n\n');
+      navigator.clipboard.writeText(batchText).then(() => {
+        logCopy(`Batch Export (${filtered.length} prompts)`, batchText);
+        showToast(`Copied ${filtered.length} prompts to clipboard!`);
+      });
+    }
+
+    // JSON Export / Import
+    function exportPromptsJSON() {
+      const blob = new Blob([JSON.stringify(promptsData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'prompts_deck_backup.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function triggerImportJSON() {
+      document.getElementById('import-file-input').click();
+    }
+
+    function handleImportJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (Array.isArray(imported)) {
+            promptsData.push(...imported);
+            renderPrompts();
+            showToast("Successfully imported prompt cards!");
+          }
+        } catch (err) {
+          alert("Invalid JSON format.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Keyboard Shortcuts Listener
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        searchInput.focus();
+      } else if (e.key === 'Escape') {
+        searchInput.value = '';
+        searchQuery = '';
+        closeSandboxModal();
+        closeShortcutsModal();
+        historyDrawer.classList.remove('active');
+        renderPrompts();
+      } else if (e.key === '?') {
+        if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+          openShortcutsModal();
+        }
+      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        openSandboxModal();
+      }
+    });
+
+    // Filtering & Event Listeners
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderPrompts();
+    });
+
+    filterTags.addEventListener('click', (e) => {
+      const btn = e.target.closest('.tag-btn');
+      if (!btn) return;
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCategory = btn.dataset.cat;
+      renderPrompts();
+    });
+
+    // ResizeObserver for dynamic performance optimization
+    const resizeObserver = new ResizeObserver(() => {});
+    resizeObserver.observe(document.body);
+
+    // Initial Render
+    renderPrompts();
+  </script>
+</body>
+</html>

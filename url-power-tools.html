@@ -1,0 +1,3942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Deep URL &amp; Hidden Endpoint Command Deck</title>
+  
+  <!-- Embedded High-Definition SVG Favicon (Cyber Gateway Icon) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300f2fe'/%3E%3Cstop offset='50%25' stop-color='%234facfe'/%3E%3Cstop offset='100%25' stop-color='%2300f5a0'/%3E%3C/linearGradient%3E%3Cfilter id='f'%3E%3CfeGaussianBlur stdDeviation='2.5' result='b'/%3E%3CfeMerge%3E%3CfeMergeNode in='b'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Crect width='92' height='92' x='4' y='4' rx='22' fill='%23080b18' stroke='url(%23g)' stroke-width='3'/%3E%3Cpath d='M30,50 L45,35 L45,45 L70,45 L70,55 L45,55 L45,65 Z' fill='url(%23g)' filter='url(%23f)'/%3E%3Ccircle cx='70' cy='50' r='5' fill='%2300f5a0'/%3E%3C/svg%3E">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       POWER URL COMMAND DECK - MODERN CYBER AESTHETIC & DESIGN TOKENS
+       ========================================================================== */
+    :root {
+      --bg-dark: #080a14;
+      --bg-surface: #0f1325;
+      --bg-surface-elevated: #161b36;
+      --bg-card: rgba(18, 24, 48, 0.85);
+      --bg-card-hover: rgba(26, 34, 68, 0.95);
+      
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-cyan: rgba(0, 242, 254, 0.4);
+      --border-emerald: rgba(0, 245, 160, 0.4);
+      --border-amber: rgba(255, 170, 0, 0.4);
+      --border-purple: rgba(157, 78, 221, 0.45);
+      --border-magenta: rgba(247, 37, 133, 0.45);
+      
+      --cyan: #00f2fe;
+      --blue: #4facfe;
+      --emerald: #00f5a0;
+      --amber: #ffaa00;
+      --purple: #9d4edd;
+      --magenta: #f72585;
+      --crimson: #ff3366;
+      
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --font-display: 'Outfit', sans-serif;
+      --font-tech: 'Space Grotesk', sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      
+      --shadow-ambient: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+      --shadow-glow-cyan: 0 0 25px rgba(0, 242, 254, 0.25);
+      --shadow-glow-emerald: 0 0 25px rgba(0, 245, 160, 0.25);
+      --shadow-glow-purple: 0 0 25px rgba(157, 78, 221, 0.25);
+      
+      --transition-quick: 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-smooth: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      canvas#ambientCanvas { display: none !important; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-display);
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient background grid & glow */
+    #ambientCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+    }
+
+    .ambient-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.07) 0%, transparent 40%),
+        radial-gradient(circle at 90% 15%, rgba(0, 245, 160, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(157, 78, 221, 0.08) 0%, transparent 50%);
+    }
+
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    /* Navigation Bar */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 14px 24px;
+      background: rgba(15, 19, 37, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      isolation: isolate;
+      position: sticky;
+      top: 16px;
+      z-index: 100;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(0, 245, 160, 0.3));
+      border: 1px solid var(--border-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-glow-cyan);
+    }
+
+    .brand-title h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, #fff 30%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+
+    .brand-title span {
+      font-size: 0.75rem;
+      font-family: var(--font-tech);
+      color: var(--emerald);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .quick-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-quick);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn:hover {
+      color: var(--cyan);
+      background: rgba(0, 242, 254, 0.1);
+    }
+
+    /* Hero Section */
+    .hero-box {
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+
+    .pill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--font-tech);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: rgba(0, 242, 254, 0.08);
+      border: 1px solid var(--border-cyan);
+      color: var(--cyan);
+      margin-bottom: 18px;
+    }
+
+    .hero-h2 {
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .gradient-txt {
+      background: linear-gradient(135deg, #ffffff 15%, var(--cyan) 50%, var(--emerald) 90%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      max-width: 840px;
+      margin: 0 auto 30px;
+      font-size: clamp(1rem, 1.6vw, 1.2rem);
+      color: var(--text-muted);
+    }
+
+    /* Metrics Row */
+    .metrics-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      max-width: 1040px;
+      margin: 0 auto 38px;
+    }
+
+    .metric-item {
+      background: rgba(15, 19, 37, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(to bottom, var(--cyan), var(--emerald));
+    }
+
+    .metric-num {
+      font-size: 1.6rem;
+      font-weight: 800;
+      font-family: var(--font-tech);
+      color: #fff;
+    }
+
+    .metric-lbl {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Search & Filter Bar */
+    .filter-bar {
+      background: rgba(15, 19, 37, 0.9);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      margin-bottom: 36px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .search-field {
+      width: 100%;
+      background: rgba(8, 10, 20, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
+      padding: 10px 16px 10px 42px;
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color var(--transition-quick);
+    }
+
+    .search-field:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 14px rgba(0, 242, 254, 0.3);
+    }
+
+    .cat-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-quick);
+    }
+
+    .chip-btn .chip-count {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-family: var(--font-code);
+    }
+
+    .chip-btn:hover, .chip-btn.active {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .chip-btn.active .chip-count {
+      background: var(--cyan);
+      color: #080a14;
+      font-weight: 700;
+    }
+
+    /* Section Headers */
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    /* Tools Grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+
+    @media (max-width: 480px) {
+      .tools-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Tool Card */
+    .tool-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform var(--transition-smooth), border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+      position: relative;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-cyan);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.5), var(--shadow-glow-cyan);
+    }
+
+    .tool-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .tool-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tool-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .tool-category {
+      font-size: 0.75rem;
+      font-family: var(--font-tech);
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 3px;
+    }
+
+    .tool-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    /* Interactive Inputs & Parameters */
+    .inputs-wrap {
+      background: rgba(8, 10, 20, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .input-row:last-child { margin-bottom: 0; }
+
+    .input-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .param-label {
+      font-size: 0.72rem;
+      font-family: var(--font-tech);
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .param-input, .param-select {
+      background: #11162d;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      padding: 8px 12px;
+      font-family: var(--font-code);
+      font-size: 0.82rem;
+      outline: none;
+      width: 100%;
+      transition: border-color var(--transition-quick);
+    }
+
+    .param-input:focus, .param-select:focus {
+      border-color: var(--cyan);
+    }
+
+    /* URL Preview Box */
+    .url-preview-box {
+      background: #060812;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .url-text {
+      font-family: var(--font-code);
+      font-size: 0.78rem;
+      color: var(--cyan);
+      word-break: break-all;
+      line-height: 1.4;
+      max-height: 60px;
+      overflow-y: auto;
+    }
+
+    /* Action Buttons */
+    .actions-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-tech);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+      transition: all var(--transition-quick);
+      text-decoration: none;
+    }
+
+    .btn-launch {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #080a14;
+      border-color: var(--cyan);
+      flex: 1;
+      justify-content: center;
+    }
+
+    .btn-launch:hover {
+      box-shadow: 0 0 16px rgba(0, 242, 254, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-subtle);
+      color: var(--text-muted);
+    }
+
+    .btn-copy:hover {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Live URL Inspector Workbench */
+    .workbench-box {
+      background: linear-gradient(135deg, rgba(15, 19, 37, 0.95), rgba(22, 27, 54, 0.95));
+      border: 1px solid var(--border-emerald);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      margin-bottom: 64px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    }
+
+    .wb-input-group {
+      display: flex;
+      gap: 12px;
+      margin: 18px 0 20px;
+    }
+
+    @media (max-width: 640px) {
+      .wb-input-group { flex-direction: column; }
+    }
+
+    .wb-url-input {
+      flex: 1;
+      background: #080b18;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: #fff;
+      padding: 12px 18px;
+      font-family: var(--font-code);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .wb-url-input:focus {
+      border-color: var(--emerald);
+      box-shadow: 0 0 14px rgba(0, 245, 160, 0.3);
+    }
+
+    .wb-parse-btn {
+      background: var(--emerald);
+      color: #080a14;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 12px 24px;
+      font-family: var(--font-tech);
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--transition-quick);
+    }
+
+    .wb-parse-btn:hover {
+      box-shadow: 0 0 18px rgba(0, 245, 160, 0.45);
+    }
+
+    .wb-parsed-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #080b18;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .wb-parsed-table th {
+      background: #11162e;
+      padding: 10px 14px;
+      text-align: left;
+      font-family: var(--font-tech);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .wb-parsed-table td {
+      padding: 8px 12px;
+      border-top: 1px solid var(--border-subtle);
+      font-family: var(--font-code);
+      font-size: 0.85rem;
+    }
+
+    .wb-edit-input {
+      background: #0d1226;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      color: #fff;
+      padding: 6px 10px;
+      font-family: var(--font-code);
+      font-size: 0.82rem;
+      width: 100%;
+    }
+
+    .wb-edit-input:focus {
+      border-color: var(--emerald);
+      outline: none;
+    }
+
+    .wb-del-btn {
+      background: rgba(255, 51, 102, 0.15);
+      border: 1px solid rgba(255, 51, 102, 0.3);
+      color: var(--crimson);
+      border-radius: 4px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-family: var(--font-tech);
+      font-size: 0.75rem;
+    }
+
+    .wb-del-btn:hover {
+      background: var(--crimson);
+      color: #fff;
+    }
+
+    .wb-util-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .wb-tool-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-tech);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-quick);
+    }
+
+    .wb-tool-btn:hover {
+      background: rgba(0, 245, 160, 0.15);
+      border-color: var(--emerald);
+      color: var(--emerald);
+    }
+
+    /* Live Assembled URL in Workbench */
+    .wb-assembled-box {
+      background: #04060c;
+      border: 1px solid var(--border-emerald);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .wb-assembled-text {
+      font-family: var(--font-code);
+      font-size: 0.85rem;
+      color: var(--emerald);
+      word-break: break-all;
+      flex: 1;
+    }
+
+    /* Token Decoder Drawer */
+    .token-decoder-box {
+      background: #090d1f;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .token-decoder-box.open { display: block; }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #101633;
+      border: 1px solid var(--cyan);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      font-family: var(--font-tech);
+      box-shadow: 0 8px 30px rgba(0, 242, 254, 0.35);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all var(--transition-quick);
+      pointer-events: none;
+    }
+
+    .toast-box.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 36px 0 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    .badge-ready {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 245, 160, 0.1);
+      border: 1px solid var(--border-emerald);
+      color: var(--emerald);
+      font-size: 0.75rem;
+      font-family: var(--font-tech);
+      font-weight: 700;
+    }
+
+    .hidden { display: none !important; }
+
+    /* ==========================================================================
+       LIGHT THEME SYSTEM & HIGH CONTRAST TOKENS
+       ========================================================================== */
+    body.light-mode {
+      --bg-dark: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #f1f5f9;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --bg-card-hover: #ffffff;
+      --border-subtle: rgba(15, 23, 42, 0.1);
+      --border-cyan: rgba(2, 132, 199, 0.45);
+      --border-emerald: rgba(5, 150, 105, 0.45);
+      --border-amber: rgba(217, 119, 6, 0.45);
+      --border-purple: rgba(124, 58, 237, 0.45);
+      --border-magenta: rgba(219, 39, 119, 0.45);
+      --cyan: #0284c7;
+      --blue: #2563eb;
+      --emerald: #059669;
+      --amber: #d97706;
+      --purple: #7c3aed;
+      --magenta: #db2777;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+      --shadow-ambient: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
+      --shadow-glow-cyan: 0 4px 20px rgba(2, 132, 199, 0.15);
+      --shadow-glow-emerald: 0 4px 20px rgba(5, 150, 105, 0.15);
+      --shadow-glow-purple: 0 4px 20px rgba(124, 58, 237, 0.15);
+    }
+
+    body.light-mode .ambient-mesh {
+      background: radial-gradient(circle at 50% 20%, rgba(2, 132, 199, 0.05), transparent 70%),
+                  radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.04), transparent 70%);
+    }
+
+    body.light-mode .top-bar,
+    body.light-mode .filter-bar {
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border-color: rgba(15, 23, 42, 0.1);
+    }
+
+    body.light-mode .brand-title h1 {
+      background: linear-gradient(90deg, #0f172a 30%, #0284c7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    body.light-mode .brand-title span {
+      color: #059669;
+    }
+
+    body.light-mode .hero-box {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 0.92));
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.05);
+      border-color: rgba(15, 23, 42, 0.12);
+    }
+
+    body.light-mode .hero-h2 {
+      color: #0f172a;
+    }
+
+    body.light-mode .gradient-txt {
+      background: linear-gradient(135deg, #0284c7 15%, #2563eb 50%, #059669 90%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    body.light-mode .hero-sub {
+      color: #334155;
+    }
+
+    body.light-mode .card-title,
+    body.light-mode .section-title {
+      color: #0f172a;
+    }
+
+    body.light-mode .field-label {
+      color: #334155;
+    }
+
+    body.light-mode .card-desc {
+      color: #475569;
+    }
+
+    body.light-mode .metric-item {
+      background: #ffffff;
+      border-color: rgba(15, 23, 42, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    body.light-mode .metric-num {
+      color: #0f172a;
+    }
+
+    body.light-mode .search-field {
+      background: #ffffff;
+      border-color: rgba(15, 23, 42, 0.15);
+      color: #0f172a;
+    }
+
+    body.light-mode .chip-btn {
+      background: #ffffff;
+      color: #475569;
+      border-color: rgba(15, 23, 42, 0.1);
+    }
+
+    body.light-mode .chip-btn:hover, body.light-mode .chip-btn.active {
+      background: rgba(2, 132, 199, 0.1);
+      border-color: #0284c7;
+      color: #0284c7;
+    }
+
+    body.light-mode .tool-card {
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+      border-color: rgba(15, 23, 42, 0.09);
+    }
+
+    body.light-mode .tool-card:hover {
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08), 0 0 20px rgba(2, 132, 199, 0.15);
+    }
+
+    body.light-mode .input-ctrl {
+      background: #f8fafc;
+      border-color: rgba(15, 23, 42, 0.15);
+      color: #0f172a;
+    }
+
+    body.light-mode .input-ctrl:focus {
+      background: #ffffff;
+      border-color: #0284c7;
+    }
+
+    body.light-mode .url-preview-box {
+      background: #0f172a; /* Developer terminal contrast */
+      border-color: #1e293b;
+    }
+
+    body.light-mode .url-text {
+      color: #38bdf8;
+    }
+
+    body.light-mode .btn-copy {
+      background: #f1f5f9;
+      border-color: rgba(15, 23, 42, 0.12);
+      color: #334155;
+    }
+
+    body.light-mode .workbench-box {
+      background: linear-gradient(135deg, #ffffff, #f8fafc);
+      border-color: rgba(5, 150, 105, 0.3);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.05);
+    }
+
+    body.light-mode .wb-input-field {
+      background: #f8fafc;
+      color: #0f172a;
+      border-color: rgba(15, 23, 42, 0.15);
+    }
+
+    body.light-mode .wb-parsed-table th {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    body.light-mode .wb-edit-input {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: rgba(15, 23, 42, 0.15);
+    }
+
+    body.light-mode .wb-assembled-box {
+      background: #0f172a;
+    }
+
+    body.light-mode .wb-assembled-text {
+      color: #34d399;
+    }
+
+    body.light-mode .token-decoder-drawer {
+      background: #ffffff;
+      border-color: rgba(124, 58, 237, 0.25);
+    }
+
+    body.light-mode .token-textarea {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    /* ==========================================================================
+       EFFECT 1 & 2: SCANLINE BEAM, MAGNETIC SPOTLIGHT & COPY PARTICLES
+       ========================================================================== */
+    .hero-box {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-scanline {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.12), rgba(0, 245, 160, 0.18), transparent);
+      pointer-events: none;
+      animation: scanlineSweep 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      z-index: 1;
+    }
+
+    @keyframes scanlineSweep {
+      0% { left: -100%; }
+      40%, 100% { left: 160%; }
+    }
+
+    /* Tool Card Interactive Spotlight */
+    .tool-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(350px circle at var(--mouse-x, -500px) var(--mouse-y, -500px), rgba(0, 242, 254, 0.15), transparent 45%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .tool-card:hover::before {
+      opacity: 1;
+    }
+
+    .tool-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Copy Particle Ripple Feedback */
+    .copy-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999999;
+      font-family: var(--font-tech);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--cyan);
+      background: rgba(8, 10, 22, 0.9);
+      border: 1px solid var(--cyan);
+      padding: 4px 10px;
+      border-radius: 999px;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+      animation: floatParticle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes floatParticle {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8) translateY(0); }
+      50% { transform: translate(-50%, -50%) scale(1.1) translateY(-25px); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.95) translateY(-45px); }
+    }
+
+    /* ==========================================================================
+       SCROLL-DRIVEN PARALLAX HERO ELEMENT
+       ========================================================================== */
+    .hero-parallax-deck {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .parallax-orbit {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px dashed rgba(0, 242, 254, 0.18);
+      will-change: transform;
+      transition: transform 0.08s ease-out;
+    }
+
+    .orbit-outer {
+      width: 440px;
+      height: 440px;
+      top: -80px;
+      right: -80px;
+      transform: translateY(calc(var(--parallax-y, 0px) * 0.35)) rotate(calc(var(--parallax-y, 0px) * 0.05deg));
+    }
+
+    .orbit-inner {
+      width: 260px;
+      height: 260px;
+      top: 10px;
+      right: 10px;
+      border: 1px solid rgba(0, 245, 160, 0.22);
+      transform: translateY(calc(var(--parallax-y, 0px) * 0.55)) rotate(calc(var(--parallax-y, 0px) * -0.08deg));
+    }
+
+    .parallax-tag {
+      position: absolute;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-family: var(--font-code);
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(8, 12, 28, 0.78);
+      border: 1px solid rgba(0, 242, 254, 0.35);
+      color: var(--cyan);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px);
+      will-change: transform;
+      transition: transform 0.08s ease-out;
+    }
+
+    body.light-mode .parallax-tag {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(2, 132, 199, 0.3);
+      color: #0284c7;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .tag-p1 { top: 32px; right: 120px; transform: translateY(calc(var(--parallax-y, 0px) * 0.45)); }
+    .tag-p2 { top: 110px; right: 300px; transform: translateY(calc(var(--parallax-y, 0px) * 0.7)); }
+    .tag-p3 { bottom: 35px; right: 180px; transform: translateY(calc(var(--parallax-y, 0px) * 0.3)); }
+
+    /* ==========================================================================
+       TOP ACTION CONTROLS: THEME & FULLSCREEN BUTTONS
+       ========================================================================== */
+    .nav-action-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .top-ctrl-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
+      color: var(--text-main);
+      padding: 6px 14px;
+      font-family: var(--font-tech);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-quick);
+      white-space: nowrap;
+    }
+
+    .top-ctrl-btn:hover {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.3);
+    }
+
+    body.light-mode .top-ctrl-btn {
+      background: #f1f5f9;
+      border-color: rgba(15, 23, 42, 0.12);
+      color: #0f172a;
+    }
+
+    body.light-mode .top-ctrl-btn:hover {
+      background: rgba(2, 132, 199, 0.12);
+      border-color: #0284c7;
+      color: #0284c7;
+    }
+
+    /* ==========================================================================
+       CUSTOM CYBER CURSOR
+       ========================================================================== */
+    .cursor-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 6px;
+      background: var(--cyan);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 999999;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.2s ease, background-color 0.2s ease;
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    .cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid rgba(0, 242, 254, 0.55);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 999998;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  height 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.2s ease,
+                  background-color 0.2s ease;
+    }
+
+    .cursor-ring.hovering {
+      width: 50px;
+      height: 50px;
+      border-color: var(--cyan);
+      background: rgba(0, 242, 254, 0.08);
+    }
+
+    .cursor-ring.clicking {
+      width: 22px;
+      height: 22px;
+      border-color: var(--emerald);
+      background: rgba(0, 245, 160, 0.25);
+    }
+
+    @media (hover: none) or (pointer: coarse) {
+      .cursor-dot, .cursor-ring {
+        display: none !important;
+      }
+    }
+
+    /* ==========================================================================
+       UNIVERSAL VIEWPORT WORKABILITY (RESPONSIVE PC, TABLET & MOBILE)
+       ========================================================================== */
+    .wb-parsed-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    @media (max-width: 1100px) {
+      .app-shell { padding: 16px; }
+      .tools-grid { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
+      .metrics-summary { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .orbit-outer, .orbit-inner { opacity: 0.4; }
+    }
+
+    @media (max-width: 860px) {
+      .top-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .brand-box { justify-content: flex-start; gap: 12px; }
+      .quick-links {
+        overflow-x: auto;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+      }
+      .nav-btn { flex-shrink: 0; }
+      .hero-h2 { font-size: clamp(1.8rem, 5vw, 2.4rem); }
+      .hero-box { padding: 28px 20px; }
+      .filter-bar { flex-direction: column; align-items: stretch; }
+      .search-box { min-width: 100%; }
+      .cat-chips { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 8px; -webkit-overflow-scrolling: touch; }
+      .chip-btn { flex-shrink: 0; }
+      .workbench-box { padding: 20px 16px; }
+      .wb-util-bar { flex-direction: column; align-items: stretch; }
+      .wb-tool-btn { justify-content: center; width: 100%; }
+      .actions-row { flex-direction: column; }
+      .btn-action { width: 100%; }
+      .orbit-outer, .orbit-inner, .tag-p1, .tag-p2, .tag-p3, .parallax-tag { display: none !important; }
+    }
+
+    @media (max-width: 480px) {
+      .brand-box { gap: 10px; }
+      .brand-title h1 { font-size: 0.92rem; line-height: 1.25; }
+      .brand-title span { font-size: 0.66rem; display: block; }
+      .pill-tag { font-size: 0.68rem; padding: 4px 10px; }
+      .metrics-summary { grid-template-columns: 1fr; }
+      .tools-grid { grid-template-columns: 1fr; }
+      .card-top { flex-wrap: wrap; }
+      .nav-action-group { width: 100%; justify-content: space-between; }
+      .top-ctrl-btn { flex: 1; justify-content: center; padding: 6px 10px; font-size: 0.75rem; }
+      .hero-sub { font-size: 0.88rem; }
+      .metric-item { padding: 12px 16px; }
+      .metric-num { font-size: 1.5rem; }
+      .wb-input-group { flex-direction: column; }
+      .wb-btn { width: 100%; justify-content: center; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cyber Cursor -->
+  <div id="cursorDot" class="cursor-dot" aria-hidden="true"></div>
+  <div id="cursorRing" class="cursor-ring" aria-hidden="true"></div>
+
+  <!-- Ambient Dynamic Canvas -->
+  <canvas id="ambientCanvas"></canvas>
+  <div class="ambient-mesh"></div>
+
+  <div class="app-shell">
+
+    <!-- Top Navigation -->
+    <header class="top-bar">
+      <a href="#" class="brand-box">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+          </svg>
+        </div>
+        <div class="brand-title">
+          <h1>⚡ 🛸 DEEP URL &amp; ENDPOINT COMMAND DECK 🎯</h1>
+          <span>⚡ Bypass Clunky UIs · Direct Authenticated Endpoints 🚀</span>
+        </div>
+      </a>
+
+      <nav class="quick-links" aria-label="Tool shortcuts">
+        <a href="#fintech" class="nav-btn">💳 💸 Fintech Exporters</a>
+        <a href="#workspace" class="nav-btn">📂 ☁️ Cloud Workspace</a>
+        <a href="#dev" class="nav-btn">💻 ⚡ Dev &amp; Infra</a>
+        <a href="#media" class="nav-btn">🎬 🌐 Open Web &amp; OSINT</a>
+        <a href="#inspector-section" class="nav-btn">🔍 🛠️ URL Inspector Workbench</a>
+      </nav>
+
+      <!-- Theme & Fullscreen Controls -->
+      <div class="nav-action-group">
+        <button id="themeToggleBtn" class="top-ctrl-btn" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
+          <span class="theme-icon">☀️</span> <span class="ctrl-label">Light Mode</span>
+        </button>
+        <button id="fullscreenToggleBtn" class="top-ctrl-btn" title="Toggle Fullscreen Mode (F11)" aria-label="Toggle fullscreen">
+          <span class="fs-icon">⛶</span> <span class="ctrl-label">Fullscreen</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-box">
+      <!-- Scroll-Driven Parallax Telemetry Deck & Scanline -->
+      <div class="hero-scanline" aria-hidden="true"></div>
+      <div class="hero-parallax-deck" aria-hidden="true">
+        <div class="parallax-orbit orbit-outer"></div>
+        <div class="parallax-orbit orbit-inner"></div>
+        <div class="parallax-tag tag-p1">⚡ 27+ ENDPOINTS</div>
+        <div class="parallax-tag tag-p2">⏱️ 0ms LATENCY</div>
+        <div class="parallax-tag tag-p3">🔒 ZERO-TRACKING</div>
+      </div>
+
+      <div class="pill-tag">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        ⚡ ⏱️ ZERO-LATENCY URL SHORTCUTS &amp; DIRECT EXPORTERS 🚀
+      </div>
+      <h2 class="hero-h2">
+        Bypass Clunky Web Interfaces With ⚡<br>
+        <span class="gradient-txt">Direct Authenticated URL Endpoints 🎯</span>
+      </h2>
+      <p class="hero-sub">
+        Web applications frequently conceal their highest-performance export pipelines, raw format streams, multi-year query parameters, and unthrottled downloads behind labyrinthine dropdowns or disabled frontend buttons. This command deck parameterizes direct backend URLs so you get instant access.
+      </p>
+
+      <!-- Key Metrics -->
+      <div class="metrics-summary">
+        <div class="metric-item">
+          <div class="metric-num">27+ 🛠️</div>
+          <div class="metric-lbl">Direct Endpoints Parameterized 🚀</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">0 ms ⚡</div>
+          <div class="metric-lbl">UI Navigation Latency 🏎️</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">100% 🔒</div>
+          <div class="metric-lbl">Client-Side Zero-Tracking Execution 🛡️</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">cURL &amp; Fetch 💻</div>
+          <div class="metric-lbl">CLI Snippet Generator Included ⚡</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search & Filter Bar -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="toolSearch" class="search-field" placeholder="Search shortcuts (e.g. Venmo, Wise, Square, Drive, Sheets, Slides, GitHub, Tarball, npm, DoH, Dork)...">
+      </div>
+      <div class="cat-chips">
+        <button class="chip-btn active" data-cat="all">🌟 All Tools <span class="chip-count" id="countAll">27</span></button>
+        <button class="chip-btn" data-cat="fintech">💳 💸 Fintech <span class="chip-count" id="countFintech">6</span></button>
+        <button class="chip-btn" data-cat="workspace">📂 ☁️ Workspace <span class="chip-count" id="countWorkspace">7</span></button>
+        <button class="chip-btn" data-cat="dev">💻 ⚡ Dev &amp; Git <span class="chip-count" id="countDev">8</span></button>
+        <button class="chip-btn" data-cat="media">🎬 🌐 Media &amp; Web <span class="chip-count" id="countMedia">6</span></button>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         SECTION 1: FINTECH & ACCOUNT DATA EXPORTERS
+         ========================================================================== -->
+    <section id="fintech">
+      <h3 class="section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2">
+          <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+        </svg>
+        💳 💸 Fintech, Banking &amp; Statement Exporters 📊
+      </h3>
+
+      <div class="tools-grid">
+
+        <!-- 1. VENMO CUSTOM RANGE EXPORTER -->
+        <article class="tool-card" data-tags="fintech venmo csv statement range export">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #008CFF; background: rgba(0, 140, 255, 0.1);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#008CFF" d="M19.5 2c.7 1.2 1 2.5 1 4 0 5-4.2 11.5-8.5 16H6.1L3.5 3.8l5.2-.5 1.5 11.6c1.8-3 3.6-7.2 3.6-9.8 0-1.6-.4-2.7-1-3.6L19.5 2z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Venmo Custom Range Statement 💳 💸</h4>
+                <div class="tool-category">⚡ Bypasses Month Dropdown 📅</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Venmo's UI forces you to click through 30+ separate monthly dropdowns. This endpoint streams a single combined CSV or PDF for any multi-year date range.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="venmoStart">Start Date</label>
+                  <input type="date" id="venmoStart" class="param-input" value="2023-01-01">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="venmoEnd">End Date</label>
+                  <input type="date" id="venmoEnd" class="param-input" value="2026-10-13">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="venmoFormat">Format</label>
+                  <select id="venmoFormat" class="param-select">
+                    <option value="true" selected>CSV Spreadsheet</option>
+                    <option value="false">PDF Document</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="venmoUrlPreview" class="url-text">https://account.venmo.com/api/statement/download?startDate=2023-01-01&amp;endDate=2026-10-13&amp;csv=true</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('venmoUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('venmoUrlPreview', 'Venmo Endpoint')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 2. PAYPAL ACTIVITY STATEMENT DIRECT -->
+        <article class="tool-card" data-tags="fintech paypal statement reports">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #0079C1; background: rgba(0, 121, 193, 0.1);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#003087" d="M7.4 3h7.2c3.5 0 5.4 1.7 4.9 5.2-.6 4-3.3 6.3-7.2 6.3H9.9l-1.5 9.5H3.6L7.4 3z"/>
+                  <path fill="#0079C1" d="M10.4 7.5h5.5c2.7 0 4.1 1.3 3.8 4-.5 3-2.5 4.8-5.5 4.8H11l-1.1 7.2H5.5l3.1-16h1.8z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">PayPal Statements &amp; Reports Hub 💰 🌐</h4>
+                <div class="tool-category">📊 Direct Reports Dashboard 📑</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Skips PayPal's nested menu labyrinth and drops you straight into the backend financial statements generator for custom monthly/quarterly tax exports.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="ppReportType">Destination View</label>
+                  <select id="ppReportType" class="param-select">
+                    <option value="https://www.paypal.com/reports/statements" selected>Monthly Financial Statements</option>
+                    <option value="https://www.paypal.com/reports/activity-download">Custom Date Activity Downloader</option>
+                    <option value="https://www.paypal.com/disputes/">Dispute Resolution Center</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="ppUrlPreview" class="url-text">https://www.paypal.com/reports/statements</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('ppUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('ppUrlPreview', 'PayPal Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 3. STRIPE RAW EVENTS & BALANCE LOGS -->
+        <article class="tool-card" data-tags="fintech stripe failed charges balance logs api">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #635BFF; background: rgba(99, 91, 255, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#635BFF" d="M13.98 9.15c-2.17-.8-3.36-1.43-3.36-2.41 0-.83.68-1.3 1.9-1.3 2.23 0 4.52.85 6.09 1.63l.89-5.49C17.65.77 15.34 0 12.33 0 6.64 0 2.85 3.01 2.85 7.91c0 4.96 3.89 6.9 7.42 8.24 2.76 1.04 3.72 1.78 3.72 2.87 0 .98-.87 1.52-2.35 1.52-2.53 0-5.57-1.25-7.39-2.34L3.33 24c2.1 1.13 5.38 1.94 8.74 1.94 6.03 0 9.95-2.83 9.95-7.96 0-5-3.8-6.95-8.04-8.83z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Stripe Raw Events &amp; Failure Filter ⚡ 💳</h4>
+                <div class="tool-category">📡 Direct Webhook &amp; Charge Query 🛡️</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Directly filter Stripe webhook logs, failed charges, or balance changes using query parameters rather than clicking through UI filter pills.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="stripeEvent">Event Type Filter</label>
+                  <select id="stripeEvent" class="param-select">
+                    <option value="charge.failed" selected>charge.failed (Failed Payments)</option>
+                    <option value="customer.subscription.deleted">customer.subscription.deleted (Churn)</option>
+                    <option value="payment_intent.succeeded">payment_intent.succeeded (Successes)</option>
+                    <option value="charge.refunded">charge.refunded (Refunds)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="stripeUrlPreview" class="url-text">https://dashboard.stripe.com/events?type=charge.failed</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('stripeUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('stripeUrlPreview', 'Stripe Filter Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 4. SQUARE / BLOCK SALES & TRANSACTIONS EXPORTER -->
+        <article class="tool-card" data-tags="fintech square block sales transactions csv pos">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #00D632; background: rgba(0, 214, 50, 0.1);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <rect x="2" y="2" width="20" height="20" rx="4" fill="#00D632" fill-opacity="0.2" stroke="#00D632" stroke-width="2"/>
+                  <rect x="7" y="7" width="10" height="10" rx="2" fill="#00D632"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Square Sales &amp; Transaction Exporter 🏪 🛒</h4>
+                <div class="tool-category">🧾 Bypasses POS Multi-Step Flow 📈</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Directly target Square's seller dashboard transactions table parameterized by start and end timestamps for immediate tax year exports.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="squareStart">Begin Date</label>
+                  <input type="date" id="squareStart" class="param-input" value="2024-01-01">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="squareEnd">End Date</label>
+                  <input type="date" id="squareEnd" class="param-input" value="2026-10-13">
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="squareUrlPreview" class="url-text">https://squareup.com/dashboard/sales/transactions?begin_date=2024-01-01&amp;end_date=2026-10-13</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('squareUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('squareUrlPreview', 'Square Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 5. WISE (TRANSFERWISE) DIRECT STATEMENT DOWNLOAD -->
+        <article class="tool-card" data-tags="fintech wise transferwise multi-currency statement download">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #9FE870; background: rgba(159, 232, 112, 0.1);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#9FE870" d="M3.5 19h4.3l3.2-6.5h4.1l-4.5 9h4.4l7-14H10.8l2-4.5H5.2L3.5 19z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Wise Multi-Currency Statement 🌍 💱</h4>
+                <div class="tool-category">💸 Direct Balance Stream ⚡</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Download Wise multi-currency account statements directly without stepping through individual balance currency screens.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="wiseCurrency">Currency</label>
+                  <select id="wiseCurrency" class="param-select">
+                    <option value="USD" selected>USD (US Dollar)</option>
+                    <option value="EUR">EUR (Euro)</option>
+                    <option value="GBP">GBP (British Pound)</option>
+                    <option value="CAD">CAD (Canadian Dollar)</option>
+                  </select>
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="wiseFormat">Format</label>
+                  <select id="wiseFormat" class="param-select">
+                    <option value="CSV" selected>CSV Spreadsheet</option>
+                    <option value="PDF">PDF Statement</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="wiseUrlPreview" class="url-text">https://wise.com/user/account/statements?currency=USD&amp;format=CSV</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('wiseUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('wiseUrlPreview', 'Wise Statement Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 6. QUICKBOOKS TRANSACTION DETAIL REPORT DIRECT -->
+        <article class="tool-card" data-tags="fintech quickbooks intuit accounting report general-ledger">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #2CA01C; background: rgba(44, 160, 28, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" fill="#2CA01C"/>
+                  <path fill="#fff" d="M10 7.5A4.5 4.5 0 0 0 5.5 12c0 2.2 1.6 4.1 3.7 4.4v-1.6A2.9 2.9 0 0 1 7.1 12a2.9 2.9 0 1 1 5.8 0v4.5h1.6V7.5H10zm4 9a4.5 4.5 0 0 0 4.5-4.5c0-2.2-1.6-4.1-3.7-4.4v1.6a2.9 2.9 0 0 1 2.1 2.8 2.9 2.9 0 1 1-5.8 0V7.5h-1.6v9H14z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">QuickBooks Online Direct Reports 📑 💼</h4>
+                <div class="tool-category">📈 Bypasses Heavy QBO Navigation 🏢</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              QuickBooks Online's sidebar takes 10+ seconds to load. Jump straight into raw transaction registers, profit/loss, or general ledger reports.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="qboReport">Target Report Type</label>
+                  <select id="qboReport" class="param-select">
+                    <option value="TransactionDetailByAccount" selected>Transaction Detail by Account</option>
+                    <option value="GeneralLedger">General Ledger</option>
+                    <option value="ProfitAndLoss">Profit and Loss</option>
+                    <option value="TrialBalance">Trial Balance</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="qboUrlPreview" class="url-text">https://app.qbo.intuit.com/app/report?name=TransactionDetailByAccount</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('qboUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('qboUrlPreview', 'QuickBooks Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 2: GOOGLE WORKSPACE & DRIVE DIRECT CONVERTERS
+         ========================================================================== -->
+    <section id="workspace">
+      <h3 class="section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        📂 ☁️ Google Workspace &amp; Cloud Productivity Direct Links 🚀
+      </h3>
+
+      <div class="tools-grid">
+
+        <!-- 7. GOOGLE DOCS MULTI-FORMAT CONVERTER -->
+        <article class="tool-card" data-tags="workspace google docs pdf copy template preview">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #4285F4; background: rgba(66, 133, 244, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                  <path fill="#A1C2FA" d="M14 2v6h6"/>
+                  <path fill="#fff" d="M8 12h8v1.5H8zm0 3h8v1.5H8zm0 3h5v1.5H8z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Google Docs Multi-Format Converter 📄 ✍️</h4>
+                <div class="tool-category">📋 Direct Stream &amp; Template Clone 🚀</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Convert any standard Google Docs URL into an instant PDF stream, a forced template clone link, or a clean embed without toolbars.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="gdocId">Google Doc URL or Document ID</label>
+                  <input type="text" id="gdocId" class="param-input" value="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms">
+                </div>
+              </div>
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="gdocAction">Target Conversion Action</label>
+                  <select id="gdocAction" class="param-select">
+                    <option value="/export?format=pdf" selected>Download as Direct PDF Stream</option>
+                    <option value="/copy">Forced Template Copy (/copy)</option>
+                    <option value="/preview">Clean Viewer Preview (No Menus)</option>
+                    <option value="/export?format=txt">Export as Plain Text / Markdown</option>
+                    <option value="/export?format=epub">Export as ePub eBook</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="gdocUrlPreview" class="url-text">https://docs.google.com/document/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/export?format=pdf</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('gdocUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('gdocUrlPreview', 'Google Doc Direct Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 8. GOOGLE DRIVE DIRECT DOWNLOAD STREAM -->
+        <article class="tool-card" data-tags="workspace google drive download direct stream bypass">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #00AC47; background: rgba(0, 172, 71, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#FFC107" d="M8.2 3.8l5.5 9.5-2.7 4.7L5.5 8.5z"/>
+                  <path fill="#0066DA" d="M13.7 13.3H2.8l2.7-4.8h11z"/>
+                  <path fill="#00AC47" d="M19.2 18H8.3l2.8-4.7h11z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Google Drive Direct File Stream 💾 ☁️</h4>
+                <div class="tool-category">⚡ Bypasses Heavy Web Previewer 🚀</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Turns a Google Drive sharing link (<code>/file/d/FILE_ID/view</code>) into a direct raw file download stream that automatically saves to your disk without loading the preview tab.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="gdriveInput">Drive Share Link or File ID</label>
+                  <input type="text" id="gdriveInput" class="param-input" placeholder="Paste drive.google.com/file/d/..." value="1x2Y3zSampleFileIdForDirectStream">
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="gdriveUrlPreview" class="url-text">https://drive.google.com/uc?export=download&amp;id=1x2Y3zSampleFileIdForDirectStream</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('gdriveUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('gdriveUrlPreview', 'Drive Direct Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 9. GOOGLE SHEETS DIRECT CSV / EXCEL EXPORT -->
+        <article class="tool-card" data-tags="workspace google sheets csv excel export">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #0F9D58; background: rgba(15, 157, 88, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#0F9D58" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                  <path fill="#87CEAB" d="M14 2v6h6"/>
+                  <path fill="#fff" d="M8 11h8v8H8zm1.5 1.5v1.8h2.2v-1.8zm3.5 0v1.8h2v-1.8zm-3.5 3.2v1.8h2v-1.8zm3.5 0v1.8h2v-1.8z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Google Sheets CSV / XLSX Downloader 📊 🔢</h4>
+                <div class="tool-category">📈 Direct Sheet Data Extraction 📑</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Download any public or authenticated Google Sheet directly as a raw CSV or XLSX workbook file via URL parameter flags without waiting for the full spreadsheet UI to calculate.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="gsheetId">Sheet ID</label>
+                  <input type="text" id="gsheetId" class="param-input" value="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="gsheetGid">Tab GID</label>
+                  <input type="text" id="gsheetGid" class="param-input" value="0">
+                </div>
+              </div>
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="gsheetFormat">Format</label>
+                  <select id="gsheetFormat" class="param-select">
+                    <option value="csv" selected>CSV (Comma Separated Values)</option>
+                    <option value="xlsx">XLSX (Microsoft Excel)</option>
+                    <option value="pdf">PDF Report</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="gsheetUrlPreview" class="url-text">https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/export?format=csv&amp;gid=0</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('gsheetUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('gsheetUrlPreview', 'Google Sheet Stream Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 10. GOOGLE SLIDES DIRECT EXPORTER -->
+        <article class="tool-card" data-tags="workspace google slides pptx pdf svg export presentation">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #F4B400; background: rgba(244, 180, 0, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#F4B400" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                  <path fill="#FBE7A1" d="M14 2v6h6"/>
+                  <rect x="8" y="12" width="8" height="6" rx="1" fill="#fff"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Google Slides PDF &amp; PPTX Stream 📽️ 🎨</h4>
+                <div class="tool-category">🎯 Bypasses Heavy Slide Editor ⚡</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Export presentations directly into PDF, PowerPoint (.pptx), plain text, or single-slide vector SVGs using instantaneous URL paths.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="gslidesId">Slides Presentation ID</label>
+                  <input type="text" id="gslidesId" class="param-input" value="1SampleSlidesPresentationId123456789">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="gslidesFormat">Export Type</label>
+                  <select id="gslidesFormat" class="param-select">
+                    <option value="/export/pdf" selected>Download as PDF (/export/pdf)</option>
+                    <option value="/export/pptx">Download as PPTX (/export/pptx)</option>
+                    <option value="/export/txt">Plain Text Outline (/export/txt)</option>
+                    <option value="/copy">Forced Clone Copy (/copy)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="gslidesUrlPreview" class="url-text">https://docs.google.com/presentation/d/1SampleSlidesPresentationId123456789/export/pdf</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('gslidesUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('gslidesUrlPreview', 'Google Slides Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 11. GOOGLE CALENDAR ONE-CLICK EVENT URL -->
+        <article class="tool-card" data-tags="workspace google calendar event template generator meet">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #4285F4; background: rgba(66, 133, 244, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="3" fill="#4285F4"/>
+                  <path fill="#fff" d="M3 9h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+                  <rect x="7" y="2" width="2" height="4" rx="1" fill="#EA4335"/>
+                  <rect x="15" y="2" width="2" height="4" rx="1" fill="#EA4335"/>
+                  <text x="12" y="17" fill="#4285F4" font-size="8" font-weight="900" text-anchor="middle" font-family="sans-serif">31</text>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Google Calendar Event URL Maker 📅 ⏰</h4>
+                <div class="tool-category">🗓️ Zero-Click Event Invitation Link ✨</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Generate a universal calendar link that automatically pre-populates event title, ISO date-times, description details, and video meeting links for attendees.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="gcalTitle">Event Title</label>
+                  <input type="text" id="gcalTitle" class="param-input" value="Sprint Architecture Review">
+                </div>
+              </div>
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="gcalStart">Start (YYYYMMDDTHHmmssZ)</label>
+                  <input type="text" id="gcalStart" class="param-input" value="20261015T150000Z">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="gcalEnd">End</label>
+                  <input type="text" id="gcalEnd" class="param-input" value="20261015T160000Z">
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="gcalUrlPreview" class="url-text">https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Sprint%20Architecture%20Review&amp;dates=20261015T150000Z/20261015T160000Z</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('gcalUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('gcalUrlPreview', 'Calendar Event Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 12. GOOGLE MEET ZERO-CLICK ROOM SPAWNER -->
+        <article class="tool-card" data-tags="workspace google meet video call authuser instant room">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #00AC47; background: rgba(0, 172, 71, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <rect x="2" y="5" width="13" height="14" rx="3" fill="#00832D"/>
+                  <path fill="#00AC47" d="M2 12h13v7H5a3 3 0 0 1-3-3z"/>
+                  <path fill="#EA4335" d="M12 5h3a3 3 0 0 1 3 3v3h-6z"/>
+                  <path fill="#FFBA00" d="M15 15l5 3.5V5.5L15 9z"/>
+                  <path fill="#2684FC" d="M15 12l5 3.5v-7z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Google Meet Zero-Click Room Spawner 🎥 📞</h4>
+                <div class="tool-category">🤝 Bypasses Lobby &amp; Account Switcher 🚀</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Instantly create a brand new meeting room tied to a specific logged-in Google workspace account profile (<code>authuser=0,1,2</code>) without landing in the default profile.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="meetUser">Google Account Index (authuser)</label>
+                  <select id="meetUser" class="param-select">
+                    <option value="0" selected>authuser=0 (Default / Personal Account)</option>
+                    <option value="1">authuser=1 (Work / Workspace Profile 2)</option>
+                    <option value="2">authuser=2 (Secondary Work Profile 3)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="meetUrlPreview" class="url-text">https://meet.google.com/new?authuser=0</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('meetUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('meetUrlPreview', 'Google Meet Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 13. GOOGLE FORMS DIRECT PREFILLED LINK & RESPONSES -->
+        <article class="tool-card" data-tags="workspace google forms prefill survey download responses">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #7248B9; background: rgba(114, 72, 185, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#7248B9" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                  <path fill="#BA9DE8" d="M14 2v6h6"/>
+                  <circle cx="8.5" cy="12.5" r="1" fill="#fff"/>
+                  <rect x="11" y="12" width="5" height="1" fill="#fff"/>
+                  <circle cx="8.5" cy="15.5" r="1" fill="#fff"/>
+                  <rect x="11" y="15" width="5" height="1" fill="#fff"/>
+                  <circle cx="8.5" cy="18.5" r="1" fill="#fff"/>
+                  <rect x="11" y="18" width="5" height="1" fill="#fff"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Google Forms Direct Prefill &amp; CSV Stream 📋 📝</h4>
+                <div class="tool-category">🗳️ Automated Survey URL &amp; Webhook 📊</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Generate prefilled Google Form responder links or download response spreadsheets directly via URL parameter hooks.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="gformId">Form ID</label>
+                  <input type="text" id="gformId" class="param-input" value="1FAIpQLScSampleGoogleFormId12345">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="gformMode">Target Mode</label>
+                  <select id="gformMode" class="param-select">
+                    <option value="viewform" selected>Clean Form View (/viewform)</option>
+                    <option value="prefill">Prefilled Entry Hook (?usp=pp_url)</option>
+                    <option value="download">Download Responses CSV</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="gformUrlPreview" class="url-text">https://docs.google.com/forms/d/e/1FAIpQLScSampleGoogleFormId12345/viewform</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('gformUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('gformUrlPreview', 'Google Form Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 3: DEVELOPER & GITHUB DEEP LINKS
+         ========================================================================== -->
+    <section id="dev">
+      <h3 class="section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        💻 ⚡ Developer, Repositories, Packages &amp; Infrastructure 🛠️
+      </h3>
+
+      <div class="tools-grid">
+
+        <!-- 14. GITHUB RAW DIFF GENERATOR -->
+        <article class="tool-card" data-tags="dev github diff compare raw pr">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #ffffff; background: rgba(255, 255, 255, 0.1);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#fff" d="M12 2C6.48 2 2 6.48 2 12.02c0 4.42 2.87 8.18 6.84 9.5.5.1.68-.21.68-.48 0-.24-.01-.87-.01-1.7-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.1-.64.35-1.08.64-1.33-2.22-.26-4.56-1.12-4.56-4.96 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.56 9.56 0 0 1 12 6.84c.85 0 1.7.12 2.5.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.85-2.34 4.7-4.57 4.94.36.31.68.92.68 1.86 0 1.34-.01 2.42-.01 2.75 0 .27.18.58.69.48A10.02 10.02 0 0 0 22 12.02C22 6.48 17.52 2 12 2z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">GitHub Raw Diff &amp; Patch Exporter 🐙 💻</h4>
+                <div class="tool-category">⚡ Bypasses Pull Request UI 🛠️</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Append <code>.diff</code> or <code>.patch</code> to any GitHub commit or compare URL to get the plain-text unified diff directly for CLI tooling or piping into LLMs.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="ghOwner">Owner / Repo</label>
+                  <input type="text" id="ghOwner" class="param-input" value="facebook/react">
+                </div>
+              </div>
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="ghBase">Base Branch / Tag</label>
+                  <input type="text" id="ghBase" class="param-input" value="main">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="ghHead">Head Branch / Tag</label>
+                  <input type="text" id="ghHead" class="param-input" value="canary">
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="ghDiffUrlPreview" class="url-text">https://github.com/facebook/react/compare/main...canary.diff</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('ghDiffUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('ghDiffUrlPreview', 'GitHub Diff Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 15. GITHUB LATEST RELEASE ASSET & TARBALL -->
+        <article class="tool-card" data-tags="dev github release latest asset tarball binary download">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #2dba4e; background: rgba(45, 186, 78, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#2dba4e" d="M12 2C6.48 2 2 6.48 2 12.02c0 4.42 2.87 8.18 6.84 9.5.5.1.68-.21.68-.48 0-.24-.01-.87-.01-1.7-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.1-.64.35-1.08.64-1.33-2.22-.26-4.56-1.12-4.56-4.96 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.56 9.56 0 0 1 12 6.84c.85 0 1.7.12 2.5.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.85-2.34 4.7-4.57 4.94.36.31.68.92.68 1.86 0 1.34-.01 2.42-.01 2.75 0 .27.18.58.69.48A10.02 10.02 0 0 0 22 12.02C22 6.48 17.52 2 12 2z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">GitHub Latest Release Asset Downloader 📦 🚀</h4>
+                <div class="tool-category">🏷️ Always Fetches Most Recent Binary ⚡</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Direct permanent link that automatically resolves to the latest binary asset without hardcoding version numbers in CI/CD scripts or curl commands.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="ghRelRepo">Owner / Repo</label>
+                  <input type="text" id="ghRelRepo" class="param-input" value="cli/cli">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="ghRelAsset">Asset Name or Archive</label>
+                  <input type="text" id="ghRelAsset" class="param-input" value="gh_2.60.0_windows_amd64.zip">
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="ghRelUrlPreview" class="url-text">https://github.com/cli/cli/releases/latest/download/gh_2.60.0_windows_amd64.zip</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('ghRelUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('ghRelUrlPreview', 'GitHub Asset Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 16. HUGGING FACE DIRECT LFS MODEL DOWNLOADER -->
+        <article class="tool-card" data-tags="dev huggingface gguf model direct lfs download ai">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #FFD21E; background: rgba(255, 210, 30, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" fill="#FFD21E"/>
+                  <circle cx="9" cy="10" r="1.5" fill="#000"/>
+                  <circle cx="15" cy="10" r="1.5" fill="#000"/>
+                  <path d="M8 14c1 2 3 3 4 3s3-1 4-3" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                  <path d="M4 15c1-1 3-1 4 1M20 15c-1-1-3-1-4 1" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Hugging Face Direct LFS Model Link 🤗 🧠</h4>
+                <div class="tool-category">🤖 Bypasses Hugging Face Web Viewer 💾</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Download heavy GGUF and safetensors files directly using curl or your browser's native download manager without loading the Hugging Face viewer interface.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="hfRepo">Model Repo</label>
+                  <input type="text" id="hfRepo" class="param-input" value="bartowski/Llama-3.3-70B-Instruct-GGUF">
+                </div>
+              </div>
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="hfFile">Target File</label>
+                  <input type="text" id="hfFile" class="param-input" value="Llama-3.3-70B-Instruct-Q4_K_M.gguf">
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="hfUrlPreview" class="url-text">https://huggingface.co/bartowski/Llama-3.3-70B-Instruct-GGUF/resolve/main/Llama-3.3-70B-Instruct-Q4_K_M.gguf?download=true</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('hfUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('hfUrlPreview', 'Hugging Face Direct Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 17. REDDIT ZERO-AUTH JSON ENDPOINT -->
+        <article class="tool-card" data-tags="dev reddit json api endpoint feed">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #FF4500; background: rgba(255, 69, 0, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" fill="#FF4500"/>
+                  <path fill="#fff" d="M12 6.5c-3.03 0-5.5 1.57-5.5 3.5 0 1.11.8 2.1 2.05 2.72-.05.25-.05.52-.05.78 0 2.21 2.46 4 5.5 4s5.5-1.79 5.5-4c0-.26 0-.53-.05-.78 1.25-.62 2.05-1.61 2.05-2.72 0-1.93-2.47-3.5-5.5-3.5zm-2.2 4.2c.6 0 1.1.5 1.1 1.1s-.5 1.1-1.1 1.1-1.1-.5-1.1-1.1.5-1.1 1.1-1.1zm4.4 0c.6 0 1.1.5 1.1 1.1s-.5 1.1-1.1 1.1-1.1-.5-1.1-1.1.5-1.1 1.1-1.1zm-4.1 3.5c.6.5 1.2.7 1.9.7s1.3-.2 1.9-.7l.8.8c-.8.8-1.7 1.1-2.7 1.1s-1.9-.3-2.7-1.1l.8-.8z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Reddit Zero-Auth JSON API 🤖 💬</h4>
+                <div class="tool-category">📡 Bypasses Heavy Web Client ⚡</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Appending <code>.json</code> to any Reddit subreddit, profile, or thread converts it into a raw REST API JSON payload without requiring an OAuth client ID or developer key.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="redditSub">Subreddit or Path</label>
+                  <input type="text" id="redditSub" class="param-input" value="r/technology/top">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="redditTime">Timeframe</label>
+                  <select id="redditTime" class="param-select">
+                    <option value="?t=day" selected>Today (?t=day)</option>
+                    <option value="?t=week">This Week (?t=week)</option>
+                    <option value="?t=year">This Year (?t=year)</option>
+                    <option value="?t=all">All Time (?t=all)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="redditUrlPreview" class="url-text">https://www.reddit.com/r/technology/top.json?t=day</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('redditUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('redditUrlPreview', 'Reddit JSON Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 18. NPM REGISTRY RAW PACKAGE METADATA & TARBALL -->
+        <article class="tool-card" data-tags="dev npm registry package metadata dependencies tarball">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #CB3837; background: rgba(203, 56, 55, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#CB3837" d="M0 0v24h24V0H0zm20.5 20.5h-4.3V7.2h-4.1v13.3H3.5V3.5h17v17z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">npm Registry Direct Manifest &amp; Raw JSON 📦 🔴</h4>
+                <div class="tool-category">⚡ Zero-Auth Public Registry API 💻</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Inspect full package metadata, release tags, shasums, and dependency trees directly from npm's CouchDB registry without installing the node CLI.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="npmPkg">Package Name</label>
+                  <input type="text" id="npmPkg" class="param-input" value="express">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="npmTag">Tag / Endpoint</label>
+                  <select id="npmTag" class="param-select">
+                    <option value="/latest" selected>Latest Release Manifest (/latest)</option>
+                    <option value="">Complete Historical Metadata (Root)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="npmUrlPreview" class="url-text">https://registry.npmjs.org/express/latest</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('npmUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('npmUrlPreview', 'npm Registry Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 19. JSDELIVR / CDNJS DIRECT CDN LINK GENERATOR -->
+        <article class="tool-card" data-tags="dev cdn jsdelivr cdnjs unpkg libraries script">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #E84D3D; background: rgba(232, 77, 61, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#E84D3D" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm3.8 14.5c-.8.8-2 1.3-3.4 1.3-2.6 0-4.6-1.8-4.6-4.5s2-4.5 4.6-4.5c1.4 0 2.6.5 3.4 1.3l-1.3 1.3c-.5-.5-1.2-.8-2.1-.8-1.6 0-2.8 1.1-2.8 2.7s1.2 2.7 2.8 2.7c.9 0 1.6-.3 2.1-.8l1.3 1.3z"/>
+                  <circle cx="16.5" cy="7.5" r="1.5" fill="#F39C12"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">jsDelivr &amp; CDN Direct Asset Linker ⚡ 🌐</h4>
+                <div class="tool-category">🚀 Zero-Config Library Embed 📦</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Directly stream minified production scripts or source maps from npm packages without hosting local bundles.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="cdnPkg">Package Name &amp; Version</label>
+                  <input type="text" id="cdnPkg" class="param-input" value="three@0.160.0">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="cdnPath">File Path</label>
+                  <input type="text" id="cdnPath" class="param-input" value="build/three.module.js">
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="cdnUrlPreview" class="url-text">https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('cdnUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('cdnUrlPreview', 'CDN Asset Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 20. DNS-OVER-HTTPS (DoH) DIRECT JSON LOOKUP -->
+        <article class="tool-card" data-tags="dev doh dns network cloudflare lookup records">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #F38020; background: rgba(243, 128, 32, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#F38020" d="M18.8 11.2c-.3-2.4-2.4-4.2-4.9-4.2-2.1 0-3.9 1.3-4.6 3.1-.4-.2-.9-.3-1.4-.3-2.1 0-3.8 1.7-3.8 3.8 0 .4.1.7.2 1.1H4c-1.1 0-2 .9-2 2s.9 2 2 2h14.8c1.8 0 3.2-1.4 3.2-3.2 0-1.7-1.3-3.1-3.2-3.3z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">DNS-over-HTTPS (DoH) Live Lookup ☁️ 🛡️</h4>
+                <div class="tool-category">🌐 Bypasses Local DNS &amp; ISP Poisoning ⚡</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Execute live DNS queries directly across Cloudflare or Google DoH endpoints returning clean JSON payloads of A, AAAA, MX, or TXT records.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="dohDomain">Domain</label>
+                  <input type="text" id="dohDomain" class="param-input" value="github.com">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="dohType">Record Type</label>
+                  <select id="dohType" class="param-select">
+                    <option value="A" selected>A (IPv4)</option>
+                    <option value="AAAA">AAAA (IPv6)</option>
+                    <option value="MX">MX (Mail Exchange)</option>
+                    <option value="TXT">TXT (Verification / SPF)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="dohUrlPreview" class="url-text">https://cloudflare-dns.com/dns-query?name=github.com&amp;type=A</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('dohUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('dohUrlPreview', 'DoH Query Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 21. CRT.SH CERTIFICATE TRANSPARENCY SUBDOMAIN FINDER -->
+        <article class="tool-card" data-tags="dev security osint cert crt.sh subdomains reconnaissance">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #00f2fe; background: rgba(0, 242, 254, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#00f2fe" d="M12 1L3 5v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V5l-9-4z"/>
+                  <path fill="#080a14" d="M12 7a3 3 0 0 0-3 3v2h-1v5h8v-5h-1v-2a3 3 0 0 0-3-3zm1.5 5h-3v-2a1.5 1.5 0 0 1 3 0v2z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Crt.sh Certificate Subdomain Finder 🔒 🕵️</h4>
+                <div class="tool-category">🛡️ Zero-Auth SSL Transparency Logs 🔍</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Query the public Certificate Transparency (CT) log database to uncover all SSL-certified subdomains, dev portals, and staging clusters for any target root domain.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="crtDomain">Target Root Domain</label>
+                  <input type="text" id="crtDomain" class="param-input" value="stripe.com">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="crtFormat">Output</label>
+                  <select id="crtFormat" class="param-select">
+                    <option value="json" selected>JSON Payload</option>
+                    <option value="table">HTML Interactive Table</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="crtUrlPreview" class="url-text">https://crt.sh/?q=%.stripe.com&amp;output=json</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('crtUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('crtUrlPreview', 'Crt.sh Recon Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 4: MEDIA & WEB INTELLIGENCE
+         ========================================================================== -->
+    <section id="media">
+      <h3 class="section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--magenta)" stroke-width="2">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        🎬 🌐 Media, Open Web &amp; Search Intelligence 📡
+      </h3>
+
+      <div class="tools-grid">
+
+        <!-- 22. YOUTUBE CLEAN EMBED & 4K THUMBNAIL GRABBER -->
+        <article class="tool-card" data-tags="media youtube thumbnail clean embed maxres video">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #FF0000; background: rgba(255, 0, 0, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#FF0000" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-5.8 31 31 0 0 0-.5-5.8z"/>
+                  <polygon points="9.6,15.5 15.8,12 9.6,8.5" fill="#fff"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">YouTube Clean Player &amp; Maxres Art 🎬 📺</h4>
+                <div class="tool-category">🍿 Bypasses Ads &amp; Algorithmic Feeds 📸</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Extract the highest quality 1080p/4K poster thumbnail or launch a distraction-free clean video player without algorithm sidebars and tracking cookies.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="ytVideoId">YouTube Video ID or Full URL</label>
+                  <input type="text" id="ytVideoId" class="param-input" value="dQw4w9WgXcQ">
+                </div>
+              </div>
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="ytMode">Extraction Target</label>
+                  <select id="ytMode" class="param-select">
+                    <option value="thumb" selected>Direct Maxres 4K Thumbnail (JPG)</option>
+                    <option value="clean">Clean Tracking-Free Embed (No-Cookie)</option>
+                    <option value="transcript">Direct Timed Subtitles (XML)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="ytUrlPreview" class="url-text">https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('ytUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('ytUrlPreview', 'YouTube Asset Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 23. WAYBACK MACHINE INSTANT ARCHIVE & SNAPSHOT -->
+        <article class="tool-card" data-tags="media wayback archive historical snapshot">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #00f5a0; background: rgba(0, 245, 160, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#00f5a0" d="M12 2L2 7v2h20V7L12 2zm-8 8v9h2v-9H4zm5 0v9h2v-9H9zm5 0v9h2v-9h-2zm5 0v9h2v-9h-2zM2 20v2h20v-2H2z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Wayback Machine Instant Snapshot ⏳ 🏛️</h4>
+                <div class="tool-category">🕰️ Direct Archival Trigger 📜</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Instantly save any live web page to the internet archive permanently, or jump straight to the oldest archived snapshot without browsing the calendar matrix.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="wbTarget">Target Web URL</label>
+                  <input type="text" id="wbTarget" class="param-input" value="https://google.com">
+                </div>
+              </div>
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="wbAction">Action</label>
+                  <select id="wbAction" class="param-select">
+                    <option value="save" selected>Save Page to Archive Immediately (/save)</option>
+                    <option value="latest">Jump to Most Recent Snapshot</option>
+                    <option value="history">View Complete Timeline Index</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="wbUrlPreview" class="url-text">https://web.archive.org/save/https://google.com</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('wbUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('wbUrlPreview', 'Wayback Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 24. ADVANCED SEARCH DORK BUILDER -->
+        <article class="tool-card" data-tags="media osint google dorks search pdf csv env">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #4285F4; background: rgba(66, 133, 244, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h5.9c-.3 1.4-1.1 2.6-2.3 3.4v2.8h3.7c2.2-2 3.5-5 3.5-8.4z"/>
+                  <path fill="#34A853" d="M12 23c3.2 0 6-1.1 7.9-3l-3.7-2.8c-1.1.7-2.5 1.2-4.2 1.2-3.2 0-6-2.2-7-5.1H1.2v2.9C3.1 20 7.3 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5 13.3c-.3-.8-.4-1.6-.4-2.3s.1-1.5.4-2.3V5.8H1.2C.4 7.4 0 9.2 0 11s.4 3.6 1.2 5.2l3.8-2.9z"/>
+                  <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C18 1.4 15.2 0 12 0 7.3 0 3.1 3 1.2 6.8l3.8 2.9c1-2.9 3.8-4.9 7-4.9z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Google Search Dork Parameterizer 🔍 🎯</h4>
+                <div class="tool-category">🕵️ Uncover Hidden Files &amp; PDFs 📂</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Generate advanced Boolean search operator links targeting specific filetypes, domains, and index listings across the open web.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="dorkKeyword">Keywords</label>
+                  <input type="text" id="dorkKeyword" class="param-input" value="financial report 2024">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="dorkFileType">Filetype / Dork</label>
+                  <select id="dorkFileType" class="param-select">
+                    <option value="filetype:pdf" selected>filetype:pdf</option>
+                    <option value="filetype:csv">filetype:csv</option>
+                    <option value="filetype:xlsx">filetype:xlsx</option>
+                    <option value="filetype:env">filetype:env (Security Audit)</option>
+                    <option value="intitle:&quot;index of /&quot;">intitle:"index of /" (Open Dirs)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="dorkUrlPreview" class="url-text">https://www.google.com/search?q=financial+report+2024+filetype%3Apdf</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('dorkUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('dorkUrlPreview', 'Google Dork Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 25. WIKIPEDIA RAW WIKITEXT & REVISION API -->
+        <article class="tool-card" data-tags="media wikipedia api wikitext revisions research encyclopedic">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #ffffff; background: rgba(255, 255, 255, 0.1);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#fff" d="M12.09 13.04l2.06-6.64h2.55l3.85 10.87h-2.12l-.93-2.73h-3.69l-.77 2.73h-1.95zm2.25-.43h2.67l-1.3-3.86zm-5.74 3.16l2.1-6.64h-1.8l-1.38 4.7-1.57-4.7H4.16l2.25 7.15-2.02 5.09h1.88l1.45-3.87 1.55 3.87h1.9z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Wikipedia Raw Revision &amp; Wikitext 📖 🌐</h4>
+                <div class="tool-category">📚 Zero-Auth Knowledge Ingestion 🧠</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Fetch raw markdown-like wikitext or unstyled mobile HTML payloads for any encyclopedic topic for LLM summarization without web scrapers.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="wikiTitle">Article Title</label>
+                  <input type="text" id="wikiTitle" class="param-input" value="Artificial_intelligence">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="wikiFormat">Format Mode</label>
+                  <select id="wikiFormat" class="param-select">
+                    <option value="raw" selected>Raw Wikitext Stream</option>
+                    <option value="json">Structured MediaWiki JSON</option>
+                    <option value="mobile">Distraction-Free Mobile View</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="wikiUrlPreview" class="url-text">https://en.wikipedia.org/w/index.php?title=Artificial_intelligence&amp;action=raw</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('wikiUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('wikiUrlPreview', 'Wikipedia Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 26. INTERNET ARCHIVE DIRECT ITEM STREAM -->
+        <article class="tool-card" data-tags="media archive.org books audio video direct download stream">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #4facfe; background: rgba(79, 172, 254, 0.12);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <path fill="#4facfe" d="M12 2L2 7v2h20V7L12 2zm-8 8v9h2v-9H4zm5 0v9h2v-9H9zm5 0v9h2v-9h-2zm5 0v9h2v-9h-2zM2 20v2h20v-2H2z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Internet Archive Direct File Linker 🏛️ 📼</h4>
+                <div class="tool-category">📜 Bypasses Heavy Viewer Player 💾</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Stream public domain audio books, historical texts, or raw video containers directly from archive.org's S3-compatible backend storage cluster.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="iaItem">Item Identifier</label>
+                  <input type="text" id="iaItem" class="param-input" value="TheAdventuresOfSherlockHolmes">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="iaFile">File / Extension</label>
+                  <input type="text" id="iaFile" class="param-input" value="adventures_sherlock_holmes.pdf">
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="iaUrlPreview" class="url-text">https://archive.org/download/TheAdventuresOfSherlockHolmes/adventures_sherlock_holmes.pdf</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('iaUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('iaUrlPreview', 'Archive.org Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+        <!-- 27. HACKER NEWS ALGOLIA FILTERED API -->
+        <article class="tool-card" data-tags="media hackernews ycombinator search algolia api stories tech">
+          <div>
+            <div class="tool-header">
+              <div class="tool-avatar" style="border-color: #FF6600; background: rgba(255, 102, 0, 0.14);">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                  <rect width="24" height="24" rx="3" fill="#FF6600"/>
+                  <path fill="#fff" d="M7 6l4.2 8.2v4.8h1.6v-4.8L17 6h-1.8l-3.3 6.6L8.6 6H7z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="tool-name">Hacker News Algolia Search API 📰 🟠</h4>
+                <div class="tool-category">💬 High-Speed Historical Feed 🚀</div>
+              </div>
+            </div>
+
+            <p class="tool-desc">
+              Filter decades of Hacker News discussions by minimum upvote thresholds, exact topic queries, and date ranges without authentication keys.
+            </p>
+
+            <div class="inputs-wrap">
+              <div class="input-row">
+                <div class="input-col">
+                  <label class="param-label" for="hnQuery">Query Keywords</label>
+                  <input type="text" id="hnQuery" class="param-input" value="Show HN LLM">
+                </div>
+                <div class="input-col">
+                  <label class="param-label" for="hnPoints">Min Points</label>
+                  <select id="hnPoints" class="param-select">
+                    <option value="points>100" selected>&gt; 100 Upvotes</option>
+                    <option value="points>300">&gt; 300 Upvotes</option>
+                    <option value="points>500">&gt; 500 Upvotes</option>
+                    <option value="points>1000">&gt; 1000 Upvotes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="url-preview-box">
+              <span id="hnUrlPreview" class="url-text">https://hn.algolia.com/api/v1/search_by_date?tags=story&amp;numericFilters=points%3E100&amp;query=Show%20HN%20LLM</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action btn-launch" onclick="launchUrl('hnUrlPreview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Launch in Browser
+            </button>
+            <button class="btn-action btn-copy" onclick="copyFromElem('hnUrlPreview', 'Hacker News API Link')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 5: LIVE URL INSPECTOR & QUERY PARAMETER WORKBENCH
+         ========================================================================== -->
+    <section id="inspector">
+      <div class="workbench-box">
+        <h3 style="font-size: 1.5rem; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2.5">
+            <polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/>
+          </svg>
+          🔬 🛠️ Interactive URL Inspector, Live Editor &amp; Query Workbench 🧪
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Paste any complex URL with hidden tokens or query strings. Break down components, edit or add parameters live, inspect Base64/JWT tokens, and export as ready-to-run cURL or fetch commands:
+        </p>
+
+        <div class="wb-input-group">
+          <input type="text" id="customUrlInput" class="wb-url-input" value="https://account.venmo.com/api/statement/download?startDate=2023-01-01&amp;endDate=2026-10-13&amp;csv=true&amp;filter=settled" placeholder="Paste any URL here...">
+          <button class="wb-parse-btn" onclick="parseCustomUrl()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            ⚡ Deconstruct Parameters 🔬
+          </button>
+        </div>
+
+        <!-- Deconstructed Elements Area -->
+        <div id="parsedResultsArea">
+          <!-- Dynamically populated table -->
+        </div>
+
+        <!-- Live Re-assembled URL Box -->
+        <div class="wb-assembled-box" id="assembledContainer">
+          <div style="width: 100%; display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px;">
+            <span style="font-size: 0.75rem; font-family: var(--font-tech); text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.05em;">Live Re-assembled URL:</span>
+            <span style="font-size: 0.75rem; color: var(--emerald);">Auto-updates on edits</span>
+          </div>
+          <span id="assembledUrlText" class="wb-assembled-text"></span>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-action btn-launch" style="padding: 6px 14px;" onclick="launchUrl('assembledUrlText')">Launch</button>
+            <button class="btn-action btn-copy" style="padding: 6px 14px;" onclick="copyFromElem('assembledUrlText', 'Reassembled URL')">Copy</button>
+          </div>
+        </div>
+
+        <!-- Utility Action Bar: cURL, Fetch & Token Decoder -->
+        <div class="wb-util-bar">
+          <button class="wb-tool-btn" onclick="copyAsCurl()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            📋 Copy as cURL Command 💻
+          </button>
+          <button class="wb-tool-btn" onclick="copyAsFetch()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            Copy as JavaScript fetch()
+          </button>
+          <button class="wb-tool-btn" onclick="toggleTokenDecoder()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Base64 / Token Decoder
+          </button>
+          <button class="wb-tool-btn" onclick="addParameterRow()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            + Add Query Parameter
+          </button>
+        </div>
+
+        <!-- Token Decoder Box -->
+        <div id="tokenDecoderBox" class="token-decoder-box">
+          <h4 style="font-size: 0.95rem; color: #fff; margin-bottom: 8px;">Base64 / JWT State Token Decoder</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">Paste any encoded state token, OAuth callback code, or query parameter payload to inspect decoded UTF-8 / JSON:</p>
+          <textarea id="rawTokenInput" class="param-input" style="height: 60px; margin-bottom: 10px;" placeholder="Paste Base64 or token string..."></textarea>
+          <button class="wb-tool-btn" onclick="decodeTokenString()" style="margin-bottom: 10px;">Decode Payload</button>
+          <div id="decodedTokenOutput" style="background:#04060c; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); padding:10px; font-family:var(--font-code); font-size:0.8rem; color:var(--cyan); white-space:pre-wrap; min-height:40px;">Decoded output will appear here...</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="badge-ready">● Single-File Zero-Dependency Utility</span>
+        <span>Runs locally on your computer with full privacy</span>
+      </div>
+      <div>
+        <span>Saved to Downloads · Works completely in-browser</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastBox" class="toast-box">
+    ✓ Copied to clipboard!
+  </div>
+
+  <!-- ==========================================================================
+       INTERACTIVE CLIENT LOGIC
+       ========================================================================== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ========================================================================
+      // 1. AMBIENT BACKGROUND PARTICLES (Pause on blur per web-app-standards)
+      // ========================================================================
+      const canvas = document.getElementById('ambientCanvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let width = 0, height = 0;
+        let animId = null;
+        let isRunning = true;
+        const dots = [];
+
+        function resize() {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize, { passive: true });
+        resize();
+
+        for (let i = 0; i < 40; i++) {
+          dots.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            r: Math.random() * 1.8 + 1
+          });
+        }
+
+        function draw() {
+          if (!isRunning) return;
+          ctx.clearRect(0, 0, width, height);
+          ctx.fillStyle = 'rgba(0, 242, 254, 0.35)';
+
+          for (let i = 0; i < dots.length; i++) {
+            const d = dots[i];
+            d.x += d.vx;
+            d.y += d.vy;
+            if (d.x < 0 || d.x > width) d.vx *= -1;
+            if (d.y < 0 || d.y > height) d.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          animId = requestAnimationFrame(draw);
+        }
+        animId = requestAnimationFrame(draw);
+
+        document.addEventListener('visibilitychange', function() {
+          if (document.hidden) {
+            isRunning = false;
+            if (animId) cancelAnimationFrame(animId);
+          } else {
+            isRunning = true;
+            animId = requestAnimationFrame(draw);
+          }
+        });
+      }
+
+      // ========================================================================
+      // 2. VENMO DYNAMIC GENERATOR
+      // ========================================================================
+      const vStart = document.getElementById('venmoStart');
+      const vEnd = document.getElementById('venmoEnd');
+      const vFmt = document.getElementById('venmoFormat');
+      const vPrev = document.getElementById('venmoUrlPreview');
+
+      function updateVenmo() {
+        if (!vStart || !vEnd || !vFmt || !vPrev) return;
+        const s = vStart.value || '2023-01-01';
+        const e = vEnd.value || '2026-10-13';
+        const c = vFmt.value;
+        vPrev.textContent = `https://account.venmo.com/api/statement/download?startDate=${s}&endDate=${e}&csv=${c}`;
+      }
+      [vStart, vEnd, vFmt].forEach(el => el && el.addEventListener('input', updateVenmo));
+
+      // ========================================================================
+      // 3. PAYPAL GENERATOR
+      // ========================================================================
+      const ppType = document.getElementById('ppReportType');
+      const ppPrev = document.getElementById('ppUrlPreview');
+      if (ppType && ppPrev) {
+        ppType.addEventListener('change', () => { ppPrev.textContent = ppType.value; });
+      }
+
+      // ========================================================================
+      // 4. STRIPE GENERATOR
+      // ========================================================================
+      const strEvent = document.getElementById('stripeEvent');
+      const strPrev = document.getElementById('stripeUrlPreview');
+      if (strEvent && strPrev) {
+        strEvent.addEventListener('change', () => {
+          strPrev.textContent = `https://dashboard.stripe.com/events?type=${encodeURIComponent(strEvent.value)}`;
+        });
+      }
+
+      // ========================================================================
+      // 5. SQUARE GENERATOR
+      // ========================================================================
+      const sqStart = document.getElementById('squareStart');
+      const sqEnd = document.getElementById('squareEnd');
+      const sqPrev = document.getElementById('squareUrlPreview');
+      function updateSquare() {
+        if (!sqStart || !sqEnd || !sqPrev) return;
+        sqPrev.textContent = `https://squareup.com/dashboard/sales/transactions?begin_date=${sqStart.value}&end_date=${sqEnd.value}`;
+      }
+      [sqStart, sqEnd].forEach(el => el && el.addEventListener('input', updateSquare));
+
+      // ========================================================================
+      // 6. WISE GENERATOR
+      // ========================================================================
+      const wCurr = document.getElementById('wiseCurrency');
+      const wFmt = document.getElementById('wiseFormat');
+      const wPrev = document.getElementById('wiseUrlPreview');
+      function updateWise() {
+        if (!wCurr || !wFmt || !wPrev) return;
+        wPrev.textContent = `https://wise.com/user/account/statements?currency=${wCurr.value}&format=${wFmt.value}`;
+      }
+      [wCurr, wFmt].forEach(el => el && el.addEventListener('input', updateWise));
+
+      // ========================================================================
+      // 7. QUICKBOOKS GENERATOR
+      // ========================================================================
+      const qboRep = document.getElementById('qboReport');
+      const qboPrev = document.getElementById('qboUrlPreview');
+      if (qboRep && qboPrev) {
+        qboRep.addEventListener('change', () => {
+          qboPrev.textContent = `https://app.qbo.intuit.com/app/report?name=${encodeURIComponent(qboRep.value)}`;
+        });
+      }
+
+      // ========================================================================
+      // 8. GOOGLE DOCS GENERATOR
+      // ========================================================================
+      const gdocId = document.getElementById('gdocId');
+      const gdocAct = document.getElementById('gdocAction');
+      const gdocPrev = document.getElementById('gdocUrlPreview');
+
+      function updateGDoc() {
+        if (!gdocId || !gdocAct || !gdocPrev) return;
+        let id = gdocId.value.trim();
+        const match = id.match(/\/d\/([a-zA-Z0-9-_]+)/);
+        if (match) id = match[1];
+        gdocPrev.textContent = `https://docs.google.com/document/d/${id}${gdocAct.value}`;
+      }
+      [gdocId, gdocAct].forEach(el => el && el.addEventListener('input', updateGDoc));
+
+      // ========================================================================
+      // 9. GOOGLE DRIVE DIRECT STREAM
+      // ========================================================================
+      const gdInput = document.getElementById('gdriveInput');
+      const gdPrev = document.getElementById('gdriveUrlPreview');
+
+      function updateGDrive() {
+        if (!gdInput || !gdPrev) return;
+        let val = gdInput.value.trim();
+        const m = val.match(/\/file\/d\/([a-zA-Z0-9-_]+)/) || val.match(/id=([a-zA-Z0-9-_]+)/);
+        if (m) val = m[1];
+        gdPrev.textContent = `https://drive.google.com/uc?export=download&id=${val}`;
+      }
+      if (gdInput) gdInput.addEventListener('input', updateGDrive);
+
+      // ========================================================================
+      // 10. GOOGLE SHEETS CSV EXPORTER
+      // ========================================================================
+      const gsId = document.getElementById('gsheetId');
+      const gsGid = document.getElementById('gsheetGid');
+      const gsFmt = document.getElementById('gsheetFormat');
+      const gsPrev = document.getElementById('gsheetUrlPreview');
+
+      function updateGSheet() {
+        if (!gsId || !gsGid || !gsFmt || !gsPrev) return;
+        let id = gsId.value.trim();
+        const m = id.match(/\/d\/([a-zA-Z0-9-_]+)/);
+        if (m) id = m[1];
+        const gid = gsGid.value.trim() || '0';
+        gsPrev.textContent = `https://docs.google.com/spreadsheets/d/${id}/export?format=${gsFmt.value}&gid=${gid}`;
+      }
+      [gsId, gsGid, gsFmt].forEach(el => el && el.addEventListener('input', updateGSheet));
+
+      // ========================================================================
+      // 11. GOOGLE SLIDES EXPORTER
+      // ========================================================================
+      const gslId = document.getElementById('gslidesId');
+      const gslFmt = document.getElementById('gslidesFormat');
+      const gslPrev = document.getElementById('gslidesUrlPreview');
+
+      function updateGSlides() {
+        if (!gslId || !gslFmt || !gslPrev) return;
+        let id = gslId.value.trim();
+        const m = id.match(/\/presentation\/d\/([a-zA-Z0-9-_]+)/);
+        if (m) id = m[1];
+        gslPrev.textContent = `https://docs.google.com/presentation/d/${id}${gslFmt.value}`;
+      }
+      [gslId, gslFmt].forEach(el => el && el.addEventListener('input', updateGSlides));
+
+      // ========================================================================
+      // 12. GOOGLE CALENDAR EVENT URL
+      // ========================================================================
+      const gcTitle = document.getElementById('gcalTitle');
+      const gcStart = document.getElementById('gcalStart');
+      const gcEnd = document.getElementById('gcalEnd');
+      const gcPrev = document.getElementById('gcalUrlPreview');
+
+      function updateGCal() {
+        if (!gcTitle || !gcStart || !gcEnd || !gcPrev) return;
+        gcPrev.textContent = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(gcTitle.value.trim())}&dates=${gcStart.value.trim()}/${gcEnd.value.trim()}`;
+      }
+      [gcTitle, gcStart, gcEnd].forEach(el => el && el.addEventListener('input', updateGCal));
+
+      // ========================================================================
+      // 13. GOOGLE MEET SPAWNER
+      // ========================================================================
+      const gmUser = document.getElementById('meetUser');
+      const gmPrev = document.getElementById('meetUrlPreview');
+      if (gmUser && gmPrev) {
+        gmUser.addEventListener('change', () => {
+          gmPrev.textContent = `https://meet.google.com/new?authuser=${gmUser.value}`;
+        });
+      }
+
+      // ========================================================================
+      // 14. GOOGLE FORMS DIRECT PREFILL
+      // ========================================================================
+      const gfId = document.getElementById('gformId');
+      const gfMode = document.getElementById('gformMode');
+      const gfPrev = document.getElementById('gformUrlPreview');
+
+      function updateGForm() {
+        if (!gfId || !gfMode || !gfPrev) return;
+        let id = gfId.value.trim();
+        const m = id.match(/\/e\/([a-zA-Z0-9-_]+)/);
+        if (m) id = m[1];
+
+        if (gfMode.value === 'viewform') {
+          gfPrev.textContent = `https://docs.google.com/forms/d/e/${id}/viewform`;
+        } else if (gfMode.value === 'prefill') {
+          gfPrev.textContent = `https://docs.google.com/forms/d/e/${id}/viewform?usp=pp_url`;
+        } else {
+          gfPrev.textContent = `https://docs.google.com/forms/d/e/${id}/downloadresponses`;
+        }
+      }
+      [gfId, gfMode].forEach(el => el && el.addEventListener('input', updateGForm));
+
+      // ========================================================================
+      // 15. GITHUB DIFF
+      // ========================================================================
+      const ghOwner = document.getElementById('ghOwner');
+      const ghBase = document.getElementById('ghBase');
+      const ghHead = document.getElementById('ghHead');
+      const ghPrev = document.getElementById('ghDiffUrlPreview');
+
+      function updateGHDiff() {
+        if (!ghOwner || !ghBase || !ghHead || !ghPrev) return;
+        ghPrev.textContent = `https://github.com/${ghOwner.value.trim()}/compare/${ghBase.value.trim()}...${ghHead.value.trim()}.diff`;
+      }
+      [ghOwner, ghBase, ghHead].forEach(el => el && el.addEventListener('input', updateGHDiff));
+
+      // ========================================================================
+      // 16. GITHUB RELEASE ASSET
+      // ========================================================================
+      const ghRelRepo = document.getElementById('ghRelRepo');
+      const ghRelAsset = document.getElementById('ghRelAsset');
+      const ghRelPrev = document.getElementById('ghRelUrlPreview');
+
+      function updateGHRelease() {
+        if (!ghRelRepo || !ghRelAsset || !ghRelPrev) return;
+        ghRelPrev.textContent = `https://github.com/${ghRelRepo.value.trim()}/releases/latest/download/${ghRelAsset.value.trim()}`;
+      }
+      [ghRelRepo, ghRelAsset].forEach(el => el && el.addEventListener('input', updateGHRelease));
+
+      // ========================================================================
+      // 17. HUGGING FACE DIRECT LFS
+      // ========================================================================
+      const hfRepo = document.getElementById('hfRepo');
+      const hfFile = document.getElementById('hfFile');
+      const hfPrev = document.getElementById('hfUrlPreview');
+
+      function updateHF() {
+        if (!hfRepo || !hfFile || !hfPrev) return;
+        hfPrev.textContent = `https://huggingface.co/${hfRepo.value.trim()}/resolve/main/${hfFile.value.trim()}?download=true`;
+      }
+      [hfRepo, hfFile].forEach(el => el && el.addEventListener('input', updateHF));
+
+      // ========================================================================
+      // 18. REDDIT JSON
+      // ========================================================================
+      const rSub = document.getElementById('redditSub');
+      const rTime = document.getElementById('redditTime');
+      const rPrev = document.getElementById('redditUrlPreview');
+
+      function updateReddit() {
+        if (!rSub || !rTime || !rPrev) return;
+        let sub = rSub.value.trim().replace(/^\//, '');
+        rPrev.textContent = `https://www.reddit.com/${sub}.json${rTime.value}`;
+      }
+      [rSub, rTime].forEach(el => el && el.addEventListener('input', updateReddit));
+
+      // ========================================================================
+      // 19. NPM REGISTRY
+      // ========================================================================
+      const npmPkg = document.getElementById('npmPkg');
+      const npmTag = document.getElementById('npmTag');
+      const npmPrev = document.getElementById('npmUrlPreview');
+
+      function updateNpm() {
+        if (!npmPkg || !npmTag || !npmPrev) return;
+        npmPrev.textContent = `https://registry.npmjs.org/${npmPkg.value.trim()}${npmTag.value}`;
+      }
+      [npmPkg, npmTag].forEach(el => el && el.addEventListener('input', updateNpm));
+
+      // ========================================================================
+      // 20. JSDELIVR CDN
+      // ========================================================================
+      const cdnPkg = document.getElementById('cdnPkg');
+      const cdnPath = document.getElementById('cdnPath');
+      const cdnPrev = document.getElementById('cdnUrlPreview');
+
+      function updateCdn() {
+        if (!cdnPkg || !cdnPath || !cdnPrev) return;
+        cdnPrev.textContent = `https://cdn.jsdelivr.net/npm/${cdnPkg.value.trim()}/${cdnPath.value.trim()}`;
+      }
+      [cdnPkg, cdnPath].forEach(el => el && el.addEventListener('input', updateCdn));
+
+      // ========================================================================
+      // 21. DNS-OVER-HTTPS (DoH)
+      // ========================================================================
+      const dohDomain = document.getElementById('dohDomain');
+      const dohType = document.getElementById('dohType');
+      const dohPrev = document.getElementById('dohUrlPreview');
+
+      function updateDoH() {
+        if (!dohDomain || !dohType || !dohPrev) return;
+        dohPrev.textContent = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(dohDomain.value.trim())}&type=${dohType.value}`;
+      }
+      [dohDomain, dohType].forEach(el => el && el.addEventListener('input', updateDoH));
+
+      // ========================================================================
+      // 22. CRT.SH RECON
+      // ========================================================================
+      const crtDom = document.getElementById('crtDomain');
+      const crtFmt = document.getElementById('crtFormat');
+      const crtPrev = document.getElementById('crtUrlPreview');
+
+      function updateCrt() {
+        if (!crtDom || !crtFmt || !crtPrev) return;
+        crtPrev.textContent = `https://crt.sh/?q=%.${crtDom.value.trim()}&output=${crtFmt.value}`;
+      }
+      [crtDom, crtFmt].forEach(el => el && el.addEventListener('input', updateCrt));
+
+      // ========================================================================
+      // 23. YOUTUBE THUMB & CLEAN
+      // ========================================================================
+      const ytId = document.getElementById('ytVideoId');
+      const ytMode = document.getElementById('ytMode');
+      const ytPrev = document.getElementById('ytUrlPreview');
+
+      function updateYT() {
+        if (!ytId || !ytMode || !ytPrev) return;
+        let id = ytId.value.trim();
+        const m = id.match(/(?:v=|\/embed\/|youtu\.be\/|\/v\/)([a-zA-Z0-9_-]{11})/);
+        if (m) id = m[1];
+
+        if (ytMode.value === 'thumb') {
+          ytPrev.textContent = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+        } else if (ytMode.value === 'clean') {
+          ytPrev.textContent = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
+        } else {
+          ytPrev.textContent = `https://video.google.com/timedtext?lang=en&v=${id}`;
+        }
+      }
+      [ytId, ytMode].forEach(el => el && el.addEventListener('input', updateYT));
+
+      // ========================================================================
+      // 24. WAYBACK MACHINE
+      // ========================================================================
+      const wbTarget = document.getElementById('wbTarget');
+      const wbAct = document.getElementById('wbAction');
+      const wbPrev = document.getElementById('wbUrlPreview');
+
+      function updateWB() {
+        if (!wbTarget || !wbAct || !wbPrev) return;
+        const t = wbTarget.value.trim();
+        if (wbAct.value === 'save') {
+          wbPrev.textContent = `https://web.archive.org/save/${t}`;
+        } else if (wbAct.value === 'latest') {
+          wbPrev.textContent = `https://web.archive.org/web/${t}`;
+        } else {
+          wbPrev.textContent = `https://web.archive.org/web/*/${t}`;
+        }
+      }
+      [wbTarget, wbAct].forEach(el => el && el.addEventListener('input', updateWB));
+
+      // ========================================================================
+      // 25. GOOGLE SEARCH DORK
+      // ========================================================================
+      const dKw = document.getElementById('dorkKeyword');
+      const dFt = document.getElementById('dorkFileType');
+      const dPrev = document.getElementById('dorkUrlPreview');
+
+      function updateDork() {
+        if (!dKw || !dFt || !dPrev) return;
+        const q = `${dKw.value.trim()} ${dFt.value.trim()}`;
+        dPrev.textContent = `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+      }
+      [dKw, dFt].forEach(el => el && el.addEventListener('input', updateDork));
+
+      // ========================================================================
+      // 26. WIKIPEDIA RAW API
+      // ========================================================================
+      const wkTitle = document.getElementById('wikiTitle');
+      const wkFmt = document.getElementById('wikiFormat');
+      const wkPrev = document.getElementById('wikiUrlPreview');
+
+      function updateWiki() {
+        if (!wkTitle || !wkFmt || !wkPrev) return;
+        const t = encodeURIComponent(wkTitle.value.trim().replace(/\s+/g, '_'));
+        if (wkFmt.value === 'raw') {
+          wkPrev.textContent = `https://en.wikipedia.org/w/index.php?title=${t}&action=raw`;
+        } else if (wkFmt.value === 'mobile') {
+          wkPrev.textContent = `https://en.m.wikipedia.org/wiki/${t}`;
+        } else {
+          wkPrev.textContent = `https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${t}&rvslots=*&rvprop=content&format=json`;
+        }
+      }
+      [wkTitle, wkFmt].forEach(el => el && el.addEventListener('input', updateWiki));
+
+      // ========================================================================
+      // 27. INTERNET ARCHIVE ITEM STREAM
+      // ========================================================================
+      const iaItem = document.getElementById('iaItem');
+      const iaFile = document.getElementById('iaFile');
+      const iaPrev = document.getElementById('iaUrlPreview');
+
+      function updateIA() {
+        if (!iaItem || !iaFile || !iaPrev) return;
+        iaPrev.textContent = `https://archive.org/download/${iaItem.value.trim()}/${iaFile.value.trim()}`;
+      }
+      [iaItem, iaFile].forEach(el => el && el.addEventListener('input', updateIA));
+
+      // ========================================================================
+      // 28. HACKER NEWS ALGOLIA
+      // ========================================================================
+      const hnQuery = document.getElementById('hnQuery');
+      const hnPoints = document.getElementById('hnPoints');
+      const hnPrev = document.getElementById('hnUrlPreview');
+
+      function updateHN() {
+        if (!hnQuery || !hnPoints || !hnPrev) return;
+        hnPrev.textContent = `https://hn.algolia.com/api/v1/search_by_date?tags=story&numericFilters=${encodeURIComponent(hnPoints.value)}&query=${encodeURIComponent(hnQuery.value.trim())}`;
+      }
+      [hnQuery, hnPoints].forEach(el => el && el.addEventListener('input', updateHN));
+
+      // ========================================================================
+      // 29. SEARCH & CATEGORY FILTERING WITH DYNAMIC COUNTS
+      // ========================================================================
+      const searchField = document.getElementById('toolSearch');
+      const catChips = document.querySelectorAll('.chip-btn');
+      const cards = document.querySelectorAll('.tool-card');
+
+      function filterTools() {
+        const q = (searchField.value || '').toLowerCase().trim();
+        const activeChip = document.querySelector('.chip-btn.active');
+        const cat = activeChip ? activeChip.getAttribute('data-cat') : 'all';
+
+        let visibleCount = 0;
+        cards.forEach(card => {
+          const tags = card.getAttribute('data-tags') || '';
+          const text = card.textContent.toLowerCase();
+          const matchQ = q === '' || text.includes(q) || tags.includes(q);
+          const matchCat = cat === 'all' || tags.includes(cat);
+
+          if (matchQ && matchCat) {
+            card.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      }
+
+      if (searchField) searchField.addEventListener('input', filterTools);
+      catChips.forEach(chip => {
+        chip.addEventListener('click', function() {
+          catChips.forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+          filterTools();
+        });
+      });
+
+      // Update category badges
+      function updateCategoryCounts() {
+        let fintech = 0, workspace = 0, dev = 0, media = 0;
+        cards.forEach(card => {
+          const tags = card.getAttribute('data-tags') || '';
+          if (tags.includes('fintech')) fintech++;
+          if (tags.includes('workspace')) workspace++;
+          if (tags.includes('dev')) dev++;
+          if (tags.includes('media')) media++;
+        });
+        const cAll = document.getElementById('countAll');
+        const cFin = document.getElementById('countFintech');
+        const cWrk = document.getElementById('countWorkspace');
+        const cDev = document.getElementById('countDev');
+        const cMed = document.getElementById('countMedia');
+        if (cAll) cAll.textContent = cards.length;
+        if (cFin) cFin.textContent = fintech;
+        if (cWrk) cWrk.textContent = workspace;
+        if (cDev) cDev.textContent = dev;
+        if (cMed) cMed.textContent = media;
+      }
+      updateCategoryCounts();
+
+      // ========================================================================
+      // 30. LIVE INTERACTIVE URL INSPECTOR & QUERY WORKBENCH
+      // ========================================================================
+      let currentParsedUrl = null;
+      let currentParamsList = [];
+
+      window.parseCustomUrl = function() {
+        const input = document.getElementById('customUrlInput');
+        const area = document.getElementById('parsedResultsArea');
+        if (!input || !area) return;
+
+        try {
+          currentParsedUrl = new URL(input.value.trim());
+          currentParamsList = Array.from(currentParsedUrl.searchParams.entries()).map(([k, v]) => ({ key: k, value: v }));
+          renderParameterEditor();
+        } catch (e) {
+          area.innerHTML = `<p style="color:var(--crimson); font-size:0.85rem; padding:8px;">Invalid URL format. Please include full protocol (e.g. https://...)</p>`;
+        }
+      };
+
+      function renderParameterEditor() {
+        const area = document.getElementById('parsedResultsArea');
+        const assembledText = document.getElementById('assembledUrlText');
+        if (!area || !currentParsedUrl) return;
+
+        let html = `
+          <div style="margin-bottom:14px; font-size:0.85rem; color:var(--text-muted); font-family:var(--font-code); display:flex; flex-wrap:wrap; gap:16px;">
+            <div><span style="color:var(--emerald);">Protocol:</span> ${escapeHtml(currentParsedUrl.protocol)}</div>
+            <div><span style="color:var(--cyan);">Host:</span> ${escapeHtml(currentParsedUrl.host)}</div>
+            <div><span style="color:var(--amber);">Path:</span> ${escapeHtml(currentParsedUrl.pathname)}</div>
+          </div>
+        `;
+
+        if (currentParamsList.length === 0) {
+          html += `<p style="color:var(--text-dim); font-size:0.85rem; margin-bottom:12px;">No query parameters currently attached.</p>`;
+        } else {
+          html += `
+            <table class="wb-parsed-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Parameter Key</th>
+                  <th style="width: 45%;">Parameter Value</th>
+                  <th style="width: 20%;">Decoded Value</th>
+                  <th style="width: 10%; text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+          currentParamsList.forEach((param, idx) => {
+            let decoded = param.value;
+            try { decoded = decodeURIComponent(param.value); } catch(e){}
+            html += `
+              <tr>
+                <td>
+                  <input type="text" class="wb-edit-input" value="${escapeHtml(param.key)}" onchange="updateParamKey(${idx}, this.value)">
+                </td>
+                <td>
+                  <input type="text" class="wb-edit-input" value="${escapeHtml(param.value)}" onchange="updateParamValue(${idx}, this.value)">
+                </td>
+                <td style="color: var(--text-dim); font-size: 0.78rem;">
+                  ${escapeHtml(decoded)}
+                </td>
+                <td style="text-align: center;">
+                  <button class="wb-del-btn" onclick="removeParam(${idx})" title="Delete parameter">✕</button>
+                </td>
+              </tr>
+            `;
+          });
+          html += `</tbody></table>`;
+        }
+
+        area.innerHTML = html;
+        rebuildAssembledUrl();
+      }
+
+      window.updateParamKey = function(idx, newKey) {
+        if (currentParamsList[idx]) {
+          currentParamsList[idx].key = newKey.trim();
+          rebuildAssembledUrl();
+        }
+      };
+
+      window.updateParamValue = function(idx, newVal) {
+        if (currentParamsList[idx]) {
+          currentParamsList[idx].value = newVal.trim();
+          rebuildAssembledUrl();
+        }
+      };
+
+      window.removeParam = function(idx) {
+        currentParamsList.splice(idx, 1);
+        renderParameterEditor();
+      };
+
+      window.addParameterRow = function() {
+        if (!currentParsedUrl) {
+          parseCustomUrl();
+          return;
+        }
+        currentParamsList.push({ key: 'newParam', value: 'value' });
+        renderParameterEditor();
+      };
+
+      function rebuildAssembledUrl() {
+        if (!currentParsedUrl) return;
+        const u = new URL(currentParsedUrl.origin + currentParsedUrl.pathname);
+        currentParamsList.forEach(p => {
+          if (p.key) u.searchParams.append(p.key, p.value);
+        });
+        const assembledText = document.getElementById('assembledUrlText');
+        if (assembledText) {
+          assembledText.textContent = u.toString();
+        }
+      }
+
+      // cURL generator
+      window.copyAsCurl = function() {
+        const assembledText = document.getElementById('assembledUrlText');
+        if (!assembledText) return;
+        const url = assembledText.textContent.trim();
+        const cmd = `curl -s -L "${url}"`;
+        navigator.clipboard.writeText(cmd).then(() => {
+          showToast('✓ Copied cURL command to clipboard!');
+        });
+      };
+
+      // JavaScript fetch() generator
+      window.copyAsFetch = function() {
+        const assembledText = document.getElementById('assembledUrlText');
+        if (!assembledText) return;
+        const url = assembledText.textContent.trim();
+        const snippet = `const res = await fetch("${url}");\nconst data = await res.text();\nconsole.log(data);`;
+        navigator.clipboard.writeText(snippet).then(() => {
+          showToast('✓ Copied fetch() snippet to clipboard!');
+        });
+      };
+
+      // Base64 Token Decoder
+      window.toggleTokenDecoder = function() {
+        const box = document.getElementById('tokenDecoderBox');
+        if (box) box.classList.toggle('open');
+      };
+
+      window.decodeTokenString = function() {
+        const input = document.getElementById('rawTokenInput');
+        const output = document.getElementById('decodedTokenOutput');
+        if (!input || !output) return;
+        const raw = input.value.trim();
+        if (!raw) {
+          output.textContent = 'Please enter a Base64 string or JWT token.';
+          return;
+        }
+
+        try {
+          // If JWT with dots, decode parts
+          if (raw.includes('.')) {
+            const parts = raw.split('.');
+            let res = '';
+            parts.forEach((part, i) => {
+              try {
+                let clean = part.replace(/-/g, '+').replace(/_/g, '/');
+                while (clean.length % 4) clean += '=';
+                const dec = atob(clean);
+                res += `[Segment ${i+1}]:\n${dec}\n\n`;
+              } catch(e) {}
+            });
+            output.textContent = res.trim() || 'Could not parse token segments.';
+          } else {
+            let clean = raw.replace(/-/g, '+').replace(/_/g, '/');
+            while (clean.length % 4) clean += '=';
+            output.textContent = atob(clean);
+          }
+        } catch(e) {
+          output.textContent = 'Error decoding Base64 payload: ' + e.message;
+        }
+      };
+
+      parseCustomUrl();
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, function(m) {
+          return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[m];
+        });
+      }
+
+      // ========================================================================
+      // 31. SECURE ACTIONS: LAUNCH & COPY
+      // ========================================================================
+      window.launchUrl = function(elemId) {
+        const el = document.getElementById(elemId);
+        if (!el) return;
+        const targetUrl = el.textContent.trim();
+        window.open(targetUrl, '_blank', 'noopener,noreferrer');
+      };
+
+      const toast = document.getElementById('toastBox');
+      window.copyFromElem = function(elemId, label) {
+        const el = document.getElementById(elemId);
+        if (!el) return;
+        const text = el.textContent.trim();
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast(`✓ Copied ${label} to clipboard!`);
+          }).catch(() => {
+            showToast(`✓ Link ready: ${label}`);
+          });
+        } else {
+          showToast(`✓ Link ready: ${label}`);
+        }
+      };
+
+      function showToast(msg) {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2400);
+      }
+
+
+      // ========================================================================
+      // 32. THEME CONTROLLER (LIGHT / DARK WITH LOCALSTORAGE PERSISTENCE)
+      // ========================================================================
+      const themeBtn = document.getElementById('themeToggleBtn');
+      const savedTheme = localStorage.getItem('power_url_theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      
+      function applyTheme(theme) {
+        if (theme === 'light') {
+          document.body.classList.add('light-mode');
+          if (themeBtn) {
+            themeBtn.querySelector('.theme-icon').textContent = '🌙';
+            themeBtn.querySelector('.ctrl-label').textContent = 'Dark Mode';
+          }
+        } else {
+          document.body.classList.remove('light-mode');
+          if (themeBtn) {
+            themeBtn.querySelector('.theme-icon').textContent = '☀️';
+            themeBtn.querySelector('.ctrl-label').textContent = 'Light Mode';
+          }
+        }
+      }
+
+      applyTheme(savedTheme);
+
+      if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+          const isLight = document.body.classList.contains('light-mode');
+          const next = isLight ? 'dark' : 'light';
+          applyTheme(next);
+          localStorage.setItem('power_url_theme', next);
+          showToast(`Switched to ${next === 'light' ? 'Light' : 'Dark Cyber'} Mode`);
+        });
+      }
+
+      // ========================================================================
+      // 33. FULLSCREEN CONTROLLER
+      // ========================================================================
+      const fsBtn = document.getElementById('fullscreenToggleBtn');
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {
+            showToast('Fullscreen denied: ' + err.message);
+          });
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        }
+      }
+
+      function updateFsUI() {
+        if (!fsBtn) return;
+        if (document.fullscreenElement) {
+          fsBtn.querySelector('.fs-icon').textContent = '🗗';
+          fsBtn.querySelector('.ctrl-label').textContent = 'Exit Fullscreen';
+        } else {
+          fsBtn.querySelector('.fs-icon').textContent = '⛶';
+          fsBtn.querySelector('.ctrl-label').textContent = 'Fullscreen';
+        }
+      }
+
+      if (fsBtn) {
+        fsBtn.addEventListener('click', toggleFullscreen);
+        document.addEventListener('fullscreenchange', updateFsUI);
+      }
+
+      // ========================================================================
+      // 34. SCROLL-DRIVEN PARALLAX HERO CONTROLLER
+      // ========================================================================
+      let lastScrollY = window.scrollY;
+      let parallaxTicking = false;
+
+      function updateParallax() {
+        document.documentElement.style.setProperty('--parallax-y', `${lastScrollY}px`);
+        parallaxTicking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        lastScrollY = window.scrollY;
+        if (!parallaxTicking && !document.hidden) {
+          window.requestAnimationFrame(updateParallax);
+          parallaxTicking = true;
+        }
+      }, { passive: true });
+
+      // ========================================================================
+      // 35. MOUSE SPOTLIGHT & COPY PARTICLE RIPPLE
+      // ========================================================================
+      document.querySelectorAll('.tool-card').forEach(card => {
+        card.addEventListener('pointermove', e => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+        });
+      });
+
+      function spawnCopyParticle(e, text) {
+        const particle = document.createElement('div');
+        particle.className = 'copy-particle';
+        particle.textContent = text || '✓ Copied!';
+        particle.style.left = `${e.clientX}px`;
+        particle.style.top = `${e.clientY}px`;
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 1000);
+      }
+
+      // Upgrade copy button clicks to trigger particle
+      document.addEventListener('click', e => {
+        const copyBtn = e.target.closest('.btn-copy, .btn-copy-card, .wb-tool-btn');
+        if (copyBtn) {
+          spawnCopyParticle(e, '✓ Copied!');
+        }
+      });
+
+      // ========================================================================
+      // 36. CUSTOM CYBER CURSOR CONTROLLER
+      // ========================================================================
+      const cursorDot = document.getElementById('cursorDot');
+      const cursorRing = document.getElementById('cursorRing');
+
+      if (cursorDot && cursorRing && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        let mouseX = -100, mouseY = -100;
+        let ringX = -100, ringY = -100;
+
+        window.addEventListener('pointermove', e => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          cursorDot.style.left = `${mouseX}px`;
+          cursorDot.style.top = `${mouseY}px`;
+        });
+
+        // Smooth spring physics for trailing ring
+        function renderRing() {
+          ringX += (mouseX - ringX) * 0.22;
+          ringY += (mouseY - ringY) * 0.22;
+          cursorRing.style.left = `${ringX}px`;
+          cursorRing.style.top = `${ringY}px`;
+          if (!document.hidden) {
+            requestAnimationFrame(renderRing);
+          }
+        }
+        requestAnimationFrame(renderRing);
+
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) requestAnimationFrame(renderRing);
+        });
+
+        // Interactive states
+        document.querySelectorAll('a, button, input, select, textarea, .tool-card, .chip-btn, .nav-btn').forEach(interactiveEl => {
+          interactiveEl.addEventListener('pointerenter', () => cursorRing.classList.add('hovering'));
+          interactiveEl.addEventListener('pointerleave', () => cursorRing.classList.remove('hovering'));
+        });
+
+        window.addEventListener('pointerdown', () => cursorRing.classList.add('clicking'));
+        window.addEventListener('pointerup', () => cursorRing.classList.remove('clicking'));
+      }
+
+    })();
+  </script>
+</body>
+</html>

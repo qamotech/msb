@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8 - Escape to the 8th</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0f;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #particles-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .game-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        /* Infinity Logo */
+        .logo-container {
+            position: relative;
+            width: 200px;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+
+        .infinity-path {
+            fill: none;
+            stroke: #00ff88;
+            stroke-width: 3;
+            filter: drop-shadow(0 0 10px #00ff88);
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        .runner {
+            fill: #ff3366;
+            filter: drop-shadow(0 0 5px #ff3366);
+            animation: runInfinity 4s linear infinite;
+        }
+
+        @keyframes runInfinity {
+            0% { offset-distance: 0%; }
+            100% { offset-distance: 100%; }
+        }
+
+        .runner-dot {
+            width: 12px;
+            height: 12px;
+            background: #ff3366;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 15px #ff3366, 0 0 30px #ff3366;
+            offset-path: path('M50,50 C50,20 80,20 100,50 C120,80 150,80 150,50 C150,20 120,20 100,50 C80,80 50,80 50,50');
+            animation: runLoop 3s linear infinite;
+        }
+
+        @keyframes runLoop {
+            0% { offset-distance: 0%; }
+            100% { offset-distance: 100%; }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { stroke: #00ff88; filter: drop-shadow(0 0 10px #00ff88); }
+            50% { stroke: #00ffcc; filter: drop-shadow(0 0 20px #00ffcc); }
+        }
+
+        .title {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00ff88, #ff3366, #00ff88);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .step-indicator {
+            font-size: 1.2em;
+            color: #00ff88;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #00ff88;
+        }
+
+        .progress-bar {
+            width: 80%;
+            max-width: 500px;
+            height: 8px;
+            background: #1a1a2e;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid #00ff8844;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #ff3366);
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 700px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 2px solid #00ff8844;
+            color: #fff;
+            padding: 15px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            border-color: #00ff88;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .action-btn .key {
+            display: block;
+            font-size: 1.5em;
+            color: #ff3366;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .action-btn.correct {
+            animation: correctFlash 0.5s ease;
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.2);
+        }
+
+        .action-btn.wrong {
+            animation: wrongShake 0.5s ease;
+            border-color: #ff3366;
+            background: rgba(255, 51, 102, 0.2);
+        }
+
+        @keyframes correctFlash {
+            0%, 100% { background: rgba(0, 255, 136, 0.2); }
+            50% { background: rgba(0, 255, 136, 0.5); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .voice-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .mic-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff3366, #ff6b6b);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+        }
+
+        .mic-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.5);
+        }
+
+        .mic-btn.listening {
+            animation: micPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes micPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 51, 102, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 51, 102, 0.8); }
+        }
+
+        .mic-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .voice-status {
+            font-size: 0.9em;
+            color: #888;
+            min-width: 200px;
+        }
+
+        .narrative {
+            font-size: 1em;
+            color: #ccc;
+            text-align: center;
+            max-width: 600px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            min-height: 50px;
+        }
+
+        .screen-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.1s;
+        }
+
+        .screen-flash.active {
+            opacity: 1;
+            animation: flashFade 0.3s ease-out;
+        }
+
+        @keyframes flashFade {
+            0% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+
+        /* Start Screen */
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .start-btn {
+            padding: 20px 60px;
+            font-size: 1.5em;
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            border: none;
+            border-radius: 50px;
+            color: #0a0a0f;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+            margin-top: 30px;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Win Screen */
+        .win-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .win-title {
+            font-size: 3em;
+            color: #00ff88;
+            text-shadow: 0 0 30px #00ff88;
+            animation: winPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes winPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .timer {
+            font-size: 1.2em;
+            color: #ff3366;
+            margin-bottom: 10px;
+        }
+
+        .shake {
+            animation: screenShake 0.5s ease;
+        }
+
+        @keyframes screenShake {
+            0%, 100% { transform: translate(0); }
+            10% { transform: translate(-5px, -5px); }
+            20% { transform: translate(5px, -5px); }
+            30% { transform: translate(-5px, 5px); }
+            40% { transform: translate(5px, 5px); }
+            50% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, -3px); }
+            70% { transform: translate(-3px, 3px); }
+            80% { transform: translate(3px, 3px); }
+            90% { transform: translate(-1px, -1px); }
+        }
+
+        @media (max-width: 600px) {
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .title { font-size: 1.8em; }
+            .action-btn { padding: 12px 8px; font-size: 0.75em; }
+        }
+
+        .hint-text {
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .lives {
+            color: #ff3366;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .combo {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5em;
+            color: #ffaa00;
+            text-shadow: 0 0 10px #ffaa00;
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .combo.visible {
+            opacity: 1;
+            animation: comboPop 0.3s ease;
+        }
+
+        @keyframes comboPop {
+            0% { transform: scale(0.5); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles-bg"></canvas>
+    <div class="screen-flash" id="screenFlash"></div>
+    <div class="combo" id="combo">COMBO x1</div>
+
+    <!-- Start Screen -->
+    <div class="start-screen" id="startScreen">
+        <div class="logo-container">
+            <svg viewBox="0 0 200 100" width="200" height="100">
+                <path class="infinity-path" d="M50,50 C50,20 80,20 100,50 C120,80 150,80 150,50 C150,20 120,20 100,50 C80,80 50,80 50,50"/>
+            </svg>
+            <div class="runner-dot"></div>
+        </div>
+        <div class="title">8 — ESCAPE TO THE 8TH</div>
+        <p style="color:#888; margin: 15px 0; text-align:center; max-width:400px;">
+            8 steps. 8 choices each. One path to freedom.<br>
+            Use your voice or click to escape the infinite loop.
+        </p>
+        <button class="start-btn" id="startBtn">▶ ENTER THE LOOP</button>
+        <p class="hint-text">🎤 Voice commands enabled — say the action number</p>
+    </div>
+
+    <!-- Game Screen -->
+    <div class="game-container" id="gameScreen" style="display:none;">
+        <div class="logo-container" style="width:120px; height:60px; margin-bottom:10px;">
+            <svg viewBox="0 0 200 100" width="120" height="60">
+                <path class="infinity-path" d="M50,50 C50,20 80,20 100,50 C120,80 150,80 150,50 C150,20 120,20 100,50 C80,80 50,80 50,50"/>
+            </svg>
+            <div class="runner-dot" style="width:8px;height:8px;"></div>
+        </div>
+        <div class="step-indicator" id="stepIndicator">STEP 1 / 8</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <div class="lives" id="lives">♥ ♥ ♥</div>
+        <div class="timer" id="timer">⏱ 00:00</div>
+        <div class="narrative" id="narrative">You awaken in darkness...</div>
+        <div class="actions-grid" id="actionsGrid"></div>
+        <div class="voice-section">
+            <button class="mic-btn" id="micBtn">
+                <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </button>
+            <span class="voice-status" id="voiceStatus">Tap mic to use voice</span>
+        </div>
+    </div>
+
+    <!-- Win Screen -->
+    <div class="win-screen" id="winScreen">
+        <div class="logo-container">
+            <svg viewBox="0 0 200 100" width="200" height="100">
+                <path class="infinity-path" d="M50,50 C50,20 80,20 100,50 C120,80 150,80 150,50 C150,20 120,20 100,50 C80,80 50,80 50,50" style="stroke:#ffaa00;"/>
+            </svg>
+            <div class="runner-dot" style="background:#ffaa00; box-shadow: 0 0 15px #ffaa00;"></div>
+        </div>
+        <div class="win-title">🏆 ESCAPED!</div>
+        <p style="color:#ccc; margin:20px; font-size:1.2em;" id="winStats">You broke the infinite loop!</p>
+        <button class="start-btn" onclick="location.reload()">↻ PLAY AGAIN</button>
+    </div>
+
+    <script>
+        // ===== AUDIO ENGINE =====
+        class AudioEngine {
+            constructor() {
+                this.ctx = null;
+                this.initialized = false;
+            }
+
+            init() {
+                if (this.initialized) return;
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                this.initialized = true;
+                this.startAmbient();
+            }
+
+            startAmbient() {
+                // Deep drone
+                const osc1 = this.ctx.createOscillator();
+                const gain1 = this.ctx.createGain();
+                osc1.type = 'sawtooth';
+                osc1.frequency.value = 40;
+                gain1.gain.value = 0.03;
+                osc1.connect(gain1);
+                gain1.connect(this.ctx.destination);
+                osc1.start();
+
+                // Sub bass pulse
+                const osc2 = this.ctx.createOscillator();
+                const gain2 = this.ctx.createGain();
+                const lfo = this.ctx.createOscillator();
+                const lfoGain = this.ctx.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.value = 55;
+                lfo.frequency.value = 0.5;
+                lfoGain.gain.value = 0.02;
+                lfo.connect(lfoGain);
+                lfoGain.connect(gain2.gain);
+                gain2.gain.value = 0.05;
+                osc2.connect(gain2);
+                gain2.connect(this.ctx.destination);
+                osc2.start();
+                lfo.start();
+
+                this.ambientGain = gain1;
+            }
+
+            playCorrect() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523, this.ctx.currentTime);
+                osc.frequency.setValueAtTime(659, this.ctx.currentTime + 0.1);
+                osc.frequency.setValueAtTime(784, this.ctx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.4);
+            }
+
+            playWrong() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+                osc.frequency.setValueAtTime(100, this.ctx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.4);
+
+                // Noise burst
+                const bufferSize = this.ctx.sampleRate * 0.2;
+                const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                const noise = this.ctx.createBufferSource();
+                const noiseGain = this.ctx.createGain();
+                noise.buffer = buffer;
+                noiseGain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                noiseGain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2);
+                noise.connect(noiseGain);
+                noiseGain.connect(this.ctx.destination);
+                noise.start();
+            }
+
+            playStepComplete() {
+                if (!this.ctx) return;
+                const notes = [523, 659, 784, 1047];
+                notes.forEach((freq, i) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0, this.ctx.currentTime + i * 0.15);
+                    gain.gain.linearRampToValueAtTime(0.2, this.ctx.currentTime + i * 0.15 + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + i * 0.15 + 0.3);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(this.ctx.currentTime + i * 0.15);
+                    osc.stop(this.ctx.currentTime + i * 0.15 + 0.3);
+                });
+            }
+
+            playWin() {
+                if (!this.ctx) return;
+                const notes = [523, 659, 784, 1047, 1319, 1568];
+                notes.forEach((freq, i) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0, this.ctx.currentTime + i * 0.2);
+                    gain.gain.linearRampToValueAtTime(0.25, this.ctx.currentTime + i * 0.2 + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + i * 0.2 + 0.5);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(this.ctx.currentTime + i * 0.2);
+                    osc.stop(this.ctx.currentTime + i * 0.2 + 0.5);
+                });
+            }
+
+            playHover() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = 800;
+                gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.1);
+            }
+
+            playTension() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(400, this.ctx.currentTime + 1);
+                gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 1);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 1);
+            }
+        }
+
+        const audio = new AudioEngine();
+
+        // ===== PARTICLES =====
+        const canvas = document.getElementById('particles-bg');
+        const pCtx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 0.5;
+                this.alpha = Math.random() * 0.5 + 0.1;
+                this.color = Math.random() > 0.5 ? '0, 255, 136' : '255, 51, 102';
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+            draw() {
+                pCtx.beginPath();
+                pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                pCtx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+                pCtx.fill();
+            }
+        }
+
+        for (let i = 0; i < 80; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            pCtx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ===== GAME DATA =====
+        const gameSteps = [
+            {
+                narrative: "You awaken in a cold, dark chamber. The walls pulse with a faint green glow. An infinite loop is carved into the floor beneath you. Eight doors surround you, each marked with a symbol.",
+                actions: [
+                    { text: "🚪 Door with eye symbol", correct: false },
+                    { text: "🔥 Door with flame", correct: false },
+                    { text: "🌀 Door with spiral", correct: true },
+                    { text: "💀 Door with skull", correct: false },
+                    { text: "⚡ Door with lightning", correct: false },
+                    { text: "🌊 Door with wave", correct: false },
+                    { text: "🗝️ Door with keyhole", correct: false },
+                    { text: "🌑 Door with moon", correct: false }
+                ],
+                hint: "The spiral mirrors the infinite loop..."
+            },
+            {
+                narrative: "Beyond the spiral door, a vast cavern opens. Bridges stretch in eight directions over a bottomless chasm. The air hums with energy. One bridge glows faintly.",
+                actions: [
+                    { text: "🌉 Bridge of stone", correct: false },
+                    { text: "🌉 Bridge of light", correct: true },
+                    { text: "🌉 Bridge of bone", correct: false },
+                    { text: "🌉 Bridge of ice", correct: false },
+                    { text: "🌉 Bridge of fire", correct: false },
+                    { text: "🌉 Bridge of shadow", correct: false },
+                    { text: "🌉 Bridge of glass", correct: false },
+                    { text: "🌉 Bridge of rope", correct: false }
+                ],
+                hint: "Light reveals the true path..."
+            },
+            {
+                narrative: "You cross the bridge of light. A library of infinite books surrounds you. Each book whispers a different secret. One book calls your name.",
+                actions: [
+                    { text: "📕 Red leather book", correct: false },
+                    { text: "📗 Green mossy book", correct: false },
+                    { text: "📘 Blue crystal book", correct: false },
+                    { text: "📙 Golden book", correct: false },
+                    { text: "📓 Black void book", correct: true },
+                    { text: "📔 White silk book", correct: false },
+                    { text: "📒 Silver chain book", correct: false },
+                    { text: "📚 Stacked books", correct: false }
+                ],
+                hint: "The void holds truth..."
+            },
+            {
+                narrative: "The black book dissolves into a corridor of mirrors. Eight reflections stare back at you, but only one moves independently. It beckons you forward.",
+                actions: [
+                    { text: "🪞 Follow left reflection", correct: false },
+                    { text: "🪞 Follow right reflection", correct: false },
+                    { text: "🪞 Break all mirrors", correct: false },
+                    { text: "🪞 Close your eyes", correct: false },
+                    { text: "🪞 Touch the moving one", correct: true },
+                    { text: "🪞 Look behind you", correct: false },
+                    { text: "🪞 Shout at mirrors", correct: false },
+                    { text: "🪞 Walk backwards", correct: false }
+                ],
+                hint: "The one that moves knows the way..."
+            },
+            {
+                narrative: "The mirror shatters into a garden of crystallized time. Eight flowers bloom, each frozen at a different moment. The 8th flower pulses with life.",
+                actions: [
+                    { text: "🌸 Pick the 1st flower", correct: false },
+                    { text: "🌸 Pick the 3rd flower", correct: false },
+                    { text: "🌸 Pick the 5th flower", correct: false },
+                    { text: "🌸 Pick the 8th flower", correct: true },
+                    { text: "🌸 Pick the 2nd flower", correct: false },
+                    { text: "🌸 Pick the 7th flower", correct: false },
+                    { text: "🌸 Water all flowers", correct: false },
+                    { text: "🌸 Uproot the garden", correct: false }
+                ],
+                hint: "8 is the key to escape..."
+            },
+            {
+                narrative: "The 8th flower opens a portal to a storm. Lightning strikes in eight patterns. You must time your movement perfectly. The 8th strike reveals the path.",
+                actions: [
+                    { text: "⚡ Run at strike 1", correct: false },
+                    { text: "⚡ Run at strike 3", correct: false },
+                    { text: "⚡ Run at strike 5", correct: false },
+                    { text: "⚡ Run at strike 7", correct: false },
+                    { text: "⚡ Run at strike 8", correct: true },
+                    { text: "⚡ Run at strike 2", correct: false },
+                    { text: "⚡ Run at strike 4", correct: false },
+                    { text: "⚡ Run at strike 6", correct: false }
+                ],
+                hint: "Patience... the 8th strike is the last..."
+            },
+            {
+                narrative: "Beyond the storm, a massive gate stands. Eight locks hold it shut. Eight keys float before you, but only one is real. The others are illusions.",
+                actions: [
+                    { text: "🔑 Golden key", correct: false },
+                    { text: "🔑 Iron key", correct: false },
+                    { text: "🔑 Crystal key", correct: false },
+                    { text: "🔑 Bone key", correct: false },
+                    { text: "🔑 Shadow key", correct: false },
+                    { text: "🔑 Light key", correct: false },
+                    { text: "🔑 Infinity key (∞)", correct: true },
+                    { text: "🔑 Blood key", correct: false }
+                ],
+                hint: "The infinite loop's key frees you..."
+            },
+            {
+                narrative: "The gate opens to blinding light. You stand at the edge of the infinite loop. To escape, you must break it. Eight actions remain. Choose wisely — this is the FINAL step.",
+                actions: [
+                    { text: "🏃 Run clockwise", correct: false },
+                    { text: "🏃 Run counter-clockwise", correct: false },
+                    { text: "🏃 Jump over the loop", correct: false },
+                    { text: "🏃 Step outside the loop", correct: false },
+                    { text: "🏃 Stop running entirely", correct: false },
+                    { text: "🏃 Run through yourself", correct: false },
+                    { text: "🏃 Embrace the infinite", correct: false },
+                    { text: "🏃 Shatter the 8th segment", correct: true }
+                ],
+                hint: "The 8th segment — break where you began..."
+            }
+        ];
+
+        // ===== GAME STATE =====
+        let currentStep = 0;
+        let lives = 3;
+        let combo = 0;
+        let startTime = 0;
+        let timerInterval = null;
+        let gameActive = false;
+        let recognition = null;
+
+        // ===== VOICE RECOGNITION =====
+        function initVoice() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                document.getElementById('voiceStatus').textContent = 'Voice not supported';
+                return;
+            }
+
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase();
+                document.getElementById('voiceStatus').textContent = `Heard: "${transcript}"`;
+                
+                // Try to extract number
+                const numberWords = {
+                    'one': 1, 'two': 2, 'three': 3, 'four': 4,
+                    'five': 5, 'six': 6, 'seven': 7, 'eight': 8,
+                    '1': 1, '2': 2, '3': 3, '4': 4,
+                    '5': 5, '6': 6, '7': 7, '8': 8,
+                    'first': 1, 'second': 2, 'third': 3, 'fourth': 4,
+                    'fifth': 5, 'sixth': 6, 'seventh': 7, 'eighth': 8
+                };
+
+                let selectedAction = -1;
+                for (const [word, num] of Object.entries(numberWords)) {
+                    if (transcript.includes(word)) {
+                        selectedAction = num - 1;
+                        break;
+                    }
+                }
+
+                if (selectedAction >= 0 && selectedAction < 8) {
+                    handleAction(selectedAction);
+                } else {
+                    document.getElementById('voiceStatus').textContent = 'Say a number 1-8';
+                }
+            };
+
+            recognition.onerror = (event) => {
+                document.getElementById('voiceStatus').textContent = 'Voice error: ' + event.error;
+                document.getElementById('micBtn').classList.remove('listening');
+            };
+
+            recognition.onend = () => {
+                document.getElementById('micBtn').classList.remove('listening');
+            };
+        }
+
+        // ===== GAME FUNCTIONS =====
+        function startGame() {
+            audio.init();
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'flex';
+            currentStep = 0;
+            lives = 3;
+            combo = 0;
+            startTime = Date.now();
+            gameActive = true;
+            
+            timerInterval = setInterval(updateTimer, 1000);
+            initVoice();
+            loadStep();
+            audio.playTension();
+        }
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
+            const secs = String(elapsed % 60).padStart(2, '0');
+            document.getElementById('timer').textContent = `⏱ ${mins}:${secs}`;
+        }
+
+        function updateLives() {
+            const hearts = '♥ '.repeat(lives).trim() + ' ♡ '.repeat(3 - lives).trim();
+            document.getElementById('lives').textContent = hearts;
+        }
+
+        function loadStep() {
+            if (currentStep >= 8) {
+                winGame();
+                return;
+            }
+
+            const step = gameSteps[currentStep];
+            document.getElementById('stepIndicator').textContent = `STEP ${currentStep + 1} / 8`;
+            document.getElementById('progressFill').style.width = `${(currentStep / 8) * 100}%`;
+            document.getElementById('narrative').textContent = step.narrative;
+            updateLives();
+
+            const grid = document.getElementById('actionsGrid');
+            grid.innerHTML = '';
+
+            step.actions.forEach((action, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'action-btn';
+                btn.innerHTML = `<span class="key">${index + 1}</span>${action.text}`;
+                btn.addEventListener('click', () => handleAction(index));
+                btn.addEventListener('mouseenter', () => audio.playHover());
+                grid.appendChild(btn);
+            });
+        }
+
+        function handleAction(index) {
+            if (!gameActive) return;
+
+            const step = gameSteps[currentStep];
+            const action = step.actions[index];
+            const buttons = document.querySelectorAll('.action-btn');
+
+            if (action.correct) {
+                // Correct action
+                buttons[index].classList.add('correct');
+                audio.playCorrect();
+                combo++;
+                updateCombo();
+                flashScreen('#00ff8833');
+
+                setTimeout(() => {
+                    currentStep++;
+                    if (currentStep >= 8) {
+                        audio.playStepComplete();
+                        setTimeout(winGame, 500);
+                    } else {
+                        audio.playStepComplete();
+                        loadStep();
+                    }
+                }, 800);
+            } else {
+                // Wrong action
+                buttons[index].classList.add('wrong');
+                audio.playWrong();
+                combo = 0;
+                updateCombo();
+                lives--;
+                updateLives();
+                flashScreen('#ff336633');
+                document.querySelector('.game-container').classList.add('shake');
+                setTimeout(() => {
+                    document.querySelector('.game-container').classList.remove('shake');
+                }, 500);
+
+                if (lives <= 0) {
+                    gameOver();
+                }
+
+                // Reset button state
+                setTimeout(() => {
+                    buttons[index].classList.remove('wrong');
+                }, 500);
+            }
+        }
+
+        function updateCombo() {
+            const comboEl = document.getElementById('combo');
+            if (combo > 1) {
+                comboEl.textContent = `COMBO x${combo}`;
+                comboEl.classList.add('visible');
+            } else {
+                comboEl.classList.remove('visible');
+            }
+        }
+
+        function flashScreen(color) {
+            const flash = document.getElementById('screenFlash');
+            flash.style.background = color;
+            flash.classList.add('active');
+            setTimeout(() => flash.classList.remove('active'), 300);
+        }
+
+        function winGame() {
+            gameActive = false;
+            clearInterval(timerInterval);
+            audio.playWin();
+
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const mins = Math.floor(elapsed / 60);
+            const secs = elapsed % 60;
+
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('winScreen').style.display = 'flex';
+            document.getElementById('winStats').innerHTML = `
+                Time: ${mins}m ${secs}s<br>
+                Lives remaining: ${'♥'.repeat(lives)}<br>
+                Best combo: x${combo}<br>
+                <br>You broke the infinite loop!
+            `;
+        }
+
+        function gameOver() {
+            gameActive = false;
+            clearInterval(timerInterval);
+            audio.playWrong();
+
+            document.getElementById('narrative').textContent = "💀 The loop consumes you. You are trapped forever in the infinite cycle...";
+            document.getElementById('actionsGrid').innerHTML = `
+                <button class="action-btn" style="grid-column: span 4; border-color: #ff3366;" onclick="location.reload()">
+                    <span class="key">↻</span>Try Again
+                </button>
+            `;
+            flashScreen('#ff336666');
+        }
+
+        // ===== EVENT LISTENERS =====
+        document.getElementById('startBtn').addEventListener('click', startGame);
+
+        document.getElementById('micBtn').addEventListener('click', () => {
+            if (!recognition) {
+                document.getElementById('voiceStatus').textContent = 'Voice not available';
+                return;
+            }
+            if (document.getElementById('micBtn').classList.contains('listening')) {
+                recognition.stop();
+            } else {
+                document.getElementById('micBtn').classList.add('listening');
+                document.getElementById('voiceStatus').textContent = 'Listening...';
+                recognition.start();
+            }
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (!gameActive) return;
+            const num = parseInt(e.key);
+            if (num >= 1 && num <= 8) {
+                handleAction(num - 1);
+            }
+        });
+    </script>
+</body>
+</html>

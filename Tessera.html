@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'">
+<meta name="theme-color" content="#fbfaf7">
+<title>Tessera — Generative Pattern Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f2ebdc'/%3E%3Cpath d='M32 0A32 32 0 0 1 0 32M64 32A32 32 0 0 1 32 64' fill='none' stroke='%23e63b2e' stroke-width='9'/%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#fbfaf7; --ink:#141414; --mute:#77736b; --rule:#141414; --soft:#e7e3da; --hi:#e63b2e;
+  --sans:"Futura","Century Gothic","Avenir Next","Avenir","Trebuchet MS",system-ui,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono","SF Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font:13px/1.4 var(--sans)}
+body{display:grid;grid-template-columns:318px 1fr;height:100vh;overflow:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+#panel{border-right:2px solid var(--rule);overflow-y:auto;scrollbar-width:thin;background:var(--paper)}
+.mast{padding:18px 18px 14px;border-bottom:2px solid var(--rule);display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.mast h1{margin:0;font:700 34px/0.9 var(--sans);letter-spacing:-.03em;text-transform:uppercase}
+.mast h1 span{color:var(--hi)}
+.mast small{display:block;font:10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin-top:6px}
+.dice{width:48px;height:48px;border:2px solid var(--ink);background:var(--hi);color:#fff;font-size:24px;border-radius:0;display:grid;place-items:center;transition:transform .15s}
+.dice:hover{transform:rotate(-8deg)}
+.dice:active{transform:rotate(-8deg) scale(.94)}
+section{padding:14px 18px 16px;border-bottom:1px solid var(--rule)}
+h2{margin:0 0 10px;font:700 11px var(--sans);letter-spacing:.2em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+h2 i{font:400 10px var(--mono);letter-spacing:.05em;color:var(--mute);font-style:normal;text-transform:none}
+.fam{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 6px}
+.fam button{aspect-ratio:1;border:1.5px solid var(--ink);background:#fff;padding:4px;display:grid;place-items:center;border-radius:0;position:relative}
+.fam button svg{width:100%;height:100%}
+.fam button.on{background:var(--ink)}
+.fam button.on svg *{stroke:#fff}
+.fam button.on svg .f{fill:#fff}
+.fam button span{position:absolute;inset:auto 0 -17px;font:9.5px var(--mono);letter-spacing:.04em;color:var(--mute);text-transform:lowercase}
+.fam{margin-bottom:22px}
+.ctl{display:grid;grid-template-columns:92px 1fr 44px;align-items:center;gap:8px;margin:7px 0}
+.ctl label{font:11px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#3b3934}
+.ctl output{font:12px var(--mono);text-align:right}
+.ctl select,.ctl input[type=number]{grid-column:2/4;width:100%;border:1.5px solid var(--ink);background:#fff;padding:5px 6px;border-radius:0}
+input[type=range]{width:100%;accent-color:var(--ink)}
+.seg{display:flex;border:1.5px solid var(--ink);grid-column:2/4}
+.seg button{flex:1;border:0;border-left:1.5px solid var(--ink);background:#fff;padding:5px 2px;font:11px var(--mono);border-radius:0}
+.seg button:first-child{border-left:0}
+.seg button.on{background:var(--ink);color:#fff}
+.pals{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.pal{height:34px;border:1.5px solid var(--ink);padding:0;display:flex;overflow:hidden;border-radius:0}
+.pal i{flex:1}
+.pal.on{outline:3px solid var(--hi);outline-offset:1px}
+.colors{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap}
+.colors label{display:flex;align-items:center;gap:6px;font:11px var(--mono);text-transform:uppercase}
+.colors input[type=color]{width:34px;height:26px;border:1.5px solid var(--ink);padding:0;background:none;border-radius:0}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+.btn{border:1.5px solid var(--ink);background:#fff;padding:7px 10px;border-radius:0;font:600 11.5px var(--sans);letter-spacing:.06em;text-transform:uppercase}
+.btn:hover{background:var(--ink);color:#fff}
+.btn.on{background:var(--ink);color:#fff}
+.btn.red{background:var(--hi);color:#fff;border-color:var(--ink)}
+.hist{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.hist button{padding:0;border:1.5px solid var(--ink);background:#fff;aspect-ratio:16/10;overflow:hidden;border-radius:0}
+.hist button img{width:100%;height:100%;object-fit:cover;display:block}
+.hist button:hover{outline:3px solid var(--hi);outline-offset:1px}
+.hist .empty{grid-column:1/-1;font:11px var(--mono);color:var(--mute)}
+.chk{display:flex;align-items:center;gap:8px;font:11px var(--mono);text-transform:uppercase;letter-spacing:.08em;margin:8px 0 2px;cursor:pointer}
+.chk input{accent-color:var(--ink);width:15px;height:15px}
+#stage{position:relative;overflow:hidden;background:#ddd}
+#cv{display:block;width:100%;height:100%;touch-action:none;cursor:pointer}
+.hud{position:absolute;right:14px;bottom:14px;font:11px var(--mono);background:var(--paper);border:1.5px solid var(--ink);padding:5px 9px;pointer-events:none}
+.hint{font:11px var(--mono);color:var(--mute);margin:8px 0 0;line-height:1.5}
+kbd{font:10.5px var(--mono);border:1px solid var(--ink);padding:0 4px;background:#fff}
+#toast{position:fixed;left:calc(50% + 159px);top:18px;transform:translate(-50%,-10px);background:var(--ink);color:#fff;padding:8px 14px;font:12px var(--mono);opacity:0;transition:.2s;pointer-events:none;z-index:9}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#menuBtn{display:none}
+@media (max-width:760px){
+  body{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  #panel{position:fixed;inset:auto 0 0 0;max-height:62vh;border-right:0;border-top:2px solid var(--rule);z-index:5;transform:translateY(calc(100% - 64px));transition:transform .25s}
+  #panel.open{transform:none}
+  #stage{grid-row:1/3;height:100vh}
+  #menuBtn{display:block;position:fixed;right:12px;top:12px;z-index:6}
+  .mast{padding:10px 14px}
+  .mast h1{font-size:26px}
+  #toast{left:50%}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<aside id="panel" aria-label="Pattern controls">
+  <div class="mast">
+    <div><h1>Tess<span>e</span>ra</h1><small>generative pattern studio</small></div>
+    <button class="dice" id="dice" title="Surprise me (Space)" aria-label="Randomize everything">⚄</button>
+  </div>
+
+  <section>
+    <h2>Tile family <i id="famName"></i></h2>
+    <div class="fam" id="fam"></div>
+    <div style="height:10px"></div>
+    <div class="ctl"><label for="size">Tile size</label><input type="range" id="size" min="8" max="180" step="1"><output id="sizeO"></output></div>
+    <div class="ctl"><label for="ms">Multi-scale</label><input type="range" id="ms" min="0" max="0.85" step="0.01"><output id="msO"></output></div>
+    <div class="ctl"><label for="depth">Max depth</label><input type="range" id="depth" min="1" max="4" step="1"><output id="depthO"></output></div>
+  </section>
+
+  <section>
+    <h2>Orientation field</h2>
+    <div class="ctl"><label for="field">Source</label>
+      <select id="field"><option value="random">Random</option><option value="noise">Noise flow</option><option value="checker">Checkerboard</option><option value="rings">Concentric rings</option><option value="bands">Diagonal bands</option><option value="spiral">Spiral</option><option value="image">Photo / image</option></select></div>
+    <div class="ctl"><label>Image</label><div class="row" style="grid-column:2/4;align-items:center"><button class="btn" id="imgBtn" type="button">Choose photo…</button><span id="imgName" style="font:11px var(--mono);color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px">or drop one on the canvas</span></div></div>
+    <input type="file" id="imgFile" accept="image/*" hidden>
+    <div class="ctl"><label for="bias">Bias</label><input type="range" id="bias" min="0" max="1" step="0.01"><output id="biasO"></output></div>
+    <div class="ctl"><label for="scale">Field scale</label><input type="range" id="scale" min="0.02" max="1" step="0.01"><output id="scaleO"></output></div>
+    <div class="ctl"><label>Symmetry</label><div class="seg" id="sym"><button data-v="none">none</button><button data-v="x">│</button><button data-v="y">─</button><button data-v="xy">┼</button></div></div>
+    <div class="ctl"><label for="seed">Seed</label><input type="number" id="seed" min="0" max="999999999"></div>
+  </section>
+
+  <section>
+    <h2>Style</h2>
+    <div class="ctl"><label>Render</label><div class="seg" id="mode"><button data-v="lines">lines</button><button data-v="fill">fill</button><button data-v="tubes">tubes</button><button data-v="both">both</button></div></div>
+    <div class="ctl"><label for="weight">Weight</label><input type="range" id="weight" min="0.01" max="0.45" step="0.005"><output id="weightO"></output></div>
+    <div class="ctl"><label>Caps</label><div class="seg" id="cap"><button data-v="round">round</button><button data-v="butt">flat</button><button data-v="square">square</button></div></div>
+    <div class="pals" id="pals" style="margin-top:12px"></div>
+    <div class="colors">
+      <label>bg <input type="color" id="cBg" aria-label="Background colour"></label>
+      <label>ink <input type="color" id="cFg" aria-label="Ink colour"></label>
+      <label>alt <input type="color" id="cAlt" aria-label="Second colour"></label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn" id="harmBtn" type="button" title="Generate a palette from colour-wheel harmony rules">Harmonize</button>
+      <button class="btn" id="photoPal" type="button" title="Extract dominant colours from the loaded photo">Colours from photo</button>
+    </div>
+    <label class="chk"><input type="checkbox" id="grid"> Show cell grid</label>
+  </section>
+
+  <section>
+    <h2>History <i>last 12 designs · click to restore</i></h2>
+    <div class="hist" id="hist"></div>
+    <button class="btn" id="keepBtn" type="button" style="margin-top:8px">Keep current design</button>
+  </section>
+
+  <section>
+    <h2>Motion</h2>
+    <label class="chk"><input type="checkbox" id="anim"> Tiles flip on their own</label>
+    <div class="ctl"><label for="rate">Flip rate</label><input type="range" id="rate" min="1" max="60" step="1"><output id="rateO"></output></div>
+    <p class="hint">Click or drag across the canvas to flip tiles by hand. On the maze, a click re-roots the colour gradient.</p>
+  </section>
+
+  <section>
+    <h2>Export</h2>
+    <div class="row">
+      <button class="btn" id="png1">PNG</button>
+      <button class="btn" id="png4">PNG ×3</button>
+      <button class="btn" id="svg">SVG</button>
+      <button class="btn" id="tile">Seamless tile</button>
+      <button class="btn" id="link">Copy link</button>
+    </div>
+    <div class="ctl" style="margin-top:10px"><label for="wpSize">Wallpaper</label>
+      <select id="wpSize"><option value="3840x2160">4K desktop 3840×2160</option><option value="2560x1440">QHD 2560×1440</option><option value="1920x1080">FHD 1920×1080</option><option value="1179x2556">Phone 1179×2556</option><option value="2048x2732">Tablet 2048×2732</option><option value="3000x3000">Square print 3000²</option></select></div>
+    <button class="btn red" id="wpGo" style="width:100%">Export wallpaper</button>
+    <p class="hint">Seamless tile exports an 8×8 block of cells that repeats edge-to-edge — ready for wallpaper, CSS backgrounds or fabric printing.<br><kbd>Space</kbd> surprise · <kbd>R</kbd> reseed · <kbd>A</kbd> animate · <kbd>S</kbd> save PNG</p>
+  </section>
+</aside>
+<main id="stage">
+  <canvas id="cv" aria-label="Generated pattern. Click tiles to flip them."></canvas>
+  <div class="hud" id="hud"></div>
+</main>
+<button class="btn" id="menuBtn" aria-controls="panel" aria-expanded="false">Controls</button>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const STORE = 'tessera.v1';
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const R2 = n => Math.round(n * 100) / 100;
+
+/* ============ palettes ============ */
+const PALETTES = [
+  { n: 'Bauhaus', bg: '#f2ebdc', fg: '#1b1b1b', alt: '#e63b2e', c: ['#e63b2e', '#f2b705', '#1e5fb4', '#1b1b1b'] },
+  { n: 'Ink', bg: '#fbfaf7', fg: '#141414', alt: '#141414', c: ['#141414', '#5b5b5b'] },
+  { n: 'Blueprint', bg: '#0f3b73', fg: '#e6f0ff', alt: '#8fb8ff', c: ['#e6f0ff', '#8fb8ff', '#2d6cb5'] },
+  { n: 'Terracotta', bg: '#efe2cf', fg: '#7a2e1f', alt: '#c8553d', c: ['#c8553d', '#f28f3b', '#588b8b', '#2d3047'] },
+  { n: 'Neon', bg: '#0b0b12', fg: '#ff2e88', alt: '#22d3ee', c: ['#ff2e88', '#22d3ee', '#a3e635', '#fde047'] },
+  { n: 'Riso', bg: '#f7f3e8', fg: '#ff48b0', alt: '#0078bf', c: ['#ff48b0', '#0078bf', '#ffe800', '#00a95c'] },
+  { n: 'Forest', bg: '#1f2d24', fg: '#d9c8a0', alt: '#8aa26b', c: ['#d9c8a0', '#8aa26b', '#e07a5f', '#3d5a45'] },
+  { n: 'Sorbet', bg: '#fff4ec', fg: '#3a2e5a', alt: '#ff9aa2', c: ['#ff9aa2', '#ffdac1', '#b5ead7', '#c7ceea'] },
+  { n: 'Klimt', bg: '#1a1410', fg: '#d4a93b', alt: '#8c5a2b', c: ['#d4a93b', '#8c5a2b', '#e8d8a8', '#5e7c5a'] },
+  { n: 'Delft', bg: '#f4f6fb', fg: '#1d3f8f', alt: '#6c8fd6', c: ['#1d3f8f', '#6c8fd6', '#b9c9ec'] }
+];
+const FAMILIES = [
+  { id: 'smith', n: 'arcs', states: 2, rot: 90, icon: '<path d="M16 0A16 16 0 0 1 0 16M32 16A16 16 0 0 0 16 32"/>' },
+  { id: 'diag', n: '10 print', states: 2, rot: 90, icon: '<path d="M0 0L32 32"/>' },
+  { id: 'tri', n: 'triangles', states: 4, rot: 90, icon: '<path class="f" d="M0 0H32L0 32Z" stroke="none" fill="#141414"/>' },
+  { id: 'quarter', n: 'quarters', states: 4, rot: 90, icon: '<path d="M0 30A30 30 0 0 0 30 0M0 20A20 20 0 0 0 20 0M0 10A10 10 0 0 0 10 0" stroke-width="2.5"/>' },
+  { id: 'weave', n: 'weave', states: 2, rot: 90, icon: '<path d="M0 16H32M16 0V11M16 21V32"/>' },
+  { id: 'hex', n: 'hex arcs', states: 2, rot: 60, icon: '<path d="M8 2H24L32 16L24 30H8L0 16Z" stroke-width="1.5"/><path d="M12 2A6 6 0 0 1 4 9M4 23A6 6 0 0 1 12 30M28 9A8 8 0 0 0 28 23"/>' },
+  { id: 'maze', n: 'maze', states: 1, rot: 0, icon: '<path d="M4 4H28V28H10V12H22V22"/>' },
+  { id: 'dots', n: 'halftone', states: 1, rot: 0, icon: '<circle class="f" cx="8" cy="8" r="6" fill="#141414" stroke="none"/><circle class="f" cx="24" cy="8" r="3" fill="#141414" stroke="none"/><circle class="f" cx="8" cy="24" r="4" fill="#141414" stroke="none"/><circle class="f" cx="24" cy="24" r="7" fill="#141414" stroke="none"/>' }
+];
+
+/* ============ params ============ */
+const DEFAULTS = { family: 'smith', size: 56, ms: 0, depth: 2, field: 'random', bias: .5, scale: .18, sym: 'none', seed: 20260930, mode: 'fill', weight: .12, cap: 'round', pal: 0, bg: '#f2ebdc', fg: '#1b1b1b', alt: '#e63b2e', grid: false, anim: false, rate: 12 };
+let P = { ...DEFAULTS };
+function sanitize(o) {
+  const q = { ...DEFAULTS };
+  if (!o || typeof o !== 'object') return q;
+  if (FAMILIES.some(f => f.id === o.family)) q.family = o.family;
+  for (const [k, a, b] of [['size', 8, 180], ['ms', 0, .85], ['depth', 1, 4], ['bias', 0, 1], ['scale', .02, 1], ['seed', 0, 999999999], ['weight', .01, .45], ['pal', 0, PALETTES.length - 1], ['rate', 1, 60]])
+    if (Number.isFinite(+o[k])) q[k] = clamp(+o[k], a, b);
+  if (['random', 'noise', 'checker', 'rings', 'bands', 'spiral'].includes(o.field)) q.field = o.field; // 'image' needs a photo loaded this session
+  if (['none', 'x', 'y', 'xy'].includes(o.sym)) q.sym = o.sym;
+  if (['lines', 'fill', 'tubes', 'both'].includes(o.mode)) q.mode = o.mode;
+  if (['round', 'butt', 'square'].includes(o.cap)) q.cap = o.cap;
+  for (const k of ['bg', 'fg', 'alt']) if (/^#[0-9a-f]{6}$/i.test(o[k])) q[k] = o[k];
+  q.grid = !!o.grid; q.anim = !!o.anim;
+  if (Array.isArray(o.cust)) { const cs = o.cust.filter(c => /^#[0-9a-f]{6}$/i.test(c)).slice(0, 8); if (cs.length) { q.cust = cs; q.pal = -1; } }
+  if (o.pal === -1 && !q.cust) q.pal = 0;
+  return q;
+}
+
+/* ============ randomness ============ */
+function hash(a, b, c) {
+  let h = (Math.imul(a | 0, 0x27d4eb2d) ^ Math.imul(b | 0, 0x165667b1) ^ Math.imul(c | 0, 0x9e3779b1)) >>> 0;
+  h = Math.imul(h ^ (h >>> 15), 0x85ebca6b); h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35); h ^= h >>> 16;
+  return (h >>> 0) / 4294967296;
+}
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function vnoise(x, y, seed) {
+  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+  const s = t => t * t * (3 - 2 * t), u = s(xf), v = s(yf);
+  const a = hash(xi, yi, seed), b = hash(xi + 1, yi, seed), c = hash(xi, yi + 1, seed), d = hash(xi + 1, yi + 1, seed);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+function fbm(x, y, seed) { let v = 0, amp = .5, f = 1, n = 0; for (let o = 0; o < 4; o++) { v += amp * vnoise(x * f, y * f, seed + o * 101); n += amp; amp *= .5; f *= 2; } return v / n; }
+
+/* ============ canvas ============ */
+const cv = $('#cv'), ctx = cv.getContext('2d');
+let W = 0, H = 0, DPR = 1;
+const base = document.createElement('canvas'), bctx = base.getContext('2d');
+function resize() {
+  const r = cv.getBoundingClientRect(); W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height));
+  DPR = Math.min(devicePixelRatio || 1, 2);
+  cv.width = W * DPR; cv.height = H * DPR; base.width = W * DPR; base.height = H * DPR;
+  if (photo) sampleImage();
+  build(); drawBase(); present();
+}
+
+/* ============ photo field ============ */
+// The photo is scaled (cover-fit) onto a quarter-resolution canvas; the downscale doubles as a blur,
+// so each tile reads an averaged brightness rather than a single noisy pixel.
+let photo = null, lum = null, lumW = 0, lumH = 0;
+function sampleImage() {
+  lumW = Math.max(1, Math.ceil(W / 4)); lumH = Math.max(1, Math.ceil(H / 4));
+  const c = document.createElement('canvas'); c.width = lumW; c.height = lumH;
+  const x = c.getContext('2d', { willReadFrequently: true });
+  const k = Math.max(lumW / photo.width, lumH / photo.height), dw = photo.width * k, dh = photo.height * k;
+  x.fillStyle = '#fff'; x.fillRect(0, 0, lumW, lumH);
+  x.imageSmoothingQuality = 'high'; x.drawImage(photo, (lumW - dw) / 2, (lumH - dh) / 2, dw, dh);
+  const d = x.getImageData(0, 0, lumW, lumH).data; lum = new Float32Array(lumW * lumH);
+  for (let i = 0; i < lum.length; i++) lum[i] = (d[i * 4] * .2126 + d[i * 4 + 1] * .7152 + d[i * 4 + 2] * .0722) / 255;
+}
+function imageAt(cx, cy) {
+  if (!lum) return .5;
+  const v = 1 - lum[clamp(Math.floor(cy / 4), 0, lumH - 1) * lumW + clamp(Math.floor(cx / 4), 0, lumW - 1)];
+  return clamp((v - .5) * (.6 + P.scale * 3) + .5, 0, 1); // "field scale" acts as contrast here
+}
+async function loadPhoto(file) {
+  if (!file || !file.type.startsWith('image/')) return toast('That is not an image');
+  if (file.size > 40e6) return toast('Image too large (max 40 MB)');
+  try {
+    const bmp = await createImageBitmap(file);
+    photo = bmp; sampleImage(); P.field = 'image';
+    $('#imgName').textContent = file.name; $('#imgName').title = file.name;
+    if (P.family === 'maze' || P.family === 'hex') P.family = 'dots';
+    if (P.family === 'dots' && P.size > 24) P.size = 12;
+    update(true); toast('Photo mapped onto the pattern — try different families and the contrast slider');
+  } catch (e) { toast('Could not read that image'); }
+}
+
+/* ============ tile generation ============ */
+let tiles = [], maze = null, origin = { x: 0, y: 0 };
+function field(cx, cy, s, lvl) {
+  const S = P.seed;
+  switch (P.field) {
+    case 'random': return hash(Math.floor(cx / s) + 7777 * lvl, Math.floor(cy / s), S);
+    case 'noise': { const k = P.scale * 0.06; return fbm(cx * k, cy * k, S); }
+    case 'checker': return ((Math.floor(cx / s) + Math.floor(cy / s)) & 1) ? .75 : .25;
+    case 'rings': { const d = Math.hypot(cx - W / 2, cy - H / 2) / s; const f = d * P.scale * 1.5; return f - Math.floor(f); }
+    case 'bands': { const f = (cx + cy) / s * P.scale * .7; return f - Math.floor(f); }
+    case 'spiral': { const a = Math.atan2(cy - H / 2, cx - W / 2) / (Math.PI * 2) + .5, d = Math.hypot(cx - W / 2, cy - H / 2) / s; const f = a * 3 + d * P.scale * 1.2; return f - Math.floor(f); }
+    case 'image': return imageAt(cx, cy);
+  }
+  return .5;
+}
+function orient(fam, v, r) {
+  if (fam.states === 2) return v < P.bias ? 0 : 1;
+  if (fam.states === 4) { const shifted = (v + P.bias - .5 + 1) % 1; return Math.min(3, Math.floor(shifted * 4)); }
+  return 0;
+}
+// mirror maps per family: [flipX, flipY]
+function mirror(famId, o, fx, fy) {
+  if (famId === 'smith' || famId === 'diag') { if (fx) o ^= 1; if (fy) o ^= 1; return o; }
+  if (famId === 'tri' || famId === 'quarter') {
+    if (fx) o = [1, 0, 3, 2][o];
+    if (fy) o = [3, 2, 1, 0][o];
+    return o;
+  }
+  return o;
+}
+function fold(cx, cy) {
+  let fx = false, fy = false;
+  if ((P.sym === 'x' || P.sym === 'xy') && cx > W / 2) { cx = W - cx; fx = true; }
+  if ((P.sym === 'y' || P.sym === 'xy') && cy > H / 2) { cy = H - cy; fy = true; }
+  return { cx, cy, fx, fy };
+}
+function build() {
+  tiles = []; maze = null;
+  const fam = FAMILIES.find(f => f.id === P.family), s = P.size;
+  if (fam.id === 'hex') return buildHex(fam);
+  if (fam.id === 'maze') return buildMaze();
+  // align a grid line with the canvas centre so symmetry folds land on tile edges
+  origin.x = W / 2 - Math.ceil(W / 2 / s) * s; origin.y = H / 2 - Math.ceil(H / 2 / s) * s;
+  const cols = Math.ceil((W - origin.x) / s), rows = Math.ceil((H - origin.y) / s);
+  const add = (x, y, sz, lvl) => {
+    const c = fold(x + sz / 2, y + sz / 2);
+    const sub = lvl < P.depth && P.ms > 0 && sz >= 8 && hash(Math.floor(c.cx / sz) * 3 + lvl, Math.floor(c.cy / sz) * 5, P.seed ^ 0x5bd1e995) < P.ms;
+    if (sub) { const h = sz / 2; add(x, y, h, lvl + 1); add(x + h, y, h, lvl + 1); add(x, y + h, h, lvl + 1); add(x + h, y + h, h, lvl + 1); return; }
+    const v = field(c.cx, c.cy, sz, lvl), r = hash(Math.floor(c.cx / sz) + 13 * lvl, Math.floor(c.cy / sz) - 7 * lvl, P.seed + 99);
+    const o = mirror(fam.id, orient(fam, v, r), c.fx, c.fy);
+    tiles.push({ x, y, s: sz, o, v, r, lvl });
+  };
+  for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) add(origin.x + i * s, origin.y + j * s, s, 0);
+}
+function buildHex(fam) {
+  const a = P.size / 2, hs = Math.sqrt(3) * a; // flat-top: width 2a, height √3·a
+  const cols = Math.ceil(W / (1.5 * a)) + 2, rows = Math.ceil(H / hs) + 2;
+  for (let q = -1; q < cols; q++) for (let r = -1; r < rows; r++) {
+    const cx = q * 1.5 * a, cy = r * hs + (q & 1 ? hs / 2 : 0);
+    const c = fold(cx, cy);
+    const v = P.field === 'random' ? hash(q, r, P.seed) : field(c.cx, c.cy, P.size, 0);
+    tiles.push({ hex: true, cx, cy, a, s: P.size, o: v < P.bias ? 0 : 1, v, r: hash(q, r, P.seed + 5), q, rr: r });
+  }
+}
+function buildMaze() {
+  const s = P.size, cols = Math.max(2, Math.floor(W / s)), rows = Math.max(2, Math.floor(H / s));
+  const ox = (W - cols * s) / 2, oy = (H - rows * s) / 2, n = cols * rows;
+  const rnd = mulberry(P.seed), links = new Uint8Array(n), seen = new Uint8Array(n); // bits: 1=E 2=S 4=W 8=N
+  const stack = [Math.floor(rnd() * n)]; seen[stack[0]] = 1;
+  const bias = P.bias; // >.5 favours horizontal corridors
+  while (stack.length) {
+    const c = stack[stack.length - 1], x = c % cols, y = (c / cols) | 0, opts = [];
+    if (x + 1 < cols && !seen[c + 1]) opts.push([c + 1, 1, 4, bias]);
+    if (y + 1 < rows && !seen[c + cols]) opts.push([c + cols, 2, 8, 1 - bias]);
+    if (x > 0 && !seen[c - 1]) opts.push([c - 1, 4, 1, bias]);
+    if (y > 0 && !seen[c - cols]) opts.push([c - cols, 8, 2, 1 - bias]);
+    if (!opts.length) { stack.pop(); continue; }
+    let tot = opts.reduce((a, o) => a + o[3] + .05, 0), pick = rnd() * tot, k = 0;
+    for (; k < opts.length - 1; k++) { pick -= opts[k][3] + .05; if (pick <= 0) break; }
+    const [nb, bit, back] = opts[k];
+    links[c] |= bit; links[nb] |= back; seen[nb] = 1; stack.push(nb);
+  }
+  maze = { cols, rows, ox, oy, s, links, dist: null, root: 0 };
+  mazeDistances(maze.root);
+}
+function mazeDistances(root) {
+  const { cols, rows, links } = maze, n = cols * rows, dist = new Int32Array(n).fill(-1), q = [root]; dist[root] = 0;
+  for (let h = 0; h < q.length; h++) {
+    const c = q[h];
+    const nbs = [[1, c + 1], [2, c + cols], [4, c - 1], [8, c - cols]];
+    for (const [bit, nb] of nbs) if (links[c] & bit && dist[nb] < 0) { dist[nb] = dist[c] + 1; q.push(nb); }
+  }
+  maze.dist = dist; maze.root = root; maze.max = Math.max(1, ...dist);
+}
+
+/* ============ drawing via SVG-path buckets (shared by canvas + SVG export) ============ */
+function Painter() {
+  const layers = new Map();
+  return {
+    add(layer, style, d) {
+      const key = layer + '|' + style.fill + '|' + style.stroke + '|' + (style.w || 0);
+      let b = layers.get(key); if (!b) { b = { layer, ...style, d: [] }; layers.set(key, b); }
+      b.d.push(d);
+    },
+    list() { return [...layers.values()].sort((a, b) => a.layer - b.layer); }
+  };
+}
+const f2 = n => Math.round(n * 100) / 100;
+function pal() { const p = P.cust && P.cust.length ? { c: P.cust } : PALETTES[P.pal]; return { bg: P.bg, fg: P.fg, alt: P.alt, c: [P.fg, P.alt, ...p.c.filter(c => c !== P.fg && c !== P.alt)] }; }
+/* ---- palette generators ---- */
+const hex = (r, g, b) => '#' + [r, g, b].map(v => Math.round(clamp(v, 0, 255)).toString(16).padStart(2, '0')).join('');
+function hsl(h, s, l) { h = ((h % 360) + 360) % 360; s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1)); return hex(f(0) * 255, f(8) * 255, f(4) * 255); }
+const lumOf = c => { const n = parseInt(c.slice(1), 16); return ((n >> 16) * .2126 + ((n >> 8) & 255) * .7152 + (n & 255) * .0722) / 255; };
+function applyPalette(cols, bg, fg, alt, label) { P.cust = cols; P.bg = bg; P.fg = fg; P.alt = alt; P.pal = -1; update(false); toast(label); }
+function harmonize() {
+  const r = Math.random, h = r() * 360, schemes = { analogous: [0, 25, -25, 50], complementary: [0, 180, 15, 195], triadic: [0, 120, 240, 60], split: [0, 150, 210, 30], tetradic: [0, 90, 180, 270] };
+  const name = Object.keys(schemes)[Math.floor(r() * 5)], dark = r() < .45;
+  const cols = schemes[name].map((o, i) => hsl(h + o, 55 + r() * 35, dark ? 55 + i * 6 : 38 + i * 8));
+  applyPalette(cols, dark ? hsl(h + 200, 25, 9) : hsl(h + 30, 30, 94), cols[0], cols[1], `${name[0].toUpperCase() + name.slice(1)} harmony`);
+}
+// k-means over the photo's pixels: background = most common colour, ink = strongest contrast to it
+function paletteFromPhoto() {
+  if (!photo) return toast('Load a photo first');
+  const c = document.createElement('canvas'); c.width = 64; c.height = 64;
+  const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(photo, 0, 0, 64, 64);
+  const d = x.getImageData(0, 0, 64, 64).data, px = [];
+  for (let i = 0; i < d.length; i += 4) px.push([d[i], d[i + 1], d[i + 2]]);
+  const K = 6; let cent = Array.from({ length: K }, (_, k) => px[Math.floor((k + .5) / K * px.length)].slice());
+  let count = [];
+  for (let it = 0; it < 10; it++) {
+    const sum = cent.map(() => [0, 0, 0]); count = cent.map(() => 0);
+    for (const p of px) { let b = 0, bd = Infinity; cent.forEach((q, k) => { const dd = (p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2 + (p[2] - q[2]) ** 2; if (dd < bd) { bd = dd; b = k; } }); sum[b][0] += p[0]; sum[b][1] += p[1]; sum[b][2] += p[2]; count[b]++; }
+    cent = cent.map((q, k) => count[k] ? sum[k].map(v => v / count[k]) : q);
+  }
+  const cols = cent.map((q, k) => ({ c: hex(...q), n: count[k] })).filter(o => o.n).sort((a, b) => b.n - a.n);
+  const bg = cols[0].c, rest = cols.slice(1).sort((a, b) => Math.abs(lumOf(b.c) - lumOf(bg)) - Math.abs(lumOf(a.c) - lumOf(bg)));
+  const fg = rest[0] ? rest[0].c : (lumOf(bg) > .5 ? '#141414' : '#f4f1ea'), alt = rest[1] ? rest[1].c : fg;
+  applyPalette(rest.map(o => o.c), bg, fg, alt, 'Palette sampled from your photo');
+}
+function arcD(cx, cy, r, x1, y1, x2, y2) {
+  const sweep = ((x1 - cx) * (y2 - cy) - (y1 - cy) * (x2 - cx)) > 0 ? 1 : 0;
+  return `M${f2(x1)} ${f2(y1)}A${f2(r)} ${f2(r)} 0 0 ${sweep} ${f2(x2)} ${f2(y2)}`;
+}
+function sectorD(cx, cy, r, x1, y1, x2, y2) { return `M${f2(cx)} ${f2(cy)}L${f2(x1)} ${f2(y1)}` + arcD(cx, cy, r, x1, y1, x2, y2).replace(/^M[^A]+/, '') + 'Z'; }
+function strokeSet(E, t, d, color) {
+  const w = Math.max(.6, P.weight * t.s), C = pal();
+  if (P.mode === 'tubes') { E.add(5, { stroke: color || C.fg, w: w * 2.2 }, d); E.add(6, { stroke: C.bg, w: w * 1.1 }, d); }
+  else E.add(5, { stroke: color || C.fg, w }, d);
+}
+function drawTile(E, t) {
+  const C = pal(), fill = P.mode === 'fill' || P.mode === 'both', lines = P.mode !== 'fill';
+  switch (P.family) {
+    case 'smith': {
+      const { x, y, s, o } = t, h = s / 2, par = (vx, vy) => ((Math.round((vx - origin.x) / s) + Math.round((vy - origin.y) / s)) & 1);
+      const corners = o === 0 ? [[x, y], [x + s, y + s]] : [[x + s, y], [x, y + s]];
+      const bandV = o === 0 ? [x + s, y] : [x, y];
+      const arcs = corners.map(([cx, cy]) => { const dx = cx === x ? 1 : -1, dy = cy === y ? 1 : -1; return [cx, cy, cx + dx * h, cy, cx, cy + dy * h]; });
+      if (fill) {
+        const cA = C.fg, cB = P.mode === 'both' ? C.alt : C.bg;
+        E.add(1, { fill: par(...bandV) ? cA : cB }, `M${f2(x)} ${f2(y)}h${f2(s)}v${f2(s)}h${f2(-s)}Z`);
+        for (const [cx, cy, x1, y1, x2, y2] of arcs) E.add(2, { fill: par(cx, cy) ? cA : cB }, sectorD(cx, cy, h, x1, y1, x2, y2));
+      }
+      if (lines) for (const [cx, cy, x1, y1, x2, y2] of arcs) strokeSet(E, t, arcD(cx, cy, h, x1, y1, x2, y2), P.mode === 'both' ? C.bg : null);
+      break;
+    }
+    case 'diag': {
+      const { x, y, s, o } = t;
+      if (fill) {
+        const par = (Math.round((x - origin.x) / s) + Math.round((y - origin.y) / s)) & 1;
+        const tri = o === 0 ? `M${f2(x)} ${f2(y)}h${f2(s)}L${f2(x + s)} ${f2(y + s)}Z` : `M${f2(x + s)} ${f2(y)}v${f2(s)}H${f2(x)}Z`;
+        E.add(1, { fill: par ? C.fg : C.alt }, tri);
+      }
+      if (lines) strokeSet(E, t, o === 0 ? `M${f2(x)} ${f2(y)}L${f2(x + s)} ${f2(y + s)}` : `M${f2(x + s)} ${f2(y)}L${f2(x)} ${f2(y + s)}`, P.mode === 'both' ? C.bg : null);
+      break;
+    }
+    case 'tri': {
+      const { x, y, s, o, r } = t, pts = [[x, y], [x + s, y], [x + s, y + s], [x, y + s]];
+      const a = pts[o], b = pts[(o + 1) % 4], c = pts[(o + 3) % 4];
+      const d = `M${f2(a[0])} ${f2(a[1])}L${f2(b[0])} ${f2(b[1])}L${f2(c[0])} ${f2(c[1])}Z`;
+      if (fill || P.mode === 'tubes') E.add(1, { fill: C.c[Math.floor(r * C.c.length) % C.c.length] }, d);
+      if (P.mode === 'lines' || P.mode === 'both') strokeSet(E, t, `M${f2(b[0])} ${f2(b[1])}L${f2(c[0])} ${f2(c[1])}`, P.mode === 'both' ? C.bg : null);
+      if (P.mode === 'tubes') E.add(5, { stroke: C.bg, w: Math.max(.6, P.weight * t.s * .6) }, d);
+      break;
+    }
+    case 'quarter': {
+      const { x, y, s, o, r } = t, pts = [[x, y], [x + s, y], [x + s, y + s], [x, y + s]], [cx, cy] = pts[o];
+      const dx = cx === x ? 1 : -1, dy = cy === y ? 1 : -1, rings = 3 + Math.floor(r * 3);
+      if (fill) E.add(0, { fill: C.c[Math.floor(r * 97) % C.c.length] }, `M${f2(x)} ${f2(y)}h${f2(s)}v${f2(s)}h${f2(-s)}Z`);
+      for (let k = rings; k >= 1; k--) {
+        const rad = s * k / rings;
+        if (fill) E.add(1 + (rings - k), { fill: C.c[(Math.floor(r * 97) + k) % C.c.length] }, sectorD(cx, cy, rad, cx + dx * rad, cy, cx, cy + dy * rad));
+        if (lines) strokeSet(E, t, arcD(cx, cy, rad, cx + dx * rad, cy, cx, cy + dy * rad), P.mode === 'both' ? C.bg : null);
+      }
+      break;
+    }
+    case 'weave': {
+      const { x, y, s, o } = t, w = Math.max(1, P.weight * s * 2.4);
+      const hD = `M${f2(x)} ${f2(y + s / 2)}h${f2(s)}`, vD = `M${f2(x + s / 2)} ${f2(y)}v${f2(s)}`;
+      const [under, over, cu, co] = o === 0 ? [vD, hD, C.alt, C.fg] : [hD, vD, C.fg, C.alt];
+      const tubes = P.mode === 'tubes';
+      E.add(2, { stroke: tubes ? C.fg : cu, w: w }, under);
+      if (tubes) E.add(3, { stroke: C.bg, w: w * .55 }, under);
+      E.add(4, { stroke: C.bg, w: w + Math.max(2, w * .5), cap: 'butt' }, over.replace(/^M([\d.-]+) ([\d.-]+)(h|v)([\d.-]+)/, (m, a, b, dir, len) => dir === 'h' ? `M${f2(+a + s * .18)} ${b}h${f2(+len - s * .36)}` : `M${a} ${f2(+b + s * .18)}v${f2(+len - s * .36)}`));
+      E.add(5, { stroke: tubes ? C.fg : co, w: w, cap: 'butt' }, over);
+      if (tubes) E.add(6, { stroke: C.bg, w: w * .55, cap: 'butt' }, over);
+      break;
+    }
+    case 'hex': {
+      const { cx, cy, a, o } = t, V = [], M = [];
+      for (let k = 0; k < 6; k++) V.push([cx + a * Math.cos(k * Math.PI / 3), cy + a * Math.sin(k * Math.PI / 3)]);
+      for (let k = 0; k < 6; k++) M.push([(V[k][0] + V[(k + 1) % 6][0]) / 2, (V[k][1] + V[(k + 1) % 6][1]) / 2]);
+      const ks = o === 0 ? [0, 2, 4] : [1, 3, 5];
+      if (fill) {
+        const cA = C.fg, cB = P.mode === 'both' ? C.alt : C.bg;
+        E.add(1, { fill: o === 0 ? cB : cA }, 'M' + V.map(p => f2(p[0]) + ' ' + f2(p[1])).join('L') + 'Z');
+        for (const k of ks) { const m1 = M[(k + 5) % 6], m2 = M[k]; E.add(2, { fill: o === 0 ? cA : cB }, sectorD(V[k][0], V[k][1], a / 2, m1[0], m1[1], m2[0], m2[1])); }
+      }
+      if (lines) for (const k of ks) { const m1 = M[(k + 5) % 6], m2 = M[k]; strokeSet(E, { s: a * 2 }, arcD(V[k][0], V[k][1], a / 2, m1[0], m1[1], m2[0], m2[1]), P.mode === 'both' ? C.bg : null); }
+      break;
+    }
+    case 'dots': {
+      const { x, y, s, v } = t, rad = s * .5 * Math.pow(clamp((v - (P.bias - .5)), 0, 1), .8) * .98;
+      if (rad < .3) break;
+      const col = C.c[Math.min(C.c.length - 1, Math.floor(v * C.c.length))];
+      const d = `M${f2(x + s / 2 - rad)} ${f2(y + s / 2)}a${f2(rad)} ${f2(rad)} 0 1 0 ${f2(rad * 2)} 0a${f2(rad)} ${f2(rad)} 0 1 0 ${f2(-rad * 2)} 0Z`;
+      if (P.mode === 'lines') strokeSet(E, { s: s * .4 }, d, C.fg); else E.add(1, { fill: P.mode === 'fill' ? C.fg : col }, d);
+      if (P.mode === 'tubes') E.add(5, { stroke: C.bg, w: Math.max(.6, rad * .35) }, d);
+      break;
+    }
+  }
+}
+function drawMaze(E) {
+  const { cols, rows, ox, oy, s, links, dist, max } = maze, C = pal(), w = Math.max(1, P.weight * s * 2.2);
+  if (P.mode === 'lines') {
+    // walls
+    let d = `M${f2(ox)} ${f2(oy)}h${f2(cols * s)}v${f2(rows * s)}h${f2(-cols * s)}Z`;
+    for (let c = 0; c < cols * rows; c++) {
+      const x = ox + (c % cols) * s, y = oy + ((c / cols) | 0) * s;
+      if (!(links[c] & 1) && (c % cols) < cols - 1) d += `M${f2(x + s)} ${f2(y)}v${f2(s)}`;
+      if (!(links[c] & 2) && ((c / cols) | 0) < rows - 1) d += `M${f2(x)} ${f2(y + s)}h${f2(s)}`;
+    }
+    E.add(5, { stroke: C.fg, w: Math.max(1, P.weight * s * .6) }, d);
+    return;
+  }
+  const grad = [C.c[0], C.c[1] || C.c[0], C.c[2] || C.c[1] || C.c[0]];
+  const bucket = k => grad[Math.min(grad.length - 1, Math.floor(k * grad.length))];
+  const NB = 12;
+  for (let c = 0; c < cols * rows; c++) {
+    const x = ox + (c % cols) * s + s / 2, y = oy + ((c / cols) | 0) * s + s / 2;
+    const k = Math.floor(dist[c] / (max + 1) * NB) / NB, col = P.mode === 'both' ? mix(grad[0], grad[grad.length - 1], k) : bucket(k);
+    let d = `M${f2(x)} ${f2(y)}l0 0`;
+    if (links[c] & 1) d += `M${f2(x)} ${f2(y)}h${f2(s)}`;
+    if (links[c] & 2) d += `M${f2(x)} ${f2(y)}v${f2(s)}`;
+    if (P.mode === 'tubes') { E.add(5, { stroke: C.fg, w: w * 1.5 }, d); E.add(6, { stroke: C.bg, w: w * .7 }, d); }
+    else E.add(5, { stroke: col, w }, d);
+  }
+  const rx = ox + (maze.root % cols) * s + s / 2, ry = oy + ((maze.root / cols) | 0) * s + s / 2;
+  E.add(9, { fill: C.fg }, `M${f2(rx - w)} ${f2(ry)}a${f2(w)} ${f2(w)} 0 1 0 ${f2(w * 2)} 0a${f2(w)} ${f2(w)} 0 1 0 ${f2(-w * 2)} 0Z`);
+}
+function mix(a, b, t) {
+  const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+  const ch = sh => Math.round(((pa >> sh) & 255) * (1 - t) + ((pb >> sh) & 255) * t);
+  return '#' + ((1 << 24) | (ch(16) << 16) | (ch(8) << 8) | ch(0)).toString(16).slice(1);
+}
+function paintAll() {
+  const E = Painter();
+  if (P.family === 'maze') drawMaze(E); else for (const t of tiles) drawTile(E, t);
+  return E.list();
+}
+function renderLayers(c, list) {
+  c.lineJoin = 'round';
+  for (const b of list) {
+    const p = new Path2D(b.d.join(''));
+    if (b.fill) { c.fillStyle = b.fill; c.fill(p); }
+    if (b.stroke) { c.strokeStyle = b.stroke; c.lineWidth = b.w; c.lineCap = b.cap || P.cap; c.stroke(p); }
+  }
+}
+function drawGrid(c) {
+  c.save(); c.strokeStyle = 'rgba(128,128,128,.35)'; c.lineWidth = 1;
+  const p = new Path2D();
+  if (P.family === 'hex') for (const t of tiles) { for (let k = 0; k <= 6; k++) { const x = t.cx + t.a * Math.cos(k * Math.PI / 3), y = t.cy + t.a * Math.sin(k * Math.PI / 3); k ? p.lineTo(x, y) : p.moveTo(x, y); } }
+  else if (P.family === 'maze') { const { cols, rows, ox, oy, s } = maze; for (let i = 0; i <= cols; i++) { p.moveTo(ox + i * s, oy); p.lineTo(ox + i * s, oy + rows * s); } for (let j = 0; j <= rows; j++) { p.moveTo(ox, oy + j * s); p.lineTo(ox + cols * s, oy + j * s); } }
+  else for (const t of tiles) p.rect(t.x + .5, t.y + .5, t.s, t.s);
+  c.stroke(p); c.restore();
+}
+let lastLayers = [];
+function drawBase() {
+  bctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  bctx.fillStyle = P.bg; bctx.fillRect(0, 0, W, H);
+  lastLayers = paintAll();
+  renderLayers(bctx, lastLayers);
+  if (P.grid) drawGrid(bctx);
+  $('#hud').textContent = P.family === 'maze' ? `${maze.cols}×${maze.rows} maze · longest path ${maze.max}` : `${tiles.length.toLocaleString()} tiles · seed ${P.seed}`;
+}
+function cellPath(t) {
+  const p = new Path2D();
+  if (t.hex) { for (let k = 0; k < 6; k++) { const x = t.cx + t.a * Math.cos(k * Math.PI / 3), y = t.cy + t.a * Math.sin(k * Math.PI / 3); k ? p.lineTo(x, y) : p.moveTo(x, y); } p.closePath(); }
+  else p.rect(t.x, t.y, t.s, t.s);
+  return p;
+}
+function drawTileInto(c, t, angle) {
+  const E = Painter(); drawTile(E, t);
+  const cp = cellPath(t), cx = t.hex ? t.cx : t.x + t.s / 2, cy = t.hex ? t.cy : t.y + t.s / 2;
+  c.save(); c.clip(cp); c.fillStyle = P.bg; c.fill(cp);
+  if (angle) { c.translate(cx, cy); c.rotate(angle); c.translate(-cx, -cy); }
+  renderLayers(c, E.list());
+  c.restore();
+  if (P.grid) { c.save(); c.strokeStyle = 'rgba(128,128,128,.35)'; c.lineWidth = 1; c.stroke(cp); c.restore(); }
+}
+function present() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(base, 0, 0);
+  if (anims.length) {
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const now = performance.now();
+    for (const a of anims) {
+      const k = clamp((now - a.t0) / a.dur, 0, 1), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      drawTileInto(ctx, a.tile, e * a.angle);
+    }
+  }
+}
+
+/* ============ animation / flipping ============ */
+let anims = [], raf = 0, lastSpawn = 0;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+function famNow() { return FAMILIES.find(f => f.id === P.family); }
+function flip(t, animate = true) {
+  const fam = famNow(); if (fam.states < 2 || anims.some(a => a.tile === t)) return;
+  const to = (t.o + 1) % fam.states;
+  if (!animate || reduceMotion.matches) { t.o = to; drawTileInto(bctx, t, 0); present(); return; }
+  anims.push({ tile: t, to, t0: performance.now(), dur: 420, angle: fam.rot * Math.PI / 180 });
+  loop();
+}
+function loop() { if (!raf && !document.hidden) raf = requestAnimationFrame(tick); }
+function tick(now) {
+  raf = 0;
+  if (P.anim && !reduceMotion.matches && famNow().states > 1 && tiles.length && now - lastSpawn > 1000 / P.rate) {
+    lastSpawn = now; flip(tiles[Math.floor(Math.random() * tiles.length)]);
+  }
+  const done = anims.filter(a => now - a.t0 >= a.dur);
+  if (done.length) {
+    anims = anims.filter(a => now - a.t0 < a.dur);
+    bctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    for (const a of done) { a.tile.o = a.to; drawTileInto(bctx, a.tile, 0); }
+  }
+  present();
+  if (anims.length || (P.anim && famNow().states > 1)) loop();
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelAnimationFrame(raf); raf = 0; } else loop(); });
+
+/* ============ pointer ============ */
+let painting = null;
+function tileAt(px, py) {
+  if (P.family === 'hex') { let best = null, bd = Infinity; for (const t of tiles) { const d = Math.hypot(t.cx - px, t.cy - py); if (d < bd) { bd = d; best = t; } } return bd <= tiles[0]?.a ? best : null; }
+  for (let k = tiles.length - 1; k >= 0; k--) { const t = tiles[k]; if (px >= t.x && px < t.x + t.s && py >= t.y && py < t.y + t.s) return t; }
+  return null;
+}
+cv.addEventListener('pointerdown', e => {
+  const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+  if (P.family === 'maze') {
+    const { cols, rows, ox, oy, s } = maze, i = Math.floor((px - ox) / s), j = Math.floor((py - oy) / s);
+    if (i >= 0 && j >= 0 && i < cols && j < rows) { mazeDistances(j * cols + i); drawBase(); present(); }
+    return;
+  }
+  cv.setPointerCapture(e.pointerId);
+  painting = new Set();
+  const t = tileAt(px, py); if (t) { painting.add(t); flip(t); }
+});
+cv.addEventListener('pointermove', e => {
+  if (!painting) return;
+  const r = cv.getBoundingClientRect(), t = tileAt(e.clientX - r.left, e.clientY - r.top);
+  if (t && !painting.has(t)) { painting.add(t); flip(t); }
+}, { passive: true });
+const endPaint = () => { painting = null; };
+cv.addEventListener('pointerup', endPaint); cv.addEventListener('pointercancel', endPaint);
+
+/* ============ UI ============ */
+function famIcons() {
+  $('#fam').replaceChildren(...FAMILIES.map(f => {
+    const b = document.createElement('button');
+    b.dataset.v = f.id; b.title = f.n; b.setAttribute('aria-label', f.n + ' tiles');
+    const svg = new DOMParser().parseFromString(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 36 36" fill="none" stroke="#141414" stroke-width="3" stroke-linecap="round">${f.icon}</svg>`, 'image/svg+xml').documentElement;
+    b.append(document.importNode(svg, true));
+    const lab = document.createElement('span'); lab.textContent = f.n; b.append(lab);
+    b.addEventListener('click', () => { P.family = f.id; if (f.id === 'maze' && P.size < 16) P.size = 24; update(true); });
+    return b;
+  }));
+}
+function palChips() {
+  $('#pals').replaceChildren(...PALETTES.map((p, k) => {
+    const b = document.createElement('button'); b.className = 'pal'; b.title = p.n; b.setAttribute('aria-label', 'Palette ' + p.n);
+    for (const c of [p.bg, ...p.c.slice(0, 3)]) { const i = document.createElement('i'); i.style.background = c; b.append(i); }
+    b.addEventListener('click', () => { P.pal = k; P.cust = null; P.bg = p.bg; P.fg = p.fg; P.alt = p.alt; update(false); });
+    return b;
+  }));
+}
+const sliders = [['size', v => v + 'px'], ['ms', v => Math.round(v * 100) + '%'], ['depth', v => v], ['bias', v => v.toFixed(2)], ['scale', v => v.toFixed(2)], ['weight', v => Math.round(v * 100) + '%'], ['rate', v => v + '/s']];
+for (const [k, fmt] of sliders) {
+  const inp = $('#' + k);
+  inp.addEventListener('input', () => { P[k] = +inp.value; $('#' + k + 'O').textContent = fmt(P[k]); schedule(k !== 'rate'); });
+}
+function segs(id, key) { $$(`#${id} button`).forEach(b => b.addEventListener('click', () => { P[key] = b.dataset.v; update(key === 'sym'); })); }
+segs('sym', 'sym'); segs('mode', 'mode'); segs('cap', 'cap');
+$('#field').addEventListener('change', e => {
+  if (e.target.value === 'image' && !photo) { e.target.value = P.field; $('#imgFile').click(); return; }
+  P.field = e.target.value; update(true);
+});
+$('#imgBtn').addEventListener('click', () => $('#imgFile').click());
+$('#imgFile').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if (f) loadPhoto(f); });
+$('#stage').addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+$('#stage').addEventListener('drop', e => { e.preventDefault(); const f = [...e.dataTransfer.files].find(f => f.type.startsWith('image/')); if (f) loadPhoto(f); });
+$('#seed').addEventListener('change', e => { P.seed = clamp(parseInt(e.target.value) || 0, 0, 999999999); update(true); });
+$('#harmBtn').addEventListener('click', harmonize);
+$('#photoPal').addEventListener('click', paletteFromPhoto);
+for (const [id, k] of [['cBg', 'bg'], ['cFg', 'fg'], ['cAlt', 'alt']]) $('#' + id).addEventListener('input', e => { P[k] = e.target.value; schedule(false); });
+$('#grid').addEventListener('change', e => { P.grid = e.target.checked; update(false); });
+$('#anim').addEventListener('change', e => { P.anim = e.target.checked; save(); if (P.anim && reduceMotion.matches) toast('Reduced motion is on — animation paused'); loop(); });
+let pend = 0, pendRebuild = false;
+function schedule(rebuild) { pendRebuild = pendRebuild || rebuild; if (!pend) pend = requestAnimationFrame(() => { pend = 0; const r = pendRebuild; pendRebuild = false; update(r); }); }
+function syncUI() {
+  for (const [k, fmt] of sliders) { $('#' + k).value = P[k]; $('#' + k + 'O').textContent = fmt(P[k]); }
+  $$('#fam button').forEach(b => { b.classList.toggle('on', b.dataset.v === P.family); b.setAttribute('aria-pressed', b.dataset.v === P.family); });
+  $('#famName').textContent = FAMILIES.find(f => f.id === P.family).n;
+  for (const [id, key] of [['sym', 'sym'], ['mode', 'mode'], ['cap', 'cap']]) $$(`#${id} button`).forEach(b => { b.classList.toggle('on', b.dataset.v === P[key]); b.setAttribute('aria-pressed', b.dataset.v === P[key]); });
+  $$('#pals .pal').forEach((b, k) => b.classList.toggle('on', k === P.pal));
+  $('#field').value = P.field; $('#seed').value = P.seed; $('#cBg').value = P.bg; $('#cFg').value = P.fg; $('#cAlt').value = P.alt;
+  $('#grid').checked = P.grid; $('#anim').checked = P.anim;
+  const hexOrMaze = P.family === 'hex' || P.family === 'maze';
+  $('#ms').disabled = hexOrMaze; $('#depth').disabled = hexOrMaze || P.ms === 0;
+  $$('#sym button').forEach(b => b.disabled = P.family === 'maze');
+}
+function update(rebuild) {
+  anims = [];
+  if (rebuild) build();
+  drawBase(); present(); syncUI(); save();
+  if (P.anim) loop();
+}
+let saveT = 0;
+function save() { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(STORE, JSON.stringify(P)); } catch (e) { /* storage unavailable */ } }, 300); }
+
+/* ============ randomize ============ */
+function surprise() {
+  const r = Math.random;
+  const fam = FAMILIES[Math.floor(r() * FAMILIES.length)].id, k = Math.floor(r() * PALETTES.length), p = PALETTES[k];
+  const fields = ['random', 'random', 'noise', 'noise', 'rings', 'bands', 'spiral', 'checker'];
+  P = { ...P, family: fam, pal: k, cust: null, bg: p.bg, fg: p.fg, alt: p.alt, seed: Math.floor(r() * 1e9),
+    size: Math.round(fam === 'dots' ? 10 + r() * 20 : fam === 'maze' ? 14 + r() * 30 : 24 + r() * 80),
+    ms: fam === 'hex' || fam === 'maze' ? 0 : r() < .35 ? R2(.2 + r() * .5) : 0, depth: 1 + Math.floor(r() * 3),
+    field: fam === 'dots' ? ['noise', 'rings', 'spiral', 'bands'][Math.floor(r() * 4)] : fields[Math.floor(r() * fields.length)],
+    bias: R2(.3 + r() * .4), scale: R2(.08 + r() * .4), sym: r() < .3 ? ['x', 'y', 'xy'][Math.floor(r() * 3)] : 'none',
+    mode: ['lines', 'fill', 'fill', 'tubes', 'both'][Math.floor(r() * 5)], weight: R2(.05 + r() * .2), cap: r() < .8 ? 'round' : 'butt' };
+  update(true); remember();
+}
+$('#dice').addEventListener('click', surprise);
+
+/* ============ export ============ */
+function download(name, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
+function pngAt(k) {
+  const c = document.createElement('canvas'); c.width = W * k; c.height = H * k;
+  const x = c.getContext('2d'); x.scale(k, k); x.fillStyle = P.bg; x.fillRect(0, 0, W, H); renderLayers(x, paintAll()); if (P.grid) drawGrid(x);
+  c.toBlob(b => { if (b) { download(`tessera-${P.family}-${P.seed}${k > 1 ? '@' + k + 'x' : ''}.png`, b); toast(`Saved ${W * k}×${H * k} PNG`); } }, 'image/png');
+}
+$('#png1').addEventListener('click', () => pngAt(1));
+$('#png4').addEventListener('click', () => pngAt(3));
+$('#svg').addEventListener('click', () => {
+  const list = paintAll();
+  const parts = [`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`, `<rect width="100%" height="100%" fill="${P.bg}"/>`];
+  for (const b of list) parts.push(`<path d="${b.d.join('')}" fill="${b.fill || 'none'}"${b.stroke ? ` stroke="${b.stroke}" stroke-width="${f2(b.w)}" stroke-linecap="${b.cap || P.cap}" stroke-linejoin="round"` : ''}/>`);
+  parts.push('</svg>');
+  download(`tessera-${P.family}-${P.seed}.svg`, new Blob([parts.join('\n')], { type: 'image/svg+xml' })); toast('Saved SVG (' + list.reduce((a, b) => a + b.d.length, 0).toLocaleString() + ' shapes)');
+});
+$('#tile').addEventListener('click', () => {
+  if (P.family === 'maze' || P.family === 'hex' || P.family === 'dots') return toast('Seamless tiles work with square Truchet families');
+  const N = 8, s = P.size, px = N * s, k = Math.max(1, Math.ceil(512 / px));
+  const c = document.createElement('canvas'); c.width = px * k; c.height = px * k;
+  const x = c.getContext('2d'); x.scale(k, k); x.fillStyle = P.bg; x.fillRect(0, 0, px, px);
+  const E = Painter(), saved = origin; origin = { x: 0, y: 0 };
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    const src = tiles.find(t => t.lvl === 0 && Math.abs(t.x - (saved.x + (i + 1) * s)) < .5 && Math.abs(t.y - (saved.y + (j + 1) * s)) < .5) || { o: 0, r: .5, v: .5 };
+    drawTile(E, { x: i * s, y: j * s, s, o: src.o, r: src.r, v: src.v, lvl: 0 });
+  }
+  origin = saved;
+  x.beginPath(); x.rect(0, 0, px, px); x.clip(); renderLayers(x, E.list());
+  c.toBlob(b => { if (b) { download(`tessera-tile-${P.family}-${P.seed}.png`, b); toast(`Saved ${c.width}px seamless tile`); } });
+});
+// Re-generate the pattern at a target resolution. Tile size scales by √(area ratio) so the
+// wallpaper keeps roughly the same number of tiles — the same composition — as the screen.
+function renderAtSize(w, h) {
+  const saved = { W, H, tiles, maze, origin: { ...origin }, lum, lumW, lumH, size: P.size };
+  // floor the reference size so a hidden/collapsed stage (W,H ≈ 1) can't explode the scale
+  const k = Math.sqrt((w * h) / (Math.max(W, 640) * Math.max(H, 400)));
+  try {
+    W = w; H = h; P.size = Math.max(4, Math.round(P.size * k));
+    if (photo) sampleImage();
+    build();
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const x = c.getContext('2d'); x.fillStyle = P.bg; x.fillRect(0, 0, w, h); renderLayers(x, paintAll()); if (P.grid) drawGrid(x);
+    return c;
+  } finally {
+    ({ W, H, tiles, maze, lum, lumW, lumH } = saved); origin = saved.origin; P.size = saved.size;
+  }
+}
+$('#wpGo').addEventListener('click', () => {
+  const [w, h] = $('#wpSize').value.split('x').map(Number), btn = $('#wpGo');
+  btn.disabled = true; btn.textContent = 'Rendering…';
+  setTimeout(() => {
+    try {
+      const c = renderAtSize(w, h);
+      c.toBlob(b => { btn.disabled = false; btn.textContent = 'Export wallpaper'; if (b) { download(`tessera-${P.family}-${w}x${h}.png`, b); toast(`Saved ${w}×${h} wallpaper`); } }, 'image/png');
+    } catch (e) { btn.disabled = false; btn.textContent = 'Export wallpaper'; toast('Export failed: ' + e.message); }
+  }, 30);
+});
+function b64u(s) { return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+$('#link').addEventListener('click', async () => {
+  const h = '#t=' + b64u(JSON.stringify(P)); history.replaceState(null, '', h);
+  try { await navigator.clipboard.writeText(location.href); toast('Link copied'); } catch (e) { toast('Link is in the address bar'); }
+});
+
+/* ============ misc ============ */
+let toastT = 0;
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2200); }
+$('#menuBtn').addEventListener('click', () => { const o = $('#panel').classList.toggle('open'); $('#menuBtn').setAttribute('aria-expanded', o); });
+addEventListener('keydown', e => {
+  if (e.target.matches('input,select,textarea') || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === ' ') { e.preventDefault(); surprise(); }
+  else if (e.key === 'r' || e.key === 'R') { P.seed = Math.floor(Math.random() * 1e9); update(true); remember(); }
+  else if (e.key === 'a' || e.key === 'A') { P.anim = !P.anim; syncUI(); save(); loop(); toast(P.anim ? 'Animation on' : 'Animation off'); }
+  else if (e.key === 's' || e.key === 'S') pngAt(1);
+});
+let rq = 0;
+new ResizeObserver(() => { if (!rq) rq = requestAnimationFrame(() => { rq = 0; resize(); }); }).observe($('#stage'));
+
+/* boot */
+try { const s = localStorage.getItem(STORE); if (s) P = sanitize(JSON.parse(s)); } catch (e) { P = { ...DEFAULTS }; }
+if (location.hash.startsWith('#t=')) { try { P = sanitize(JSON.parse(atob(location.hash.slice(3).replace(/-/g, '+').replace(/_/g, '/')))); } catch (e) { toast('Could not read link'); } }
+famIcons(); palChips(); syncUI(); resize();
+
+/* ============ design history (session only; thumbnails are re-rendered at 160×100) ============ */
+const designs = [];
+function remember() {
+  const key = JSON.stringify({ ...P, anim: false });
+  if (designs.length && designs[0].key === key) return;
+  let thumb = '';
+  try { thumb = renderAtSize(160, 100).toDataURL('image/png'); } catch (e) { /* thumbnail is optional */ }
+  designs.unshift({ key, p: JSON.parse(key), thumb });
+  if (designs.length > 12) designs.pop();
+  renderHistory();
+}
+function renderHistory() {
+  const box = $('#hist');
+  if (!designs.length) { box.replaceChildren(Object.assign(document.createElement('span'), { className: 'empty', textContent: 'Roll the dice or press R to start a history.' })); return; }
+  box.replaceChildren(...designs.map((d, k) => {
+    const b = document.createElement('button'); b.type = 'button';
+    b.title = `${FAMILIES.find(f => f.id === d.p.family).n} · seed ${d.p.seed}`; b.setAttribute('aria-label', 'Restore design ' + (k + 1) + ': ' + b.title);
+    if (d.thumb) { const img = document.createElement('img'); img.src = d.thumb; img.alt = ''; b.append(img); }
+    b.addEventListener('click', () => { P = sanitize(d.p); update(true); toast('Design restored'); });
+    return b;
+  }));
+}
+$('#keepBtn').addEventListener('click', () => { remember(); toast('Saved to history'); });
+requestAnimationFrame(remember);
+</script>
+</body>
+</html>

@@ -1,0 +1,1587 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coding Efficiency Workbench</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f4ee;
+      --paper: #fffcf3;
+      --panel: #ffffff;
+      --ink: #191b1f;
+      --muted: #6d7380;
+      --line: #d9d5ca;
+      --teal: #08756f;
+      --teal-soft: #d8efea;
+      --red: #b83f37;
+      --red-soft: #f6d8d3;
+      --gold: #9a6b00;
+      --gold-soft: #f5e3b5;
+      --green: #3c7a33;
+      --green-soft: #dcebd2;
+      --blue: #385f9e;
+      --blue-soft: #dde8f8;
+      --shadow: 0 18px 42px rgba(28, 32, 38, 0.12);
+      --radius: 8px;
+      --mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-height: 100%;
+      background:
+        linear-gradient(135deg, rgba(8, 117, 111, 0.12), transparent 32%),
+        linear-gradient(315deg, rgba(184, 63, 55, 0.09), transparent 36%),
+        var(--bg);
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.45;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 7px;
+      min-height: 36px;
+      padding: 8px 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    button:hover { transform: translateY(-1px); border-color: #aaa394; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+      outline: 3px solid rgba(8, 117, 111, 0.24);
+      outline-offset: 2px;
+    }
+
+    button.primary { background: var(--ink); color: white; border-color: var(--ink); }
+    button.accent { background: var(--teal); color: white; border-color: var(--teal); }
+    button.danger { background: var(--red-soft); color: #7d211c; border-color: #e3a9a1; }
+    button.icon { width: 36px; padding: 0; flex: 0 0 36px; }
+    button.tiny { min-height: 28px; padding: 4px 8px; font-size: 12px; }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fffef9;
+      color: var(--ink);
+      padding: 10px 11px;
+    }
+
+    textarea {
+      min-height: 104px;
+      resize: vertical;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #3f434b;
+      letter-spacing: 0;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 82px minmax(0, 1fr);
+    }
+
+    .rail {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 16px 12px;
+      background: rgba(255, 252, 243, 0.82);
+      backdrop-filter: blur(14px);
+      border-right: 1px solid var(--line);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 18px;
+    }
+
+    .mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, #191b1f 0 52%, #08756f 52% 100%);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      margin: 0 auto;
+      box-shadow: var(--shadow);
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .nav button {
+      width: 56px;
+      height: 48px;
+      padding: 0;
+      border-color: transparent;
+      background: transparent;
+      color: var(--muted);
+      position: relative;
+    }
+
+    .nav button.active {
+      color: var(--ink);
+      background: white;
+      border-color: var(--line);
+      box-shadow: 0 8px 20px rgba(30, 32, 36, 0.09);
+    }
+
+    .nav button.active::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      width: 4px;
+      height: 26px;
+      border-radius: 4px;
+      background: var(--teal);
+    }
+
+    .main {
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .headline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    h1 {
+      font-size: clamp(24px, 3vw, 42px);
+      line-height: 1;
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    .subtle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: end;
+      gap: 8px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+      min-height: 104px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .meter {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e7e2d7;
+    }
+
+    .meter > i {
+      display: block;
+      height: 100%;
+      width: var(--value, 0%);
+      background: linear-gradient(90deg, var(--teal), #57a35d);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 28px rgba(34, 38, 43, 0.08);
+      overflow: hidden;
+    }
+
+    .panel header {
+      min-height: 58px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(255, 252, 243, 0.68);
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    .panel-body {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .tabs, .segmented {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tabs button, .segmented button {
+      min-height: 32px;
+      padding: 6px 10px;
+      font-size: 13px;
+      background: #fbfaf5;
+    }
+
+    .tabs button.active, .segmented button.active {
+      background: var(--ink);
+      color: white;
+      border-color: var(--ink);
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fffef9;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .item-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .item-title {
+      font-weight: 800;
+      word-break: break-word;
+    }
+
+    .item-meta {
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: white;
+      color: #454b55;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pill.teal { background: var(--teal-soft); color: #04514c; border-color: #aed7d2; }
+    .pill.gold { background: var(--gold-soft); color: #684900; border-color: #e2c46d; }
+    .pill.red { background: var(--red-soft); color: #7d211c; border-color: #e3a9a1; }
+    .pill.green { background: var(--green-soft); color: #285922; border-color: #b8d4ac; }
+    .pill.blue { background: var(--blue-soft); color: #253f73; border-color: #b8cbed; }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .row.end { justify-content: end; }
+
+    .codebox {
+      border-radius: var(--radius);
+      border: 1px solid #c9c2b5;
+      background: #1d2025;
+      color: #f5efe4;
+      min-height: 118px;
+      padding: 12px;
+      font: 13px/1.5 var(--mono);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .mini {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .checklist {
+      display: grid;
+      gap: 8px;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fffef9;
+    }
+
+    .check input {
+      width: 18px;
+      height: 18px;
+      padding: 0;
+    }
+
+    .check b {
+      font-size: 13px;
+    }
+
+    .empty {
+      border: 1px dashed #bcb5a8;
+      border-radius: var(--radius);
+      padding: 18px;
+      color: var(--muted);
+      text-align: center;
+      background: rgba(255, 252, 243, 0.62);
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 10;
+      background: var(--ink);
+      color: white;
+      padding: 11px 13px;
+      border-radius: 7px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms ease;
+      max-width: min(420px, calc(100vw - 28px));
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .command-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .command {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fffef9;
+    }
+
+    .command code {
+      font-family: var(--mono);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .visual {
+      min-height: 178px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(90deg, rgba(8, 117, 111, 0.09) 0 1px, transparent 1px 100%),
+        linear-gradient(0deg, rgba(56, 95, 158, 0.08) 0 1px, transparent 1px 100%),
+        #fffef9;
+      background-size: 24px 24px;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+
+    .visual svg {
+      width: min(520px, 95%);
+      height: auto;
+    }
+
+    .importer {
+      position: fixed;
+      inset: 0;
+      background: rgba(25, 27, 31, 0.42);
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      z-index: 12;
+    }
+
+    .modal {
+      width: min(720px, 100%);
+      background: var(--panel);
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .drawer {
+      display: grid;
+      gap: 12px;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+
+    @media (max-width: 1080px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .rail {
+        position: static;
+        height: auto;
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: auto;
+        align-items: center;
+        padding: 10px;
+      }
+
+      .nav {
+        display: flex;
+        overflow-x: auto;
+      }
+
+      .nav button.active::before {
+        left: 12px;
+        bottom: -5px;
+        width: 28px;
+        height: 4px;
+      }
+
+      .main { padding: 14px; }
+      .topbar { grid-template-columns: 1fr; }
+      .actions { justify-content: start; }
+      .metrics, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .command, .item-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="rail">
+      <div class="mark" aria-label="Coding Efficiency Workbench">CE</div>
+      <nav class="nav" aria-label="Workbench sections">
+        <button class="active" data-view="focus" title="Focus queue" aria-label="Focus queue">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3Zm1 1v8.4l5.2 3 .9-1.7-4.1-2.4V4h-2Z"/></svg>
+        </button>
+        <button data-view="context" title="Context capsule" aria-label="Context capsule">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M4 4h16v3H4V4Zm0 5h10v3H4V9Zm0 5h16v6H4v-6Zm2 2v2h12v-2H6Z"/></svg>
+        </button>
+        <button data-view="runbook" title="Command runbook" aria-label="Command runbook">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="m8 7 5 5-5 5-1.4-1.4L10.2 12 6.6 8.4 8 7Zm5 10h6v2h-6v-2Z"/></svg>
+        </button>
+        <button data-view="snippets" title="Snippet vault" aria-label="Snippet vault">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M8 3h8l4 4v14H4V3h4Zm7 2H6v14h12V8h-3V5Zm-7 7h8v2H8v-2Zm0 4h6v2H8v-2Z"/></svg>
+        </button>
+        <button data-view="ship" title="Ship gate" aria-label="Ship gate">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2 4 5v6c0 5.1 3.4 9.9 8 11 4.6-1.1 8-5.9 8-11V5l-8-3Zm0 2.1 6 2.3V11c0 4-2.5 7.7-6 8.8C8.5 18.7 6 15 6 11V6.4l6-2.3Zm3.3 5.2L11 13.6l-2.3-2.3-1.4 1.4L11 16.4l5.7-5.7-1.4-1.4Z"/></svg>
+        </button>
+      </nav>
+      <button id="themeBtn" class="icon" title="Toggle contrast" aria-label="Toggle contrast">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 2v16a8 8 0 0 1 0-16Z"/></svg>
+      </button>
+    </aside>
+
+    <main class="main">
+      <section class="topbar">
+        <div class="headline">
+          <h1>Coding Efficiency Workbench</h1>
+          <p class="subtle" id="todayLine"></p>
+        </div>
+        <div class="actions">
+          <button id="copyBriefBtn" class="accent">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16 1H4v14h2V3h10V1Zm3 4H8v18h11V5Zm-2 2v14h-7V7h7Z"/></svg>
+            Copy brief
+          </button>
+          <button id="exportBtn">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3v10.2l3.6-3.6L17 11l-6 6-6-6 1.4-1.4 3.6 3.6V3h2ZM5 19h14v2H5v-2Z"/></svg>
+            Export
+          </button>
+          <button id="importBtn">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M11 21V10.8l-3.6 3.6L6 13l6-6 6 6-1.4 1.4-3.6-3.6V21h-2ZM5 3h14v2H5V3Z"/></svg>
+            Import
+          </button>
+          <button id="resetBtn" class="danger">Reset demo</button>
+        </div>
+      </section>
+
+      <section class="metrics" aria-label="Efficiency metrics">
+        <div class="metric">
+          <span>Focus score</span>
+          <strong id="focusScore">0</strong>
+          <div class="meter"><i id="focusMeter"></i></div>
+        </div>
+        <div class="metric">
+          <span>Active work</span>
+          <strong id="activeCount">0</strong>
+          <p class="mini">WIP above 3 is usually noisy.</p>
+        </div>
+        <div class="metric">
+          <span>Context load</span>
+          <strong id="contextLoad">0%</strong>
+          <div class="meter"><i id="contextMeter"></i></div>
+        </div>
+        <div class="metric">
+          <span>Ship readiness</span>
+          <strong id="shipReadiness">0%</strong>
+          <div class="meter"><i id="shipMeter"></i></div>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <div class="stack">
+          <section class="panel view" data-panel="focus">
+            <header>
+              <h2>Focus Queue</h2>
+              <div class="row end">
+                <button id="sortTasksBtn" class="tiny">Sort by leverage</button>
+                <button id="clearDoneBtn" class="tiny">Clear done</button>
+              </div>
+            </header>
+            <div class="panel-body">
+              <div class="grid-3">
+                <label>Task
+                  <input id="taskTitle" placeholder="Implement cache invalidation">
+                </label>
+                <label>Impact
+                  <select id="taskImpact">
+                    <option value="5">5 critical</option>
+                    <option value="4">4 high</option>
+                    <option value="3" selected>3 medium</option>
+                    <option value="2">2 low</option>
+                    <option value="1">1 tiny</option>
+                  </select>
+                </label>
+                <label>Effort
+                  <select id="taskEffort">
+                    <option value="1">1 tiny</option>
+                    <option value="2" selected>2 small</option>
+                    <option value="3">3 medium</option>
+                    <option value="5">5 heavy</option>
+                    <option value="8">8 deep</option>
+                  </select>
+                </label>
+              </div>
+              <label>Definition of done
+                <input id="taskDone" placeholder="Tests pass, docs updated, edge case covered">
+              </label>
+              <div class="row">
+                <button id="addTaskBtn" class="primary">Add task</button>
+                <button id="startTimerBtn">Start 25 min</button>
+                <button id="pauseTimerBtn">Pause</button>
+                <button id="resetTimerBtn">Reset timer</button>
+                <span class="pill teal" id="timerText">25:00</span>
+              </div>
+              <div class="list" id="taskList"></div>
+            </div>
+          </section>
+
+          <section class="panel view hidden" data-panel="context">
+            <header>
+              <h2>Context Capsule</h2>
+              <div class="row end">
+                <button id="compressBtn" class="tiny">Compress</button>
+                <button id="copyCapsuleBtn" class="tiny">Copy capsule</button>
+              </div>
+            </header>
+            <div class="panel-body">
+              <div class="grid-2">
+                <label>Current objective
+                  <textarea id="objectiveInput"></textarea>
+                </label>
+                <label>Constraints and invariants
+                  <textarea id="constraintsInput"></textarea>
+                </label>
+              </div>
+              <label>Evidence, file notes, command results
+                <textarea id="notesInput"></textarea>
+              </label>
+              <div class="grid-3">
+                <label>Budget tokens
+                  <input id="tokenBudget" type="number" min="500" step="500">
+                </label>
+                <label>Risk level
+                  <select id="riskLevel">
+                    <option>low</option>
+                    <option selected>medium</option>
+                    <option>high</option>
+                  </select>
+                </label>
+                <label>Next owner
+                  <input id="nextOwner" placeholder="me, reviewer, deploy bot">
+                </label>
+              </div>
+              <pre class="codebox" id="capsuleOutput"></pre>
+            </div>
+          </section>
+
+          <section class="panel view hidden" data-panel="runbook">
+            <header>
+              <h2>Command Runbook</h2>
+              <div class="tabs" id="stackTabs"></div>
+            </header>
+            <div class="panel-body">
+              <div class="grid-3">
+                <label>Project path
+                  <input id="projectPath" placeholder="C:\Users\qamel\Downloads\project">
+                </label>
+                <label>Package manager
+                  <select id="packageManager">
+                    <option>npm</option>
+                    <option>pnpm</option>
+                    <option>yarn</option>
+                    <option>python</option>
+                    <option>static</option>
+                  </select>
+                </label>
+                <label>Branch prefix
+                  <input id="branchPrefix" placeholder="codex/">
+                </label>
+              </div>
+              <div class="command-list" id="commandList"></div>
+              <div class="drawer">
+                <div class="grid-2">
+                  <label>Custom command label
+                    <input id="customCommandLabel" placeholder="Smoke test">
+                  </label>
+                  <label>Command
+                    <input id="customCommandValue" placeholder="npm run test -- --watch=false">
+                  </label>
+                </div>
+                <button id="addCommandBtn" class="primary">Add command</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel view hidden" data-panel="snippets">
+            <header>
+              <h2>Snippet Vault</h2>
+              <div class="row end">
+                <input id="snippetSearch" placeholder="Search snippets">
+                <button id="addSnippetBtn" class="tiny">Add snippet</button>
+              </div>
+            </header>
+            <div class="panel-body">
+              <div class="grid-3">
+                <label>Title
+                  <input id="snippetTitle" placeholder="Review prompt">
+                </label>
+                <label>Tags
+                  <input id="snippetTags" placeholder="review, tests">
+                </label>
+                <label>Kind
+                  <select id="snippetKind">
+                    <option>prompt</option>
+                    <option>checklist</option>
+                    <option>command</option>
+                    <option>template</option>
+                  </select>
+                </label>
+              </div>
+              <label>Snippet body
+                <textarea id="snippetBody"></textarea>
+              </label>
+              <div class="list" id="snippetList"></div>
+            </div>
+          </section>
+
+          <section class="panel view hidden" data-panel="ship">
+            <header>
+              <h2>Ship Gate</h2>
+              <div class="row end">
+                <button id="copyShipBtn" class="tiny">Copy report</button>
+              </div>
+            </header>
+            <div class="panel-body">
+              <div class="visual" aria-label="Delivery health diagram">
+                <svg viewBox="0 0 720 230" role="img" aria-labelledby="visualTitle visualDesc">
+                  <title id="visualTitle">Delivery health diagram</title>
+                  <desc id="visualDesc">A pipeline from intent to verification showing current readiness.</desc>
+                  <defs>
+                    <linearGradient id="pipe" x1="0" x2="1">
+                      <stop offset="0" stop-color="#08756f"/>
+                      <stop offset="0.5" stop-color="#9a6b00"/>
+                      <stop offset="1" stop-color="#b83f37"/>
+                    </linearGradient>
+                  </defs>
+                  <rect x="25" y="88" width="670" height="34" rx="7" fill="#e7e2d7"/>
+                  <rect id="readinessBar" x="25" y="88" width="1" height="34" rx="7" fill="url(#pipe)"/>
+                  <g fill="#191b1f" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="800">
+                    <text x="45" y="64">Intent</text>
+                    <text x="186" y="64">Code</text>
+                    <text x="326" y="64">Tests</text>
+                    <text x="463" y="64">Review</text>
+                    <text x="604" y="64">Ship</text>
+                  </g>
+                  <g fill="#fffef9" stroke="#191b1f" stroke-width="3">
+                    <circle cx="72" cy="105" r="24"/>
+                    <circle cx="216" cy="105" r="24"/>
+                    <circle cx="360" cy="105" r="24"/>
+                    <circle cx="504" cy="105" r="24"/>
+                    <circle cx="648" cy="105" r="24"/>
+                  </g>
+                  <g fill="#08756f">
+                    <path d="M62 105l7 7 15-17 4 4-19 22-11-12 4-4Z"/>
+                    <path d="M206 105l7 7 15-17 4 4-19 22-11-12 4-4Z"/>
+                    <path d="M350 105l7 7 15-17 4 4-19 22-11-12 4-4Z"/>
+                    <path d="M494 105l7 7 15-17 4 4-19 22-11-12 4-4Z"/>
+                    <path d="M638 105l7 7 15-17 4 4-19 22-11-12 4-4Z"/>
+                  </g>
+                  <text id="visualScore" x="360" y="176" text-anchor="middle" fill="#191b1f" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="900">0%</text>
+                </svg>
+              </div>
+              <div class="checklist" id="shipChecks"></div>
+              <pre class="codebox" id="shipReport"></pre>
+            </div>
+          </section>
+        </div>
+
+        <aside class="stack">
+          <section class="panel">
+            <header>
+              <h2>Daily Brief</h2>
+              <button id="copyDailyBtn" class="tiny">Copy</button>
+            </header>
+            <div class="panel-body">
+              <pre class="codebox" id="dailyBrief"></pre>
+            </div>
+          </section>
+
+          <section class="panel">
+            <header>
+              <h2>Decision Log</h2>
+              <button id="addDecisionBtn" class="tiny">Add</button>
+            </header>
+            <div class="panel-body">
+              <label>Decision
+                <input id="decisionText" placeholder="Use localStorage for state">
+              </label>
+              <label>Reason
+                <input id="decisionReason" placeholder="Keeps the app single-file and local">
+              </label>
+              <div class="list" id="decisionList"></div>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <div class="importer hidden" id="importer" role="dialog" aria-modal="true" aria-label="Import workspace">
+    <div class="modal">
+      <h2>Import Workspace</h2>
+      <label>Paste exported JSON
+        <textarea id="importText"></textarea>
+      </label>
+      <div class="row end">
+        <button id="cancelImportBtn">Cancel</button>
+        <button id="applyImportBtn" class="primary">Import</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY = "coding-efficiency-workbench:v1";
+    const TIMER_TOTAL = 25 * 60;
+    const qs = (selector, root = document) => root.querySelector(selector);
+    const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+
+    const defaultState = {
+      theme: "light",
+      activeView: "focus",
+      timer: { remaining: TIMER_TOTAL, running: false, startedAt: null },
+      context: {
+        objective: "Deliver the smallest complete improvement with a clear test signal.",
+        constraints: "Preserve user work. Keep edits scoped. Prefer existing project patterns. Verify before claiming completion.",
+        notes: "Capture evidence as you work: commands, files touched, test results, unresolved risks.",
+        budget: 8000,
+        risk: "medium",
+        owner: "me"
+      },
+      settings: {
+        path: "C:\\Users\\qamel\\Downloads",
+        manager: "npm",
+        branchPrefix: "codex/"
+      },
+      tasks: [
+        { id: id(), title: "Read the local instructions", done: "Know the scope, constraints, and verification path", impact: 5, effort: 1, complete: true, created: Date.now() - 500000 },
+        { id: id(), title: "Build a focused working slice", done: "Core path works before polishing", impact: 5, effort: 2, complete: false, created: Date.now() - 300000 },
+        { id: id(), title: "Run syntax and browser checks", done: "No console errors, layout holds on mobile and desktop", impact: 4, effort: 2, complete: false, created: Date.now() - 200000 }
+      ],
+      snippets: [
+        { id: id(), title: "Bug Triage Prompt", kind: "prompt", tags: "debug, triage", body: "Given the failing behavior, list the top three likely causes. For each, name the file or subsystem to inspect, the evidence that would confirm it, and the smallest reversible fix." },
+        { id: id(), title: "Review Checklist", kind: "checklist", tags: "review, quality", body: "Behavioral regression checked\nTests cover changed branch\nFailure mode is handled\nNo unrelated refactor\nUser-facing text is accurate" },
+        { id: id(), title: "Commit Message", kind: "template", tags: "git, commit", body: "type(scope): concise outcome\n\n- changed thing\n- verification command\n- remaining caveat" },
+        { id: id(), title: "Handoff Brief", kind: "template", tags: "handoff, context", body: "Goal:\nCurrent state:\nFiles touched:\nVerified with:\nRisks:\nNext action:" }
+      ],
+      commands: [
+        { id: id(), label: "Status", command: "git status --short" },
+        { id: id(), label: "Tests", command: "npm test" },
+        { id: id(), label: "Build", command: "npm run build" },
+        { id: id(), label: "Search", command: "rg -n \"TODO|FIXME|throw new Error\" ." }
+      ],
+      decisions: [
+        { id: id(), text: "Make the workbench a single file", reason: "It opens directly from Downloads and remains portable.", created: Date.now() - 100000 }
+      ],
+      shipChecks: {
+        intent: true,
+        build: false,
+        tests: false,
+        responsive: false,
+        accessibility: false,
+        rollback: true,
+        docs: false,
+        risk: false
+      }
+    };
+
+    const stackPresets = {
+      npm: ["npm install", "npm run lint", "npm test", "npm run build", "npm run dev"],
+      pnpm: ["pnpm install", "pnpm lint", "pnpm test", "pnpm build", "pnpm dev"],
+      yarn: ["yarn install", "yarn lint", "yarn test", "yarn build", "yarn dev"],
+      python: ["python -m pytest", "python -m compileall .", "python -m pip check", "python -m http.server 8000"],
+      static: ["npx http-server .", "npx playwright test", "npx html-validate *.html", "npx prettier --check ."]
+    };
+
+    const shipCheckLabels = {
+      intent: "Intent and acceptance criteria are explicit",
+      build: "Build or syntax check passed",
+      tests: "Targeted tests passed",
+      responsive: "Desktop and mobile layout checked",
+      accessibility: "Keyboard and readable contrast checked",
+      rollback: "Rollback path is known",
+      docs: "Docs, comments, or handoff are updated",
+      risk: "Known risks are captured"
+    };
+
+    let state = loadState();
+    let timerHandle = null;
+
+    function id() {
+      return Math.random().toString(36).slice(2, 10);
+    }
+
+    function clone(value) {
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return clone(defaultState);
+        return mergeDefaults(clone(defaultState), JSON.parse(saved));
+      } catch {
+        return clone(defaultState);
+      }
+    }
+
+    function mergeDefaults(base, incoming) {
+      for (const key of Object.keys(incoming || {})) {
+        if (incoming[key] && typeof incoming[key] === "object" && !Array.isArray(incoming[key])) {
+          base[key] = mergeDefaults(base[key] || {}, incoming[key]);
+        } else {
+          base[key] = incoming[key];
+        }
+      }
+      return base;
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function render() {
+      document.body.dataset.theme = state.theme;
+      renderDate();
+      renderViews();
+      renderMetrics();
+      renderContext();
+      renderTasks();
+      renderRunbook();
+      renderSnippets();
+      renderDecisions();
+      renderShipGate();
+      renderBriefs();
+      renderTimer();
+      saveState();
+    }
+
+    function renderDate() {
+      const formatter = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "short", day: "numeric" });
+      qs("#todayLine").textContent = formatter.format(new Date());
+    }
+
+    function renderViews() {
+      qsa(".nav button[data-view]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.view === state.activeView);
+      });
+      qsa(".view").forEach((panel) => {
+        panel.classList.toggle("hidden", panel.dataset.panel !== state.activeView);
+      });
+    }
+
+    function renderMetrics() {
+      const activeTasks = state.tasks.filter((task) => !task.complete);
+      const completed = state.tasks.length ? state.tasks.filter((task) => task.complete).length / state.tasks.length : 0;
+      const leverage = activeTasks.reduce((sum, task) => sum + task.impact / Math.max(task.effort, 1), 0);
+      const wipPenalty = Math.max(0, activeTasks.length - 3) * 8;
+      const focusScore = Math.max(0, Math.min(100, Math.round(35 + completed * 35 + leverage * 6 - wipPenalty)));
+      const contextLoad = Math.min(100, Math.round((estimateTokens(capsuleText()) / Math.max(Number(state.context.budget), 1)) * 100));
+      const readiness = shipReadiness();
+
+      qs("#focusScore").textContent = focusScore;
+      qs("#focusMeter").style.setProperty("--value", focusScore + "%");
+      qs("#activeCount").textContent = activeTasks.length;
+      qs("#contextLoad").textContent = contextLoad + "%";
+      qs("#contextMeter").style.setProperty("--value", contextLoad + "%");
+      qs("#shipReadiness").textContent = readiness + "%";
+      qs("#shipMeter").style.setProperty("--value", readiness + "%");
+    }
+
+    function renderContext() {
+      qs("#objectiveInput").value = state.context.objective;
+      qs("#constraintsInput").value = state.context.constraints;
+      qs("#notesInput").value = state.context.notes;
+      qs("#tokenBudget").value = state.context.budget;
+      qs("#riskLevel").value = state.context.risk;
+      qs("#nextOwner").value = state.context.owner;
+      qs("#capsuleOutput").textContent = capsuleText();
+    }
+
+    function renderTasks() {
+      const list = qs("#taskList");
+      if (!state.tasks.length) {
+        list.innerHTML = '<div class="empty">No queued work.</div>';
+        return;
+      }
+      list.innerHTML = state.tasks.map((task) => `
+        <article class="item">
+          <div class="item-top">
+            <div>
+              <div class="item-title">${escapeHtml(task.title)}</div>
+              <div class="item-meta">
+                <span class="pill ${task.complete ? "green" : "teal"}">${task.complete ? "done" : "active"}</span>
+                <span class="pill gold">impact ${task.impact}</span>
+                <span class="pill blue">effort ${task.effort}</span>
+                <span class="pill">score ${scoreTask(task).toFixed(1)}</span>
+              </div>
+            </div>
+            <div class="row end">
+              <button class="tiny" data-task-toggle="${task.id}">${task.complete ? "Reopen" : "Done"}</button>
+              <button class="tiny danger" data-task-remove="${task.id}">Remove</button>
+            </div>
+          </div>
+          <p class="subtle">${escapeHtml(task.done || "No definition of done set.")}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderRunbook() {
+      const tabs = qs("#stackTabs");
+      tabs.innerHTML = Object.keys(stackPresets).map((name) => `
+        <button class="${state.settings.manager === name ? "active" : ""}" data-stack="${name}">${name}</button>
+      `).join("");
+      qs("#projectPath").value = state.settings.path;
+      qs("#packageManager").value = state.settings.manager;
+      qs("#branchPrefix").value = state.settings.branchPrefix;
+
+      const preset = stackPresets[state.settings.manager] || [];
+      const projectPath = state.settings.path || ".";
+      const commands = [
+        { id: "cd", label: "Enter project", command: `Set-Location -LiteralPath "${projectPath}"` },
+        { id: "branch", label: "Branch", command: `git switch -c ${state.settings.branchPrefix || "codex/"}focused-work` },
+        ...preset.map((command, index) => ({ id: "preset-" + index, label: command.split(" ")[0], command })),
+        ...state.commands
+      ];
+
+      qs("#commandList").innerHTML = commands.map((item) => `
+        <div class="command">
+          <div>
+            <span class="pill">${escapeHtml(item.label)}</span>
+            <code>${escapeHtml(item.command)}</code>
+          </div>
+          <button class="tiny" data-copy="${escapeHtml(item.command)}">Copy</button>
+        </div>
+      `).join("");
+    }
+
+    function renderSnippets() {
+      const search = qs("#snippetSearch").value.trim().toLowerCase();
+      const snippets = state.snippets.filter((snippet) => {
+        const haystack = `${snippet.title} ${snippet.kind} ${snippet.tags} ${snippet.body}`.toLowerCase();
+        return !search || haystack.includes(search);
+      });
+      const list = qs("#snippetList");
+      if (!snippets.length) {
+        list.innerHTML = '<div class="empty">No matching snippets.</div>';
+        return;
+      }
+      list.innerHTML = snippets.map((snippet) => `
+        <article class="item">
+          <div class="item-top">
+            <div>
+              <div class="item-title">${escapeHtml(snippet.title)}</div>
+              <div class="item-meta">
+                <span class="pill blue">${escapeHtml(snippet.kind)}</span>
+                ${String(snippet.tags || "").split(",").filter(Boolean).map((tag) => `<span class="pill">${escapeHtml(tag.trim())}</span>`).join("")}
+              </div>
+            </div>
+            <div class="row end">
+              <button class="tiny" data-snippet-copy="${snippet.id}">Copy</button>
+              <button class="tiny danger" data-snippet-remove="${snippet.id}">Remove</button>
+            </div>
+          </div>
+          <pre class="codebox">${escapeHtml(snippet.body)}</pre>
+        </article>
+      `).join("");
+    }
+
+    function renderDecisions() {
+      const list = qs("#decisionList");
+      if (!state.decisions.length) {
+        list.innerHTML = '<div class="empty">No decisions logged.</div>';
+        return;
+      }
+      list.innerHTML = state.decisions.slice().reverse().map((decision) => `
+        <article class="item">
+          <div class="item-top">
+            <div>
+              <div class="item-title">${escapeHtml(decision.text)}</div>
+              <p class="subtle">${escapeHtml(decision.reason)}</p>
+            </div>
+            <button class="tiny danger" data-decision-remove="${decision.id}">Remove</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderShipGate() {
+      qs("#shipChecks").innerHTML = Object.entries(shipCheckLabels).map(([key, label]) => `
+        <label class="check">
+          <input type="checkbox" ${state.shipChecks[key] ? "checked" : ""} data-ship="${key}">
+          <b>${escapeHtml(label)}</b>
+          <span class="pill ${state.shipChecks[key] ? "green" : "red"}">${state.shipChecks[key] ? "yes" : "open"}</span>
+        </label>
+      `).join("");
+      const readiness = shipReadiness();
+      qs("#readinessBar").setAttribute("width", String(Math.max(1, Math.round(670 * readiness / 100))));
+      qs("#visualScore").textContent = readiness + "%";
+      qs("#shipReport").textContent = shipReport();
+    }
+
+    function renderBriefs() {
+      qs("#dailyBrief").textContent = dailyBrief();
+    }
+
+    function renderTimer() {
+      qs("#timerText").textContent = formatTime(state.timer.remaining);
+    }
+
+    function scoreTask(task) {
+      return Number(task.impact) / Math.max(Number(task.effort), 1);
+    }
+
+    function estimateTokens(text) {
+      return Math.ceil(String(text).length / 4);
+    }
+
+    function capsuleText() {
+      const active = state.tasks.filter((task) => !task.complete).slice(0, 5);
+      return [
+        "OBJECTIVE",
+        state.context.objective || "(empty)",
+        "",
+        "CONSTRAINTS",
+        state.context.constraints || "(empty)",
+        "",
+        "ACTIVE TASKS",
+        active.length ? active.map((task) => `- ${task.title} [impact ${task.impact}, effort ${task.effort}] done: ${task.done || "unspecified"}`).join("\n") : "- none",
+        "",
+        "EVIDENCE NOTES",
+        state.context.notes || "(empty)",
+        "",
+        `RISK: ${state.context.risk || "medium"}`,
+        `NEXT OWNER: ${state.context.owner || "me"}`,
+        `TOKEN ESTIMATE: ${estimateTokens(`${state.context.objective} ${state.context.constraints} ${state.context.notes}`)}`
+      ].join("\n");
+    }
+
+    function compressedCapsule() {
+      const sentences = String(state.context.notes || "")
+        .split(/(?<=[.!?])\s+|\n+/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .slice(0, 8);
+      const taskLine = state.tasks
+        .filter((task) => !task.complete)
+        .sort((a, b) => scoreTask(b) - scoreTask(a))
+        .slice(0, 4)
+        .map((task) => `${task.title} (${task.done || "done criteria needed"})`)
+        .join("; ");
+      return [
+        `Goal: ${state.context.objective}`,
+        `Constraints: ${state.context.constraints}`,
+        `Priority queue: ${taskLine || "none"}`,
+        `Evidence: ${sentences.join(" ") || "none captured"}`,
+        `Risk: ${state.context.risk}; owner: ${state.context.owner || "me"}.`
+      ].join("\n");
+    }
+
+    function dailyBrief() {
+      const next = state.tasks
+        .filter((task) => !task.complete)
+        .sort((a, b) => scoreTask(b) - scoreTask(a))
+        .slice(0, 3);
+      return [
+        "TODAY",
+        state.context.objective,
+        "",
+        "TOP QUEUE",
+        next.length ? next.map((task, index) => `${index + 1}. ${task.title} -> ${task.done || "define done"}`).join("\n") : "No active tasks.",
+        "",
+        "QUALITY BAR",
+        `${shipReadiness()}% ship readiness, ${state.context.risk} risk, ${estimateTokens(capsuleText())} estimated context tokens.`
+      ].join("\n");
+    }
+
+    function shipReadiness() {
+      const values = Object.values(state.shipChecks);
+      return Math.round(values.filter(Boolean).length / values.length * 100);
+    }
+
+    function shipReport() {
+      const open = Object.entries(shipCheckLabels)
+        .filter(([key]) => !state.shipChecks[key])
+        .map(([, label]) => `- ${label}`)
+        .join("\n");
+      return [
+        `Ship readiness: ${shipReadiness()}%`,
+        "",
+        "Open gates:",
+        open || "- none",
+        "",
+        "Recent decisions:",
+        state.decisions.slice(-3).map((decision) => `- ${decision.text}: ${decision.reason}`).join("\n") || "- none"
+      ].join("\n");
+    }
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60).toString().padStart(2, "0");
+      const secs = Math.floor(seconds % 60).toString().padStart(2, "0");
+      return `${mins}:${secs}`;
+    }
+
+    function tickTimer() {
+      if (!state.timer.running) return;
+      state.timer.remaining = Math.max(0, state.timer.remaining - 1);
+      if (state.timer.remaining === 0) {
+        state.timer.running = false;
+        window.clearInterval(timerHandle);
+        timerHandle = null;
+        toast("Focus block complete.");
+      }
+      renderTimer();
+      saveState();
+    }
+
+    function startTimer() {
+      if (timerHandle) window.clearInterval(timerHandle);
+      state.timer.running = true;
+      timerHandle = window.setInterval(tickTimer, 1000);
+      render();
+    }
+
+    function pauseTimer() {
+      state.timer.running = false;
+      if (timerHandle) window.clearInterval(timerHandle);
+      timerHandle = null;
+      render();
+    }
+
+    function resetTimer() {
+      state.timer = { remaining: TIMER_TOTAL, running: false, startedAt: null };
+      if (timerHandle) window.clearInterval(timerHandle);
+      timerHandle = null;
+      render();
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        toast("Copied.");
+      } catch {
+        const area = document.createElement("textarea");
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+        toast("Copied.");
+      }
+    }
+
+    function toast(message) {
+      const el = qs("#toast");
+      el.textContent = message;
+      el.classList.add("show");
+      window.setTimeout(() => el.classList.remove("show"), 1800);
+    }
+
+    function wireEvents() {
+      qsa(".nav button[data-view]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.activeView = button.dataset.view;
+          render();
+        });
+      });
+
+      qs("#themeBtn").addEventListener("click", () => {
+        const high = document.documentElement.style.getPropertyValue("--bg") === "#ffffff";
+        if (high) {
+          document.documentElement.style.setProperty("--bg", "#f6f4ee");
+          document.documentElement.style.setProperty("--paper", "#fffcf3");
+          document.documentElement.style.setProperty("--line", "#d9d5ca");
+        } else {
+          document.documentElement.style.setProperty("--bg", "#ffffff");
+          document.documentElement.style.setProperty("--paper", "#ffffff");
+          document.documentElement.style.setProperty("--line", "#9aa0a8");
+        }
+      });
+
+      qs("#addTaskBtn").addEventListener("click", () => {
+        const title = qs("#taskTitle").value.trim();
+        if (!title) return toast("Add a task title.");
+        state.tasks.push({
+          id: id(),
+          title,
+          done: qs("#taskDone").value.trim(),
+          impact: Number(qs("#taskImpact").value),
+          effort: Number(qs("#taskEffort").value),
+          complete: false,
+          created: Date.now()
+        });
+        qs("#taskTitle").value = "";
+        qs("#taskDone").value = "";
+        render();
+      });
+
+      qs("#taskList").addEventListener("click", (event) => {
+        const toggle = event.target.closest("[data-task-toggle]");
+        const remove = event.target.closest("[data-task-remove]");
+        if (toggle) {
+          const task = state.tasks.find((item) => item.id === toggle.dataset.taskToggle);
+          if (task) task.complete = !task.complete;
+          render();
+        }
+        if (remove) {
+          state.tasks = state.tasks.filter((item) => item.id !== remove.dataset.taskRemove);
+          render();
+        }
+      });
+
+      qs("#sortTasksBtn").addEventListener("click", () => {
+        state.tasks.sort((a, b) => Number(a.complete) - Number(b.complete) || scoreTask(b) - scoreTask(a));
+        render();
+      });
+
+      qs("#clearDoneBtn").addEventListener("click", () => {
+        state.tasks = state.tasks.filter((task) => !task.complete);
+        render();
+      });
+
+      qs("#startTimerBtn").addEventListener("click", startTimer);
+      qs("#pauseTimerBtn").addEventListener("click", pauseTimer);
+      qs("#resetTimerBtn").addEventListener("click", resetTimer);
+
+      ["objectiveInput", "constraintsInput", "notesInput", "tokenBudget", "riskLevel", "nextOwner"].forEach((inputId) => {
+        qs("#" + inputId).addEventListener("input", () => {
+          state.context.objective = qs("#objectiveInput").value;
+          state.context.constraints = qs("#constraintsInput").value;
+          state.context.notes = qs("#notesInput").value;
+          state.context.budget = Number(qs("#tokenBudget").value);
+          state.context.risk = qs("#riskLevel").value;
+          state.context.owner = qs("#nextOwner").value;
+          render();
+        });
+      });
+
+      qs("#compressBtn").addEventListener("click", () => {
+        state.context.notes = compressedCapsule();
+        render();
+        toast("Capsule compressed.");
+      });
+      qs("#copyCapsuleBtn").addEventListener("click", () => copyText(capsuleText()));
+      qs("#copyBriefBtn").addEventListener("click", () => copyText(capsuleText()));
+      qs("#copyDailyBtn").addEventListener("click", () => copyText(dailyBrief()));
+      qs("#copyShipBtn").addEventListener("click", () => copyText(shipReport()));
+
+      qs("#stackTabs").addEventListener("click", (event) => {
+        const tab = event.target.closest("[data-stack]");
+        if (!tab) return;
+        state.settings.manager = tab.dataset.stack;
+        render();
+      });
+
+      ["projectPath", "packageManager", "branchPrefix"].forEach((inputId) => {
+        qs("#" + inputId).addEventListener("input", () => {
+          state.settings.path = qs("#projectPath").value;
+          state.settings.manager = qs("#packageManager").value;
+          state.settings.branchPrefix = qs("#branchPrefix").value;
+          render();
+        });
+      });
+
+      qs("#commandList").addEventListener("click", (event) => {
+        const copy = event.target.closest("[data-copy]");
+        if (copy) copyText(copy.dataset.copy);
+      });
+
+      qs("#addCommandBtn").addEventListener("click", () => {
+        const label = qs("#customCommandLabel").value.trim();
+        const command = qs("#customCommandValue").value.trim();
+        if (!label || !command) return toast("Add a label and command.");
+        state.commands.push({ id: id(), label, command });
+        qs("#customCommandLabel").value = "";
+        qs("#customCommandValue").value = "";
+        render();
+      });
+
+      qs("#snippetSearch").addEventListener("input", renderSnippets);
+      qs("#addSnippetBtn").addEventListener("click", () => {
+        const title = qs("#snippetTitle").value.trim();
+        const body = qs("#snippetBody").value.trim();
+        if (!title || !body) return toast("Add a title and body.");
+        state.snippets.push({
+          id: id(),
+          title,
+          kind: qs("#snippetKind").value,
+          tags: qs("#snippetTags").value.trim(),
+          body
+        });
+        qs("#snippetTitle").value = "";
+        qs("#snippetTags").value = "";
+        qs("#snippetBody").value = "";
+        render();
+      });
+
+      qs("#snippetList").addEventListener("click", (event) => {
+        const copy = event.target.closest("[data-snippet-copy]");
+        const remove = event.target.closest("[data-snippet-remove]");
+        if (copy) {
+          const snippet = state.snippets.find((item) => item.id === copy.dataset.snippetCopy);
+          if (snippet) copyText(snippet.body);
+        }
+        if (remove) {
+          state.snippets = state.snippets.filter((item) => item.id !== remove.dataset.snippetRemove);
+          render();
+        }
+      });
+
+      qs("#addDecisionBtn").addEventListener("click", () => {
+        const text = qs("#decisionText").value.trim();
+        const reason = qs("#decisionReason").value.trim();
+        if (!text || !reason) return toast("Add a decision and reason.");
+        state.decisions.push({ id: id(), text, reason, created: Date.now() });
+        qs("#decisionText").value = "";
+        qs("#decisionReason").value = "";
+        render();
+      });
+
+      qs("#decisionList").addEventListener("click", (event) => {
+        const remove = event.target.closest("[data-decision-remove]");
+        if (!remove) return;
+        state.decisions = state.decisions.filter((item) => item.id !== remove.dataset.decisionRemove);
+        render();
+      });
+
+      qs("#shipChecks").addEventListener("change", (event) => {
+        const input = event.target.closest("[data-ship]");
+        if (!input) return;
+        state.shipChecks[input.dataset.ship] = input.checked;
+        render();
+      });
+
+      qs("#exportBtn").addEventListener("click", () => {
+        const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "coding-efficiency-workbench-export.json";
+        link.click();
+        URL.revokeObjectURL(url);
+      });
+
+      qs("#importBtn").addEventListener("click", () => {
+        qs("#importer").classList.remove("hidden");
+        qs("#importText").focus();
+      });
+      qs("#cancelImportBtn").addEventListener("click", () => qs("#importer").classList.add("hidden"));
+      qs("#applyImportBtn").addEventListener("click", () => {
+        try {
+          state = mergeDefaults(clone(defaultState), JSON.parse(qs("#importText").value));
+          qs("#importText").value = "";
+          qs("#importer").classList.add("hidden");
+          render();
+          toast("Imported.");
+        } catch {
+          toast("Import JSON is invalid.");
+        }
+      });
+
+      qs("#resetBtn").addEventListener("click", () => {
+        state = clone(defaultState);
+        resetTimer();
+        toast("Demo state restored.");
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.ctrlKey && event.key === "Enter") {
+          event.preventDefault();
+          qs("#addTaskBtn").click();
+        }
+        if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "c") {
+          event.preventDefault();
+          copyText(capsuleText());
+        }
+      });
+    }
+
+    wireEvents();
+    render();
+  </script>
+</body>
+</html>

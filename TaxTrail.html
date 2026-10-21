@@ -1,0 +1,1503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TaxTrail — Tax Season Prep, A to Z</title>
+<meta name="description" content="TaxTrail: a private, offline, single-file tax season command center. Roadmap, document checklist, income ledger, Venmo statement analyzer, estimator, credits, deadlines and 60+ official resources.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0e6a56">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='rgb(14,106,86)'/%3E%3Cpath d='M18 12h20l10 10v30a3 3 0 0 1-3 3H18a3 3 0 0 1-3-3V15a3 3 0 0 1 3-3z' fill='rgb(250,245,232)'/%3E%3Cpath d='M22 31h20M22 37h14' stroke='rgb(14,106,86)' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M22 46l5 5 11-12' fill='none' stroke='rgb(214,150,40)' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<script>
+/* set theme before first paint: stored pref -> device setting */
+(function(){var p='auto';try{p=(JSON.parse(localStorage.getItem('taxtrail.v1'))||{}).theme||'auto'}catch(e){}
+var d=p==='dark'||(p==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+document.documentElement.setAttribute('data-theme',d?'dark':'light');})();
+</script>
+<style>
+:root{
+  --bg:#f6f1e6;--bg2:#ece4d2;--sf:#fffcf5;--sf2:#faf4e6;--ink:#14261f;--mut:#566860;--line:rgba(20,38,31,.14);
+  --brand:#0e6a56;--brand2:#13a37f;--onb:#fff;--gold:#c68521;--coral:#d4553c;--blue:#2f6fb0;--ok:#16895a;--warn:#b9771a;--bad:#c9432f;
+  --sh:0 1px 2px rgba(20,38,31,.06),0 12px 30px -14px rgba(20,38,31,.28);--sh2:0 2px 4px rgba(20,38,31,.08),0 28px 60px -20px rgba(20,38,31,.38);
+  --sky1:#f7c98f;--sky2:#fbe6c4;--sky3:#f6f1e6;--sun:#f4a73a;--sunglow:rgba(244,167,58,.45);--h3:#cfdcc0;--h2:#86b79d;--h1:#1d6a58;--star:0;
+  --paper:#fffdf6;--paperline:#c9bfa6;
+  --r:18px;--serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;color-scheme:light;
+}
+:root[data-theme=dark]{
+  --bg:#08120e;--bg2:#0d1b16;--sf:#102019;--sf2:#0c1914;--ink:#e6f2ec;--mut:#8fa69c;--line:rgba(230,242,236,.14);
+  --brand:#38d6a8;--brand2:#7ae9c9;--onb:#04201a;--gold:#ebb64f;--coral:#ff7b61;--blue:#6eaeff;--ok:#43d492;--warn:#ebb64f;--bad:#ff7b61;
+  --sh:0 1px 2px rgba(0,0,0,.4),0 14px 34px -14px rgba(0,0,0,.7);--sh2:0 2px 4px rgba(0,0,0,.5),0 30px 64px -20px rgba(0,0,0,.85);
+  --sky1:#10294a;--sky2:#0c2a33;--sky3:#08120e;--sun:#e8eefc;--sunglow:rgba(150,190,255,.32);--h3:#12303a;--h2:#0f4a45;--h1:#0b6a58;--star:1;
+  --paper:#1a2d26;--paperline:#3a5a4e;color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:74px;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);overflow-x:hidden;transition:background .5s,color .5s;-webkit-font-smoothing:antialiased}
+a{color:var(--brand);text-underline-offset:3px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+svg{display:block}
+:focus-visible{outline:2.5px solid var(--brand2);outline-offset:2px;border-radius:6px}
+::selection{background:var(--brand);color:var(--onb)}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:clamp(16px,4vw,32px)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.skip{position:absolute;left:12px;top:-60px;background:var(--brand);color:var(--onb);padding:10px 16px;border-radius:10px;z-index:200;transition:top .2s}
+.skip:focus{top:10px}
+#sp{position:fixed;left:0;top:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--brand),var(--gold),var(--coral));z-index:120}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:10px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font:700 1.28rem/1 var(--serif);letter-spacing:-.01em;margin-right:auto}
+.brand svg{width:34px;height:34px;filter:drop-shadow(0 4px 8px rgba(14,106,86,.35));transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.brand:hover svg{transform:rotate(-8deg) scale(1.1)}
+.brand small{display:block;font:600 .56rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--mut);margin-top:4px}
+.links{display:flex;gap:2px;align-items:center}
+.links a,.links button.lk{color:var(--ink);text-decoration:none;font-size:.88rem;font-weight:550;padding:8px 12px;border-radius:999px;background:none;border:0;transition:background .2s,color .2s}
+.links a:hover,.links button.lk:hover,.links a.on{background:color-mix(in srgb,var(--brand) 14%,transparent);color:var(--brand)}
+.sel{appearance:none;background:var(--sf) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='gray' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 10px center;border:1px solid var(--line);border-radius:999px;padding:8px 28px 8px 12px;font-size:.85rem;font-weight:600}
+.ibtn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--sf);border:1px solid var(--line);transition:transform .25s,background .2s}
+.ibtn:hover{transform:translateY(-2px) rotate(8deg);background:color-mix(in srgb,var(--brand) 12%,var(--sf))}
+.ibtn svg{width:18px;height:18px}
+.burger{display:none}
+.menu{position:relative}
+.pop{position:absolute;right:0;top:calc(100% + 10px);min-width:230px;background:var(--sf);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh2);padding:8px;display:none;z-index:130}
+.pop.show{display:block;animation:pop .22s cubic-bezier(.2,.9,.3,1.2)}
+.pop button,.pop a{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:9px 11px;border-radius:9px;font-size:.88rem;text-decoration:none;color:var(--ink)}
+.pop button:hover,.pop a:hover{background:color-mix(in srgb,var(--brand) 13%,transparent)}
+.pop svg{width:16px;height:16px;color:var(--brand)}
+.pop.tools{min-width:290px;left:0;right:auto;max-height:70vh;overflow:auto}
+@keyframes pop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
+@media(max-width:940px){.links{display:none}.burger{display:grid}.nav.open .links{display:flex;position:absolute;left:0;right:0;top:62px;flex-direction:column;align-items:stretch;background:var(--bg);padding:12px clamp(16px,4vw,32px) 18px;border-bottom:1px solid var(--line);box-shadow:var(--sh2)}.nav.open .links a,.nav.open .links button.lk{padding:12px 14px;text-align:left;border-radius:12px}.pop.tools{left:auto;right:0}}
+
+@media(max-width:540px){.brand small{display:none}.nav-in{gap:6px}.brand{font-size:1.15rem;gap:8px}.brand svg{width:30px;height:30px}.sel{padding:7px 22px 7px 10px;font-size:.78rem;background-position:right 8px center}.ibtn{width:34px;height:34px;flex:none}}
+/* HERO */
+.hero{position:relative;height:155vh;min-height:980px}
+.pin{position:sticky;top:0;height:100vh;min-height:620px;overflow:hidden;background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 55%,var(--sky3) 100%);isolation:isolate}
+.pin::after{content:"";position:absolute;inset:auto 0 0 0;height:20vh;background:linear-gradient(transparent,var(--bg));z-index:6;pointer-events:none}
+.layer{position:absolute;left:0;right:0;will-change:transform;transform:translate3d(var(--mx,0px),calc(var(--p,0)*var(--sy,0)*-1px + var(--my,0px)),0)}
+.stars{inset:0 0 40% 0;opacity:calc(var(--star)*(1 - var(--p,0)*1.2));background-image:radial-gradient(1.4px 1.4px at 8% 18%,#fff,transparent),radial-gradient(1px 1px at 21% 8%,#fff,transparent),radial-gradient(1.6px 1.6px at 33% 28%,#cfe,transparent),radial-gradient(1px 1px at 47% 12%,#fff,transparent),radial-gradient(1.4px 1.4px at 58% 24%,#fff,transparent),radial-gradient(1px 1px at 69% 7%,#fff,transparent),radial-gradient(1.6px 1.6px at 78% 20%,#cfe,transparent),radial-gradient(1px 1px at 90% 11%,#fff,transparent),radial-gradient(1.2px 1.2px at 15% 36%,#fff,transparent),radial-gradient(1px 1px at 63% 38%,#fff,transparent),radial-gradient(1.2px 1.2px at 95% 33%,#fff,transparent);animation:twinkle 5s ease-in-out infinite alternate}
+@keyframes twinkle{to{opacity:calc(var(--star)*.45)}}
+.sunwrap{top:13vh;right:14vw;left:auto;width:min(26vw,300px);aspect-ratio:1}
+.orb{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 38% 34%,#fff8 0 10%,var(--sun) 40%,color-mix(in srgb,var(--sun) 78%,#e25 )100%);box-shadow:0 0 0 clamp(18px,3vw,44px) var(--sunglow),0 0 120px 40px var(--sunglow);animation:breathe 7s ease-in-out infinite}
+:root[data-theme=dark] .orb{background:radial-gradient(circle at 36% 34%,#fff 0 12%,#dfe8fb 35%,#9db4dd 100%)}
+@keyframes breathe{50%{transform:scale(1.045)}}
+.hill{height:64vh;bottom:0;width:100%;overflow:visible}
+.hill path{transition:fill .5s}
+.paper{position:absolute;width:clamp(74px,8vw,112px);aspect-ratio:3/4;background:var(--paper);border:1px solid var(--paperline);border-radius:7px;padding:9px 9px;box-shadow:0 14px 26px -10px rgba(0,0,0,.35);left:var(--x);top:var(--y);transform:rotate(var(--r));animation:bob var(--t,6s) ease-in-out var(--d,0s) infinite alternate}
+.paper b{display:block;font:800 clamp(.7rem,1.1vw,.95rem)/1 var(--mono);color:var(--brand);letter-spacing:.02em;margin-bottom:7px}
+.paper i{display:block;height:4px;border-radius:3px;background:var(--paperline);margin:5px 0;opacity:.8}
+.paper i:nth-child(odd){width:78%}.paper i:nth-child(3){width:55%}
+.paper u{position:absolute;right:8px;bottom:8px;width:16px;height:16px;border-radius:50%;border:2px solid var(--gold);text-decoration:none}
+@keyframes bob{to{transform:translateY(-16px) rotate(calc(var(--r) + 5deg))}}
+.coin{position:absolute;left:var(--x);top:var(--y);width:var(--s,38px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7c8,#f0b93d 45%,#b6791a);box-shadow:inset 0 0 0 3px rgba(255,255,255,.35),0 10px 18px -6px rgba(0,0,0,.4);display:grid;place-items:center;font:800 calc(var(--s,38px)*.45)/1 var(--serif);color:#7a4c08;animation:spin var(--t,5s) ease-in-out var(--d,0s) infinite alternate}
+@keyframes spin{from{transform:translateY(0) rotateY(0)}to{transform:translateY(-22px) rotateY(180deg)}}
+.hero-copy{position:absolute;left:0;right:0;top:50%;z-index:5;transform:translateY(calc(-50% + var(--p,0)*-90px));opacity:calc(1 - var(--p,0)*1.5);pointer-events:none}
+.hero-copy .wrap{pointer-events:auto}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:700 .72rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--brand);background:color-mix(in srgb,var(--sf) 70%,transparent);border:1px solid var(--line);padding:8px 14px;border-radius:999px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 var(--ok);animation:ping 2s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+h1{font:800 clamp(2.7rem,7.4vw,6rem)/.98 var(--serif);letter-spacing:-.035em;margin:20px 0 18px;max-width:12ch;text-wrap:balance}
+h1 em{font-style:italic;background:linear-gradient(100deg,var(--brand),var(--gold) 55%,var(--coral));-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.08em}
+.lede{max-width:46ch;font-size:clamp(1.02rem,1.5vw,1.2rem);color:color-mix(in srgb,var(--ink) 82%,transparent)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--sf);color:var(--ink);padding:11px 18px;border-radius:999px;font-weight:650;font-size:.92rem;text-decoration:none;transition:transform .25s cubic-bezier(.2,.9,.3,1.3),box-shadow .25s,background .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn.pri{background:linear-gradient(135deg,var(--brand),var(--brand2));color:var(--onb);border-color:transparent;box-shadow:0 10px 24px -10px var(--brand)}
+.btn.sm{padding:7px 13px;font-size:.8rem}
+.btn.dng{color:var(--bad)}
+.btn svg{width:16px;height:16px}
+.rip{position:absolute;border-radius:50%;background:currentColor;opacity:.25;transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(3.2);opacity:0}}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.chip{display:flex;align-items:baseline;gap:8px;padding:10px 16px;border-radius:14px;background:color-mix(in srgb,var(--sf) 76%,transparent);border:1px solid var(--line);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:var(--sh)}
+.chip b{font:800 1.6rem/1 var(--serif)}
+.chip span{font-size:.75rem;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.scrollhint{position:absolute;bottom:4vh;left:50%;translate:-50% 0;z-index:7;font:700 .7rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--mut);display:grid;justify-items:center;gap:8px;opacity:calc(1 - var(--p,0)*4)}
+.scrollhint i{width:22px;height:34px;border:2px solid var(--mut);border-radius:12px;position:relative}
+.scrollhint i::after{content:"";position:absolute;left:50%;top:6px;width:4px;height:7px;border-radius:2px;background:var(--mut);translate:-50% 0;animation:wheel 1.6s infinite}
+@keyframes wheel{to{transform:translateY(12px);opacity:0}}
+@media(max-width:700px){.sunwrap{right:4vw;top:9vh;width:34vw}.hero{height:140vh}}
+
+/* MARQUEE */
+.marquee{overflow:hidden;border-block:1px solid var(--line);background:var(--bg2);padding:14px 0;-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.mq{display:flex;gap:14px;width:max-content;animation:mq 46s linear infinite}
+.marquee:hover .mq{animation-play-state:paused}
+.mq span{font:700 .85rem/1 var(--mono);padding:9px 15px;border-radius:9px;background:var(--sf);border:1px dashed var(--paperline);color:var(--mut);white-space:nowrap}
+.mq span b{color:var(--brand)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* SECTIONS */
+section{padding-block:clamp(54px,8vw,104px)}
+.sh{max-width:720px;margin-bottom:34px}
+.sh .k{font:700 .74rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--brand);display:flex;align-items:center;gap:10px}
+.sh .k::before{content:"";width:28px;height:2px;background:var(--gold);border-radius:2px}
+h2{font:800 clamp(1.9rem,4.2vw,3.1rem)/1.04 var(--serif);letter-spacing:-.025em;margin:12px 0 12px}
+.sh p{color:var(--mut);font-size:1.04rem}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--i,0)*70ms)}
+.rv.in{opacity:1;transform:none}
+
+/* DASH */
+.banner{display:flex;gap:14px;align-items:flex-start;padding:16px 20px;border-radius:16px;border:1px solid color-mix(in srgb,var(--c,var(--gold)) 45%,transparent);background:color-mix(in srgb,var(--c,var(--gold)) 11%,var(--sf));margin-bottom:22px}
+.banner svg{width:26px;height:26px;color:var(--c,var(--gold));flex:none;margin-top:1px}
+.banner b{display:block;font-size:1.02rem}
+.banner span{color:var(--mut);font-size:.92rem}
+.dash{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1.6fr);gap:18px}
+@media(max-width:900px){.dash{grid-template-columns:1fr}}
+.panel{background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--sh)}
+.panel.in2{background:var(--sf2);box-shadow:none;border-radius:14px;padding:14px}
+.panel h3,.card h4{font:700 1.05rem/1.2 var(--serif);margin-bottom:12px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,124px),1fr));gap:12px}
+.fld{display:grid;gap:5px;font-size:.76rem;font-weight:650;color:var(--mut);letter-spacing:.02em}
+.fld input,.fld select,.fld textarea,.inp input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:.95rem;font-weight:500;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.fld input:focus,.fld select:focus,.inp input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 22%,transparent)}
+.inp{position:relative;display:block}
+.inp.money input{padding-left:24px;font-family:var(--mono)}
+.inp.money::before{content:"$";position:absolute;left:11px;top:50%;translate:0 -50%;color:var(--mut);font:500 .9rem var(--mono);pointer-events:none}
+input[type=checkbox]{accent-color:var(--brand);width:18px;height:18px}
+input[type=file]{padding:8px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.tile{position:relative;overflow:hidden;background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--sh)}
+.tile .v{font:800 2.05rem/1 var(--serif);letter-spacing:-.02em;margin:8px 0 4px;font-variant-numeric:tabular-nums}
+.tile .l{font:700 .7rem/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.tile .s{font-size:.8rem;color:var(--mut)}
+.tile::after{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--c,var(--brand)) 30%,transparent),transparent 70%)}
+.good{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+
+/* TOOLS */
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:20px}
+.search{flex:1 1 220px;min-width:0;display:flex;align-items:center;gap:9px;background:var(--sf);border:1px solid var(--line);border-radius:999px;padding:0 14px;box-shadow:var(--sh)}
+.search svg{width:17px;height:17px;color:var(--mut);flex:none}
+.search input{border:0;background:none;padding:11px 0;width:100%;outline:none}
+.search kbd{font:600 .7rem var(--mono);border:1px solid var(--line);border-radius:6px;padding:2px 6px;color:var(--mut)}
+.fchips{display:flex;gap:8px;flex-wrap:wrap}
+.fc{border:1px solid var(--line);background:var(--sf);padding:8px 14px;border-radius:999px;font-size:.84rem;font-weight:650;transition:all .2s}
+.fc.on,.fc:hover{background:var(--brand);color:var(--onb);border-color:transparent}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,268px),1fr));gap:16px;align-items:start}
+.card{--c:var(--brand);position:relative;background:var(--sf);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s,border-color .3s}
+.card::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),color-mix(in srgb,var(--c) 17%,transparent),transparent 60%);opacity:0;transition:opacity .35s}
+.card:hover::before{opacity:1}
+.card:not(.open):hover{transform:translateY(-5px);box-shadow:var(--sh2);border-color:color-mix(in srgb,var(--c) 50%,var(--line))}
+.card.open{grid-column:1/-1;border-color:color-mix(in srgb,var(--c) 55%,var(--line));box-shadow:var(--sh2)}
+.card[hidden]{display:none}
+.t-prep{--c:var(--brand)}.t-money{--c:var(--gold)}.t-plan{--c:var(--coral)}.t-learn{--c:var(--blue)}
+.ch{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:18px;z-index:1}
+.ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 15%,transparent);color:var(--c);transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.card:hover .ico{transform:rotate(-8deg) scale(1.08)}
+.ico svg{width:24px;height:24px}
+.ch .tag{font:700 .64rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.ch h3{font:700 1.12rem/1.2 var(--serif);margin:3px 0}
+.ch p{font-size:.82rem;color:var(--mut);line-height:1.35}
+.chev{width:20px;height:20px;color:var(--mut);transition:transform .45s cubic-bezier(.3,1.4,.5,1)}
+.card.open .chev{transform:rotate(180deg)}
+.met{grid-column:1/-1;display:flex;align-items:center;gap:10px;margin-top:2px}
+.met b{font:700 .85rem var(--mono);color:var(--ink);white-space:nowrap}
+.mbar{flex:1;height:6px;border-radius:6px;background:color-mix(in srgb,var(--c) 14%,transparent);overflow:hidden}
+.mbar i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 55%,#fff));transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.cbody{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s cubic-bezier(.2,.8,.2,1)}
+.card.open .cbody{grid-template-rows:1fr}
+.cbody>div{overflow:hidden;min-height:0}
+.cpad{padding:6px 20px 24px;opacity:0;transform:translateY(10px);transition:opacity .4s .12s,transform .5s .12s}
+.card.open .cpad{opacity:1;transform:none}
+.cpad>.intro{color:var(--mut);font-size:.92rem;max-width:80ch;margin-bottom:16px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.row.sp{justify-content:space-between}
+.mt{margin-top:14px}.mt2{margin-top:22px}
+.note{font-size:.8rem;color:var(--mut);margin-top:10px;line-height:1.45}
+.note b{color:var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:6px;font:700 .7rem/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;padding:5px 9px;border-radius:999px;background:color-mix(in srgb,var(--pc,var(--mut)) 16%,transparent);color:var(--pc,var(--mut))}
+.pill.ok{--pc:var(--ok)}.pill.warn{--pc:var(--warn)}.pill.bad{--pc:var(--bad)}.pill.blue{--pc:var(--blue)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--sf)}
+.tbl{width:100%;border-collapse:collapse;font-size:.86rem}
+.tbl th{font:700 .68rem/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);text-align:left;padding:11px 12px;background:var(--sf2);position:sticky;top:0}
+.tbl td{padding:7px 12px;border-top:1px solid var(--line);vertical-align:middle}
+.tbl td input,.tbl td select{width:100%;min-width:90px;background:transparent;border:1px solid transparent;border-radius:8px;padding:6px 8px;font-size:.86rem}
+.tbl td input:hover,.tbl td select:hover{border-color:var(--line)}
+.tbl td input:focus,.tbl td select:focus{outline:none;border-color:var(--brand);background:var(--bg)}
+.tbl td.n,.tbl th.n{text-align:right;font-family:var(--mono)}
+.tbl tfoot td{font-weight:700;background:var(--sf2)}
+.tbl .x{background:none;border:0;color:var(--mut);padding:4px;border-radius:6px}
+.tbl .x:hover{color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.kv{display:grid;gap:0}
+.kv div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:.9rem}
+.kv div:last-child{border:0}
+.kv span:first-child{color:var(--mut)}.kv b{font-family:var(--mono);font-weight:650}
+.kv .tot{font-weight:800;border-top:2px solid var(--ink);border-bottom:0;margin-top:4px;padding-top:10px}
+.big{border-radius:16px;padding:20px;color:var(--onb);background:linear-gradient(135deg,var(--brand),var(--brand2));position:relative;overflow:hidden}
+.big.owe{background:linear-gradient(135deg,#b8432f,#e0793b);color:#fff}
+.big .l{font:700 .72rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+.big .v{font:800 clamp(2.2rem,5vw,3.4rem)/1.05 var(--serif);letter-spacing:-.03em;margin:8px 0 4px;font-variant-numeric:tabular-nums}
+.big .s{font-size:.85rem;opacity:.9}
+.big::after{content:"";position:absolute;right:-40px;bottom:-60px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.14)}
+.stack{display:flex;height:22px;border-radius:8px;overflow:hidden;background:var(--line);margin:10px 0 8px}
+.stack i{display:block;height:100%;transition:flex-basis .8s cubic-bezier(.2,.8,.2,1);min-width:0}
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.74rem;color:var(--mut)}
+.leg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px}
+.tgl{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--sf);font-size:.78rem;font-weight:650;transition:all .2s}
+.tgl[aria-pressed=true]{background:var(--ok);color:#fff;border-color:transparent}
+:root[data-theme=dark] .tgl[aria-pressed=true]{color:#04201a}
+.tgl svg{width:14px;height:14px}
+.dl{display:grid;gap:10px}
+.dg{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--sf)}
+.dg>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 14px;font-weight:700;background:var(--sf2)}
+.dg>summary::-webkit-details-marker{display:none}
+.dg>summary .pill{margin-left:auto}
+.di{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 14px;border-top:1px solid var(--line)}
+.di b{display:block;font-size:.9rem}
+.di small{color:var(--mut);font-size:.78rem;display:block;line-height:1.35}
+.di .form{font:700 .66rem var(--mono);color:var(--brand);background:color-mix(in srgb,var(--brand) 12%,transparent);padding:1px 6px;border-radius:5px;margin-right:6px}
+.tg2{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.steps{display:grid;gap:14px;counter-reset:s}
+.ph{border:1px solid var(--line);border-radius:16px;background:var(--sf);overflow:hidden}
+.ph>header{display:flex;gap:12px;align-items:center;padding:13px 16px;background:var(--sf2)}
+.ph>header .no{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:800 .95rem var(--serif);background:var(--c,var(--brand));color:var(--onb);flex:none}
+.ph>header h5{font:700 1rem/1.2 var(--serif)}
+.ph>header small{color:var(--mut);font-size:.78rem}
+.ph>header .pill{margin-left:auto}
+.st{display:flex;gap:11px;align-items:flex-start;padding:10px 16px;border-top:1px solid var(--line);font-size:.9rem;cursor:pointer;transition:background .2s}
+.st:hover{background:color-mix(in srgb,var(--brand) 6%,transparent)}
+.st input{margin-top:3px;flex:none}
+.st.done span{color:var(--mut);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--mut) 55%,transparent)}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--sf);text-align:left;width:100%;transition:all .2s}
+.opt:hover{border-color:var(--brand);transform:translateX(4px)}
+.opt b{display:block}.opt span{font-size:.82rem;color:var(--mut)}
+.wiz{display:grid;gap:10px;max-width:640px}
+.res{border-radius:16px;padding:18px;border:1px solid var(--brand);background:color-mix(in srgb,var(--brand) 9%,var(--sf))}
+.res h4{font:800 1.5rem/1.1 var(--serif);margin-bottom:8px}
+.drop{display:block;border:2px dashed color-mix(in srgb,var(--c) 55%,var(--line));border-radius:16px;padding:26px 18px;text-align:center;background:color-mix(in srgb,var(--c) 6%,transparent);transition:all .25s;cursor:pointer}
+.drop.over{background:color-mix(in srgb,var(--c) 18%,transparent);transform:scale(1.015)}
+.drop svg{width:34px;height:34px;margin:0 auto 8px;color:var(--c)}
+.drop b{font-size:1rem}
+.chart{display:flex;align-items:flex-end;gap:3px;height:150px;padding:6px 0 0;overflow-x:auto}
+.cc{flex:1 0 14px;max-width:34px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px;height:100%;position:relative}
+.cc u{width:100%;display:flex;gap:2px;align-items:flex-end;height:calc(100% - 16px);text-decoration:none}
+.cc u i{flex:1;border-radius:4px 4px 0 0;min-height:1px;transition:height .8s cubic-bezier(.2,.8,.2,1)}
+.cc small{font:600 .55rem var(--mono);color:var(--mut);height:12px}
+.meter{height:10px;border-radius:8px;background:var(--line);overflow:hidden;margin:6px 0}
+.meter i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--ok),var(--gold),var(--bad));background-size:300px 100%}
+.cr{display:grid;grid-template-columns:1fr auto;gap:10px;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:var(--sf)}
+.cr h5{font-size:.95rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.cr p{font-size:.82rem;color:var(--mut);margin-top:4px}
+.cr .meta{font-size:.74rem;color:var(--mut);margin-top:6px}
+.tl{list-style:none;padding:0;display:grid;gap:0}
+.tl li{display:grid;grid-template-columns:78px 1fr auto;gap:12px;align-items:center;padding:11px 4px;border-bottom:1px dashed var(--line)}
+.tl .d{font:700 .8rem var(--mono);color:var(--brand)}
+.tl li.past{opacity:.5}
+.tl li.next{background:color-mix(in srgb,var(--gold) 12%,transparent);border-radius:10px;padding-inline:10px}
+.tl b{font-size:.92rem}.tl small{display:block;color:var(--mut);font-size:.78rem}
+
+/* TIMELINE SECTION */
+.rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 2px 24px;margin-inline:calc(clamp(16px,4vw,32px)*-1);padding-inline:clamp(16px,4vw,32px)}
+.step{flex:0 0 min(300px,78vw);scroll-snap-align:start;position:relative;background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--sh);overflow:hidden;transition:transform .35s}
+.step:hover{transform:translateY(-6px)}
+.step .n{font:800 4.2rem/1 var(--serif);color:color-mix(in srgb,var(--c) 22%,transparent);position:absolute;right:14px;top:6px}
+.step small{font:700 .7rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--c)}
+.step h3{font:700 1.2rem/1.2 var(--serif);margin:12px 0 8px}
+.step p{font-size:.88rem;color:var(--mut)}
+.step a{display:inline-block;margin-top:12px;font-weight:700;font-size:.85rem}
+.step::before{content:"";position:absolute;left:0;top:0;height:4px;width:100%;background:var(--c)}
+
+/* RESOURCES */
+.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:16px}
+.rc{background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--sh)}
+.rc h3{font:700 1.08rem var(--serif);margin-bottom:10px;display:flex;align-items:center;gap:9px}
+.rc h3 svg{width:20px;height:20px;color:var(--c,var(--brand))}
+.rc ul{list-style:none;padding:0;display:grid;gap:2px}
+.rc li a{display:flex;justify-content:space-between;gap:10px;text-decoration:none;color:var(--ink);padding:7px 9px;border-radius:9px;font-size:.88rem;transition:background .2s,padding .2s}
+.rc li a:hover{background:color-mix(in srgb,var(--brand) 11%,transparent);padding-left:14px;color:var(--brand)}
+.rc li a span{color:var(--mut);font-size:.72rem;align-self:center;white-space:nowrap}
+details.q{background:var(--sf);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}
+details.q[open]{border-color:var(--brand)}
+details.q summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:700;display:flex;justify-content:space-between;gap:12px;align-items:center}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::after{content:"+";font:400 1.5rem/1 var(--mono);color:var(--brand);transition:transform .3s}
+details.q[open] summary::after{transform:rotate(45deg)}
+details.q div{padding:0 18px 16px;color:var(--mut);font-size:.94rem}
+.faq{max-width:860px}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--line);padding:56px 0 30px;position:relative;overflow:hidden}
+footer::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--brand),var(--gold),var(--coral),var(--blue))}
+.fg{display:grid;grid-template-columns:1.5fr repeat(5,1fr);gap:28px}
+@media(max-width:1000px){.fg{grid-template-columns:repeat(3,1fr)}.fg .fb{grid-column:1/-1}}
+@media(max-width:620px){.fg{grid-template-columns:repeat(2,1fr)}}
+footer h6{font:700 .72rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-bottom:14px}
+footer ul{list-style:none;padding:0;display:grid;gap:7px}
+footer li a{color:var(--ink);text-decoration:none;font-size:.88rem;opacity:.86;transition:color .2s,opacity .2s,padding .2s}
+footer li a:hover{color:var(--brand);opacity:1;padding-left:5px}
+.fb p{color:var(--mut);font-size:.88rem;margin-top:12px;max-width:34ch}
+.legal{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);color:var(--mut);font-size:.78rem;display:grid;gap:8px}
+.legal b{color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:24px;translate:-50% 30px;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:600;font-size:.88rem;opacity:0;transition:all .35s cubic-bezier(.2,.9,.3,1.3);z-index:300;pointer-events:none;max-width:90vw;box-shadow:var(--sh2)}
+.toast.show{opacity:1;translate:-50% 0}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:250}
+.totop{position:fixed;right:18px;bottom:18px;z-index:90;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
+.totop.show{opacity:1;pointer-events:auto}
+#printSheet{display:none}
+@media print{
+  body>*:not(#printSheet){display:none!important}
+  #printSheet{display:block!important;padding:24px;color:#000;background:#fff;font:13px/1.45 var(--sans)}
+  #printSheet h1{font-size:26px;max-width:none;margin:0 0 6px;color:#000}
+  #printSheet h2{font-size:17px;margin:18px 0 6px;color:#000;border-bottom:1px solid #999}
+  #printSheet table{width:100%;border-collapse:collapse}#printSheet td,#printSheet th{border-bottom:1px solid #ccc;padding:4px 6px;text-align:left;font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}.rv{opacity:1;transform:none}.layer,.hero-copy{transform:none!important}}
+[hidden]{display:none!important}
+.card{scroll-margin-top:80px}
+.card.rv{transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1),box-shadow .4s,border-color .3s;transition-delay:calc(var(--i,0)*70ms),calc(var(--i,0)*70ms),0s,0s}
+.st.flash{animation:fl 1.6s ease}
+@keyframes fl{0%,60%{background:color-mix(in srgb,var(--gold) 35%,transparent)}}
+.mb{margin-bottom:10px}
+</style>
+</head>
+<body>
+<a class="skip" href="#tools">Skip to the tools</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<linearGradient id="lgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14b08a"/><stop offset="1" stop-color="#073c34"/></linearGradient>
+<linearGradient id="lgY" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd978"/><stop offset="1" stop-color="#d4881a"/></linearGradient>
+</defs></svg>
+<div id="sp"></div>
+
+<nav class="nav" id="nav" aria-label="Main">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top" aria-label="TaxTrail home"><span data-logo></span><span>TaxTrail<small>Season prep · A to Z</small></span></a>
+    <div class="links" id="links">
+      <a href="#dash">Dashboard</a>
+      <span class="menu"><button class="lk" id="toolsBtn" aria-expanded="false" aria-haspopup="true">12 Tools ▾</button><div class="pop tools" id="toolsPop" role="menu"></div></span>
+      <a href="#timeline">Timeline</a>
+      <a href="#resources">Resources</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <select class="sel" id="yearSel" aria-label="Tax year"></select>
+    <button class="ibtn" id="themeBtn" aria-label="Switch theme" title="Theme: auto / light / dark"></button>
+    <span class="menu"><button class="ibtn" id="dataBtn" aria-label="Your data" aria-expanded="false" title="Backup, print, export"></button>
+      <div class="pop" id="dataPop" role="menu">
+        <button data-act="snap"><span data-ic="image"></span>Save 1280×720 snapshot</button>
+        <button data-act="print"><span data-ic="printer"></span>Print / save summary PDF</button>
+        <button data-act="ics"><span data-ic="calendar"></span>Deadlines to calendar (.ics)</button>
+        <button data-act="export"><span data-ic="download"></span>Export backup (.json)</button>
+        <button data-act="import"><span data-ic="upload"></span>Import backup</button>
+        <button data-act="reset"><span data-ic="trash"></span>Erase everything…</button>
+      </div></span>
+    <button class="ibtn burger" id="burger" aria-label="Menu" aria-expanded="false"></button>
+  </div>
+</nav>
+<input type="file" id="impFile" accept="application/json,.json" hidden>
+
+<header class="hero" id="top">
+  <div class="pin" id="pin">
+    <div class="layer stars" style="--sy:20;top:0"></div>
+    <div class="layer sunwrap" style="--sy:70"><div class="orb"></div></div>
+    <svg class="layer hill" style="--sy:60" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true"><path fill="var(--h3)" d="M0 210C200 130 380 190 560 140S900 80 1100 140s240 30 340-30V400H0Z"/></svg>
+    <div class="layer" style="--sy:150;top:0;height:100%;pointer-events:none" aria-hidden="true">
+      <div class="paper" style="--x:47%;--y:17%;--r:-9deg;--t:6s"><b>W-2</b><i></i><i></i><i></i><i></i><u></u></div>
+      <div class="paper" style="--x:57%;--y:62%;--r:7deg;--t:7s;--d:-2s"><b>1099</b><i></i><i></i><i></i><i></i><u></u></div>
+      <div class="paper" style="--x:69%;--y:56%;--r:-5deg;--t:8s;--d:-1s"><b>1040</b><i></i><i></i><i></i><i></i><u></u></div>
+      <div class="paper" style="--x:84%;--y:14%;--r:10deg;--t:6.5s;--d:-3s"><b>1098</b><i></i><i></i><i></i><i></i><u></u></div>
+      <div class="paper" style="--x:36%;--y:7%;--r:-4deg;--t:9s;--d:-4s"><b>SCH C</b><i></i><i></i><i></i><i></i><u></u></div>
+    </div>
+    <svg class="layer hill" style="--sy:130" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true"><path fill="var(--h2)" d="M0 262C180 190 330 252 520 212S860 150 1060 222s270 28 380-24V400H0Z"/></svg>
+    <svg class="layer hill" style="--sy:230" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true"><path fill="var(--h1)" d="M0 306C240 252 420 324 640 284S1000 232 1200 292s190 22 240-10V400H0Z"/></svg>
+    <div class="layer" style="--sy:330;top:0;height:100%;pointer-events:none" aria-hidden="true">
+      <div class="coin" style="--x:12%;--y:76%;--s:44px;--t:4s">$</div>
+      <div class="coin" style="--x:30%;--y:84%;--s:28px;--t:5s;--d:-1s">$</div>
+      <div class="coin" style="--x:58%;--y:82%;--s:36px;--t:4.5s;--d:-2s">$</div>
+      <div class="coin" style="--x:79%;--y:78%;--s:50px;--t:5.5s;--d:-.5s">$</div>
+      <div class="coin" style="--x:92%;--y:88%;--s:26px;--t:4.2s;--d:-3s">$</div>
+    </div>
+    <div class="hero-copy">
+      <div class="wrap">
+        <span class="eyebrow"><i></i><span id="heroEye">Tax season command center</span></span>
+        <h1>Get tax&#8209;ready, <em>A&nbsp;to&nbsp;Z.</em></h1>
+        <p class="lede">One private page for the whole household: gather every document, tally every dollar, estimate the result, and never miss a deadline. Nothing ever leaves this browser.</p>
+        <div class="cta">
+          <a class="btn pri" href="#tools" data-rip>Start prepping</a>
+          <a class="btn" href="#tools" data-open="roadmap" data-rip>Open the A–Z roadmap</a>
+        </div>
+        <div class="chips">
+          <div class="chip"><b id="hDays">–</b><span id="hDaysL">days to deadline</span></div>
+          <div class="chip"><b id="hPrep">0%</b><span>prepped</span></div>
+          <div class="chip"><b id="hDocs">0</b><span>docs in hand</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="scrollhint"><i></i>Scroll</div>
+  </div>
+</header>
+
+<div class="marquee" aria-hidden="true"><div class="mq" id="mq"></div></div>
+
+<main>
+<section id="dash"><div class="wrap">
+  <div class="sh rv"><div class="k">Mission control</div><h2>Your household at a glance</h2>
+    <p>Set up both taxpayers once. Every tool below shares the same data, so numbers flow from your documents to the estimate to the checklist.</p></div>
+  <div id="banner" class="rv"></div>
+  <div class="dash">
+    <div class="panel rv">
+      <h3>Household</h3>
+      <div class="fgrid">
+        <label class="fld">Taxpayer 1<input data-k="na" placeholder="You" maxlength="24" autocomplete="off"></label>
+        <label class="fld">Taxpayer 2<input data-k="nb" placeholder="Spouse" maxlength="24" autocomplete="off"></label>
+        <label class="fld">Filing status<select data-k="status" id="statusSel">
+          <option value="mfj">Married filing jointly</option><option value="mfs">Married filing separately</option>
+          <option value="single">Single</option><option value="hoh">Head of household</option><option value="qss">Qualifying surviving spouse</option></select></label>
+        <label class="fld">Home state (optional)<input data-k="stt" placeholder="e.g. KY" maxlength="20" autocomplete="off"></label>
+      </div>
+      <p class="note"><b>Private by design.</b> Everything you type is stored only in this browser (localStorage). There is no server, no analytics, no network calls. Use <b>Backup</b> in the top bar to move it between devices.</p>
+    </div>
+    <div class="tiles" id="tiles"></div>
+  </div>
+</div></section>
+
+<section id="tools" style="background:var(--bg2);border-block:1px solid var(--line)"><div class="wrap">
+  <div class="sh rv"><div class="k">The toolbox</div><h2>Twelve tools. Tap any card to open it.</h2>
+    <p>Each card shows a live status at a glance and expands into a full working tool. Open several at once; your work saves automatically.</p></div>
+  <div class="bar rv">
+    <label class="search"><span data-ic="search"></span><input id="q" type="search" placeholder="Search tools: venmo, mileage, credits, W-4…" autocomplete="off" aria-label="Search tools"><kbd>/</kbd></label>
+    <div class="fchips" id="fchips" role="group" aria-label="Filter tools"></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <p id="empty" class="note" hidden style="text-align:center;padding:30px">No tools match that search. Try “income”, “deadline”, or “credit”.</p>
+</div></section>
+
+<section id="timeline"><div class="wrap">
+  <div class="sh rv"><div class="k">Season at a glance</div><h2>Six phases from shoebox to filed</h2>
+    <p>Swipe through the whole season. Each phase opens the matching checklist inside the roadmap tool.</p></div>
+  <div class="rail" id="rail"></div>
+</div></section>
+
+<section id="resources" style="background:var(--bg2);border-block:1px solid var(--line)"><div class="wrap">
+  <div class="sh rv"><div class="k">Official links &amp; help</div><h2>Every resource you will actually need</h2>
+    <p>Hand-picked primary sources: the IRS, Treasury, the Taxpayer Advocate, and free-help programs. Links open in a new tab.</p></div>
+  <div class="rg" id="rg"></div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+  <div class="sh rv"><div class="k">Straight answers</div><h2>Questions couples ask in tax season</h2></div>
+  <div class="faq" id="faqList"></div>
+</div></section>
+</main>
+
+<footer id="foot"><div class="wrap">
+  <div class="fg" id="fg"></div>
+  <div class="legal">
+    <div><b>Not tax, legal, or financial advice.</b> TaxTrail is an organizer and rough estimator. Figures use simplified rules (no AMT, capital-gain rates, phase-ins, or state tax) and may be out of date; always confirm against current IRS forms and instructions or a licensed preparer.</div>
+    <div>Your data stays on this device. Clearing browser data erases it, so export a backup regularly. Venmo, PayPal, Cash App, IRS and all other names belong to their owners; no affiliation or endorsement is implied.</div>
+    <div id="legalYear"></div>
+  </div>
+</div></footer>
+
+<button class="ibtn totop" id="totop" aria-label="Back to top" data-ic="up"></button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas id="fx"></canvas>
+<div id="printSheet"></div>
+<script>
+'use strict';
+/* ============ helpers ============ */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $f=(n,d=0)=>(n<0?'-':'')+'$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct=(n,d=1)=>(n*100).toFixed(d)+'%';
+const num=v=>{const n=parseFloat(v);return isFinite(n)?n:0};
+const uid=()=>Math.random().toString(36).slice(2,9);
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+const sum=(a,f)=>a.reduce((s,x)=>s+(f?f(x):x),0);
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+/* ============ icons ============ */
+const IC={
+ route:'<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>',
+ files:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/>',
+ users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+ wallet:'<rect x="2" y="6" width="20" height="14" rx="2.5"/><path d="M2 10h20M16.5 15h1.5M5 6l11-3 1 3"/>',
+ swap:'<path d="m17 3 4 4-4 4M21 7H8M7 21l-4-4 4-4M3 17h13"/>',
+ tag:'<path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
+ calc:'<rect x="4" y="2" width="16" height="20" rx="2.5"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/>',
+ gauge:'<path d="m12 14 4-4"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/>',
+ spark:'<path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 3v4M17 5h4M5 17v4M3 19h4"/>',
+ brief:'<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16M2 13h20"/>',
+ receipt:'<path d="M4 2v20l2-1.5L8 22l2-1.5 2 1.5 2-1.5 2 1.5 2-1.5 2 1.5V2l-2 1.5L16 2l-2 1.5L12 2l-2 1.5L8 2 6 3.5z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+ cal:'<rect x="3" y="4" width="18" height="18" rx="2.5"/><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+ moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+ auto:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',
+ menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',x:'<path d="M6 6l12 12M18 6 6 18"/>',
+ chev:'<path d="m6 9 6 6 6-6"/>',
+ download:'<path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/>',upload:'<path d="M12 15V3m0 0 4 4m-4-4-4 4M4 21h16"/>',
+ printer:'<path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><rect x="6" y="14" width="12" height="7"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+ trash:'<path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15"/>',
+ image:'<rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',
+ up:'<path d="m6 15 6-6 6 6"/>',plus:'<path d="M12 5v14M5 12h14"/>',check:'<path d="m5 12.5 4.5 4.5L19 7"/>',
+ alert:'<path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/>',
+ ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+ shield:'<path d="M12 3 4 6v6c0 5 3.4 8.4 8 10 4.6-1.6 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/>',
+ book:'<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5zM4 21.5A2.5 2.5 0 0 1 6.5 19H20"/>',
+ heart:'<path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z"/>',
+ bank:'<path d="M3 10 12 4l9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 21h18"/>',
+ scale:'<path d="M12 3v18M7 21h10M5 7h14M5 7l-3 7a4 4 0 0 0 6 0zM19 7l-3 7a4 4 0 0 0 6 0z"/>',
+ pin:'<path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>'
+};
+const ic=(n,s)=>`<svg viewBox="0 0 24 24" width="${s||24}" height="${s||24}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]||''}</svg>`;
+const LOGO=`<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="url(#lgG)"/><path d="M18 12h20l10 10v30a3 3 0 0 1-3 3H18a3 3 0 0 1-3-3V15a3 3 0 0 1 3-3z" fill="#faf5e8"/><path d="M38 12v8a2 2 0 0 0 2 2h8z" fill="#dfd3b2"/><path d="M22 31h20M22 37h14" stroke="#0e6a56" stroke-width="2.4" stroke-linecap="round"/><path d="M22 46l5 5 11-12" fill="none" stroke="url(#lgY)" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const LOGO_SA=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14b08a"/><stop offset="1" stop-color="#073c34"/></linearGradient><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd978"/><stop offset="1" stop-color="#d4881a"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#a)"/><path d="M18 12h20l10 10v30a3 3 0 0 1-3 3H18a3 3 0 0 1-3-3V15a3 3 0 0 1 3-3z" fill="#faf5e8"/><path d="M38 12v8a2 2 0 0 0 2 2h8z" fill="#dfd3b2"/><path d="M22 31h20M22 37h14" stroke="#0e6a56" stroke-width="2.4" stroke-linecap="round"/><path d="M22 46l5 5 11-12" fill="none" stroke="url(#b)" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+/* ============ tax-year data (federal, simplified; always verify with IRS) ============ */
+const R=[.1,.12,.22,.24,.32,.35,.37];
+const DATA={
+ 2023:{std:{single:13850,mfj:27700,mfs:13850,hoh:20800,qss:27700},old:[1850,1500],br:{single:[11000,44725,95375,182100,231250,578125],mfj:[22000,89450,190750,364200,462500,693750],mfs:[11000,44725,95375,182100,231250,346875],hoh:[15700,59850,95350,182100,231250,578100]},ssBase:160200,ctc:2000,actc:1600,salt:10000,saltThr:500000,mile:{biz:.655,med:.22,char:.14},lim:{k401:22500,ira:6500,hsaS:3850,hsaF:7750,sep:66000},k1099:'$20,000 and 200 transactions',eitc:{max:[600,3995,6604,7430],s:[17640,46560,52918,56838],j:[24210,53120,59478,63398]}},
+ 2024:{std:{single:14600,mfj:29200,mfs:14600,hoh:21900,qss:29200},old:[1950,1550],br:{single:[11600,47150,100525,191950,243725,609350],mfj:[23200,94300,201050,383900,487450,731200],mfs:[11600,47150,100525,191950,243725,365600],hoh:[16550,63100,100500,191950,243700,609350]},ssBase:168600,ctc:2000,actc:1700,salt:10000,saltThr:500000,mile:{biz:.67,med:.21,char:.14},lim:{k401:23000,ira:7000,hsaS:4150,hsaF:8300,sep:69000},k1099:'$5,000 (no transaction minimum)',eitc:{max:[632,4213,6960,7830],s:[18591,49084,55768,59899],j:[25511,56004,62688,66819]}},
+ 2025:{std:{single:15750,mfj:31500,mfs:15750,hoh:23625,qss:31500},old:[2000,1600],br:{single:[11925,48475,103350,197300,250525,626350],mfj:[23850,96950,206700,394600,501050,751600],mfs:[11925,48475,103350,197300,250525,375800],hoh:[17000,64850,103350,197300,250500,626350]},ssBase:176100,ctc:2200,actc:1700,salt:40000,saltThr:500000,mile:{biz:.70,med:.21,char:.14},lim:{k401:23500,ira:7000,hsaS:4300,hsaF:8550,sep:70000},k1099:'$20,000 and 200 transactions',eitc:{max:[649,4328,7152,8046],s:[19104,50434,57310,61555],j:[26214,57554,64430,68675]}},
+ 2026:{std:{single:16100,mfj:32200,mfs:16100,hoh:24150,qss:32200},old:[2050,1650],br:{single:[12400,50400,105700,201775,256225,640600],mfj:[24800,100800,211400,403550,512450,768700],mfs:[12400,50400,105700,201775,256225,384350],hoh:[17700,67450,105700,201750,256200,640600]},ssBase:184500,ctc:2200,actc:1700,salt:40400,saltThr:505000,mile:{biz:.725,med:.205,char:.14},lim:{k401:24500,ira:7500,hsaS:4400,hsaF:8750,sep:72000},k1099:'$20,000 and 200 transactions',eitc:null}
+};
+const YEARS=Object.keys(DATA).map(Number);
+const STATUS={mfj:'Married filing jointly',mfs:'Married filing separately',single:'Single',hoh:'Head of household',qss:'Qualifying surviving spouse'};
+
+/* ============ dates ============ */
+const TODAY=(()=>{const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())})();
+const wkAdj=d=>{const x=new Date(d);const w=x.getDay();if(w===6)x.setDate(x.getDate()+2);else if(w===0)x.setDate(x.getDate()+1);return x};
+const dayDiff=d=>Math.round((d-TODAY)/864e5);
+const fmtD=(d,o)=>d.toLocaleDateString('en-US',o||{month:'short',day:'numeric',year:'numeric'});
+const dueDate=y=>wkAdj(new Date(y+1,3,15));
+const extDate=y=>wkAdj(new Date(y+1,9,15));
+
+/* ============ state ============ */
+const KEY='taxtrail.v1';
+const defYear=()=>{const y=TODAY.getFullYear();const d=TODAY>=new Date(y,9,16)?y:y-1;return clamp(d,YEARS[0],YEARS[YEARS.length-1])};
+const newYear=()=>({status:'mfj',docs:{},road:{},cr:{},income:[],exp:[],miles:[],
+ est:{wA:0,wB:0,whA:0,whB:0,seA:0,seB:0,intr:0,oth:0,adj:0,kids:0,odep:0,old:0,tips:0,ot:0,cred:0,paid:0,mode:'auto'},
+ ded:{salt:0,prop:0,mort:0,char:0,med:0,oth:0},
+ wh:{a:{ytdw:0,ytdh:0,pp:26,done:0},b:{ytdw:0,ytdh:0,pp:26,done:0}},
+ se:{a:{rev:0,exp:0,sqft:0,hi:0,sep:0},b:{rev:0,exp:0,sqft:0,hi:0,sep:0},prior:0},
+ quiz:{step:'start',hist:[]}});
+const DEF=()=>({v:1,year:defYear(),na:'You',nb:'Spouse',stt:'',theme:'auto',y:{},venmo:{a:{},b:{}},ui:{open:[],flt:'all',vwho:'a',vyear:0,docsMissing:false}});
+function merge(base,src){if(!src||typeof src!=='object')return base;for(const k in src){if(src[k]&&typeof src[k]==='object'&&!Array.isArray(src[k])&&base[k]&&typeof base[k]==='object'&&!Array.isArray(base[k]))merge(base[k],src[k]);else base[k]=src[k]}return base}
+let S=DEF();
+try{merge(S,JSON.parse(localStorage.getItem(KEY)))}catch(e){}
+if(!YEARS.includes(S.year))S.year=defYear();
+const ensureYear=y=>{S.y[y]=merge(newYear(),S.y[y]||{})};
+const YR=()=>S.y[S.year];
+ensureYear(S.year);
+let _sv;const save=()=>{clearTimeout(_sv);_sv=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},120)};
+const root=p=>p.startsWith('y.')?[S.y[S.year],p.slice(2)]:[S,p];
+const getP=p=>{const[r,q]=root(p);return q.split('.').reduce((a,k)=>a==null?a:a[k],r)};
+const setP=(p,v)=>{const[r,q]=root(p);const ks=q.split('.');const l=ks.pop();let c=r;for(const k of ks){c=c[k]||(c[k]={})}c[l]=v};
+const people=()=>['single','hoh','qss'].includes(YR().status)?1:2;
+const nm=w=>(w==='a'?S.na:S.nb)||(w==='a'?'You':'Spouse');
+
+/* ============ calculation engine ============ */
+function bracketTax(taxable,status,year){
+ const t=DATA[year].br[status==='qss'?'mfj':status];let prev=0,tax=0,rate=R[0];const parts=[];
+ for(let i=0;i<7;i++){const top=i<6?t[i]:Infinity;const amt=clamp(taxable-prev,0,top-prev);if(amt>0){tax+=amt*R[i];rate=R[i]}parts.push({rate:R[i],amt,tax:amt*R[i],from:prev,to:top});prev=top}
+ return{tax,rate,parts};
+}
+function itemized(agi,st,year,x){
+ const d=DATA[year];let cap=year>=2025?Math.max(10000,d.salt-.3*Math.max(0,agi-d.saltThr)):10000;if(st==='mfs')cap/=2;
+ const saltRaw=x.salt+x.prop,salt=Math.min(saltRaw,cap),med=Math.max(0,x.med-.075*Math.max(0,agi));
+ const char=year>=2026?Math.max(0,x.char-.005*Math.max(0,agi)):x.char;
+ return{salt,saltRaw,cap,med,char,mort:x.mort,oth:x.oth,total:salt+med+x.mort+char+x.oth};
+}
+function unit(u){
+ const d=DATA[u.year],st=u.status,joint=st==='mfj'||st==='qss',married=joint||st==='mfs';
+ let seTax=0,medW=0,seProf=0,wages=0;
+ u.p.forEach(p=>{wages+=p.w;seProf+=p.se;const net=p.se>=400?p.se*.9235:0;const room=Math.max(0,d.ssBase-p.w);seTax+=.124*Math.min(net,room)+.029*net;medW+=p.w+net});
+ const addl=.009*Math.max(0,medW-(joint?250000:st==='mfs'?125000:200000));
+ const halfSE=seTax/2;
+ const agi=wages+seProf+u.intr+u.oth-halfSE-u.adj;
+ const stdAmt=d.std[st]+u.old*d.old[married?1:0];
+ const item=itemized(agi,st,u.year,u.ded);
+ let dedType,ded;
+ if(u.mode==='std'||(u.mode!=='item'&&stdAmt>=item.total)){dedType='Standard';ded=stdAmt}else{dedType='Itemized';ded=item.total}
+ let senior=0,tipsot=0;
+ if(u.year>=2025){
+  senior=Math.max(0,u.old*6000-.06*Math.max(0,agi-(joint?150000:75000)));
+  tipsot=Math.max(0,Math.min(u.tips,25000)+Math.min(u.ot,joint?25000:12500)-.1*Math.max(0,agi-(joint?300000:150000)));
+ }
+ const tiB=Math.max(0,agi-ded-senior-tipsot);
+ const qbi=Math.min(.2*Math.max(0,seProf-halfSE),.2*tiB);
+ const taxable=Math.max(0,tiB-qbi);
+ const bt=bracketTax(taxable,st,u.year);
+ const ctcMax=u.kids*d.ctc+u.odep*500;
+ const ctcAmt=Math.max(0,ctcMax-50*Math.ceil(Math.max(0,agi-(joint?400000:200000))/1000));
+ const nonref=Math.min(ctcAmt,bt.tax);
+ const earned=wages+Math.max(0,seProf-halfSE);
+ const ref=Math.max(0,Math.min(ctcAmt-nonref,u.kids*d.actc,.15*Math.max(0,earned-2500)));
+ const total=Math.max(0,bt.tax-nonref)+seTax+addl;
+ const pay=u.wh+u.paid+ref+u.cred;
+ return{agi,ded,dedType,std:stdAmt,item,senior,tipsot,qbi,taxable,bt,ctcNon:nonref,ctcRef:ref,ctc:nonref+ref,seTax,addl,total,pay,bal:pay-total,eff:agi>0?total/agi:0,marg:bt.rate,wh:u.wh,paid:u.paid,cred:u.cred,income:wages+seProf+u.intr+u.oth,wages,seProf};
+}
+function runJoint(st,Yd){
+ Yd=Yd||YR();const e=Yd.est;
+ return unit({year:S.year,status:st,p:[{w:e.wA,se:e.seA},{w:e.wB,se:e.seB}],intr:e.intr,oth:e.oth,adj:e.adj,kids:e.kids,odep:e.odep,old:e.old,tips:e.tips,ot:e.ot,cred:e.cred,paid:e.paid,wh:e.whA+e.whB,ded:Yd.ded,mode:e.mode});
+}
+function runSolo(st,Yd){
+ Yd=Yd||YR();const e=Yd.est;
+ return unit({year:S.year,status:st,p:[{w:e.wA,se:e.seA}],intr:e.intr,oth:e.oth,adj:e.adj,kids:e.kids,odep:e.odep,old:Math.min(1,e.old),tips:e.tips,ot:e.ot,cred:e.cred,paid:e.paid,wh:e.whA,ded:Yd.ded,mode:e.mode});
+}
+function runMFS(Yd){
+ Yd=Yd||YR();const e=Yd.est;const hiA=(e.wA+e.seA)>=(e.wB+e.seB);
+ const half={};for(const k in Yd.ded)half[k]=Yd.ded[k]/2;
+ const mk=(w,se,wh,hi,i)=>unit({year:S.year,status:'mfs',p:[{w,se}],intr:e.intr/2,oth:e.oth/2,adj:e.adj/2,kids:hi?e.kids:0,odep:hi?e.odep:0,old:e.old>i?1:0,tips:e.tips/2,ot:e.ot/2,cred:hi?e.cred:0,paid:e.paid/2,wh,ded:half,mode:e.mode});
+ const a=mk(e.wA,e.seA,e.whA,hiA,0),b=mk(e.wB,e.seB,e.whB,!hiA,1);
+ return{a,b,total:a.total+b.total,bal:a.bal+b.bal,pay:a.pay+b.pay,agi:a.agi+b.agi};
+}
+function household(){
+ const st=YR().status;
+ if(st==='mfs'){const m=runMFS();return{kind:'split',st,a:m.a,b:m.b,res:{total:m.total,bal:m.bal,pay:m.pay,agi:m.agi,eff:m.agi>0?m.total/m.agi:0,marg:Math.max(m.a.marg,m.b.marg),dedType:m.a.dedType,taxable:m.a.taxable+m.b.taxable,ded:m.a.ded+m.b.ded,bt:null}}}
+ if(st==='single'||st==='hoh')return{kind:'solo',st,res:runSolo(st)};
+ return{kind:'joint',st,res:runJoint(st)};
+}
+
+/* ============ CSV + payment-app parsing ============ */
+function parseCSV(t){
+ const rows=[];let r=[],f='',q=false;
+ for(let i=0;i<t.length;i++){const c=t[i];
+  if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+  else if(c==='"')q=true;
+  else if(c===',')(r.push(f),f='');
+  else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;r.push(f);rows.push(r);r=[];f=''}
+  else f+=c}
+ if(f!==''||r.length){r.push(f);rows.push(r)}
+ return rows;
+}
+const parseMoney=s=>{s=String(s||'');const neg=/-/.test(s)||/^\(.*\)$/.test(s.trim());const v=parseFloat(s.replace(/[^0-9.]/g,''));return isFinite(v)?(neg?-v:v):0};
+const BIZ_RX=/\b(invoice|invoiced|services?|labou?r|job|work(ed)?|commission|order|sale|sales|client|customer|booking|consult\w*|lesson|tutor\w*|clean\w*|repair\w*|install\w*|haul\w*|deliver\w*|design\w*|catering|rent|deposit|retainer|freelance|shift|gig)\b/i;
+function parseVenmo(text){
+ const rows=parseCSV(text.replace(/^﻿/,''));
+ const hi=rows.findIndex(r=>r.some(c=>c.trim()==='Datetime')&&r.some(c=>/^Amount \(total\)/.test(c.trim())));
+ if(hi<0)throw new Error('Could not find the header row (needs “Datetime” and “Amount (total)” columns). Is this a Venmo statement CSV?');
+ const H=rows[hi].map(c=>c.trim()),ix=n=>H.indexOf(n);
+ const iD=ix('Datetime'),iT=ix('Type'),iS=ix('Status'),iN=ix('Note'),iA=H.findIndex(c=>/^Amount \(total\)/.test(c)),iF=H.findIndex(c=>/^Amount \(fee\)/.test(c));
+ const out={};let used=0,skipped=0;
+ for(let i=hi+1;i<rows.length;i++){
+  const r=rows[i],dt=(r[iD]||'').trim();
+  if(!/^\d{4}-\d{2}/.test(dt)){skipped++;continue}
+  const st=(r[iS]||'').trim();
+  if(st&&!/^(complete|issued|settled)/i.test(st)){skipped++;continue}
+  const type=(r[iT]||'').trim(),amt=parseMoney(r[iA]),fee=Math.abs(parseMoney(r[iF]||''));
+  const ym=dt.slice(0,7),o=out[ym]||(out[ym]={r:0,rc:0,s:0,sc:0,f:0,t:0,b:0,bc:0});
+  used++;o.f+=fee;
+  if(/transfer/i.test(type)){o.t+=Math.abs(amt);continue}
+  if(/add funds|top ?up/i.test(type))continue;
+  if(amt>0){o.r+=amt;o.rc++;if(BIZ_RX.test(r[iN]||'')||/merchant/i.test(type)){o.b+=amt;o.bc++}}
+  else if(amt<0){o.s+=-amt;o.sc++}
+ }
+ for(const k in out)for(const f in out[k])out[k][f]=Math.round(out[k][f]*100)/100;
+ return{months:out,used,skipped};
+}
+function venmoYear(who,y){
+ const m=S.venmo[who]||{},t={r:0,rc:0,s:0,sc:0,f:0,t:0,b:0,bc:0};
+ for(const ym in m)if(ym.startsWith(y+'-'))for(const f in t)t[f]+=m[ym][f]||0;
+ return t;
+}
+const venmoYears=()=>[...new Set(['a','b'].flatMap(w=>Object.keys(S.venmo[w]||{}).map(k=>+k.slice(0,4))))].sort();
+
+/* ============ ledger -> estimator mapping ============ */
+const ITYPES=[['w2','W-2 wages','w'],['nec','1099-NEC / self-employed','se'],['k','1099-K / payment-app business sales','se'],['int','1099-INT interest','i'],['div','1099-DIV dividends','i'],['b','1099-B / 1099-DA net gains','o'],['r','1099-R pension / IRA','o'],['ssa','SSA-1099 (taxable part)','o'],['g','1099-G unemployment / state refund','o'],['k1','K-1 / rental / royalty','o'],['oth','Other income','o']];
+const ITM=Object.fromEntries(ITYPES.map(t=>[t[0],t]));
+function ledgerTotals(){
+ const T={a:{w:0,se:0,i:0,o:0,wh:0},b:{w:0,se:0,i:0,o:0,wh:0}};
+ YR().income.forEach(r=>{const g=(ITM[r.type]||[0,0,'o'])[2],t=T[r.who]||T.a;t[g]+=num(r.amt);t.wh+=num(r.wh)});
+ return T;
+}
+
+/* ============ content ============ */
+const DOCS=[
+ {g:'Income forms',c:'var(--gold)',items:[
+  ['w2','W-2','Wage and salary statements','Every employer, for each spouse. Employers must furnish by Jan 31.','e'],
+  ['nec','1099-NEC / 1099-MISC','Freelance, contractor and side-gig pay','Payers send these at $600+ (payments made in 2026 and later: $2,000). Income under the threshold is still taxable.','e'],
+  ['k','1099-K','Payment apps &amp; marketplaces','PayPal, Venmo/Cash App business, Etsy, eBay, Uber, Airbnb. Reporting threshold varies by year; business sales are taxable even with no form.','e'],
+  ['int','1099-INT / 1099-DIV','Bank interest &amp; dividends','Banks, savings, brokerage, money-market accounts. Check every institution you used.','e'],
+  ['b','1099-B / 1099-DA / 8949 data','Stock, crypto and digital-asset sales','Brokerage consolidated statements often arrive mid-February. Keep cost-basis records for crypto.','e'],
+  ['r','1099-R','Retirement &amp; pension distributions','IRA, 401(k), pension, annuity withdrawals or rollovers.','e'],
+  ['ssa','SSA-1099 / RRB-1099','Social Security &amp; railroad benefits','Download from your my Social Security account.','e'],
+  ['g','1099-G','Unemployment &amp; state refunds','Unemployment compensation is taxable; state refunds only if you itemized last time.','e'],
+  ['k1','Schedule K-1','Partnership, S-corp, trust income','Often arrive late; ask for an estimate or plan to extend.','e'],
+  ['rent','Rental &amp; royalty records','Rents, expenses, depreciation schedule','Income and expense ledger for each property.','j']]},
+ {g:'Deductions &amp; credits',c:'var(--coral)',items:[
+  ['m98','1098','Mortgage interest statement','Plus closing statement if you bought or refinanced.','j'],
+  ['prop','Property tax &amp; state tax records','Real-estate, vehicle and state/local tax paid','Property tax bills, state estimated payments, sales-tax records.','j'],
+  ['e98','1098-E','Student-loan interest','Up to $2,500 deduction, phased out at higher incomes.','e'],
+  ['t98','1098-T','Tuition statement','Needed for education credits (AOTC / LLC).','e'],
+  ['hsa','1099-SA / 5498-SA / W-2 box 12 (HSA)','Health savings account activity','Contributions and distributions; Form 8889.','e'],
+  ['ira','5498','IRA contribution statement','You can still contribute for the prior year until the filing deadline.','e'],
+  ['char','Charitable receipts','Donation letters, non-cash donation lists','Written acknowledgment required for gifts of $250+.','j'],
+  ['med','Medical &amp; dental expenses','Out-of-pocket costs, insurance premiums, mileage to care','Only the portion above 7.5% of AGI helps, and only if you itemize.','j'],
+  ['care','Child / dependent-care provider info','Provider name, address, EIN or SSN, amounts paid','Required for the Child &amp; Dependent Care Credit (Form 2441).','j'],
+  ['a95','1095-A (Marketplace) / 1095-B / 1095-C','Health-coverage forms','1095-A is required to reconcile premium tax credits (Form 8962).','j'],
+  ['est','Estimated-tax payment records','Form 1040-ES confirmations and dates','Each payment you made to the IRS or state.','e'],
+  ['en','Energy-improvement receipts','Solar, heat pump, windows, EV purchase','Many of these credits ended after 2025, so check the year.','j']]},
+ {g:'Business &amp; side hustle',c:'var(--blue)',items:[
+  ['binc','Business income log','Invoices, payment-app and bank deposits','Reconcile to bank statements, including Venmo/PayPal business income.','e'],
+  ['bexp','Business expense receipts','Supplies, software, phone, advertising, fees','Use the Expense Log tool to categorize as you go.','e'],
+  ['bmil','Mileage log','Date, destination, purpose, miles','A contemporaneous log is the best defense in an audit.','e'],
+  ['home','Home-office measurements','Square footage of dedicated workspace','Simplified method: $5 per sq ft up to 300 sq ft.','e'],
+  ['i99','1099-NEC you must issue','Contractors you paid $600+ (2026: $2,000+)','Furnish by Jan 31; you need a W-9 from each contractor.','j']]},
+ {g:'People &amp; identity',c:'var(--brand)',items:[
+  ['ssn','SSNs / ITINs for everyone on the return','Taxpayers, spouse, every dependent','Names must match Social Security records exactly.','j'],
+  ['pid','Photo ID','Driver license or state ID','Some preparers and e-file providers require it.','e'],
+  ['dob','Dependents’ birth dates &amp; residency months','Needed for CTC, EITC, dependent-care credits','Also custody paperwork or Form 8332 if parents are separated.','j'],
+  ['py','Last year’s return (PDF)','Includes prior-year AGI for e-file signature','Download from your tax software or an IRS transcript.','j'],
+  ['ipp','IRS Identity Protection PIN','Six-digit PIN if you were issued one','Each spouse has a separate PIN, and it changes every year.','e'],
+  ['bank','Bank routing &amp; account number','For direct-deposit refund or payment','Double-check digits; wrong numbers delay refunds.','j']]}
+];
+const ROAD=[
+ {k:'p1',t:'Year-end power moves',c:'var(--coral)',w:y=>`Now → Dec 31, ${y}`,s:[
+  ['w1','Run a projection with the Estimator and Withholding tools so nothing surprises you'],
+  ['w2','Adjust W-4s if you are headed for a big bill or an oversized refund'],
+  ['w3','If self-employed, make the Q4 estimated payment (due mid-January)'],
+  ['w4','Max pre-tax retirement (401(k) deferrals must happen by Dec 31) and HSA contributions'],
+  ['w5','Bunch deductions: pre-pay or donate in one year if itemizing is close'],
+  ['w6','Use up FSA balances and check your plan’s grace period'],
+  ['w7','Harvest investment losses (watch the wash-sale rule)'],
+  ['w8','Confirm names and SSNs match Social Security records for both spouses and every dependent'],
+  ['w9','Start the shoebox: receipts, mileage log, business expenses']]},
+ {k:'p2',t:'Gather &amp; verify',c:'var(--gold)',w:y=>`January ${y+1}`,s:[
+  ['g1','Create or verify an IRS Online Account for each spouse'],
+  ['g2','Retrieve IP PINs if the IRS issued them'],
+  ['g3','Download last year’s return (you need prior-year AGI to e-file)'],
+  ['g4','Collect W-2s and 1099-NECs (due to you by Jan 31)'],
+  ['g5','Collect 1099-INT/DIV/B/R, 1099-K, SSA-1099, 1098, 1095-A (some arrive mid-February)'],
+  ['g6','Download payment-app statements for BOTH spouses (Venmo, PayPal, Cash App) and run the analyzer'],
+  ['g7','Cross-check every form against your own records; request corrections early'],
+  ['g8','Total your business income, expenses and mileage']]},
+ {k:'p3',t:'Decide &amp; plan',c:'var(--blue)',w:y=>`Late Jan – Feb ${y+1}`,s:[
+  ['d1','Choose filing status: MFJ vs MFS (Filing Status + Estimator tools)'],
+  ['d2','Pick how to file: IRS Free File, software, VITA/AARP help, or a pro'],
+  ['d3','Book a preparer now if using one; March fills up'],
+  ['d4','Decide standard vs itemized (Deduction Planner)'],
+  ['d5','Review credits you may qualify for (Credits Explorer)'],
+  ['d6','Check the IRS e-file start date and expected refund timing (refunds claiming EITC/ACTC are held until mid-Feb)']]},
+ {k:'p4',t:'Prepare the return',c:'var(--brand)',w:y=>`Feb – Mar ${y+1}`,s:[
+  ['r1','Enter every income document for both spouses'],
+  ['r2','Enter deductions and credits'],
+  ['r3','Run your software’s error check / diagnostics'],
+  ['r4','Compare to last year; explain any big swings'],
+  ['r5','Prepare state (and local) returns'],
+  ['r6','Decide on IRA / HSA contributions for the year, which are still allowed until the deadline']]},
+ {k:'p5',t:'File &amp; pay',c:'var(--coral)',w:y=>`By Apr 15, ${y+1}`,s:[
+  ['f1','E-file federal and state with direct deposit'],
+  ['f2','Pay any balance by the deadline (Direct Pay or EFTPS). An extension does NOT extend time to pay'],
+  ['f3','If you are not ready, file Form 4868 by the deadline to extend filing to October 15'],
+  ['f4','Make the Q1 estimated payment for next year if you owe estimated tax'],
+  ['f5','Save the e-file acceptance confirmation']]},
+ {k:'p6',t:'After you file',c:'var(--gold)',w:y=>`Spring ${y+1} and beyond`,s:[
+  ['a1','Track your refund with Where’s My Refund'],
+  ['a2','Save PDFs of the return and all source documents for at least 3 years (7 for losses or missed income)'],
+  ['a3','Update W-4s and estimated payments for the new year'],
+  ['a4','Open and answer any IRS notice promptly; never ignore one'],
+  ['a5','File Form 1040-X if you discover a mistake or a missing form'],
+  ['a6','Start next year’s checklist in TaxTrail']]}
+];
+const FAQ=[
+ ['Should we file jointly or separately?','For most married couples, married filing jointly (MFJ) gives the lowest total tax and unlocks credits that are limited or unavailable when filing separately (EITC, education credits, dependent-care credit, student-loan interest). Separate filing can make sense to keep liability separate, for income-driven student-loan payments, or when one spouse has large medical costs. Use the Estimator’s side-by-side comparison, then confirm with a preparer if the result is close. Note that if one spouse itemizes on a separate return, the other must too.'],
+ ['Do we owe tax on Venmo or Cash App money?','Personal reimbursements (splitting dinner, paying back a friend, selling a used couch for less than you paid) are not income. Money you receive for goods or services as a business, side gig or rental is taxable, whether or not you get a 1099-K. Form 1099-K reporting thresholds changed several times, so check the year you are filing. Use the Payment-App Analyzer to see what your statements show, then separate personal from business.'],
+ ['What if we are missing a W-2 or 1099?','Contact the payer first. If you do not receive it by mid-February, call the IRS (800-829-1040) with the employer’s details. You are still required to report the income, so use your final pay stub or year-end bank records to estimate, and file Form 4852 as a substitute W-2 if needed.'],
+ ['We can’t pay what we owe. Do we still file?','Yes. File on time even if you cannot pay; the failure-to-file penalty (up to 25%) is far larger than the failure-to-pay penalty (0.5% per month). Then set up an online payment plan with the IRS. Interest accrues on unpaid tax from the original due date.'],
+ ['Does an extension give us more time to pay?','No. Form 4868 extends the time to file (to October 15 for most people) but taxes are still due on the original deadline. Pay your best estimate by then to limit penalties and interest.'],
+ ['Who has to make estimated tax payments?','Generally anyone who expects to owe $1,000+ after withholding and credits, typically because of self-employment, investments, or under-withholding. Safe harbor: pay 90% of this year’s tax or 100% of last year’s (110% if last year’s AGI was over $150,000). The Self-Employment tool builds your quarterly schedule.'],
+ ['How long should we keep tax records?','At least 3 years from filing (the usual audit window), 6 years if you omitted more than 25% of income, and 7 years for bad-debt or worthless-securities claims. Keep property and investment basis records for as long as you own the asset plus 3 years.'],
+ ['What if we are filing a late or past-year return?','If you are owed a refund you generally have 3 years from the original due date to claim it, after which the refund is forfeited. If you owe, file as soon as possible: penalties and interest grow every month. The Deadlines tool shows the refund-claim window for the selected year.'],
+ ['When will our refund arrive?','Most e-filed returns with direct deposit are processed within 21 days. Returns claiming the EITC or Additional Child Tax Credit cannot be refunded before mid-February by law. Check status with Where’s My Refund after about 24 hours of e-filing.'],
+ ['We found a mistake after filing. Now what?','Do not refile. Wait until the original return is processed, then file Form 1040-X to amend. Most amended returns can now be e-filed for recent years. You generally have 3 years from the original filing date to claim a refund.'],
+ ['Is it safe to use this page for financial info?','TaxTrail is one HTML file with no server, no tracking and no network requests; data lives in your browser’s local storage. Still: do not enter SSNs or bank numbers (this app never asks for them), keep a backup export, and use a private device.']
+];
+const L=(a,b,c)=>[a,b,c||''];
+const LINKS=[
+ {t:'IRS essentials',i:'bank',c:'var(--brand)',l:[L('IRS.gov home','https://www.irs.gov'),L('Get ready to file','https://www.irs.gov/filing'),L('IRS Free File','https://www.irs.gov/filing/free-file-do-your-federal-taxes-for-free','free'),L('Your Online Account','https://www.irs.gov/payments/your-online-account'),L('Where’s My Refund?','https://www.irs.gov/refunds'),L('Interactive Tax Assistant','https://www.irs.gov/help/ita'),L('Tax Withholding Estimator','https://www.irs.gov/individuals/tax-withholding-estimator'),L('Credits &amp; deductions hub','https://www.irs.gov/credits-deductions')]},
+ {t:'Forms &amp; publications',i:'book',c:'var(--blue)',l:[L('All forms &amp; instructions','https://www.irs.gov/forms-instructions'),L('Form 1040','https://www.irs.gov/forms-pubs/about-form-1040'),L('Schedule C (business)','https://www.irs.gov/forms-pubs/about-schedule-c-form-1040'),L('Schedule SE','https://www.irs.gov/forms-pubs/about-schedule-se-form-1040'),L('Schedule A (itemized)','https://www.irs.gov/forms-pubs/about-schedule-a-form-1040'),L('Form W-4','https://www.irs.gov/forms-pubs/about-form-w-4'),L('Form 4868 extension','https://www.irs.gov/forms-pubs/extension-of-time-to-file-your-tax-return'),L('Form 1040-ES estimates','https://www.irs.gov/forms-pubs/about-form-1040-es'),L('Form 8962 (marketplace)','https://www.irs.gov/forms-pubs/about-form-8962'),L('Pub 17 Your Federal Income Tax','https://www.irs.gov/publications/p17','guide'),L('Pub 501 Filing status','https://www.irs.gov/publications/p501'),L('Pub 505 Withholding &amp; estimates','https://www.irs.gov/publications/p505'),L('Pub 463 Travel &amp; car','https://www.irs.gov/publications/p463'),L('Pub 535 Business expenses','https://www.irs.gov/publications/p535'),L('Pub 970 Education','https://www.irs.gov/publications/p970'),L('Pub 596 EITC','https://www.irs.gov/publications/p596'),L('Pub 969 HSAs','https://www.irs.gov/publications/p969')]},
+ {t:'Free help',i:'heart',c:'var(--coral)',l:[L('VITA / TCE free tax prep','https://www.irs.gov/individuals/free-tax-return-preparation-for-qualifying-taxpayers','free'),L('AARP Tax-Aide','https://www.aarp.org/money/taxes/aarp_taxaide/','free'),L('Directory of tax pros','https://irs.treasury.gov/rpo/rpo.jsf'),L('Taxpayer Advocate Service','https://www.taxpayeradvocate.irs.gov'),L('Low-income taxpayer clinics','https://www.taxpayeradvocate.irs.gov/get-help/low-income-taxpayer-clinics/'),L('Tax Foundation explainers','https://taxfoundation.org')]},
+ {t:'Pay, plan &amp; refunds',i:'wallet',c:'var(--gold)',l:[L('All payment options','https://www.irs.gov/payments'),L('IRS Direct Pay','https://www.irs.gov/payments/direct-pay','free'),L('EFTPS','https://www.eftps.gov'),L('Payment plans','https://www.irs.gov/payments/online-payment-agreement-application'),L('Penalties &amp; interest','https://www.irs.gov/payments/penalties'),L('Estimated taxes','https://www.irs.gov/businesses/small-businesses-self-employed/estimated-taxes'),L('Amended returns (1040-X)','https://www.irs.gov/filing/amended-return-frequently-asked-questions'),L('Treasury Offset Program','https://fiscal.treasury.gov/top/')]},
+ {t:'Records &amp; security',i:'shield',c:'var(--ok)',l:[L('Get your transcript','https://www.irs.gov/individuals/get-transcript'),L('Identity Protection PIN','https://www.irs.gov/identity-theft-fraud-scams/get-an-identity-protection-pin'),L('IdentityTheft.gov','https://www.identitytheft.gov'),L('Report IRS phishing','https://www.irs.gov/privacy-disclosure/report-phishing'),L('How long to keep records','https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records'),L('FTC consumer alerts','https://consumer.ftc.gov/identity-theft-and-online-security')]},
+ {t:'Side hustles &amp; investing',i:'brief',c:'var(--blue)',l:[L('Understanding Form 1099-K','https://www.irs.gov/businesses/understanding-your-form-1099-k'),L('Gig economy tax center','https://www.irs.gov/businesses/gig-economy-tax-center'),L('Standard mileage rates','https://www.irs.gov/tax-professionals/standard-mileage-rates'),L('Home office deduction','https://www.irs.gov/businesses/small-businesses-self-employed/home-office-deduction'),L('Digital assets (crypto)','https://www.irs.gov/filing/digital-assets')]},
+ {t:'Credits &amp; benefits',i:'spark',c:'var(--coral)',l:[L('Earned Income Tax Credit','https://www.irs.gov/credits-deductions/individuals/earned-income-tax-credit-eitc'),L('Child Tax Credit','https://www.irs.gov/credits-deductions/individuals/child-tax-credit'),L('Education credits','https://www.irs.gov/credits-deductions/individuals/education-credits-aotc-llc'),L('Marketplace coverage','https://www.healthcare.gov'),L('My Social Security','https://www.ssa.gov/myaccount/'),L('Federal student aid','https://studentaid.gov')]},
+ {t:'State &amp; local',i:'pin',c:'var(--brand)',l:[L('Find your state tax agency','https://www.taxadmin.org/state-tax-agencies'),L('USA.gov state taxes','https://www.usa.gov/state-taxes'),L('Consumer Financial Protection Bureau','https://www.consumerfinance.gov')]}
+];
+const FORMS=['W-2','1099-NEC','1099-K','1099-INT','1099-DIV','1099-B','1099-DA','1099-R','SSA-1099','1098','1098-E','1098-T','1095-A','5498','Schedule C','Schedule SE','Schedule A','Schedule 8812','Form 8863','Form 2441','Form 4868','Form 1040-ES','Form 8962','Form 8889','1040-X'];
+/* ============ ui utilities ============ */
+const mf=(k,l,x='')=>`<label class="fld"><span>${l}</span><span class="inp money"><input type="number" inputmode="decimal" step="any" data-k="${k}" placeholder="0" ${x}></span></label>`;
+const nf=(k,l,x='')=>`<label class="fld"><span>${l}</span><input type="number" inputmode="decimal" step="any" min="0" data-k="${k}" placeholder="0" ${x}></label>`;
+const setH=(sel,html)=>{const e=typeof sel==='string'?$(sel):sel;if(e&&e._h!==html){e._h=html;e.innerHTML=html}};
+const setT=(sel,t)=>{const e=typeof sel==='string'?$(sel):sel;if(e&&e.textContent!==t)e.textContent=t};
+const sp=(c,t)=>`<span class="${c}">${t}</span>`;
+let SV=0;const bump=()=>{SV++;queueRefresh()};
+let _tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2800)}
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function animNum(el,to,fmt,dur=800){
+ if(!el)return;const from=el._v==null?0:el._v;el._v=to;cancelAnimationFrame(el._r);
+ if(RM||from===to){el.textContent=fmt(to);return}
+ const t0=performance.now();const step=t=>{const k=clamp((t-t0)/dur,0,1),e=1-Math.pow(1-k,3);el.textContent=fmt(from+(to-from)*e);if(k<1)el._r=requestAnimationFrame(step)};el._r=requestAnimationFrame(step);
+}
+function dl(name,text,type){const b=new Blob([text],{type:type||'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(a.href)},600)}
+const csvCell=v=>{v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+const todayISO=()=>{const y=S.year;return TODAY.getFullYear()===y?TODAY.toISOString().slice(0,10).replace(/^\d{4}/,y):y+'-12-31'};
+const whoOpts=sel=>`<option value="a"${sel==='a'?' selected':''}>${esc(nm('a'))}</option>${people()>1?`<option value="b"${sel==='b'?' selected':''}>${esc(nm('b'))}</option>`:''}`;
+const tgl=(ns,key,label,extra='')=>`<button type="button" class="tgl" data-tog="${ns}:${key}" aria-pressed="false" ${extra}>${ic('check',14)}<span>${label}</span></button>`;
+
+/* ============ filing status wizard data ============ */
+const FS={
+ start:{q:'Were you legally married on December 31 of the tax year?',o:[['Yes, married','m1'],['No: single, divorced, or legally separated by year-end','u1'],['My spouse died','w1']]},
+ m1:{q:'Did you live apart from your spouse for the last 6 months of the year, pay more than half the cost of keeping up a home, and have a child who lived with you more than half the year?',o:[['Yes, all of that','=hohm'],['No','m2']]},
+ m2:{q:'Is there a specific reason to keep your tax liability separate (a spouse with back taxes or a questionable return, income-driven student-loan payments, or large medical bills on a lower income)?',o:[['Yes','=mfsc'],['No, I just want the lowest total tax','=mfj']]},
+ u1:{q:'Did you pay more than half the cost of keeping up a home for a qualifying child or relative who lived with you more than half the year?',o:[['Yes','=hoh'],['No','=single']]},
+ w1:{q:'Did your spouse die during the tax year you are filing for?',o:[['Yes','=mfjd'],['No, in one of the two prior years','w2']]},
+ w2:{q:'Do you have a dependent child living with you, and have you not remarried?',o:[['Yes','=qss'],['No','u1']]}
+};
+const FSR={
+ mfj:{t:'Married filing jointly',s:'mfj',b:['Usually the lowest combined tax for married couples.','Unlocks credits limited or closed to MFS: EITC, education credits, dependent-care credit, student-loan interest.','Both spouses are jointly liable for the return and any tax due.']},
+ mfjd:{t:'Married filing jointly (year of death)',s:'mfj',b:['A surviving spouse can generally file jointly for the year the spouse died.','Include the deceased spouse’s income up to the date of death; sign as “filing as surviving spouse”.']},
+ mfsc:{t:'Compare MFS against MFJ before deciding',s:'mfs',b:['MFS keeps each spouse responsible only for their own return, which helps with back taxes, innocent-spouse concerns, or income-driven student-loan payment calculations.','It often costs more: lower thresholds, no EITC, limited education and dependent-care credits.','Run both in the Estimator’s comparison table. If one spouse itemizes, the other must too.']},
+ hohm:{t:'You may qualify as Head of household',s:'hoh',b:['The IRS treats you as “considered unmarried”, which can open HOH rates and a larger standard deduction.','All three conditions must hold for the entire second half of the year. Verify in Pub 501.']},
+ hoh:{t:'Head of household',s:'hoh',b:['Wider brackets and a larger standard deduction than Single.','You must pay over half the cost of the home and the person must meet dependent and residency tests.']},
+ single:{t:'Single',s:'single',b:['Default status for unmarried filers with no qualifying dependent.']},
+ qss:{t:'Qualifying surviving spouse',s:'qss',b:['Uses joint-return rates and standard deduction for up to two years after the year of death.','Requires a dependent child and that you have not remarried.']}
+};
+const EXC=[['biz','Business (Schedule C)'],['med','Medical / dental'],['char','Charity'],['tax','State / local tax'],['mort','Mortgage interest'],['care','Child / dependent care'],['edu','Education'],['oth','Other']];
+
+/* ============ shared computations ============ */
+function seCalc(w){
+ const Yd=YR(),s=Yd.se[w],d=DATA[S.year],led=ledgerTotals()[w].se;
+ const miles=sum(Yd.miles.filter(m=>m.who===w),m=>num(m.mi)),mileAmt=miles*d.mile.biz;
+ const log=sum(Yd.exp.filter(e=>e.who===w&&e.cat==='biz'),e=>num(e.amt));
+ const home=Math.min(300,num(s.sqft))*5,gross=led+num(s.rev),exp=num(s.exp)+mileAmt+log+home,net=gross-exp;
+ const base=net>=400?net*.9235:0,wages=num(w==='a'?Yd.est.wA:Yd.est.wB);
+ const se=.124*Math.min(base,Math.max(0,d.ssBase-wages))+.029*base,half=se/2;
+ return{led,miles,mileAmt,log,home,gross,exp,net,se,half,qbi:Math.max(0,.2*(net-half-num(s.hi)-num(s.sep))),sepMax:Math.max(0,Math.min(d.lim.sep,.2*(net-half)))};
+}
+function deadlines(y){
+ const F=y+1,A=(m,d,yy)=>wkAdj(new Date(yy,m,d));
+ const L=[
+  {d:A(3,15,y),t:`Q1 estimated tax for ${y}`,n:'Form 1040-ES for self-employed or under-withheld taxpayers.',k:'est'},
+  {d:A(5,15,y),t:`Q2 estimated tax for ${y}`,n:'Covers Apr–May income.',k:'est'},
+  {d:A(8,15,y),t:`Q3 estimated tax for ${y}`,n:'Covers Jun–Aug income.',k:'est'},
+  {d:new Date(y,11,31),t:`Year-end planning cutoff (${y})`,n:'Last day for 401(k) deferrals, most charitable gifts, FSA spending, tax-loss harvesting and education payments.',k:'plan'},
+  {d:A(0,15,F),t:`Q4 estimated tax for ${y}`,n:'Final estimated payment for the year (skip if you file and pay by Jan 31).',k:'est'},
+  {d:A(0,31,F),t:'W-2 and 1099-NEC due to recipients',n:'Employers and payers must furnish these by now. Chase missing forms after this date.',k:'docs'},
+  {d:A(1,17,F),t:'Broker / bank forms (approx.)',n:'1099-B, 1099-DIV, 1099-INT and 1099-R typically arrive by mid-February.',k:'docs'},
+  {d:A(2,16,F),t:'Partnership / S-corp returns due',n:'Relevant if you receive a K-1. Late K-1s are a common reason to extend.',k:'docs'},
+  {d:dueDate(y),t:`Filing &amp; payment deadline for ${y}`.replace('&amp;','&'),n:'File Form 1040 or Form 4868 and pay what you owe. Also the deadline to make IRA and HSA contributions for the year.',k:'file'},
+  {d:A(5,15,F),t:`Q2 estimated tax for ${F}`,n:'Next year’s second-quarter payment.',k:'est'},
+  {d:extDate(y),t:'Extended filing deadline',n:'If you filed Form 4868. Payment was still due in April.',k:'file'},
+  {d:wkAdj(new Date(y+4,3,15)),t:`Refund-claim window closes for ${y}`,n:'Three years after the original due date; unclaimed refunds are forfeited.',k:'file'}
+ ];
+ return L.sort((a,b)=>a.d-b.d);
+}
+const ymd=d=>d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+function makeICS(){
+ const esc2=s=>String(s).replace(/\\/g,'\\\\').replace(/[,;]/g,m=>'\\'+m).replace(/\n/g,'\\n');
+ const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//TaxTrail//Tax season//EN','CALSCALE:GREGORIAN'];
+ deadlines(S.year).forEach(e=>{const n=new Date(e.d);n.setDate(n.getDate()+1);
+  L.push('BEGIN:VEVENT',`UID:${S.year}-${e.k}-${ymd(e.d)}@taxtrail`,`DTSTAMP:${ymd(TODAY)}T000000Z`,`DTSTART;VALUE=DATE:${ymd(e.d)}`,`DTEND;VALUE=DATE:${ymd(n)}`,`SUMMARY:${esc2('TaxTrail: '+e.t)}`,`DESCRIPTION:${esc2(e.n)}`,'BEGIN:VALARM','TRIGGER:-P7D','ACTION:DISPLAY','DESCRIPTION:Tax deadline in 7 days','END:VALARM','END:VEVENT')});
+ L.push('END:VCALENDAR');return L.join('\r\n');
+}
+const k1099=y=>y===2024?[5000,0]:[20000,200];
+function docStats(){
+ const Yd=YR(),P=people();let need=0,have=0;
+ DOCS.forEach(g=>g.items.forEach(it=>{if(Yd.docs[it[0]+'.na'])return;if(it[4]==='e'){need+=P;have+=!!Yd.docs[it[0]+'.a']+(P>1&&!!Yd.docs[it[0]+'.b'])}else{need++;have+=!!Yd.docs[it[0]+'.j']}}));
+ return{need,have,pct:need?have/need:0};
+}
+function roadStats(){const Yd=YR();let t=0,d=0;ROAD.forEach(p=>p.s.forEach(s=>{t++;d+=!!Yd.road[s[0]]}));return{t,d,pct:t?d/t:0}}
+
+/* ============ the twelve tools ============ */
+const TOOLS=[
+/* 1 ROADMAP */
+{id:'roadmap',t:'A–Z Roadmap',tag:'Plan',cls:'t-plan',ic:'route',blurb:'Six phases and 40 steps, from year-end moves to post-filing housekeeping.',
+ body:()=>`<p class="intro">Tick steps off as you go. Dates adjust to the tax year selected in the top bar. Finish a phase and the pill turns green.</p>
+  <div class="row sp"><span class="pill blue" id="rmP"></span><button class="btn sm" id="rmNext">${ic('route',15)}Jump to next open step</button></div>
+  <div class="steps mt" id="rmSteps"></div>`,
+ render(){
+  const Yd=YR(),box=$('#rmSteps');if(!box)return;
+  if(this._s!==S.year){this._s=S.year;box.innerHTML=ROAD.map((p,i)=>`<div class="ph" style="--c:${p.c}"><header><span class="no">${i+1}</span><div><h5>${p.t}</h5><small>${p.w(S.year)}</small></div><span class="pill" data-rp="${p.k}"></span></header>${p.s.map(s=>`<label class="st" data-st="${s[0]}"><input type="checkbox" data-chk="road:${s[0]}"><span>${s[1]}</span></label>`).join('')}</div>`).join('')}
+  ROAD.forEach(p=>{let d=0;p.s.forEach(s=>{const on=!!Yd.road[s[0]];d+=on;const el=$(`[data-st="${s[0]}"]`,box);el.classList.toggle('done',on);el.firstElementChild.checked=on});const pl=$(`[data-rp="${p.k}"]`,box);setT(pl,d+' / '+p.s.length);pl.className='pill'+(d===p.s.length?' ok':'')});
+  const r=roadStats();setT('#rmP',`${r.d} of ${r.t} steps · ${Math.round(r.pct*100)}%`);
+ },
+ met(){const r=roadStats();return{txt:`${r.d}/${r.t} steps`,pct:r.pct}}},
+
+/* 2 DOCUMENT CHECKLIST */
+{id:'docs',t:'Document Checklist',tag:'Prep',cls:'t-prep',ic:'files',blurb:'Every form and record, tracked separately for each spouse.',
+ body:()=>`<p class="intro">Tap the chips as each document lands in your hands. “N/A” removes items that do not apply to you from the count.</p>
+  <div class="row sp"><span class="pill blue" id="dcP"></span><button class="tgl" id="dcMiss" aria-pressed="false">${ic('check',14)}<span>Show only what’s missing</span></button></div>
+  <div class="dl mt" id="dcList"></div>`,
+ render(){
+  const Yd=YR(),box=$('#dcList');if(!box)return;const P=people();const sig=[S.year,P].join('|');
+  if(this._s!==sig){this._s=sig;box.innerHTML=DOCS.map((g,gi)=>`<details class="dg" open style="border-left:4px solid ${g.c}"><summary>${g.g}<span class="pill" data-gp="${gi}"></span></summary>${g.items.map(it=>`<div class="di" data-doc="${it[0]}"><div><b><span class="form">${it[1]}</span>${it[2]}</b><small>${it[3]}</small></div><div class="tg2">${it[4]==='e'?tgl('docs',it[0]+'.a','<span class="nA"></span>')+(P>1?tgl('docs',it[0]+'.b','<span class="nB"></span>'):''):tgl('docs',it[0]+'.j','Have it')}${tgl('docs',it[0]+'.na','N/A')}</div></div>`).join('')}</details>`).join('')}
+  const miss=!!S.ui.docsMissing;const mb=$('#dcMiss');mb.setAttribute('aria-pressed',miss);
+  DOCS.forEach((g,gi)=>{let need=0,have=0;g.items.forEach(it=>{const na=!!Yd.docs[it[0]+'.na'];let n=0,h=0;if(!na){if(it[4]==='e'){n=P;h=!!Yd.docs[it[0]+'.a']+(P>1&&!!Yd.docs[it[0]+'.b'])}else{n=1;h=!!Yd.docs[it[0]+'.j']}}need+=n;have+=h;
+   const row=$(`[data-doc="${it[0]}"]`,box);row.hidden=miss&&(na||h>=n);row.style.opacity=na?.45:1;
+   $$('[data-tog]',row).forEach(b=>b.setAttribute('aria-pressed',!!Yd.docs[b.dataset.tog.split(':')[1]]))});
+   const gp=$(`[data-gp="${gi}"]`,box);setT(gp,have+' / '+need);gp.className='pill'+(need&&have===need?' ok':'')});
+  const s=docStats();setT('#dcP',`${s.have} of ${s.need} collected · ${Math.round(s.pct*100)}%`);
+ },
+ met(){const s=docStats();return{txt:`${s.have}/${s.need} in hand`,pct:s.pct}}},
+
+/* 3 FILING STATUS */
+{id:'status',t:'Filing Status Finder',tag:'Decide',cls:'t-learn',ic:'users',blurb:'A short guided quiz plus a joint-vs-separate cheat sheet for couples.',
+ body:()=>`<p class="intro">Answer a few questions and TaxTrail points to the status the IRS rules support. Then run the numbers both ways in the Estimator.</p>
+  <div class="cols"><div id="fsBox"></div>
+  <div class="panel in2"><h4>Joint vs separate at a glance</h4><div class="tw"><table class="tbl"><thead><tr><th></th><th>Joint</th><th>Separate</th></tr></thead><tbody>
+   <tr><td>Typical total tax</td><td>Lower</td><td>Higher</td></tr><tr><td>Liability</td><td>Both responsible</td><td>Own return only</td></tr>
+   <tr><td>EITC / education credits</td><td>Available</td><td>Mostly blocked</td></tr><tr><td>Student-loan interest</td><td>Available</td><td>Not allowed</td></tr>
+   <tr><td>Standard deduction</td><td>2× single</td><td>Same as single</td></tr><tr><td>Itemizing</td><td>Together</td><td>Both must itemize if one does</td></tr></tbody></table></div>
+   <p class="note">Separate returns can help with income-driven repayment plans, innocent-spouse risk, and large medical costs on one spouse’s lower income. Check with the Estimator before assuming.</p></div></div>`,
+ render(){
+  const Yd=YR(),q=Yd.quiz,box=$('#fsBox');if(!box)return;let h='';
+  if(FS[q.step]){const n=FS[q.step];h=`<div class="wiz"><b style="font:700 1.1rem var(--serif)">${n.q}</b>${n.o.map(o=>`<button class="opt" data-fs="${o[1]}"><span><b>${o[0]}</b></span></button>`).join('')}${q.hist.length?`<button class="btn sm" data-fs="__back" style="justify-self:start">← Back</button>`:''}</div>`}
+  else{const r=FSR[q.step.replace('=','')];h=`<div class="res"><span class="pill ok">Result</span><h4 class="mt">${r.t}</h4><ul style="padding-left:18px;display:grid;gap:6px;font-size:.92rem">${r.b.map(b=>`<li>${b}</li>`).join('')}</ul><div class="row mt"><button class="btn pri sm" data-fs="__use" ${Yd.status===r.s?'disabled':''}>${Yd.status===r.s?'Already set':'Use “'+STATUS[r.s]+'”'}</button><button class="btn sm" data-fs="__restart">Start over</button></div></div>`}
+  setH(box,h);
+ },
+ met(){return{txt:STATUS[YR().status],pct:null}}},
+
+/* 4 INCOME LEDGER */
+{id:'income',t:'Household Income Ledger',tag:'Money',cls:'t-money',ic:'wallet',blurb:'Log every income form for both spouses and total it by type.',
+ body:()=>`<p class="intro">One row per form or income source. Totals feed the Estimator and Self-Employment tools. Enter amounts exactly as they appear on the forms (box 1 for W-2s).</p>
+  <div class="row"><button class="btn sm pri" id="ldAdd">${ic('plus',15)}Add income row</button><button class="btn sm" id="ldSend">${ic('calc',15)}Send totals to Estimator</button></div>
+  <div class="tw mt"><table class="tbl"><thead><tr><th>Whose</th><th>Type</th><th>Payer / note</th><th class="n">Amount</th><th class="n">Fed. withheld</th><th></th></tr></thead><tbody id="ldRows"></tbody></table></div>
+  <div class="tw mt"><table class="tbl" id="ldTot"></table></div>
+  <p class="note">Self-employment lines are gross receipts here. Expenses are subtracted in the Self-Employment tool, and the net is what flows into the Estimator.</p>`,
+ render(){
+  const Yd=YR(),tb=$('#ldRows');if(!tb)return;const sig=[S.year,S.na,S.nb,SV,people()].join('|');
+  if(this._s!==sig){this._s=sig;tb.innerHTML=Yd.income.length?Yd.income.map(r=>`<tr data-r="${r.id}"><td><select data-l="who" aria-label="Whose">${whoOpts(r.who)}</select></td><td><select data-l="type" aria-label="Type">${ITYPES.map(t=>`<option value="${t[0]}"${r.type===t[0]?' selected':''}>${t[1]}</option>`).join('')}</select></td><td><input data-l="payer" value="${esc(r.payer)}" placeholder="Employer, bank, app…" aria-label="Payer"></td><td class="n"><input type="number" step="any" data-l="amt" value="${r.amt||''}" placeholder="0" aria-label="Amount"></td><td class="n"><input type="number" step="any" data-l="wh" value="${r.wh||''}" placeholder="0" aria-label="Withheld"></td><td><button class="x" data-del="income:${r.id}" aria-label="Delete row">${ic('x',16)}</button></td></tr>`).join(''):`<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:22px">No rows yet. Add your first W-2, 1099 or other income.</td></tr>`}
+  const T=ledgerTotals(),P=people();const row=(l,k)=>`<tr><td>${l}</td><td class="n">${$f(T.a[k])}</td>${P>1?`<td class="n">${$f(T.b[k])}</td>`:''}<td class="n"><b>${$f(T.a[k]+(P>1?T.b[k]:0))}</b></td></tr>`;
+  const tot=w=>T[w].w+T[w].se+T[w].i+T[w].o;
+  setH('#ldTot',`<thead><tr><th>Totals</th><th class="n">${esc(nm('a'))}</th>${P>1?`<th class="n">${esc(nm('b'))}</th>`:''}<th class="n">Household</th></tr></thead><tbody>${row('Wages','w')}${row('Self-employment (gross)','se')}${row('Interest &amp; dividends','i')}${row('Other income','o')}${row('Federal tax withheld','wh')}</tbody><tfoot><tr><td>Total income</td><td class="n">${$f(tot('a'))}</td>${P>1?`<td class="n">${$f(tot('b'))}</td>`:''}<td class="n">${$f(tot('a')+(P>1?tot('b'):0))}</td></tr></tfoot>`);
+ },
+ met(){const T=ledgerTotals(),t=sum(['a','b'],w=>T[w].w+T[w].se+T[w].i+T[w].o);return{txt:t?$f(t)+' tracked':'Nothing logged yet',pct:null}}},
+
+/* 5 PAYMENT-APP ANALYZER */
+{id:'venmo',t:'Payment-App Analyzer',tag:'Money',cls:'t-money',ic:'swap',blurb:'Drop in Venmo statement CSVs for each spouse; see totals, months and 1099-K risk.',
+ body:()=>`<p class="intro">Load a Venmo statement (Venmo → Statements → Download CSV). It is parsed entirely inside your browser; only monthly totals are kept, never the individual transactions or notes.</p>
+  <div class="cols"><div>
+   <div class="row"><b style="font-size:.85rem">Statement belongs to:</b><span class="row" id="vWho"></span></div>
+   <label class="drop mt" id="vDrop" style="--c:var(--gold)" tabindex="0">${ic('upload',34)}<b>Drop Venmo CSV file(s) here</b><br><small style="color:var(--mut)">or click to choose · stays on this device</small><input type="file" id="vFile" accept=".csv,text/csv" multiple hidden></label>
+   <p class="note" id="vMsg" aria-live="polite"></p>
+   <div class="row mt"><button class="btn sm" id="vAdd">${ic('plus',15)}Add received total to ledger</button><button class="btn sm dng" id="vClear">${ic('trash',15)}Clear this person</button></div>
+   <p class="note"><b>Remember:</b> money friends and family send you back (rent splits, dinners, reimbursements) is <b>not</b> income. Only payments for goods or services you sold are. Edit the ledger amount down to the business-only part.</p>
+  </div><div class="panel in2" id="vSum"></div></div>
+  <div class="mt2" id="vChart"></div>`,
+ render(){
+  const yrs=venmoYears(),w=S.ui.vwho,P=people();
+  setH('#vWho',['a','b'].slice(0,P>1?2:1).map(x=>`<button class="tgl" data-vwho="${x}" aria-pressed="${w===x}">${esc(nm(x))}</button>`).join(''));
+  if(!yrs.length){setH('#vSum','<p class="note">No statement loaded yet. Upload one to see yearly totals, a monthly chart, and a reporting-threshold check.</p>');setH('#vChart','');return}
+  let vy=S.ui.vyear;if(!yrs.includes(vy))vy=yrs.includes(S.year)?S.year:yrs[yrs.length-1];
+  const rowsH=yrs.map(y=>{const a=venmoYear('a',y),b=venmoYear('b',y),th=k1099(y);const flag=(t)=>t.r>=th[0]&&t.rc>=th[1];return`<tr><td><b>${y}</b></td><td class="n">${$f(a.r)}</td>${P>1?`<td class="n">${$f(b.r)}</td>`:''}<td class="n">${$f(a.s+(P>1?b.s:0))}</td><td class="n">${$f(a.b+(P>1?b.b:0))}</td><td>${flag(a)||(P>1&&flag(b))?'<span class="pill warn">Over</span>':'<span class="pill ok">Under</span>'}</td></tr>`}).join('');
+  setH('#vSum',`<h4>Yearly totals <small style="font-weight:400;color:var(--mut)">(received = incoming payments &amp; charges)</small></h4><div class="tw"><table class="tbl"><thead><tr><th>Year</th><th class="n">${esc(nm('a'))} received</th>${P>1?`<th class="n">${esc(nm('b'))} received</th>`:''}<th class="n">Sent</th><th class="n">Business-looking</th><th>1099-K level*</th></tr></thead><tbody>${rowsH}</tbody></table></div><p class="note">*“Over” means gross incoming payments exceeded that year’s 1099-K reporting level (${esc(DATA[vy]?DATA[vy].k1099:'$20,000 and 200 transactions')}). It matters only for payments flagged as goods &amp; services sales.</p>`);
+  const t=venmoYear(w,vy),m=S.venmo[w]||{};let mx=1;const mo=[];for(let i=1;i<=12;i++){const k=vy+'-'+String(i).padStart(2,'0'),o=m[k]||{r:0,s:0,b:0};mo.push(o);mx=Math.max(mx,o.r,o.s)}
+  setH('#vChart',`<div class="row sp"><h4 style="margin:0">${esc(nm(w))} · month by month</h4><label class="fld" style="display:flex;align-items:center;gap:8px">Year <select id="vYearSel" class="sel">${yrs.map(y=>`<option${y===vy?' selected':''}>${y}</option>`).join('')}</select></label></div>
+   <div class="chart mt" role="img" aria-label="Monthly received and sent totals">${mo.map((o,i)=>`<div class="cc" title="${MON[i]}: received ${$f(o.r)}, sent ${$f(o.s)}"><u><i style="height:${o.r/mx*100}%;background:var(--ok)"></i><i style="height:${o.s/mx*100}%;background:var(--gold)"></i></u><small>${MON[i][0]}</small></div>`).join('')}</div>
+   <div class="leg mt"><span><i style="background:var(--ok)"></i>Received</span><span><i style="background:var(--gold)"></i>Sent</span></div>
+   <div class="tiles mt">${[['Received',$f(t.r),`${t.rc} payments`],['Sent',$f(t.s),`${t.sc} payments`],['Cashed out to bank',$f(t.t),'transfers'],['Fees',$f(t.f,2),'Venmo fees'],['Business-looking',$f(t.b),`${t.bc} with keywords`]].map(x=>`<div class="tile"><div class="l">${x[0]}</div><div class="v" style="font-size:1.5rem">${x[1]}</div><div class="s">${x[2]}</div></div>`).join('')}</div>
+   <div class="mt"><div class="row sp"><small>Received vs 1099-K level</small><small class="mono">${$f(t.r)} / ${$f(k1099(vy)[0])}</small></div><div class="meter"><i style="width:${clamp(t.r/k1099(vy)[0],0,1)*100}%"></i></div></div>`);
+  const sel=$('#vYearSel');if(sel)sel.onchange=()=>{S.ui.vyear=+sel.value;save();queueRefresh()};
+ },
+ met(){const n=sum(['a','b'],w=>Object.keys(S.venmo[w]||{}).length);return{txt:n?`${n} months loaded`:'No statement yet',pct:null}}},
+
+/* 6 DEDUCTION PLANNER */
+{id:'deduct',t:'Deduction Planner',tag:'Decide',cls:'t-learn',ic:'tag',blurb:'Standard vs itemized, with SALT cap, medical floor and contribution limits.',
+ body:()=>`<p class="intro">Enter the year’s itemizable amounts. TaxTrail applies the SALT cap, the medical-expense floor and (from 2026) the charity floor, then tells you which route wins.</p>
+  <div class="cols"><div class="panel in2"><h4>Itemizable amounts</h4><div class="fgrid">
+   ${mf('y.ded.salt','State &amp; local income or sales tax')}${mf('y.ded.prop','Property tax')}${mf('y.ded.mort','Mortgage interest')}${mf('y.ded.char','Charitable gifts')}${mf('y.ded.med','Medical &amp; dental (total)')}${mf('y.ded.oth','Other itemized')}</div>
+   <div class="row mt"><button class="btn sm" id="ddPull">${ic('receipt',15)}Pull from Expense Log</button></div></div>
+   <div><div id="ddRes"></div></div></div>
+  <div class="cols mt2"><div class="panel in2"><h4>Contribution limits for <span class="yy"></span></h4><div class="kv" id="ddLim"></div><p class="note">Limits shown are for individuals under 50; catch-up amounts are higher. HSA family limit applies to family coverage.</p></div>
+  <div class="panel in2"><h4>Other deductions worth checking</h4><ul style="padding-left:18px;display:grid;gap:7px;font-size:.88rem"><li><b>Above-the-line:</b> IRA, HSA, student-loan interest (up to $2,500), educator expenses, half of self-employment tax.</li><li><b>2025–2028:</b> up to $6,000 per 65+ taxpayer; qualified tips and overtime premium deductions (Estimator handles them).</li><li><b>2026+:</b> non-itemizers can deduct some charitable gifts ($1,000 single / $2,000 joint).</li><li><b>Self-employed:</b> health insurance, SEP-IRA, QBI 20% deduction (Self-Employment tool).</li></ul></div></div>`,
+ render(){
+  const Yd=YR(),H=household(),agi=H.res.agi,st=H.st,it=itemized(agi,st,S.year,Yd.ded),std=DATA[S.year].std[st];
+  const diff=it.total-std;
+  setH('#ddRes',`<div class="big ${diff>0?'':'owe'}" style="${diff>0?'':'background:linear-gradient(135deg,var(--blue),#4a8fd6)'}"><div class="l">${diff>0?'Itemizing wins':'Standard deduction wins'}</div><div class="v">${$f(Math.abs(diff))}</div><div class="s">${diff>0?'more than the standard deduction':'is the gap itemizing would need to close'} · ${STATUS[st]}</div></div>
+   <div class="kv mt"><div><span>Standard deduction</span><b>${$f(std)}</b></div><div><span>State/local tax entered → counted (cap ${$f(it.cap)})</span><b>${$f(it.saltRaw)} → ${$f(it.salt)}</b></div><div><span>Mortgage interest</span><b>${$f(it.mort)}</b></div><div><span>Charity${S.year>=2026?' (after 0.5% floor)':''}</span><b>${$f(it.char)}</b></div><div><span>Medical over 7.5% of AGI</span><b>${$f(it.med)}</b></div><div><span>Other</span><b>${$f(it.oth)}</b></div><div class="tot"><span>Itemized total</span><b>${$f(it.total)}</b></div></div>
+   ${diff<0&&diff>-std*.2?`<p class="note"><b>Close call.</b> You are within ${$f(-diff)} of itemizing. “Bunching” gifts or prepaying deductible bills into one year can tip it.</p>`:''}`);
+  const d=DATA[S.year].lim;
+  setH('#ddLim',`<div><span>401(k) / 403(b) deferral</span><b>${$f(d.k401)}</b></div><div><span>IRA (traditional or Roth)</span><b>${$f(d.ira)}</b></div><div><span>HSA, self-only / family</span><b>${$f(d.hsaS)} / ${$f(d.hsaF)}</b></div><div><span>SEP-IRA maximum</span><b>${$f(d.sep)}</b></div><div><span>Business mileage rate</span><b>${(DATA[S.year].mile.biz*100).toFixed(1)}¢/mi</b></div>`);
+ },
+ met(){const Yd=YR(),H=household(),it=itemized(H.res.agi,H.st,S.year,Yd.ded),d=it.total-DATA[S.year].std[H.st];return{txt:it.total?(d>0?`Itemize +${$f(d)}`:`Standard +${$f(-d)}`):`Std ${$f(DATA[S.year].std[H.st])}`,pct:null}}},
+
+/* 7 ESTIMATOR */
+{id:'estimate',t:'Tax Estimator',tag:'Money',cls:'t-money',ic:'calc',blurb:'Federal estimate for both of you, with a joint vs separate comparison.',
+ body:()=>`<p class="intro">A rough federal estimate using the selected year’s brackets. It ignores AMT, capital-gain rates, state tax and many credits, so treat the result as a planning number.</p>
+  <div class="cols"><div>
+   <div class="panel in2"><h4>Income &amp; withholding</h4>
+    <div class="fgrid">${mf('y.est.wA','<span class="nA"></span> wages (W-2 box 1)')}${mf('y.est.wB','<span class="nB"></span> wages (W-2 box 1)','data-p2')}
+     ${mf('y.est.whA','<span class="nA"></span> federal tax withheld')}${mf('y.est.whB','<span class="nB"></span> federal tax withheld','data-p2')}
+     ${mf('y.est.seA','<span class="nA"></span> self-employment net profit')}${mf('y.est.seB','<span class="nB"></span> self-employment net profit','data-p2')}
+     ${mf('y.est.intr','Interest, dividends &amp; gains')}${mf('y.est.oth','Other taxable income')}${mf('y.est.adj','Adjustments (IRA, HSA, student-loan interest…)')}</div></div>
+   <div class="panel in2 mt"><h4>Household</h4>
+    <div class="fgrid">${nf('y.est.kids','Children under 17')}${nf('y.est.odep','Other dependents')}
+     <label class="fld">Taxpayers age 65+<select data-k="y.est.old" data-num><option value="0">None</option><option value="1">One</option><option value="2">Both</option></select></label>
+     ${mf('y.est.cred','Other credits (EITC, education…)')}${mf('y.est.paid','Estimated payments made')}
+     <span data-ymin="2025" class="fgrid" style="grid-column:1/-1">${mf('y.est.tips','Qualified tips')}${mf('y.est.ot','Overtime premium pay')}</span>
+     <label class="fld">Deduction method<select data-k="y.est.mode"><option value="auto">Best of standard / itemized</option><option value="std">Force standard</option><option value="item">Force itemized</option></select></label></div></div>
+   <div class="row mt"><button class="btn sm" id="esPull">${ic('wallet',15)}Import from Income Ledger</button><button class="btn sm" id="esSE">${ic('brief',15)}Use Self-Employment net</button></div>
+  </div>
+  <div><div id="esBig"></div><div class="kv mt" id="esKv"></div><div id="esBrk" class="mt"></div></div></div>
+  <div class="mt2" id="esCmp"></div>`,
+ render(){
+  const Yd=YR(),H=household(),r=H.res,owe=r.bal<0;
+  setH('#esBig',`<div class="big ${owe?'owe':''}"><div class="l">${owe?'Estimated balance due':'Estimated refund'}</div><div class="v" id="esV">${$f(Math.abs(r.bal))}</div><div class="s">${STATUS[H.st]} · tax year ${S.year}${H.kind==='solo'&&people()>1?' · spouse excluded':''}</div></div>`);
+  const v=$('#esV');if(v)animNum(v,Math.abs(r.bal),x=>$f(x));
+  const kv=(a,b,c='')=>`<div class="${c}"><span>${a}</span><b>${b}</b></div>`;
+  if(H.kind==='split'){setH('#esKv',kv('Combined AGI',$f(r.agi))+kv(nm('a')+' tax',$f(H.a.total))+kv(nm('b')+' tax',$f(H.b.total))+kv('Total tax',$f(r.total),'tot')+kv('Payments &amp; credits',$f(r.pay))+kv('Effective rate',pct(r.eff)))}
+  else setH('#esKv',kv('Total income',$f(r.income))+kv('AGI',$f(r.agi))+kv(r.dedType+' deduction',$f(r.ded))+(r.senior||r.tipsot?kv('Senior / tips / overtime deductions',$f(r.senior+r.tipsot)):'')+(r.qbi?kv('QBI deduction (20%)',$f(r.qbi)):'')+kv('Taxable income',$f(r.taxable))+kv('Income tax (brackets)',$f(r.bt.tax))+kv('Child &amp; dependent credits',$f(r.ctc))+kv('Self-employment &amp; Medicare surtax',$f(r.seTax+r.addl))+kv('Total tax',$f(r.total),'tot')+kv('Withholding + estimates + credits',$f(r.pay))+kv('Effective / marginal rate',pct(r.eff)+' / '+pct(r.marg,0)));
+  const pts=(H.kind==='split'?H.a.bt:r.bt).parts;const cols=['#8fd3b8','#4cbf9a','#e9c35c','#e59a3d','#e0724a','#c4483e','#8e2f4a'];const taxable=(H.kind==='split'?H.a.taxable:r.taxable)||1;
+  setH('#esBrk',`<small style="font-weight:700;color:var(--mut)">Where your taxable income lands${H.kind==='split'?` (${esc(nm('a'))})`:''}</small><div class="stack">${pts.map((p,i)=>p.amt>0?`<i style="flex:${p.amt/taxable};background:${cols[i]}" title="${pct(p.rate,0)}: ${$f(p.amt)}"></i>`:'').join('')}</div><div class="leg">${pts.map((p,i)=>p.amt>0?`<span><i style="background:${cols[i]}"></i>${pct(p.rate,0)} · ${$f(p.amt)}</span>`:'').join('')}</div>`);
+  if(people()>1){const j=runJoint('mfj'),s=runMFS(),dlt=s.total-j.total;
+   setH('#esCmp',`<div class="panel in2"><h4>Joint vs separate, side by side</h4><div class="tw"><table class="tbl"><thead><tr><th></th><th class="n">Married filing jointly</th><th class="n">Married filing separately</th></tr></thead><tbody><tr><td>Total tax</td><td class="n">${$f(j.total)}</td><td class="n">${$f(s.total)}</td></tr><tr><td>Refund (+) / owed (−)</td><td class="n">${$f(j.bal)}</td><td class="n">${$f(s.bal)}</td></tr><tr><td>Deduction used</td><td class="n">${$f(j.ded)} (${j.dedType})</td><td class="n">${$f(s.a.ded)} + ${$f(s.b.ded)}</td></tr></tbody></table></div>
+    <p class="note"><b>${Math.abs(dlt)<1?'No difference.':dlt>0?`Filing jointly saves about ${$f(dlt)}.`:`Filing separately saves about ${$f(-dlt)}.`}</b> The separate-return estimate splits shared amounts evenly and gives dependents to the higher earner, and it leaves out credits that MFS filers cannot claim, so the real gap usually favors joint even more.</p></div>`)}
+  else setH('#esCmp','');
+ },
+ met(){const r=household().res;return{txt:r.bal<0?`Owe ${$f(-r.bal)}`:`Refund ${$f(r.bal)}`,pct:null}}},
+
+/* 8 WITHHOLDING */
+{id:'withhold',t:'Withholding Check-up',tag:'Plan',cls:'t-plan',ic:'gauge',blurb:'Project the full year from year-to-date pay stubs and fix W-4s before it is too late.',
+ body:()=>`<p class="intro">Enter year-to-date figures from a recent pay stub. TaxTrail projects the full year, runs the estimator on it, and tells you how much to change per paycheck.</p>
+  <div class="cols">${['a','b'].map(w=>`<div class="panel in2" ${w==='b'?'data-p2':''}><h4><span class="n${w.toUpperCase()}"></span></h4><div class="fgrid">${mf(`y.wh.${w}.ytdw`,'YTD gross wages')}${mf(`y.wh.${w}.ytdh`,'YTD federal withholding')}${nf(`y.wh.${w}.pp`,'Pay periods per year')}${nf(`y.wh.${w}.done`,'Pay periods completed')}</div></div>`).join('')}</div>
+  <div class="row mt"><button class="btn sm pri" id="whApply">${ic('calc',15)}Apply projection to Estimator</button></div>
+  <div class="cols mt"><div id="whRes"></div><div id="whTip"></div></div>`,
+ render(){
+  const Yd=YR(),P=people(),pr={};
+  ['a','b'].forEach(w=>{const q=Yd.wh[w],k=num(q.done)>0&&num(q.pp)>0?num(q.pp)/num(q.done):0;pr[w]={w:k?num(q.ytdw)*k:num(w==='a'?Yd.est.wA:Yd.est.wB),h:k?num(q.ytdh)*k:num(w==='a'?Yd.est.whA:Yd.est.whB),left:Math.max(0,num(q.pp)-num(q.done)),proj:!!k}});
+  const e=Yd.est,est2={...e,wA:pr.a.w,whA:pr.a.h,wB:P>1?pr.b.w:0,whB:P>1?pr.b.h:0};
+  const H=Yd.status==='mfs'?runMFS({est:est2,ded:Yd.ded}):null;
+  const st=Yd.status;const r=st==='single'||st==='hoh'?runSolo(st,{est:est2,ded:Yd.ded}):st==='mfs'?{total:H.total,bal:H.bal,pay:H.pay}:runJoint(st,{est:est2,ded:Yd.ded});
+  this.last={pr,r,est2};
+  setH('#whRes',`<div class="big ${r.bal<0?'owe':''}"><div class="l">Projected ${r.bal<0?'balance due':'refund'}</div><div class="v">${$f(Math.abs(r.bal))}</div><div class="s">Projected wages ${$f(pr.a.w+(P>1?pr.b.w:0))} · withholding ${$f(pr.a.h+(P>1?pr.b.h:0))}${pr.a.proj||pr.b.proj?'':' · using Estimator figures (enter YTD to project)'}</div></div>`);
+  const left=Math.max(1,(P>1?Math.max(pr.a.left,pr.b.left):pr.a.left)||26),n=P>1?2:1;let tip;
+  if(r.bal<-50)tip=`<div class="banner" style="--c:var(--coral)">${ic('alert')}<div><b>Under-withheld by about ${$f(-r.bal)}</b><span>Add roughly <b>${$f(-r.bal/n/left,2)}</b> per paycheck${n>1?' for each of you':''} on Form W-4 step 4(c), or make an estimated payment.</span></div></div>`;
+  else if(r.bal>1200)tip=`<div class="banner" style="--c:var(--blue)">${ic('info')}<div><b>Over-withheld by about ${$f(r.bal)}</b><span>You are lending the IRS money interest-free. You could cut roughly <b>${$f((r.bal-300)/n/left,2)}</b> per paycheck${n>1?' each':''} and still land near a small refund.</span></div></div>`;
+  else tip=`<div class="banner" style="--c:var(--ok)">${ic('shield')}<div><b>Right on track</b><span>Projected result is within a comfortable range of zero. Re-check after any raise, new job, or life event.</span></div></div>`;
+  setH('#whTip',tip+`<p class="note">Use the IRS Tax Withholding Estimator for a precise W-4 recommendation. Two-earner households should check “Multiple jobs” on each W-4.</p>`);
+ },
+ met(){return{txt:this.last?(this.last.r.bal<0?`Short ${$f(-this.last.r.bal)}`:`Over ${$f(this.last.r.bal)}`):'Add YTD pay',pct:null}}},
+
+/* 9 CREDITS */
+{id:'credits',t:'Credits Explorer',tag:'Decide',cls:'t-learn',ic:'spark',blurb:'Twelve big credits with a likely / check / unlikely read from your own numbers.',
+ body:()=>`<p class="intro">Credits cut tax dollar-for-dollar, so they are worth a minute each. The badges use your Estimator figures; mark the ones you plan to claim.</p>
+  <div id="crEitc" class="mb"></div><div class="dl mt" id="crList"></div>`,
+ render(){
+  const Yd=YR(),H=household(),agi=H.res.agi,e=Yd.est,kids=e.kids+e.odep,d=DATA[S.year],joint=Yd.status==='mfj'||Yd.status==='qss',y=S.year;
+  const hi=joint?agi>=400000:agi>=200000;
+  const eit=d.eitc?(()=>{const n=Math.min(3,kids),lim=(joint?d.eitc.j:d.eitc.s)[n];return{n,max:d.eitc.max[n],lim,ok:Yd.status!=='mfs'&&agi>0&&agi<lim}})():null;
+  const C=[
+   {id:'ctc',n:'Child Tax Credit &amp; other-dependent credit',a:`Up to ${$f(d.ctc)} per child under 17 plus $500 per other dependent`,f:'Schedule 8812',w:'Qualifying child with an SSN who lived with you over half the year. Phases out above $400,000 joint / $200,000 other.',u:'https://www.irs.gov/credits-deductions/individuals/child-tax-credit',l:kids>0?(hi?'check':'likely'):'unlikely'},
+   {id:'eitc',n:'Earned Income Tax Credit',a:eit?`Up to ${$f(eit.max)} for your family size`:'Amount depends on income &amp; children',f:'Schedule EIC',w:eit?`Under ${$f(eit.lim)} AGI for ${eit.n} child${eit.n===1?'':'ren'} in ${y}. Needs earned income and modest investment income. Generally unavailable if married filing separately.`:'2026 limits are not in this app yet; use the IRS EITC Assistant.',u:'https://www.irs.gov/credits-deductions/individuals/earned-income-tax-credit-eitc',l:eit?(eit.ok?'likely':'unlikely'):'check'},
+   {id:'cdcc',n:'Child &amp; dependent care credit',a:'20–35% of up to $3,000 (one) / $6,000 (two+) of work-related care costs; higher percentages from 2026',f:'Form 2441',w:'You (and your spouse) worked or looked for work while paying for care of a child under 13 or a disabled dependent.',u:'https://www.irs.gov/taxtopics/tc602',l:e.kids>0?'check':'unlikely'},
+   {id:'aotc',n:'American Opportunity Credit',a:'Up to $2,500 per student; 40% refundable',f:'Form 8863 + 1098-T',w:`First four years of college. Phases out $160,000–$180,000 joint / $80,000–$90,000 single; not for MFS.`,u:'https://www.irs.gov/credits-deductions/individuals/aotc',l:Yd.status==='mfs'?'unlikely':(joint?agi<180000:agi<90000)?'check':'unlikely'},
+   {id:'llc',n:'Lifetime Learning Credit',a:'Up to $2,000 per return (20% of $10,000)',f:'Form 8863',w:'Any post-secondary course to gain job skills; same income phase-outs as AOTC.',u:'https://www.irs.gov/credits-deductions/individuals/llc',l:(joint?agi<180000:agi<90000)?'check':'unlikely'},
+   {id:'saver',n:'Saver’s Credit',a:'10–50% of up to $2,000 saved per person',f:'Form 8880',w:'Contribution to an IRA/401(k) with AGI under roughly $79,000 joint / $39,500 single (2025 levels, adjusts yearly).',u:'https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-savings-contributions-savers-credit',l:agi>0&&agi<(joint?80000:40000)?'likely':'unlikely'},
+   {id:'ptc',n:'Premium Tax Credit (Marketplace)',a:'Varies; reconcile advance payments',f:'Form 8962 + 1095-A',w:'Required to file if you or family had Marketplace coverage with advance credits. Rules around the enhanced subsidies changed after 2025.',u:'https://www.irs.gov/affordable-care-act/individuals-and-families/the-premium-tax-credit-the-basics',l:'check'},
+   {id:'energy',n:'Home energy &amp; clean vehicle credits',a:'Up to 30% of costs for solar, batteries, heat pumps (varies)',f:'Forms 5695 / 8936',w:y>=2026?'Most of these credits ended for property placed in service after Dec 31, 2025 and vehicles acquired after Sept 30, 2025.':'Check dates: many of these credits ended after 2025 and apply only to items bought in the tax year.',u:'https://www.irs.gov/credits-deductions/energy-efficient-home-improvement-credit',l:y>=2026?'unlikely':'check'},
+   {id:'adopt',n:'Adoption credit',a:'About $16,000–$17,000 per child; part refundable from 2025',f:'Form 8839',w:'Qualified adoption expenses; income phase-out near $250,000.',u:'https://www.irs.gov/taxtopics/tc607',l:'unlikely'},
+   {id:'ftc',n:'Foreign tax credit',a:'Dollar-for-dollar for foreign income tax paid',f:'Form 1116',w:'Foreign dividends or interest through funds and brokerage statements (1099-DIV box 7).',u:'https://www.irs.gov/individuals/international-taxpayers/foreign-tax-credit',l:'check'},
+   {id:'elder',n:'Credit for the elderly or disabled',a:'$3,750–$7,500 base before limits',f:'Schedule R',w:'Age 65+ or retired on permanent disability with low income and little nontaxable pension.',u:'https://www.irs.gov/taxtopics/tc602',l:e.old>0&&agi<(joint?25000:17500)?'check':'unlikely'},
+   {id:'rcl',n:'Retirement-plan & HSA employer credits',a:'Small-business owners may qualify for startup credits',f:'Form 8881 / 5884',w:'Self-employed owners with employees starting a plan or hiring from target groups.',u:'https://www.irs.gov/credits-deductions/businesses',l:'unlikely'}
+  ];
+  const B={likely:['ok','Likely'],check:['warn','Worth checking'],unlikely:['','Probably not']};
+  this.nLikely=C.filter(c=>c.l==='likely').length;
+  setH('#crList',C.map(c=>`<div class="cr"><div><h5>${c.n}<span class="pill ${B[c.l][0]}">${B[c.l][1]}</span></h5><p><b>${c.a}</b></p><p>${c.w}</p><div class="meta"><span class="form" style="font:700 .7rem var(--mono);color:var(--brand)">${c.f}</span> · <a href="${c.u}" target="_blank" rel="noopener noreferrer">IRS guide</a></div></div><div class="tg2" style="align-content:start">${tgl('cr',c.id,'I’ll claim')}</div></div>`).join(''));
+  $$('#crList [data-tog]').forEach(b=>b.setAttribute('aria-pressed',!!Yd.cr[b.dataset.tog.split(':')[1]]));
+  setH('#crEitc',eit?'':`<div class="banner" style="--c:var(--blue)">${ic('info')}<div><b>EITC table for ${S.year} not loaded</b><span>Use the IRS EITC Assistant for exact limits.</span></div></div>`);
+ },
+ met(){return{txt:(this.nLikely==null?'…':this.nLikely)+' likely for you',pct:null}}},
+
+/* 10 SELF-EMPLOYMENT */
+{id:'selfemp',t:'Self-Employment & Estimates',tag:'Money',cls:'t-money',ic:'brief',blurb:'Net profit, SE tax, QBI and a quarterly payment schedule for side income.',
+ body:()=>`<p class="intro">For freelance, gig and small-business income. Receipts come from the ledger (plus anything extra you enter); expenses come from the log, mileage and home-office method.</p>
+  <div class="cols">${['a','b'].map(w=>`<div class="panel in2" ${w==='b'?'data-p2':''}><h4><span class="n${w.toUpperCase()}"></span></h4><div class="fgrid">${mf(`y.se.${w}.rev`,'Extra gross receipts (not in ledger)')}${mf(`y.se.${w}.exp`,'Other business expenses')}${nf(`y.se.${w}.sqft`,'Home-office sq ft (max 300)')}${mf(`y.se.${w}.hi`,'Self-employed health insurance')}${mf(`y.se.${w}.sep`,'SEP-IRA contribution')}</div><div class="kv mt" id="se${w}"></div></div>`).join('')}</div>
+  <div class="row mt"><button class="btn sm pri" id="seSend">${ic('calc',15)}Send net profit to Estimator</button></div>
+  <div class="panel in2 mt2"><h4>Quarterly estimated payments</h4><div class="fgrid" style="max-width:420px">${mf('y.se.prior','Last year’s total tax (for safe harbor)')}</div><div class="cols mt" id="seQ"></div><p class="note" id="seQn"></p></div>`,
+ render(){
+  const P=people(),H=household(),r=H.res,Yd=YR();
+  ['a','b'].slice(0,P).forEach(w=>{const c=seCalc(w);const kv=(a,b,x='')=>`<div class="${x}"><span>${a}</span><b>${b}</b></div>`;
+   setH('#se'+w,kv('Receipts (ledger + extra)',$f(c.gross))+kv('Expenses (manual)',$f(num(Yd.se[w].exp)))+kv('Expenses from log',$f(c.log))+kv(`Mileage (${c.miles.toLocaleString()} mi)`,$f(c.mileAmt))+kv('Home office',$f(c.home))+kv('Net profit',$f(c.net),'tot')+kv('Self-employment tax',$f(c.se))+kv('QBI deduction (approx.)',$f(c.qbi))+kv('SEP-IRA max (approx.)',$f(c.sepMax)))});
+  const e=Yd.est,wh=e.whA+e.whB,tot=r.total,pc=r.agi>(Yd.status==='mfs'?75000:150000)?1.1:1,prior=num(Yd.se.prior);
+  const target=prior>0?Math.min(.9*tot,prior*pc):.9*tot,need=Math.max(0,target-wh),rem=Math.max(0,need-e.paid),per=need/4;
+  const dts=[new Date(S.year,3,15),new Date(S.year,5,15),new Date(S.year,8,15),new Date(S.year+1,0,15)].map(wkAdj);
+  setH('#seQ',dts.map((d,i)=>`<div class="tile" style="--c:${dayDiff(d)<0?'var(--mut)':'var(--gold)'}"><div class="l">Q${i+1} · ${fmtD(d,{month:'short',day:'numeric'})}</div><div class="v" style="font-size:1.5rem">${$f(per)}</div><div class="s">${dayDiff(d)<0?'due date passed':dayDiff(d)+' days away'}</div></div>`).join(''));
+  setH('#seQn',`Safe harbor target <b>${$f(target)}</b> (${prior>0?'lesser of 90% of this year’s tax or '+(pc>1?'110%':'100%')+' of last year’s':'90% of this year’s estimated tax'}), minus ${$f(wh)} withholding = <b>${$f(need)}</b> to pay in four installments. You have recorded ${$f(e.paid)} paid; <b>${$f(rem)}</b> remains. Withholding counts as paid evenly through the year.`);
+ },
+ met(){const t=sum(['a','b'].slice(0,people()),w=>seCalc(w).net);return{txt:t?`Net ${$f(t)}`:'No side income',pct:null}}},
+
+/* 11 EXPENSE & MILEAGE LOG */
+{id:'log',t:'Expense & Mileage Log',tag:'Prep',cls:'t-prep',ic:'receipt',blurb:'Running log of deductible costs and business miles that feed the other tools.',
+ body:()=>`<p class="intro">Log receipts and trips as they happen. Business costs and miles flow into the Self-Employment tool; medical, charity and tax amounts can be pulled into the Deduction Planner.</p>
+  <div class="cols"><div><div class="row sp"><h4 style="margin:0">Expenses</h4><span class="row"><button class="btn sm pri" id="exAdd">${ic('plus',15)}Add</button><button class="btn sm" id="exCsv">${ic('download',15)}CSV</button></span></div>
+   <div class="tw mt"><table class="tbl"><thead><tr><th>Date</th><th>Whose</th><th>Category</th><th>Description</th><th class="n">Amount</th><th></th></tr></thead><tbody id="exRows"></tbody></table></div><div class="leg mt" id="exTot"></div></div>
+  <div><div class="row sp"><h4 style="margin:0">Mileage</h4><span class="row"><button class="btn sm pri" id="mlAdd">${ic('plus',15)}Add</button><button class="btn sm" id="mlCsv">${ic('download',15)}CSV</button></span></div>
+   <div class="tw mt"><table class="tbl"><thead><tr><th>Date</th><th>Whose</th><th>Trip &amp; purpose</th><th class="n">Miles</th><th></th></tr></thead><tbody id="mlRows"></tbody></table></div><div class="leg mt" id="mlTot"></div></div></div>`,
+ render(){
+  const Yd=YR(),sig=[S.year,S.na,S.nb,SV,people()].join('|');
+  if(this._s!==sig){this._s=sig;
+   $('#exRows').innerHTML=Yd.exp.length?Yd.exp.map(r=>`<tr data-r="${r.id}"><td><input type="date" data-x="exp" data-l="date" value="${esc(r.date)}" aria-label="Date"></td><td><select data-x="exp" data-l="who" aria-label="Whose">${whoOpts(r.who)}</select></td><td><select data-x="exp" data-l="cat" aria-label="Category">${EXC.map(c=>`<option value="${c[0]}"${r.cat===c[0]?' selected':''}>${c[1]}</option>`).join('')}</select></td><td><input data-x="exp" data-l="desc" value="${esc(r.desc)}" placeholder="What was it?" aria-label="Description"></td><td class="n"><input type="number" step="any" data-x="exp" data-l="amt" value="${r.amt||''}" placeholder="0" aria-label="Amount"></td><td><button class="x" data-del="exp:${r.id}" aria-label="Delete">${ic('x',16)}</button></td></tr>`).join(''):`<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:18px">No expenses logged.</td></tr>`;
+   $('#mlRows').innerHTML=Yd.miles.length?Yd.miles.map(r=>`<tr data-r="${r.id}"><td><input type="date" data-x="miles" data-l="date" value="${esc(r.date)}" aria-label="Date"></td><td><select data-x="miles" data-l="who" aria-label="Whose">${whoOpts(r.who)}</select></td><td><input data-x="miles" data-l="trip" value="${esc(r.trip)}" placeholder="Where and why?" aria-label="Trip"></td><td class="n"><input type="number" step="any" data-x="miles" data-l="mi" value="${r.mi||''}" placeholder="0" aria-label="Miles"></td><td><button class="x" data-del="miles:${r.id}" aria-label="Delete">${ic('x',16)}</button></td></tr>`).join(''):`<tr><td colspan="5" style="text-align:center;color:var(--mut);padding:18px">No trips logged.</td></tr>`}
+  const ct={};EXC.forEach(c=>ct[c[0]]=0);Yd.exp.forEach(e=>ct[e.cat]=(ct[e.cat]||0)+num(e.amt));
+  setH('#exTot',EXC.filter(c=>ct[c[0]]).map(c=>`<span><b>${c[1].split(' (')[0]}</b> ${$f(ct[c[0]])}</span>`).join('')||'<span>Totals appear here</span>');
+  const mi=sum(Yd.miles,m=>num(m.mi)),rate=DATA[S.year].mile.biz;
+  setH('#mlTot',`<span><b>${mi.toLocaleString()} mi</b></span><span>× ${(rate*100).toFixed(1)}¢ = <b>${$f(mi*rate)}</b> deduction</span>`);
+ },
+ met(){const Yd=YR(),mi=sum(Yd.miles,m=>num(m.mi)),x=sum(Yd.exp,e=>num(e.amt));return{txt:`${mi.toLocaleString()} mi · ${$f(x)}`,pct:null}}},
+
+/* 12 DEADLINES */
+{id:'deadlines',t:'Deadlines & Calendar',tag:'Plan',cls:'t-plan',ic:'cal',blurb:'Every federal date for the year, with countdowns and one-click calendar export.',
+ body:()=>`<p class="intro">Dates adjust for weekends. Export them to Google, Apple or Outlook calendar with a 7-day reminder on each.</p>
+  <div class="row"><button class="btn sm pri" id="dlIcs">${ic('download',15)}Download .ics calendar</button></div>
+  <div class="cols mt"><ul class="tl" id="dlList"></ul><div id="dlLate"></div></div>
+  <p class="note">The IRS announces the exact e-file opening date each January (typically the last week of the month). State deadlines usually match federal but not always; check your state agency.</p>`,
+ render(){
+  const L=deadlines(S.year);const nx=L.findIndex(e=>dayDiff(e.d)>=0);this._n=nx>=0?L[nx]:null;
+  setH('#dlList',L.map((e,i)=>{const n=dayDiff(e.d);return`<li class="${n<0?'past':''} ${i===nx?'next':''}"><span class="d">${fmtD(e.d,{month:'short',day:'numeric'})}<br><small>${e.d.getFullYear()}</small></span><div><b>${esc(e.t)}</b><small>${esc(e.n)}</small></div><span class="pill ${n<0?'':n<=14?'bad':n<=45?'warn':'blue'}">${n<0?'passed':n===0?'today':n+' days'}</span></li>`}).join(''));
+  const due=dueDate(S.year),ext=extDate(S.year),cl=wkAdj(new Date(S.year+4,3,15));
+  let late='';
+  if(dayDiff(due)<0)late=`<div class="panel in2"><h4>Filing a past year?</h4><ul style="padding-left:18px;display:grid;gap:8px;font-size:.88rem"><li>The ${S.year} deadline was <b>${fmtD(due)}</b>${dayDiff(ext)>=0?` and the extended deadline is <b>${fmtD(ext)}</b> (${dayDiff(ext)} days).`:'.'}</li><li><b>If you are owed a refund</b> there is no late-filing penalty, but you must file by <b>${fmtD(cl)}</b> (${dayDiff(cl)>=0?dayDiff(cl)+' days left':'already closed'}) or the refund is forfeited.</li><li><b>If you owe</b>, penalties are 5% per month up to 25% of the unpaid tax, plus interest. File now and pay or set up a plan.</li><li>Get missing forms from your IRS Online Account transcripts (wage &amp; income transcript).</li></ul></div>`;
+  else late=`<div class="panel in2"><h4>Countdown</h4><div class="big"><div class="l">Filing deadline</div><div class="v">${dayDiff(due)} days</div><div class="s">${fmtD(due,{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</div></div></div>`;
+  setH('#dlLate',late);
+ },
+ met(){const n=this._n;return{txt:n?`${fmtD(n.d,{month:'short',day:'numeric'})} · ${dayDiff(n.d)}d`:'All dates passed',pct:null}}}
+];
+const TOOL=Object.fromEntries(TOOLS.map(t=>[t.id,t]));
+/* ============ init: static pieces ============ */
+$$('[data-logo]').forEach(e=>e.innerHTML=LOGO);
+$$('[data-ic]').forEach(e=>e.innerHTML=ic(e.dataset.ic,16));
+$('#burger').innerHTML=ic('menu',20);$('#dataBtn').innerHTML=ic('download',18);
+{const f=$('link[rel=icon]');if(f)f.href='data:image/svg+xml,'+encodeURIComponent(LOGO_SA)}
+
+/* theme */
+const mqDark=matchMedia('(prefers-color-scheme: dark)');
+function applyTheme(){
+ const d=S.theme==='dark'||(S.theme==='auto'&&mqDark.matches);
+ document.documentElement.setAttribute('data-theme',d?'dark':'light');
+ $('#themeBtn').innerHTML=ic({auto:'auto',light:'sun',dark:'moon'}[S.theme],18);
+ $('#themeBtn').title='Theme: '+S.theme+' (click to change)';
+ $('meta[name=theme-color]').content=d?'#08120e':'#0e6a56';
+}
+if(mqDark.addEventListener)mqDark.addEventListener('change',()=>{if(S.theme==='auto')applyTheme()});
+$('#themeBtn').onclick=()=>{S.theme={auto:'light',light:'dark',dark:'auto'}[S.theme]||'auto';save();applyTheme();toast('Theme: '+S.theme)};
+applyTheme();
+
+/* year + status selects */
+const ys=$('#yearSel');
+ys.innerHTML=YEARS.map(y=>`<option value="${y}">Tax ${y}</option>`).join('');ys.value=S.year;
+ys.onchange=()=>{S.year=+ys.value;ensureYear(S.year);save();hydrate();SV++;refresh();toast('Switched to tax year '+S.year)};
+
+/* tool cards */
+const KW={roadmap:'timeline checklist steps plan',docs:'documents forms w-2 1099 collect missing',status:'married jointly separately single head of household',income:'wages ledger 1099 w-2 interest',venmo:'paypal cash app 1099-k statement csv payment',deduct:'standard itemized salt mortgage charity medical hsa ira',estimate:'refund owe brackets calculator',withhold:'w-4 paycheck refund',credits:'child eitc education saver',selfemp:'freelance gig quarterly sch c business',log:'receipts mileage expenses',deadlines:'calendar dates extension ics'};
+$('#grid').innerHTML=TOOLS.map((t,i)=>`<article class="card ${t.cls} rv" id="t-${t.id}" data-tool="${t.id}" data-tag="${t.tag}" style="--i:${i%6}">
+ <button class="ch" aria-expanded="false" aria-controls="b-${t.id}"><span class="ico">${ic(t.ic)}</span><span><span class="tag">${t.tag}</span><h3>${t.t}</h3><p>${t.blurb}</p></span><span class="chev">${ic('chev',20)}</span><span class="met"><b data-met></b><span class="mbar"><i></i></span></span></button>
+ <div class="cbody" id="b-${t.id}" inert><div><div class="cpad">${t.body()}</div></div></div></article>`).join('');
+$('#fchips').innerHTML=['All','Prep','Money','Plan','Decide'].map(f=>`<button class="fc${f==='All'?' on':''}" data-f="${f}">${f}</button>`).join('');
+$('#toolsPop').innerHTML=TOOLS.map(t=>`<button data-open="${t.id}" role="menuitem">${ic(t.ic,16)}${t.t}</button>`).join('');
+
+function setOpen(id,on){
+ const c=$('#t-'+id);if(!c)return;c.classList.toggle('open',on);
+ $('.ch',c).setAttribute('aria-expanded',on);$('.cbody',c).inert=!on;
+ const i=S.ui.open.indexOf(id);if(on&&i<0)S.ui.open.push(id);if(!on&&i>=0)S.ui.open.splice(i,1);save();
+}
+function openTool(id,scroll=true){
+ const c=$('#t-'+id);if(!c)return;
+ $('#q').value='';applyFilter();
+ setOpen(id,true);
+ if(scroll)setTimeout(()=>c.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'}),70);
+}
+S.ui.open.slice().forEach(id=>setOpen(id,true));
+
+/* filter + search */
+let curF='All';
+function applyFilter(){
+ const q=$('#q').value.trim().toLowerCase();let n=0;
+ TOOLS.forEach(t=>{const c=$('#t-'+t.id);const hay=(t.t+' '+t.blurb+' '+t.tag+' '+KW[t.id]).toLowerCase();const ok=(curF==='All'||t.tag===curF)&&(!q||q.split(/\s+/).every(w=>hay.includes(w)));c.hidden=!ok;n+=ok});
+ $('#empty').hidden=n>0;
+}
+$('#q').addEventListener('input',applyFilter);
+$('#fchips').addEventListener('click',e=>{const b=e.target.closest('.fc');if(!b)return;curF=b.dataset.f;$$('.fc').forEach(x=>x.classList.toggle('on',x===b));applyFilter()});
+
+/* resources, faq, footer, rail, marquee */
+$('#rg').innerHTML=LINKS.map((g,i)=>`<div class="rc rv" style="--c:${g.c};--i:${i%4}"><h3>${ic(g.i)}${g.t}</h3><ul>${g.l.map(l=>`<li><a href="${l[1]}" target="_blank" rel="noopener noreferrer">${l[0]}<span>${l[2]||''}</span></a></li>`).join('')}</ul></div>`).join('');
+$('#faqList').innerHTML=FAQ.map((f,i)=>`<details class="q rv" style="--i:${i%3}"><summary>${esc(f[0])}</summary><div>${esc(f[1])}</div></details>`).join('');
+{
+ const col=(t,items)=>`<div><h6>${t}</h6><ul>${items.map(i=>`<li><a href="${i[1]}"${/^https?:/.test(i[1])?' target="_blank" rel="noopener noreferrer"':''}>${i[0]}</a></li>`).join('')}</ul></div>`;
+ const g=i=>LINKS[i].l.map(l=>[l[0],l[1]]);
+ $('#fg').innerHTML=`<div class="fb"><a class="brand" href="#top">${LOGO}<span>TaxTrail<small>Season prep · A to Z</small></span></a><p>A private, offline organizer for the whole tax season. One file, zero trackers.</p></div>`
+  +col('Tools',TOOLS.map(t=>[t.t,'#t-'+t.id]))
+  +col('IRS essentials',g(0))+col('Forms &amp; pubs',g(1))
+  +col('Help &amp; payments',g(2).concat(g(3)))
+  +col('Records, credits &amp; state',g(4).concat(g(5),g(6),g(7)));
+}
+$('#mq').innerHTML=FORMS.concat(FORMS).map(f=>`<span><b>${f}</b></span>`).join('');
+$('#rail').innerHTML=ROAD.map((p,i)=>`<div class="step" style="--c:${p.c}"><span class="n">${i+1}</span><small data-rw="${p.k}"></small><h3>${p.t}</h3><p>${p.s.slice(0,3).map(s=>s[1]).join(' · ')}…</p><p class="mono" style="margin-top:8px;color:var(--ink);font-size:.8rem" data-rd="${p.k}"></p><a href="#t-roadmap" data-open="roadmap">Open this checklist →</a></div>`).join('');
+
+/* ============ data binding ============ */
+function hydrate(r=document){
+ $$('[data-k]',r).forEach(el=>{const v=getP(el.dataset.k);
+  if(el.type==='checkbox')el.checked=!!v;
+  else if(el.tagName==='SELECT')el.value=String(v==null?'':v);
+  else el.value=(v===0||v==null)?'':v});
+}
+function onField(e){
+ const el=e.target;
+ if(el.dataset&&el.dataset.k){
+  const v=el.type==='checkbox'?el.checked:(el.type==='number'||el.dataset.num!==undefined)?num(el.value):el.value;
+  setP(el.dataset.k,v);save();queueRefresh();return;
+ }
+ if(el.dataset&&el.dataset.l){
+  const tr=el.closest('tr');if(!tr)return;
+  const list=YR()[el.dataset.x||'income'];const row=list.find(r=>r.id===tr.dataset.r);
+  if(row){row[el.dataset.l]=el.type==='number'?num(el.value):el.value;save();queueRefresh()}
+ }
+}
+document.addEventListener('input',onField);
+document.addEventListener('change',e=>{if(e.target.tagName==='SELECT')onField(e)});
+
+function phaseDone(p){const Yd=YR();return p.s.every(s=>Yd.road[s[0]])}
+document.addEventListener('change',e=>{
+ const el=e.target;if(!el.dataset||!el.dataset.chk)return;
+ const[ns,key]=el.dataset.chk.split(':'),Yd=YR();
+ if(el.checked)Yd[ns][key]=true;else delete Yd[ns][key];
+ save();
+ if(el.checked){
+  const p=ROAD.find(p=>p.s.some(s=>s[0]===key));
+  if(p&&phaseDone(p)){const r=el.getBoundingClientRect();confetti(r.left,r.top,roadStats().pct===1?160:70);toast(roadStats().pct===1?'Roadmap complete. Nicely done!':'Phase complete: '+p.t.replace('&amp;','&'))}
+ }
+ queueRefresh();
+});
+
+/* ============ actions ============ */
+function fromLedger(){
+ const Yd=YR(),T=ledgerTotals(),e=Yd.est;
+ e.wA=Math.round(T.a.w);e.wB=Math.round(T.b.w);e.whA=Math.round(T.a.wh);e.whB=Math.round(T.b.wh);
+ e.intr=Math.round(T.a.i+T.b.i);e.oth=Math.round(T.a.o+T.b.o);
+ e.seA=Math.round(seCalc('a').net);e.seB=Math.round(seCalc('b').net);
+ save();hydrate();queueRefresh();toast('Ledger totals sent to the Estimator');
+}
+function pullLog(){
+ const Yd=YR(),ct={};Yd.exp.forEach(x=>ct[x.cat]=(ct[x.cat]||0)+num(x.amt));
+ const d=Yd.ded;if(ct.med)d.med=ct.med;if(ct.char)d.char=ct.char;if(ct.mort)d.mort=ct.mort;if(ct.tax)d.salt=ct.tax;
+ save();hydrate();queueRefresh();toast('Pulled medical, charity, mortgage and tax totals from your log');
+}
+let _arm={};
+function confirm2(key,btn,label,fn){
+ if(_arm[key]){clearTimeout(_arm[key]);_arm[key]=0;btn.innerHTML=btn._h;fn();return}
+ btn._h=btn.innerHTML;btn.textContent=label;_arm[key]=setTimeout(()=>{_arm[key]=0;btn.innerHTML=btn._h},3500);
+}
+const ACT={
+ ldAdd(){YR().income.push({id:uid(),who:'a',type:'w2',payer:'',amt:0,wh:0});bump();setTimeout(()=>{const r=$$('#ldRows tr').pop();const f=r&&$('input[data-l=payer]',r);if(f)f.focus()},60)},
+ ldSend:fromLedger,esPull:fromLedger,
+ esSE(){const Yd=YR();Yd.est.seA=Math.round(seCalc('a').net);Yd.est.seB=Math.round(seCalc('b').net);save();hydrate();queueRefresh();toast('Net self-employment profit sent to the Estimator')},
+ seSend(){ACT.esSE()},
+ whApply(){const Yd=YR(),l=TOOL.withhold.last;if(!l)return;const e=Yd.est;e.wA=Math.round(l.pr.a.w);e.whA=Math.round(l.pr.a.h);if(people()>1){e.wB=Math.round(l.pr.b.w);e.whB=Math.round(l.pr.b.h)}save();hydrate();queueRefresh();toast('Projection applied to the Estimator')},
+ exAdd(){YR().exp.push({id:uid(),date:todayISO(),who:'a',cat:'biz',desc:'',amt:0});bump()},
+ mlAdd(){YR().miles.push({id:uid(),date:todayISO(),who:'a',trip:'',mi:0});bump()},
+ exCsv(){const Yd=YR();dl(`taxtrail-expenses-${S.year}.csv`,['Date,Whose,Category,Description,Amount'].concat(Yd.exp.map(r=>[r.date,nm(r.who),(EXC.find(c=>c[0]===r.cat)||[0,r.cat])[1],r.desc,num(r.amt)].map(csvCell).join(','))).join('\n'),'text/csv')},
+ mlCsv(){const Yd=YR();dl(`taxtrail-mileage-${S.year}.csv`,['Date,Whose,Trip,Miles'].concat(Yd.miles.map(r=>[r.date,nm(r.who),r.trip,num(r.mi)].map(csvCell).join(','))).join('\n'),'text/csv')},
+ ddPull:pullLog,
+ dlIcs(){dl(`taxtrail-deadlines-${S.year}.ics`,makeICS(),'text/calendar');toast('Calendar file downloaded')},
+ dcMiss(){S.ui.docsMissing=!S.ui.docsMissing;save();queueRefresh()},
+ rmNext(){const el=$('.st:not(.done)');if(!el){toast('Every step is done!');return}el.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')},
+ vAdd(){const w=S.ui.vwho,y=S.ui.vyear||venmoYears().pop();if(!y){toast('Load a statement first');return}const t=venmoYear(w,y);YR();if(!S.y[y])S.y[y]=newYear();S.y[y].income.push({id:uid(),who:w,type:'k',payer:`Venmo received ${y} (reduce to business-only)`,amt:Math.round(t.r),wh:0});save();if(y===S.year)bump();toast(`Added ${$f(t.r)} to the ${y} ledger. Edit it to the business-only amount.`)},
+ vClear(e){confirm2('vc',e,'Click again to clear',()=>{S.venmo[S.ui.vwho]={};save();queueRefresh();toast('Cleared '+nm(S.ui.vwho)+'’s payment-app data')})}
+};
+document.addEventListener('click',e=>{
+ const t=e.target;
+ const rb=t.closest('.btn');if(rb&&!RM){const r=rb.getBoundingClientRect(),s=document.createElement('span'),d=Math.max(r.width,r.height);s.className='rip';s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;rb.appendChild(s);setTimeout(()=>s.remove(),620)}
+ const ch=t.closest('.ch');if(ch){const c=ch.closest('.card');setOpen(c.dataset.tool,!c.classList.contains('open'));if(c.classList.contains('open'))setTimeout(()=>c.scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'}),90);return}
+ const tg=t.closest('[data-tog]');if(tg){
+  const[ns,key]=tg.dataset.tog.split(':'),Yd=YR();Yd[ns][key]=!Yd[ns][key];if(!Yd[ns][key])delete Yd[ns][key];
+  tg.setAttribute('aria-pressed',!!Yd[ns][key]);save();
+  if(ns==='docs'&&Yd.docs[key]&&docStats().pct===1){const r=tg.getBoundingClientRect();confetti(r.left,r.top,160);toast('Every document collected!')}
+  queueRefresh();return}
+ const dlx=t.closest('[data-del]');if(dlx){const[k,id]=dlx.dataset.del.split(':'),Yd=YR();Yd[k]=Yd[k].filter(r=>r.id!==id);save();bump();return}
+ const fs=t.closest('[data-fs]');if(fs){
+  const q=YR().quiz,v=fs.dataset.fs;
+  if(v==='__back')q.step=q.hist.pop()||'start';
+  else if(v==='__restart'){q.step='start';q.hist=[]}
+  else if(v==='__use'){YR().status=FSR[q.step.replace('=','')].s;hydrate();toast('Filing status set to '+STATUS[YR().status])}
+  else{q.hist.push(q.step);q.step=v}
+  save();queueRefresh();return}
+ const vw=t.closest('[data-vwho]');if(vw){S.ui.vwho=vw.dataset.vwho;save();queueRefresh();return}
+ const op=t.closest('[data-open]');if(op){e.preventDefault();$('#toolsPop').classList.remove('show');$('#nav').classList.remove('open');openTool(op.dataset.open);return}
+ const da=t.closest('[data-act]');if(da){$('#dataPop').classList.remove('show');dataAct(da.dataset.act,da);return}
+ const bt=t.closest('button[id]');if(bt&&ACT[bt.id]){ACT[bt.id](bt);return}
+ if(!t.closest('.menu'))$$('.pop').forEach(p=>p.classList.remove('show'));
+});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'){$$('.pop').forEach(p=>p.classList.remove('show'));$('#nav').classList.remove('open')}
+ if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$('#tools').scrollIntoView();$('#q').focus()}
+ if((e.key==='Enter'||e.key===' ')&&e.target.id==='vDrop'){e.preventDefault();$('#vFile').click()}
+});
+$('#toolsBtn').onclick=e=>{e.stopPropagation();const p=$('#toolsPop');const on=!p.classList.contains('show');$$('.pop').forEach(x=>x.classList.remove('show'));p.classList.toggle('show',on);e.currentTarget.setAttribute('aria-expanded',on)};
+$('#dataBtn').onclick=e=>{e.stopPropagation();const p=$('#dataPop');const on=!p.classList.contains('show');$$('.pop').forEach(x=>x.classList.remove('show'));p.classList.toggle('show',on)};
+$('#burger').onclick=()=>{const n=$('#nav');n.classList.toggle('open');$('#burger').setAttribute('aria-expanded',n.classList.contains('open'))};
+$$('#links a').forEach(a=>a.addEventListener('click',()=>$('#nav').classList.remove('open')));
+$('#totop').onclick=()=>scrollTo({top:0,behavior:RM?'auto':'smooth'});
+
+/* payment-app file handling (event delegation: input is rendered once in body) */
+async function venmoFiles(files){
+ const w=S.ui.vwho,msgs=[];let tot=0;
+ for(const f of files){
+  try{const r=parseVenmo(await f.text());Object.assign(S.venmo[w],r.months);tot+=r.used;msgs.push(`${f.name}: ${r.used} transactions across ${Object.keys(r.months).length} months`)}
+  catch(err){msgs.push(`${f.name}: ${err.message}`)}
+ }
+ S.ui.vyear=0;save();queueRefresh();
+ const m=$('#vMsg');if(m)m.textContent=msgs.join(' · ');
+ if(tot)toast(`Loaded ${tot} transactions for ${nm(w)}`);
+}
+document.addEventListener('change',e=>{if(e.target.id==='vFile'){venmoFiles([...e.target.files]);e.target.value=''}});
+['dragenter','dragover'].forEach(ev=>document.addEventListener(ev,e=>{const d=e.target.closest&&e.target.closest('#vDrop');if(d){e.preventDefault();d.classList.add('over')}}));
+['dragleave','drop'].forEach(ev=>document.addEventListener(ev,e=>{const d=e.target.closest&&e.target.closest('#vDrop');if(d){e.preventDefault();d.classList.remove('over');if(ev==='drop')venmoFiles([...e.dataTransfer.files])}}));
+
+/* ============ refresh ============ */
+let _q=0;function queueRefresh(){if(_q)return;_q=requestAnimationFrame(()=>{_q=0;refresh()})}
+function refresh(){
+ TOOLS.forEach(t=>{try{t.render()}catch(err){console.error('render',t.id,err)}});
+ $$('.nA').forEach(e=>setT(e,nm('a')));$$('.nB').forEach(e=>setT(e,nm('b')));$$('.yy').forEach(e=>setT(e,S.year));
+ $$('[data-p2]').forEach(e=>e.hidden=people()<2);
+ $$('[data-ymin]').forEach(e=>e.hidden=S.year<+e.dataset.ymin);
+ TOOLS.forEach(t=>{const c=$('#t-'+t.id),m=t.met();setT($('[data-met]',c),m.txt);const bar=$('.mbar',c);bar.hidden=m.pct==null;if(m.pct!=null)$('i',bar).style.width=Math.round(m.pct*100)+'%'});
+ ROAD.forEach(p=>{const d=p.s.filter(s=>YR().road[s[0]]).length;const a=$(`[data-rw="${p.k}"]`),b=$(`[data-rd="${p.k}"]`);if(a)a.textContent=p.w(S.year).replace(/&amp;/g,'&');if(b)b.textContent=`${d} / ${p.s.length} done`});
+ renderDash();renderBanner();
+ setT('#legalYear',`Reference figures: federal tax years ${YEARS[0]}–${YEARS[YEARS.length-1]}. Showing tax year ${S.year}. Updated ${fmtD(TODAY)}.`);
+}
+function buildTiles(){
+ const T=[['var(--brand)','Overall prep','roadmap + documents'],['var(--gold)','Documents in hand','across both taxpayers'],['var(--coral)','Estimated refund','federal, rough'],['var(--blue)','Days to deadline','']];
+ $('#tiles').innerHTML=T.map((t,i)=>`<div class="tile rv" style="--c:${t[0]};--i:${i}"><div class="l" id="tl${i}">${t[1]}</div><div class="v" id="tv${i}">0</div><div class="s" id="ts${i}">${t[2]}</div></div>`).join('');
+}
+buildTiles();
+function renderDash(){
+ const rs=roadStats(),ds=docStats(),H=household().res,prep=(rs.pct+ds.pct)/2;
+ const due=dueDate(S.year),ext=extDate(S.year);let tgt=due,lab='to filing deadline';
+ if(dayDiff(due)<0){tgt=ext;lab='to extended deadline'}
+ if(TODAY<=new Date(S.year,11,31)){tgt=new Date(S.year,11,31);lab='until year-end'}
+ const n=dayDiff(tgt),owe=H.bal<0;
+ animNum($('#tv0'),prep*100,x=>Math.round(x)+'%');
+ animNum($('#tv1'),ds.have,x=>Math.round(x)+' / '+ds.need);
+ setT('#tl2',owe?'Estimated balance due':'Estimated refund');
+ animNum($('#tv2'),Math.abs(H.bal),x=>$f(x));
+ const tv3=$('#tv3');if(n<0){tv3._v=null;setT(tv3,'Passed');setT('#ts3',fmtD(tgt))}else{animNum(tv3,n,x=>Math.round(x)+'');setT('#ts3',lab+' · '+fmtD(tgt))}
+ setT('#hPrep',Math.round(prep*100)+'%');setT('#hDocs',ds.have+'');
+ setT('#hDays',n<0?'–':n+'');setT('#hDaysL',n<0?'deadline passed':lab.replace('to filing deadline','days to file').replace('to extended deadline','days to extension').replace('until year-end','days to year-end'));
+ if(n>=0&&n!==0)setT('#hDaysL',{ 'to filing deadline':'days to file','to extended deadline':'days to extended deadline','until year-end':'days to year-end'}[lab]);
+ setT('#heroEye',`Tax year ${S.year} · ${STATUS[YR().status]}`);
+}
+function renderBanner(){
+ const y=S.year,due=dueDate(y),ext=extDate(y),nd=dayDiff(due),ne=dayDiff(ext),cl=wkAdj(new Date(y+4,3,15)),nc=dayDiff(cl);
+ let c,i,b,s;
+ if(TODAY<=new Date(y,11,31)){c='var(--ok)';i='spark';b=`Tax year ${y} is still in progress`;s=`${dayDiff(new Date(y,11,31))} days remain for year-end moves: retirement deferrals, charitable gifts, withholding changes. The ${y} filing deadline is ${fmtD(due)}.`}
+ else if(nd>=0){c=nd<=30?'var(--coral)':'var(--gold)';i='cal';b=`${nd} days until the ${y} filing deadline (${fmtD(due)})`;s=nd<=30?'Time to file or request an extension (Form 4868). Remember: an extension does not extend time to pay.':'Plenty of time. Work through the roadmap and keep gathering documents.'}
+ else if(ne>=0){c='var(--coral)';i='alert';b=`The ${y} April deadline passed. Extended deadline: ${fmtD(ext)} (${ne} days)`;s=`If you filed Form 4868 you have until ${fmtD(ext)} to file. If not, file as soon as possible: there is no penalty on a refund, but penalties and interest grow on any tax owed.`}
+ else{c=nc>=0?'var(--coral)':'var(--bad)';i='alert';b=`Filing the ${y} return late?`;s=nc>=0?`File right away. A refund can still be claimed until ${fmtD(cl)} (${nc} days). Any tax owed accrues penalties and interest.`:`The 3-year refund window (${fmtD(cl)}) has closed, so any refund is forfeited, but you should still file if tax is owed.`}
+ setH('#banner',`<div class="banner" style="--c:${c}">${ic(i)}<div><b>${b}</b><span>${s}</span></div></div>`);
+}
+
+/* ============ motion: hero parallax, reveal, nav ============ */
+const hero=$('.hero'),pin=$('#pin');
+function onScroll(){
+ const y=scrollY,hh=Math.max(1,hero.offsetHeight-innerHeight),p=clamp(y/hh,0,1);
+ hero.style.setProperty('--p',p.toFixed(4));
+ const mx=document.documentElement.scrollHeight-innerHeight;
+ $('#sp').style.transform=`scaleX(${mx>0?y/mx:0})`;
+ $('#totop').classList.toggle('show',y>900);
+ let cur='';['dash','tools','timeline','resources','faq'].forEach(id=>{const e=$('#'+id);if(e&&e.getBoundingClientRect().top<innerHeight*.4)cur=id});
+ $$('#links a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur));
+}
+let _sc=0;addEventListener('scroll',()=>{if(_sc)return;_sc=requestAnimationFrame(()=>{_sc=0;onScroll()})},{passive:true});addEventListener('resize',onScroll);
+if(!RM)pin.addEventListener('pointermove',e=>{pin.style.setProperty('--mx',((e.clientX/innerWidth-.5)*-26).toFixed(1)+'px');pin.style.setProperty('--my',((e.clientY/innerHeight-.5)*-14).toFixed(1)+'px')});
+document.addEventListener('pointermove',e=>{const c=e.target.closest&&e.target.closest('.card');if(c){const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px')}});
+if('IntersectionObserver' in window){
+ const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);setTimeout(()=>x.target.classList.remove('rv','in'),1500)}}),{threshold:.08,rootMargin:'0px 0px -6% 0px'});
+ $$('.rv').forEach(e=>io.observe(e));
+}else $$('.rv').forEach(e=>e.classList.add('in'));
+
+/* confetti */
+function confetti(x,y,n=90){
+ if(RM)return;const c=$('#fx'),g=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
+ const cols=['#13a37f','#f4a73a','#d4553c','#2f6fb0','#ffd978'];
+ const P=Array.from({length:n},()=>({x,y,vx:(Math.random()-.5)*11,vy:-Math.random()*11-3,r:Math.random()*4+3,c:cols[Math.random()*5|0],a:Math.random()*6,va:(Math.random()-.5)*.4}));
+ let f=0;(function step(){g.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.vy+=.32;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.a+=p.va;g.save();g.translate(p.x,p.y);g.rotate(p.a);g.fillStyle=p.c;g.globalAlpha=Math.max(0,1-f/110);g.fillRect(-p.r,-p.r/2,p.r*2,p.r);g.restore()});if(++f<110)requestAnimationFrame(step);else g.clearRect(0,0,c.width,c.height)})();
+}
+
+/* ============ data menu actions ============ */
+function dataAct(a,btn){
+ if(a==='export'){dl(`taxtrail-backup-${TODAY.toISOString().slice(0,10)}.json`,JSON.stringify({app:'taxtrail',v:1,data:S},null,1),'application/json');toast('Backup downloaded. Keep it somewhere safe.')}
+ else if(a==='import')$('#impFile').click();
+ else if(a==='ics')ACT.dlIcs();
+ else if(a==='print')printSummary();
+ else if(a==='snap')snapshot();
+ else if(a==='reset'){if(!btn._arm){btn._arm=1;btn._h=btn.innerHTML;btn.textContent='Click again to erase everything';$('#dataPop').classList.add('show');setTimeout(()=>{btn._arm=0;btn.innerHTML=btn._h},3500)}else{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
+}
+$('#impFile').addEventListener('change',async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{const j=JSON.parse(await f.text());if(j.app!=='taxtrail'||!j.data)throw new Error('Not a TaxTrail backup');const n=merge(DEF(),j.data);localStorage.setItem(KEY,JSON.stringify(n));location.reload()}
+ catch(err){toast('Import failed: '+err.message)}
+ e.target.value='';
+});
+function printSummary(){
+ const Yd=YR(),H=household(),r=H.res,ds=docStats(),rs=roadStats(),T=ledgerTotals();
+ const miss=[];DOCS.forEach(g=>g.items.forEach(it=>{if(Yd.docs[it[0]+'.na'])return;if(it[4]==='e'){const m=[];if(!Yd.docs[it[0]+'.a'])m.push(nm('a'));if(people()>1&&!Yd.docs[it[0]+'.b'])m.push(nm('b'));if(m.length)miss.push(`${it[1]} (${m.join(', ')})`)}else if(!Yd.docs[it[0]+'.j'])miss.push(it[1])}));
+ const un=ROAD.flatMap(p=>p.s.filter(s=>!Yd.road[s[0]]).map(s=>s[1])).slice(0,12);
+ const dec=t=>t.replace(/&amp;/g,'&');
+ $('#printSheet').innerHTML=`<h1>TaxTrail summary · tax year ${S.year}</h1><p>${esc(nm('a'))}${people()>1?' &amp; '+esc(nm('b')):''} · ${STATUS[Yd.status]} · printed ${fmtD(TODAY)}</p>
+ <h2>Federal estimate (rough)</h2><table><tr><td>Total income</td><td>${$f(r.income||0)}</td></tr><tr><td>AGI</td><td>${$f(r.agi)}</td></tr><tr><td>Total tax</td><td>${$f(r.total)}</td></tr><tr><td>Payments &amp; credits</td><td>${$f(r.pay)}</td></tr><tr><td><b>${r.bal<0?'Balance due':'Refund'}</b></td><td><b>${$f(Math.abs(r.bal))}</b></td></tr></table>
+ <h2>Income ledger</h2><table><tr><th></th><th>${esc(nm('a'))}</th><th>${esc(nm('b'))}</th></tr>${[['Wages','w'],['Self-employment (gross)','se'],['Interest &amp; dividends','i'],['Other','o'],['Withheld','wh']].map(x=>`<tr><td>${x[0]}</td><td>${$f(T.a[x[1]])}</td><td>${$f(T.b[x[1]])}</td></tr>`).join('')}</table>
+ <h2>Documents: ${ds.have} of ${ds.need} collected</h2><p>${miss.length?'Still missing: '+miss.map(esc).join('; '):'Everything collected.'}</p>
+ <h2>Roadmap: ${rs.d} of ${rs.t} steps done</h2><ul>${un.map(u=>`<li>${esc(dec(u))}</li>`).join('')}</ul>
+ <h2>Upcoming deadlines</h2><table>${deadlines(S.year).filter(e=>dayDiff(e.d)>=0).slice(0,6).map(e=>`<tr><td>${fmtD(e.d)}</td><td>${esc(e.t)}</td></tr>`).join('')}</table>
+ <p style="margin-top:16px;font-size:11px">Not tax advice. Figures are simplified estimates.</p>`;
+ setTimeout(()=>print(),80);
+}
+async function snapshot(){
+ const c=document.createElement('canvas');c.width=1280;c.height=720;const g=c.getContext('2d');
+ const dark=document.documentElement.dataset.theme==='dark';
+ const bg=g.createLinearGradient(0,0,0,720);
+ if(dark){bg.addColorStop(0,'#10294a');bg.addColorStop(.6,'#0c2a33');bg.addColorStop(1,'#08120e')}else{bg.addColorStop(0,'#f7c98f');bg.addColorStop(.6,'#fbe6c4');bg.addColorStop(1,'#f6f1e6')}
+ g.fillStyle=bg;g.fillRect(0,0,1280,720);
+ g.fillStyle=dark?'#dfe8fb':'#f4a73a';g.beginPath();g.arc(1050,170,92,0,7);g.fill();
+ [['#cfdcc0','#12303a',470,130],['#86b79d','#0f4a45',545,90],['#1d6a58','#0b6a58',620,60]].forEach(h=>{g.fillStyle=dark?h[1]:h[0];g.beginPath();g.moveTo(0,h[2]);g.bezierCurveTo(320,h[2]-h[3],640,h[2]+h[3]*.6,960,h[2]-h[3]*.5);g.bezierCurveTo(1100,h[2]-h[3]*.8,1200,h[2]-h[3]*.2,1280,h[2]-h[3]*.4);g.lineTo(1280,720);g.lineTo(0,720);g.fill()});
+ const ink=dark?'#e6f2ec':'#14261f',mut=dark?'#9fb5ab':'#4b5d55';
+ const img=new Image();await new Promise(res=>{img.onload=res;img.onerror=res;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(LOGO_SA)});
+ g.drawImage(img,70,62,92,92);
+ g.fillStyle=ink;g.font='800 56px "Iowan Old Style",Palatino,Georgia,serif';g.fillText('TaxTrail',182,124);
+ g.fillStyle=mut;g.font='600 22px system-ui,Segoe UI,sans-serif';g.fillText(`Tax year ${S.year} · ${STATUS[YR().status]}`,184,158);
+ g.fillStyle=ink;g.font='800 40px "Iowan Old Style",Palatino,Georgia,serif';g.fillText(`${nm('a')}${people()>1?' & '+nm('b'):''}`,70,262);
+ const rs=roadStats(),ds=docStats(),r=household().res;
+ const cards=[['Roadmap',Math.round(rs.pct*100)+'%',`${rs.d}/${rs.t} steps`],['Documents',`${ds.have}/${ds.need}`,'collected'],[r.bal<0?'Est. balance due':'Est. refund',$f(Math.abs(r.bal)),'federal, rough'],['Next deadline',(()=>{const n=deadlines(S.year).find(e=>dayDiff(e.d)>=0);return n?fmtD(n.d,{month:'short',day:'numeric'}):'–'})(),'']];
+ cards.forEach((k,i)=>{const x=70+i*290,y=330;g.fillStyle=dark?'rgba(16,32,25,.88)':'rgba(255,252,245,.92)';g.beginPath();g.roundRect(x,y,262,200,24);g.fill();g.strokeStyle=dark?'rgba(230,242,236,.16)':'rgba(20,38,31,.14)';g.stroke();
+  g.fillStyle=mut;g.font='700 16px system-ui,sans-serif';g.fillText(k[0].toUpperCase(),x+24,y+44);g.fillStyle=ink;g.font='800 46px "Iowan Old Style",Palatino,Georgia,serif';g.fillText(k[1],x+24,y+110);g.fillStyle=mut;g.font='500 18px system-ui,sans-serif';g.fillText(k[2],x+24,y+150)});
+ g.fillStyle=mut;g.font='500 18px system-ui,sans-serif';g.fillText('Private, offline tax-season prep · '+fmtD(TODAY),70,680);
+ c.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`taxtrail-snapshot-${S.year}.png`;document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(a.href)},600);toast('1280×720 snapshot saved')},'image/png');
+}
+
+/* ============ self-test (#selftest) ============ */
+function selftest(){
+ const T=[],ok=(n,c)=>T.push([n,!!c]);
+ ok('2025 single 50k taxable → $5,914',Math.abs(bracketTax(50000,'single',2025).tax-5914)<.01);
+ ok('2025 MFJ 100k taxable → $11,828',Math.abs(bracketTax(100000,'mfj',2025).tax-11828)<.01);
+ const u=unit({year:2025,status:'single',p:[{w:65750,se:0}],intr:0,oth:0,adj:0,kids:0,odep:0,old:0,tips:0,ot:0,cred:0,paid:0,wh:0,ded:{salt:0,prop:0,mort:0,char:0,med:0,oth:0},mode:'auto'});
+ ok('unit single 65,750 wages → tax 5,914',Math.abs(u.total-5914)<.01&&u.dedType==='Standard');
+ const se=unit({year:2025,status:'single',p:[{w:0,se:100000}],intr:0,oth:0,adj:0,kids:0,odep:0,old:0,tips:0,ot:0,cred:0,paid:0,wh:0,ded:{salt:0,prop:0,mort:0,char:0,med:0,oth:0},mode:'auto'});
+ ok('SE tax on 100k profit ≈ 14,129.55',Math.abs(se.seTax-14129.55)<.05);
+ const kid=unit({year:2025,status:'mfj',p:[{w:80000,se:0},{w:0,se:0}],intr:0,oth:0,adj:0,kids:2,odep:0,old:0,tips:0,ot:0,cred:0,paid:0,wh:0,ded:{salt:0,prop:0,mort:0,char:0,med:0,oth:0},mode:'auto'});
+ ok('CTC 2 kids lowers tax to zero-ish',kid.ctc>0&&kid.total>=0);
+ ok('CSV quoted newline',JSON.stringify(parseCSV('a,"b\nc",d\n1,2,3'))===JSON.stringify([['a','b\nc','d'],['1','2','3']]));
+ ok('money parse',parseMoney('- $1,234.50')===-1234.5&&parseMoney('+ $5')===5);
+ ok('weekend adjust (Sat→Mon)',wkAdj(new Date(2026,3,18)).getDate()===20);
+ const csv=',ID,Datetime,Type,Status,Note,From,To,Amount (total),Amount (tip),Amount (tax),Amount (fee)\n"Account Statement"\n,1,2025-03-05T10:00:00,Payment,Complete,"invoice\nfor work",A,B,+ $120.00,,,\n,2,2025-03-06T10:00:00,Payment,Complete,pizza,B,A,- $20.00,,,\n,3,2025-03-09T10:00:00,Standard Transfer,Issued,,,,- $50.00,,,\n';
+ const v=parseVenmo(csv).months['2025-03'];
+ ok('venmo parse',v&&v.r===120&&v.s===20&&v.t===50&&v.b===120&&v.rc===1);
+ ok('deadlines sorted',deadlines(2025).every((e,i,a)=>!i||a[i-1].d<=e.d));
+ const pass=T.filter(t=>t[1]).length;
+ console.table(T.map(t=>({test:t[0],pass:t[1]})));window.__selftest={pass,total:T.length,fails:T.filter(t=>!t[1]).map(t=>t[0])};
+ toast(`Self-test: ${pass}/${T.length} passed`);
+}
+window.TT={S,YR,household,unit,parseVenmo,selftest,openTool,refresh};
+
+/* ============ go ============ */
+hydrate();refresh();onScroll();
+if(location.hash.startsWith('#t-')){const id=location.hash.slice(3);if(TOOL[id])setTimeout(()=>openTool(id),300)}
+addEventListener('hashchange',()=>{if(location.hash.startsWith('#t-')){const id=location.hash.slice(3);if(TOOL[id])openTool(id)}});
+if(location.hash==='#selftest')selftest();
+</script>
+</body>
+</html>

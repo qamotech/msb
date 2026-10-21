@@ -1,0 +1,1144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'">
+<meta name="theme-color" content="#05060a">
+<title>Orrery — Gravity Sandbox</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='9' fill='%23ffb547'/%3E%3Cellipse cx='32' cy='32' rx='27' ry='11' fill='none' stroke='%236fd3ff' stroke-width='3' transform='rotate(-25 32 32)'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#05060a; --panel:rgba(12,14,22,.78); --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
+  --ink:#e6e1d3; --mute:#8b8f9c; --amber:#ffb547; --cyan:#6fd3ff; --rose:#ff6f91;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --mono:ui-monospace,"Cascadia Mono","SF Mono",Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:13px/1.45 var(--sans);overflow:hidden;overscroll-behavior:none;user-select:none;-webkit-user-select:none}
+input[type=text]{user-select:text;-webkit-user-select:text}
+#insClose{position:absolute;top:8px;right:8px;border:0;padding:2px 8px;color:var(--mute);font-size:16px}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;display:block;touch-action:none;cursor:crosshair}
+canvas#sky.pan{cursor:grab} canvas#sky.panning{cursor:grabbing} canvas#sky.erase{cursor:cell}
+button,input,select{font:inherit;color:inherit}
+button{background:transparent;border:1px solid var(--line2);border-radius:8px;padding:6px 10px;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+button:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.28)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+button.on{background:rgba(255,181,71,.14);border-color:var(--amber);color:#ffd9a0}
+.glass{background:var(--panel);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);isolation:isolate;box-shadow:0 10px 40px rgba(0,0,0,.45)}
+header.brand{position:fixed;top:calc(14px + env(safe-area-inset-top));left:16px;display:flex;align-items:baseline;gap:12px;pointer-events:none;z-index:3}
+header.brand h1{margin:0;font:400 30px/1 var(--serif);letter-spacing:.02em}
+header.brand h1 i{color:var(--amber);font-style:italic}
+header.brand span{font:11px var(--mono);color:var(--mute);letter-spacing:.14em;text-transform:uppercase}
+#panel{position:fixed;top:calc(62px + env(safe-area-inset-top));left:16px;width:min(292px,calc(100vw - 32px));max-height:calc(100vh - 150px);overflow:auto;padding:14px;z-index:4;scrollbar-width:thin}
+#panel.hidden{display:none}
+#panel h2{font:600 10px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin:14px 0 8px}
+#panel h2:first-child{margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.grid button,.grid3 button{padding:7px 6px;font-size:12px;text-align:center}
+#presets button:last-child{grid-column:1/-1}
+.row{display:flex;align-items:center;gap:8px;margin:6px 0}
+.row label{flex:1;color:#c9c5b8}
+.row output{font:12px var(--mono);color:var(--amber);min-width:62px;text-align:right}
+input[type=range]{width:100%;accent-color:var(--amber)}
+.check{display:flex;align-items:center;gap:8px;padding:3px 0;cursor:pointer;color:#c9c5b8}
+.check input{accent-color:var(--amber);width:15px;height:15px}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.hint{color:var(--mute);font-size:11.5px;margin:6px 0 0}
+kbd{font:11px var(--mono);border:1px solid var(--line2);border-bottom-width:2px;border-radius:4px;padding:0 4px;color:#d7d2c4}
+#toggle{position:fixed;top:calc(16px + env(safe-area-inset-top));right:16px;z-index:5}
+#transport{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:8px;z-index:4;max-width:calc(100vw - 32px);flex-wrap:wrap;justify-content:center}
+#transport button{min-width:40px;padding:7px 10px}
+#transport .sep{width:1px;height:22px;background:var(--line2);margin:0 4px}
+#speedLbl{font:12px var(--mono);color:var(--amber);min-width:44px;text-align:center}
+#stats{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));font:11px/1.6 var(--mono);color:var(--mute);z-index:3;pointer-events:none;white-space:pre}
+#stats b{color:var(--ink);font-weight:500}
+#inspector{position:fixed;right:16px;top:calc(62px + env(safe-area-inset-top));width:min(260px,calc(100vw - 32px));padding:14px;z-index:4}
+#inspector[hidden]{display:none}
+#inspector h3{margin:0 0 2px;font:400 22px var(--serif);display:flex;align-items:center;gap:8px}
+#inspector h3 .dot{width:12px;height:12px;border-radius:50%;display:inline-block;box-shadow:0 0 10px currentColor}
+#inspector input[type=text]{background:transparent;border:0;border-bottom:1px dashed var(--line2);width:100%;font:400 20px var(--serif);padding:0}
+#inspector dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:10px 0;font:12px var(--mono)}
+#inspector dt{color:var(--mute)} #inspector dd{margin:0;text-align:right}
+#inspector .btns{display:flex;flex-wrap:wrap;gap:6px}
+#inspector .btns button{flex:1 1 auto;font-size:12px}
+#toast{position:fixed;left:50%;top:calc(18px + env(safe-area-inset-top));transform:translateX(-50%) translateY(-8px);opacity:0;padding:8px 14px;z-index:9;font:12px var(--mono);pointer-events:none;transition:opacity .25s,transform .25s}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#help{position:fixed;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.55);z-index:10}
+#help[hidden]{display:none}
+#help .card{width:min(560px,calc(100vw - 32px));padding:22px 24px;max-height:calc(100vh - 40px);overflow:auto}
+#help h2{font:400 26px var(--serif);margin:0 0 10px}
+#help table{width:100%;border-collapse:collapse;font-size:13px}
+#help td{padding:5px 4px;border-bottom:1px solid var(--line)}
+#help td:first-child{white-space:nowrap;width:1%;padding-right:16px}
+#help p{color:#c9c5b8}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:720px){
+  header.brand h1{font-size:24px} header.brand span{display:none}
+  #panel{top:auto;bottom:calc(74px + env(safe-area-inset-bottom));max-height:52vh}
+  #inspector{top:auto;bottom:calc(74px + env(safe-area-inset-bottom));right:16px}
+  #stats{display:none}
+  #transport{flex-wrap:nowrap;gap:3px;padding:6px}
+  #transport button{min-width:34px;padding:6px 7px}
+  #transport .sep{display:none}
+  #speedLbl{min-width:30px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-label="Gravity simulation canvas. Drag to launch bodies."></canvas>
+<header class="brand"><h1>Orr<i>e</i>ry</h1><span>n-body gravity sandbox</span></header>
+<button id="toggle" class="glass" aria-expanded="true" aria-controls="panel" title="Toggle panel (Tab)">☰ Controls</button>
+
+<aside id="panel" class="glass" aria-label="Simulation controls">
+  <h2>Scenes</h2>
+  <div class="grid" id="presets">
+    <button data-p="solar">Solar System</button>
+    <button data-p="binary">Binary Stars</button>
+    <button data-p="figure8">Figure-Eight</button>
+    <button data-p="trojans">Trojan Swarm</button>
+    <button data-p="galaxies">Galaxy Merger</button>
+    <button data-p="rings">Ringed Giant</button>
+    <button data-p="chaos">Chaos Cluster</button>
+    <button data-p="comets">Comet Season</button>
+    <button data-p="empty">Empty Void</button>
+  </div>
+
+  <h2>Tool</h2>
+  <div class="grid3" id="tools" role="radiogroup" aria-label="Tool">
+    <button data-t="launch" class="on" role="radio" aria-checked="true" title="L">Launch</button>
+    <button data-t="pan" role="radio" aria-checked="false" title="P">Pan</button>
+    <button data-t="erase" role="radio" aria-checked="false" title="E">Erase</button>
+  </div>
+
+  <h2>New body</h2>
+  <div class="grid3" id="kinds">
+    <button data-m="0.05">Moon</button>
+    <button data-m="1" class="on">Planet</button>
+    <button data-m="30">Giant</button>
+    <button data-m="1000">Star</button>
+    <button data-m="8000">Black hole</button>
+    <button data-m="dust">Dust ×80</button>
+    <button data-m="comet" style="grid-column:1/-1">☄ Comet (grows a tail near stars)</button>
+  </div>
+  <div class="row"><label for="mass">Mass</label><output id="massOut">1</output></div>
+  <input id="mass" type="range" min="-2" max="4" step="0.01" value="0" aria-label="Mass (log scale)">
+  <label class="check"><input type="checkbox" id="assist" checked> Orbit assist on click</label>
+  <p class="hint">Drag to slingshot (pull back like a catapult). A plain click drops a body into a circular orbit around the strongest attractor.</p>
+
+  <h2>Display</h2>
+  <div class="checks">
+    <label class="check"><input type="checkbox" id="trails" checked> Trails</label>
+    <label class="check"><input type="checkbox" id="labels" checked> Labels</label>
+    <label class="check"><input type="checkbox" id="vectors"> Velocity</label>
+    <label class="check"><input type="checkbox" id="field"> Potential</label>
+    <label class="check"><input type="checkbox" id="merge" checked> Collisions</label>
+    <label class="check"><input type="checkbox" id="relTrail"> Rel. trails</label>
+    <label class="check" title="Habitable zones around stars, Hill spheres around planets"><input type="checkbox" id="zones"> Zones</label>
+  </div>
+  <div class="row"><label for="trailLen">Trail length</label><output id="trailOut">400</output></div>
+  <input id="trailLen" type="range" min="20" max="1200" step="10" value="400">
+
+  <h2>Scene file</h2>
+  <div class="grid">
+    <button id="qsave">Quick save</button>
+    <button id="qload">Quick load</button>
+    <button id="exportBtn">Export JSON</button>
+    <button id="importBtn">Import JSON</button>
+    <button id="shot">Screenshot</button>
+    <button id="shareBtn" title="Copy a link that recreates these bodies (dust not included)">Copy link</button>
+    <button id="helpBtn" style="grid-column:1/-1">Help <kbd>?</kbd></button>
+  </div>
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+</aside>
+
+<aside id="inspector" class="glass" hidden aria-label="Selected body">
+  <button id="insClose" aria-label="Close inspector" title="Close (Esc)">✕</button>
+  <h3><span class="dot" id="insDot"></span><input type="text" id="insName" aria-label="Body name" maxlength="24"></h3>
+  <dl id="insData"></dl>
+  <div class="row"><label for="insMass">Mass</label><output id="insMassOut"></output></div>
+  <input id="insMass" type="range" min="-2" max="4.3" step="0.01" aria-label="Selected body mass (log scale)">
+  <div class="btns" style="margin-top:10px">
+    <button id="insFollow">Follow</button>
+    <button id="insCirc" title="Set velocity to a circular orbit around the dominant attractor">Circularize</button>
+    <button id="insPin" title="Freeze this body in place">Pin</button>
+    <button id="insRing" title="Surround this body with a ring of orbiting debris">Ring</button>
+    <button id="insDel" title="Delete">Delete</button>
+  </div>
+</aside>
+
+<nav id="transport" class="glass" aria-label="Playback">
+  <button id="play" title="Play / pause (Space)" aria-label="Pause">❚❚</button>
+  <button id="stepBtn" title="Single step (.)" aria-label="Step">⏵|</button>
+  <button id="rev" title="Reverse time — leapfrog integration is time-symmetric (R)" aria-label="Reverse time">⇄</button>
+  <button id="rewind" title="Time machine: jump back 5 seconds, undoing collisions and escapes (B)" aria-label="Rewind 5 seconds">⏪</button>
+  <span class="sep"></span>
+  <button id="slower" aria-label="Slower" title="Slower (-)">−</button>
+  <span id="speedLbl" aria-live="polite">×4</span>
+  <button id="faster" aria-label="Faster" title="Faster (+)">+</button>
+  <span class="sep"></span>
+  <button id="fit" title="Fit view (F)">Fit</button>
+  <button id="com" title="Zero total momentum (M)">COM</button>
+</nav>
+
+<div id="stats"></div>
+<div id="toast" class="glass" role="status" aria-live="polite"></div>
+
+<div id="help" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="card glass">
+    <h2 id="helpTitle">How the heavens work here</h2>
+    <p>Every massive body pulls on every other using Newtonian gravity, integrated with a symplectic leapfrog scheme, so orbits stay stable for a long time and time can run backwards. Dust and ring particles are massless: they feel gravity but don't exert it.</p>
+    <table>
+      <tr><td>Drag on empty sky</td><td>Slingshot a new body (pull back, release)</td></tr>
+      <tr><td>Click on empty sky</td><td>Drop a body (circular orbit if assist is on)</td></tr>
+      <tr><td>Click a body</td><td>Select it and open the inspector</td></tr>
+      <tr><td>Right / middle drag, or <kbd>Space</kbd>+drag</td><td>Pan</td></tr>
+      <tr><td>Wheel / pinch</td><td>Zoom around the cursor</td></tr>
+      <tr><td><kbd>Space</kbd> tap</td><td>Play / pause</td></tr>
+      <tr><td><kbd>.</kbd></td><td>Step once</td></tr>
+      <tr><td><kbd>R</kbd></td><td>Reverse time</td></tr>
+      <tr><td><kbd>B</kbd> / ⏪</td><td>Time machine: jump back 5 s (undoes collisions too)</td></tr>
+      <tr><td><kbd>+</kbd> <kbd>−</kbd></td><td>Change speed</td></tr>
+      <tr><td><kbd>F</kbd></td><td>Fit everything in view</td></tr>
+      <tr><td><kbd>G</kbd></td><td>Follow selected body</td></tr>
+      <tr><td><kbd>Del</kbd></td><td>Delete selected body</td></tr>
+      <tr><td><kbd>L</kbd> <kbd>P</kbd> <kbd>E</kbd></td><td>Launch / Pan / Erase tool</td></tr>
+      <tr><td><kbd>1</kbd>–<kbd>9</kbd></td><td>Load scene</td></tr>
+      <tr><td><kbd>Tab</kbd></td><td>Hide / show the panel</td></tr>
+    </table>
+    <p style="margin-bottom:0"><button id="helpClose">Close</button></p>
+  </div>
+</div>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const cv = $('#sky'), ctx = cv.getContext('2d', { alpha: false });
+let W = 0, H = 0, DPR = 1;
+
+/* ---------- constants ---------- */
+const G = 1, EPS2 = 1.0, DT = 0.25, LAUNCH_K = 0.01;
+const PALETTE = ['#ffb547', '#6fd3ff', '#ff6f91', '#9dff8a', '#c9a7ff', '#ffe28a', '#7af0d6', '#ff9a5c', '#8fb3ff'];
+const DUST = ['#c8b89a', '#8fd0ff', '#ffb0c4', '#bfb0ff'];
+const SPEEDS = [1, 2, 4, 8, 16, 32, 64];
+const STORE_KEY = 'orrery.scene.v1';
+
+/* ---------- state ---------- */
+const S = {
+  bodies: [], t: 0, dir: 1, paused: false, speedIdx: 2,
+  tool: 'launch', mass: 1, dustMode: false,
+  trails: true, labels: true, vectors: false, field: false, merge: true, relTrail: false, zones: false, trailLen: 400,
+  cam: { x: 0, y: 0, z: 1 }, follow: null, selected: null, E0: null,
+  flashes: []
+};
+let nextId = 1, accDirty = true, colorIdx = 0;
+
+/* ---------- massless particles (struct of arrays) ---------- */
+const P = { n: 0, cap: 0, x: null, y: null, vx: null, vy: null, ax: null, ay: null, c: null, dead: null };
+function pGrow(cap) {
+  const f = (A, T) => { const a = new T(cap); if (A) a.set(A.subarray(0, P.n)); return a; };
+  P.x = f(P.x, Float64Array); P.y = f(P.y, Float64Array); P.vx = f(P.vx, Float64Array); P.vy = f(P.vy, Float64Array);
+  P.ax = f(P.ax, Float64Array); P.ay = f(P.ay, Float64Array); P.c = f(P.c, Uint8Array); P.dead = f(P.dead, Uint8Array);
+  P.cap = cap;
+}
+pGrow(2048);
+const P_MAX = 6000;
+function pAdd(x, y, vx, vy, c) {
+  if (P.n >= P_MAX) return false;
+  if (P.n >= P.cap) pGrow(Math.min(P_MAX, P.cap * 2));
+  const i = P.n++;
+  P.x[i] = x; P.y[i] = y; P.vx[i] = vx; P.vy[i] = vy; P.ax[i] = 0; P.ay[i] = 0; P.c[i] = c; P.dead[i] = 0;
+  return true;
+}
+function pCompact() {
+  let j = 0;
+  for (let i = 0; i < P.n; i++) {
+    if (P.dead[i]) continue;
+    if (i !== j) { P.x[j] = P.x[i]; P.y[j] = P.y[i]; P.vx[j] = P.vx[i]; P.vy[j] = P.vy[i]; P.ax[j] = P.ax[i]; P.ay[j] = P.ay[i]; P.c[j] = P.c[i]; }
+    P.dead[j] = 0; j++;
+  }
+  P.n = j;
+}
+
+/* ---------- bodies ---------- */
+const radiusFor = m => Math.max(1.4, 1.6 * Math.cbrt(m));
+function makeBody(o) {
+  const id = nextId++;
+  return {
+    id, name: o.name || nameFor(o.m), x: o.x, y: o.y, vx: o.vx || 0, vy: o.vy || 0, ax: 0, ay: 0,
+    m: o.m, r: radiusFor(o.m), color: o.color || PALETTE[(colorIdx++) % PALETTE.length], pinned: !!o.pinned, comet: !!o.comet,
+    trail: new Float32Array(1200 * 2), tHead: 0, tLen: 0
+  };
+}
+const SYL = ['ka', 'lo', 'ri', 'ven', 'tar', 'es', 'mo', 'zu', 'an', 'the', 'ol', 'ix', 'ur', 'sa', 'dri', 'po', 'nel', 'cy'];
+function nameFor(m) {
+  const n = 2 + (Math.random() * 2 | 0); let s = '';
+  for (let i = 0; i < n; i++) s += SYL[Math.random() * SYL.length | 0];
+  s = s[0].toUpperCase() + s.slice(1);
+  if (m >= 5000) return 'Void ' + s;
+  if (m >= 300) return s + ' Prime';
+  return s;
+}
+function addBody(o) { const b = makeBody(o); S.bodies.push(b); accDirty = true; return b; }
+/* ---------- time machine ----------
+   Unlike ⇄ (which re-integrates backwards), this restores exact snapshots, so it also
+   undoes merges and absorbed dust. One snapshot every 30 frames, 60 kept ≈ 30 s. */
+const timeline = []; let histTick = 0;
+function pushSnap() {
+  timeline.push({ t: S.t, bodies: S.bodies.map(b => ({ ...b, trail: null })), n: P.n,
+    px: P.x.slice(0, P.n), py: P.y.slice(0, P.n), pvx: P.vx.slice(0, P.n), pvy: P.vy.slice(0, P.n), pc: P.c.slice(0, P.n) });
+  if (timeline.length > 60) timeline.shift();
+}
+function rewind(steps = 10) {
+  if (timeline.length < 2) return toast('Nothing recorded yet');
+  const s = timeline[Math.max(0, timeline.length - 1 - steps)];
+  timeline.length = Math.max(1, timeline.length - steps);
+  S.bodies = s.bodies.map(b => ({ ...b, trail: new Float32Array(1200 * 2), tHead: 0, tLen: 0 }));
+  if (P.cap < s.n) pGrow(Math.max(s.n, P.cap * 2));
+  P.n = s.n; P.x.set(s.px); P.y.set(s.py); P.vx.set(s.pvx); P.vy.set(s.pvy); P.c.set(s.pc); P.dead.fill(0, 0, s.n);
+  S.t = s.t; accDirty = true; S.E0 = null; S.flashes.length = 0;
+  if (S.selected && !S.bodies.some(b => b.id === S.selected)) select(null);
+  if (S.follow && !S.bodies.some(b => b.id === S.follow)) S.follow = null;
+  toast(`Rewound to t = ${s.t.toFixed(0)} (${timeline.length} snapshots left)`);
+}
+function clearScene() {
+  timeline.length = 0;
+  S.bodies.length = 0; P.n = 0; S.t = 0; S.follow = null; select(null); S.flashes.length = 0; accDirty = true; colorIdx = 0;
+}
+function zeroMomentum() {
+  let M = 0, px = 0, py = 0, cx = 0, cy = 0;
+  for (const b of S.bodies) { M += b.m; px += b.m * b.vx; py += b.m * b.vy; cx += b.m * b.x; cy += b.m * b.y; }
+  if (!M) return;
+  const vx = px / M, vy = py / M;
+  for (const b of S.bodies) { b.vx -= vx; b.vy -= vy; }
+  for (let i = 0; i < P.n; i++) { P.vx[i] -= vx; P.vy[i] -= vy; }
+  resetTrails(); S.E0 = null;
+}
+function resetTrails() { for (const b of S.bodies) { b.tLen = 0; b.tHead = 0; } }
+
+/* ---------- physics ---------- */
+function bodyAcc() {
+  const B = S.bodies, n = B.length;
+  for (let i = 0; i < n; i++) { B[i].ax = 0; B[i].ay = 0; }
+  for (let i = 0; i < n; i++) {
+    const a = B[i];
+    for (let j = i + 1; j < n; j++) {
+      const b = B[j], dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy + EPS2;
+      const inv = G / (d2 * Math.sqrt(d2));
+      a.ax += dx * inv * b.m; a.ay += dy * inv * b.m;
+      b.ax -= dx * inv * a.m; b.ay -= dy * inv * a.m;
+    }
+  }
+}
+let anyDead = false;
+function particleAcc() {
+  const B = S.bodies, nb = B.length, X = P.x, Y = P.y, AX = P.ax, AY = P.ay;
+  for (let i = 0; i < P.n; i++) {
+    let ax = 0, ay = 0; const x = X[i], y = Y[i];
+    for (let k = 0; k < nb; k++) {
+      const b = B[k], dx = b.x - x, dy = b.y - y, r2 = dx * dx + dy * dy;
+      if (S.merge && r2 < b.r * b.r) { P.dead[i] = 1; anyDead = true; }
+      const d2 = r2 + EPS2, inv = G * b.m / (d2 * Math.sqrt(d2));
+      ax += dx * inv; ay += dy * inv;
+    }
+    AX[i] = ax; AY[i] = ay;
+  }
+}
+function step(dt) {
+  const B = S.bodies, h = dt * 0.5;
+  if (accDirty) { bodyAcc(); particleAcc(); accDirty = false; }
+  for (const b of B) {
+    if (b.pinned) { b.vx = 0; b.vy = 0; continue; }
+    b.vx += b.ax * h; b.vy += b.ay * h; b.x += b.vx * dt; b.y += b.vy * dt;
+  }
+  const X = P.x, Y = P.y, VX = P.vx, VY = P.vy, AX = P.ax, AY = P.ay;
+  for (let i = 0; i < P.n; i++) { VX[i] += AX[i] * h; VY[i] += AY[i] * h; X[i] += VX[i] * dt; Y[i] += VY[i] * dt; }
+  bodyAcc(); particleAcc();
+  for (const b of B) { if (!b.pinned) { b.vx += b.ax * h; b.vy += b.ay * h; } }
+  for (let i = 0; i < P.n; i++) { VX[i] += AX[i] * h; VY[i] += AY[i] * h; }
+  if (S.merge) collide();
+  if (anyDead) { pCompact(); anyDead = false; }
+  S.t += dt;
+}
+function collide() {
+  const B = S.bodies;
+  for (let i = 0; i < B.length; i++) {
+    for (let j = i + 1; j < B.length; j++) {
+      const a = B[i], b = B[j], dx = b.x - a.x, dy = b.y - a.y, rr = (a.r + b.r) * 0.8;
+      if (dx * dx + dy * dy < rr * rr) { merge(a, b); B.splice(j, 1); j--; accDirty = true; }
+    }
+  }
+  if (accDirty) { bodyAcc(); accDirty = false; }
+}
+function merge(a, b) {
+  const M = a.m + b.m, big = a.m >= b.m ? a : b;
+  const x = (a.x * a.m + b.x * b.m) / M, y = (a.y * a.m + b.y * b.m) / M;
+  const vx = (a.vx * a.m + b.vx * b.m) / M, vy = (a.vy * a.m + b.vy * b.m) / M;
+  S.flashes.push({ x, y, r: Math.max(a.r, b.r), age: 0, color: big.color, e: Math.min(a.m, b.m) / M });
+  if (big === b) { a.name = b.name; a.color = b.color; a.trail = b.trail; a.tHead = b.tHead; a.tLen = b.tLen; }
+  a.pinned = a.pinned || b.pinned;
+  a.x = x; a.y = y; a.vx = a.pinned ? 0 : vx; a.vy = a.pinned ? 0 : vy; a.m = M; a.r = radiusFor(M);
+  if (S.follow === b.id) S.follow = a.id;
+  if (S.selected === b.id) S.selected = a.id;
+  S.E0 = null;
+}
+function energy() {
+  const B = S.bodies; let K = 0, U = 0;
+  for (let i = 0; i < B.length; i++) {
+    const a = B[i]; K += 0.5 * a.m * (a.vx * a.vx + a.vy * a.vy);
+    for (let j = i + 1; j < B.length; j++) { const b = B[j], dx = b.x - a.x, dy = b.y - a.y; U -= G * a.m * b.m / Math.sqrt(dx * dx + dy * dy + EPS2); }
+  }
+  return K + U;
+}
+function dominantAt(x, y, exclude) {
+  let best = null, bs = 0;
+  for (const b of S.bodies) {
+    if (b === exclude) continue;
+    const dx = b.x - x, dy = b.y - y, s = b.m / (dx * dx + dy * dy + EPS2);
+    if (s > bs) { bs = s; best = b; }
+  }
+  return best;
+}
+function circularVel(x, y, around) {
+  const dx = x - around.x, dy = y - around.y, d = Math.hypot(dx, dy) || 1;
+  const v = Math.sqrt(G * around.m / Math.sqrt(d * d + EPS2));
+  return { vx: around.vx + (-dy / d) * v, vy: around.vy + (dx / d) * v };
+}
+function orbitInfo(b) {
+  const c = dominantAt(b.x, b.y, b); if (!c) return null;
+  const rx = b.x - c.x, ry = b.y - c.y, vx = b.vx - c.vx, vy = b.vy - c.vy;
+  const r = Math.hypot(rx, ry), v2 = vx * vx + vy * vy, mu = G * (c.m + b.m);
+  const a = 1 / (2 / r - v2 / mu);
+  const h = rx * vy - ry * vx;
+  const ex = (vy * h) / mu - rx / r, ey = (-vx * h) / mu - ry / r;
+  const e = Math.hypot(ex, ey);
+  return { around: c, r, a, e, T: a > 0 ? 2 * Math.PI * Math.sqrt(a * a * a / mu) : Infinity, bound: a > 0 && e < 1 };
+}
+
+/* ---------- presets ---------- */
+function rnd(a, b) { return a + Math.random() * (b - a); }
+function disk(cx, cy, cvx, cvy, M, r0, r1, n, c, sense = 1) {
+  for (let i = 0; i < n; i++) {
+    const r = r0 + (r1 - r0) * Math.sqrt(Math.random()), th = Math.random() * Math.PI * 2;
+    const v = Math.sqrt(G * M / Math.sqrt(r * r + EPS2));
+    pAdd(cx + r * Math.cos(th), cy + r * Math.sin(th), cvx - sense * Math.sin(th) * v, cvy + sense * Math.cos(th) * v, c);
+  }
+}
+function orbiter(center, r, m, name, color, ang = Math.random() * Math.PI * 2, sense = 1) {
+  const x = center.x + r * Math.cos(ang), y = center.y + r * Math.sin(ang);
+  const v = Math.sqrt(G * (center.m + m) / Math.sqrt(r * r + EPS2));
+  return addBody({ x, y, vx: center.vx - sense * Math.sin(ang) * v, vy: center.vy + sense * Math.cos(ang) * v, m, name, color });
+}
+const PRESETS = {
+  solar() {
+    const sun = addBody({ x: 0, y: 0, m: 1000, name: 'Sol', color: '#ffc861' });
+    const pl = [['Mercury', 60, .05, '#b9a894'], ['Venus', 95, .8, '#ffd9a0'], ['Earth', 135, 1, '#6fd3ff'], ['Mars', 185, .1, '#ff8a5c'],
+      ['Jupiter', 410, 10, '#e8b27a'], ['Saturn', 580, 3, '#f1dc9b'], ['Uranus', 730, 1.2, '#9ff0f0'], ['Neptune', 870, 1.4, '#7d9bff']];
+    for (const [n, r, m, c] of pl) {
+      const p = orbiter(sun, r, m, n, c);
+      if (n === 'Earth') orbiter(p, 5, .012, 'Luna', '#d8d4c8');
+    }
+    disk(0, 0, 0, 0, 1000, 225, 285, 1000, 0);
+    return 'Solar System — 8 planets, a moon and an asteroid belt';
+  },
+  binary() {
+    const m = 500, d = 200, v = Math.sqrt(G * m / (2 * d));
+    addBody({ x: -d / 2, y: 0, vx: 0, vy: -v, m, name: 'Castor', color: '#ffb547' });
+    addBody({ x: d / 2, y: 0, vx: 0, vy: v, m, name: 'Pollux', color: '#8fb3ff' });
+    const cm = { x: 0, y: 0, vx: 0, vy: 0, m: 2 * m };
+    orbiter(cm, 520, 2, 'Tatooine', '#e0c890', 0.3);
+    orbiter(cm, 720, 5, 'Hoth', '#b8e8ff', 2.4);
+    disk(0, 0, 0, 0, 2 * m, 330, 460, 900, 1);
+    return 'Binary Stars — circumbinary planets and a disk; watch the inner edge churn';
+  },
+  figure8() {
+    const L = 150, M = 100, s = Math.sqrt(G * M / L);
+    const p = [[0.97000436, -0.24308753], [-0.97000436, 0.24308753], [0, 0]];
+    const v3 = [-0.93240737, -0.86473146];
+    const v = [[-v3[0] / 2, -v3[1] / 2], [-v3[0] / 2, -v3[1] / 2], v3];
+    const names = ['Alpha', 'Beta', 'Gamma'], cols = ['#ffb547', '#6fd3ff', '#ff6f91'];
+    for (let i = 0; i < 3; i++) addBody({ x: p[i][0] * L, y: p[i][1] * L, vx: v[i][0] * s, vy: v[i][1] * s, m: M, name: names[i], color: cols[i] });
+    S.speedIdx = 4;
+    return 'Figure-Eight — the Chenciner–Montgomery three-body choreography';
+  },
+  trojans() {
+    const sun = addBody({ x: 0, y: 0, m: 1000, name: 'Helios', color: '#ffc861' });
+    const R = 400, jup = orbiter(sun, R, 15, 'Jove', '#e8b27a', 0);
+    for (const sign of [1, -1]) {
+      for (let i = 0; i < 450; i++) {
+        const ang = sign * Math.PI / 3 + rnd(-.22, .22), r = R + rnd(-14, 14);
+        const v = Math.sqrt(G * 1000 / r);
+        pAdd(r * Math.cos(ang), r * Math.sin(ang), -Math.sin(ang) * v, Math.cos(ang) * v, sign > 0 ? 1 : 2);
+      }
+    }
+    disk(0, 0, 0, 0, 1000, 120, 200, 300, 0);
+    void jup;
+    return 'Trojan Swarm — asteroids trapped at the L4 and L5 Lagrange points';
+  },
+  galaxies() {
+    const M = 800;
+    // relative orbit: a≈660, e≈0.82 → periapsis ≈120, a close fly-by rather than a head-on hit
+    const a = addBody({ x: -350, y: 0, vx: .6, vy: -.42, m: M, name: 'Andros', color: '#ffe28a' });
+    const b = addBody({ x: 350, y: 0, vx: -.6, vy: .42, m: M, name: 'Milkana', color: '#8fb3ff' });
+    disk(a.x, a.y, a.vx, a.vy, M, 24, 170, 1500, 0, 1);
+    disk(b.x, b.y, b.vx, b.vy, M, 24, 170, 1500, 1, -1);
+    S.trails = false; syncChecks();
+    return 'Galaxy Merger — tidal tails form as two disks collide (Toomre & Toomre, 1972)';
+  },
+  rings() {
+    const star = addBody({ x: 0, y: 0, m: 1000, name: 'Kronos Prime', color: '#ffc861' });
+    const g = orbiter(star, 520, 40, 'Annulus', '#f1dc9b', 0);
+    disk(g.x, g.y, g.vx, g.vy, 40, 11, 22, 1400, 0);
+    disk(g.x, g.y, g.vx, g.vy, 40, 24, 30, 500, 1);
+    orbiter(g, 44, .08, 'Shepherd', '#d8d4c8');
+    S.follow = g.id; select(g.id);
+    return 'Ringed Giant — the camera follows the planet; a shepherd moon sculpts the rings';
+  },
+  chaos() {
+    for (let i = 0; i < 14; i++) {
+      const r = rnd(40, 320), th = rnd(0, Math.PI * 2);
+      addBody({ x: r * Math.cos(th), y: r * Math.sin(th), vx: rnd(-.7, .7), vy: rnd(-.7, .7), m: Math.pow(10, rnd(0.3, 2.3)) });
+    }
+    return 'Chaos Cluster — 14 random bodies. Who survives?';
+  },
+  comets() {
+    const sun = addBody({ x: 0, y: 0, m: 1000, name: 'Sol', color: '#ffc861' });
+    orbiter(sun, 150, 1, 'Terra', '#6fd3ff'); orbiter(sun, 300, 6, 'Magnus', '#e8b27a');
+    const names = ['Halley', 'Hale-Bopp', 'Encke', 'Swift', 'Tempel', 'Lovejoy'];
+    names.forEach((n, k) => {
+      // highly eccentric orbits: start near aphelion with a small sideways speed
+      const ang = k / names.length * Math.PI * 2 + rnd(-.3, .3), r = rnd(620, 900), v = Math.sqrt(G * 1000 / r) * rnd(.22, .38);
+      addBody({ x: r * Math.cos(ang), y: r * Math.sin(ang), vx: -Math.sin(ang) * v, vy: Math.cos(ang) * v, m: .02, name: n, color: '#cfe9ff', comet: true });
+    });
+    disk(0, 0, 0, 0, 1000, 1000, 1150, 700, 1);
+    S.speedIdx = 4;
+    return 'Comet Season — tails always point away from the star and grow near perihelion';
+  },
+  empty() { return 'Empty Void — drop a Star, then launch planets around it'; }
+};
+const PRESET_KEYS = Object.keys(PRESETS);
+function loadPreset(key) {
+  clearScene();
+  S.speedIdx = 2; S.trails = true;
+  const msg = PRESETS[key]();
+  if (key !== 'rings') zeroMomentum();
+  S.trails = S.trails && key !== 'galaxies'; syncChecks();
+  accDirty = true; S.E0 = null; S.dir = 1;
+  if (key !== 'rings') fitView(); else S.cam.z = (Math.min(W, H) || 600) * 0.42 / 60;
+  if (key === 'empty') { S.cam.x = 0; S.cam.y = 0; S.cam.z = 1; }
+  $$('#presets button').forEach(b => b.classList.toggle('on', b.dataset.p === key));
+  updateSpeed(); updateRev(); toast(msg);
+}
+
+/* ---------- camera ---------- */
+const w2sx = x => (x - S.cam.x) * S.cam.z + W / 2;
+const w2sy = y => (y - S.cam.y) * S.cam.z + H / 2;
+const s2wx = x => (x - W / 2) / S.cam.z + S.cam.x;
+const s2wy = y => (y - H / 2) / S.cam.z + S.cam.y;
+function fitView() {
+  let minx = Infinity, miny = Infinity, maxx = -Infinity, maxy = -Infinity, any = false;
+  const inc = (x, y) => { any = true; if (x < minx) minx = x; if (x > maxx) maxx = x; if (y < miny) miny = y; if (y > maxy) maxy = y; };
+  for (const b of S.bodies) inc(b.x, b.y);
+  for (let i = 0; i < P.n; i += 7) inc(P.x[i], P.y[i]);
+  if (!any) return;
+  S.follow = null;
+  S.cam.x = (minx + maxx) / 2; S.cam.y = (miny + maxy) / 2;
+  const span = Math.max(maxx - minx, maxy - miny, 60);
+  S.cam.z = Math.min(40, Math.max(0.02, (Math.min(W, H) || 600) * 0.86 / span));
+}
+function zoomAt(sx, sy, f) {
+  const wx = s2wx(sx), wy = s2wy(sy);
+  S.cam.z = Math.min(40, Math.max(0.02, S.cam.z * f));
+  if (!S.follow) { S.cam.x = wx - (sx - W / 2) / S.cam.z; S.cam.y = wy - (sy - H / 2) / S.cam.z; }
+  fieldDirty = true;
+}
+
+/* ---------- starfield ---------- */
+const stars = Array.from({ length: 260 }, () => ({ x: Math.random(), y: Math.random(), s: Math.random() < .08 ? 1.6 : 1, a: rnd(.15, .6), p: rnd(.01, .05) }));
+
+/* ---------- potential field ---------- */
+const fcv = document.createElement('canvas'), fctx = fcv.getContext('2d');
+let fieldDirty = true, fimg = null;
+function drawField() {
+  const cell = 6, gw = Math.ceil(W / cell), gh = Math.ceil(H / cell);
+  if (fcv.width !== gw || fcv.height !== gh || !fimg) { fcv.width = gw; fcv.height = gh; fimg = fctx.createImageData(gw, gh); }
+  const d = fimg.data, B = S.bodies, nb = B.length;
+  const bx = new Float64Array(nb), by = new Float64Array(nb), bm = new Float64Array(nb);
+  for (let k = 0; k < nb; k++) { bx[k] = B[k].x; by[k] = B[k].y; bm[k] = B[k].m; }
+  const soft = 25 / (S.cam.z * S.cam.z) + EPS2;
+  let o = 0;
+  for (let j = 0; j < gh; j++) {
+    const wy = s2wy(j * cell + cell / 2);
+    for (let i = 0; i < gw; i++) {
+      const wx = s2wx(i * cell + cell / 2);
+      let phi = 0;
+      for (let k = 0; k < nb; k++) { const dx = bx[k] - wx, dy = by[k] - wy; phi += bm[k] / Math.sqrt(dx * dx + dy * dy + soft); }
+      const v = Math.log(phi * 40 + 1e-9);
+      const band = v * 2.2 - Math.floor(v * 2.2), dd = Math.min(band, 1 - band);
+      const edge = Math.max(0, 1 - dd / 0.09);
+      const t = Math.max(0, Math.min(1, (v + 1) / 9)), e2 = edge * edge * t;
+      d[o] = 6 + 26 * t + e2 * 90; d[o + 1] = 8 + 34 * t * t + e2 * 70; d[o + 2] = 16 + 60 * t + e2 * 50; d[o + 3] = 255;
+      o += 4;
+    }
+  }
+  fctx.putImageData(fimg, 0, 0);
+  ctx.save(); ctx.imageSmoothingEnabled = true; ctx.globalAlpha = .85; ctx.drawImage(fcv, 0, 0, gw * cell, gh * cell); ctx.restore();
+}
+
+/* ---------- render ---------- */
+let drag = null, predicted = null, predictDirty = false, hoverId = null;
+function render() {
+  const cam = S.cam;
+  ctx.fillStyle = '#05060a'; ctx.fillRect(0, 0, W, H);
+  if (S.field && S.bodies.length) drawField();
+  // stars (parallax)
+  ctx.fillStyle = '#fff';
+  for (const s of stars) {
+    let x = (s.x * W - cam.x * s.p * cam.z) % W; if (x < 0) x += W;
+    let y = (s.y * H - cam.y * s.p * cam.z) % H; if (y < 0) y += H;
+    ctx.globalAlpha = s.a; ctx.fillRect(x, y, s.s, s.s);
+  }
+  ctx.globalAlpha = 1;
+
+  const ref = S.relTrail && S.follow ? S.bodies.find(b => b.id === S.follow) : null;
+  // trails
+  if (S.trails) {
+    ctx.lineWidth = 1.25; ctx.lineJoin = 'round';
+    const L = S.trailLen;
+    for (const b of S.bodies) {
+      const n = Math.min(b.tLen, L); if (n < 2) continue;
+      ctx.strokeStyle = b.color;
+      const chunks = 5, per = Math.ceil(n / chunks);
+      for (let c = 0; c < chunks; c++) {
+        const start = c * per, end = Math.min(n - 1, start + per);
+        if (end <= start) continue;
+        ctx.globalAlpha = 0.06 + 0.5 * ((c + 1) / chunks) ** 1.6;
+        ctx.beginPath();
+        for (let k = start; k <= end; k++) {
+          const idx = ((b.tHead - n + k) % 1200 + 1200) % 1200;
+          let x = b.trail[idx * 2], y = b.trail[idx * 2 + 1];
+          if (ref) { x += ref.x; y += ref.y; }
+          const sx = w2sx(x), sy = w2sy(y);
+          k === start ? ctx.moveTo(sx, sy) : ctx.lineTo(sx, sy);
+        }
+        ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+  // particles
+  if (P.n) {
+    const paths = DUST.map(() => new Path2D());
+    const sz = Math.max(1, Math.min(2.2, cam.z * 1.1));
+    for (let i = 0; i < P.n; i++) {
+      const sx = (P.x[i] - cam.x) * cam.z + W / 2, sy = (P.y[i] - cam.y) * cam.z + H / 2;
+      if (sx < -2 || sy < -2 || sx > W + 2 || sy > H + 2) continue;
+      paths[P.c[i] % DUST.length].rect(sx, sy, sz, sz);
+    }
+    ctx.globalAlpha = .82;
+    paths.forEach((p, i) => { ctx.fillStyle = DUST[i]; ctx.fill(p); });
+    ctx.globalAlpha = 1;
+  }
+  // zones: habitable band around stars (luminosity ∝ m^3.5, scaled so Sol's band holds Earth),
+  // and each planet's Hill sphere r_H = a·∛(m/3M) — where moons and rings can survive
+  if (S.zones) {
+    ctx.save();
+    for (const b of S.bodies) {
+      const sx = w2sx(b.x), sy = w2sy(b.y);
+      if (b.m >= 300 && b.m < 5000) {
+        const k = Math.sqrt(Math.pow(b.m / 1000, 3.5)), r0 = 112 * k * cam.z, r1 = 172 * k * cam.z;
+        if (r1 < 4 || r0 > Math.hypot(W, H) * 2) continue;
+        ctx.fillStyle = 'rgba(120,230,150,.07)'; ctx.beginPath(); ctx.arc(sx, sy, r1, 0, Math.PI * 2); ctx.moveTo(sx + r0, sy); ctx.arc(sx, sy, r0, 0, Math.PI * 2, true); ctx.fill();
+        ctx.strokeStyle = 'rgba(120,230,150,.35)'; ctx.setLineDash([2, 5]); ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(sx, sy, r0, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(sx, sy, r1, 0, 7); ctx.stroke();
+        if (S.labels && r1 > 60) { ctx.setLineDash([]); ctx.fillStyle = 'rgba(150,240,170,.6)'; ctx.font = '10px ' + getComputedStyle(document.documentElement).getPropertyValue('--mono'); ctx.fillText('habitable zone', sx + r1 * .72 + 4, sy - r1 * .72); }
+      } else if (b.m < 300) {
+        const c = dominantAt(b.x, b.y, b); if (!c || c.m < b.m * 3) continue;
+        const rh = Math.hypot(b.x - c.x, b.y - c.y) * Math.cbrt(b.m / (3 * c.m)) * cam.z;
+        if (rh < 3) continue;
+        ctx.strokeStyle = hexA(b.color, .4); ctx.setLineDash([3, 4]); ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(sx, sy, rh, 0, 7); ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
+  // comet tails: small bodies near a star grow an ion tail (straight, anti-stellar)
+  // and a dust tail (curved, lagging behind the orbit); both lengthen as 1/r
+  const star = S.bodies.reduce((a, b) => (b.m >= 300 && (!a || b.m > a.m) ? b : a), null);
+  if (star) {
+    ctx.globalCompositeOperation = 'lighter';
+    for (const b of S.bodies) {
+      if (!b.comet || b === star) continue;
+      const dx = b.x - star.x, dy = b.y - star.y, r = Math.hypot(dx, dy);
+      if (r > 700 || r < star.r) continue;
+      const L = Math.min(300, 16000 / r) * cam.z, ux = dx / r, uy = dy / r;
+      const sx = w2sx(b.x), sy = w2sy(b.y);
+      if (L < 3 || sx < -L || sy < -L || sx > W + L || sy > H + L) continue;
+      const v = Math.hypot(b.vx - star.vx, b.vy - star.vy) || 1, lx = -(b.vx - star.vx) / v, ly = -(b.vy - star.vy) / v;
+      const ex = sx + ux * L, ey = sy + uy * L;
+      let g = ctx.createLinearGradient(sx, sy, ex, ey); g.addColorStop(0, 'rgba(140,200,255,.75)'); g.addColorStop(1, 'rgba(140,200,255,0)');
+      ctx.strokeStyle = g; ctx.lineWidth = Math.max(1, 2.2 * Math.min(1.5, cam.z)); ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.stroke();
+      const dxe = sx + (ux * .7 + lx * .5) * L * .8, dye = sy + (uy * .7 + ly * .5) * L * .8;
+      g = ctx.createLinearGradient(sx, sy, dxe, dye); g.addColorStop(0, 'rgba(255,230,190,.55)'); g.addColorStop(1, 'rgba(255,230,190,0)');
+      ctx.strokeStyle = g; ctx.lineWidth = Math.max(2, 5 * Math.min(1.5, cam.z)); ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.quadraticCurveTo(sx + ux * L * .5, sy + uy * L * .5, dxe, dye); ctx.stroke();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  // bodies
+  ctx.globalCompositeOperation = 'lighter';
+  for (const b of S.bodies) {
+    const sx = w2sx(b.x), sy = w2sy(b.y), rs = Math.max(1.8, b.r * cam.z);
+    if (sx < -rs * 6 || sy < -rs * 6 || sx > W + rs * 6 || sy > H + rs * 6) continue;
+    if (b.m >= 5000) continue;
+    const glowR = b.m >= 300 ? rs * 5 : rs * 3;
+    const g = ctx.createRadialGradient(sx, sy, rs * .4, sx, sy, glowR);
+    g.addColorStop(0, hexA(b.color, b.m >= 300 ? .55 : .28)); g.addColorStop(1, hexA(b.color, 0));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy, glowR, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  for (const b of S.bodies) {
+    const sx = w2sx(b.x), sy = w2sy(b.y), rs = Math.max(1.8, b.r * cam.z);
+    if (sx < -rs * 4 || sy < -rs * 4 || sx > W + rs * 4 || sy > H + rs * 4) continue;
+    if (b.m >= 5000) {
+      // black hole: lensing ring + event horizon
+      const ring = ctx.createRadialGradient(sx, sy, rs * .9, sx, sy, rs * 2.6);
+      ring.addColorStop(0, 'rgba(255,200,120,.0)'); ring.addColorStop(.18, 'rgba(255,190,110,.75)'); ring.addColorStop(.45, 'rgba(255,120,60,.18)'); ring.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = ring; ctx.beginPath(); ctx.arc(sx, sy, rs * 2.6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(sx, sy, rs, 0, Math.PI * 2); ctx.fill();
+    } else {
+      ctx.fillStyle = b.m >= 300 ? '#fff8e6' : b.color;
+      ctx.beginPath(); ctx.arc(sx, sy, rs, 0, Math.PI * 2); ctx.fill();
+      if (b.m >= 300) { ctx.strokeStyle = b.color; ctx.lineWidth = Math.max(1, rs * .25); ctx.stroke(); }
+      else if (rs > 5) { // terminator shading
+        const sh = ctx.createLinearGradient(sx - rs, sy - rs, sx + rs, sy + rs);
+        sh.addColorStop(0, 'rgba(255,255,255,.25)'); sh.addColorStop(.55, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(0,0,0,.55)');
+        ctx.fillStyle = sh; ctx.fill();
+      }
+    }
+    if (b.pinned) { ctx.strokeStyle = 'rgba(255,255,255,.5)'; ctx.setLineDash([2, 3]); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(sx, sy, rs + 6, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
+    if (S.vectors) {
+      ctx.strokeStyle = hexA(b.color, .8); ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + b.vx * 18, sy + b.vy * 18); ctx.stroke();
+    }
+    if (b.id === S.selected || b.id === hoverId) {
+      ctx.strokeStyle = b.id === S.selected ? '#fff' : 'rgba(255,255,255,.45)'; ctx.lineWidth = 1;
+      const rr = rs + 7, t = performance.now() / 900;
+      for (let q = 0; q < 4; q++) { const a0 = t + q * Math.PI / 2; ctx.beginPath(); ctx.arc(sx, sy, rr, a0, a0 + .7); ctx.stroke(); }
+    }
+    if (S.labels && (rs > 2.5 || b.m >= 10 || b.id === S.selected)) {
+      ctx.font = '11px ' + getComputedStyle(document.documentElement).getPropertyValue('--mono');
+      ctx.fillStyle = 'rgba(230,225,211,.72)'; ctx.fillText(b.name, sx + rs + 6, sy - rs - 2);
+    }
+  }
+  // selected orbit ellipse
+  const sel = S.bodies.find(b => b.id === S.selected);
+  if (sel) drawOrbit(sel);
+  // merge flashes
+  for (let i = S.flashes.length - 1; i >= 0; i--) {
+    const f = S.flashes[i]; f.age += 1;
+    const k = f.age / 50; if (k >= 1) { S.flashes.splice(i, 1); continue; }
+    const sx = w2sx(f.x), sy = w2sy(f.y), rr = (f.r * cam.z + 4) * (1 + k * (6 + 20 * f.e));
+    ctx.strokeStyle = hexA(f.color, (1 - k) * .9); ctx.lineWidth = 2 * (1 - k) + .5;
+    ctx.beginPath(); ctx.arc(sx, sy, rr, 0, Math.PI * 2); ctx.stroke();
+  }
+  // launch preview
+  if (drag && drag.mode === 'launch' && drag.moved) {
+    const sx = w2sx(drag.wx), sy = w2sy(drag.wy);
+    ctx.strokeStyle = 'rgba(255,181,71,.9)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(drag.ex, drag.ey); ctx.stroke();
+    ctx.beginPath(); ctx.arc(drag.ex, drag.ey, 4, 0, Math.PI * 2); ctx.stroke();
+    const ax = sx + (sx - drag.ex), ay = sy + (sy - drag.ey);
+    ctx.setLineDash([3, 4]); ctx.strokeStyle = 'rgba(111,211,255,.8)';
+    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ax, ay); ctx.stroke(); ctx.setLineDash([]);
+    if (predictDirty) { predicted = predict(); predictDirty = false; }
+    if (predicted && predicted.pts.length > 2) {
+      ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.setLineDash([2, 5]); ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      for (let i = 0; i < predicted.pts.length; i += 2) { const x = w2sx(predicted.pts[i]), y = w2sy(predicted.pts[i + 1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke(); ctx.setLineDash([]);
+      if (predicted.hit) { const n = predicted.pts.length; const x = w2sx(predicted.pts[n - 2]), y = w2sy(predicted.pts[n - 1]); ctx.strokeStyle = '#ff6f91'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x - 6, y - 6); ctx.lineTo(x + 6, y + 6); ctx.moveTo(x + 6, y - 6); ctx.lineTo(x - 6, y + 6); ctx.stroke(); }
+    }
+    const v = launchVelocity();
+    ctx.fillStyle = '#ffd9a0'; ctx.font = '11px ' + getComputedStyle(document.documentElement).getPropertyValue('--mono');
+    ctx.fillText('v = ' + Math.hypot(v.vx - v.bvx, v.vy - v.bvy).toFixed(2), drag.ex + 10, drag.ey + 16);
+  }
+  if (drag && drag.mode === 'erase') {
+    ctx.strokeStyle = 'rgba(255,111,145,.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(drag.ex, drag.ey, 26, 0, Math.PI * 2); ctx.stroke();
+  }
+}
+function drawOrbit(b) {
+  const o = orbitInfo(b); if (!o || !o.bound || o.a * S.cam.z > 20000) return;
+  const c = o.around, rx = b.x - c.x, ry = b.y - c.y, vx = b.vx - c.vx, vy = b.vy - c.vy, mu = G * (c.m + b.m);
+  const h = rx * vy - ry * vx, r = Math.hypot(rx, ry);
+  const ex = (vy * h) / mu - rx / r, ey = (-vx * h) / mu - ry / r;
+  const w = Math.atan2(ey, ex), bsemi = o.a * Math.sqrt(1 - o.e * o.e);
+  const fx = c.x - o.a * o.e * Math.cos(w), fy = c.y - o.a * o.e * Math.sin(w);
+  ctx.save(); ctx.strokeStyle = hexA(b.color, .35); ctx.setLineDash([4, 6]); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.ellipse(w2sx(fx), w2sy(fy), o.a * S.cam.z, bsemi * S.cam.z, w, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+}
+function hexA(hex, a) {
+  const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`;
+}
+
+/* ---------- prediction ---------- */
+function launchVelocity() {
+  const dx = (s2wx(drag.sx) - s2wx(drag.ex)), dy = (s2wy(drag.sy) - s2wy(drag.ey));
+  const f = S.follow ? S.bodies.find(b => b.id === S.follow) : null;
+  const bvx = f ? f.vx : 0, bvy = f ? f.vy : 0;
+  return { vx: dx * LAUNCH_K + bvx, vy: dy * LAUNCH_K + bvy, bvx, bvy };
+}
+function predict() {
+  const B = S.bodies, n = B.length;
+  const x = new Float64Array(n + 1), y = new Float64Array(n + 1), vx = new Float64Array(n + 1), vy = new Float64Array(n + 1), m = new Float64Array(n + 1), r = new Float64Array(n + 1), pin = new Uint8Array(n + 1);
+  for (let i = 0; i < n; i++) { x[i] = B[i].x; y[i] = B[i].y; vx[i] = B[i].vx; vy[i] = B[i].vy; m[i] = B[i].m; r[i] = B[i].r; pin[i] = B[i].pinned ? 1 : 0; }
+  const v = launchVelocity();
+  x[n] = drag.wx; y[n] = drag.wy; vx[n] = v.vx; vy[n] = v.vy; m[n] = S.dustMode ? 0 : S.mass; r[n] = radiusFor(S.mass);
+  const N = n + 1, ax = new Float64Array(N), ay = new Float64Array(N);
+  const acc = () => {
+    ax.fill(0); ay.fill(0);
+    for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+      const dx = x[j] - x[i], dy = y[j] - y[i], d2 = dx * dx + dy * dy + EPS2, inv = G / (d2 * Math.sqrt(d2));
+      ax[i] += dx * inv * m[j]; ay[i] += dy * inv * m[j]; ax[j] -= dx * inv * m[i]; ay[j] -= dy * inv * m[i];
+    }
+  };
+  const pts = [x[n], y[n]]; let hit = false;
+  const steps = Math.min(2400, 900 * Math.max(1, SPEEDS[S.speedIdx] / 4)), dt = DT * 2;
+  acc();
+  for (let s = 0; s < steps; s++) {
+    for (let i = 0; i < N; i++) { if (pin[i]) continue; vx[i] += ax[i] * dt / 2; vy[i] += ay[i] * dt / 2; x[i] += vx[i] * dt; y[i] += vy[i] * dt; }
+    acc();
+    for (let i = 0; i < N; i++) { if (pin[i]) continue; vx[i] += ax[i] * dt / 2; vy[i] += ay[i] * dt / 2; }
+    if (s % 3 === 0) pts.push(x[n], y[n]);
+    for (let i = 0; i < n; i++) { const dx = x[i] - x[n], dy = y[i] - y[n], rr = r[i] + r[n] * .5; if (dx * dx + dy * dy < rr * rr) { hit = true; break; } }
+    if (hit) { pts.push(x[n], y[n]); break; }
+  }
+  return { pts, hit };
+}
+
+/* ---------- interaction ---------- */
+const pointers = new Map();
+let spaceDown = false, spaceUsed = false;
+function hitTest(sx, sy) {
+  let best = null, bd = Infinity;
+  for (const b of S.bodies) {
+    const dx = w2sx(b.x) - sx, dy = w2sy(b.y) - sy, d = Math.hypot(dx, dy), rs = Math.max(8, b.r * S.cam.z + 5);
+    if (d < rs && d < bd) { bd = d; best = b; }
+  }
+  return best;
+}
+function select(id) {
+  S.selected = id;
+  const ins = $('#inspector');
+  if (!id) { ins.hidden = true; return; }
+  ins.hidden = false; refreshInspector(true);
+}
+function erase(sx, sy) {
+  const r = 26;
+  for (let i = S.bodies.length - 1; i >= 0; i--) {
+    const b = S.bodies[i];
+    if (Math.hypot(w2sx(b.x) - sx, w2sy(b.y) - sy) < r + b.r * S.cam.z) { if (S.selected === b.id) select(null); if (S.follow === b.id) S.follow = null; S.bodies.splice(i, 1); accDirty = true; S.E0 = null; }
+  }
+  for (let i = 0; i < P.n; i++) if (Math.hypot(w2sx(P.x[i]) - sx, w2sy(P.y[i]) - sy) < r) P.dead[i] = 1;
+  pCompact();
+}
+cv.addEventListener('contextmenu', e => e.preventDefault());
+cv.addEventListener('pointerdown', e => {
+  cv.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, { x: e.offsetX, y: e.offsetY });
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    drag = { mode: 'pinch', d0: Math.hypot(a.x - b.x, a.y - b.y), z0: S.cam.z, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, cx: S.cam.x, cy: S.cam.y };
+    return;
+  }
+  const sx = e.offsetX, sy = e.offsetY;
+  const panIntent = e.button === 1 || e.button === 2 || spaceDown || S.tool === 'pan';
+  if (spaceDown) spaceUsed = true;
+  const hit = e.button === 0 && !spaceDown && S.tool !== 'erase' ? hitTest(sx, sy) : null;
+  if (hit) { select(hit.id); drag = { mode: 'none' }; return; }
+  if (panIntent) { drag = { mode: 'pan', sx, sy, cx: S.cam.x, cy: S.cam.y, moved: false }; cv.classList.add('panning'); return; }
+  if (S.tool === 'erase') { drag = { mode: 'erase', ex: sx, ey: sy }; erase(sx, sy); return; }
+  drag = { mode: 'launch', sx, sy, ex: sx, ey: sy, wx: s2wx(sx), wy: s2wy(sy), moved: false };
+});
+cv.addEventListener('pointermove', e => {
+  const p = pointers.get(e.pointerId);
+  if (p) { p.x = e.offsetX; p.y = e.offsetY; }
+  if (!drag) { const h = hitTest(e.offsetX, e.offsetY); hoverId = h ? h.id : null; cv.style.cursor = h ? 'pointer' : ''; return; }
+  if (drag.mode === 'pinch' && pointers.size >= 2) {
+    const [a, b] = [...pointers.values()];
+    const d = Math.hypot(a.x - b.x, a.y - b.y);
+    S.cam.z = Math.min(40, Math.max(0.02, drag.z0 * d / drag.d0));
+    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    if (!S.follow) { S.cam.x = drag.cx - (mx - drag.mx) / S.cam.z; S.cam.y = drag.cy - (my - drag.my) / S.cam.z; }
+    fieldDirty = true;
+  } else if (drag.mode === 'pan') {
+    if (Math.hypot(e.offsetX - drag.sx, e.offsetY - drag.sy) > 3) { drag.moved = true; S.follow = null; }
+    if (drag.moved) { S.cam.x = drag.cx - (e.offsetX - drag.sx) / S.cam.z; S.cam.y = drag.cy - (e.offsetY - drag.sy) / S.cam.z; }
+  } else if (drag.mode === 'launch') {
+    drag.ex = e.offsetX; drag.ey = e.offsetY;
+    if (Math.hypot(drag.ex - drag.sx, drag.ey - drag.sy) > 5) drag.moved = true;
+    predictDirty = true;
+  } else if (drag.mode === 'erase') {
+    drag.ex = e.offsetX; drag.ey = e.offsetY; erase(drag.ex, drag.ey);
+  }
+});
+function endPointer(e) {
+  pointers.delete(e.pointerId);
+  cv.classList.remove('panning');
+  if (!drag) return;
+  if (drag.mode === 'pinch') { if (pointers.size === 0) drag = null; return; }
+  if (drag.mode === 'pan' && !drag.moved && S.tool === 'pan') select(null);
+  if (drag.mode === 'launch' && e.type === 'pointerup') launch();
+  drag = null; predicted = null;
+}
+cv.addEventListener('pointerup', endPointer);
+cv.addEventListener('pointercancel', endPointer);
+cv.addEventListener('wheel', e => { e.preventDefault(); zoomAt(e.offsetX, e.offsetY, Math.exp(-e.deltaY * 0.0015)); }, { passive: false });
+
+function launch() {
+  let vx, vy;
+  if (!drag.moved) {
+    const c = $('#assist').checked ? dominantAt(drag.wx, drag.wy) : null;
+    if (c) ({ vx, vy } = circularVel(drag.wx, drag.wy, c));
+    else { const f = S.follow ? S.bodies.find(b => b.id === S.follow) : null; vx = f ? f.vx : 0; vy = f ? f.vy : 0; }
+  } else ({ vx, vy } = launchVelocity());
+  if (S.dustMode) {
+    let n = 0;
+    for (let i = 0; i < 80; i++) {
+      const r = Math.sqrt(Math.random()) * 10 / Math.max(.3, S.cam.z), th = Math.random() * Math.PI * 2;
+      if (pAdd(drag.wx + r * Math.cos(th), drag.wy + r * Math.sin(th), vx + rnd(-.05, .05), vy + rnd(-.05, .05), (Math.random() * DUST.length) | 0)) n++;
+    }
+    if (!n) toast('Particle limit reached (' + P_MAX + ')');
+    accDirty = true; return;
+  }
+  const b = addBody({ x: drag.wx, y: drag.wy, vx, vy, m: S.mass, comet: S.cometMode, color: S.cometMode ? '#cfe9ff' : undefined });
+  S.E0 = null;
+  select(b.id);
+}
+
+/* ---------- inspector ---------- */
+let lastIns = 0;
+function refreshInspector(force) {
+  const b = S.bodies.find(x => x.id === S.selected);
+  if (!b) { if (S.selected) select(null); return; }
+  const now = performance.now(); if (!force && now - lastIns < 180) return; lastIns = now;
+  $('#insDot').style.background = b.color; $('#insDot').style.color = b.color;
+  if (document.activeElement !== $('#insName')) $('#insName').value = b.name;
+  if (document.activeElement !== $('#insMass')) $('#insMass').value = Math.log10(b.m);
+  $('#insMassOut').textContent = fmt(b.m);
+  const o = orbitInfo(b), v = Math.hypot(b.vx, b.vy);
+  const rows = [['speed', v.toFixed(3)], ['radius', b.r.toFixed(2)]];
+  if (o) {
+    rows.push(['orbits', o.around.name], ['distance', o.r.toFixed(1)]);
+    if (o.bound) rows.push(['semi-major', o.a.toFixed(1)], ['eccentric.', o.e.toFixed(3)], ['period', o.T.toFixed(0)]);
+    else rows.push(['status', 'escaping']);
+  }
+  $('#insData').replaceChildren(...rows.flatMap(([k, v]) => [h('dt', k), h('dd', String(v))]));
+  $('#insFollow').classList.toggle('on', S.follow === b.id);
+  $('#insPin').classList.toggle('on', b.pinned);
+}
+function h(tag, text) { const el = document.createElement(tag); el.textContent = text; return el; }
+const fmt = m => m >= 100 ? m.toFixed(0) : m >= 1 ? m.toFixed(2) : m.toPrecision(2);
+const selBody = () => S.bodies.find(x => x.id === S.selected);
+$('#insName').addEventListener('input', e => { const b = selBody(); if (b) b.name = e.target.value.slice(0, 24) || b.name; });
+$('#insMass').addEventListener('input', e => { const b = selBody(); if (!b) return; b.m = Math.pow(10, +e.target.value); b.r = radiusFor(b.m); accDirty = true; S.E0 = null; refreshInspector(true); });
+$('#insFollow').addEventListener('click', () => toggleFollow());
+$('#insCirc').addEventListener('click', () => { const b = selBody(); if (!b) return; const c = dominantAt(b.x, b.y, b); if (!c) return toast('Nothing to orbit'); Object.assign(b, circularVel(b.x, b.y, c)); S.E0 = null; toast(b.name + ' now circles ' + c.name); });
+$('#insPin').addEventListener('click', () => { const b = selBody(); if (!b) return; b.pinned = !b.pinned; if (b.pinned) { b.vx = 0; b.vy = 0; } S.E0 = null; refreshInspector(true); });
+$('#insDel').addEventListener('click', deleteSelected);
+$('#insClose').addEventListener('click', () => select(null));
+$('#insRing').addEventListener('click', () => {
+  const b = selBody(); if (!b) return;
+  // stay inside ~40% of the Hill radius so the ring survives the parent's own orbit
+  const c = dominantAt(b.x, b.y, b), hill = c ? Math.hypot(b.x - c.x, b.y - c.y) * Math.cbrt(b.m / (3 * c.m)) : b.r * 20;
+  const r1 = Math.max(b.r * 2.2, Math.min(b.r * 6, hill * .4)), r0 = Math.max(b.r * 1.6, r1 * .6);
+  const before = P.n; disk(b.x, b.y, b.vx, b.vy, b.m, r0, r1, 400, (Math.random() * DUST.length) | 0);
+  accDirty = true; toast(P.n > before ? `${P.n - before} ring particles around ${b.name}` : 'Particle limit reached');
+});
+function deleteSelected() { const b = selBody(); if (!b) return; S.bodies.splice(S.bodies.indexOf(b), 1); if (S.follow === b.id) S.follow = null; select(null); accDirty = true; S.E0 = null; toast('Deleted ' + b.name); }
+function toggleFollow() { const b = selBody(); if (!b) return; S.follow = S.follow === b.id ? null : b.id; if (S.follow) resetTrails(); refreshInspector(true); toast(S.follow ? 'Following ' + b.name : 'Camera released'); }
+
+/* ---------- UI wiring ---------- */
+$$('#presets button').forEach(b => b.addEventListener('click', () => loadPreset(b.dataset.p)));
+function setTool(t) {
+  S.tool = t;
+  $$('#tools button').forEach(b => { const on = b.dataset.t === t; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
+  cv.classList.toggle('pan', t === 'pan'); cv.classList.toggle('erase', t === 'erase');
+}
+$$('#tools button').forEach(b => b.addEventListener('click', () => setTool(b.dataset.t)));
+function setMass(m) {
+  S.dustMode = m === 'dust'; S.cometMode = m === 'comet';
+  if (!S.dustMode) { S.mass = S.cometMode ? .02 : +m; $('#mass').value = Math.log10(S.mass); }
+  $('#massOut').textContent = S.dustMode ? 'dust' : S.cometMode ? 'comet' : fmt(S.mass);
+  $$('#kinds button').forEach(b => b.classList.toggle('on', b.dataset.m === String(m)));
+}
+$$('#kinds button').forEach(b => b.addEventListener('click', () => setMass(b.dataset.m)));
+$('#mass').addEventListener('input', e => { S.dustMode = false; S.cometMode = false; S.mass = +Math.pow(10, +e.target.value).toPrecision(3); $('#massOut').textContent = fmt(S.mass); $$('#kinds button').forEach(b => b.classList.remove('on')); });
+const checks = ['trails', 'labels', 'vectors', 'field', 'merge', 'relTrail', 'zones'];
+function syncChecks() { checks.forEach(k => { $('#' + k).checked = S[k]; }); }
+checks.forEach(k => $('#' + k).addEventListener('change', e => { S[k] = e.target.checked; if (k === 'relTrail') resetTrails(); }));
+$('#trailLen').addEventListener('input', e => { S.trailLen = +e.target.value; $('#trailOut').textContent = S.trailLen; });
+function updateSpeed() { $('#speedLbl').textContent = '×' + SPEEDS[S.speedIdx]; }
+function updatePlay() { $('#play').textContent = S.paused ? '▶' : '❚❚'; $('#play').setAttribute('aria-label', S.paused ? 'Play' : 'Pause'); }
+function updateRev() { $('#rev').classList.toggle('on', S.dir < 0); }
+$('#play').addEventListener('click', () => { S.paused = !S.paused; updatePlay(); });
+$('#stepBtn').addEventListener('click', () => { S.paused = true; updatePlay(); simulate(1); });
+$('#rewind').addEventListener('click', () => rewind(10));
+$('#rev').addEventListener('click', () => { S.dir *= -1; updateRev(); toast(S.dir < 0 ? 'Time running backwards' : 'Time running forwards'); });
+$('#slower').addEventListener('click', () => { S.speedIdx = Math.max(0, S.speedIdx - 1); updateSpeed(); });
+$('#faster').addEventListener('click', () => { S.speedIdx = Math.min(SPEEDS.length - 1, S.speedIdx + 1); updateSpeed(); });
+$('#fit').addEventListener('click', fitView);
+$('#com').addEventListener('click', () => { zeroMomentum(); toast('Total momentum zeroed'); });
+$('#toggle').addEventListener('click', togglePanel);
+function togglePanel() { const p = $('#panel'), h = p.classList.toggle('hidden'); $('#toggle').setAttribute('aria-expanded', !h); }
+$('#helpBtn').addEventListener('click', () => showHelp(true));
+$('#helpClose').addEventListener('click', () => showHelp(false));
+$('#help').addEventListener('click', e => { if (e.target.id === 'help') showHelp(false); });
+function showHelp(on) { $('#help').hidden = !on; if (on) $('#helpClose').focus(); }
+
+/* ---------- save / load ---------- */
+function serialize() {
+  const parts = [];
+  for (let i = 0; i < P.n; i++) parts.push(+P.x[i].toFixed(2), +P.y[i].toFixed(2), +P.vx[i].toFixed(4), +P.vy[i].toFixed(4), P.c[i]);
+  return {
+    v: 1, t: S.t, cam: S.cam,
+    bodies: S.bodies.map(b => ({ name: b.name, x: b.x, y: b.y, vx: b.vx, vy: b.vy, m: b.m, color: b.color, pinned: b.pinned, comet: b.comet || undefined })),
+    particles: parts
+  };
+}
+function deserialize(d) {
+  if (!d || d.v !== 1 || !Array.isArray(d.bodies)) throw new Error('Not an Orrery scene');
+  clearScene();
+  for (const b of d.bodies.slice(0, 400)) {
+    const nums = ['x', 'y', 'vx', 'vy', 'm'].every(k => Number.isFinite(b[k]));
+    if (!nums || b.m <= 0) continue;
+    addBody({ x: b.x, y: b.y, vx: b.vx, vy: b.vy, m: b.m, name: String(b.name || '').slice(0, 24) || undefined, color: /^#[0-9a-f]{6}$/i.test(b.color) ? b.color : undefined, pinned: !!b.pinned, comet: !!b.comet });
+  }
+  const p = Array.isArray(d.particles) ? d.particles : [];
+  for (let i = 0; i + 4 < p.length && P.n < P_MAX; i += 5) if ([0, 1, 2, 3].every(k => Number.isFinite(p[i + k]))) pAdd(p[i], p[i + 1], p[i + 2], p[i + 3], (p[i + 4] | 0) % DUST.length);
+  S.t = Number.isFinite(d.t) ? d.t : 0;
+  if (d.cam && [d.cam.x, d.cam.y, d.cam.z].every(Number.isFinite)) S.cam = { x: d.cam.x, y: d.cam.y, z: Math.min(40, Math.max(.02, d.cam.z)) };
+  accDirty = true; S.E0 = null;
+  $$('#presets button').forEach(b => b.classList.remove('on'));
+}
+$('#qsave').addEventListener('click', () => {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(serialize())); toast('Scene saved to this browser'); }
+  catch (e) { toast('Could not save: ' + e.name); }
+});
+$('#qload').addEventListener('click', () => {
+  try { const s = localStorage.getItem(STORE_KEY); if (!s) return toast('No quick save yet'); deserialize(JSON.parse(s)); toast('Scene restored'); }
+  catch (e) { toast('Load failed: ' + e.message); }
+});
+function download(name, blob) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+$('#exportBtn').addEventListener('click', () => download('orrery-scene.json', new Blob([JSON.stringify(serialize())], { type: 'application/json' })));
+$('#importBtn').addEventListener('click', () => $('#importFile').click());
+$('#importFile').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f) return; if (f.size > 20e6) return toast('File too large');
+  try { deserialize(JSON.parse(await f.text())); toast('Imported ' + f.name); } catch (err) { toast('Import failed: ' + err.message); }
+});
+const b64u = s => btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const unb64u = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0)));
+$('#shareBtn').addEventListener('click', async () => {
+  const d = serialize(); d.particles = [];
+  d.bodies = d.bodies.slice(0, 80).map(b => ({ ...b, x: +b.x.toFixed(2), y: +b.y.toFixed(2), vx: +b.vx.toFixed(5), vy: +b.vy.toFixed(5), m: +b.m.toPrecision(5) }));
+  const h = '#s=' + b64u(JSON.stringify(d));
+  history.replaceState(null, '', h);
+  try { await navigator.clipboard.writeText(location.href); toast('Scene link copied'); } catch (e) { toast('Link is in the address bar'); }
+});
+$('#shot').addEventListener('click', () => cv.toBlob(b => b && download('orrery-' + Date.now() + '.png', b)));
+
+/* ---------- keyboard ---------- */
+addEventListener('keydown', e => {
+  if (e.target.matches('input[type=text]')) return;
+  if (e.key === 'Escape') { if (!$('#help').hidden) showHelp(false); else select(null); return; }
+  if (e.key === ' ') { e.preventDefault(); if (!e.repeat) { spaceDown = true; spaceUsed = false; cv.classList.add('pan'); } return; }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === '.') { S.paused = true; updatePlay(); simulate(1); }
+  else if (k === 'r') $('#rev').click();
+  else if (k === 'b') rewind(10);
+  else if (k === '+' || k === '=') $('#faster').click();
+  else if (k === '-' || k === '_') $('#slower').click();
+  else if (k === 'f') fitView();
+  else if (k === 'g') toggleFollow();
+  else if (k === 'm') $('#com').click();
+  else if (k === 'l') setTool('launch');
+  else if (k === 'p') setTool('pan');
+  else if (k === 'e') setTool('erase');
+  else if (k === 'delete' || k === 'backspace') deleteSelected();
+  else if (k === '?' || k === 'h') showHelp($('#help').hidden);
+  else if (k === 'tab' && !e.shiftKey && document.activeElement === document.body) { e.preventDefault(); togglePanel(); }
+  else if (/^[1-9]$/.test(k)) loadPreset(PRESET_KEYS[+k - 1]);
+});
+addEventListener('keyup', e => {
+  if (e.key === ' ') { spaceDown = false; cv.classList.toggle('pan', S.tool === 'pan'); if (!spaceUsed && !e.target.matches('input,button')) { S.paused = !S.paused; updatePlay(); } }
+});
+
+/* ---------- toast ---------- */
+let toastT = 0;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600); }
+
+/* ---------- loop ---------- */
+let rafId = 0, lastStats = 0, frames = 0, fpsT = performance.now(), fps = 60;
+function simulate(n) {
+  for (let i = 0; i < n; i++) step(DT * S.dir);
+  const ref = S.relTrail && S.follow ? S.bodies.find(b => b.id === S.follow) : null;
+  for (const b of S.bodies) {
+    const i = b.tHead; b.trail[i * 2] = ref ? b.x - ref.x : b.x; b.trail[i * 2 + 1] = ref ? b.y - ref.y : b.y;
+    b.tHead = (i + 1) % 1200; b.tLen = Math.min(1200, b.tLen + 1);
+  }
+}
+function frame(now) {
+  rafId = 0;
+  if (!S.paused) { simulate(SPEEDS[S.speedIdx]); if (++histTick % 30 === 0) pushSnap(); }
+  if (S.follow) { const f = S.bodies.find(b => b.id === S.follow); if (f) { S.cam.x = f.x; S.cam.y = f.y; } else S.follow = null; }
+  render();
+  frames++;
+  if (now - fpsT > 500) { fps = frames * 1000 / (now - fpsT); frames = 0; fpsT = now; }
+  if (now - lastStats > 200) {
+    lastStats = now;
+    const E = energy(); if (S.E0 === null && S.bodies.length > 1) S.E0 = E;
+    const drift = S.E0 ? Math.abs((E - S.E0) / S.E0) * 100 : 0;
+    const st = [['t      ', S.t.toFixed(0) + (S.dir < 0 ? ' ◂' : '')], ['\nbodies ', S.bodies.length], ['  dust ', P.n],
+      ['\nenergy ', E.toFixed(1)], ['  drift ', (drift < 0.001 ? '<0.001' : drift.toFixed(3)) + '%'],
+      ['\nzoom   ', S.cam.z.toFixed(2) + '×'], ['  fps ', fps.toFixed(0)]];
+    $('#stats').replaceChildren(...st.flatMap(([k, v]) => [k, h('b', String(v))]));
+    if (S.selected) refreshInspector();
+  }
+  schedule();
+}
+function schedule() { if (!rafId && !document.hidden) rafId = requestAnimationFrame(frame); }
+document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelAnimationFrame(rafId); rafId = 0; } else schedule(); });
+
+function resize() {
+  const wasEmpty = !W || !H;
+  W = innerWidth; H = innerHeight;
+  if (wasEmpty && W && H && S.bodies.length && !S.follow) requestAnimationFrame(fitView);
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  fieldDirty = true;
+}
+let resizeQ = 0;
+addEventListener('resize', () => { if (!resizeQ) resizeQ = requestAnimationFrame(() => { resizeQ = 0; resize(); }); }, { passive: true });
+resize();
+setMass('1');
+if (innerWidth < 720) togglePanel();
+let fromLink = false;
+if (location.hash.startsWith('#s=')) {
+  try { deserialize(JSON.parse(unb64u(location.hash.slice(3)))); fromLink = true; requestAnimationFrame(fitView); toast('Scene loaded from link'); }
+  catch (e) { toast('Could not read scene link'); }
+}
+if (!fromLink) loadPreset('solar');
+schedule();
+</script>
+</body>
+</html>

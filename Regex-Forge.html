@@ -1,0 +1,1131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; worker-src blob:; style-src 'unsafe-inline'; img-src data:; connect-src 'none'">
+<meta name="theme-color" content="#101214">
+<title>Regex Forge — Regular Expression Workbench</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101214'/%3E%3Ctext x='32' y='43' font-family='monospace' font-size='30' font-weight='700' text-anchor='middle' fill='%23c6f432'%3E.*%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0e1012; --bg2:#15181b; --bg3:#1b1f23; --line:#262b31; --line2:#333a42;
+  --ink:#e4e7ea; --mute:#8a939c; --dim:#5d656e;
+  --lime:#c6f432; --cyan:#4fd6ff; --pink:#ff6fae; --amber:#ffc24b; --violet:#b69cff; --green:#56e39f; --red:#ff5d5d; --orange:#ff9656;
+  --mono:"JetBrains Mono","Cascadia Code","Cascadia Mono","SF Mono",ui-monospace,Consolas,monospace;
+  --sans:"Inter","Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;
+  --m1:rgba(198,244,50,.28); --m2:rgba(79,214,255,.28);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--sans)}
+body{min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+a{color:var(--cyan)}
+.app{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;max-width:1440px;margin:0 auto;padding:18px clamp(12px,2vw,26px) 40px}
+header.bar{grid-column:1/-1;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font:800 20px/1 var(--sans);letter-spacing:-.02em}
+.brand b{font:700 17px var(--mono);color:#101214;background:var(--lime);border-radius:8px;padding:5px 8px}
+.brand small{display:block;font:500 11px var(--mono);color:var(--mute);letter-spacing:.04em;margin-top:3px}
+header .sp{flex:1}
+.btn{background:var(--bg3);border:1px solid var(--line2);border-radius:9px;padding:7px 12px;transition:background .12s,border-color .12s}
+.btn:hover{background:#232830;border-color:#46505b}
+.btn.pri{background:var(--lime);color:#101214;border-color:var(--lime);font-weight:600}
+.btn.sm{padding:4px 9px;font-size:12.5px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:14px}
+.lbl{font:600 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.lbl .sp{flex:1}
+.lbl output{letter-spacing:0;text-transform:none;font-size:12px;color:var(--ink)}
+
+/* pattern row */
+.pattern{display:flex;align-items:stretch;background:var(--bg);border:1px solid var(--line2);border-radius:11px;overflow:hidden;transition:border-color .15s}
+.pattern:focus-within{border-color:var(--lime)}
+.pattern.bad{border-color:var(--red)}
+.slash{font:500 20px/1 var(--mono);color:var(--dim);padding:14px 4px 0 12px;user-select:none}
+.slash.r{padding:14px 8px 0 4px}
+.hlwrap{position:relative;flex:1;min-width:0}
+.hl,.hlwrap textarea{margin:0;border:0;padding:12px 2px;font:500 17px/1.55 var(--mono);white-space:pre-wrap;word-break:break-all;overflow-wrap:anywhere;letter-spacing:0;tab-size:4}
+.hl{position:absolute;inset:0;pointer-events:none;color:var(--ink);overflow:hidden}
+.hlwrap textarea{position:relative;display:block;width:100%;background:transparent;color:transparent;caret-color:var(--lime);resize:none;outline:none;min-height:52px;overflow:hidden}
+.hlwrap textarea::selection{background:rgba(198,244,50,.25);color:transparent}
+.flags{display:flex;align-items:center;gap:2px;padding:0 8px;border-left:1px solid var(--line)}
+.flag{font:600 13px var(--mono);width:26px;height:28px;border-radius:7px;border:1px solid transparent;background:transparent;color:var(--dim)}
+.flag.on{color:#101214;background:var(--lime)}
+.flag:hover:not(.on){color:var(--ink);border-color:var(--line2)}
+.status{display:flex;gap:14px;align-items:center;font:12.5px var(--mono);color:var(--mute);margin:8px 2px 0;min-height:20px;flex-wrap:wrap}
+.status .err{color:var(--red)}
+.status .ok{color:var(--green)}
+.status .warn{color:var(--amber)}
+/* token colors */
+.t-grp{color:var(--cyan)} .t-q{color:var(--pink)} .t-cls{color:var(--amber)} .t-rng{color:var(--amber)} .t-esc{color:var(--violet)}
+.t-anc{color:var(--lime)} .t-alt{color:var(--orange);font-weight:700} .t-dot{color:var(--violet)} .t-ref{color:var(--green)} .t-err{color:#fff;background:var(--red);border-radius:3px}
+.t-hi{background:rgba(255,255,255,.14);border-radius:3px;box-shadow:0 0 0 1px rgba(255,255,255,.25)}
+
+/* test text */
+.testwrap{position:relative;background:var(--bg);border:1px solid var(--line2);border-radius:11px;overflow:auto;max-height:46vh;min-height:170px}
+.testwrap:focus-within{border-color:var(--line2)}
+.testwrap .hl,.testwrap textarea{font:14px/1.6 var(--mono);padding:12px 14px;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;margin:0;border:0}
+.testwrap .hl{position:absolute;left:0;right:0;top:0;min-height:100%;color:transparent}
+.testwrap textarea{position:relative;display:block;width:100%;min-height:170px;background:transparent;color:var(--ink);caret-color:var(--lime);resize:none;outline:none;overflow:hidden}
+.testwrap mark{color:transparent;border-radius:3px;background:var(--m1);box-shadow:0 -1px 0 rgba(198,244,50,.6) inset}
+.testwrap mark.alt{background:var(--m2);box-shadow:0 -1px 0 rgba(79,214,255,.6) inset}
+.testwrap mark.z{background:none;box-shadow:none;border-left:2px solid var(--pink);margin-left:-1px}
+.testwrap mark.sel{background:rgba(255,255,255,.1);box-shadow:0 0 0 1px #fff inset}
+.testwrap mark .g{border-radius:2px}
+.g1{background:rgba(255,111,174,.45)} .g2{background:rgba(255,194,75,.45)} .g3{background:rgba(182,156,255,.5)} .g4{background:rgba(86,227,159,.45)} .g5{background:rgba(255,150,86,.45)} .g6{background:rgba(79,214,255,.45)}
+
+/* tabs */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:-4px -14px 12px;padding:0 10px;overflow-x:auto}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:10px 12px;color:var(--mute);font-weight:600;font-size:13px;white-space:nowrap}
+.tab[aria-selected=true]{color:var(--ink);border-bottom-color:var(--lime)}
+.tab .n{font:600 11px var(--mono);background:var(--bg3);border-radius:10px;padding:1px 7px;margin-left:6px;color:var(--mute)}
+.panel[hidden]{display:none}
+.stack{display:grid;gap:16px;grid-template-columns:minmax(0,1fr);min-width:0}
+.card{min-width:0}
+
+/* matches */
+.mlist{display:grid;gap:6px;max-height:420px;overflow:auto;padding-right:4px}
+.mrow{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer;text-align:left;width:100%}
+.mrow:hover,.mrow.sel{border-color:var(--lime)}
+.mrow .ix{font:600 11px var(--mono);color:var(--dim)}
+.mrow .mt{font:13px var(--mono);word-break:break-all}
+.mrow .mt q{quotes:none;color:var(--lime)}
+.mrow .grps{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.chip{font:12px var(--mono);border-radius:6px;padding:1px 6px;background:var(--bg3);color:var(--mute)}
+.chip b{color:var(--ink);font-weight:500}
+.ws{color:var(--dim)}
+.empty{color:var(--mute);font-size:13px;padding:10px 2px}
+
+/* explain */
+.explain{font:13px/1.55 var(--sans);display:grid;gap:2px}
+.ex{display:flex;gap:10px;align-items:baseline;padding:3px 8px;border-radius:7px;cursor:default}
+.ex:hover{background:var(--bg3)}
+.ex code{font:600 12.5px var(--mono);white-space:pre;flex:none;max-width:45%;overflow:hidden;text-overflow:ellipsis}
+.ex span{color:#c8ced4}
+/* railroad */
+#rr{overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:10px;margin-top:12px}
+#rr svg{display:block}
+#rr text{font:12px var(--mono)}
+
+/* replace / code */
+.field{width:100%;background:var(--bg);border:1px solid var(--line2);border-radius:9px;padding:9px 11px;font:14px var(--mono);outline:none}
+.field:focus{border-color:var(--lime)}
+pre.out{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:13.5px/1.6 var(--mono);white-space:pre-wrap;word-break:break-word;margin:10px 0 0;max-height:360px;overflow:auto}
+.codetabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.codetabs button{font:600 12px var(--mono)}
+.codetabs button.on{background:var(--lime);color:#101214;border-color:var(--lime)}
+.note{font-size:12.5px;color:var(--amber);margin-top:8px}
+
+/* tests */
+.trow{display:grid;grid-template-columns:1fr 130px 70px 30px;gap:8px;align-items:center;margin-bottom:6px}
+.trow input{background:var(--bg);border:1px solid var(--line2);border-radius:8px;padding:7px 9px;font:13px var(--mono);outline:none}
+.trow select{background:var(--bg);border:1px solid var(--line2);border-radius:8px;padding:6px;font-size:12.5px}
+.badge{font:700 11px var(--mono);border-radius:6px;padding:4px 0;text-align:center}
+.badge.pass{background:rgba(86,227,159,.16);color:var(--green)}
+.badge.fail{background:rgba(255,93,93,.16);color:var(--red)}
+.x{background:none;border:0;color:var(--dim);font-size:16px}
+.x:hover{color:var(--red)}
+
+/* sidebar */
+aside{display:grid;gap:16px;align-content:start;grid-template-columns:minmax(0,1fr);min-width:0}
+.lib{display:grid;gap:4px;max-height:330px;overflow:auto}
+.libitem{display:grid;gap:1px;text-align:left;background:none;border:1px solid transparent;border-radius:9px;padding:7px 9px}
+.libitem:hover{background:var(--bg3);border-color:var(--line2)}
+.libitem b{font-weight:600;font-size:13px}
+.libitem code{font:11.5px var(--mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#libSearch{margin-bottom:8px}
+.cheat{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:12.5px}
+.cheat button{font:600 12.5px var(--mono);background:var(--bg3);border:1px solid var(--line2);border-radius:6px;padding:1px 6px;text-align:center;color:var(--lime)}
+.cheat span{color:#b8c0c8;align-self:center}
+.cheat h4{grid-column:1/-1;margin:8px 0 2px;font:600 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.saved{display:grid;gap:4px}
+.saved .it{display:flex;gap:6px;align-items:center}
+.saved .it button:first-child{flex:1;text-align:left;background:none;border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.saved .it button:first-child:hover{border-color:var(--lime)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);background:var(--lime);color:#101214;font:600 13px var(--sans);padding:9px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:50}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.tip{position:fixed;z-index:60;max-width:320px;background:#050607;border:1px solid var(--line2);border-radius:9px;padding:8px 10px;font-size:12.5px;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.tip code{font:600 12px var(--mono);color:var(--lime)}
+.tip[hidden]{display:none}
+@media (max-width:980px){.app{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){
+  .trow{grid-template-columns:1fr 100px 56px 26px}
+  .slash{display:none}
+  .pattern{flex-wrap:wrap}
+  .hlwrap{flex-basis:100%;padding:0 10px}
+  .flags{flex-basis:100%;border-left:0;border-top:1px solid var(--line);padding:6px 8px;justify-content:space-between}
+  .ex code{max-width:38%}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div class="brand"><b>/.*/</b><div>Regex Forge<small>test · explain · visualize · export</small></div></div>
+    <span class="sp"></span>
+    <button class="btn sm" id="shareB" title="Copy a link containing this pattern and text">Copy share link</button>
+    <button class="btn sm" id="saveB">Save pattern</button>
+  </header>
+
+  <main class="stack">
+    <section class="card">
+      <div class="lbl">Pattern <span class="sp"></span><output id="grpInfo"></output></div>
+      <div class="pattern" id="patBox">
+        <span class="slash" aria-hidden="true">/</span>
+        <div class="hlwrap"><pre class="hl" id="patHl" aria-hidden="true"></pre><textarea id="pat" rows="1" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Regular expression pattern"></textarea></div>
+        <span class="slash r" aria-hidden="true">/</span>
+        <div class="flags" id="flags" role="group" aria-label="Flags"></div>
+      </div>
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="card">
+      <div class="lbl">Test string <span class="sp"></span><output id="textInfo"></output></div>
+      <div class="testwrap" id="testWrap"><pre class="hl" id="textHl" aria-hidden="true"></pre><textarea id="text" spellcheck="false" aria-label="Test string"></textarea></div>
+    </section>
+
+    <section class="card">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" aria-selected="true" data-tab="matches">Matches<span class="n" id="mCount">0</span></button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="explain">Explain</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="replace">Replace</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="tests">Unit tests<span class="n" id="tCount">0/0</span></button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="code">Code</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="examples">Examples</button>
+      </div>
+      <div class="panel" id="p-matches" role="tabpanel"><div class="mlist" id="mlist"></div></div>
+      <div class="panel" id="p-explain" role="tabpanel" hidden>
+        <div class="explain" id="explain"></div>
+        <div class="lbl" style="margin-top:16px">Railroad diagram</div>
+        <div id="rr"></div>
+      </div>
+      <div class="panel" id="p-replace" role="tabpanel" hidden>
+        <div class="codetabs" id="rmode" role="group" aria-label="Mode"><button class="btn sm on" data-m="replace">Replace</button><button class="btn sm" data-m="split">Split</button></div>
+        <input class="field" id="repl" placeholder="Replacement — use $1, $<name>, $&, $`, $'" spellcheck="false" aria-label="Replacement string">
+        <pre class="out" id="replOut"></pre>
+        <div id="splitOut" class="mlist" hidden style="margin-top:10px"></div>
+        <div style="margin-top:8px"><button class="btn sm" id="copyRepl">Copy result</button></div>
+      </div>
+      <div class="panel" id="p-tests" role="tabpanel" hidden>
+        <div id="tests"></div>
+        <button class="btn sm" id="addTest">+ Add test</button>
+        <button class="btn sm" id="addFromSel" title="Add each line of the test string as a 'should match' test">+ Lines as tests</button>
+      </div>
+      <div class="panel" id="p-examples" role="tabpanel" hidden>
+        <p style="margin:0 0 10px;color:var(--mute);font-size:13px">Strings generated <i>from</i> your pattern — handy for seeding test data or spotting what it really accepts. Each one is re-checked against the regex in a sandboxed worker.</p>
+        <div class="row" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+          <button class="btn sm pri" id="genEx">Generate 12</button>
+          <button class="btn sm" id="exToText">Append to test string</button>
+          <button class="btn sm" id="exToTests">Add all as tests</button>
+        </div>
+        <div id="exList" class="mlist"></div>
+      </div>
+      <div class="panel" id="p-code" role="tabpanel" hidden>
+        <div class="codetabs" id="langs"></div>
+        <pre class="out" id="codeOut"></pre>
+        <div class="note" id="codeNote"></div>
+        <div style="margin-top:8px"><button class="btn sm" id="copyCode">Copy code</button></div>
+      </div>
+    </section>
+  </main>
+
+  <aside>
+    <section class="card">
+      <div class="lbl">Library</div>
+      <input class="field" id="libSearch" placeholder="Search patterns…" aria-label="Search pattern library">
+      <div class="lib" id="lib"></div>
+    </section>
+    <section class="card">
+      <div class="lbl">Saved <span class="sp"></span></div>
+      <div class="saved" id="saved"></div>
+    </section>
+    <section class="card">
+      <div class="lbl">Cheatsheet · click to insert</div>
+      <div class="cheat" id="cheat"></div>
+    </section>
+  </aside>
+</div>
+<div class="tip" id="tip" hidden></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const STORE = 'regexforge.v1';
+function el(tag, attrs = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const k of kids.flat()) if (k != null && k !== false) e.append(k);
+  return e;
+}
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+/* ===================== state ===================== */
+const FLAGS = [
+  ['g', 'global — find all matches'], ['i', 'ignoreCase'], ['m', 'multiline — ^ and $ match at line breaks'], ['s', 'dotAll — . matches newlines'],
+  ['u', 'unicode'], ['y', 'sticky — match only at lastIndex'], ['d', 'hasIndices — report group positions'], ['v', 'unicodeSets — set operations like [\\p{L}--[a-z]] (replaces u)']
+];
+let st = {
+  src: '(?<year>\\d{4})-(?<month>0[1-9]|1[0-2])-(?<day>\\d{2})', flags: 'gm',
+  text: 'Release notes\n2024-03-15  Initial launch\n2024-13-01  (invalid month, should not match)\n2025-07-04  Fireworks patch\nDeadline: 2026-11-30',
+  repl: '$<day>/$<month>/$<year>',
+  tests: [{ s: '1999-12-31', e: 1 }, { s: '1999-00-31', e: 0 }, { s: 'on 2020-02-29!', e: 1 }]
+};
+let saved = [];
+try { const s = JSON.parse(localStorage.getItem(STORE) || 'null'); if (s && typeof s === 'object') { if (s.cur) st = { ...st, ...sanitize(s.cur) }; if (Array.isArray(s.saved)) saved = s.saved.map(sanitize).filter(x => x.name).slice(0, 100); } } catch (e) { /* ignore */ }
+function sanitize(o) {
+  o = o || {};
+  return {
+    name: typeof o.name === 'string' ? o.name.slice(0, 60) : undefined,
+    src: String(o.src ?? ''), flags: String(o.flags ?? '').replace(/[^gimsuydv]/g, '').split('').filter((c, i, a) => a.indexOf(c) === i).join(''),
+    text: String(o.text ?? '').slice(0, 200000), repl: String(o.repl ?? ''),
+    tests: Array.isArray(o.tests) ? o.tests.slice(0, 200).map(t => ({ s: String(t && t.s || ''), e: t && t.e ? 1 : 0 })) : []
+  };
+}
+const persist = debounce(() => { try { localStorage.setItem(STORE, JSON.stringify({ cur: st, saved })); } catch (e) { /* storage unavailable */ } }, 300);
+
+/* ===================== parser ===================== */
+const ESC = { d: 'a digit (0–9)', D: 'a non-digit', w: 'a word character [A-Za-z0-9_]', W: 'a non-word character', s: 'whitespace', S: 'a non-whitespace character', t: 'a tab', n: 'a newline', r: 'a carriage return', v: 'a vertical tab', f: 'a form feed' };
+function parse(src, flags) {
+  let i = 0, groupCount = 0; const toks = [], errs = [], names = [];
+  const tok = (s, e, cls, desc) => toks.push({ s, e, cls, desc });
+  function parseAlt(depth) {
+    const s = i, alts = [parseSeq(depth)];
+    while (src[i] === '|') { tok(i, i + 1, 't-alt', '<b>|</b> — alternation: match the left side <i>or</i> the right side'); i++; alts.push(parseSeq(depth)); }
+    return alts.length === 1 ? alts[0] : { type: 'alt', alts, s, e: i };
+  }
+  function parseSeq(depth) {
+    const s = i, items = [];
+    while (i < src.length && src[i] !== '|') {
+      if (src[i] === ')') { if (depth > 0) break; tok(i, i + 1, 't-err', 'Unmatched closing parenthesis'); errs.push('Unmatched “)” at ' + i); i++; continue; }
+      if ('*+?'.includes(src[i]) || (src[i] === '{' && /^\{\d+(,\d*)?\}/.test(src.slice(i)))) {
+        const m = src[i] === '{' ? /^\{\d+(,\d*)?\}/.exec(src.slice(i))[0] : src[i];
+        tok(i, i + m.length, 't-err', 'Nothing to repeat — a quantifier needs something before it'); errs.push('Nothing to repeat at ' + i); i += m.length; continue;
+      }
+      let atom = parseAtom(depth);
+      atom = parseQuant(atom);
+      items.push(atom);
+    }
+    return { type: 'seq', items, s, e: i };
+  }
+  function parseEscape(inClass) {
+    const s = i; i++;
+    const c = src[i];
+    if (c === undefined) { errs.push('Trailing backslash'); return { type: 'char', v: '\\', s, e: i, desc: 'Trailing backslash (error)', err: true }; }
+    if (!inClass && (c === 'b' || c === 'B')) { i++; return { type: 'anchor', v: '\\' + c, s, e: i, desc: c === 'b' ? 'a word boundary' : 'a position that is NOT a word boundary' }; }
+    if (inClass && c === 'b') { i++; return { type: 'esc', v: '\\b', s, e: i, desc: 'a backspace character' }; }
+    if (ESC[c]) { i++; return { type: 'esc', v: '\\' + c, s, e: i, desc: ESC[c] }; }
+    if (c === '0' && !/\d/.test(src[i + 1] || '')) { i++; return { type: 'esc', v: '\\0', s, e: i, desc: 'the NUL character' }; }
+    let m;
+    if (c === 'x' && (m = /^x[0-9a-fA-F]{2}/.exec(src.slice(i)))) { i += m[0].length; const ch = String.fromCharCode(parseInt(m[0].slice(1), 16)); return { type: 'esc', v: '\\' + m[0], s, e: i, desc: `the character ${show(ch)} (hex ${m[0].slice(1)})`, lit: ch }; }
+    if (c === 'u' && (m = /^u\{[0-9a-fA-F]{1,6}\}/.exec(src.slice(i)))) { i += m[0].length; const cp = parseInt(m[0].slice(2, -1), 16); return { type: 'esc', v: '\\' + m[0], s, e: i, desc: `code point U+${cp.toString(16).toUpperCase()} ${cp <= 0x10ffff ? show(String.fromCodePoint(cp)) : ''}`, lit: cp <= 0x10ffff ? String.fromCodePoint(cp) : '' }; }
+    if (c === 'u' && (m = /^u[0-9a-fA-F]{4}/.exec(src.slice(i)))) { i += m[0].length; const ch = String.fromCharCode(parseInt(m[0].slice(1), 16)); return { type: 'esc', v: '\\' + m[0], s, e: i, desc: `the character ${show(ch)} (U+${m[0].slice(1).toUpperCase()})`, lit: ch }; }
+    if ((c === 'p' || c === 'P') && (m = /^[pP]\{[\w=]+\}/.exec(src.slice(i)))) { i += m[0].length; return { type: 'esc', v: '\\' + m[0], s, e: i, desc: `${c === 'P' ? 'NOT ' : ''}a character with Unicode property ${m[0].slice(2, -1)}` }; }
+    if (c === 'c' && /[A-Za-z]/.test(src[i + 1] || '')) { i += 2; return { type: 'esc', v: '\\c' + src[i - 1], s, e: i, desc: `control character Ctrl-${src[i - 1].toUpperCase()}` }; }
+    if (!inClass && /[1-9]/.test(c)) { m = /^\d+/.exec(src.slice(i)); i += m[0].length; return { type: 'backref', v: '\\' + m[0], num: +m[0], s, e: i, desc: `the same text as captured by group #${m[0]}` }; }
+    if (!inClass && c === 'k' && (m = /^k<([A-Za-z_$][\w$]*)>/.exec(src.slice(i)))) { i += m[0].length; return { type: 'backref', v: '\\' + m[0], name: m[1], s, e: i, desc: `the same text as captured by group “${m[1]}”` }; }
+    i++;
+    return { type: 'char', v: c, s, e: i, desc: `the literal character ${show(c)}`, lit: c, escaped: true };
+  }
+  function parseAtom(depth) {
+    const c = src[i], s = i;
+    if (c === '(') {
+      i++; let kind = 'cap', name = null, m;
+      if (src.startsWith('?:', i)) { kind = 'noncap'; i += 2; }
+      else if (src.startsWith('?=', i)) { kind = 'la'; i += 2; }
+      else if (src.startsWith('?!', i)) { kind = 'nla'; i += 2; }
+      else if (src.startsWith('?<=', i)) { kind = 'lb'; i += 3; }
+      else if (src.startsWith('?<!', i)) { kind = 'nlb'; i += 3; }
+      else if ((m = /^\?<([A-Za-z_$][\w$]*)>/.exec(src.slice(i)))) { kind = 'named'; name = m[1]; i += m[0].length; if (names.includes(name)) errs.push(`Duplicate group name “${name}”`); names.push(name); }
+      else if ((m = /^\?[ims]*(-[ims]+)?:/.exec(src.slice(i)))) { kind = 'mod'; name = m[0].slice(1, -1); i += m[0].length; }
+      else if (src[i] === '?') { errs.push('Invalid group at ' + s); tok(s, i + 1, 't-err', 'Invalid group syntax'); i++; }
+      const num = kind === 'cap' || kind === 'named' ? ++groupCount : null;
+      const g = { type: 'group', kind, name, num, s, e: 0 };
+      tok(s, i, 't-grp', groupDesc(g));
+      g.body = parseAlt(depth + 1);
+      if (src[i] === ')') { tok(i, i + 1, 't-grp', 'End of ' + groupDesc(g).replace(/^<b>.*?<\/b> — /, '')); i++; }
+      else { errs.push('Unclosed group starting at ' + s); tok(s, s + 1, 't-err', 'This group is never closed'); }
+      g.e = i; g.head = [s, s + (i > s ? 1 : 0)];
+      return g;
+    }
+    if (c === '[') {
+      i++; let neg = false;
+      if (src[i] === '^') { neg = true; i++; }
+      tok(s, i, 't-cls', neg ? '<b>[^</b> — negated character class: any ONE character that is NOT listed' : '<b>[</b> — character class: any ONE of the listed characters');
+      const items = [];
+      while (i < src.length && src[i] !== ']') {
+        const a = src[i] === '\\' ? parseEscape(true) : { type: 'char', v: src[i], s: i, e: ++i, lit: src[i - 1], desc: `the character ${show(src[i - 1])}` };
+        if (src[i] === '-' && src[i + 1] !== undefined && src[i + 1] !== ']') {
+          i++;
+          const b = src[i] === '\\' ? parseEscape(true) : { type: 'char', v: src[i], s: i, e: ++i, lit: src[i - 1] };
+          const bad = a.lit != null && b.lit != null && a.lit.codePointAt(0) > b.lit.codePointAt(0);
+          if (bad) errs.push(`Range out of order: ${a.v}-${b.v}`);
+          items.push({ type: 'range', from: a, to: b, s: a.s, e: b.e });
+          tok(a.s, b.e, bad ? 't-err' : 't-rng', bad ? 'Range out of order' : `a character in the range ${show(a.lit ?? a.v)} to ${show(b.lit ?? b.v)}`);
+        } else { items.push(a); tok(a.s, a.e, a.type === 'esc' ? 't-esc' : 't-cls', a.desc); }
+      }
+      if (src[i] === ']') { tok(i, i + 1, 't-cls', 'End of character class'); i++; }
+      else { errs.push('Unclosed character class'); tok(s, s + 1, 't-err', 'Character class is never closed'); }
+      return { type: 'class', neg, items, s, e: i };
+    }
+    if (c === '\\') { const e = parseEscape(false); tok(e.s, e.e, e.type === 'anchor' ? 't-anc' : e.type === 'backref' ? 't-ref' : e.err ? 't-err' : e.type === 'esc' ? 't-esc' : 't-esc', `<b>${esc(e.v)}</b> — ${e.desc}`); return e; }
+    if (c === '.') { i++; const d = flags.includes('s') ? 'any character, including line breaks' : 'any character except line breaks'; tok(s, i, 't-dot', `<b>.</b> — ${d}`); return { type: 'dot', s, e: i, desc: d }; }
+    if (c === '^' || c === '$') {
+      i++; const m = flags.includes('m');
+      const d = c === '^' ? (m ? 'the start of a line' : 'the start of the input') : (m ? 'the end of a line' : 'the end of the input');
+      tok(s, i, 't-anc', `<b>${c}</b> — asserts ${d}`); return { type: 'anchor', v: c, s, e: i, desc: d };
+    }
+    // literal (handle surrogate pairs)
+    const cp = src.codePointAt(i), ch = String.fromCodePoint(cp); i += ch.length;
+    return { type: 'char', v: ch, lit: ch, s, e: i, desc: `the character ${show(ch)}` };
+  }
+  function parseQuant(atom) {
+    const s = i, c = src[i]; let min, max, m;
+    if (c === '*') { min = 0; max = Infinity; i++; }
+    else if (c === '+') { min = 1; max = Infinity; i++; }
+    else if (c === '?') { min = 0; max = 1; i++; }
+    else if (c === '{' && (m = /^\{(\d+)(,(\d*))?\}/.exec(src.slice(i)))) { min = +m[1]; max = m[2] ? (m[3] === '' ? Infinity : +m[3]) : min; i += m[0].length; if (max < min) errs.push('Quantifier range out of order'); }
+    else return atom;
+    let lazy = false; if (src[i] === '?') { lazy = true; i++; }
+    const q = { type: 'quant', min, max, lazy, body: atom, s: atom.s, e: i, qs: s };
+    tok(s, i, 't-q', `<b>${esc(src.slice(s, i))}</b> — ${quantDesc(q)}`);
+    if (atom.type === 'anchor' || (atom.type === 'group' && /la|lb/.test(atom.kind))) q.warn = 'Quantifying an assertion has no useful effect';
+    if (i < src.length && '*+'.includes(src[i])) { tok(i, i + 1, 't-err', 'Nothing to repeat (JavaScript has no possessive quantifiers)'); errs.push('Nothing to repeat at ' + i); i++; }
+    return q;
+  }
+  const ast = parseAlt(0);
+  return { ast, toks, errs, groupCount, names };
+}
+function groupDesc(g) {
+  const map = { cap: `capturing group #${g.num}`, named: `named capturing group “${g.name}” (#${g.num})`, noncap: 'non-capturing group', la: 'positive lookahead — asserts what follows matches, without consuming it', nla: 'negative lookahead — asserts what follows does NOT match', lb: 'positive lookbehind — asserts what precedes matches', nlb: 'negative lookbehind — asserts what precedes does NOT match', mod: `modifier group (${g.name})` };
+  return `<b>(</b> — ${map[g.kind]}`;
+}
+function quantDesc(q) {
+  const { min, max, lazy } = q;
+  let d = min === 0 && max === 1 ? 'optional (zero or one time)' : min === 0 && max === Infinity ? 'zero or more times' : min === 1 && max === Infinity ? 'one or more times' :
+    min === max ? `exactly ${min} time${min === 1 ? '' : 's'}` : max === Infinity ? `${min} or more times` : `between ${min} and ${max} times`;
+  return d + (min === max ? '' : lazy ? ', as FEW as possible (lazy)' : ', as many as possible (greedy)');
+}
+function show(ch) {
+  const names = { ' ': 'space', '\n': 'newline', '\t': 'tab', '\r': 'carriage return' };
+  return names[ch] ? `‹${names[ch]}›` : `“${ch}”`;
+}
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* ===================== explanation ===================== */
+function explainNode(n, depth, out, flags) {
+  const add = (text, node, cls) => out.push({ depth, text, s: node.s, e: node.e, cls });
+  switch (n.type) {
+    case 'seq': {
+      let buf = null;
+      const flush = () => { if (buf) { out.push({ depth, text: buf.items.length > 1 ? `the literal text “${buf.items.map(x => x.lit).join('')}”` : buf.items[0].desc, s: buf.s, e: buf.e, cls: 't-lit' }); buf = null; } };
+      for (const it of n.items) {
+        if (it.type === 'char' && it.lit != null) { if (!buf) buf = { items: [], s: it.s, e: it.e }; buf.items.push(it); buf.e = it.e; }
+        else { flush(); explainNode(it, depth, out, flags); }
+      }
+      flush();
+      if (!n.items.length) add('(empty — matches the empty string)', n, 't-dim');
+      break;
+    }
+    case 'alt':
+      add(`Either of ${n.alts.length} alternatives:`, n, 't-alt');
+      n.alts.forEach((a, k) => { out.push({ depth: depth + 1, text: `Option ${k + 1}:`, s: a.s, e: a.e, cls: 't-alt' }); explainNode(a, depth + 2, out, flags); });
+      break;
+    case 'group':
+      add(groupDesc(n).replace(/^<b>\(<\/b> — /, '').replace(/^./, c => c.toUpperCase()) + ':', n, 't-grp');
+      explainNode(n.body, depth + 1, out, flags);
+      break;
+    case 'quant': {
+      const b = n.body, simple = ['char', 'esc', 'dot', 'class', 'backref'].includes(b.type);
+      if (simple) add(`${cap(quantDesc(n))}: ${atomText(b)}`, n, 't-q');
+      else { add(`${cap(quantDesc(n))}:`, n, 't-q'); explainNode(b, depth + 1, out, flags); }
+      if (n.warn) add('⚠ ' + n.warn, n, 't-warn');
+      break;
+    }
+    case 'class': add(cap(atomText(n)), n, 't-cls'); break;
+    case 'anchor': add(n.v === '^' || n.v === '$' ? `Assert ${n.desc}` : `Assert ${n.desc}`, n, 't-anc'); break;
+    case 'backref': add(cap(n.desc), n, 't-ref'); break;
+    default: add(cap(n.desc || n.v), n, n.type === 'dot' ? 't-dot' : 't-esc');
+  }
+}
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+function atomText(n) {
+  if (n.type === 'class') {
+    const parts = n.items.map(it => it.type === 'range' ? `${it.from.lit ?? it.from.v}–${it.to.lit ?? it.to.v}` : it.type === 'esc' ? it.desc : show(it.lit ?? it.v));
+    return `${n.neg ? 'any character EXCEPT' : 'one of'}: ${parts.join(', ') || '(nothing)'}`;
+  }
+  return n.desc || n.v;
+}
+
+/* ===================== ReDoS analyzer =====================
+   Static heuristics for catastrophic backtracking. A pattern is risky when the engine can
+   split the same input between two quantifiers in many ways:
+   1. nested unbounded quantifiers — (a+)+, (\w*)*  → exponential
+   2. a repeated alternation whose branches can start with the same char — (a|ab)*  → exponential
+   3. adjacent unbounded quantifiers over overlapping sets — \d+\d+, .*.*  → polynomial
+   "Overlap" is decided by testing each atom against a pool of sample characters. */
+const ANALYZE_POOL = 'aAzZ09_ -.,@#\t\n/éΩ';
+function atomTester(a) {
+  try { const re = new RegExp('^(?:' + st.src.slice(a.s, a.e) + ')$', st.flags.replace(/[gyd]/g, '')); return c => re.test(c); }
+  catch (e) { return () => true; }
+}
+function firstAtoms(n) {
+  switch (n.type) {
+    case 'seq': { const out = []; for (const it of n.items) { if (it.type === 'anchor' || (it.type === 'group' && /la|lb/.test(it.kind))) continue; out.push(...firstAtoms(it)); if (!(it.type === 'quant' && it.min === 0)) break; } return out; }
+    case 'alt': return n.alts.flatMap(firstAtoms);
+    case 'group': return /la|lb/.test(n.kind) ? [] : firstAtoms(n.body);
+    case 'quant': return firstAtoms(n.body);
+    case 'char': case 'class': case 'esc': case 'dot': return [n];
+    default: return [];
+  }
+}
+function overlaps(A, B) {
+  // test pool = fixed samples + every literal/range endpoint the atoms mention
+  let pool = ANALYZE_POOL;
+  for (const a of [...A, ...B]) {
+    if (a.lit) pool += a.lit;
+    if (a.type === 'class') for (const it of a.items) { if (it.lit) pool += it.lit; if (it.type === 'range') pool += (it.from.lit || '') + (it.to.lit || ''); }
+  }
+  const chars = [...new Set(pool)];
+  for (const a of A) for (const b of B) { const ta = atomTester(a), tb = atomTester(b); for (const c of chars) if (ta(c) && tb(c)) return true; }
+  return false;
+}
+const unbounded = q => q.type === 'quant' && (q.max === Infinity || q.max > 25);
+function redosRisks(ast) {
+  const out = [], seen = new Set(), add = (sev, msg, n) => { if (!seen.has(msg)) { seen.add(msg); out.push({ sev, msg, s: n.s, e: n.e }); } };
+  const visit = n => {
+    if (!n) return;
+    if (unbounded(n)) {
+      let body = n.body; while (body.type === 'group' && !/la|lb/.test(body.kind)) body = body.body;
+      // nesting is only ambiguous if a new iteration could start inside an inner quantifier's run;
+      // (?:-[a-z]+)* is safe because every iteration must begin with "-", which [a-z]+ can't eat
+      const inner = []; walk(body, x => { if (x !== n && unbounded(x)) inner.push(x); });
+      const head = firstAtoms(body);
+      if (inner.some(q => overlaps(head, firstAtoms(q.body)))) add('high', `nested quantifier “${st.src.slice(n.s, n.e)}” can split input exponentially many ways — flatten it or make the inner part unambiguous`, n);
+      if (body.type === 'alt') for (let i = 0; i < body.alts.length; i++) for (let j = i + 1; j < body.alts.length; j++)
+        if (overlaps(firstAtoms(body.alts[i]), firstAtoms(body.alts[j]))) add('high', `alternatives inside “${st.src.slice(n.s, n.e)}” can start with the same character — make branches mutually exclusive`, n);
+    }
+    if (n.type === 'seq') for (let i = 0; i + 1 < n.items.length; i++) {
+      const a = n.items[i], b = n.items[i + 1];
+      if (unbounded(a) && unbounded(b) && overlaps(firstAtoms(a.body), firstAtoms(b.body))) add('medium', `“${st.src.slice(a.s, b.e)}” — two adjacent quantifiers compete for the same characters (polynomial backtracking)`, a);
+    }
+    if (n.type === 'seq') n.items.forEach(visit); else if (n.type === 'alt') n.alts.forEach(visit); else if (n.body) visit(n.body);
+  };
+  visit(ast);
+  return out.sort((a, b) => (a.sev === 'high' ? 0 : 1) - (b.sev === 'high' ? 0 : 1));
+}
+
+/* ===================== railroad diagram ===================== */
+function railroad(ast) {
+  const NS = 'http://www.w3.org/2000/svg', CH = 7.4, H = 26, VG = 12, PAD = 10;
+  const measure = s => Math.max(22, s.length * CH + 18);
+  // layout returns {w, h, up (distance from top to rail), draw(g, x, y) } where y = rail y
+  function box(label, cls, title) {
+    const w = measure(label);
+    return { w, up: H / 2, down: H / 2, draw(svg, x, y) {
+      svg.push(`<rect x="${x}" y="${y - H / 2}" width="${w}" height="${H}" rx="${cls === 'lit' ? 6 : 12}" class="rr-${cls}"><title>${esc(title || label)}</title></rect><text x="${x + w / 2}" y="${y + 4}" text-anchor="middle" class="rr-t-${cls}">${esc(label)}</text>`);
+    } };
+  }
+  function seq(items) {
+    if (!items.length) return { w: 20, up: 0, down: 0, draw(svg, x, y) { svg.push(`<path d="M${x} ${y}h20"/>`); } };
+    const g = 14, w = items.reduce((a, b) => a + b.w, 0) + g * (items.length - 1);
+    return { w, up: Math.max(...items.map(i => i.up)), down: Math.max(...items.map(i => i.down)), draw(svg, x, y) {
+      let cx = x;
+      items.forEach((it, k) => { it.draw(svg, cx, y); cx += it.w; if (k < items.length - 1) { svg.push(`<path d="M${cx} ${y}h${g}"/>`); cx += g; } });
+    } };
+  }
+  function choice(opts) {
+    const inner = Math.max(...opts.map(o => o.w)), w = inner + 40;
+    let h = 0; const ys = [];
+    opts.forEach((o, k) => { if (k) h += VG; h += o.up; ys.push(h); h += o.down; });
+    const up = ys[0], total = h;
+    return { w, up, down: total - up, draw(svg, x, y) {
+      opts.forEach((o, k) => {
+        const oy = y - up + ys[k], ox = x + 20 + (inner - o.w) / 2;
+        if (k === 0) svg.push(`<path d="M${x} ${y}h${ox - x}"/><path d="M${ox + o.w} ${y}H${x + w}"/>`);
+        else svg.push(`<path d="M${x} ${y}q10 0 10 10V${oy - 10}q0 10 10 10H${ox}"/><path d="M${ox + o.w} ${oy}H${x + w - 20}q10 0 10 -10V${y + 10}q0 -10 10 -10"/>`);
+        o.draw(svg, ox, oy);
+      });
+    } };
+  }
+  function loop(body, q) {
+    const label = q.min === 0 && q.max === 1 ? '' : q.max === Infinity ? (q.min > 1 ? `${q.min}+` : '') : q.min === q.max ? `×${q.min}` : `${q.min}–${q.max}`;
+    const skip = q.min === 0, repeat = q.max > 1, w = body.w + 40;
+    return { w, up: body.up + (skip ? 18 : 0), down: body.down + (repeat ? 22 : 0), draw(svg, x, y) {
+      svg.push(`<path d="M${x} ${y}h20"/><path d="M${x + 20 + body.w} ${y}h20"/>`);
+      body.draw(svg, x + 20, y);
+      if (skip) { const ty = y - body.up - 10; svg.push(`<path d="M${x} ${y}q10 0 10 -10V${ty + 10}q0 -10 10 -10H${x + w - 20}q10 0 10 10V${y - 10}q0 10 10 10"/>`); }
+      if (repeat) {
+        const by = y + body.down + 12;
+        svg.push(`<path d="M${x + 20 + body.w} ${y}q10 0 10 10V${by - 10}q0 10 -10 10H${x + 20}q-10 0 -10 -10V${y + 10}q0 -10 10 -10" class="rr-loop"/>`);
+        const lab = (label ? label + ' ' : '') + (q.lazy ? 'lazy' : '');
+        if (lab.trim()) svg.push(`<text x="${x + w / 2}" y="${by + 14}" text-anchor="middle" class="rr-note">${esc(lab.trim())}</text>`);
+      }
+    } };
+  }
+  function group(inner, label) {
+    const w = inner.w + 20;
+    return { w, up: inner.up + 18, down: inner.down + 8, draw(svg, x, y) {
+      svg.push(`<rect x="${x}" y="${y - inner.up - 12}" width="${w}" height="${inner.up + inner.down + 20}" rx="8" class="rr-grp"/><text x="${x + 4}" y="${y - inner.up - 16}" class="rr-note">${esc(label)}</text>`);
+      svg.push(`<path d="M${x} ${y}h10"/><path d="M${x + 10 + inner.w} ${y}h10"/>`);
+      inner.draw(svg, x + 10, y);
+    } };
+  }
+  function build(n) {
+    switch (n.type) {
+      case 'seq': {
+        const items = []; let lit = '';
+        const flush = () => { if (lit) { items.push(box(lit, 'lit')); lit = ''; } };
+        for (const it of n.items) { if (it.type === 'char' && it.lit != null && it.lit !== ' ') lit += it.lit; else { flush(); items.push(build(it)); } }
+        flush(); return seq(items);
+      }
+      case 'alt': return choice(n.alts.map(build));
+      case 'group': {
+        const inner = build(n.body);
+        const labels = { cap: `group #${n.num}`, named: `${n.name} #${n.num}`, noncap: '', la: 'followed by', nla: 'not followed by', lb: 'preceded by', nlb: 'not preceded by', mod: n.name };
+        return labels[n.kind] ? group(inner, labels[n.kind]) : inner;
+      }
+      case 'quant': return loop(build(n.body), n);
+      case 'class': {
+        const t = n.items.map(it => it.type === 'range' ? `${it.from.lit ?? it.from.v}-${it.to.lit ?? it.to.v}` : it.v).join(' ');
+        return box((n.neg ? 'not ' : '') + (t || '∅'), 'cls', atomText(n));
+      }
+      case 'anchor': return box({ '^': 'start', '$': 'end', '\\b': 'word boundary', '\\B': 'non-boundary' }[n.v] || n.v, 'anc', n.desc);
+      case 'dot': return box('any char', 'esc', n.desc);
+      case 'esc': return box({ '\\d': 'digit', '\\D': 'non-digit', '\\w': 'word char', '\\W': 'non-word', '\\s': 'whitespace', '\\S': 'non-space', '\\n': 'newline', '\\t': 'tab' }[n.v] || n.v, 'esc', n.desc);
+      case 'backref': return box('same as ' + (n.name || '#' + n.num), 'ref', n.desc);
+      case 'char': return box(n.lit === ' ' ? '␣' : n.lit ?? n.v, 'lit');
+      default: return box('?', 'lit');
+    }
+  }
+  const root = build(ast), W = root.w + 60, Ht = root.up + root.down + 2 * PAD + 16, y = root.up + PAD + 8;
+  const parts = [];
+  parts.push(`<circle cx="10" cy="${y}" r="5" class="rr-end"/><path d="M15 ${y}h15"/>`);
+  root.draw(parts, 30, y);
+  parts.push(`<path d="M${30 + root.w} ${y}h15"/><circle cx="${50 + root.w}" cy="${y}" r="5" class="rr-end"/>`);
+  return `<svg xmlns="${NS}" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}"><style>path{fill:none;stroke:#5d656e;stroke-width:1.6}.rr-loop{stroke:#ff6fae}.rr-lit{fill:#1b1f23;stroke:#8a939c}.rr-cls{fill:rgba(255,194,75,.12);stroke:#ffc24b}.rr-esc{fill:rgba(182,156,255,.12);stroke:#b69cff}.rr-anc{fill:rgba(198,244,50,.12);stroke:#c6f432}.rr-ref{fill:rgba(86,227,159,.12);stroke:#56e39f}.rr-grp{fill:rgba(79,214,255,.04);stroke:#4fd6ff;stroke-dasharray:4 3}.rr-end{fill:#5d656e}text{fill:#e4e7ea}.rr-note{fill:#8a939c;font-size:11px}.rr-t-cls{fill:#ffc24b}.rr-t-esc{fill:#b69cff}.rr-t-anc{fill:#c6f432}.rr-t-ref{fill:#56e39f}</style>${parts.join('')}</svg>`;
+}
+
+/* ===================== worker engine ===================== */
+const WORKER_SRC = `
+self.onmessage = e => {
+  const { id, src, flags, text, repl, tests, wantReplace } = e.data;
+  const t0 = performance.now();
+  try {
+    let fl = flags; let hasD = true;
+    try { new RegExp('', 'd'); if (!fl.includes('d')) fl += 'd'; } catch (_) { hasD = false; }
+    const re = new RegExp(src, fl);
+    const matches = []; let capped = false;
+    const pack = m => ({ i: m.index, t: m[0], g: Array.from(m).slice(1).map((v, k) => ({ v: v === undefined ? null : v, r: m.indices && m.indices[k + 1] ? m.indices[k + 1] : null })), n: m.groups ? Object.keys(m.groups) : [] });
+    if (re.global || re.sticky) {
+      let m, guard = 0;
+      while ((m = re.exec(text)) !== null) {
+        matches.push(pack(m));
+        if (m[0] === '') re.lastIndex += (re.unicode && text.codePointAt(re.lastIndex) > 0xffff) ? 2 : 1;
+        if (++guard >= 10000) { capped = true; break; }
+        if (!re.global && re.sticky) { /* sticky without g continues from lastIndex */ }
+        if (!re.global) break;
+      }
+    } else { const m = re.exec(text); if (m) matches.push(pack(m)); }
+    let replaced = null, split = null;
+    if (wantReplace) replaced = text.replace(new RegExp(src, flags), repl);
+    if (e.data.wantSplit) split = text.split(new RegExp(src, flags.replace(/[gy]/g, '')), 2000).map(s => s === undefined ? null : s);
+    const res = (tests || []).map(t => { const r = new RegExp(src, flags.replace(/[gy]/g, '')); return r.test(t.s); });
+    self.postMessage({ id, ok: true, matches, capped, replaced, split, tests: res, ms: performance.now() - t0 });
+  } catch (err) { self.postMessage({ id, ok: false, error: String(err.message || err) }); }
+};`;
+const workerURL = URL.createObjectURL(new Blob([WORKER_SRC], { type: 'text/javascript' }));
+let worker = null, reqId = 0, pending = null;
+function newWorker() { worker = new Worker(workerURL); worker.onmessage = onResult; }
+newWorker();
+const TIMEOUT = 1000;
+function run() {
+  const id = ++reqId;
+  if (pending) { clearTimeout(pending.timer); }
+  pending = { id, timer: setTimeout(() => {
+    if (!pending || pending.id !== id) return;
+    worker.terminate(); newWorker(); pending = null;
+    lastResult = null;
+    setStatus([['err', `⏱ Timed out after ${TIMEOUT} ms — this pattern is likely suffering catastrophic backtracking on this input.`], ['warn', 'Tip: avoid nested quantifiers like (a+)+ and make alternatives mutually exclusive.']]);
+    renderMatches(null);
+  }, TIMEOUT) };
+  worker.postMessage({ id, src: st.src, flags: st.flags, text: st.text, repl: st.repl, tests: st.tests, wantReplace: activeTab === 'replace' && rmode === 'replace', wantSplit: activeTab === 'replace' && rmode === 'split' });
+}
+let lastResult = null, parsed = null;
+function onResult(e) {
+  const r = e.data;
+  if (!pending || r.id !== pending.id) return;
+  clearTimeout(pending.timer); pending = null;
+  lastResult = r;
+  renderAll();
+}
+
+/* ===================== rendering ===================== */
+function renderPattern() {
+  parsed = parse(st.src, st.flags);
+  const hl = $('#patHl'), src = st.src;
+  const cls = new Array(src.length).fill(null), tokAt = new Array(src.length).fill(null);
+  for (const t of parsed.toks) for (let k = t.s; k < t.e; k++) { cls[k] = t.cls; tokAt[k] = t; }
+  const frag = document.createDocumentFragment();
+  let k = 0;
+  while (k < src.length) {
+    const t = tokAt[k]; let j = k + 1;
+    while (j < src.length && tokAt[j] === t) j++;
+    const span = document.createElement('span'); span.textContent = src.slice(k, j);
+    if (cls[k]) span.className = cls[k] + (hiRange && k >= hiRange[0] && j <= hiRange[1] ? ' t-hi' : '');
+    else if (hiRange && k >= hiRange[0] && j <= hiRange[1]) span.className = 't-hi';
+    span.dataset.s = k; frag.append(span); k = j;
+  }
+  frag.append('\n');
+  hl.replaceChildren(frag);
+  $('#grpInfo').textContent = parsed.groupCount ? `${parsed.groupCount} capture group${parsed.groupCount > 1 ? 's' : ''}` : '';
+  autoGrow($('#pat'));
+}
+let hiRange = null;
+function autoGrow(ta) { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; }
+function setStatus(items) { $('#status').replaceChildren(...items.map(([c, t]) => el('span', { class: c }, t))); }
+let selMatch = -1;
+function renderText() {
+  const hl = $('#textHl'), text = st.text, frag = document.createDocumentFragment();
+  const ms = lastResult && lastResult.ok ? lastResult.matches : [];
+  let pos = 0, n = 0;
+  for (let k = 0; k < ms.length && n < 3000; k++) {
+    const m = ms[k]; if (m.i < pos) continue;
+    frag.append(text.slice(pos, m.i));
+    const mk = document.createElement('mark');
+    mk.className = m.t === '' ? 'z' : (k % 2 ? 'alt' : '') + (k === selMatch ? ' sel' : '');
+    if (k === selMatch && m.t) appendGroups(mk, m); else mk.textContent = m.t;
+    frag.append(mk); pos = m.i + m.t.length; n++;
+  }
+  frag.append(text.slice(pos), '\n');
+  hl.replaceChildren(frag);
+  autoGrow($('#text'));
+  $('#textInfo').textContent = `${text.length.toLocaleString()} chars · ${text.split('\n').length} lines`;
+}
+function appendGroups(mk, m) {
+  // colour each character by its innermost capturing group (requires d-flag indices)
+  const len = m.t.length, owner = new Array(len).fill(0), size = new Array(len).fill(Infinity);
+  m.g.forEach((g, k) => {
+    if (!g.r) return; const [a, b] = g.r;
+    for (let p = a; p < b; p++) { const o = p - m.i; if (o >= 0 && o < len && b - a <= size[o]) { owner[o] = k + 1; size[o] = b - a; } }
+  });
+  let p = 0;
+  while (p < len) {
+    let q = p + 1; while (q < len && owner[q] === owner[p]) q++;
+    const s = document.createElement('span'); s.textContent = m.t.slice(p, q);
+    if (owner[p]) s.className = 'g g' + (((owner[p] - 1) % 6) + 1);
+    mk.append(s); p = q;
+  }
+}
+function visible(s) {
+  const f = document.createDocumentFragment();
+  for (const part of s.split(/([\n\t ])/)) {
+    if (part === '\n') f.append(el('span', { class: 'ws' }, '↵')); else if (part === '\t') f.append(el('span', { class: 'ws' }, '→')); else if (part === ' ') f.append(el('span', { class: 'ws' }, '·')); else f.append(part);
+  }
+  return f;
+}
+function renderMatches(r) {
+  const list = $('#mlist');
+  if (!r || !r.ok) { list.replaceChildren(el('div', { class: 'empty' }, r ? '—' : 'No result.')); $('#mCount').textContent = '0'; return; }
+  const ms = r.matches;
+  $('#mCount').textContent = ms.length + (r.capped ? '+' : '');
+  if (!ms.length) { list.replaceChildren(el('div', { class: 'empty' }, 'No matches. Tip: toggle the g flag to find every match, or i to ignore case.')); return; }
+  const names = parsed ? parsed.names : [];
+  const namedByNum = {}; if (parsed) walk(parsed.ast, n => { if (n.type === 'group' && n.kind === 'named') namedByNum[n.num] = n.name; });
+  const rows = ms.slice(0, 500).map((m, k) => el('button', { class: 'mrow' + (k === selMatch ? ' sel' : ''), onclick: () => { selMatch = selMatch === k ? -1 : k; renderText(); renderMatches(lastResult); scrollToMatch(m); } },
+    el('span', { class: 'ix' }, '#' + (k + 1), el('br'), `${m.i}–${m.i + m.t.length}`),
+    el('div', {}, el('div', { class: 'mt' }, m.t === '' ? el('span', { class: 'ws' }, '(empty match)') : visible(m.t)),
+      m.g.length ? el('div', { class: 'grps' }, m.g.map((g, gi) => el('span', { class: 'chip' }, el('span', { class: 'g g' + ((gi % 6) + 1), style: 'display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px' }), (namedByNum[gi + 1] || (gi + 1)) + ': ', g.v === null ? el('i', {}, 'undefined') : el('b', {}, g.v)))) : null)));
+  if (ms.length > 500) rows.push(el('div', { class: 'empty' }, `…and ${ms.length - 500} more`));
+  list.replaceChildren(...rows);
+  void names;
+}
+function scrollToMatch(m) {
+  const ta = $('#text'); const before = st.text.slice(0, m.i).split('\n').length - 1;
+  const lh = parseFloat(getComputedStyle(ta).lineHeight) || 22; $('#testWrap').scrollTop = Math.max(0, before * lh - 60);
+}
+function walk(n, f) { if (!n) return; f(n); if (n.type === 'seq') n.items.forEach(x => walk(x, f)); else if (n.type === 'alt') n.alts.forEach(x => walk(x, f)); else if (n.body) walk(n.body, f); }
+function renderExplain() {
+  const box = $('#explain');
+  if (!parsed) return;
+  if (!st.src) { box.replaceChildren(el('div', { class: 'empty' }, 'Type a pattern to see it explained.')); $('#rr').replaceChildren(); return; }
+  const out = []; explainNode(parsed.ast, 0, out, st.flags);
+  for (const rk of redosRisks(parsed.ast)) out.unshift({ depth: 0, text: `⚠ ${rk.sev === 'high' ? 'High' : 'Moderate'} ReDoS risk — ${rk.msg}`, s: rk.s, e: rk.e, cls: 't-err' });
+  const flagDesc = st.flags.split('').map(f => FLAGS.find(x => x[0] === f)).filter(Boolean).map(x => `${x[0]} (${x[1].split(' — ')[0]})`);
+  const rows = out.map(r => {
+    const d = el('div', { class: 'ex', style: `padding-left:${8 + r.depth * 18}px` }, el('code', { class: r.cls }, st.src.slice(r.s, r.e) || '∅'), el('span', {}, r.text.replace(/<[^>]+>/g, '')));
+    d.addEventListener('mouseenter', () => { hiRange = [r.s, r.e]; renderPattern(); });
+    d.addEventListener('mouseleave', () => { hiRange = null; renderPattern(); });
+    return d;
+  });
+  if (flagDesc.length) rows.push(el('div', { class: 'ex' }, el('code', { class: 't-anc' }, '/' + st.flags), el('span', {}, 'Flags: ' + flagDesc.join(', '))));
+  box.replaceChildren(...rows);
+  try {
+    const doc = new DOMParser().parseFromString(railroad(parsed.ast), 'image/svg+xml');
+    if (doc.querySelector('parsererror')) throw new Error('bad SVG');
+    $('#rr').replaceChildren(document.importNode(doc.documentElement, true));
+  } catch (e) { $('#rr').textContent = 'Diagram unavailable: ' + e.message; }
+}
+let rmode = 'replace';
+$$('#rmode button').forEach(b => b.addEventListener('click', () => {
+  rmode = b.dataset.m; $$('#rmode button').forEach(x => x.classList.toggle('on', x === b));
+  $('#repl').hidden = $('#replOut').hidden = rmode === 'split'; $('#splitOut').hidden = rmode !== 'split';
+  $('#copyRepl').textContent = rmode === 'split' ? 'Copy as JSON' : 'Copy result'; run();
+}));
+function renderReplace() {
+  if (rmode === 'split') {
+    const box = $('#splitOut'), parts = lastResult && lastResult.ok ? lastResult.split : null;
+    if (!parts) { box.replaceChildren(el('div', { class: 'empty' }, lastResult && !lastResult.ok ? '—' : '')); return; }
+    box.replaceChildren(el('div', { class: 'empty', style: 'padding:0 2px 4px' }, `text.split(regex) → ${parts.length} item${parts.length === 1 ? '' : 's'}${parts.length >= 2000 ? ' (capped)' : ''} · capture groups are spliced in`),
+      ...parts.slice(0, 400).map((p, k) => el('div', { class: 'mrow', style: 'cursor:default' }, el('span', { class: 'ix' }, '[' + k + ']'), el('div', { class: 'mt' }, p === null ? el('i', { class: 'ws' }, 'undefined') : p === '' ? el('span', { class: 'ws' }, '(empty string)') : visible(p)))));
+    return;
+  }
+  const out = $('#replOut');
+  if (lastResult && lastResult.ok && lastResult.replaced != null) out.textContent = lastResult.replaced; else if (lastResult && !lastResult.ok) out.textContent = '—'; else out.textContent = '';
+}
+function renderTests() {
+  const box = $('#tests'); const res = lastResult && lastResult.ok ? lastResult.tests : [];
+  let pass = 0;
+  const rows = st.tests.map((t, k) => {
+    const got = res[k], ok = got === undefined ? null : (got ? 1 : 0) === t.e; if (ok) pass++;
+    const inp = el('input', { value: t.s, 'aria-label': `Test ${k + 1} input`, spellcheck: 'false' });
+    inp.addEventListener('input', () => { t.s = inp.value; changed(false); });
+    const sel = el('select', { 'aria-label': `Test ${k + 1} expectation` }, el('option', { value: 1 }, 'should match'), el('option', { value: 0 }, 'should not match'));
+    sel.value = t.e; sel.addEventListener('change', () => { t.e = +sel.value; changed(false); });
+    return el('div', { class: 'trow' }, inp, sel, el('span', { class: 'badge ' + (ok === null ? '' : ok ? 'pass' : 'fail') }, ok === null ? '…' : ok ? 'PASS' : 'FAIL'),
+      el('button', { class: 'x', 'aria-label': `Delete test ${k + 1}`, onclick: () => { st.tests.splice(k, 1); changed(false); renderTests(); } }, '×'));
+  });
+  if (!rows.length) rows.push(el('div', { class: 'empty' }, 'No tests yet. Tests check the pattern (without g/y) against each input.'));
+  // keep focus if rebuilding
+  const f = document.activeElement, fi = f && f.closest('.trow') ? [...box.children].indexOf(f.closest('.trow')) : -1, isInp = f && f.tagName === 'INPUT', caret = isInp ? f.selectionStart : 0;
+  box.replaceChildren(...rows);
+  if (fi >= 0 && box.children[fi]) { const nf = box.children[fi].querySelector(isInp ? 'input' : 'select'); if (nf) { nf.focus(); if (isInp) nf.setSelectionRange(caret, caret); } }
+  $('#tCount').textContent = `${pass}/${st.tests.length}`;
+  $('#tCount').style.color = st.tests.length && pass === st.tests.length ? 'var(--green)' : st.tests.length ? 'var(--red)' : '';
+}
+
+/* ===================== code export ===================== */
+const LANGS = {
+  JavaScript: () => {
+    const lit = '/' + st.src.replace(/(^|[^\\])\//g, '$1\\/').replace(/\n/g, '\\n') + '/' + st.flags;
+    return `const re = ${lit};\n\n` + (st.flags.includes('g') ? `for (const m of text.matchAll(re)) {\n  console.log(m.index, m[0]${parsed && parsed.names.length ? ', m.groups' : ''});\n}\n\n// replace\nconst out = text.replace(re, ${JSON.stringify(st.repl)});` : `const m = re.exec(text);\nif (m) console.log(m.index, m[0]${parsed && parsed.names.length ? ', m.groups' : ''});`);
+  },
+  Python: () => {
+    let p = st.src.replace(/\(\?<([A-Za-z_]\w*)>/g, '(?P<$1>').replace(/\\k<([A-Za-z_]\w*)>/g, '(?P=$1)');
+    const fl = [['i', 're.IGNORECASE'], ['m', 're.MULTILINE'], ['s', 're.DOTALL']].filter(([f]) => st.flags.includes(f)).map(x => x[1]);
+    const q = p.includes("'''") ? '"""' : "'''";
+    const lit = !p.includes("'") && !p.endsWith('\\') ? `r'${p}'` : !p.includes('"') && !p.endsWith('\\') ? `r"${p}"` : `r${q}${p}${q}`;
+    const repl = st.repl.replace(/\$<([A-Za-z_]\w*)>/g, '\\g<$1>').replace(/\$(\d+)/g, '\\g<$1>').replace(/\$&/g, '\\g<0>');
+    return `import re\n\npattern = re.compile(${lit}${fl.length ? ', ' + fl.join(' | ') : ''})\n\n` + (st.flags.includes('g') ? `for m in pattern.finditer(text):\n    print(m.start(), m.group(0)${parsed && parsed.names.length ? ', m.groupdict()' : ''})\n\nresult = pattern.sub(${JSON.stringify(repl)}, text)` : `m = pattern.search(text)\nif m:\n    print(m.start(), m.group(0))`);
+  },
+  Go: () => {
+    const inl = ['i', 'm', 's'].filter(f => st.flags.includes(f)).join('');
+    let p = (inl ? `(?${inl})` : '') + st.src.replace(/\(\?<([A-Za-z_]\w*)>/g, '(?P<$1>');
+    const lit = p.includes('`') ? JSON.stringify(p) : '`' + p + '`';
+    return `import "regexp"\n\nvar re = regexp.MustCompile(${lit})\n\n` + (st.flags.includes('g') ? `matches := re.FindAllStringSubmatchIndex(text, -1)\nfor _, m := range matches {\n\tfmt.Println(m[0], text[m[0]:m[1]])\n}` : `if m := re.FindStringSubmatch(text); m != nil {\n\tfmt.Println(m[0])\n}`);
+  },
+  PHP: () => {
+    const p = st.src.replace(/\//g, '\\/'), fl = st.flags.replace(/[gyd]/g, '') + (st.flags.includes('u') ? '' : '');
+    const lit = "'/" + p.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + '/' + fl + "'";
+    return st.flags.includes('g') ? `preg_match_all(${lit}, $text, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);\nforeach ($matches as $m) {\n    echo $m[0][1], ': ', $m[0][0], PHP_EOL;\n}` : `if (preg_match(${lit}, $text, $m)) {\n    echo $m[0];\n}`;
+  },
+  Java: () => {
+    const lit = JSON.stringify(st.src);
+    const fl = [['i', 'Pattern.CASE_INSENSITIVE'], ['m', 'Pattern.MULTILINE'], ['s', 'Pattern.DOTALL'], ['u', 'Pattern.UNICODE_CASE']].filter(([f]) => st.flags.includes(f)).map(x => x[1]);
+    return `import java.util.regex.*;\n\nPattern p = Pattern.compile(${lit}${fl.length ? ', ' + fl.join(' | ') : ''});\nMatcher m = p.matcher(text);\n${st.flags.includes('g') ? 'while' : 'if'} (m.find()) {\n    System.out.println(m.start() + ": " + m.group());\n}`;
+  },
+  'C#': () => {
+    const lit = '@"' + st.src.replace(/"/g, '""') + '"';
+    const fl = [['i', 'RegexOptions.IgnoreCase'], ['m', 'RegexOptions.Multiline'], ['s', 'RegexOptions.Singleline']].filter(([f]) => st.flags.includes(f)).map(x => x[1]);
+    return `using System.Text.RegularExpressions;\n\nvar re = new Regex(${lit}${fl.length ? ', ' + fl.join(' | ') : ''});\n` + (st.flags.includes('g') ? `foreach (Match m in re.Matches(text))\n    Console.WriteLine($"{m.Index}: {m.Value}");` : `var m = re.Match(text);\nif (m.Success) Console.WriteLine(m.Value);`);
+  },
+  Rust: () => {
+    const inl = ['i', 'm', 's'].filter(f => st.flags.includes(f)).join('');
+    const p = (inl ? `(?${inl})` : '') + st.src.replace(/\(\?<([A-Za-z_]\w*)>/g, '(?P<$1>');
+    const hashes = '#'.repeat((p.match(/"#*/g) || ['']).reduce((a, b) => Math.max(a, b.length), 0));
+    return `use regex::Regex;\n\nlet re = Regex::new(r${hashes}"${p}"${hashes}).unwrap();\n` + (st.flags.includes('g') ? `for m in re.find_iter(text) {\n    println!("{}: {}", m.start(), m.as_str());\n}` : `if let Some(m) = re.find(text) {\n    println!("{}", m.as_str());\n}`);
+  }
+};
+let lang = 'JavaScript';
+function renderCode() {
+  $('#langs').replaceChildren(...Object.keys(LANGS).map(l => el('button', { class: 'btn sm' + (l === lang ? ' on' : ''), onclick: () => { lang = l; renderCode(); } }, l)));
+  $('#codeOut').textContent = LANGS[lang]();
+  const hasLook = /\(\?<?[=!]/.test(st.src), hasBack = /\\[1-9]|\\k</.test(st.src);
+  $('#codeNote').textContent = (lang === 'Go' || lang === 'Rust') && (hasLook || hasBack) ? `⚠ ${lang}'s regex engine (RE2-style) does not support ${[hasLook && 'lookaround', hasBack && 'backreferences'].filter(Boolean).join(' or ')}.` : lang === 'Python' && /\\p\{/.test(st.src) ? '⚠ Python\'s built-in re module lacks \\p{…}; use the third-party “regex” module.' : '';
+}
+
+/* ===================== example generator (regex → strings) ===================== */
+const PRINT = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -_.,:;!?@#$%&*+=/()[]{}<>\'"~^|';
+const UNI_POOL = PRINT + 'éüñçøåßдждλπΩ中文日本語한국🚀🎉☕🍕✨';
+const ESC_POOL = { '\\d': '0123456789', '\\D': 'abcXYZ-_ .', '\\w': 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_', '\\W': ' -.,!?@#', '\\s': ' ', '\\S': 'abcXYZ019', '\\n': '\n', '\\t': '\t', '\\r': '\r', '\\f': '\f', '\\v': '\v', '\\0': '\0' };
+function sampleEsc(n, r, inClassFlags) {
+  if (ESC_POOL[n.v]) { const p = ESC_POOL[n.v]; return [...p][Math.floor(r() * [...p].length)]; }
+  if (n.lit != null) return n.lit;
+  if (/^\\[pP]\{/.test(n.v)) { // filter a mixed pool through the property escape itself
+    try { const re = new RegExp('^' + n.v + '$', 'u'); const pool = [...UNI_POOL].filter(c => re.test(c)); if (pool.length) return pool[Math.floor(r() * pool.length)]; } catch (e) { /* unsupported */ }
+    return 'a';
+  }
+  return n.v.slice(1);
+}
+function generateSample(ast, flags, r) {
+  const caps = {};
+  const ci = flags.includes('i');
+  const g = n => {
+    switch (n.type) {
+      case 'seq': return n.items.map(g).join('');
+      case 'alt': return g(n.alts[Math.floor(r() * n.alts.length)]);
+      case 'group': {
+        if (/^(la|nla|lb|nlb)$/.test(n.kind)) return '';
+        const s = g(n.body); if (n.num) caps[n.num] = s; if (n.name) caps[n.name] = s; return s;
+      }
+      case 'quant': {
+        const hi = Math.min(n.max, n.min + (n.max === Infinity ? 4 : 3)), cnt = n.min + Math.floor(r() * (hi - n.min + 1));
+        let s = ''; for (let k = 0; k < cnt; k++) s += g(n.body); return s;
+      }
+      case 'class': {
+        let src = st.src.slice(n.s, n.e);
+        try {
+          const re = new RegExp('^' + src + '$', flags.replace(/[gyd]/g, ''));
+          const pool = [...UNI_POOL].filter(c => re.test(c));
+          // positive classes can reach outside the pool (e.g. [α-ω]); sample their ranges directly
+          if (!n.neg) for (const it of n.items) if (it.type === 'range' && it.from.lit && it.to.lit) {
+            const a = it.from.lit.codePointAt(0), b = it.to.lit.codePointAt(0);
+            if (b >= a) for (let k = 0; k < 6; k++) pool.push(String.fromCodePoint(a + Math.floor(r() * (b - a + 1))));
+          }
+          if (pool.length) return pool[Math.floor(r() * pool.length)];
+        } catch (e) { /* fall through */ }
+        return '?';
+      }
+      case 'esc': return sampleEsc(n, r);
+      case 'dot': { const p = PRINT + (flags.includes('s') ? '\n' : ''); return p[Math.floor(r() * p.length)]; }
+      case 'anchor': return '';
+      case 'backref': return caps[n.name || n.num] || '';
+      case 'char': { const c = n.lit ?? n.v; return ci && r() < .5 ? (r() < .5 ? c.toUpperCase() : c.toLowerCase()) : c; }
+    }
+    return '';
+  };
+  return g(ast);
+}
+let examples = [];
+function verifySamples(samples) {
+  return new Promise(res => {
+    const w = new Worker(workerURL);
+    const t = setTimeout(() => { w.terminate(); res(null); }, 1200);
+    w.onmessage = e => { clearTimeout(t); w.terminate(); res(e.data.ok ? e.data.tests : null); };
+    w.postMessage({ id: 1, src: st.src, flags: st.flags, text: '', repl: '', tests: samples.map(s => ({ s })), wantReplace: false });
+  });
+}
+async function genExamples() {
+  const box = $('#exList');
+  if (!st.src || !parsed) { box.replaceChildren(el('div', { class: 'empty' }, 'Type a pattern first.')); return; }
+  if (lastResult && !lastResult.ok) { box.replaceChildren(el('div', { class: 'empty' }, 'Fix the pattern error first.')); return; }
+  const r = Math.random, seen = new Set(), out = [];
+  // oversample, verify in the sandbox, then keep verified strings first (rejection sampling for lookarounds)
+  for (let k = 0; k < 160 && out.length < 40; k++) { const s = generateSample(parsed.ast, st.flags, r); if (s.length <= 400 && !seen.has(s)) { seen.add(s); out.push(s); } }
+  box.replaceChildren(el('div', { class: 'empty' }, 'Verifying…'));
+  const ok = await verifySamples(out);
+  examples = out.map((s, k) => ({ s, ok: ok ? ok[k] : null }));
+  if (ok) { const good = examples.filter(e => e.ok), bad = examples.filter(e => !e.ok); examples = [...good.slice(0, 12), ...bad.slice(0, Math.max(0, 12 - good.length))].slice(0, 12); }
+  else examples = examples.slice(0, 12);
+  const hasLook = /\(\?<?[=!]/.test(st.src);
+  const rows = examples.map(ex => el('div', { class: 'mrow', style: 'cursor:default' },
+    el('span', { class: 'badge ' + (ex.ok === null ? '' : ex.ok ? 'pass' : 'fail'), style: 'align-self:start' }, ex.ok === null ? '?' : ex.ok ? '✓' : '✗'),
+    el('div', { style: 'display:flex;gap:8px;align-items:center;justify-content:space-between' },
+      el('div', { class: 'mt' }, ex.s === '' ? el('span', { class: 'ws' }, '(empty string)') : visible(ex.s)),
+      el('button', { class: 'btn sm', title: 'Add as a unit test', onclick: () => { st.tests.push({ s: ex.s, e: ex.ok === false ? 0 : 1 }); changed(false); renderTests(); toast('Added as test'); } }, '+ test'))));
+  if (ok === null) rows.unshift(el('div', { class: 'note' }, 'Verification timed out — this pattern backtracks heavily.'));
+  else if (examples.some(e => !e.ok)) rows.unshift(el('div', { class: 'note' }, hasLook ? 'Some samples fail because lookarounds and anchors constrain context the generator does not simulate.' : 'Some samples do not match — usually anchors, backreferences or case rules interacting.'));
+  box.replaceChildren(...rows);
+}
+$('#genEx').addEventListener('click', genExamples);
+const exSoon = debounce(genExamples, 400);
+$('#exToText').addEventListener('click', () => { if (!examples.length) return; st.text += (st.text.endsWith('\n') || !st.text ? '' : '\n') + examples.map(e => e.s).join('\n'); $('#text').value = st.text; renderText(); persist(); runSoon(); toast(`Appended ${examples.length} lines`); });
+$('#exToTests').addEventListener('click', () => { if (!examples.length) return; examples.forEach(e => st.tests.push({ s: e.s, e: e.ok === false ? 0 : 1 })); changed(false); renderTests(); toast(`Added ${examples.length} tests`); });
+
+/* ===================== orchestration ===================== */
+let activeTab = 'matches';
+function renderAll() {
+  const r = lastResult;
+  const items = [];
+  if (!st.src) items.push(['', 'Empty pattern matches everywhere.']);
+  if (r && !r.ok) { items.push(['err', '✕ ' + r.error]); $('#patBox').classList.add('bad'); }
+  else { $('#patBox').classList.remove('bad'); if (r) items.push(['ok', `✓ ${r.matches.length}${r.capped ? '+' : ''} match${r.matches.length === 1 ? '' : 'es'}`], ['', `${r.ms.toFixed(2)} ms`]); }
+  if (parsed && parsed.errs.length && (!r || r.ok)) items.push(['warn', '⚠ ' + parsed.errs[0]]);
+  const risks = parsed ? redosRisks(parsed.ast) : [];
+  if (risks.length) items.push([risks[0].sev === 'high' ? 'err' : 'warn', `⚠ ReDoS risk${risks.length > 1 ? ` (${risks.length})` : ''}: ${risks[0].msg}`]);
+  setStatus(items);
+  if (selMatch >= (r && r.ok ? r.matches.length : 0)) selMatch = -1;
+  renderText(); renderMatches(r); renderTests();
+  if (activeTab === 'replace') renderReplace();
+  if (activeTab === 'code') renderCode();
+}
+const runSoon = debounce(run, 90);
+function changed(patternChanged = true) {
+  if (patternChanged) { renderPattern(); examples = []; if (activeTab === 'explain') renderExplain(); if (activeTab === 'code') renderCode(); if (activeTab === 'examples') exSoon(); }
+  persist(); runSoon();
+}
+$('#pat').addEventListener('input', e => { st.src = e.target.value.replace(/\n/g, ''); if (e.target.value !== st.src) e.target.value = st.src; changed(); });
+$('#pat').addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
+$('#text').addEventListener('input', e => { st.text = e.target.value; renderText(); persist(); runSoon(); });
+$('#repl').addEventListener('input', e => { st.repl = e.target.value; persist(); runSoon(); });
+function renderFlags() {
+  $('#flags').replaceChildren(...FLAGS.map(([f, d]) => el('button', { class: 'flag' + (st.flags.includes(f) ? ' on' : ''), title: `${f} — ${d}`, 'aria-pressed': st.flags.includes(f), 'aria-label': d, onclick: () => {
+    // u and v are mutually exclusive: turning one on turns the other off
+    st.flags = st.flags.includes(f) ? st.flags.replace(f, '') : 'dgimsuvy'.split('').filter(c => c === f || (st.flags.includes(c) && !((f === 'u' && c === 'v') || (f === 'v' && c === 'u')))).join('');
+    renderFlags(); changed();
+  } }, f)));
+}
+$$('.tab').forEach(t => t.addEventListener('click', () => selectTab(t.dataset.tab)));
+function selectTab(name) {
+  activeTab = name;
+  $$('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.tab === name));
+  $$('.panel').forEach(p => p.hidden = p.id !== 'p-' + name);
+  if (name === 'explain') renderExplain();
+  if (name === 'code') renderCode();
+  if (name === 'examples' && !examples.length) genExamples();
+  if (name === 'replace') run();
+}
+$('.tabs').addEventListener('keydown', e => {
+  const tabs = $$('.tab'), i = tabs.findIndex(t => t.dataset.tab === activeTab);
+  const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
+  const n = tabs[(i + d + tabs.length) % tabs.length]; selectTab(n.dataset.tab); n.focus();
+});
+
+/* pattern tooltips */
+const tip = $('#tip');
+// Build a tooltip from a description that may contain <b>/<i> markers; everything else is inserted as text.
+function richText(desc) {
+  const frag = document.createDocumentFragment(); let cur = frag;
+  const dec = s => s.replace(/&(amp|lt|gt|quot|#39);/g, (_, k) => ({ amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'" }[k]));
+  for (const part of desc.split(/(<\/?[bi]>)/)) {
+    if (part === '<b>' || part === '<i>') { const n = document.createElement(part[1]); frag.append(n); cur = n; }
+    else if (part === '</b>' || part === '</i>') cur = frag;
+    else if (part) cur.append(dec(part));
+  }
+  return frag;
+}
+let tipQ = 0, tipEv = null;
+$('#patBox').addEventListener('mousemove', e => { tipEv = e; if (!tipQ) tipQ = requestAnimationFrame(showTip); }, { passive: true });
+function showTip() {
+  tipQ = 0; const e = tipEv; if (!e) return;
+  // overlay spans have pointer-events:none; enable them briefly for hit-testing
+  const hl = $('#patHl'); hl.style.pointerEvents = 'auto'; const sp = document.elementFromPoint(e.clientX, e.clientY); hl.style.pointerEvents = '';
+  if (sp && sp.parentElement === hl && sp.dataset.s != null && parsed) {
+    const k = +sp.dataset.s, t = parsed.toks.filter(t => k >= t.s && k < t.e).pop();
+    if (t) { tip.replaceChildren(richText(t.desc)); tip.hidden = false; tip.style.left = Math.min(innerWidth - 330, e.clientX + 12) + 'px'; tip.style.top = e.clientY + 18 + 'px'; return; }
+  }
+  tip.hidden = true;
+}
+$('#patBox').addEventListener('mouseleave', () => { tipEv = null; tip.hidden = true; });
+
+/* tests */
+$('#addTest').addEventListener('click', () => { st.tests.push({ s: '', e: 1 }); changed(false); renderTests(); const ins = $$('#tests input'); ins[ins.length - 1]?.focus(); });
+$('#addFromSel').addEventListener('click', () => {
+  const lines = st.text.split('\n').filter(Boolean).slice(0, 50);
+  const re = (() => { try { return new RegExp(st.src, st.flags.replace(/[gy]/g, '')); } catch (e) { return null; } })();
+  lines.forEach(s => st.tests.push({ s, e: re ? (re.test(s) ? 1 : 0) : 1 }));
+  changed(false); renderTests(); toast(`Added ${lines.length} tests (expectations snapshot current behaviour)`);
+});
+
+/* library */
+const LIB = [
+  ['Email address', '[\\w.+-]+@[\\w-]+(?:\\.[\\w-]+)*\\.[A-Za-z]{2,}', 'gi', 'Contact alice.smith+news@example.co.uk or bob@test.io — not me@localhost.'],
+  ['URL (http/https)', 'https?:\\/\\/(?:www\\.)?[-\\w@:%.+~#=]{1,256}\\.[a-z]{2,24}\\b[-\\w()@:%+.~#?&/=]*', 'gi', 'Docs at https://developer.mozilla.org/en-US/docs/Web and http://example.com?q=1#top.'],
+  ['IPv4 address', '\\b(?:(?:25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|1?\\d?\\d)\\b', 'g', 'Hosts: 192.168.1.1, 10.0.0.255, 256.1.1.1 (invalid), 8.8.8.8'],
+  ['ISO date (named groups)', '(?<year>\\d{4})-(?<month>0[1-9]|1[0-2])-(?<day>0[1-9]|[12]\\d|3[01])', 'g', 'Shipped 2024-03-15, returned 2024-13-01, refunded 2024-04-31.'],
+  ['Time 24h', '\\b(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d)?\\b', 'g', 'Meet at 09:30, lunch 12:45:10, not 24:00 or 7:5.'],
+  ['Hex colour', '#(?:[0-9a-fA-F]{3,4}){1,2}\\b', 'g', 'color: #fff; background: #1b1f23; border: #c6f432aa; bad: #12345'],
+  ['UUID v4', '\\b[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\b', 'gi', 'id=3f2504e0-4f89-41d3-9a0c-0305e82c3301 other=3f2504e0-4f89-11d3-9a0c-0305e82c3301'],
+  ['Semantic version', '\\bv?(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-([\\da-z-]+(?:\\.[\\da-z-]+)*))?(?:\\+([\\da-z-]+(?:\\.[\\da-z-]+)*))?\\b', 'gi', 'Upgrade from v1.2.3 to 2.0.0-rc.1+build.5 (not 01.2.3).'],
+  ['US phone number', '\\(?\\b\\d{3}\\)?[-. ]?\\d{3}[-. ]?\\d{4}\\b', 'g', 'Call (555) 123-4567 or 555.987.6543, fax 5551234567.'],
+  ['Credit-card shape (redact)', '\\b(?:\\d[ -]?){12,15}\\d\\b', 'g', 'Test card 4242 4242 4242 4242 and 5555-5555-5555-4444.'],
+  ['Duplicate words', '\\b(\\w+)\\s+\\1\\b', 'gi', 'This is is a test of the the duplicate word finder.'],
+  ['Markdown link', '\\[([^\\]]+)\\]\\(([^)\\s]+)(?:\\s+"([^"]*)")?\\)', 'g', 'See [the docs](https://example.com "Docs") and [home](/).'],
+  ['HTML tag', '<\\/?([a-z][a-z0-9-]*)\\b[^>]*>', 'gi', '<div class="card"><p>Hello <b>world</b></p><br/></div>'],
+  ['Quoted string (with escapes)', '"(?:[^"\\\\]|\\\\.)*"', 'g', 'say "hello", then "she said \\"hi\\"" and "".'],
+  ['Password strength', '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\s]).{12,}$', 'gm', 'weakpass\nStr0ng!Passphrase\nNoSymbols12345\nsh0rt!A'],
+  ['Trailing whitespace', '[ \\t]+$', 'gm', 'line one   \nline two\t\nclean line'],
+  ['Numbers with thousands', '\\b\\d{1,3}(?:,\\d{3})*(?:\\.\\d+)?\\b', 'g', 'Revenue $1,234,567.89 up from 987,654 (and 12,34 is wrong).'],
+  ['Camel → snake (replace)', '(?<=[a-z0-9])([A-Z])', 'g', 'parseHttpResponse getUserId toString'],
+  ['Catastrophic backtracking demo', '^(a+)+$', '', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab'],
+  ['Emoji (Unicode property)', '\\p{Extended_Pictographic}', 'gu', 'Ship it 🚀 then celebrate 🎉 with ☕ and 🍕!']
+];
+function renderLib() {
+  const q = $('#libSearch').value.toLowerCase();
+  $('#lib').replaceChildren(...LIB.filter(([n, p]) => !q || n.toLowerCase().includes(q) || p.toLowerCase().includes(q)).map(([n, p, f, t]) =>
+    el('button', { class: 'libitem', onclick: () => { load({ src: p, flags: f, text: t, repl: n.includes('snake') ? '_$1' : st.repl, tests: [] }); toast('Loaded: ' + n); if (n.includes('snake')) selectTab('replace'); } }, el('b', {}, n), el('code', {}, '/' + p + '/' + f))));
+}
+$('#libSearch').addEventListener('input', renderLib);
+
+/* cheatsheet */
+const CHEAT = [
+  ['Characters', [['.', 'any char'], ['\\d', 'digit'], ['\\w', 'word char'], ['\\s', 'whitespace'], ['[abc]', 'any of a, b, c'], ['[^abc]', 'not a, b, c'], ['[a-z]', 'range'], ['\\p{L}', 'any letter (u flag)']]],
+  ['Anchors', [['^', 'start'], ['$', 'end'], ['\\b', 'word boundary']]],
+  ['Quantifiers', [['*', '0 or more'], ['+', '1 or more'], ['?', 'optional'], ['{3}', 'exactly 3'], ['{2,5}', '2 to 5'], ['+?', 'lazy']]],
+  ['Groups', [['(…)', 'capture'], ['(?:…)', 'group only'], ['(?<name>…)', 'named'], ['\\1', 'backreference'], ['a|b', 'alternation']]],
+  ['Lookaround', [['(?=…)', 'followed by'], ['(?!…)', 'not followed by'], ['(?<=…)', 'preceded by'], ['(?<!…)', 'not preceded by']]]
+];
+$('#cheat').replaceChildren(...CHEAT.flatMap(([h, rows]) => [el('h4', {}, h), ...rows.flatMap(([t, d]) => [el('button', { onclick: () => insert(t.replace('…', '')), title: 'Insert ' + t }, t), el('span', {}, d)])]));
+function insert(t) {
+  const ta = $('#pat'), a = ta.selectionStart ?? st.src.length, b = ta.selectionEnd ?? a;
+  let ins = t, caret = a + t.length;
+  const pairs = { '(': ')', '(?:': ')', '(?<name>': ')', '(?=': ')', '(?!': ')', '(?<=': ')', '(?<!': ')' };
+  if (t.endsWith('(') || pairs[t] !== undefined) { const sel = st.src.slice(a, b); ins = t + sel + ')'; caret = a + t.length + sel.length; }
+  if (t.startsWith('(?<name>')) { ins = '(?<name>' + st.src.slice(a, b) + ')'; }
+  ta.value = st.src = st.src.slice(0, a) + ins + st.src.slice(b);
+  ta.focus(); ta.setSelectionRange(caret, caret);
+  if (t.startsWith('(?<name>')) ta.setSelectionRange(a + 3, a + 7);
+  changed();
+}
+
+/* saved + share */
+function renderSaved() {
+  const box = $('#saved');
+  if (!saved.length) { box.replaceChildren(el('div', { class: 'empty' }, 'Nothing saved yet.')); return; }
+  box.replaceChildren(...saved.map((s, k) => el('div', { class: 'it' },
+    el('button', { title: '/' + s.src + '/' + s.flags, onclick: () => { load(s); toast('Loaded ' + s.name); } }, s.name),
+    el('button', { class: 'x', 'aria-label': 'Delete ' + s.name, onclick: () => { saved.splice(k, 1); persist(); renderSaved(); } }, '×'))));
+}
+$('#saveB').addEventListener('click', () => {
+  const ta = el('input', { class: 'field', value: parsed && parsed.names[0] ? parsed.names.join('-') : 'pattern ' + (saved.length + 1), maxlength: 60, 'aria-label': 'Name for saved pattern' });
+  const box = $('#saved');
+  const row = el('div', { class: 'it' }, ta, el('button', { class: 'btn sm pri', onclick: commit }, 'Save'));
+  function commit() { const name = ta.value.trim().slice(0, 60) || 'untitled'; saved.unshift({ name, ...structuredClone({ src: st.src, flags: st.flags, text: st.text, repl: st.repl, tests: st.tests }) }); persist(); renderSaved(); toast('Saved “' + name + '”'); }
+  ta.addEventListener('keydown', e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') renderSaved(); });
+  box.prepend(row); ta.focus(); ta.select();
+});
+function b64u(s) { return btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function unb64u(s) { const b = atob(s.replace(/-/g, '+').replace(/_/g, '/')); return new TextDecoder().decode(Uint8Array.from(b, c => c.charCodeAt(0))); }
+$('#shareB').addEventListener('click', async () => {
+  const data = b64u(JSON.stringify({ src: st.src, flags: st.flags, text: st.text.slice(0, 4000), repl: st.repl, tests: st.tests.slice(0, 30) }));
+  const url = location.href.split('#')[0] + '#r=' + data;
+  history.replaceState(null, '', '#r=' + data);
+  try { await navigator.clipboard.writeText(url); toast('Share link copied'); } catch (e) { toast('Link is in the address bar'); }
+});
+function load(o) {
+  const s = sanitize(o);
+  st = { src: s.src, flags: s.flags, text: s.text, repl: s.repl, tests: s.tests };
+  $('#pat').value = st.src; $('#text').value = st.text; $('#repl').value = st.repl; selMatch = -1; examples = [];
+  if (activeTab === 'examples') setTimeout(genExamples, 0);
+  renderFlags(); renderPattern(); renderTests(); if (activeTab === 'explain') renderExplain(); if (activeTab === 'code') renderCode();
+  persist(); run();
+}
+$('#copyRepl').addEventListener('click', async () => { try { await navigator.clipboard.writeText(rmode === 'split' ? JSON.stringify(lastResult && lastResult.split || [], null, 1) : $('#replOut').textContent); toast('Copied'); } catch (e) { toast('Clipboard unavailable'); } });
+$('#copyCode').addEventListener('click', async () => { try { await navigator.clipboard.writeText($('#codeOut').textContent); toast('Copied ' + lang + ' snippet'); } catch (e) { toast('Clipboard unavailable'); } });
+let toastT;
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2000); }
+new ResizeObserver(() => { autoGrow($('#pat')); autoGrow($('#text')); }).observe(document.body);
+
+/* boot */
+if (location.hash.startsWith('#r=')) { try { st = { ...st, ...sanitize(JSON.parse(unb64u(location.hash.slice(3)))) }; } catch (e) { toast('Could not read share link'); } }
+$('#pat').value = st.src; $('#text').value = st.text; $('#repl').value = st.repl;
+renderFlags(); renderLib(); renderSaved(); renderPattern(); run();
+</script>
+</body>
+</html>

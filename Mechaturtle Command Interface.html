@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MECHATURTLE // Deep-Space Command Interface</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='30' cy='38' rx='20' ry='15' fill='%231b2a4a' stroke='%2354e9ff' stroke-width='3'/%3E%3Cpath d='M30 24 L42 31 L42 45 L30 52 L18 45 L18 31 Z' fill='none' stroke='%2354e9ff' stroke-width='2'/%3E%3Ccircle cx='47' cy='22' r='7' fill='%231b2a4a' stroke='%2354e9ff' stroke-width='2'/%3E%3Ccircle cx='49' cy='21' r='2.5' fill='%2354e9ff'/%3E%3Cpath d='M14 34 L6 30 M14 44 L6 48' stroke='%2354e9ff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --cy:#00f0ff; --cy-dim:rgba(0, 240, 255,.28); --vi:#b983ff; --or:#ff9a3c;
+    --panel:rgba(4, 8, 20,.65); --line:rgba(0, 240, 255,.3);
+    --bg-base: #02040a;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0; overflow:hidden; color:#d7ecff;
+    font-family:"Rajdhani", system-ui, sans-serif;
+    background: radial-gradient(ellipse at center, rgba(16,20,40,1) 0%, rgba(2,4,10,1) 100%);
+    -webkit-user-select:none; user-select:none;
+    animation: bootup 1.5s ease-out forwards;
+  }
+  @keyframes bootup {
+    0% { opacity: 0; filter: brightness(0.2) contrast(1.5) blur(10px); transform: scale(1.05); }
+    50% { opacity: 1; filter: brightness(1.2) contrast(1.2) blur(0px); transform: scale(1); }
+    100% { filter: brightness(1) contrast(1) blur(0px); }
+  }
+  #space{position:fixed; inset:0; width:100%; height:100%; display:block; mix-blend-mode: screen;}
+  #vignette{position:fixed; inset:0; pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,8,.7) 100%);
+    z-index:10;}
+  
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:30;
+    display:flex; align-items:center; gap:16px; padding:12px 20px;
+    background:linear-gradient(180deg, rgba(2,6,16,.95), rgba(2,6,16,.6) 80%, transparent);
+    border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 240, 255, 0.05);
+  }
+  header h1{font-size:18px; font-weight:700; letter-spacing:4px; margin:0; color:var(--cy);
+    text-shadow:0 0 16px var(--cy-dim), 0 0 4px var(--cy); white-space:nowrap; display: flex; align-items: center; gap: 8px;}
+  header h1 small{color:#7fa8c9; letter-spacing:2px; font-weight:500; font-size: 12px; opacity: 0.8;}
+  .meters{display:flex; gap:16px; align-items:center; margin-left:auto;}
+  .meter{width:180px;}
+  .meter label{font-family:"Share Tech Mono", monospace; font-size:11px; letter-spacing:2px; color:#a2cbe8; display:flex; justify-content:space-between; margin-bottom: 4px; text-shadow: 0 0 4px rgba(162, 203, 232, 0.5);}
+  .bar{height:10px; border-radius:6px; background:rgba(0,0,0,.4); border:1px solid rgba(0,240,255,.2); overflow:hidden; box-shadow: inset 0 0 8px rgba(0,0,0,0.8);}
+  .bar i{display:block; height:100%; border-radius:4px; transition:width .3s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative;}
+  .bar i::after{content:''; position:absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, transparent 40%, rgba(0,0,0,0.2) 100%);}
+  #hullbar i{background:linear-gradient(90deg,#ff3b3b,#ffb347); box-shadow:0 0 12px rgba(255,93,93,0.8);}
+  #energybar i{background:linear-gradient(90deg,#00f0ff,#b983ff); box-shadow:0 0 12px rgba(0,240,255,0.8);}
+  #speedo{font-family:"Share Tech Mono", monospace; font-size:13px; color:#00f0ff; letter-spacing:1px; min-width:90px; text-align:right; text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);}
+  .hbtn{background:rgba(0,240,255,.05); border:1px solid rgba(0,240,255,0.3); color:var(--cy);
+    border-radius:6px; padding:6px 12px; font-size:14px; cursor:pointer; letter-spacing:1px; transition: all 0.2s;
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);}
+  .hbtn:hover{background:rgba(0,240,255,.2); box-shadow:0 0 15px var(--cy-dim); transform: translateY(-1px);}
+  .hbtn:active{transform: translateY(1px);}
+
+  .panel{
+    position:fixed; top:70px; bottom:96px; width:220px; z-index:25;
+    background:var(--panel); border:1px solid rgba(0, 240, 255, 0.2); border-radius:12px;
+    -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+    display:flex; flex-direction:column; overflow:hidden;
+    box-shadow:0 8px 32px rgba(0,0,0,.6), inset 0 0 20px rgba(0, 240, 255, 0.05);
+    animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  #abilities{left:16px; animation-delay: 0.2s;} #tools{right:16px; animation-delay: 0.3s;}
+  @keyframes slideIn { from{ opacity: 0; transform: translateY(30px); } to{ opacity: 1; transform: translateY(0); } }
+  .panel h2{margin:0; padding:12px 16px 10px; font-size:14px; font-weight:600; letter-spacing:3px; color:var(--cy);
+    border-bottom:1px solid rgba(0, 240, 255, 0.15); display:flex; justify-content:space-between; align-items:center;
+    background: linear-gradient(90deg, rgba(0, 240, 255, 0.1), transparent);}
+  .panel h2 .cnt{font-family:"Share Tech Mono", monospace; font-size:11px; color:#00f0ff; background:rgba(0, 240, 255,.1);
+    border:1px solid rgba(0, 240, 255, 0.3); border-radius:12px; padding:2px 8px; box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);}
+  .grid{overflow-y:auto; padding:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; scrollbar-width:thin;}
+  .grid::-webkit-scrollbar{width:4px;} .grid::-webkit-scrollbar-thumb{background:rgba(0, 240, 255, 0.4); border-radius:2px;}
+  
+  .abtn,.tbtn{
+    position:relative; cursor:grab; border:1px solid rgba(0, 240, 255, 0.15); border-radius:8px;
+    background:linear-gradient(145deg, rgba(20,35,60,.7), rgba(8,15,30,.8));
+    color:#e0f2fe; padding:12px 8px; font-family:"Rajdhani", sans-serif; font-size:12px; font-weight:600; text-align:center; line-height:1.2;
+    transition:all .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  .tbtn{cursor:pointer; border-color:rgba(185, 131, 255, 0.2);
+    background:linear-gradient(145deg, rgba(45,30,80,.7), rgba(15,10,35,.8));}
+  .abtn .ic,.tbtn .ic{font-size:24px; display:block; margin-bottom:4px; filter:drop-shadow(0 0 6px rgba(0, 240, 255, 0.6)); transition: transform 0.2s;}
+  .tbtn .ic{filter:drop-shadow(0 0 6px rgba(185, 131, 255, 0.6));}
+  .abtn .cost,.tbtn .cost{position:absolute; top:4px; right:4px; font-family:"Share Tech Mono", monospace; font-size:10px; color:var(--or);
+    background:rgba(0,0,0,.6); border:1px solid rgba(255, 154, 60, 0.3); border-radius:4px; padding:1px 4px; box-shadow: 0 0 4px rgba(255, 154, 60, 0.2);}
+  .tbtn .cost{color:var(--vi); border-color:rgba(185, 131, 255, 0.3); box-shadow: 0 0 4px rgba(185, 131, 255, 0.2);}
+  
+  .abtn:hover{transform:translateY(-4px) scale(1.05); border-color:var(--cy);
+    background:linear-gradient(145deg, rgba(30,55,90,.9), rgba(12,22,45,.9));
+    box-shadow:0 8px 20px rgba(0, 240, 255,.25), 0 0 12px inset rgba(0, 240, 255, 0.2); z-index:2;}
+  .abtn:hover .ic{transform: scale(1.15);}
+  .tbtn:hover{transform:translateY(-4px) scale(1.05); border-color:var(--vi);
+    background:linear-gradient(145deg, rgba(65,45,110,.9), rgba(22,15,45,.9));
+    box-shadow:0 8px 20px rgba(185, 131, 255,.25), 0 0 12px inset rgba(185, 131, 255, 0.2); z-index:2;}
+  .tbtn:hover .ic{transform: scale(1.15);}
+  .abtn:active,.tbtn:active{transform:translateY(1px) scale(.95); transition: 0.1s;}
+  .abtn.cool{opacity:.4; filter:saturate(.2) grayscale(0.5); pointer-events: none;}
+
+  #turtle{position:fixed; left:0; top:0; width:150px; height:150px; z-index:20;
+    cursor:grab; touch-action:none; will-change:transform;
+    filter:drop-shadow(0 0 20px rgba(0, 240, 255,.5)); transition: filter 0.3s;}
+  #turtle.dragging{cursor:grabbing; filter:drop-shadow(0 0 35px rgba(0, 240, 255,.9)) brightness(1.2);}
+  #turtle:hover:not(.dragging){filter:drop-shadow(0 0 30px rgba(0, 240, 255,.7));}
+  #turtle svg{width:100%; height:100%; display:block; overflow:visible;}
+  #turtle .tag{position:absolute; left:50%; top:-28px; transform:translateX(-50%);
+    font-family:"Share Tech Mono", monospace; font-size:11px; letter-spacing:2px; color:var(--cy); background:rgba(4,10,24,.9);
+    border:1px solid var(--cy); border-radius:6px; padding:3px 10px; white-space:nowrap;
+    opacity:0; transition:all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events:none;
+    box-shadow: 0 4px 12px rgba(0, 240, 255, 0.3);}
+  #turtle:hover .tag{opacity:1; top:-36px;}
+  .flame{transform-box:fill-box; transform-origin: center;}
+
+  #log{
+    position:fixed; left:16px; bottom:16px; width:min(480px,65vw); z-index:25;
+    background:rgba(2,4,10,.85); border:1px solid rgba(0, 240, 255, 0.3); border-radius:12px;
+    border-left: 4px solid var(--cy);
+    font-family:"Share Tech Mono",monospace; font-size:12px; padding:10px 14px;
+    height:74px; overflow:hidden; color:#aee0ff; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6), inset 0 0 15px rgba(0, 240, 255, 0.05);
+  }
+  #log div{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:0; animation: logEntry 0.3s forwards; line-height: 1.4;}
+  @keyframes logEntry { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+  #log .t{color:#4a7a9e; margin-right:8px; display: inline-block; width: 60px;}
+  #log b{color: #fff; text-shadow: 0 0 4px var(--cy);}
+
+  #hint{
+    position:fixed; right:16px; bottom:16px; z-index:25; max-width:280px;
+    font-size:13px; font-weight:500; color:#8faac9; background:rgba(2,4,10,.85); border:1px solid rgba(0, 240, 255, 0.2);
+    border-radius:12px; padding:10px 14px; line-height:1.5; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  }
+  #hint b{color:var(--cy); font-weight: 700; text-shadow: 0 0 4px rgba(0, 240, 255, 0.4);}
+
+  #tooltip{
+    position:fixed; z-index:60; pointer-events:none; max-width:240px;
+    background:rgba(4,10,26,.95); border:1px solid var(--cy); border-radius:8px;
+    padding:10px 12px; font-size:12px; visibility:hidden; opacity:0; transform:scale(0.95); transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+    box-shadow:0 8px 24px rgba(0,0,0,0.8), 0 0 16px var(--cy-dim);
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  }
+  #tooltip.visible{visibility:visible; opacity:1; transform:scale(1);}
+  #tooltip b{color:#fff; font-size:14px; font-weight:700; letter-spacing:1px; display:block; margin-bottom:4px; text-shadow: 0 0 4px var(--cy);}
+  #tooltip .dc{color:#9fcbe8; line-height:1.4; font-weight:500;}
+  #tooltip .cc{color:var(--or); font-family:"Share Tech Mono", monospace; margin-top:6px; font-size: 11px; text-shadow: 0 0 4px rgba(255, 154, 60, 0.4);}
+
+  #draghost{position:fixed; z-index:70; pointer-events:none; font-size:32px;
+    filter:drop-shadow(0 0 15px var(--cy)); transform:translate(-50%,-50%); display:none;}
+
+  #flash{position:fixed; inset:0; z-index:40; pointer-events:none; opacity:0; background:#fff;}
+  body.collapsed .panel{transform: translateX(-150%); opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);}
+  body.collapsed #tools{transform: translateX(150%);}
+
+  @media (max-width:900px){
+    .panel{width:210px; top:65px; bottom:110px;}
+    .meter{width:120px;} header h1{font-size:14px;}
+    #hint{display:none;} #log{width:60vw;}
+  }
+  body.glitching {
+    animation: glitch-anim 0.1s infinite;
+  }
+  @keyframes glitch-anim {
+    0% { transform: translate(2px, 1px); filter: hue-rotate(10deg) contrast(1.1); }
+    33% { transform: translate(-2px, -1px); filter: hue-rotate(-10deg) saturate(2); }
+    66% { transform: translate(1px, 2px); filter: hue-rotate(15deg); }
+    100% { transform: translate(0, 0); filter: hue-rotate(0deg); }
+  }
+</style>
+</head>
+<body>
+<canvas id="space"></canvas>
+<div id="vignette"></div>
+<div id="flash"></div>
+
+<header>
+  <h1>🐢 MECHATURTLE <small>// DEEP-SPACE COMMAND</small></h1>
+  <div class="meters">
+    <div class="meter"><label><span>HULL</span><span id="hulltxt">100</span></label>
+      <div class="bar" id="hullbar"><i style="width:100%"></i></div></div>
+    <div class="meter"><label><span>ENERGY</span><span id="energytxt">100</span></label>
+      <div class="bar" id="energybar"><i style="width:100%"></i></div></div>
+    <div id="speedo">0 u/s</div>
+    <button class="hbtn" id="mutebtn" title="Toggle sound">🔊</button>
+    <button class="hbtn" id="panelbtn" title="Toggle panels">▦</button>
+  </div>
+</header>
+
+<aside class="panel" id="abilities"><h2>ABILITIES <span class="cnt">24</span></h2><div class="grid" id="abgrid"></div></aside>
+<aside class="panel" id="tools"><h2>TOOLS <span class="cnt">12</span></h2><div class="grid" id="tgrid"></div></aside>
+
+<div id="turtle">
+  <div class="tag">MECHATURTLE-7 // ONLINE</div>
+  <svg viewBox="0 0 200 200" id="tsvg">
+    <defs>
+      <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#c9d8f4"/><stop offset=".5" stop-color="#7d92b8"/><stop offset="1" stop-color="#3a4a6e"/>
+      </linearGradient>
+      <radialGradient id="shellTop" cx=".5" cy=".32" r=".85">
+        <stop offset="0" stop-color="#93aede"/><stop offset=".6" stop-color="#4a5f8c"/><stop offset="1" stop-color="#27334f"/>
+      </radialGradient>
+      <radialGradient id="coreG">
+        <stop offset="0" stop-color="#eaffff"/><stop offset=".35" stop-color="#54e9ff"/>
+        <stop offset=".7" stop-color="#1e90ff" stop-opacity=".8"/><stop offset="1" stop-color="#1e90ff" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="flameG" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#a5f3ff"/>
+        <stop offset=".7" stop-color="#3b82f6"/><stop offset="1" stop-color="#3b82f6" stop-opacity="0"/>
+      </linearGradient>
+      <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="3.2" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <!-- thruster flames -->
+    <g id="flames" filter="url(#glow)">
+      <path id="fl0" class="flame" d="M46 92 L14 104 L46 116 Z" fill="url(#flameG)" style="transform-origin:100% 50%"/>
+      <path id="fl1" class="flame" d="M154 92 L186 104 L154 116 Z" fill="url(#flameG)" style="transform-origin:0% 50%"/>
+      <path id="fl2" class="flame" d="M52 138 L30 162 L64 150 Z" fill="url(#flameG)" style="transform-origin:80% 20%"/>
+      <path id="fl3" class="flame" d="M148 138 L170 162 L136 150 Z" fill="url(#flameG)" style="transform-origin:20% 20%"/>
+      <path id="fl4" class="flame" d="M84 164 L100 196 L116 164 Z" fill="url(#flameG)" style="transform-origin:50% 0%"/>
+    </g>
+    <!-- flippers + nozzles -->
+    <g fill="url(#steel)" stroke="#16213a" stroke-width="2.5">
+      <ellipse cx="54" cy="104" rx="21" ry="12" transform="rotate(-22 54 104)"/>
+      <ellipse cx="146" cy="104" rx="21" ry="12" transform="rotate(22 146 104)"/>
+      <ellipse cx="58" cy="142" rx="18" ry="11" transform="rotate(22 58 142)"/>
+      <ellipse cx="142" cy="142" rx="18" ry="11" transform="rotate(-22 142 142)"/>
+    </g>
+    <g fill="#1b2742" stroke="#54e9ff" stroke-width="1.5">
+      <rect x="28" y="98" width="13" height="12" rx="3"/>
+      <rect x="159" y="98" width="13" height="12" rx="3"/>
+      <rect x="36" y="146" width="12" height="11" rx="3" transform="rotate(22 42 151)"/>
+      <rect x="152" y="146" width="12" height="11" rx="3" transform="rotate(-22 158 151)"/>
+      <rect x="90" y="158" width="20" height="13" rx="4"/>
+    </g>
+    <!-- shell -->
+    <ellipse cx="100" cy="108" rx="63" ry="55" fill="url(#shellTop)" stroke="#141f38" stroke-width="3.5"/>
+    <g fill="rgba(18,36,72,.45)" stroke="#54e9ff" stroke-width="1.6" filter="url(#glow)">
+      <polygon points="100,64 124,78 124,104 100,118 76,104 76,78"/>
+      <polygon points="100,118 124,104 124,130 100,144 76,130 76,104"/>
+      <polygon points="76,78 76,104 54,96 54,70"/>
+      <polygon points="124,78 124,104 146,96 146,70"/>
+      <polygon points="54,96 76,104 76,130 54,122"/>
+      <polygon points="146,96 124,104 124,130 146,122"/>
+    </g>
+    <g stroke="#54e9ff" stroke-width="1.2" opacity=".65" filter="url(#glow)">
+      <path d="M100 64 L100 144 M76 78 L54 70 M124 78 L146 70 M76 130 L54 122 M124 130 L146 122" fill="none"/>
+    </g>
+    <!-- reactor core -->
+    <circle cx="100" cy="104" r="21" fill="url(#coreG)" filter="url(#glow)" id="corehalo"/>
+    <circle cx="100" cy="104" r="9.5" fill="#eaffff" opacity=".92"/>
+    <circle cx="100" cy="104" r="9.5" fill="none" stroke="#54e9ff" stroke-width="2"/>
+    <!-- head -->
+    <circle cx="100" cy="38" r="21" fill="url(#steel)" stroke="#141f38" stroke-width="3"/>
+    <path d="M100 17 L100 4" stroke="#54e9ff" stroke-width="2.5"/>
+    <circle cx="100" cy="4" r="4" fill="#54e9ff" filter="url(#glow)"/>
+    <circle cx="100" cy="40" r="9" fill="#0a1428"/>
+    <circle id="eye" cx="100" cy="40" r="5.5" fill="#54e9ff" filter="url(#glow)"/>
+    <circle cx="102" cy="38" r="1.8" fill="#fff"/>
+  </svg>
+</div>
+
+<div id="log"></div>
+<div id="hint"><b>DRAG</b> the turtle to fly it · <b>WASD / arrows</b> thrust · <b>drag abilities onto the turtle</b> or click to fire · beware the <b>black hole</b> 🕳️</div>
+<div id="tooltip"></div>
+<div id="draghost"></div>
+
+<script>
+"use strict";
+/* ================= SETUP ================= */
+const cv=document.getElementById('space'),ctx=cv.getContext('2d');
+let W=0,H=0;
+function resize(){
+  W=innerWidth;H=innerHeight;
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = W * dpr; cv.height = H * dpr;
+  cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  ctx.resetTransform(); ctx.scale(dpr, dpr);
+  placeBH();
+}
+addEventListener('resize',resize);
+const rand=(a,b)=>a+Math.random()*(b-a), TAU=Math.PI*2;
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+
+/* ================= AUDIO ================= */
+let AC=null,muted=false;
+function beep(f,dur,type,vol){
+  if(muted)return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.type=type||'sine';o.frequency.value=f;
+    g.gain.setValueAtTime(vol||.06,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+dur);
+    o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+dur);
+  }catch(e){}
+}
+const sfx={
+  fire(){beep(660,.12,'square',.05);beep(990,.1,'sine',.04);},
+  tool(){beep(440,.15,'triangle',.05);},
+  deny(){beep(160,.2,'sawtooth',.06);},
+  boom(){beep(90,.4,'sawtooth',.09);beep(55,.5,'sine',.08);},
+  heal(){beep(520,.12,'sine',.05);beep(780,.14,'sine',.05);}
+};
+mutebtn.onclick=()=>{muted=!muted;mutebtn.textContent=muted?'🔇':'🔊';};
+panelbtn.onclick=()=>document.body.classList.toggle('collapsed');
+
+/* ================= STATE ================= */
+const S={t:0,ts:1,shake:0,energy:100,hull:100,overdrive:0,autopilot:0,slowmo:0,
+  cloak:0,shield:0,regen:0,wormhole:null,constel:false,decoy:null,anoms:[],score:0};
+
+/* ================= BACKGROUND ================= */
+let stars=[];
+function initStars(){
+  stars=[];
+  for(let i=0;i<340;i++)stars.push({x:rand(0,W),y:rand(0,H),z:rand(.15,1),r:rand(.4,1.9),tw:rand(0,TAU),sp:rand(.5,2)});
+}
+const planets=[
+  {x:.12,y:.68,r:46,c1:'#3b2f6b',c2:'#120e2a',ring:false},
+  {x:.9,y:.14,r:30,c1:'#7a4a2b',c2:'#241407',ring:true}
+];
+let BH={x:0,y:0,r:64};
+function placeBH(){BH.x=W*.78;BH.y=H*.3;}
+let bhParts=[];
+for(let i=0;i<46;i++)bhParts.push({a:rand(0,TAU),d:rand(1.3,3.4),s:rand(.5,1.4)});
+let comets=[],cometT=1.5;
+function spawnComet(x,y,vx,vy,col){
+  comets.push({x:x??rand(0,W),y:y??-40,vx:vx??rand(-160,-60),vy:vy??rand(180,300),
+    life:rand(4,7),col:col||'#9df3ff'});
+}
+let meteors=[];
+let floaters=[];
+for(let i=0;i<40;i++)floaters.push({x:rand(0,2000),y:rand(0,2000),r:rand(1,3),vx:rand(-8,8),vy:rand(-6,6),a:rand(.1,.4)});
+
+function drawBG(dt){
+  ctx.save();
+  if(S.shake>0)ctx.translate(rand(-S.shake,S.shake),rand(-S.shake,S.shake));
+  // nebulas
+  ctx.globalCompositeOperation = 'screen';
+  const nb1 = ctx.createRadialGradient(W*0.2, H*0.2, 0, W*0.2, H*0.2, W*0.4);
+  nb1.addColorStop(0, 'rgba(60,20,100,0.2)'); nb1.addColorStop(1, 'transparent');
+  ctx.fillStyle = nb1; ctx.beginPath(); ctx.arc(W*0.2, H*0.2, W*0.4, 0, TAU); ctx.fill();
+  
+  const nb2 = ctx.createRadialGradient(W*0.8, H*0.8, 0, W*0.8, H*0.8, W*0.5);
+  nb2.addColorStop(0, 'rgba(10,50,90,0.15)'); nb2.addColorStop(1, 'transparent');
+  ctx.fillStyle = nb2; ctx.beginPath(); ctx.arc(W*0.8, H*0.8, W*0.5, 0, TAU); ctx.fill();
+  
+  const nb3 = ctx.createRadialGradient(W*0.6, H*0.3, 0, W*0.6, H*0.3, W*0.3);
+  nb3.addColorStop(0, 'rgba(100,20,50,0.12)'); nb3.addColorStop(1, 'transparent');
+  ctx.fillStyle = nb3; ctx.beginPath(); ctx.arc(W*0.6, H*0.3, W*0.3, 0, TAU); ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+  // stars
+  for(const s of stars){
+    s.tw+=dt*3*s.sp;
+    const a=.35+.65*Math.abs(Math.sin(s.tw));
+    ctx.globalAlpha=a*s.z;
+    ctx.fillStyle=s.z>.7?'#eaf6ff':'#9fc3e8';
+    const px=(s.x - S.t*4*s.z)%W, py=(s.y - S.t*2*s.z)%H;
+    ctx.fillRect(px<0?px+W:px, py<0?py+H:py, s.r, s.r);
+  }
+  ctx.globalAlpha=1;
+  // constellations
+  if(S.constel){
+    ctx.strokeStyle='rgba(84,233,255,.35)';ctx.lineWidth=1;
+    for(let g=0;g<4;g++){
+      const bx=(g*397+120)%W, by=(g*263+80)%H;
+      ctx.beginPath();
+      for(let k=0;k<6;k++){const px=bx+Math.cos(g+k*1.1)*90, py=by+Math.sin(g*2+k*.9)*70;
+        k?ctx.lineTo(px,py):ctx.moveTo(px,py);
+        ctx.fillStyle='#bffbff';ctx.fillRect(px-1.5,py-1.5,3,3);}
+      ctx.stroke();
+    }
+  }
+  // planets
+  for(const p of planets){
+    const x=p.x*W,y=p.y*H;
+    const g=ctx.createRadialGradient(x-p.r*.3,y-p.r*.3,p.r*.1,x,y,p.r);
+    g.addColorStop(0,p.c1);g.addColorStop(1,p.c2);
+    ctx.shadowBlur = 30; ctx.shadowColor = p.c1;
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,p.r,0,TAU);ctx.fill();
+    ctx.shadowBlur = 0;
+    if(p.ring){
+      ctx.shadowBlur = 15; ctx.shadowColor = 'rgba(200,180,255,.6)';
+      ctx.strokeStyle='rgba(200,180,255,.4)';ctx.lineWidth=5;
+      ctx.beginPath();ctx.ellipse(x,y,p.r*1.7,p.r*.5,-.4,0,TAU);ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+  }
+  drawBH(dt);
+  // comets
+  cometT-=dt;
+  if(cometT<=0){spawnComet();cometT=rand(2.5,6);}
+  for(let i=comets.length-1;i>=0;i--){
+    const c=comets[i];c.life-=dt;
+    c.x+=c.vx*dt;c.y+=c.vy*dt;
+    if(c.life<=0||c.y>H+80){comets.splice(i,1);continue;}
+    const tx=c.x-c.vx*.35,ty=c.y-c.vy*.35;
+    const g=ctx.createLinearGradient(c.x,c.y,tx,ty);
+    g.addColorStop(0,'#ffffff');g.addColorStop(.25,c.col);g.addColorStop(1,'transparent');
+    ctx.strokeStyle=g;ctx.lineWidth=3;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(c.x,c.y);ctx.lineTo(tx,ty);ctx.stroke();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(c.x,c.y,2.6,0,TAU);ctx.fill();
+  }
+  // meteors
+  for(let i=meteors.length-1;i>=0;i--){
+    const m=meteors[i];m.life-=dt;m.x+=m.vx*dt;m.y+=m.vy*dt;
+    if(m.life<=0||m.y>H+40){meteors.splice(i,1);continue;}
+    const g=ctx.createLinearGradient(m.x,m.y,m.x-m.vx*.25,m.y-m.vy*.25);
+    g.addColorStop(0,'#ffd9a0');g.addColorStop(1,'transparent');
+    ctx.strokeStyle=g;ctx.lineWidth=2.5;ctx.beginPath();
+    ctx.moveTo(m.x,m.y);ctx.lineTo(m.x-m.vx*.25,m.y-m.vy*.25);ctx.stroke();
+  }
+  // drifting dust
+  ctx.fillStyle='#8fb8d8';
+  for(const f of floaters){
+    f.x+=f.vx*dt;f.y+=f.vy*dt;
+    if(f.x<0)f.x=W;if(f.x>W)f.x=0;if(f.y<0)f.y=H;if(f.y>H)f.y=0;
+    ctx.globalAlpha=f.a;ctx.beginPath();ctx.arc(f.x%W,f.y%H,f.r,0,TAU);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  ctx.restore();
+}
+
+function drawBH(dt){
+  const{x,y,r}=BH;
+  // halo
+  let g=ctx.createRadialGradient(x,y,r*.5,x,y,r*3.4);
+  g.addColorStop(0,'rgba(120,80,255,.12)');g.addColorStop(.5,'rgba(60,40,160,.06)');g.addColorStop(1,'transparent');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*3.4,0,TAU);ctx.fill();
+  // accretion disk (rotating)
+  ctx.save();ctx.translate(x,y);
+  for(let i=0;i<3;i++){
+    ctx.rotate(dt*(.5+i*.22)*(i%2?1:-1));
+    ctx.strokeStyle=`rgba(255,${140+i*40},${70+i*20},${.55-i*.13})`;
+    ctx.lineWidth=11-i*2.5;ctx.setLineDash([54,30]);
+    ctx.beginPath();ctx.ellipse(0,0,r*1.95,r*1.12,(i*.5),0,TAU);ctx.stroke();
+  }
+  ctx.restore();ctx.setLineDash([]);
+  // photon ring
+  ctx.strokeStyle='rgba(150,225,255,.95)';ctx.lineWidth=3;
+  ctx.shadowBlur=15; ctx.shadowColor='rgba(150,225,255,1)';
+  ctx.beginPath();ctx.arc(x,y,r*1.04,0,TAU);ctx.stroke();
+  ctx.strokeStyle='rgba(150,225,255,.25)';ctx.lineWidth=8;
+  ctx.beginPath();ctx.arc(x,y,r*1.04,0,TAU);ctx.stroke();
+  ctx.shadowBlur=0;
+  // event horizon
+  ctx.fillStyle='#000';ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();
+  // infalling matter
+  for(const p of bhParts){
+    p.a+=dt*p.s*1.6;p.d-=dt*.55*p.s;
+    if(p.d<1.08){p.d=rand(2.6,3.4);p.a=rand(0,TAU);}
+    const px=x+Math.cos(p.a)*r*p.d, py=y+Math.sin(p.a)*r*p.d*.72;
+    ctx.fillStyle=`rgba(255,${180+Math.floor(60*Math.sin(p.a))},120,${clamp(1.4-p.d*.35,.1,.9)})`;
+    ctx.beginPath();ctx.arc(px,py,2.2,0,TAU);ctx.fill();
+  }
+  // label
+  ctx.fillStyle='rgba(160,190,230,.6)';ctx.font='10px monospace';
+  ctx.fillText('SAGITTARIUS T-7 // SUPERMASSIVE',x-r*1.5,y+r*2.2);
+}
+</script>
+<script>
+"use strict";
+/* ================= TURTLE ================= */
+const turtleEl=document.getElementById('turtle');
+const flames=[0,1,2,3,4].map(i=>document.getElementById('fl'+i));
+const T={x:0,y:0,vx:0,vy:0,ang:-Math.PI/2,spin:0,drag:false,px:0,py:0};
+const NOZ=[[28,104],[172,104],[42,151],[158,151],[100,171]]; // local 200-space
+const TSC=0.75; // 150px / 200
+function tCenter(){const r=turtleEl.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};}
+function nozWorld(i){
+  const c=tCenter(),dx=(NOZ[i][0]-100)*TSC,dy=(NOZ[i][1]-100)*TSC;
+  const th=T.ang+Math.PI/2,co=Math.cos(th),si=Math.sin(th);
+  return{x:c.left+dx*co-dy*si,y:c.top+dx*si+dy*co};
+}
+function faceX(){return Math.cos(T.ang)} function faceY(){return Math.sin(T.ang)}
+
+/* ================= PARTICLES ================= */
+let parts=[],rings=[],beams=[];
+const MAXP=700;
+function burst(x,y,col,n,spd,life){
+  for(let i=0;i<n;i++){
+    if(parts.length>MAXP)parts.shift();
+    const a=rand(0,TAU),s=rand(spd*.3,spd);
+    parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:rand(life*.5,life),ml:life,col,r:rand(1.5,4)});
+  }
+}
+function ring(x,y,col,maxR,w){rings.push({x,y,r:8,vr:maxR/0.7,col,life:.7,ml:.7,w:w||4});}
+function beam(x1,y1,ang,len,col,w,life){
+  beams.push({x1,y1,x2:x1+Math.cos(ang)*len,y2:y1+Math.sin(ang)*len,col,w,life,ml:life||.35});
+}
+function flashScreen(col,a){
+  const f=document.getElementById('flash');
+  f.style.background=col;f.style.transition='none';f.style.opacity=a;
+  requestAnimationFrame(()=>{f.style.transition='opacity .5s';f.style.opacity=0;});
+}
+function shake(m){S.shake=Math.min(22,S.shake+m);}
+
+/* ================= LOG / HUD ================= */
+const logEl=document.getElementById('log');
+function log(msg){
+  const d=document.createElement('div');
+  const t=new Date();const ts=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');
+  d.innerHTML='<span class="t">'+ts+'</span>'+msg;
+  logEl.prepend(d);
+  while(logEl.children.length>5)logEl.lastChild.remove();
+}
+const hullFill=document.querySelector('#hullbar i'),energyFill=document.querySelector('#energybar i');
+const hullTxt=document.getElementById('hulltxt'),energyTxt=document.getElementById('energytxt'),speedo=document.getElementById('speedo');
+let hudT=0;
+function hud(){
+  hullFill.style.width=clamp(S.hull,0,100)+'%';hullTxt.textContent=Math.round(clamp(S.hull,0,100));
+  energyFill.style.width=clamp(S.energy,0,100)+'%';energyTxt.textContent=Math.round(clamp(S.energy,0,100));
+  speedo.textContent=Math.round(Math.hypot(T.vx,T.vy))+' u/s';
+}
+
+/* ================= TOOLTIP ================= */
+const tip=document.getElementById('tooltip');
+function bindTip(el,name,cost,desc){
+  el.addEventListener('mouseenter',e=>{tip.innerHTML='<b>'+name+'</b><div class="dc">'+desc+'</div>'+(cost?'<div class="cc">◆ '+cost+' energy</div>':'');tip.classList.add('visible');});
+  el.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+16)+'px';tip.style.top=(e.clientY+14)+'px';});
+  el.addEventListener('mouseleave',()=>tip.classList.remove('visible'));
+}
+
+/* ================= ABILITIES ================= */
+const ABILITIES=[
+ {n:'Prismatic Shell',i:'🔷',c:8, d:'Hardened plasma plating. Shield 6s.',fx:'prism'},
+ {n:'Ion Dash',i:'⚡',c:10,d:'Violent burst of ion thrust forward.',fx:'dash'},
+ {n:'Gravity Well',i:'🌀',c:14,d:'Crush nearby matter into the core.',fx:'gwell'},
+ {n:'Solar Flare',i:'☀️',c:12,d:'Blinding stellar eruption.',fx:'flare'},
+ {n:'EMP Burst',i:'💥',c:11,d:'Fry every circuit in the sector.',fx:'emp'},
+ {n:'Cryo Freeze',i:'❄️',c:10,d:'Flash-freeze local spacetime.',fx:'cryo'},
+ {n:'Warp Jump',i:'🌠',c:18,d:'Blink to a random sector point.',fx:'warp'},
+ {n:'Laser Barrage',i:'🔫',c:13,d:'Raking fan of scarlet lasers.',fx:'lasers'},
+ {n:'Nano Repair',i:'🔧',c:9, d:'Swarm-bots restore +25 hull.',fx:'nano'},
+ {n:'Shield Matrix',i:'🛡️',c:12,d:'Full-spectrum barrier. 8s.',fx:'shieldmat'},
+ {n:'Comet Trail',i:'☄️',c:8, d:'Launch a loyal pet comet.',fx:'comet'},
+ {n:'Quantum Dodge',i:'💨',c:9, d:'Phase-sidestep with afterimages.',fx:'dodge'},
+ {n:'Star Forge',i:'⭐',c:15,d:'Forge raw starfire. +10 energy.',fx:'forge'},
+ {n:'Nebula Cloak',i:'🌫️',c:12,d:'Vanish into the dust. 5s.',fx:'cloak'},
+ {n:'Meteor Storm',i:'🌠',c:16,d:'Call down the rocks.',fx:'storm'},
+ {n:'Tractor Beam',i:'🧲',c:10,d:'Grab debris, drag it home.',fx:'tractor'},
+ {n:'Fusion Overload',i:'☢️',c:22,d:'Core going critical. Big boom.',fx:'fusion'},
+ {n:'Time Dilation',i:'⏳',c:14,d:'Slow the universe. 4s.',fx:'dilate'},
+ {n:'Asteroid Armor',i:'🪨',c:11,d:'Rock-hard plating. +10 hull.',fx:'armor'},
+ {n:'Hyperion Beam',i:'🔆',c:17,d:'A lance of pure dawn.',fx:'hyperion'},
+ {n:'Void Step',i:'👻',c:13,d:'Step through nothing itself.',fx:'void'},
+ {n:'Starlight Mend',i:'💚',c:10,d:'Bask and recover +15 hull.',fx:'mend'},
+ {n:'Supernova',i:'🌟',c:25,d:'Go out shining. Maximum boom.',fx:'supernova'},
+ {n:'Shell Spin',i:'🐢',c:9, d:'Beyblade protocol engaged.',fx:'spin'},
+];
+const TOOLS=[
+ {n:'Deep Scanner',i:'📡',d:'Ping the sector for anomalies.',fx:'scan'},
+ {n:'Star Map',i:'🗺️',d:'Toggle constellation overlay.',fx:'starmap'},
+ {n:'Fuel Scoop',i:'⛽',d:'Siphon stellar hydrogen. +40 energy.',fx:'fuel'},
+ {n:'Repair Drone',i:'🤖',d:'Deploy mend-bot. Hull regen 10s.',fx:'drone'},
+ {n:'Comms Array',i:'📻',d:'Broadcast a hello to the void.',fx:'comms'},
+ {n:'Nav AI',i:'🧭',d:'Autopilot for 8 seconds.',fx:'nav'},
+ {n:'Wormhole Probe',i:'🕳️',d:'Poke a 12s hole in spacetime.',fx:'worm'},
+ {n:'Shield Tuner',i:'🎛️',d:'Quick retune. Mini-shield 4s.',fx:'tuner'},
+ {n:'Engine Overdrive',i:'🚀',d:'200% thrust for 8s.',fx:'overdrive'},
+ {n:'Hologram',i:'👥',d:'Project a decoy turtle. 8s.',fx:'holo'},
+ {n:'Cargo Manifest',i:'📦',d:"What's in the hold?",fx:'cargo'},
+ {n:'BH Slingshot',i:'🎯',d:'Whip around the black hole.',fx:'sling'},
+];
+
+function shieldFx(dur,col){
+  S.shield=Math.max(S.shield,dur);S.shieldCol=col||'#54e9ff';
+  turtleEl.classList.add('shielded');
+  const st=document.createElement('style');
+  st.id='shieldstyle';
+  document.getElementById('shieldstyle')?.remove();
+  st.textContent=`#turtle.shielded::after{content:'';position:absolute;inset:-16px;border-radius:50%;border:3px solid ${S.shieldCol};box-shadow:0 0 24px ${S.shieldCol},inset 0 0 24px ${S.shieldCol};animation:shpulse 1s infinite alternate;pointer-events:none;}@keyframes shpulse{from{transform:scale(.96);opacity:.7}to{transform:scale(1.04);opacity:1}}`;
+  document.head.appendChild(st);
+}
+
+function activateAbility(a,btn){
+  const now=performance.now();
+  if(btn._cd&&now<btn._cd){return;}
+  if(S.energy<a.c){sfx.deny();log('⚠️ Insufficient energy for <b>'+a.n+'</b>.');return;}
+  S.energy-=a.c;btn._cd=now+1100;btn.classList.add('cool');
+  setTimeout(()=>btn.classList.remove('cool'),1100);
+  const c=tCenter(),fx=faceX(),fy=faceY();
+  sfx.fire();
+  switch(a.fx){
+    case 'prism': shieldFx(6,'#54e9ff');ring(c.x,c.y,'#54e9ff',120,5);log('🔷 <b>Prismatic Shell</b> online.');break;
+    case 'dash': T.vx+=fx*560;T.vy+=fy*560;
+      for(let i=0;i<5;i++)nozWorld(i%5),burst(nozWorld(i%5).x,nozWorld(i%5).y,'#9df3ff',8,260,.5);
+      shake(4);log('⚡ <b>Ion Dash!</b>');break;
+    case 'gwell': S.pull={t:3,x:c.x,y:c.y};ring(c.x,c.y,'#a78bfa',200,6);shake(5);log('🌀 <b>Gravity Well</b> collapsing matter.');break;
+    case 'flare': flashScreen('#ff9a3c',.35);burst(c.x,c.y,'#ffb347',46,420,.9);burst(c.x,c.y,'#fff',20,300,.6);shake(6);sfx.boom();log('☀️ <b>Solar Flare</b> discharged.');break;
+    case 'emp': ring(c.x,c.y,'#a78bfa',260,8);ring(c.x,c.y,'#fff',180,3);burst(c.x,c.y,'#a78bfa',30,340,.7);shake(7);sfx.boom();log('💥 <b>EMP Burst</b>. Sector silenced.');break;
+    case 'cryo': burst(c.x,c.y,'#bfefff',50,380,1);ring(c.x,c.y,'#bfefff',200,5);S.slowmo=Math.max(S.slowmo,2);log('❄️ <b>Cryo Freeze</b>. Time thickens.');break;
+    case 'warp':{
+      burst(c.x,c.y,'#fff',30,300,.5);
+      const nx=rand(120,W-120),ny=rand(140,H-120);
+      for(let i=0;i<=10;i++)parts.push({x:c.x+(nx-c.x)*i/10,y:c.y+(ny-c.y)*i/10,vx:0,vy:0,life:.4,ml:.4,col:'#a78bfa',r:3});
+      T.x=nx-75;T.y=ny-75;T.vx*=.2;T.vy*=.2;
+      burst(nx,ny,'#a78bfa',36,320,.7);flashScreen('#a78bfa',.25);shake(5);
+      log('🌠 <b>Warp Jump</b> complete.');break;}
+    case 'lasers': for(let k=-2;k<=2;k++){beam(c.x,c.y,T.ang+k*.16,rand(500,700),'#ff4d5e',5);burst(c.x+fx*90,c.y+fy*90,'#ff4d5e',6,200,.4);}shake(5);log('🔫 <b>Laser Barrage</b> away.');break;
+    case 'nano': S.hull=Math.min(100,S.hull+25);burst(c.x,c.y,'#7dff9a',40,240,1);sfx.heal();log('🔧 <b>Nano Repair</b>. Hull +25.');break;
+    case 'shieldmat': shieldFx(8,'#54e9ff');ring(c.x,c.y,'#54e9ff',150,6);log('🛡️ <b>Shield Matrix</b> at full.');break;
+    case 'comet': spawnComet(c.x,c.y,fx*260+rand(-40,40),fy*260+rand(-40,40),'#9df3ff');log('☄️ Pet comet deployed. Good boy.');break;
+    case 'dodge':{const px=-fy,py=fx;T.vx+=px*480;T.vy+=py*480;
+      for(let i=0;i<3;i++)setTimeout(()=>{const q=tCenter();rings.push({x:q.x,y:q.y,r:20,vr:60,col:'#9df3ff',life:.4,ml:.4,w:3});},i*90);
+      log('💨 <b>Quantum Dodge!</b>');break;}
+    case 'forge': burst(c.x,c.y,'#ffd76a',55,420,.9);ring(c.x,c.y,'#ffd76a',170,5);S.energy=Math.min(100,S.energy+10);log('⭐ <b>Star Forge</b>. Energy +10.');break;
+    case 'cloak': S.cloak=5;turtleEl.style.opacity=.22;log('🌫️ <b>Nebula Cloak</b>. You see nothing.');setTimeout(()=>{if(S.cloak<=0)turtleEl.style.opacity=1;},5100);break;
+    case 'storm': for(let i=0;i<14;i++)meteors.push({x:rand(0,W),y:rand(-120,-10),vx:rand(-140,-40),vy:rand(320,480),life:4});
+      shake(6);log('🌠 <b>Meteor Storm</b> inbound.');break;
+    case 'tractor': beam(c.x,c.y,Math.atan2(BH.y-c.y,BH.x-c.x),Math.hypot(BH.x-c.x,BH.y-c.y),'#7dffd4',7,.8);
+      S.pull={t:3,x:c.x,y:c.y};log('🧲 <b>Tractor Beam</b> engaged.');break;
+    case 'fusion': flashScreen('#fff7d6',.4);burst(c.x,c.y,'#ffd76a',70,520,1.1);ring(c.x,c.y,'#ffb347',300,9);ring(c.x,c.y,'#fff',200,4);shake(12);sfx.boom();log('☢️ <b>FUSION OVERLOAD!</b>');break;
+    case 'dilate': S.slowmo=Math.max(S.slowmo,4);ring(c.x,c.y,'#a78bfa',220,5);log('⏳ <b>Time Dilation</b>. Savor it.');break;
+    case 'armor': S.hull=Math.min(100,S.hull+10);S.armor=8;ring(c.x,c.y,'#b8b8c8',140,7);burst(c.x,c.y,'#cfcfcf',30,260,.8);log('🪨 <b>Asteroid Armor</b> bolted on.');break;
+    case 'hyperion': beam(c.x,c.y,T.ang,900,'#ffe9a8',16,.6);beam(c.x,c.y,T.ang,900,'#fff',6,.6);burst(c.x+fx*120,c.y+fy*120,'#ffe9a8',24,300,.5);shake(8);sfx.boom();log('🔆 <b>HYPERION BEAM.</b>');break;
+    case 'void':{const nx=c.x+fx*230,ny=c.y+fy*230;burst(c.x,c.y,'#a78bfa',26,280,.5);
+      T.x=clamp(nx,80,W-80)-75;T.y=clamp(ny,120,H-80)-75;burst(clamp(nx,80,W-80),clamp(ny,120,H-80),'#a78bfa',30,300,.6);
+      ring(c.x,c.y,'#a78bfa',130,5);log('👻 <b>Void Step</b>.');break;}
+    case 'mend': S.hull=Math.min(100,S.hull+15);burst(c.x,c.y,'#7dff9a',36,220,1.2);sfx.heal();log('💚 <b>Starlight Mend</b>. Hull +15.');break;
+    case 'supernova': flashScreen('#ffffff',.55);burst(c.x,c.y,'#fff',90,640,1.3);burst(c.x,c.y,'#ffb347',60,480,1.2);
+      ring(c.x,c.y,'#fff',420,10);ring(c.x,c.y,'#ffb347',320,7);ring(c.x,c.y,'#ff5d5d',240,5);
+      shake(16);sfx.boom();setTimeout(()=>sfx.boom(),180);log('🌟 <b>SUPERNOVA.</b> Absolutely sick.');break;
+    case 'spin': T.spin=2.2;ring(c.x,c.y,'#54e9ff',150,6);burst(c.x,c.y,'#54e9ff',30,320,.6);log('🐢 <b>SHELL SPIN.</b> Beyblade protocol.');break;
+  }
+}
+
+function activateTool(t,btn){
+  const c=tCenter();sfx.tool();
+  switch(t.fx){
+    case 'scan': S.anoms=[];for(let i=0;i<5;i++)S.anoms.push({x:rand(60,W-60),y:rand(100,H-60),t:12});
+      ring(c.x,c.y,'#7dffd4',420,4);log('📡 Scan complete: <b>5 anomalies</b> pinged.');break;
+    case 'starmap': S.constel=!S.constel;log('🗺️ Star map '+(S.constel?'<b>ON</b>':'OFF')+'.');break;
+    case 'fuel': S.energy=Math.min(100,S.energy+40);burst(c.x,c.y,'#ffb347',30,260,.8);log('⛽ Scooped +40 energy. Tasty hydrogen.');break;
+    case 'drone': S.regen=10;burst(c.x,c.y,'#7dff9a',24,220,.9);log('🤖 Mend-bot deployed. 10s of repairs.');break;
+    case 'comms': for(let i=0;i<3;i++)setTimeout(()=>{const q=tCenter();rings.push({x:q.x,y:q.y,r:10,vr:320,col:'#7dffd4',life:1.1,ml:1.1,w:3});},i*260);
+      setTimeout(()=>log('📻 Incoming: <i>"hello, turtle"</i> — the void answers.'),900);
+      log('📻 Broadcasting hello...');break;
+    case 'nav': S.autopilot=8;log('🧭 Nav AI engaged. Sit back.');break;
+    case 'worm': S.wormhole={x:c.x+Math.cos(T.ang)*220,y:c.y+Math.sin(T.ang)*220,t:12};
+      ring(S.wormhole.x,S.wormhole.y,'#a78bfa',90,5);log('🕳️ Wormhole probe away. 12s.');break;
+    case 'tuner': shieldFx(4,'#7dffd4');log('🎛️ Deflectors retuned. Mini-shield 4s.');break;
+    case 'overdrive': S.overdrive=8;burst(c.x,c.y,'#ff9a3c',36,340,.8);log('🚀 <b>OVERDRIVE.</b> 200% thrust, 8s.');break;
+    case 'holo':{const d=turtleEl.cloneNode(true);d.removeAttribute('id');d.style.opacity=.35;
+      d.style.transform=`translate(${T.x+120}px,${T.y-60}px) rotate(0deg)`;
+      document.body.appendChild(d);let lt=8;
+      const iv=setInterval(()=>{lt-=.1;d.style.transform=`translate(${T.x+120+Math.sin(lt*3)*30}px,${T.y-60+Math.cos(lt*2)*20}px) rotate(${lt*40}deg)`;
+        if(lt<=0){clearInterval(iv);d.remove();}},100);
+      log('👥 Hologram decoy projected.');break;}
+    case 'cargo':{const items=['1× left flipper (spare)','3 tons of moon cheese','a suspiciously warm plasma coil','47 rubber ducks','1 black hole (mini, decorative)','0 regrets'];
+      log('📦 Manifest: '+items[Math.floor(Math.random()*items.length)]);break;}
+    case 'sling':{const dx=c.x-BH.x,dy=c.y-BH.y,d=Math.hypot(dx,dy);
+      if(d>560){sfx.deny();log('🎯 Too far from the black hole for a slingshot.');break;}
+      const tx=-dy/d,ty=dx/d;T.vx=tx*980;T.vy=ty*980;
+      burst(c.x,c.y,'#a78bfa',40,380,.8);ring(c.x,c.y,'#a78bfa',160,5);shake(7);
+      log('🎯 <b>BLACK HOLE SLINGSHOT!</b>');break;}
+  }
+}
+
+/* ================= BUILD UI ================= */
+const abgrid=document.getElementById('abgrid'),tgrid=document.getElementById('tgrid');
+ABILITIES.forEach(a=>{
+  const b=document.createElement('button');b.className='abtn';
+  b.innerHTML='<span class="ic">'+a.i+'</span>'+a.n+'<span class="cost">'+a.c+'</span>';
+  bindTip(b,a.n+' '+a.i,a.c,a.d);
+  b.addEventListener('click',()=>activateAbility(a,b));
+  b._ability=a;abgrid.appendChild(b);
+});
+TOOLS.forEach(t=>{
+  const b=document.createElement('button');b.className='tbtn';
+  b.innerHTML='<span class="ic">'+t.i+'</span>'+t.n;
+  bindTip(b,t.n+' '+t.i,0,t.d);
+  b.addEventListener('click',()=>activateTool(t,b));
+  tgrid.appendChild(b);
+});
+
+/* ---- drag & drop: ability chips onto turtle ---- */
+const ghost=document.getElementById('draghost');
+let chipDrag=null;
+abgrid.addEventListener('pointerdown',e=>{
+  const b=e.target.closest('.abtn');if(!b)return;
+  chipDrag={btn:b,x0:e.clientX,y0:e.clientY,on:false};
+});
+addEventListener('pointermove',e=>{
+  if(chipDrag&&!chipDrag.on&&Math.hypot(e.clientX-chipDrag.x0,e.clientY-chipDrag.y0)>9){
+    chipDrag.on=true;ghost.textContent=chipDrag.btn._ability.i;ghost.style.display='block';tip.style.display='none';
+  }
+  if(chipDrag&&chipDrag.on){ghost.style.left=e.clientX+'px';ghost.style.top=e.clientY+'px';}
+});
+addEventListener('pointerup',e=>{
+  if(chipDrag&&chipDrag.on){
+    const c=tCenter();
+    if(Math.hypot(e.clientX-c.x,e.clientY-c.y)<100)activateAbility(chipDrag.btn._ability,chipDrag.btn);
+    ghost.style.display='none';
+  }
+  chipDrag=null;
+});
+
+/* ---- turtle drag ---- */
+let tDrag=null;
+turtleEl.addEventListener('pointerdown',e=>{
+  e.preventDefault();tDrag={lx:e.clientX,ly:e.clientY,t:performance.now()};
+  T.drag=true;T.px=T.x;T.py=T.y;T.vx=0;T.vy=0;
+  turtleEl.classList.add('dragging');turtleEl.setPointerCapture(e.pointerId);
+});
+turtleEl.addEventListener('pointermove',e=>{
+  if(!tDrag)return;
+  const now=performance.now(),dt=Math.max(1,now-tDrag.t)/1000;
+  const nx=e.clientX-75,ny=e.clientY-75;
+  const tvx = (nx-T.x)/dt, tvy = (ny-T.y)/dt;
+  T.vx = T.vx * 0.3 + tvx * 0.7;
+  T.vy = T.vy * 0.3 + tvy * 0.7;
+  T.x=nx;T.y=ny;tDrag={lx:e.clientX,ly:e.clientY,t:now};
+});
+turtleEl.addEventListener('pointerup',()=>{tDrag=null;T.drag=false;turtleEl.classList.remove('dragging');});
+
+/* ---- keyboard ---- */
+const keys={};
+addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase()))e.preventDefault();});
+addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
+</script>
+<script>
+"use strict";
+/* ================= MAIN LOOP ================= */
+function updateWorld(dt){
+  // timers (real dt passed separately where needed)
+  if(S.overdrive>0)S.overdrive-=dt;
+  if(S.autopilot>0)S.autopilot-=dt;
+  if(S.armor>0)S.armor-=dt;
+  if(S.shield>0){S.shield-=dt;if(S.shield<=0)turtleEl.classList.remove('shielded');}
+  if(S.cloak>0){S.cloak-=dt;if(S.cloak<=0)turtleEl.style.opacity=1;}
+  if(S.regen>0){S.regen-=dt;S.hull=Math.min(100,S.hull+3*dt);}
+  S.energy=Math.min(100,S.energy+7*dt);
+
+  // keyboard thrust
+  let ax=0,ay=0;
+  if(keys['w']||keys['arrowup'])ay-=1;
+  if(keys['s']||keys['arrowdown'])ay+=1;
+  if(keys['a']||keys['arrowleft'])ax-=1;
+  if(keys['d']||keys['arrowright'])ax+=1;
+  if(ax||ay){const l=Math.hypot(ax,ay);ax/=l;ay/=l;
+    const acc=950*(S.overdrive>0?1.9:1);
+    T.vx+=ax*acc*dt;T.vy+=ay*acc*dt;}
+  if(keys['x']){T.vx*=Math.exp(-6*dt);T.vy*=Math.exp(-6*dt);}
+
+  // autopilot wander
+  if(S.autopilot>0&&!T.drag){
+    if(!S.wp||Math.hypot(S.wp.x-(T.x+75),S.wp.y-(T.y+75))<90)
+      S.wp={x:rand(120,W-120),y:rand(140,H-120)};
+    const dx=S.wp.x-(T.x+75),dy=S.wp.y-(T.y+75),d=Math.hypot(dx,dy)||1;
+    T.vx+=(dx/d*420-T.vx)*Math.min(1,dt*2);
+    T.vy+=(dy/d*420-T.vy)*Math.min(1,dt*2);
+  }
+
+  // black hole gravity on turtle
+  const c=tCenter(),bdx=BH.x-c.x,bdy=BH.y-c.y,bd=Math.hypot(bdx,bdy)||1;
+  if(bd<380&&!T.drag){
+    const F=Math.min(950,150000/(bd*bd+5000));
+    T.vx+=bdx/bd*F*dt;T.vy+=bdy/bd*F*dt;
+  }
+  if(bd<BH.r+58){
+    const nx=(c.x-BH.x)/bd,ny=(c.y-BH.y)/bd;
+    T.vx=nx*460;T.vy=ny*460;
+    S.hull-=(S.armor>0?4:10)*dt;
+    if(!S._bhw||S.t-S._bhw>2){S._bhw=S.t;log('⚠️ <b>EVENT HORIZON PROXIMITY!</b> Hull failing!');shake(6);sfx.deny();}
+    if(S.hull<=0){S.hull=100;T.x=W/2-75;T.y=H/2-75;T.vx=0;T.vy=0;log('💀 Turtle reconstituted at spawn. Be careful out there.');}
+  }
+
+  // friction + speed cap
+  if(!T.drag){T.vx*=Math.exp(-1.4*dt);T.vy*=Math.exp(-1.4*dt);}
+  const sp=Math.hypot(T.vx,T.vy),ms=560*(S.overdrive>0?1.7:1);
+  if(sp>ms&&!T.drag){T.vx*=ms/sp;T.vy*=ms/sp;}
+
+  // integrate + bounds
+  if(!T.drag){
+    T.x+=T.vx*dt;T.y+=T.vy*dt;
+  }
+  if(T.x<-40){T.x=-40;T.vx=Math.abs(T.vx)*.5;}
+  if(T.x>W-110){T.x=W-110;T.vx=-Math.abs(T.vx)*.5;}
+  if(T.y<46){T.y=46;T.vy=Math.abs(T.vy)*.5;}
+  if(T.y>H-160){T.y=H-160;T.vy=-Math.abs(T.vy)*.5;}
+
+  // facing
+  if(T.spin>0){T.spin-=dt;T.ang+=dt*15;}
+  else if(sp>50){
+    const tgt=Math.atan2(T.vy,T.vx);
+    let d=tgt-T.ang;while(d>Math.PI)d-=TAU;while(d<-Math.PI)d+=TAU;
+    T.ang+=d*Math.min(1,dt*7);
+  }
+  const deg=T.ang*180/Math.PI+90;
+  const bob = sp<20 && !T.drag ? Math.sin(S.t*2)*6 : 0;
+  turtleEl.style.transform=`translate(${T.x.toFixed(1)}px,${(T.y+bob).toFixed(1)}px) rotate(${deg.toFixed(1)}deg) scale(${1 - S.shake*0.005})`;
+  
+  if (S.shake > 8) document.body.classList.add('glitching');
+  else document.body.classList.remove('glitching');
+
+  // thruster flames (jets activate with movement!)
+  const thrusting=(ax||ay||T.drag||sp>90)?1:0;
+  const base=clamp(sp/520,0,1);
+  for(let i=0;i<5;i++){
+    const boost=(i===4)?(0.2+base*1.5+thrusting*.45):(0.1+base*1.0+thrusting*.25);
+    const s=Math.max(.02,boost*(0.82+0.36*Math.sin(S.t*44+i*1.9)));
+    flames[i].style.transform=`scale(${s.toFixed(2)})`;
+  }
+  // exhaust particles
+  if(sp>70){
+    for(let k=0;k<2;k++){
+      const n=nozWorld(Math.floor(rand(0,5)));
+      parts.push({x:n.x,y:n.y,vx:-faceX()*sp*.35+rand(-60,60),vy:-faceY()*sp*.35+rand(-60,60),
+        life:rand(.3,.6),ml:.6,col:Math.random()<.12?'#ffb347':(Math.random()<.5?'#9df3ff':'#3b82f6'),r:rand(1.5,3.5)});
+    }
+    if(parts.length>MAXP)parts.splice(0,parts.length-MAXP);
+  }
+
+  // gravity well / tractor pull on debris
+  if(S.pull&&S.pull.t>0){
+    S.pull.t-=dt;
+    const P=S.pull;
+    for(const f of floaters){const dx=P.x-f.x%W,dy=P.y-f.y%H,d=Math.hypot(dx,dy)||1;
+      if(d<420){f.vx+=dx/d*160*dt;f.vy+=dy/d*160*dt;}}
+    for(const cm of comets){const dx=P.x-cm.x,dy=P.y-cm.y,d=Math.hypot(dx,dy)||1;
+      if(d<420){cm.vx+=dx/d*300*dt;cm.vy+=dy/d*300*dt;}}
+  }
+  // wormhole
+  if(S.wormhole){
+    const wh=S.wormhole;wh.t-=dt;
+    for(const p of parts){const dx=wh.x-p.x,dy=wh.y-p.y,d=Math.hypot(dx,dy)||1;
+      if(d<300){p.vx+=dx/d*500*dt;p.vy+=dy/d*500*dt;}}
+    for(const cm of comets){const dx=wh.x-cm.x,dy=wh.y-cm.y,d=Math.hypot(dx,dy)||1;
+      if(d<300){cm.vx+=dx/d*600*dt;cm.vy+=dy/d*600*dt;}}
+    if(wh.t<=0)S.wormhole=null;
+  }
+  // anomalies
+  for(let i=S.anoms.length-1;i>=0;i--){S.anoms[i].t-=dt;if(S.anoms[i].t<=0)S.anoms.splice(i,1);}
+
+  // particles
+  for(let i=parts.length-1;i>=0;i--){
+    const p=parts[i];p.life-=dt;
+    if(p.life<=0){parts.splice(i,1);continue;}
+    p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=Math.exp(-1.2*dt);p.vy*=Math.exp(-1.2*dt);
+  }
+  for(let i=rings.length-1;i>=0;i--){
+    const r=rings[i];r.life-=dt;if(r.life<=0){rings.splice(i,1);continue;}
+    r.r+=r.vr*dt;
+  }
+  for(let i=beams.length-1;i>=0;i--){beams[i].life-=dt;if(beams[i].life<=0)beams.splice(i,1);}
+}
+
+function drawWorld(dt){
+  ctx.save();
+  if(S.shake>0)ctx.translate(rand(-S.shake,S.shake),rand(-S.shake,S.shake));
+  // wormhole
+  if(S.wormhole){
+    const wh=S.wormhole;
+    ctx.save();ctx.translate(wh.x,wh.y);ctx.rotate(S.t*3);
+    for(let i=0;i<2;i++){ctx.strokeStyle=`rgba(167,139,250,${.7-i*.25})`;ctx.lineWidth=6-i*2;
+      ctx.setLineDash([26,16]);ctx.beginPath();ctx.arc(0,0,34+i*12,0,TAU);ctx.stroke();}
+    ctx.restore();ctx.setLineDash([]);
+    ctx.fillStyle='#000';ctx.beginPath();ctx.arc(wh.x,wh.y,26,0,TAU);ctx.fill();
+    ctx.strokeStyle='rgba(200,170,255,.9)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(wh.x,wh.y,26,0,TAU);ctx.stroke();
+  }
+  // anomalies
+  for(const a of S.anoms){
+    const p=.5+.5*Math.sin(S.t*6);
+    ctx.save();ctx.translate(a.x,a.y);ctx.rotate(Math.PI/4);
+    ctx.strokeStyle=`rgba(125,255,212,${.4+.5*p})`;ctx.lineWidth=2;
+    const s=8+6*p;ctx.strokeRect(-s/2,-s/2,s,s);ctx.restore();
+    ctx.fillStyle=`rgba(125,255,212,${.5*p+.3})`;ctx.font='9px monospace';
+    ctx.fillText('?!',a.x+12,a.y-8);
+  }
+  // gravity well visual
+  if(S.pull&&S.pull.t>0){
+    ctx.strokeStyle='rgba(167,139,250,.5)';ctx.lineWidth=2;ctx.setLineDash([12,10]);
+    ctx.beginPath();ctx.arc(S.pull.x,S.pull.y,60+20*Math.sin(S.t*8),0,TAU);ctx.stroke();ctx.setLineDash([]);
+  }
+  ctx.globalCompositeOperation = 'screen';
+  // particles
+  for(const p of parts){
+    ctx.globalAlpha=clamp(p.life/p.ml,0,1);
+    ctx.fillStyle=p.col;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,TAU);ctx.fill();
+  }
+  // rings
+  for(const r of rings){
+    ctx.globalAlpha=clamp(r.life/r.ml,0,1);
+    ctx.strokeStyle=r.col;ctx.lineWidth=r.w;
+    ctx.shadowBlur=10; ctx.shadowColor=r.col;
+    ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,TAU);ctx.stroke();
+    ctx.shadowBlur=0;
+  }
+  ctx.globalAlpha=1;
+  // beams
+  ctx.lineCap='round';
+  for(const b of beams){
+    ctx.globalAlpha=clamp(b.life/b.ml,0,1);
+    ctx.strokeStyle=b.col;ctx.lineWidth=b.w;
+    ctx.shadowBlur=15; ctx.shadowColor=b.col;
+    ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(b.x2,b.y2);ctx.stroke();
+    ctx.shadowBlur=0;
+    ctx.strokeStyle='#fff';ctx.lineWidth=Math.max(1,b.w*.35);
+    ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(b.x2,b.y2);ctx.stroke();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.globalAlpha=1;
+  ctx.restore();
+}
+
+let last=performance.now();
+function loop(now){
+  const rdt=Math.min(.05,(now-last)/1000);last=now;
+  // slow-mo easing
+  const tsT=S.slowmo>0?0.25:1;
+  if(S.slowmo>0)S.slowmo-=rdt;
+  S.ts+=(tsT-S.ts)*Math.min(1,rdt*5);
+  const dt=rdt*S.ts;
+  S.t+=rdt;
+  S.shake*=Math.exp(-6*rdt);if(S.shake<.2)S.shake=0;
+  drawBG(rdt);
+  updateWorld(dt);
+  drawWorld(rdt);
+  hudT-=rdt;if(hudT<=0){hudT=.12;hud();}
+  requestAnimationFrame(loop);
+}
+
+/* ================= INIT ================= */
+resize();initStars();
+T.x=W/2-75;T.y=H/2-75;
+log('🐢 <b>MECHATURTLE-7 online.</b> All 24 abilities armed. 12 tools ready.');
+log('🕳️ Warning: supermassive black hole detected at starboard.');
+log('💡 Drag me, or use <b>WASD / arrows</b>. Drag abilities onto me to fire.');
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

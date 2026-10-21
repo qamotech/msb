@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crumb2Coin - Crypto Portfolio Tracker</title>
+    <meta name="description" content="Turn your digital crumbs into coins. A single-file crypto portfolio tracker and financial visualization web application.">
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
+    
+    <style>
+        :root {
+            --bg: #0a0a0a; --surface: #171717;
+            --text: #ededed; --text-dim: #a3a3a3;
+            --brand: #eab308; --brand-glow: rgba(234, 179, 8, 0.2);
+            --up: #22c55e; --down: #ef4444;
+            --font: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        header { padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #262626; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--brand); text-shadow: 0 0 10px var(--brand-glow); display: flex; align-items: center; gap: 0.5rem;}
+        nav a { color: var(--text-dim); text-decoration: none; margin-left: 1.5rem; }
+        
+        .hero { padding: 3rem 2rem; text-align: center; }
+        .portfolio-value { font-size: 4rem; font-weight: 900; letter-spacing: -2px; }
+        .change { color: var(--up); font-weight: bold; font-size: 1.2rem; display: flex; justify-content: center; align-items: center; gap: 0.25rem;}
+        
+        /* Inline SVG Graph Image */
+        .chart-img { margin: 2rem auto; max-width: 600px; width: 100%; height: 150px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 150'%3E%3Cpath d='M0 150 L0 100 Q 50 120 100 80 T 200 60 T 300 90 T 400 40 T 500 70 T 600 20 L600 150 Z' fill='rgba(234, 179, 8, 0.1)'/%3E%3Cpath d='M0 100 Q 50 120 100 80 T 200 60 T 300 90 T 400 40 T 500 70 T 600 20' fill='none' stroke='%23eab308' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center; }
+
+        main { flex: 1; display: grid; grid-template-columns: 1fr 300px; gap: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; padding: 0 2rem 2rem 2rem; }
+        @media(max-width:800px) { main { grid-template-columns: 1fr; } }
+        
+        .card { background: var(--surface); border: 1px solid #262626; border-radius: 12px; padding: 1.5rem; }
+        .asset-list { display: flex; flex-direction: column; gap: 1rem; }
+        .asset { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid #262626; }
+        .asset:last-child { border: none; padding-bottom: 0; }
+        .asset-name { font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap:0.5rem;}
+        
+        aside { display: flex; flex-direction: column; gap: 1.5rem; }
+        ul { list-style: none; }
+        ul li { margin-bottom: 0.5rem; }
+        ul a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+        ul a:hover { color: var(--brand); }
+
+        footer { padding: 2rem; border-top: 1px solid #262626; text-align: center; margin-top: auto; color: var(--text-dim); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">🪙 Crumb2Coin</div>
+        <nav>
+            <a href="#">Dashboard</a>
+            <a href="#">Exchange</a>
+            <a href="#">Wallet</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <p style="color:var(--text-dim); text-transform:uppercase; letter-spacing:2px; font-size:0.8rem;">Total Balance</p>
+        <div class="portfolio-value">$24,152.80</div>
+        <div class="change">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            +5.24% (24h)
+        </div>
+        <div class="chart-img"></div>
+    </div>
+
+    <main>
+        <section class="card">
+            <h3 style="margin-bottom: 1.5rem; color: var(--text-dim);">Your Assets</h3>
+            <div class="asset-list">
+                <div class="asset">
+                    <div>
+                        <div class="asset-name">₿ Bitcoin <span style="font-size:0.75rem; color:var(--text-dim);">BTC</span></div>
+                        <div style="font-size:0.85rem; color:var(--text-dim);">0.245 BTC</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight:bold;">$15,432.10</div>
+                        <div style="color:var(--up); font-size:0.85rem;">+2.1%</div>
+                    </div>
+                </div>
+                <div class="asset">
+                    <div>
+                        <div class="asset-name">⟠ Ethereum <span style="font-size:0.75rem; color:var(--text-dim);">ETH</span></div>
+                        <div style="font-size:0.85rem; color:var(--text-dim);">2.5 ETH</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight:bold;">$4,105.20</div>
+                        <div style="color:var(--down); font-size:0.85rem;">-0.5%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <aside>
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">🔧 Resources</h3>
+                <ul>
+                    <li><a href="#">🔗 Connect Hardware Wallet</a></li>
+                    <li><a href="#">📊 Export Tax Report</a></li>
+                    <li><a href="#">🛡️ Security Settings</a></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">🌐 Suggested Sites</h3>
+                <ul>
+                    <li><a href="https://coinmarketcap.com" target="_blank">📈 CoinMarketCap</a></li>
+                    <li><a href="https://tradingview.com" target="_blank">📉 TradingView</a></li>
+                    <li><a href="https://etherscan.io" target="_blank">🔍 Etherscan</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <p>Crumb2Coin Tracker &copy; 2026. Data is simulated.</p>
+        <div style="margin-top: 1rem; display:flex; justify-content:center; gap:1rem;">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">API</a>
+        </div>
+    </footer>
+
+</body>
+</html>

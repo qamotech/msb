@@ -1,0 +1,2829 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Crumb to Coin</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥐</text></svg>">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap">
+<style>
+/* ============================================================
+   TOKENS — LIGHT (default)
+============================================================ */
+:root {
+  --bg:          #FAF3E8;
+  --bg2:         #F1E8D8;
+  --card:        #FFFFFF;
+  --card2:       #FDF8F1;
+  --ink:         #2B1A0E;
+  --ink2:        #6B4F35;
+  --ink3:        #9A7D61;
+  --border:      #E8D9C4;
+  --accent:      #C2410C;
+  --accent2:     #7C2D12;
+  --gold:        #D97706;
+  --gold2:       #92400E;
+  --ok:          #15803D;
+  --ok-bg:       #DCFCE7;
+  --warn:        #B45309;
+  --warn-bg:     #FEF3C7;
+  --bad:         #B91C1C;
+  --bad-bg:      #FEE2E2;
+  --info:        #1D4ED8;
+  --info-bg:     #E0F2FE;
+  --side-bg:     #2B1A0E;
+  --side-ink:    #E8D9C4;
+  --side-muted:  #9A7057;
+  --side-active: #C2410C;
+  --shadow-sm:   0 1px 3px rgba(70,40,15,.08), 0 1px 2px rgba(70,40,15,.06);
+  --shadow:      0 4px 12px rgba(70,40,15,.10), 0 2px 4px rgba(70,40,15,.06);
+  --shadow-lg:   0 10px 30px rgba(70,40,15,.13), 0 4px 10px rgba(70,40,15,.07);
+  --radius-sm:   8px;
+  --radius:      12px;
+  --radius-lg:   18px;
+  --header-bg:   rgba(250,243,232,.9);
+  --header-border: rgba(232,217,196,.8);
+  color-scheme: light;
+}
+
+/* DARK */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:          #130A02;
+    --bg2:         #1E1008;
+    --card:        #231408;
+    --card2:       #2B1A0E;
+    --ink:         #F0E4D0;
+    --ink2:        #C4A882;
+    --ink3:        #8A6E52;
+    --border:      #3D2510;
+    --accent:      #EA580C;
+    --accent2:     #FB923C;
+    --gold:        #F59E0B;
+    --gold2:       #FCD34D;
+    --ok:          #4ADE80;
+    --ok-bg:       #052E16;
+    --warn:        #FBB524;
+    --warn-bg:     #451A03;
+    --bad:         #F87171;
+    --bad-bg:      #450A0A;
+    --info:        #60A5FA;
+    --info-bg:     #1E3A5F;
+    --side-bg:     #0D0502;
+    --side-ink:    #E8D9C4;
+    --side-muted:  #7A5538;
+    --side-active: #EA580C;
+    --shadow-sm:   0 1px 3px rgba(0,0,0,.4);
+    --shadow:      0 4px 12px rgba(0,0,0,.5);
+    --shadow-lg:   0 10px 30px rgba(0,0,0,.6);
+    --header-bg:   rgba(19,10,2,.92);
+    --header-border: rgba(61,37,16,.8);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:          #130A02;
+  --bg2:         #1E1008;
+  --card:        #231408;
+  --card2:       #2B1A0E;
+  --ink:         #F0E4D0;
+  --ink2:        #C4A882;
+  --ink3:        #8A6E52;
+  --border:      #3D2510;
+  --accent:      #EA580C;
+  --accent2:     #FB923C;
+  --gold:        #F59E0B;
+  --gold2:       #FCD34D;
+  --ok:          #4ADE80;
+  --ok-bg:       #052E16;
+  --warn:        #FBB524;
+  --warn-bg:     #451A03;
+  --bad:         #F87171;
+  --bad-bg:      #450A0A;
+  --info:        #60A5FA;
+  --info-bg:     #1E3A5F;
+  --side-bg:     #0D0502;
+  --side-ink:    #E8D9C4;
+  --side-muted:  #7A5538;
+  --side-active: #EA580C;
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.4);
+  --shadow:      0 4px 12px rgba(0,0,0,.5);
+  --shadow-lg:   0 10px 30px rgba(0,0,0,.6);
+  --header-bg:   rgba(19,10,2,.92);
+  --header-border: rgba(61,37,16,.8);
+  color-scheme: dark;
+}
+
+/* CYBERPUNK */
+:root[data-theme="cyberpunk"] {
+  --bg:          #0A0014;
+  --bg2:         #110022;
+  --card:        #130028;
+  --card2:       #1A003A;
+  --ink:         #E8D0FF;
+  --ink2:        #B090D0;
+  --ink3:        #7050A0;
+  --border:      #3A0060;
+  --accent:      #FF3D82;
+  --accent2:     #FF80B0;
+  --gold:        #00FFD1;
+  --gold2:       #80FFE8;
+  --ok:          #00FFD1;
+  --ok-bg:       #002A22;
+  --warn:        #FFD700;
+  --warn-bg:     #2A2000;
+  --bad:         #FF3D82;
+  --bad-bg:      #2A0010;
+  --info:        #7C3AFF;
+  --info-bg:     #1A003A;
+  --side-bg:     #070010;
+  --side-ink:    #E8D0FF;
+  --side-muted:  #6040A0;
+  --side-active: #FF3D82;
+  --shadow-sm:   0 1px 3px rgba(255,61,130,.15);
+  --shadow:      0 4px 16px rgba(255,61,130,.20);
+  --shadow-lg:   0 10px 40px rgba(124,58,255,.25);
+  --header-bg:   rgba(10,0,20,.92);
+  --header-border: rgba(58,0,96,.9);
+  color-scheme: dark;
+}
+
+/* EMERALD */
+:root[data-theme="emerald"] {
+  --bg:          #021A0F;
+  --bg2:         #032A18;
+  --card:        #043020;
+  --card2:       #053828;
+  --ink:         #B8FFE4;
+  --ink2:        #70D4A8;
+  --ink3:        #3A8060;
+  --border:      #0A5030;
+  --accent:      #00CC88;
+  --accent2:     #4DFFC0;
+  --gold:        #88FF44;
+  --gold2:       #AAFFAA;
+  --ok:          #00FF99;
+  --ok-bg:       #003020;
+  --warn:        #FFDD00;
+  --warn-bg:     #2A2000;
+  --bad:         #FF4444;
+  --bad-bg:      #2A0000;
+  --info:        #00AAFF;
+  --info-bg:     #001A2A;
+  --side-bg:     #011008;
+  --side-ink:    #B8FFE4;
+  --side-muted:  #2A6040;
+  --side-active: #00CC88;
+  --shadow-sm:   0 1px 3px rgba(0,204,136,.12);
+  --shadow:      0 4px 16px rgba(0,204,136,.16);
+  --shadow-lg:   0 10px 40px rgba(0,204,136,.20);
+  --header-bg:   rgba(2,26,15,.93);
+  --header-border: rgba(10,80,48,.9);
+  color-scheme: dark;
+}
+
+/* ============================================================
+   RESET + BASE
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Lora', Georgia, 'Times New Roman', serif;
+  text-wrap: balance;
+  line-height: 1.25;
+}
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+button { font-family: inherit; }
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes slidein {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse-ring {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.08); opacity: .8; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+/* ============================================================
+   LAYOUT SHELL
+============================================================ */
+.app-shell {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+}
+/* Top header */
+.app-header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 20px;
+  height: 56px;
+  background: var(--header-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--header-border);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.brand-icon { font-size: 24px; line-height: 1; flex-shrink: 0; }
+.brand-text h1 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.brand-text small {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 10.5px;
+  color: var(--ink3);
+  letter-spacing: .03em;
+  font-weight: 400;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* progress ring */
+.prog-ring {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: default;
+  font-variant-numeric: tabular-nums;
+}
+.prog-ring svg { transform: rotate(-90deg); flex-shrink: 0; }
+.prog-ring .ring-track { stroke: var(--border); }
+.prog-ring .ring-fill  { stroke: var(--gold); transition: stroke-dashoffset .6s cubic-bezier(.4,0,.2,1); }
+.prog-ring-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink2);
+  white-space: nowrap;
+}
+.prog-ring-text b { color: var(--gold); font-size: 13px; }
+/* theme picker */
+.theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--ink2);
+  cursor: pointer;
+  font-size: 15px;
+  transition: background .15s, border-color .15s;
+}
+.theme-btn:hover { background: var(--bg2); border-color: var(--accent); }
+.theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.theme-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  min-width: 200px;
+  z-index: 100;
+  animation: fadein .15s ease;
+}
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink);
+  background: transparent;
+  transition: background .12s, border-color .12s;
+}
+.theme-option:hover { background: var(--bg2); }
+.theme-option.active { border-color: var(--accent); background: var(--bg2); }
+.theme-swatch {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1.5px solid var(--border);
+}
+/* fullscreen btn */
+.fs-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--ink2);
+  cursor: pointer;
+  font-size: 14px;
+  transition: background .15s, border-color .15s;
+}
+.fs-btn:hover { background: var(--bg2); border-color: var(--accent); }
+.fs-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* sidebar toggle */
+.nav-toggle {
+  display: none;
+  align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--ink2);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* ============================================================
+   CONTENT ROW
+============================================================ */
+.content-row {
+  display: grid;
+  grid-template-columns: 256px 1fr;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ============================================================
+   SIDEBAR NAV
+============================================================ */
+.sidebar {
+  background: var(--side-bg);
+  color: var(--side-ink);
+  overflow-y: auto;
+  padding: 12px 8px 32px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--side-muted) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--side-muted); border-radius: 4px; }
+.nav-section-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--side-muted);
+  padding: 14px 12px 5px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 12px;
+  border-radius: 9px;
+  color: var(--side-ink);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .12s;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+.nav-item:hover { background: rgba(255,255,255,.06); }
+.nav-item.active {
+  background: var(--side-active);
+  color: #fff;
+}
+.nav-item .nav-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+.nav-item .nav-label { flex: 1; }
+.nav-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1.5px 6px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.7);
+  font-variant-numeric: tabular-nums;
+}
+.nav-item.active .nav-badge { background: rgba(255,255,255,.25); color: #fff; }
+.nav-divider { height: 1px; background: rgba(255,255,255,.06); margin: 6px 8px; }
+
+/* ============================================================
+   MAIN CONTENT
+============================================================ */
+.main-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 28px 32px 80px;
+  scroll-behavior: smooth;
+}
+.page { display: none; max-width: 1020px; margin: 0 auto; }
+.page.on { display: block; animation: fadein .25s ease; }
+
+/* ============================================================
+   COMPONENTS
+============================================================ */
+/* Section heading */
+.sec-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.sec-heading {
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Grids */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, transform .1s, box-shadow .15s;
+  font-family: 'Inter', sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--accent2); box-shadow: var(--shadow-sm); }
+.btn:active { transform: scale(.98); }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn-ghost {
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+}
+.btn-ghost:hover { background: var(--bg2); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-gold { background: var(--gold); color: #fff; }
+.btn-gold:hover { background: var(--gold2); }
+
+/* Pills / Badges */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  letter-spacing: .03em;
+  font-family: 'Inter', sans-serif;
+}
+.pill-ok   { background: var(--ok-bg);   color: var(--ok); }
+.pill-warn { background: var(--warn-bg); color: var(--warn); }
+.pill-bad  { background: var(--bad-bg);  color: var(--bad); }
+.pill-info { background: var(--info-bg); color: var(--info); }
+.pill-accent { background: var(--bg2);  color: var(--accent); }
+
+/* Stat tiles */
+.stat-tile {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+.stat-tile .stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 4px;
+}
+.stat-tile .stat-val {
+  font-family: 'Lora', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.stat-tile.highlight .stat-val { color: var(--accent); }
+
+/* Form inputs */
+.field { margin-bottom: 14px; }
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--ink3);
+  margin-bottom: 5px;
+}
+input[type=text], input[type=number], input[type=date],
+input[type=email], input[type=url], select, textarea {
+  width: 100%;
+  padding: 8px 11px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  transition: border-color .15s, box-shadow .15s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(217,119,6,.15);
+}
+textarea { min-height: 80px; resize: vertical; line-height: 1.5; }
+select { cursor: pointer; }
+input[type=range] {
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+input[type=color] {
+  height: 36px;
+  padding: 3px 5px;
+  cursor: pointer;
+}
+input[type=checkbox], input[type=radio] {
+  accent-color: var(--accent);
+  width: 15px; height: 15px;
+  cursor: pointer;
+}
+
+/* Checklist steps */
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 10px 13px;
+  border-radius: 9px;
+  border: 1.5px solid var(--border);
+  margin-bottom: 8px;
+  background: var(--card);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.step-item:hover { border-color: var(--gold); }
+.step-item.done { background: var(--ok-bg); border-color: var(--ok); }
+.step-item.done .step-text { text-decoration: line-through; color: var(--ink3); }
+.step-item input[type=checkbox] { margin-top: 2px; flex-shrink: 0; }
+.step-text { font-size: 14px; line-height: 1.45; color: var(--ink); }
+
+/* Callouts */
+.callout {
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 13.5px;
+  margin-bottom: 9px;
+  line-height: 1.5;
+}
+.callout-tip  { background: var(--ok-bg);   border-left: 3px solid var(--ok); }
+.callout-warn { background: var(--warn-bg); border-left: 3px solid var(--warn); }
+.callout-info { background: var(--info-bg); border-left: 3px solid var(--info); }
+.callout-tag {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 3px;
+  opacity: .8;
+}
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--ink3);
+  text-align: left;
+  padding: 6px 9px;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+tbody td {
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--bg2); }
+tbody td input { padding: 5px 8px; font-size: 13px; }
+
+/* Resource links */
+.res-link {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--border);
+}
+.res-link:last-child { border-bottom: none; }
+.res-link a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px dotted currentColor;
+}
+.res-link a:hover { color: var(--accent2); }
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  padding: 10px 16px;
+  font-size: 13.5px;
+  color: var(--ink);
+  pointer-events: auto;
+  animation: fadein .2s ease;
+  max-width: 300px;
+}
+.toast.ok { border-left-color: var(--ok); }
+.toast.warn { border-left-color: var(--warn); }
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadein .15s ease;
+}
+.modal-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 540px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 28px;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 14px; right: 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  width: 28px; height: 28px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--ink2);
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: var(--bad-bg); color: var(--bad); }
+.modal-title {
+  font-family: 'Lora', serif;
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+.modal-sub { font-size: 13px; color: var(--ink3); margin-bottom: 18px; }
+
+/* Progress bar */
+.progress-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--accent));
+  border-radius: 999px;
+  transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+
+/* Accordion */
+details.accordion {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+details.accordion summary {
+  padding: 11px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--card);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+details.accordion summary::-webkit-details-marker { display: none; }
+details.accordion summary::after { content: '▸'; font-size: 11px; color: var(--ink3); transition: transform .2s; }
+details.accordion[open] summary::after { transform: rotate(90deg); }
+details.accordion[open] summary { background: var(--bg2); }
+.accordion-body { padding: 14px; background: var(--card); font-size: 13.5px; color: var(--ink2); }
+
+/* Glossary item */
+.gloss-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  margin-bottom: 8px;
+}
+.gloss-term { font-family: 'Lora', serif; font-size: 15px; font-weight: 600; color: var(--accent); }
+.gloss-def { font-size: 13px; color: var(--ink2); margin-top: 3px; line-height: 1.5; }
+
+/* Timeline */
+.timeline-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 13.5px;
+  align-items: start;
+}
+.timeline-row:last-child { border-bottom: none; }
+.timeline-date { font-family: 'Lora', serif; font-weight: 700; color: var(--accent); font-size: 14px; }
+
+/* ============================================================
+   FOOTER
+============================================================ */
+.app-footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+/* ============================================================
+   HOME PAGE
+============================================================ */
+.hero-banner {
+  background: linear-gradient(130deg, var(--card2) 0%, var(--bg2) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 36px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-banner::before {
+  content: '🥐';
+  position: absolute;
+  right: 20px;
+  bottom: -10px;
+  font-size: 100px;
+  opacity: .07;
+  pointer-events: none;
+  line-height: 1;
+}
+.hero-eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.hero-title {
+  font-family: 'Lora', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.hero-title em { color: var(--accent); font-style: italic; }
+.hero-body { font-size: 15px; color: var(--ink2); max-width: 600px; line-height: 1.65; }
+
+/* Stage overview cards */
+.stage-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+.stage-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  box-shadow: var(--shadow);
+}
+.stage-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stage-card-icon { font-size: 26px; margin-bottom: 8px; }
+.stage-card-title { font-size: 14.5px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.stage-card-blurb { font-size: 12px; color: var(--ink3); line-height: 1.45; }
+
+/* Tool cards on home */
+.tool-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+  box-shadow: var(--shadow-sm);
+}
+.tool-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  box-shadow: var(--shadow);
+}
+.tool-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tool-card-icon { font-size: 24px; flex-shrink: 0; }
+.tool-card-title { font-size: 14.5px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.tool-card-desc { font-size: 12px; color: var(--ink3); line-height: 1.4; }
+
+/* ============================================================
+   STAGE PAGES
+============================================================ */
+.stage-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.stage-head-icon { font-size: 40px; }
+.stage-badge {
+  font-family: 'Lora', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.stage-subline { font-size: 13.5px; color: var(--ink3); margin-bottom: 22px; }
+.stage-intro {
+  font-size: 15px;
+  color: var(--ink2);
+  max-width: 740px;
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+/* ============================================================
+   COSTING LAB
+============================================================ */
+.ing-cost-cell { font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   BREAK-EVEN CHART
+============================================================ */
+#beCanvas {
+  width: 100%;
+  height: 280px;
+  display: block;
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================================
+   CHANNEL QUIZ
+============================================================ */
+.quiz-option {
+  display: block;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  margin-bottom: 7px;
+  cursor: pointer;
+  font-size: 13.5px;
+  background: var(--card);
+  color: var(--ink);
+  transition: border-color .12s, background .12s;
+}
+.quiz-option:hover { border-color: var(--gold); }
+.quiz-option.selected { border-color: var(--accent); background: var(--bg2); font-weight: 600; }
+.quiz-option input { margin-right: 9px; }
+.result-bar-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 40px;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.result-bar {
+  height: 12px;
+  background: var(--bg2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.result-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--accent));
+  border-radius: 999px;
+  transition: width .5s ease;
+}
+
+/* ============================================================
+   LAUNCH PLANNER
+============================================================ */
+.launch-timeline-item {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 13.5px;
+}
+.launch-timeline-item:last-child { border-bottom: none; }
+.launch-date-col { font-family: 'Lora', serif; font-weight: 700; color: var(--accent); }
+.launch-day-highlight { color: var(--gold); font-weight: 800; }
+
+/* ============================================================
+   TEMPLATES
+============================================================ */
+pre.tpl {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  overflow-x: auto;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+/* ============================================================
+   IDEA GENERATOR
+============================================================ */
+.idea-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 11px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  margin-bottom: 8px;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.idea-num { font-family: 'Lora', serif; font-weight: 700; color: var(--accent); flex-shrink: 0; width: 20px; }
+.idea-text { flex: 1; line-height: 1.45; }
+
+/* ============================================================
+   SNAPSHOT ENGINE (export/import)
+============================================================ */
+.snapshot-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  color: var(--ink3);
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.snapshot-zone:hover { border-color: var(--accent); background: var(--bg2); }
+.snapshot-zone.drag-over { border-color: var(--gold); background: var(--bg2); }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 860px) {
+  .content-row { grid-template-columns: 1fr; }
+  .sidebar {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 6px 8px;
+    gap: 3px;
+    flex-wrap: nowrap;
+    background: var(--side-bg);
+  }
+  .nav-section-label { display: none; }
+  .nav-item { flex-shrink: 0; padding: 7px 10px; font-size: 12px; }
+  .nav-item .nav-label { display: none; }
+  .nav-divider { display: none; }
+  .nav-badge { display: none; }
+  .main-scroll { padding: 18px 16px 60px; }
+  .nav-toggle { display: inline-flex; }
+  .grid2, .grid3 { grid-template-columns: 1fr; }
+  .hero-banner { padding: 22px 20px; }
+  .hero-title { font-size: 22px; }
+  .brand-text small { display: none; }
+}
+@media (max-width: 560px) {
+  .app-header { padding: 0 14px; }
+  .main-scroll { padding: 14px 12px 60px; }
+  .stage-head { gap: 10px; }
+  .stage-head-icon { font-size: 28px; }
+  .stage-badge { font-size: 19px; }
+}
+</style>
+</head>
+</head>
+<body>
+<div class="app-shell">
+  <!-- HEADER -->
+  <header class="app-header">
+    <button class="brand" data-go="home" aria-label="Go to home">
+      <span class="brand-icon">🥐</span>
+      <div class="brand-text">
+        <h1>Crumb to Coin</h1>
+        <small>From great product to real revenue</small>
+      </div>
+    </button>
+    <div class="header-right">
+      <div class="prog-ring" title="Overall roadmap progress" aria-label="Progress">
+        <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
+          <circle class="ring-track" cx="16" cy="16" r="13" fill="none" stroke-width="4"/>
+          <circle class="ring-fill" id="ring-fill" cx="16" cy="16" r="13" fill="none" stroke-width="4"
+            stroke-linecap="round"
+            stroke-dasharray="81.68"
+            stroke-dashoffset="81.68"/>
+        </svg>
+        <span class="prog-ring-text" id="ring-text"><b>0%</b> done</span>
+      </div>
+      <button class="theme-btn" id="themeToggle" aria-label="Change theme" title="Change theme">🎨</button>
+      <button class="fs-btn" id="fsBtn" aria-label="Toggle fullscreen" title="Toggle fullscreen">⛶</button>
+    </div>
+  </header>
+
+  <!-- CONTENT ROW -->
+  <div class="content-row">
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar-nav" aria-label="Main navigation"></nav>
+
+    <!-- MAIN SCROLL -->
+    <main id="main-scroll" class="main-scroll" aria-label="Main content"></main>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+<script>
+/* ============================================================
+   CONSTANTS & DATA
+============================================================ */
+"use strict";
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const KEY = "c2c_v2";
+const fmt$ = n => isNaN(+n) ? "$0.00" : "$" + (+n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const num = el => { const v = parseFloat(el && el.value); return isNaN(v) ? 0 : v; };
+const fmtDate = d => d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+
+const STAGES = [
+  { id: "validate", num: 1, icon: "🎯", short: "Validate", time: "1–3 weeks", title: "Prove people will pay",
+    blurb: "Turn compliments into evidence before you spend a dime.",
+    intro: "Everyone's croissant gets rave reviews at dinner parties. The market is harsher than your aunt. This stage converts polite praise into hard evidence that strangers will pay money — before you invest in licenses, packaging, or a logo.",
+    steps: [
+      { id: "v1", t: "Write your one-line pitch: what you sell, who it's for, and why it's special" },
+      { id: "v2", t: "Run 20+ tastings with people outside your inner circle; log scores and honest comments" },
+      { id: "v3", t: "Ask tasters what they'd realistically pay — and record the answers, not just the smiles" },
+      { id: "v4", t: "Research 3 local competitors: their prices, positioning, and the gap you fill" },
+      { id: "v5", t: "Sketch your ideal customer persona: where they shop, what they value, what they already buy" },
+      { id: "v6", t: "Run a tiny pre-order test (even 10 units) and collect actual payment" },
+      { id: "v7", t: "Narrow your MVP line to 1–3 hero items — no more" }
+    ],
+    tips: [
+      "Compliments are free; payment is data. One paid pre-order is worth 100 compliments.",
+      "In tastings, ask 'What's the closest thing you already buy, and what do you pay for it?' — it anchors real pricing.",
+      "If people ask 'where can I buy this?' unprompted, write it down. That's your signal."
+    ],
+    pits: [
+      "Launching with 12 SKUs because you 'can't choose.' You can. Pick your best.",
+      "Skipping competitor research and discovering your $9 cookie sits next to a proven $4 one.",
+      "Building a logo and website before validating that anyone will pay."
+    ],
+    res: [
+      { n: "SCORE — free business mentors", u: "https://www.score.org" },
+      { n: "SBA Small Business Development Centers", u: "https://www.sba.gov/local-assistance" },
+      { n: "Google Trends — check search interest in your category", u: "https://trends.google.com" }
+    ]
+  },
+  { id: "standard", num: 2, icon: "📐", short: "Standardize", time: "1–2 weeks", title: "Make it repeatable",
+    blurb: "If you can't bake it identically on a Tuesday at scale, you don't have a product yet.",
+    intro: "A business needs a spec, not a vibe. Standardizing means your product tastes identical in batch 300 as it did in batch 3 — and that someone else could make it from your instructions alone.",
+    steps: [
+      { id: "s1", t: "Convert your recipe to weights (grams) and baker's percentages" },
+      { id: "s2", t: "Run 3 full test batches on different days and confirm consistent results" },
+      { id: "s3", t: "Document every variable: times, temps, equipment, pan sizes, proofing cues" },
+      { id: "s4", t: "Do informal shelf-life testing: taste at day 1, 3, 5, 7 and note where quality drops" },
+      { id: "s5", t: "Create a spec sheet: target weight, size, texture, and a reference photo of 'perfect'" },
+      { id: "s6", t: "Cost one batch by hand as a gut-check before using the Costing Lab" },
+      { id: "s7", t: "Write the recipe so a stranger could execute it without calling you" }
+    ],
+    tips: [
+      "Weigh eggs too. 'Two eggs' is a 20% variance hiding in your recipe.",
+      "Keep a batch log: date, humidity, oven quirks, results. Patterns reveal themselves fast.",
+      "Freeze your reference standard (if possible) so you always know what 'correct' looks like."
+    ],
+    pits: [
+      "'Eyeballing' the vanilla — flavor drift kills repeat purchases.",
+      "Testing one successful batch and calling it done.",
+      "Scaling up 10x without testing the intermediate size; mixing times and bake curves change."
+    ],
+    res: [
+      { n: "Baker's percentages explained — The Perfect Loaf", u: "https://www.theperfectloaf.com/bakers-percentage/" },
+      { n: "King Arthur Baking Guides", u: "https://www.kingarthurbaking.com/learn/guides" }
+    ]
+  },
+  { id: "costing", num: 3, icon: "💰", short: "Cost & Price", time: "2–4 hours", title: "Know your numbers",
+    blurb: "Most food businesses fail on math, not on flavor.",
+    intro: "You need to know exactly what one unit costs — ingredients, your labor, overhead, packaging — and price from margin targets, not guesses. Do this in the Costing Lab tool, then lock the workflow here.",
+    steps: [
+      { id: "c1", t: "Enter every ingredient in the Costing Lab — including the butter, eggs, and 'splash' of vanilla" },
+      { id: "c2", t: "Add labor and overhead, not just ingredients (most first-timers forget these)" },
+      { id: "c3", t: "Set a margin target: aim for total unit cost ≤ 30–35% of retail price" },
+      { id: "c4", t: "Calculate BOTH retail (MSRP) and wholesale prices" },
+      { id: "c5", t: "Round to market-friendly prices ($4.50, $7.95) and re-check your margin" },
+      { id: "c6", t: "Compare against competitors and position deliberately — premium or value, not accidental" },
+      { id: "c7", t: "Schedule a monthly re-cost; butter prices don't care about your feelings" }
+    ],
+    tips: [
+      "If retail margin is under ~50% after labor, the product is a hobby — reformulate, re-size, or re-price.",
+      "Wholesale is typically 50% of MSRP. If you can't make money at half retail price, wholesale isn't a channel for this SKU.",
+      "Charge for your labor even when it's you. Unpaid 'you' is a hidden subsidy that breaks when you hire."
+    ],
+    pits: [
+      "Costing ingredients at grocery-store prices instead of bulk/wholesale prices you'll actually pay.",
+      "Forgetting packaging, labels, bags, and payment processing fees (~3%).",
+      "Pricing low 'to get customers started' — prices are much harder to raise than to start right."
+    ],
+    res: [
+      { n: "Open the Costing Lab →", u: "#tool-cost" },
+      { n: "Open the Break-Even Analyzer →", u: "#tool-breakeven" }
+    ]
+  },
+  { id: "legal", num: 4, icon: "⚖️", short: "Legal & Compliance", time: "1–4 weeks", title: "Make it legal",
+    blurb: "Cottage food laws can get you selling fast — if your product qualifies.",
+    intro: "The good news: most US states have cottage food laws letting you sell certain low-risk foods made at home. The catch: they're specific about products, sales caps, labeling, and channels. Higher-risk items usually require a licensed kitchen. Run the Compliance Checker, then work this list.",
+    steps: [
+      { id: "l1", t: "Choose a business structure and register your business name" },
+      { id: "l2", t: "Get an EIN and open a separate business bank account" },
+      { id: "l3", t: "Confirm whether your product qualifies under your state's cottage food law" },
+      { id: "l4", t: "If it doesn't qualify: book a licensed commercial or shared kitchen" },
+      { id: "l5", t: "Get required permits, food handler card, and/or kitchen inspection" },
+      { id: "l6", t: "Line up general + product liability insurance" },
+      { id: "l7", t: "Build a compliant label: ingredients, allergens, net weight, business name & address" },
+      { id: "l8", t: "Check each sales channel's specific rules (markets, shipping across state lines)" }
+    ],
+    tips: [
+      "Cottage food laws generally cover shelf-stable, low-moisture goods. Custards, cream cheese frosting, fresh-fruit fillings, and meat usually need a licensed kitchen.",
+      "'Made in a home kitchen' disclosure statements are required on cottage food labels in most states — design it into the label now.",
+      "Keep a simple compliance folder: permits, insurance certificates, food handler cards, and label versions."
+    ],
+    pits: [
+      "Selling refrigerated items under cottage food law 'because nobody checks.' One food safety incident ends the business.",
+      "Designing labels before checking legal requirements, then reprinting.",
+      "Ignoring sales caps: many states cap cottage food revenue (e.g., $25k–$75k/yr). Know when you'll outgrow it."
+    ],
+    res: [
+      { n: "FDA Food Labeling Guide", u: "https://www.fda.gov/food/food-labeling-nutrition/food-labeling-guide" },
+      { n: "Cottage food laws by state — Forrager", u: "https://forrager.com" },
+      { n: "Institute for Justice — state cottage food rankings", u: "https://ij.org" },
+      { n: "SBA — register your business", u: "https://www.sba.gov/business-guide/launch-your-business" }
+    ]
+  },
+  { id: "production", num: 5, icon: "🏭", short: "Production", time: "2–4 weeks", title: "Set up operations",
+    blurb: "Kitchen, equipment, suppliers, and a schedule that survives Saturday rush.",
+    intro: "Production is where margins are won or lost. Choose the right kitchen model for your stage, buy equipment smart, lock in bulk suppliers, and build a weekly rhythm so you're never panic-baking at 2 a.m. before market day.",
+    steps: [
+      { id: "p1", t: "Choose your kitchen model: home (if legal), shared kitchen, commissary rental, or co-packer" },
+      { id: "p2", t: "List required equipment and price used before new" },
+      { id: "p3", t: "Open wholesale/bulk accounts for core ingredients (restaurant supply, Costco Business, distributors)" },
+      { id: "p4", t: "Set par levels and a weekly production schedule (bake days, prep days, delivery days)" },
+      { id: "p5", t: "Write food safety & sanitation SOPs, even if it's just you" },
+      { id: "p6", t: "Set up simple inventory tracking with FIFO rotation" }
+    ],
+    tips: [
+      "Shared kitchens ($15–$35/hr) beat buying a kitchen until revenue justifies it. Many include cold storage and permits.",
+      "Buy your top 3 ingredients in bulk sizes only. Specialty items can wait for retail size.",
+      "Your production schedule should be boring and identical every week. Boring scales; chaos doesn't."
+    ],
+    pits: [
+      "Buying a $4,000 deck oven when a $600 convection proves the concept.",
+      "Single-sourcing a key ingredient — have a backup supplier for flour, butter, and packaging.",
+      "Underestimating prep + cleanup time: an 8-hour bake day is really 11 hours."
+    ],
+    res: [
+      { n: "Find shared/commissary kitchens near you", u: "https://www.google.com/search?q=commissary+kitchen+near+me" },
+      { n: "USDA food safety guidance", u: "https://www.fsis.usda.gov/" }
+    ]
+  },
+  { id: "brand", num: 6, icon: "🎨", short: "Brand & Packaging", time: "1–3 weeks", title: "Look like you belong",
+    blurb: "People eat with their eyes first, and buy with their hearts second.",
+    intro: "Your brand isn't a logo — it's the story plus the shelf presence plus the experience of opening the box. At this stage you need a memorable name, clean identity, packaging that protects the product, and a label that's both beautiful and legally complete.",
+    steps: [
+      { id: "b1", t: "Choose a memorable, searchable name and lock your origin story" },
+      { id: "b2", t: "Create a simple logo and a 2–3 color palette" },
+      { id: "b3", t: "Test packaging function: crush protection, grease resistance, freshness" },
+      { id: "b4", t: "Design the label with all required legal elements included" },
+      { id: "b5", t: "Confirm shelf life matches what you print and promise" },
+      { id: "b6", t: "Design one memorable 'moment': the booth display, the tissue paper, the unboxing" }
+    ],
+    tips: [
+      "Required label elements (typical): product identity, net weight, ingredients in descending order, allergen statement, and your business name & address.",
+      "Search your name on Instagram and the USPTO database before you fall in love with it.",
+      "Packaging is marketing you've already paid for: a sticker + stamp on kraft boxes looks artisanal and costs cents."
+    ],
+    pits: [
+      "Ordering 5,000 printed boxes before the label is legally reviewed.",
+      "Picking a name so generic no one can find you in search.",
+      "Packaging that looks great but lets cookies arrive as gravel."
+    ],
+    res: [
+      { n: "USPTO trademark search", u: "https://tmsearch.uspto.gov" },
+      { n: "Canva — free design tool", u: "https://www.canva.com" },
+      { n: "FDA Food Labeling Guide", u: "https://www.fda.gov/food/food-labeling-nutrition/food-labeling-guide" }
+    ]
+  },
+  { id: "channels", num: 7, icon: "🛒", short: "Sales Channels", time: "ongoing", title: "Pick your channels",
+    blurb: "Start with 1–2 channels. Master them. Then add more.",
+    intro: "Farmers markets build community and cash fast. Online scales beyond your zip code. Wholesale trades margin for volume. Subscriptions create predictability. Run the Channel Match quiz, choose deliberately, then execute hard on at most two.",
+    steps: [
+      { id: "ch1", t: "Run the Channel Match quiz and pick your 1–2 starting channels" },
+      { id: "ch2", t: "Apply to 2–3 farmers markets or pop-up events (applications close early!)" },
+      { id: "ch3", t: "Set up online ordering with payments (Square, Shopify, Etsy, or similar)" },
+      { id: "ch4", t: "Build a wholesale line sheet with prices, minimums, and terms" },
+      { id: "ch5", t: "Pitch 5 local cafés or retailers in person, samples in hand" },
+      { id: "ch6", t: "Set wholesale terms: net-15 payment, order minimums, delivery days" },
+      { id: "ch7", t: "Launch a limited pre-order 'drop' to create demand signals and control inventory" }
+    ],
+    tips: [
+      "Markets are your R&D lab: same-day cash, instant feedback, and customers who become your online following.",
+      "Wholesale math: retailer needs ~50% margin. Your wholesale price is half MSRP — confirm your cost structure supports it first.",
+      "Scarcity works: 'Saturday only, 40 boxes, pre-order closes Thursday' outsells 'always available.'"
+    ],
+    pits: [
+      "Saying yes to every channel at once and doing all of them badly.",
+      "Consignment deals ('we'll pay you when it sells') — push for wholesale purchase instead.",
+      "Skipping the email list at your booth. The market is rented; the list is owned."
+    ],
+    res: [
+      { n: "USDA National Farmers Market Directory", u: "https://www.ams.usda.gov/local-food-directories/farmersmarkets" },
+      { n: "Etsy for food sellers", u: "https://www.etsy.com" },
+      { n: "Square for food businesses", u: "https://squareup.com" }
+    ]
+  },
+  { id: "marketing", num: 8, icon: "📣", short: "Marketing & Launch", time: "2–4 weeks", title: "Launch loud",
+    blurb: "Nobody lines up for a secret. Build anticipation, then open the doors.",
+    intro: "Great products don't market themselves. Build a countdown: tease the story, show the process, collect emails, recruit local press, and pick one launch moment worth showing up for. Food is visual — lean on video.",
+    steps: [
+      { id: "m1", t: "Build your countdown with the Launch Planner" },
+      { id: "m2", t: "Set up Instagram/TikTok and post a 2-week behind-the-scenes teaser series" },
+      { id: "m3", t: "Start an email list from day one (QR code at the booth, link in bio)" },
+      { id: "m4", t: "Plan a launch drop or tasting event with a fixed date and limited quantity" },
+      { id: "m5", t: "Send samples to 5 local food bloggers and journalists" },
+      { id: "m6", t: "Partner with one complementary business for cross-promotion (coffee × pastry)" },
+      { id: "m7", t: "Ask every happy customer for a review, photo, or repost" }
+    ],
+    tips: [
+      "Process videos outperform product photos: laminating dough, glazing, the 5 a.m. oven pull. Film everything.",
+      "The email list prints money on demand: 'Pre-orders open tomorrow, subscribers first' is a launch engine.",
+      "Local press loves angles: 'Chef quits restaurant to bake grandmother's recipe' is a story; 'new bakery opens' isn't."
+    ],
+    pits: [
+      "Waiting until launch day to start posting — the algorithm needs a runway.",
+      "Spending on ads before you've converted a single in-person stranger.",
+      "Deleting negative feedback instead of fixing the problem it points to."
+    ],
+    res: [
+      { n: "Canva for content design", u: "https://www.canva.com" },
+      { n: "Meta Business Suite (free scheduling)", u: "https://business.facebook.com" }
+    ]
+  },
+  { id: "scale", num: 9, icon: "📈", short: "Grow & Scale", time: "ongoing", title: "Systemize and grow",
+    blurb: "From 'you with a product' to a business that runs without breaking you.",
+    intro: "Scaling isn't just selling more — it's making each additional unit cheaper to produce and each week more predictable. Watch the numbers weekly, double down on heroes, cut dead weight, and only scale what's already profitable.",
+    steps: [
+      { id: "g1", t: "Review numbers weekly: units sold, margin per product, performance per channel" },
+      { id: "g2", t: "Kill or reformulate underperformers; double down on hero products" },
+      { id: "g3", t: "Raise prices where you're under margin target — customers are stickier than you fear" },
+      { id: "g4", t: "Systemize production: batch schedules, prep lists, packing stations" },
+      { id: "g5", t: "Hire and train your first helper using written SOPs" },
+      { id: "g6", t: "Evaluate co-packing or expanded wholesale only when demand outstrips capacity" },
+      { id: "g7", t: "Review contracts, insurance, and registrations before every big commitment" }
+    ],
+    tips: [
+      "Scale signals: 3+ weeks of sellouts, wholesale reorders without prompting, and you personally becoming the bottleneck.",
+      "Raise prices on your best seller first. It's the least price-sensitive item you own.",
+      "Document everything before hiring: if it's not written down, you'll train someone the wrong way by accident."
+    ],
+    pits: [
+      "Scaling an unprofitable product — you'll just lose money faster.",
+      "Hiring before systemizing: people amplify whatever process exists, good or bad.",
+      "Chasing a second location or food truck before the first channel runs profitably without you."
+    ],
+    res: [
+      { n: "SBA loans & funding programs", u: "https://www.sba.gov/funding-programs" },
+      { n: "SCORE mentoring for growth stage", u: "https://www.score.org" }
+    ]
+  }
+];
+
+const TOOLS = [
+  { id: "tool-cost",       icon: "🧮", name: "Costing Lab",           desc: "Ingredient-level cost, true unit cost, and margin-based pricing with wholesale." },
+  { id: "tool-breakeven",  icon: "📉", name: "Break-Even Analyzer",   desc: "How many units per month cover your fixed costs? With a live chart." },
+  { id: "tool-channel",    icon: "🧭", name: "Channel Match",         desc: "A 6-question quiz that recommends your best starting sales channels." },
+  { id: "tool-compliance", icon: "✅", name: "Compliance Checker",    desc: "Cottage food vs. licensed kitchen, labeling, and channel rules — mapped out." },
+  { id: "tool-launch",     icon: "🗓️", name: "Launch Planner",        desc: "Pick a launch date; get a dated 8-week countdown of milestones." },
+  { id: "tool-ideas",      icon: "💡", name: "Marketing Idea Generator", desc: "Randomized, budget-filtered promo plays for food brands." }
+];
+
+const CHANNEL_INFO = {
+  market:       { name: "Farmers markets & pop-ups",       margin: "100% of MSRP (minus booth fees)",         effort: "High: weekends, face time" },
+  online:       { name: "Online DTC & shipping",           margin: "100% of MSRP (minus shipping, fees)",     effort: "Medium: content, fulfillment" },
+  wholesale:    { name: "Wholesale: cafés & retail",       margin: "~50% of MSRP per unit",                   effort: "Medium: sales calls, delivery" },
+  subscription: { name: "Subscriptions & pre-order drops", margin: "100% of MSRP, predictable demand",        effort: "Medium: scheduling, retention" },
+  custom:       { name: "Custom orders & events",          margin: "Premium pricing, 2–4× standard",          effort: "High: bespoke production" }
+};
+
+const QUIZ = [
+  { q: "Does your product stay fresh at room temperature for 5+ days and ship without breaking?",
+    opts: [["Yes, it's built for it", { online: 3, subscription: 2, wholesale: 1 }], ["No — best within a day or two", { market: 2, custom: 2 }], ["Not sure yet", { market: 1 }]] },
+  { q: "How many units could you realistically produce per week right now?",
+    opts: [["Under ~150", { custom: 2, market: 1 }], ["150–600", { market: 2, subscription: 2, wholesale: 1 }], ["600+ (or with a rented kitchen easily)", { wholesale: 3, online: 1 }]] },
+  { q: "How do you feel about face-to-face selling?",
+    opts: [["Love it — put me in front of customers", { market: 3, custom: 2 }], ["Fine in small doses", { market: 1, wholesale: 1 }], ["I'd rather stay behind the scenes", { online: 2, wholesale: 2, subscription: 2 }]] },
+  { q: "What's your setup budget for the next 3 months?",
+    opts: [["Under $500", { market: 2, custom: 2 }], ["$500–$2,500", { online: 2, subscription: 1, market: 1 }], ["Over $2,500", { wholesale: 2, online: 1 }]] },
+  { q: "What matters most in your first 6 months?",
+    opts: [["Cash flow, fast", { market: 2, custom: 2 }], ["Building a brand & community", { market: 1, online: 2, subscription: 1 }], ["Predictable, recurring revenue", { subscription: 3, wholesale: 2 }]] },
+  { q: "Which best describes your product?",
+    opts: [["A visual showstopper", { market: 2, online: 1 }], ["An everyday staple people repeat", { wholesale: 2, subscription: 2 }], ["A gift / celebration item", { custom: 2, online: 1 }]] }
+];
+
+const IDEAS = [
+  { t: "Time-lapse: '6 a.m. bake' — ovens, steam, first tray out", c: "Reels/TikTok", b: 0 },
+  { t: "Founder story post: why you started (one honest paragraph + photo)", c: "Instagram", b: 0 },
+  { t: "Before/after of your signature product mid-process", c: "Instagram", b: 0 },
+  { t: "'Pack an order with me' 15-second video", c: "Reels/TikTok", b: 0 },
+  { t: "Poll your audience: which special should drop next?", c: "Stories", b: 0 },
+  { t: "Start the email list: subscribers get first access to every drop", c: "Email", b: 0 },
+  { t: "Seasonal limited drop with a public countdown timer", c: "All channels", b: 0 },
+  { t: "Pitch a 'small business spotlight' to your local paper or patch site", c: "Local press", b: 0 },
+  { t: "Set up Google Business Profile for maps, hours, and reviews", c: "Google", b: 0 },
+  { t: "Giveaway: follow + tag two friends; winner announced on a live", c: "Instagram", b: 0 },
+  { t: "Collab post with a local coffee shop or complementary maker", c: "Instagram", b: 0 },
+  { t: "QR code on booth/box: 'scan for 10% off your first online order'", c: "Print", b: 1 },
+  { t: "Micro-influencer barter: free box to 5 local food accounts for an honest story", c: "Instagram", b: 1 },
+  { t: "Invite a local food blogger for a private tasting", c: "Local press", b: 1 },
+  { t: "Referral card: give $5, get $5", c: "Print", b: 1 },
+  { t: "Loyalty punch card: buy 9, get the 10th free", c: "Print", b: 1 },
+  { t: "Live demo at the market: decorate, slice, or glaze on-site", c: "Markets", b: 1 },
+  { t: "Holiday pre-order campaign with a hard deadline", c: "Email", b: 1 },
+  { t: "Send corporate tasting boxes to 3 office managers with a catering one-pager", c: "B2B", b: 2 },
+  { t: "Boost your best-performing organic post to a 10-mile geo radius", c: "Paid social", b: 2 }
+];
+
+const LAUNCH_STEPS = [
+  { w: 8, t: "Finalize recipe & complete the Costing Lab — numbers locked" },
+  { w: 6, t: "Register business; apply for permits/licenses; book kitchen if needed" },
+  { w: 5, t: "Lock brand identity; order packaging & labels (lead times bite)" },
+  { w: 4, t: "Run full-scale test batches; confirm shelf life and yield" },
+  { w: 3, t: "Product photoshoot; set up socials; start teasing; email capture live" },
+  { w: 2, t: "Submit market applications; pitch 5 wholesale accounts; send press samples" },
+  { w: 1, t: "Soft launch to friends, family & email list — iron out the kinks" },
+  { w: 0, t: "LAUNCH DAY. Sell out. Post everything. Collect emails." }
+];
+
+const TEMPLATES = [
+  { id: "tpl-pitch", name: "Wholesale pitch email", txt: `Subject: Local pastry samples for {{Shop Name}} this week?
+
+Hi {{Name}},
+
+I'm {{Your Name}}, founder of {{Brand}} here in {{City}}. We make {{one-line product pitch}}.
+
+Your {{counter / coffee program / neighborhood}} is exactly where our {{product}} belongs — they pair beautifully with {{their product}}, and our customers already ask where else they can find us.
+
+I'd love to drop off a complimentary tasting box this week. Fifteen minutes, no commitment. If it's a fit, we offer:
+• Wholesale at 50% of MSRP ({{wholesale price}}/unit, retail {{MSRP}})
+• {{X}}-unit minimum, delivered {{days}} each week
+• {{N}}-day shelf life, display-ready packaging
+
+Which morning works better — Tuesday or Thursday?
+
+{{Your Name}}
+{{Phone}} · @{{instagram}}` },
+  { id: "tpl-linesheet", name: "Line sheet structure", txt: `{{BRAND NAME}} — LINE SHEET  |  {{Season/Year}}
+
+1. BRAND STORY (2 sentences + 1 hero photo)
+   Who you are, what you make, why it's different.
+
+2. PRODUCTS (one row per SKU)
+   Photo | SKU name | Case pack | Unit weight | Shelf life
+   | Wholesale price | Suggested retail (MSRP)
+
+3. TERMS
+   Opening order minimum: $____
+   Reorder minimum: $____
+   Payment: Net 15 / due on delivery
+   Delivery: days, zones, fees
+   Returns: policy (typically none on perishables)
+
+4. CONTACT
+   Name, phone, email, order form link
+
+Keep it to ONE page. PDF only. Photos on white backgrounds.` },
+  { id: "tpl-booth", name: "Farmers market booth checklist", txt: `SELLING
+□ Table, cloth (floor-length), tent/weights, signage (visible from 10 ft)
+□ Pricing clearly displayed — never make people ask
+□ Card reader + charged phone/battery, cash float ($100 in small bills)
+□ Bags, tissue, stickers, thank-you cards with QR to online store
+□ Sample setup (check market rules), tongs, gloves
+□ Cooler/ambient control per your product + thermometer
+
+OPERATIONS
+□ Production packed & labeled the night before
+□ Par levels written down; restock plan for sellout
+□ Email signup sheet or QR (offer 10% off first online order)
+□ Water, snacks, chair, sunscreen, phone charger
+
+CONTENT
+□ Tripod or friend filming: setup time-lapse, customer reactions, sellout
+□ Post Stories live; recap reel within 24 hours` },
+  { id: "tpl-preorder", name: "Pre-order drop announcement", txt: `📦 DROP 001 — {{Product Name}}
+
+{{One sentence of desire: what it is, what makes it special.}}
+
+We're baking {{40}} boxes. That's it.
+
+→ Pre-orders open {{date/time}} for email subscribers first
+→ Public opens {{date/time}}
+→ Pickup {{location}} on {{date}}, {{time window}}
+→ {{Price}} per box · contains {{allergen note}}
+
+Last drop sold out in {{time}}. Link in bio. 🔗` },
+  { id: "tpl-feedback", name: "Customer feedback questions", txt: `1. On a scale of 1–10, how likely are you to buy this?
+2. What would you have paid before I told you the price?
+3. What's the closest thing you already buy, and what do you pay?
+4. What's the first word that came to mind when you tasted it?
+5. What would make you NOT buy it again?
+6. Where do you wish you could find this?
+
+Rule: ask 20 people. Ignore the two kindest and the two cruelest.
+Patterns in the middle 16 are your roadmap.` },
+  { id: "tpl-bio", name: "Instagram bio formula", txt: `{{WHAT}} · {{WHERE}} · {{PROOF or PERSONALITY}}
+{{Next drop date or order CTA}}
+⬇ Order / waitlist link
+
+Examples:
+"Croissants, laminated by hand · Portland OR · 3,000 sold at PSU market
+Saturday drops — preorder ⬇"
+
+"Sourdough babka from a Sicilian grandmother's notebook · Brooklyn
+Ships Tue–Thu · join the waitlist ⬇"` }
+];
+
+const GLOSSARY = [
+  ["Food cost %", "Ingredient cost as a share of selling price. Below ~30% of retail is the typical healthy zone for baked goods."],
+  ["COGS", "Cost of Goods Sold — everything that goes into one saleable unit: ingredients, packaging, and direct labor."],
+  ["Gross margin", "(Price − unit cost) ÷ price. A $12 item costing $4.20 to make has a 65% gross margin."],
+  ["MSRP", "Manufacturer's Suggested Retail Price — what the customer pays at retail."],
+  ["Wholesale price", "What retailers pay you, typically 50% of MSRP, leaving them room to double it."],
+  ["Consignment", "Retailer only pays after the item sells. Risky for perishables — prefer true wholesale purchase."],
+  ["Cottage food law", "State laws allowing sale of certain low-risk foods made in home kitchens, usually with caps and labeling rules."],
+  ["Food handler card", "Basic food safety certification required in many jurisdictions for anyone selling food."],
+  ["Commissary / shared kitchen", "Licensed commercial kitchen you rent by the hour — required for most non-cottage food production."],
+  ["Co-packer", "A manufacturer that produces your recipe at scale for you — the scale-up step when demand beats capacity."],
+  ["HACCP", "Hazard Analysis Critical Control Points — a formal food safety plan, sometimes required for wholesale or high-risk items."],
+  ["Shelf life", "How long a product stays safe and saleable — drives packaging, channel choice, and label claims."],
+  ["Par level", "The minimum stock you must have on hand; below par triggers production or purchasing."],
+  ["SKU", "Stock Keeping Unit — one distinct product/variant you sell. Fewer SKUs early = simpler ops."],
+  ["MOQ", "Minimum Order Quantity — the smallest wholesale order you'll accept."],
+  ["Net terms", "Payment window for wholesale buyers, e.g., 'Net 15' = invoice due in 15 days."],
+  ["Drop", "A limited, dated release of product. Creates urgency and matches supply to real demand."],
+  ["UGC", "User-Generated Content — customer photos and reviews you repost. The cheapest, most credible marketing there is."]
+];
+
+/* ============================================================
+   STATE
+============================================================ */
+function defaultState() {
+  return {
+    checks: {},
+    ingredients: [
+      { name: "All-purpose flour", pkg: 14, pkgQty: 5000, unit: "g",  used: 1200 },
+      { name: "Butter (European)",  pkg: 7,  pkgQty: 454,  unit: "g",  used: 680  },
+      { name: "Sugar",              pkg: 9,  pkgQty: 4000, unit: "g",  used: 150  },
+      { name: "Eggs",               pkg: 4.5,pkgQty: 12,   unit: "ea", used: 6    },
+      { name: "Yeast",              pkg: 3,  pkgQty: 500,  unit: "g",  used: 12   }
+    ],
+    calc: { yield: 24, laborMin: 120, wage: 18, overhead: 10, packaging: 0.60, margin: 65 },
+    be: { fixed: 1200, price: 0, varc: 0 },
+    quiz: {},
+    launchDate: "",
+    compliance: { setup: "home", risk: "shelf", mk: false, on: false, xstate: false },
+    ideas: { budget: 0 },
+    lastCosting: null,
+    theme: "light"
+  };
+}
+
+function loadState() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(KEY) || "{}");
+    const d = defaultState();
+    return {
+      ...d, ...raw,
+      calc: { ...d.calc, ...(raw.calc || {}) },
+      be: { ...d.be, ...(raw.be || {}) },
+      compliance: { ...d.compliance, ...(raw.compliance || {}) },
+      ideas: { ...d.ideas, ...(raw.ideas || {}) }
+    };
+  } catch { return defaultState(); }
+}
+
+let ST = loadState();
+function save() { try { localStorage.setItem(KEY, JSON.stringify(ST)); } catch {} }
+
+/* ============================================================
+   THEME
+============================================================ */
+const THEMES = [
+  { id: "light",    label: "Light",    swatch: "#FAF3E8" },
+  { id: "dark",     label: "Dark",     swatch: "#2B1A0E" },
+  { id: "cyberpunk",label: "Cyberpunk",swatch: "#FF3D82" },
+  { id: "emerald",  label: "Emerald",  swatch: "#00CC88" }
+];
+
+function applyTheme(id) {
+  document.documentElement.setAttribute("data-theme", id);
+  ST.theme = id; save();
+  $$(".theme-option").forEach(el => el.classList.toggle("active", el.dataset.theme === id));
+}
+
+/* ============================================================
+   ROUTER
+============================================================ */
+let _current = "";
+function show(id) {
+  id = id.replace(/^#/, "");
+  if (id === _current) return;
+  _current = id;
+
+  $$(".page").forEach(p => p.classList.remove("on"));
+  const el = document.getElementById("page-" + id);
+  if (el) el.classList.add("on");
+
+  $$(".nav-item").forEach(a => {
+    const match = a.dataset.go === id;
+    a.classList.toggle("active", match);
+    if (match) a.setAttribute("aria-current", "page");
+    else a.removeAttribute("aria-current");
+  });
+
+  $("#main-scroll").scrollTop = 0;
+  if (id === "tool-breakeven") requestAnimationFrame(drawBE);
+  if (id === "tool-compliance") renderCompliance();
+  history.replaceState(null, "", "#" + id);
+}
+
+/* ============================================================
+   TOAST
+============================================================ */
+function toast(msg, type = "") {
+  const el = document.createElement("div");
+  el.className = "toast" + (type ? " " + type : "");
+  el.textContent = msg;
+  el.setAttribute("role", "status");
+  el.setAttribute("aria-live", "polite");
+  $("#toast-container").appendChild(el);
+  setTimeout(() => el.remove(), 2800);
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+let _focusTrap = null;
+function openModal(html, onClose) {
+  closeModal();
+  const ov = document.createElement("div");
+  ov.className = "modal-overlay";
+  ov.setAttribute("role", "dialog");
+  ov.setAttribute("aria-modal", "true");
+  ov.innerHTML = `<div class="modal-box">${html}</div>`;
+  ov.querySelector(".modal-box").insertAdjacentHTML("afterbegin",
+    `<button class="modal-close" aria-label="Close">✕</button>`);
+  document.body.appendChild(ov);
+  const close = () => { ov.remove(); if (onClose) onClose(); };
+  ov.querySelector(".modal-close").addEventListener("click", close);
+  ov.addEventListener("click", e => { if (e.target === ov) close(); });
+  document.addEventListener("keydown", function esc(e) {
+    if (e.key === "Escape") { close(); document.removeEventListener("keydown", esc); }
+  });
+  // Focus trap
+  const focusable = ov.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  const first = focusable[0], last = focusable[focusable.length - 1];
+  ov.addEventListener("keydown", e => {
+    if (e.key !== "Tab") return;
+    if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+    else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+  });
+  (first || ov).focus();
+}
+function closeModal() { $$(".modal-overlay").forEach(m => m.remove()); }
+
+/* ============================================================
+   BUILD NAV
+============================================================ */
+function buildNav() {
+  const nav = $("#sidebar-nav");
+  let h = `<button class="nav-item" data-go="home"><span class="nav-icon">🏠</span><span class="nav-label">Start here</span></button>`;
+  h += `<div class="nav-section-label">The Roadmap</div>`;
+  STAGES.forEach(s => {
+    h += `<button class="nav-item" data-go="stage-${s.id}">
+      <span class="nav-icon">${s.icon}</span>
+      <span class="nav-label">${s.num}. ${s.short}</span>
+      <span class="nav-badge" id="nb-${s.id}">0/${s.steps.length}</span>
+    </button>`;
+  });
+  h += `<div class="nav-divider"></div><div class="nav-section-label">Tools</div>`;
+  TOOLS.forEach(t => {
+    h += `<button class="nav-item" data-go="${t.id}">
+      <span class="nav-icon">${t.icon}</span>
+      <span class="nav-label">${t.name}</span>
+    </button>`;
+  });
+  h += `<div class="nav-divider"></div><div class="nav-section-label">Reference</div>`;
+  h += `<button class="nav-item" data-go="templates"><span class="nav-icon">📋</span><span class="nav-label">Templates</span></button>`;
+  h += `<button class="nav-item" data-go="glossary"><span class="nav-icon">📖</span><span class="nav-label">Glossary</span></button>`;
+  h += `<button class="nav-item" data-go="snapshot"><span class="nav-icon">💾</span><span class="nav-label">Save / Load</span></button>`;
+  nav.innerHTML = h;
+  nav.addEventListener("click", e => {
+    const btn = e.target.closest("[data-go]");
+    if (btn) show(btn.dataset.go);
+  });
+}
+
+/* ============================================================
+   BUILD ALL PAGES
+============================================================ */
+function buildPages() {
+  const main = $("#main-scroll");
+  main.innerHTML = pageHome() + STAGES.map(pageStage).join("") +
+    pageCost() + pageBE() + pageChannel() + pageCompliance() +
+    pageLaunch() + pageIdeas() + pageTemplates() + pageGlossary() + pageSnapshot();
+}
+
+/* ---- HOME ---- */
+function pageHome() {
+  const cards = STAGES.map(s => `
+    <button class="stage-card" data-go="stage-${s.id}" aria-label="Stage ${s.num}: ${s.title}">
+      <div class="stage-card-icon">${s.icon}</div>
+      <div class="stage-card-title">Stage ${s.num} · ${s.title}</div>
+      <div class="stage-card-blurb">${s.blurb}</div>
+      <div class="progress-bar" style="margin-top:10px"><div class="progress-bar-fill" id="hb-${s.id}" style="width:0%"></div></div>
+    </button>`).join("");
+  const tcards = TOOLS.map(t => `
+    <button class="tool-card" data-go="${t.id}" aria-label="${t.name}">
+      <div class="tool-card-icon">${t.icon}</div>
+      <div><div class="tool-card-title">${t.name}</div><div class="tool-card-desc">${t.desc}</div></div>
+    </button>`).join("");
+  return `<section class="page" id="page-home">
+    <div class="hero-banner">
+      <div class="hero-eyebrow">End-to-end food business playbook</div>
+      <h2 class="hero-title">Turn your <em>signature dish</em><br>into real revenue.</h2>
+      <p class="hero-body">Nine stages take you from "everyone says it's amazing" to repeatable revenue: validation, standardization, costing, legal, production, brand, channels, launch, and scale. Work the checklist, use the tools, keep your progress — everything saves in your browser.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+        <button class="btn" data-go="stage-validate">Start Stage 1 →</button>
+        <button class="btn btn-ghost" data-go="tool-cost">Open Costing Lab 🧮</button>
+      </div>
+    </div>
+    <div class="sec-label" style="margin-top:24px">The Roadmap</div>
+    <div class="grid3">${cards}</div>
+    <div class="sec-label" style="margin-top:22px">Interactive Tools</div>
+    <div class="grid2">${tcards}</div>
+    <div class="app-footer">
+      <span>Crumb to Coin · educational guide, not legal or financial advice. Always verify rules with your local authorities.</span>
+      <button class="btn btn-ghost btn-sm" id="resetBtn">Reset all progress</button>
+    </div>
+  </section>`;
+}
+
+/* ---- STAGE ---- */
+function pageStage(s) {
+  const steps = s.steps.map(st => `
+    <label class="step-item" data-step="${st.id}">
+      <input type="checkbox" class="step-cb" data-step="${st.id}" aria-label="${st.t}">
+      <span class="step-text">${st.t}</span>
+    </label>`).join("");
+  const tips = s.tips.map(t => `
+    <div class="callout callout-tip">
+      <div class="callout-tag">💡 Pro tip</div>${t}
+    </div>`).join("");
+  const pits = s.pits.map(p => `
+    <div class="callout callout-warn">
+      <div class="callout-tag">⚠️ Common trap</div>${p}
+    </div>`).join("");
+  const res = s.res.map(r => {
+    const isInternal = r.u.startsWith("#");
+    return `<div class="res-link">🔗 <a href="${r.u}" ${isInternal ? '' : 'target="_blank" rel="noopener"'}>${r.n}</a></div>`;
+  }).join("");
+  const next = STAGES.find(x => x.num === s.num + 1);
+  return `<section class="page" id="page-stage-${s.id}">
+    <div class="stage-head">
+      <div class="stage-head-icon">${s.icon}</div>
+      <div>
+        <span class="pill pill-accent">Stage ${s.num} of 9 · ~${s.time}</span>
+        <div class="stage-badge">${s.title}</div>
+      </div>
+    </div>
+    <p class="stage-subline" id="sm-${s.id}">Progress: loading…</p>
+    <p class="stage-intro">${s.intro}</p>
+    <div class="grid2">
+      <div>
+        <div class="sec-label">Working checklist — <span id="sc-${s.id}"></span></div>
+        ${steps}
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+          ${next
+            ? `<button class="btn btn-sm" data-go="stage-${next.id}">Next: ${next.title} →</button>`
+            : `<button class="btn btn-sm" data-go="home">🏁 Roadmap overview</button>`}
+        </div>
+      </div>
+      <div>
+        <div class="sec-label">Coaching</div>
+        ${tips}${pits}
+        <div class="sec-label" style="margin-top:16px">Resources</div>
+        <div class="card" style="padding:14px 18px">${res}</div>
+      </div>
+    </div>
+  </section>`;
+}
+
+/* ---- COSTING LAB ---- */
+function pageCost() {
+  const c = ST.calc;
+  return `<section class="page" id="page-tool-cost">
+    <div class="stage-head">
+      <div class="stage-head-icon">🧮</div>
+      <div><span class="pill pill-accent">Tool</span><div class="stage-badge">Costing Lab</div></div>
+    </div>
+    <p class="stage-intro" style="margin-bottom:18px">Price from math, not vibes. Keep package size and amount used in the <b>same unit</b> per row (g, oz, kg, or each).</p>
+    <div class="card">
+      <div class="card-title">🥚 Ingredients per batch</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th style="width:26%">Ingredient</th>
+            <th>Pack cost $</th><th>Pack size</th><th>Unit</th><th>Used / batch</th><th>Cost / batch</th><th></th>
+          </tr></thead>
+          <tbody id="ingBody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px">
+        <button class="btn btn-ghost btn-sm" id="addIng">+ Add ingredient</button>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">⏱ Batch & labor</div>
+        <div class="grid2">
+          <div class="field"><label class="field-label" for="cYield">Units per batch (yield)</label><input type="number" id="cYield" min="1" value="${c.yield}"></div>
+          <div class="field"><label class="field-label" for="cLabor">Labor minutes / batch</label><input type="number" id="cLabor" min="0" value="${c.laborMin}"></div>
+          <div class="field"><label class="field-label" for="cWage">Hourly wage $</label><input type="number" id="cWage" min="0" step="0.5" value="${c.wage}"></div>
+          <div class="field"><label class="field-label" for="cOver">Overhead % of ing.+labor</label><input type="number" id="cOver" min="0" max="100" value="${c.overhead}"></div>
+          <div class="field"><label class="field-label" for="cPack">Packaging $ / unit</label><input type="number" id="cPack" min="0" step="0.05" value="${c.packaging}"></div>
+          <div class="field"><label class="field-label" for="cMargin">Target margin %</label><input type="number" id="cMargin" min="0" max="95" value="${c.margin}"></div>
+        </div>
+        <p style="font-size:12px;color:var(--ink3);margin-top:8px">Food businesses typically target 60–70% gross margin at retail to survive wholesale, fees, and waste.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 Results</div>
+        <div class="grid2" style="gap:10px">
+          <div class="stat-tile"><div class="stat-label">Ingredients / batch</div><div class="stat-val" id="oIng">—</div></div>
+          <div class="stat-tile"><div class="stat-label">Total cost / batch</div><div class="stat-val" id="oBatch">—</div></div>
+          <div class="stat-tile"><div class="stat-label">True cost / unit</div><div class="stat-val" id="oUnit">—</div></div>
+          <div class="stat-tile"><div class="stat-label">Cost % at retail</div><div class="stat-val" id="oFoodPct">—</div></div>
+          <div class="stat-tile highlight"><div class="stat-label">Suggested retail</div><div class="stat-val" id="oPrice">—</div></div>
+          <div class="stat-tile"><div class="stat-label">Wholesale (50% MSRP)</div><div class="stat-val" id="oWhole">—</div></div>
+        </div>
+        <p style="font-size:13px;margin-top:12px;color:var(--ink2)" id="oNote"></p>
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-sm" id="csvBtn">⬇ Export CSV</button>
+          <button class="btn btn-ghost btn-sm" data-go="tool-breakeven">Break-Even →</button>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+/* ---- BREAK-EVEN ---- */
+function pageBE() {
+  const b = ST.be;
+  return `<section class="page" id="page-tool-breakeven">
+    <div class="stage-head">
+      <div class="stage-head-icon">📉</div>
+      <div><span class="pill pill-accent">Tool</span><div class="stage-badge">Break-Even Analyzer</div></div>
+    </div>
+    <p class="stage-intro" style="margin-bottom:18px">Fixed costs vs. profit per unit. This is your monthly survival number.</p>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">📥 Inputs</div>
+        <div class="field"><label class="field-label" for="beFixed">Monthly fixed costs $</label><input type="number" id="beFixed" min="0" value="${b.fixed}"></div>
+        <div class="field"><label class="field-label" for="bePrice">Selling price / unit $</label><input type="number" id="bePrice" min="0" step="0.05" value="${b.price || ""}"></div>
+        <div class="field"><label class="field-label" for="beVarc">Variable cost / unit $ (ingredients, labor, packaging)</label><input type="number" id="beVarc" min="0" step="0.05" value="${b.varc || ""}"></div>
+        <button class="btn btn-ghost btn-sm" id="beImport" style="margin-top:4px">⤵ Import from Costing Lab</button>
+        <p style="font-size:12px;color:var(--ink3);margin-top:10px">Typical fixed costs: kitchen rent, insurance, market fees, software, licenses — often $800–$2,500/mo.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 Results</div>
+        <div class="grid2" style="gap:10px">
+          <div class="stat-tile"><div class="stat-label">Contribution / unit</div><div class="stat-val" id="beContrib">—</div></div>
+          <div class="stat-tile highlight"><div class="stat-label">Break-even units / month</div><div class="stat-val" id="beUnits">—</div></div>
+          <div class="stat-tile"><div class="stat-label">Revenue at break-even</div><div class="stat-val" id="beRev">—</div></div>
+          <div class="stat-tile"><div class="stat-label">Units / week needed</div><div class="stat-val" id="beWeek">—</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📈 Cumulative monthly profit</div>
+      <canvas id="beCanvas" aria-label="Break-even chart"></canvas>
+    </div>
+  </section>`;
+}
+
+/* ---- CHANNEL MATCH ---- */
+function pageChannel() {
+  const qs = QUIZ.map((q, qi) => `
+    <div style="margin-bottom:18px">
+      <p style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px">${qi + 1}. ${q.q}</p>
+      ${q.opts.map((o, oi) => `
+        <label class="quiz-option" data-q="${qi}" data-o="${oi}">
+          <input type="radio" name="cq${qi}" value="${oi}">${o[0]}
+        </label>`).join("")}
+    </div>`).join("");
+  return `<section class="page" id="page-tool-channel">
+    <div class="stage-head">
+      <div class="stage-head-icon">🧭</div>
+      <div><span class="pill pill-accent">Tool</span><div class="stage-badge">Channel Match</div></div>
+    </div>
+    <p class="stage-intro" style="margin-bottom:18px">Six questions. Honest answers. A ranked fit for your starting sales channels.</p>
+    <div class="grid2">
+      <div class="card">${qs}</div>
+      <div class="card">
+        <div class="card-title">Your channel ranking</div>
+        <div id="chResults"><p style="color:var(--ink3);font-size:13.5px">Answer all 6 questions to see your personalized ranking.</p></div>
+      </div>
+    </div>
+  </section>`;
+}
+
+/* ---- COMPLIANCE ---- */
+function pageCompliance() {
+  const c = ST.compliance;
+  return `<section class="page" id="page-tool-compliance">
+    <div class="stage-head">
+      <div class="stage-head-icon">✅</div>
+      <div><span class="pill pill-accent">Tool</span><div class="stage-badge">Compliance Checker</div></div>
+    </div>
+    <p class="stage-intro" style="margin-bottom:18px">Map your likely regulatory path. Rules vary by state and county — always verify locally.</p>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">Your situation</div>
+        <div class="field">
+          <label class="field-label" for="cmpSetup">Where will you produce?</label>
+          <select id="cmpSetup">
+            <option value="home" ${c.setup === "home" ? "selected" : ""}>My home kitchen</option>
+            <option value="commercial" ${c.setup === "commercial" ? "selected" : ""}>Licensed / shared / commercial kitchen</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="cmpRisk">Product type</label>
+          <select id="cmpRisk">
+            <option value="shelf" ${c.risk === "shelf" ? "selected" : ""}>Shelf-stable, low-risk (bread, cookies, granola)</option>
+            <option value="fridge" ${c.risk === "fridge" ? "selected" : ""}>Refrigeration required (custard, cream fillings)</option>
+            <option value="high" ${c.risk === "high" ? "selected" : ""}>High-risk / meat / acidified / canned goods</option>
+          </select>
+        </div>
+        <div class="field-label" style="margin-bottom:8px">Where will you sell?</div>
+        <label class="quiz-option" style="margin-bottom:6px"><input type="checkbox" id="cmpMk" ${c.mk ? "checked" : ""}> Farmers markets / events (in-state)</label>
+        <label class="quiz-option" style="margin-bottom:6px"><input type="checkbox" id="cmpOn" ${c.on ? "checked" : ""}> Online, in-state (pickup/local delivery)</label>
+        <label class="quiz-option"><input type="checkbox" id="cmpXs" ${c.xstate ? "checked" : ""}> Online, shipping across state lines</label>
+      </div>
+      <div class="card">
+        <div class="card-title">Your likely path</div>
+        <div id="cmpOut"><p style="color:var(--ink3);font-size:13.5px">Fill in your situation to see guidance.</p></div>
+        <div class="callout callout-warn" style="margin-top:14px">
+          <div class="callout-tag">⚠️ Disclaimer</div>
+          General education only, not legal advice. Confirm everything with your state Department of Agriculture and local health department before selling.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Verify with these official sources</div>
+      <div class="res-link">🔗 <a href="https://forrager.com" target="_blank" rel="noopener">Forrager — cottage food laws, state by state</a></div>
+      <div class="res-link">🔗 <a href="https://ij.org" target="_blank" rel="noopener">Institute for Justice — state cottage food rankings</a></div>
+      <div class="res-link">🔗 <a href="https://www.fda.gov/food/food-labeling-nutrition/food-labeling-guide" target="_blank" rel="noopener">FDA Food Labeling Guide</a></div>
+      <div class="res-link">🔗 <a href="https://www.google.com/search?q=my+state+department+of+agriculture+cottage+food" target="_blank" rel="noopener">Your state Department of Agriculture</a></div>
+    </div>
+  </section>`;
+}
+
+/* ---- LAUNCH PLANNER ---- */
+function pageLaunch() {
+  return `<section class="page" id="page-tool-launch">
+    <div class="stage-head">
+      <div class="stage-head-icon">🗓️</div>
+      <div><span class="pill pill-accent">Tool</span><div class="stage-badge">Launch Planner</div></div>
+    </div>
+    <p class="stage-intro" style="margin-bottom:18px">Pick your launch date and get a dated 8-week countdown. Milestones land on the same weekday as your launch.</p>
+    <div class="card" style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px" class="field">
+        <label class="field-label" for="launchDate">Launch date</label>
+        <input type="date" id="launchDate" value="${ST.launchDate}">
+      </div>
+      <button class="btn" id="launchGo">Generate countdown 🚀</button>
+    </div>
+    <div class="card" id="launchOut"><p style="color:var(--ink3);font-size:13.5px">Choose a date above to generate your timeline.</p></div>
+  </section>`;
+}
+
+/* ---- IDEA GENERATOR ---- */
+function pageIdeas() {
+  return `<section class="page" id="page-tool-ideas">
+    <div class="stage-head">
+      <div class="stage-head-icon">💡</div>
+      <div><span class="pill pill-accent">Tool</span><div class="stage-badge">Marketing Idea Generator</div></div>
+    </div>
+    <p class="stage-intro" style="margin-bottom:18px">Budget-filtered promo plays. Hit shuffle until the list sparks something.</p>
+    <div class="card" style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px" class="field">
+        <label class="field-label" for="ideaBudget">Budget tier</label>
+        <select id="ideaBudget">
+          <option value="0" ${ST.ideas.budget == 0 ? "selected" : ""}>Scrappy — $0, time only</option>
+          <option value="1" ${ST.ideas.budget == 1 ? "selected" : ""}>Small — under ~$200</option>
+          <option value="2" ${ST.ideas.budget == 2 ? "selected" : ""}>Serious — $200+</option>
+        </select>
+      </div>
+      <button class="btn" id="ideaGo">Shuffle ideas 🎲</button>
+    </div>
+    <div class="card" id="ideaOut"><p style="color:var(--ink3);font-size:13.5px">Hit shuffle to draw 8 ideas.</p></div>
+  </section>`;
+}
+
+/* ---- TEMPLATES ---- */
+function pageTemplates() {
+  const items = TEMPLATES.map(x => `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+        <div class="card-title" style="margin:0">${x.name}</div>
+        <button class="btn btn-ghost btn-sm" data-copy="${x.id}">📋 Copy</button>
+      </div>
+      <pre class="tpl" id="${x.id}">${x.txt}</pre>
+    </div>`).join("");
+  return `<section class="page" id="page-templates">
+    <div class="stage-head">
+      <div class="stage-head-icon">📋</div>
+      <div><span class="pill pill-accent">Reference</span><div class="stage-badge">Templates & Scripts</div></div>
+    </div>
+    <p class="stage-intro" style="margin-bottom:18px">Proven structures, ready to copy. Replace the {{curly braces}} with your details.</p>
+    ${items}
+  </section>`;
+}
+
+/* ---- GLOSSARY ---- */
+function pageGlossary() {
+  const items = GLOSSARY.map(([t, d]) => `
+    <div class="gloss-item">
+      <div class="gloss-term">${t}</div>
+      <div class="gloss-def">${d}</div>
+    </div>`).join("");
+  return `<section class="page" id="page-glossary">
+    <div class="stage-head">
+      <div class="stage-head-icon">📖</div>
+      <div><span class="pill pill-accent">Reference</span><div class="stage-badge">Glossary</div></div>
+    </div>
+    <p class="stage-intro" style="margin-bottom:18px">Key terms used by food business owners, buyers, and regulators.</p>
+    <div class="grid2">${items}</div>
+  </section>`;
+}
+
+/* ---- SNAPSHOT ENGINE ---- */
+function pageSnapshot() {
+  return `<section class="page" id="page-snapshot">
+    <div class="stage-head">
+      <div class="stage-head-icon">💾</div>
+      <div><span class="pill pill-accent">Workspace</span><div class="stage-badge">Save & Load</div></div>
+    </div>
+    <p class="stage-intro" style="margin-bottom:18px">Export your entire workspace — all checklist progress, costing inputs, and tool settings — to a JSON file. Re-import it any time on any browser.</p>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">💾 Export snapshot</div>
+        <p style="font-size:13.5px;color:var(--ink2);margin-bottom:14px">Downloads a JSON file containing all your progress and inputs. Safe to keep as a backup.</p>
+        <button class="btn" id="exportBtn">⬇ Download workspace.json</button>
+      </div>
+      <div class="card">
+        <div class="card-title">📂 Import snapshot</div>
+        <p style="font-size:13.5px;color:var(--ink2);margin-bottom:14px">Upload a previously exported workspace.json to restore all your data.</p>
+        <div class="snapshot-zone" id="dropZone" tabindex="0" role="button" aria-label="Click or drag a workspace.json file to import">
+          <div style="font-size:28px;margin-bottom:6px">📂</div>
+          <div>Drag & drop or <b>click to browse</b></div>
+          <div style="font-size:12px;margin-top:4px;color:var(--ink3)">workspace.json only</div>
+        </div>
+        <input type="file" id="importFile" accept=".json" style="display:none">
+      </div>
+    </div>
+    <div class="card" style="margin-top:4px">
+      <div class="card-title">🗑 Reset workspace</div>
+      <p style="font-size:13.5px;color:var(--ink2);margin-bottom:14px">Clear all progress, checklist states, and tool inputs. This cannot be undone — export first if you want a backup.</p>
+      <button class="btn" style="background:var(--bad)" id="resetBtn2">Reset everything</button>
+    </div>
+  </section>`;
+}
+
+/* ============================================================
+   PROGRESS
+============================================================ */
+function totalSteps() { return STAGES.reduce((a, s) => a + s.steps.length, 0); }
+function doneFor(s)   { return s.steps.filter(st => ST.checks[st.id]).length; }
+
+function updateProgress() {
+  const total = totalSteps();
+  const done  = STAGES.reduce((a, s) => a + doneFor(s), 0);
+  const pct   = total ? Math.round(done / total * 100) : 0;
+
+  // Ring
+  const C = 2 * Math.PI * 14; // r=14 → circumference ≈ 87.96
+  const fill = $("#ring-fill");
+  if (fill) fill.style.strokeDashoffset = C * (1 - pct / 100);
+
+  const rtxt = $("#ring-text");
+  if (rtxt) rtxt.innerHTML = `<b>${pct}%</b> done`;
+
+  STAGES.forEach(s => {
+    const d = doneFor(s), len = s.steps.length;
+    const pctS = len ? d / len : 0;
+    const nb = $("#nb-" + s.id);   if (nb) nb.textContent = `${d}/${len}`;
+    const hb = $("#hb-" + s.id);   if (hb) hb.style.width = (pctS * 100) + "%";
+    const sc = $("#sc-" + s.id);   if (sc) sc.textContent = `${d}/${len} done`;
+    const sm = $("#sm-" + s.id);   if (sm) sm.textContent = d === len
+      ? "✅ Stage complete. Momentum looks good on you."
+      : `Progress: ${d} of ${len} steps complete.`;
+  });
+}
+
+function restoreChecks() {
+  $$(".step-cb").forEach(cb => {
+    const on = !!ST.checks[cb.dataset.step];
+    cb.checked = on;
+    cb.closest(".step-item").classList.toggle("done", on);
+  });
+}
+
+/* ============================================================
+   COSTING LAB
+============================================================ */
+function renderIngredients() {
+  const tb = $("#ingBody");
+  if (!tb) return;
+  tb.innerHTML = ST.ingredients.map((r, i) => `
+    <tr>
+      <td><input type="text" data-i="${i}" data-f="name" value="${r.name.replace(/"/g, '&quot;')}" placeholder="Ingredient" aria-label="Ingredient name"></td>
+      <td><input type="number" style="width:80px" min="0" step="0.01" data-i="${i}" data-f="pkg" value="${r.pkg}" aria-label="Pack cost"></td>
+      <td><input type="number" style="width:80px" min="0" step="any" data-i="${i}" data-f="pkgQty" value="${r.pkgQty}" aria-label="Pack size"></td>
+      <td><input type="text" style="width:50px" data-i="${i}" data-f="unit" value="${r.unit}" aria-label="Unit"></td>
+      <td><input type="number" style="width:80px" min="0" step="any" data-i="${i}" data-f="used" value="${r.used}" aria-label="Amount used per batch"></td>
+      <td class="ing-cost-cell" id="ic-${i}"></td>
+      <td><button class="btn btn-ghost btn-sm" data-del="${i}" aria-label="Remove ${r.name}">✕</button></td>
+    </tr>`).join("");
+
+  tb.querySelectorAll("input").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const i = +inp.dataset.i, f = inp.dataset.f;
+      ST.ingredients[i][f] = (f === "name" || f === "unit") ? inp.value : (parseFloat(inp.value) || 0);
+      save(); computeCost();
+    });
+  });
+  tb.querySelectorAll("[data-del]").forEach(b => {
+    b.addEventListener("click", () => {
+      ST.ingredients.splice(+b.dataset.del, 1);
+      save(); renderIngredients(); computeCost();
+    });
+  });
+}
+
+function computeCost() {
+  let ingTotal = 0;
+  ST.ingredients.forEach((r, i) => {
+    const cost = r.pkgQty > 0 ? r.used * (r.pkg / r.pkgQty) : 0;
+    ingTotal += cost;
+    const cell = document.getElementById("ic-" + i);
+    if (cell) cell.textContent = fmt$(cost);
+  });
+  const y      = num($("#cYield")),
+        mins   = num($("#cLabor")),
+        wage   = num($("#cWage")),
+        ov     = num($("#cOver")),
+        pack   = num($("#cPack")),
+        margin = num($("#cMargin"));
+  const labor    = mins / 60 * wage;
+  const overhead = (ingTotal + labor) * ov / 100;
+  const batch    = ingTotal + labor + overhead;
+  const unit     = y > 0 ? batch / y + pack : 0;
+  const price    = margin < 100 ? unit / (1 - margin / 100) : 0;
+  const whole    = price * 0.5;
+  const foodPct  = price > 0 ? unit / price * 100 : 0;
+
+  const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+  set("#oIng",     fmt$(ingTotal));
+  set("#oBatch",   fmt$(batch));
+  set("#oUnit",    fmt$(unit));
+  set("#oPrice",   fmt$(price));
+  set("#oWhole",   fmt$(whole));
+  set("#oFoodPct", price > 0 ? foodPct.toFixed(1) + "%" : "—");
+
+  const note = $("#oNote");
+  if (note) {
+    if (foodPct <= 35 && price > 0)
+      note.innerHTML = `✅ Healthy zone: cost is <b>${foodPct.toFixed(0)}%</b> of retail. Round <b>${fmt$(price)}</b> to a market price like <b>${fmt$(Math.ceil(price) - 0.05)}</b> and re-check margin.`;
+    else if (price > 0)
+      note.innerHTML = `⚠️ Cost is <b>${foodPct.toFixed(0)}%</b> of retail — thin. Reformulate, buy in bulk, shrink portion, or raise price.`;
+    else
+      note.textContent = "Enter a target margin to see pricing.";
+  }
+  ST.lastCosting = { unitCost: unit, price };
+}
+
+function bindCost() {
+  ["cYield", "cLabor", "cWage", "cOver", "cPack", "cMargin"].forEach(id => {
+    const el = $("#" + id);
+    if (!el) return;
+    el.addEventListener("input", () => {
+      ST.calc = {
+        yield: num($("#cYield")), laborMin: num($("#cLabor")),
+        wage: num($("#cWage")), overhead: num($("#cOver")),
+        packaging: num($("#cPack")), margin: num($("#cMargin"))
+      };
+      save(); computeCost();
+    });
+  });
+  const addIng = $("#addIng");
+  if (addIng) addIng.addEventListener("click", () => {
+    ST.ingredients.push({ name: "", pkg: 0, pkgQty: 0, unit: "g", used: 0 });
+    save(); renderIngredients(); computeCost();
+  });
+  const csvBtn = $("#csvBtn");
+  if (csvBtn) csvBtn.addEventListener("click", exportCSV);
+  renderIngredients();
+  computeCost();
+}
+
+function exportCSV() {
+  let csv = "Ingredient,Pack Cost,Pack Size,Unit,Used per Batch,Cost per Batch\n";
+  let ing = 0;
+  ST.ingredients.forEach(r => {
+    const c = r.pkgQty > 0 ? r.used * (r.pkg / r.pkgQty) : 0;
+    ing += c;
+    csv += `"${r.name}",${r.pkg},${r.pkgQty},${r.unit},${r.used},${c.toFixed(2)}\n`;
+  });
+  const labor = num($("#cLabor")) / 60 * num($("#cWage"));
+  csv += `"Labor",,,,,${labor.toFixed(2)}\n`;
+  csv += `"Overhead",,,,,${((ing + labor) * num($("#cOver")) / 100).toFixed(2)}\n`;
+  csv += `"Packaging/unit",,,,,${(num($("#cPack")) * num($("#cYield"))).toFixed(2)}\n`;
+  const uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+  const a = document.createElement("a");
+  a.href = uri;
+  a.download = "cost-sheet.csv";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  toast("Cost sheet exported ✓", "ok");
+}
+
+/* ============================================================
+   BREAK-EVEN
+============================================================ */
+function bindBE() {
+  ["beFixed", "bePrice", "beVarc"].forEach(id => {
+    const el = $("#" + id);
+    if (!el) return;
+    el.addEventListener("input", () => {
+      ST.be = { fixed: num($("#beFixed")), price: num($("#bePrice")), varc: num($("#beVarc")) };
+      save(); drawBE();
+    });
+  });
+  const imp = $("#beImport");
+  if (imp) imp.addEventListener("click", () => {
+    if (ST.lastCosting && ST.lastCosting.price > 0) {
+      const pEl = $("#bePrice"), vEl = $("#beVarc");
+      if (pEl) pEl.value = ST.lastCosting.price.toFixed(2);
+      if (vEl) vEl.value = ST.lastCosting.unitCost.toFixed(2);
+      ST.be.price = ST.lastCosting.price;
+      ST.be.varc  = ST.lastCosting.unitCost;
+      save(); drawBE();
+      toast("Imported from Costing Lab ✓", "ok");
+    } else {
+      toast("Run the Costing Lab first, then come back here.", "warn");
+    }
+  });
+  window.addEventListener("resize", () => {
+    if (document.getElementById("page-tool-breakeven").classList.contains("on")) drawBE();
+  });
+  drawBE();
+}
+
+function drawBE() {
+  const cv = $("#beCanvas");
+  if (!cv) return;
+  const ctx = cv.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth || 680, h = 260;
+  cv.width = w * dpr; cv.height = h * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+
+  const fixed = num($("#beFixed")), price = num($("#bePrice")), vc = num($("#beVarc"));
+  const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+
+  // Get CSS variables for theme-aware colors
+  const cs = getComputedStyle(document.documentElement);
+  const colGrid   = cs.getPropertyValue("--border").trim() || "#eee";
+  const colText   = cs.getPropertyValue("--ink3").trim()   || "#888";
+  const colAccent = cs.getPropertyValue("--accent").trim() || "#c2410c";
+  const colGold   = cs.getPropertyValue("--gold").trim()   || "#d97706";
+  const colOk     = cs.getPropertyValue("--ok").trim()     || "#15803d";
+
+  if (!(price > vc) || fixed <= 0) {
+    set("#beContrib", price > vc ? fmt$(price - vc) : "—");
+    set("#beUnits", "—"); set("#beRev", "—"); set("#beWeek", "—");
+    ctx.fillStyle = colText;
+    ctx.font = "14px 'Inter', system-ui";
+    ctx.fillText(fixed <= 0 ? "Enter monthly fixed costs to begin." : "Price must be above variable cost per unit.", 24, h / 2);
+    return;
+  }
+
+  const contrib = price - vc;
+  const be      = fixed / contrib;
+  const maxU    = Math.ceil(be * 2.2);
+  set("#beContrib", fmt$(contrib));
+  set("#beUnits",   Math.ceil(be).toLocaleString() + " units");
+  set("#beRev",     fmt$(Math.ceil(be) * price));
+  set("#beWeek",    (Math.ceil(be) / 4.33).toFixed(0) + " units");
+
+  const L = 72, R = 20, T = 22, B = 38;
+  const minP = -fixed, maxP = fixed;
+  const X = u => L + (w - L - R) * u / maxU;
+  const Y = p => T + (h - T - B) * (1 - (p - minP) / (maxP - minP));
+
+  // Grid lines
+  ctx.strokeStyle = colGrid; ctx.lineWidth = 1;
+  ctx.font = `11px 'Inter', system-ui`;
+  ctx.fillStyle = colText;
+  for (let i = 0; i <= 4; i++) {
+    const p = minP + (maxP - minP) * i / 4;
+    const y = Y(p);
+    ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(w - R, y); ctx.stroke();
+    const label = (p < 0 ? "-$" : "$") + Math.abs(Math.round(p)).toLocaleString();
+    ctx.fillText(label, 4, y + 4);
+  }
+  // Zero line dashed
+  ctx.strokeStyle = colText; ctx.setLineDash([5, 4]); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(L, Y(0)); ctx.lineTo(w - R, Y(0)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // X labels
+  ctx.fillText("0", L - 6, h - 10);
+  const maxLabel = maxU.toLocaleString() + " units";
+  ctx.fillText(maxLabel, w - R - ctx.measureText(maxLabel).width, h - 10);
+
+  // Profit line
+  ctx.strokeStyle = colAccent; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  const step = Math.max(1, Math.floor(maxU / 300));
+  for (let u = 0; u <= maxU; u += step) {
+    const p = u * contrib - fixed;
+    const px = X(u), py = Y(Math.max(minP, Math.min(maxP, p)));
+    u === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Break-even dot
+  const bx = X(be), by = Y(0);
+  ctx.fillStyle = colOk;
+  ctx.beginPath(); ctx.arc(bx, by, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.font = `bold 12px 'Inter', system-ui`;
+  ctx.fillStyle = colOk;
+  ctx.fillText(`break-even: ${Math.ceil(be)} units`, Math.min(bx + 10, w - 160), by - 10);
+}
+
+/* ============================================================
+   CHANNEL QUIZ
+============================================================ */
+function bindQuiz() {
+  Object.entries(ST.quiz).forEach(([qi, oi]) => {
+    const lab = document.querySelector(`.quiz-option[data-q="${qi}"][data-o="${oi}"]`);
+    if (lab) { lab.classList.add("selected"); const inp = lab.querySelector("input"); if (inp) inp.checked = true; }
+  });
+  $$(".quiz-option").forEach(lab => {
+    lab.addEventListener("click", () => {
+      const qi = lab.dataset.q, oi = lab.dataset.o;
+      if (!qi) return;
+      ST.quiz[qi] = +oi; save();
+      $$(`.quiz-option[data-q="${qi}"]`).forEach(l => l.classList.remove("selected"));
+      lab.classList.add("selected");
+      renderChannelResults();
+    });
+  });
+  renderChannelResults();
+}
+
+function renderChannelResults() {
+  const out = $("#chResults");
+  if (!out) return;
+  if (Object.keys(ST.quiz).length < QUIZ.length) {
+    out.innerHTML = `<p style="color:var(--ink3);font-size:13.5px">${Object.keys(ST.quiz).length}/${QUIZ.length} answered — finish the quiz to see your ranking.</p>`;
+    return;
+  }
+  const scores = { market: 0, online: 0, wholesale: 0, subscription: 0, custom: 0 };
+  QUIZ.forEach((q, qi) => {
+    const oi = ST.quiz[qi];
+    if (oi == null) return;
+    Object.entries(q.opts[oi][1]).forEach(([k, v]) => scores[k] += v);
+  });
+  const ranked = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const max = ranked[0][1] || 1;
+  let h = ranked.map(([k, v], i) => `
+    <div class="result-bar-row">
+      <span>${i === 0 ? "🥇 " : i === 1 ? "🥈 " : ""}${CHANNEL_INFO[k].name.split(":")[0]}</span>
+      <div class="result-bar"><div class="result-bar-fill" style="width:${Math.round(v / max * 100)}%"></div></div>
+      <b style="font-variant-numeric:tabular-nums">${v}</b>
+    </div>`).join("");
+  const top = ranked[0][0], second = ranked[1][0];
+  h += `<div class="callout callout-tip" style="margin-top:14px">
+    <div class="callout-tag">Recommended starting mix</div>
+    Lead with <b>${CHANNEL_INFO[top].name}</b> and support it with <b>${CHANNEL_INFO[second].name}</b>. Master these two before adding a third.
+  </div>`;
+  h += [top, second].map(k => `
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px">
+      <b style="font-family:'Lora',serif">${CHANNEL_INFO[k].name}</b>
+      <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">
+        <span class="pill pill-ok">${CHANNEL_INFO[k].margin}</span>
+        <span class="pill pill-info">${CHANNEL_INFO[k].effort}</span>
+      </div>
+    </div>`).join("");
+  out.innerHTML = h;
+}
+
+/* ============================================================
+   COMPLIANCE
+============================================================ */
+function bindCompliance() {
+  const mpSetup = $("#cmpSetup"), mpRisk = $("#cmpRisk");
+  if (mpSetup) mpSetup.addEventListener("change", e => { ST.compliance.setup = e.target.value; save(); renderCompliance(); });
+  if (mpRisk)  mpRisk.addEventListener("change",  e => { ST.compliance.risk  = e.target.value; save(); renderCompliance(); });
+  [["cmpMk","mk"],["cmpOn","on"],["cmpXs","xstate"]].forEach(([id, k]) => {
+    const el = $("#" + id);
+    if (el) el.addEventListener("change", e => { ST.compliance[k] = e.target.checked; save(); renderCompliance(); });
+  });
+  renderCompliance();
+}
+
+function renderCompliance() {
+  const c = ST.compliance, out = $("#cmpOut");
+  if (!out) return;
+  const pill = (cls, txt) => `<span class="pill ${cls}">${txt}</span>`;
+  let headline, verdict, ppill;
+  if (c.setup === "home" && c.risk === "shelf") {
+    headline = "Likely path: Cottage Food (home kitchen)";
+    ppill    = pill("pill-ok", "Cottage food candidate");
+    verdict  = "Your product is low-risk and you're producing at home, so your state's cottage food law is probably your fastest route to legal sales. Expect: a registration or permit, a food handler card, specific label text (often a 'made in a home kitchen' statement), an annual revenue cap, and limits on where you can sell.";
+  } else if (c.setup === "home" && (c.risk === "fridge" || c.risk === "high")) {
+    headline = "Likely path: Licensed / shared kitchen required";
+    ppill    = pill("pill-warn", "Cottage food won't cover this");
+    verdict  = "Refrigerated, cream/custard, fresh-dairy, and high-risk items are typically excluded from cottage food laws. To sell legally you'll likely need to produce in a licensed commercial or shared/commissary kitchen, plus the usual permits and inspections.";
+  } else {
+    headline = "Likely path: Licensed commercial production";
+    ppill    = pill("pill-info", "Commercial kitchen route");
+    verdict  = "You're producing in a licensed/shared kitchen, which unlocks the full range of products and channels. Focus shifts to your kitchen's permit, your food handler certification, liability insurance, and compliant labeling.";
+  }
+  const reqs = [
+    ["Business registration + EIN + separate bank account", "pill-info"],
+    ["Food handler card / food safety certification", "pill-info"]
+  ];
+  if (c.setup === "home" && c.risk === "shelf") {
+    reqs.push(["Cottage food registration or permit (state-specific)", "pill-warn"]);
+    reqs.push(["Label with 'made in a home kitchen' disclosure if required", "pill-warn"]);
+    reqs.push(["Track annual revenue against your state's cottage food cap", "pill-warn"]);
+  } else {
+    reqs.push(["Licensed commercial / shared kitchen agreement", "pill-warn"]);
+    reqs.push(["Kitchen permit + health inspection", "pill-warn"]);
+  }
+  reqs.push(["General + product liability insurance", "pill-info"]);
+  reqs.push(["Compliant label: ingredients, allergens, net weight, business name & address", "pill-info"]);
+
+  const reqsHtml = reqs.map(r => `<div style="display:flex;gap:8px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--border);font-size:13.5px"><span class="${r[1]}" style="flex-shrink:0">•</span>${r[0]}</div>`).join("");
+
+  const chHtml = [];
+  if (c.mk) chHtml.push(["Farmers markets / in-state events",
+    c.setup === "home" && c.risk === "shelf"
+      ? "Usually allowed under cottage food, but each market may have its own vendor permit and rules."
+      : "Allowed; confirm any market-specific vendor permits and inspection requirements.", "tip"]);
+  if (c.on) chHtml.push(["Online, in-state (pickup / local delivery)",
+    c.setup === "home" && c.risk === "shelf"
+      ? "Generally allowed in many states, but some restrict online/remote sales — verify."
+      : "Allowed with licensed production; set up compliant ordering and delivery.", "tip"]);
+  if (c.xstate) chHtml.push(["Shipping across state lines",
+    c.setup === "home"
+      ? "Usually NOT allowed under cottage food — interstate sales typically require a licensed kitchen and federal/commercial compliance."
+      : "Possible with licensed production, but interstate sales can trigger additional federal labeling/registration requirements.", "warn"]);
+
+  out.innerHTML = `
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+        <b style="font-family:'Lora',serif;font-size:15px">${headline}</b>${ppill}
+      </div>
+      <p style="font-size:13.5px;color:var(--ink2)">${verdict}</p>
+    </div>
+    <div class="sec-label" style="margin-bottom:6px">Likely requirements</div>
+    ${reqsHtml}
+    ${chHtml.length ? `<div class="sec-label" style="margin:16px 0 8px">Channel check</div>` + chHtml.map(r => `
+      <div class="callout callout-${r[2]}" style="margin-bottom:8px">
+        <div class="callout-tag">${r[2] === "tip" ? "✅" : "⚠️"} ${r[0]}</div>${r[1]}
+      </div>`).join("") : ""}
+  `;
+}
+
+/* ============================================================
+   LAUNCH PLANNER
+============================================================ */
+function bindLaunch() {
+  const goBtn = $("#launchGo"), datePick = $("#launchDate");
+  if (goBtn)    goBtn.addEventListener("click",    renderLaunch);
+  if (datePick) datePick.addEventListener("change", e => { ST.launchDate = e.target.value; save(); });
+  if (ST.launchDate) renderLaunch();
+}
+
+function renderLaunch() {
+  const v = $("#launchDate").value, out = $("#launchOut");
+  if (!v) { out.innerHTML = `<p style="color:var(--ink3);font-size:13.5px">Choose a date above to generate your timeline.</p>`; return; }
+  const launch = new Date(v + "T00:00:00");
+  if (isNaN(launch)) { out.innerHTML = `<p style="color:var(--bad)">That date doesn't look right.</p>`; return; }
+  const steps = [...LAUNCH_STEPS].sort((a, b) => b.w - a.w);
+  let h = `<p style="margin-bottom:10px">🚀 <b>Launch: ${fmtDate(launch)}</b> — milestones land on the same weekday.</p>`;
+  h += steps.map(s => {
+    const d = new Date(launch); d.setDate(d.getDate() - s.w * 7);
+    const isDay = s.w === 0;
+    return `<div class="launch-timeline-item">
+      <div class="launch-date-col ${isDay ? "launch-day-highlight" : ""}">${isDay ? "🎉 LAUNCH" : fmtDate(d)}</div>
+      <div><b>${isDay ? "Launch day" : s.w + " week" + (s.w > 1 ? "s" : "") + " out"}</b> — ${s.t}</div>
+    </div>`;
+  }).join("");
+  out.innerHTML = h;
+}
+
+/* ============================================================
+   IDEA GENERATOR
+============================================================ */
+function bindIdeas() {
+  const goBtn = $("#ideaGo"), budSel = $("#ideaBudget");
+  if (goBtn)   goBtn.addEventListener("click",  renderIdeas);
+  if (budSel)  budSel.addEventListener("change", e => { ST.ideas.budget = +e.target.value; save(); renderIdeas(); });
+}
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderIdeas() {
+  const b = +$("#ideaBudget").value, out = $("#ideaOut");
+  const pool  = IDEAS.filter(i => i.b <= b);
+  const picks = shuffle([...pool]).slice(0, 8);
+  out.innerHTML = `<div class="sec-label" style="margin-bottom:10px">8 plays for your budget</div>` +
+    picks.map((idea, idx) => `
+      <div class="idea-item">
+        <div class="idea-num">${idx + 1}.</div>
+        <div class="idea-text">${idea.t}</div>
+        <span class="pill pill-info" style="flex-shrink:0">${idea.c}</span>
+      </div>`).join("");
+}
+
+/* ============================================================
+   SNAPSHOT ENGINE
+============================================================ */
+function bindSnapshot() {
+  const exportBtn = $("#exportBtn");
+  if (exportBtn) exportBtn.addEventListener("click", () => {
+    const json = JSON.stringify(ST, null, 2);
+    const uri = "data:application/json;charset=utf-8," + encodeURIComponent(json);
+    const a = document.createElement("a");
+    a.href = uri;
+    a.download = "crumb2coin-workspace.json";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("Workspace exported ✓", "ok");
+  });
+
+  const dropZone = $("#dropZone"), fileInput = $("#importFile");
+  if (dropZone && fileInput) {
+    dropZone.addEventListener("click", () => fileInput.click());
+    dropZone.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") fileInput.click(); });
+    dropZone.addEventListener("dragover", e => { e.preventDefault(); dropZone.classList.add("drag-over"); });
+    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("drag-over"));
+    dropZone.addEventListener("drop", e => {
+      e.preventDefault(); dropZone.classList.remove("drag-over");
+      const f = e.dataTransfer.files[0];
+      if (f) loadFile(f);
+    });
+    fileInput.addEventListener("change", () => { if (fileInput.files[0]) loadFile(fileInput.files[0]); });
+  }
+
+  const resetBtn2 = $("#resetBtn2");
+  if (resetBtn2) resetBtn2.addEventListener("click", () => {
+    openModal(`
+      <div class="modal-title">Reset workspace?</div>
+      <div class="modal-sub">This clears all checklist progress, costing inputs, and tool settings. Export first if you want a backup.</div>
+      <div style="display:flex;gap:10px;margin-top:20px">
+        <button class="btn" style="background:var(--bad)" id="confirmReset">Yes, reset everything</button>
+        <button class="btn btn-ghost" id="cancelReset">Cancel</button>
+      </div>`, null);
+    setTimeout(() => {
+      const ok = $("#confirmReset"), no = $("#cancelReset");
+      if (ok) ok.addEventListener("click", () => {
+        try { localStorage.removeItem(KEY); } catch {}
+        location.reload();
+      });
+      if (no) no.addEventListener("click", closeModal);
+    }, 50);
+  });
+}
+
+function loadFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (typeof parsed !== "object" || !parsed) throw new Error("Invalid");
+      const d = defaultState();
+      ST = { ...d, ...parsed, calc: { ...d.calc, ...(parsed.calc || {}) }, be: { ...d.be, ...(parsed.be || {}) }, compliance: { ...d.compliance, ...(parsed.compliance || {}) }, ideas: { ...d.ideas, ...(parsed.ideas || {}) } };
+      save();
+      location.reload();
+    } catch {
+      toast("Could not load that file — is it a valid workspace.json?", "warn");
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ============================================================
+   GLOBAL CLICK DELEGATION
+============================================================ */
+function bindGlobal() {
+  document.addEventListener("click", e => {
+    const goEl = e.target.closest("[data-go]");
+    if (goEl) { show(goEl.dataset.go); return; }
+
+    const copyEl = e.target.closest("[data-copy]");
+    if (copyEl) {
+      const txt = document.getElementById(copyEl.dataset.copy)?.innerText || "";
+      (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject())
+        .then(() => { copyEl.textContent = "✅ Copied!"; setTimeout(() => copyEl.textContent = "📋 Copy", 1600); })
+        .catch(() => {
+          const r = document.createRange();
+          const el = document.getElementById(copyEl.dataset.copy);
+          if (el) { r.selectNodeContents(el); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand("copy"); sel.removeAllRanges(); }
+          copyEl.textContent = "✅ Copied!"; setTimeout(() => copyEl.textContent = "📋 Copy", 1600);
+        });
+      return;
+    }
+
+    // Close theme popover when clicking outside
+    const tp = $(".theme-popover");
+    if (tp && !tp.contains(e.target) && !e.target.closest("#themeToggle")) {
+      tp.remove();
+    }
+  });
+
+  // Step checkboxes
+  document.addEventListener("change", e => {
+    if (e.target.classList.contains("step-cb")) {
+      ST.checks[e.target.dataset.step] = e.target.checked;
+      e.target.closest(".step-item").classList.toggle("done", e.target.checked);
+      save(); updateProgress();
+    }
+  });
+
+  // Reset on home page
+  document.addEventListener("click", e => {
+    if (e.target.id === "resetBtn") {
+      openModal(`
+        <div class="modal-title">Reset all progress?</div>
+        <div class="modal-sub">This clears all checklist progress, tool inputs, and settings. Export first if you want a backup.</div>
+        <div style="display:flex;gap:10px;margin-top:20px">
+          <button class="btn" style="background:var(--bad)" id="confirmReset">Yes, reset</button>
+          <button class="btn btn-ghost" id="cancelReset">Cancel</button>
+        </div>`, null);
+      setTimeout(() => {
+        const ok = $("#confirmReset"), no = $("#cancelReset");
+        if (ok) ok.addEventListener("click", () => { try { localStorage.removeItem(KEY); } catch {} location.reload(); });
+        if (no) no.addEventListener("click", closeModal);
+      }, 50);
+    }
+  });
+
+  // Internal resource links (#tool-cost, #tool-breakeven)
+  document.addEventListener("click", e => {
+    const a = e.target.closest("a[href^='#']");
+    if (a) {
+      e.preventDefault();
+      const target = a.getAttribute("href").replace("#", "");
+      if (target) show(target);
+    }
+  });
+}
+
+/* ============================================================
+   THEME POPOVER
+============================================================ */
+function buildThemePopover() {
+  const btn = $("#themeToggle");
+  if (!btn) return;
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    let existing = $(".theme-popover");
+    if (existing) { existing.remove(); return; }
+    const pop = document.createElement("div");
+    pop.className = "theme-popover";
+    pop.setAttribute("role", "menu");
+    pop.innerHTML = THEMES.map(t => `
+      <button class="theme-option ${ST.theme === t.id ? "active" : ""}" data-theme="${t.id}" role="menuitem">
+        <div class="theme-swatch" style="background:${t.swatch}"></div>
+        ${t.label}
+      </button>`).join("");
+    pop.addEventListener("click", e => {
+      const btn2 = e.target.closest("[data-theme]");
+      if (btn2) { applyTheme(btn2.dataset.theme); pop.remove(); }
+    });
+    const wrap = btn.closest(".header-right");
+    if (wrap) {
+      wrap.style.position = "relative";
+      wrap.appendChild(pop);
+    }
+  });
+}
+
+/* ============================================================
+   FULLSCREEN
+============================================================ */
+function bindFullscreen() {
+  const btn = $("#fsBtn");
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+      btn.textContent = "⛶";
+      btn.setAttribute("aria-label", "Exit fullscreen");
+    } else {
+      document.exitFullscreen().catch(() => {});
+      btn.textContent = "⛶";
+      btn.setAttribute("aria-label", "Enter fullscreen");
+    }
+  });
+  document.addEventListener("fullscreenchange", () => {
+    if (!document.fullscreenElement) btn.textContent = "⛶";
+  });
+}
+
+/* ============================================================
+   POPSTATE (back/forward navigation)
+============================================================ */
+function bindPopstate() {
+  window.addEventListener("popstate", () => {
+    const hash = location.hash.replace("#", "") || "home";
+    _current = "";
+    show(hash);
+  });
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+function init() {
+  // Apply saved theme
+  applyTheme(ST.theme || "light");
+
+  buildNav();
+  buildPages();
+  bindGlobal();
+  restoreChecks();
+  updateProgress();
+  bindCost();
+  bindBE();
+  bindQuiz();
+  bindCompliance();
+  bindLaunch();
+  bindIdeas();
+  bindSnapshot();
+  buildThemePopover();
+  bindFullscreen();
+  bindPopstate();
+
+  // Initial route
+  const startHash = location.hash.replace("#", "") || "home";
+  show(startHash);
+}
+
+// DOM ready
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>

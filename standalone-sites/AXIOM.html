@@ -1,0 +1,2901 @@
+<!doctype html>
+<html lang="en" data-theme="cyber">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#071018">
+    <title>AXIOM 2040 v4 // Supercharged AI Coding Workspace</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23071018'/%3E%3Cpolygon points='16,4 26,12 26,24 16,32 6,24 6,12' fill='%2355dcff' opacity='0.9'/%3E%3Cpolygon points='16,8 22,14 22,22 16,28 10,22 10,14' fill='%23071018'/%3E%3Ccircle cx='16' cy='18' r='4' fill='%2355dcff'/%3E%3C/svg%3E">
+    <style>
+        /* ==========================================================================
+           THEME ACCENT STUDIO & CSS TOKENS
+           ========================================================================== */
+        :root {
+            --bg: #05090e;
+            --bg2: #08111a;
+            --panel: rgba(10, 22, 32, .85);
+            --panel2: rgba(13, 30, 43, .92);
+            --line: rgba(117, 224, 255, .18);
+            --line2: rgba(117, 224, 255, .38);
+            --text: #e9fbff;
+            --muted: #7fa0ad;
+            --cyan: #55dcff;
+            --cyan2: #8eecff;
+            --violet: #9b7cff;
+            --gold: #ffc75a;
+            --red: #ff6d82;
+            --green: #5effb6;
+            --shadow: 0 20px 60px rgba(0, 0, 0, .55);
+            --radius: 14px;
+            --mono: "Cascadia Code", "Fira Code", "SFMono-Regular", Consolas, monospace;
+            --sans: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+            --font-size: 12px;
+            --line-height: 1.6;
+            --sidebar-w: 260px;
+            --ai-w: 360px;
+            --lower-h: 220px;
+            --elec-color: #55dcff;
+        }
+        html[data-theme="violet"] {
+            --bg: #0b0714;
+            --bg2: #120b22;
+            --panel: rgba(22, 14, 40, .85);
+            --panel2: rgba(31, 19, 56, .92);
+            --line: rgba(186, 133, 255, .2);
+            --line2: rgba(186, 133, 255, .45);
+            --text: #f5eeff;
+            --muted: #9b8aab;
+            --cyan: #c27eff;
+            --cyan2: #d8aaee;
+            --violet: #55dcff;
+            --elec-color: #c27eff;
+        }
+        html[data-theme="emerald"] {
+            --bg: #040d0a;
+            --bg2: #071711;
+            --panel: rgba(11, 33, 25, .85);
+            --panel2: rgba(15, 45, 34, .92);
+            --line: rgba(94, 255, 182, .2);
+            --line2: rgba(94, 255, 182, .45);
+            --text: #eafff5;
+            --muted: #7faba0;
+            --cyan: #2ef296;
+            --cyan2: #7afabf;
+            --violet: #60c2ff;
+            --elec-color: #2ef296;
+        }
+        html[data-theme="solar"] {
+            --bg: #121008;
+            --bg2: #1c180c;
+            --panel: rgba(38, 32, 16, .85);
+            --panel2: rgba(54, 45, 23, .92);
+            --line: rgba(255, 199, 90, .22);
+            --line2: rgba(255, 199, 90, .45);
+            --text: #fffbe9;
+            --muted: #b8ac8c;
+            --cyan: #ffba3b;
+            --cyan2: #ffd885;
+            --violet: #ff6d82;
+            --elec-color: #ffba3b;
+        }
+        html[data-theme="oled"] {
+            --bg: #000000;
+            --bg2: #050505;
+            --panel: rgba(15, 15, 15, .95);
+            --panel2: rgba(25, 25, 25, .98);
+            --line: rgba(255, 255, 255, .15);
+            --line2: rgba(255, 255, 255, .35);
+            --text: #ffffff;
+            --muted: #888888;
+            --cyan: #ffffff;
+            --cyan2: #dddddd;
+            --violet: #a0a0a0;
+            --elec-color: #ffffff;
+        }
+        html[data-theme="light"],
+        body.light {
+            --bg: #eef4f7;
+            --bg2: #e3ecf1;
+            --panel: rgba(255, 255, 255, .9);
+            --panel2: rgba(255, 255, 255, .96);
+            --line: rgba(16, 82, 101, .18);
+            --line2: rgba(16, 145, 180, .4);
+            --text: #0d232e;
+            --muted: #577382;
+            --cyan: #0b8db2;
+            --cyan2: #18a9d4;
+            --violet: #7a50e6;
+            --shadow: 0 18px 48px rgba(20, 55, 68, .12);
+            --elec-color: #0b8db2;
+        }
+
+        /* ==========================================================================
+           GLOBAL & ANIMATIONS WITH CROSS-BROWSER VENDOR PREFIXES
+           ========================================================================== */
+        * {
+            box-sizing: border-box
+        }
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            overflow: hidden;
+            transition: background-color .4s ease, color .4s ease
+        }
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit
+        }
+        #bgCanvas,
+        #confettiCanvas,
+        #electricCanvas,
+        .noise,
+        .grid,
+        .glow {
+            position: fixed;
+            inset: 0;
+            pointer-events: none
+        }
+        #bgCanvas {
+            z-index: 0;
+            opacity: 0.6
+        }
+        #confettiCanvas {
+            z-index: 9999
+        }
+        #electricCanvas {
+            z-index: 1;
+            opacity: 0.85
+        }
+        .noise {
+            opacity: .03;
+            z-index: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E")
+        }
+        .grid {
+            z-index: 0;
+            background: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+            background-size: 28px 28px;
+            -webkit-mask-image: linear-gradient(to bottom, black, transparent 85%);
+            mask-image: linear-gradient(to bottom, black, transparent 85%);
+        }
+
+        @keyframes cascadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px) scale(0.98)
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1)
+            }
+        }
+        .cascade-item {
+            animation: cascadeIn .35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0
+        }
+        .cascade-item:nth-child(1) {
+            animation-delay: .02s
+        }
+        .cascade-item:nth-child(2) {
+            animation-delay: .05s
+        }
+        .cascade-item:nth-child(3) {
+            animation-delay: .08s
+        }
+        .cascade-item:nth-child(4) {
+            animation-delay: .11s
+        }
+        .cascade-item:nth-child(5) {
+            animation-delay: .14s
+        }
+
+        @keyframes electricPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 8px var(--elec-color), 0 0 20px rgba(85, 220, 255, .15)
+            }
+            50% {
+                box-shadow: 0 0 25px var(--elec-color), 0 0 50px rgba(85, 220, 255, .35), 0 0 80px rgba(85, 220, 255, .1)
+            }
+        }
+        @keyframes electricBorder {
+            0% {
+                border-color: var(--line)
+            }
+            33% {
+                border-color: var(--cyan)
+            }
+            66% {
+                border-color: var(--violet)
+            }
+            100% {
+                border-color: var(--line)
+            }
+        }
+        @keyframes pulse {
+            50% {
+                opacity: .35;
+                transform: scale(.85)
+            }
+        }
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: scale(0.96)
+            }
+        }
+        @keyframes toastIn {
+            from {
+                transform: translateY(12px) scale(.95);
+                opacity: 0
+            }
+        }
+        @keyframes radarSweep {
+            0% {
+                top: 0%;
+                opacity: 0.8
+            }
+            50% {
+                opacity: 1
+            }
+            100% {
+                top: 100%;
+                opacity: 0
+            }
+        }
+        @keyframes sparkFade {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.8
+            }
+            100% {
+                transform: scale(2.5);
+                opacity: 0
+            }
+        }
+
+        /* ==========================================================================
+           APP LAYOUT
+           ========================================================================== */
+        .app {
+            height: 100%;
+            display: grid;
+            grid-template-rows: 52px 1fr 26px;
+            position: relative;
+            z-index: 2
+        }
+
+        /* TOP NAVIGATION BAR */
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(8, 18, 28, .97), rgba(5, 11, 18, .93));
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            z-index: 20;
+            box-shadow: 0 1px 0 rgba(85, 220, 255, .08), 0 2px 12px rgba(0, 0, 0, .4);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-width: 190px
+        }
+        .brandmark {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--line2);
+            clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+            display: grid;
+            place-items: center;
+            color: var(--cyan);
+            font-weight: bold;
+            text-shadow: 0 0 15px var(--cyan);
+            box-shadow: inset 0 0 22px rgba(85, 220, 255, .15), 0 0 15px rgba(85, 220, 255, .3);
+            transition: .3s;
+            animation: electricPulse 3s infinite;
+        }
+        .brand b {
+            font-size: 12px;
+            letter-spacing: .15em
+        }
+        .brand small {
+            display: block;
+            color: var(--muted);
+            font-size: 9px;
+            letter-spacing: .12em;
+            margin-top: 1px
+        }
+        .project-vault-bar {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex: 1;
+            justify-content: center;
+            min-width: 0
+        }
+        .project-selector {
+            background: rgba(0, 0, 0, .25);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            color: var(--text);
+            padding: 5px 9px;
+            font-weight: 600;
+            outline: 0;
+            cursor: pointer;
+            max-width: 200px;
+            transition: .2s
+        }
+        .project-selector:focus,
+        .project-selector:hover {
+            border-color: var(--line2)
+        }
+        .project-title input {
+            width: min(220px, 100%);
+            background: transparent;
+            border: 0;
+            border-bottom: 1px solid transparent;
+            color: var(--text);
+            text-align: center;
+            font-weight: 700;
+            outline: 0;
+            padding: 4px
+        }
+        .project-title input:focus {
+            border-color: var(--cyan)
+        }
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 5px
+        }
+        .icon-btn,
+        .btn {
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .01));
+            color: var(--text);
+            border-radius: 9px;
+            cursor: pointer;
+            transition: .18s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 11px;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0
+        }
+        .btn {
+            padding: 6px 10px;
+            font-weight: 650
+        }
+        .icon-btn:hover,
+        .btn:hover {
+            border-color: var(--line2);
+            transform: translateY(-1px);
+            box-shadow: 0 0 16px rgba(85, 220, 255, .14)
+        }
+        .btn.primary {
+            background: linear-gradient(135deg, rgba(85, 220, 255, .25), rgba(85, 220, 255, .08));
+            border-color: var(--cyan);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(85, 220, 255, .2)
+        }
+        .btn.danger {
+            color: #ffdbe1;
+            border-color: rgba(255, 109, 130, .4);
+            background: rgba(255, 109, 130, .08)
+        }
+        .kbd {
+            font: 9px var(--mono);
+            color: var(--muted);
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            padding: 1px 4px;
+            background: rgba(0, 0, 0, .3)
+        }
+
+        /* ==========================================================================
+           PANEL WINDOW CONTROLS — Minimize / Maximize / Close
+           ========================================================================== */
+        .panel-wc-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 38px;
+            height: 38px;
+            padding: 0 10px;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(0, 0, 0, .1));
+            flex-shrink: 0;
+            -webkit-user-select: none;
+            user-select: none;
+            cursor: default;
+        }
+        .panel-wc-bar .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 10px;
+            letter-spacing: .14em;
+            color: var(--cyan2);
+            text-transform: uppercase;
+            font-weight: 700
+        }
+        .panel-wc-bar .panel-meta {
+            color: var(--muted);
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px
+        }
+        .panel-wc {
+            display: flex;
+            align-items: center;
+            gap: 5px
+        }
+        .wc-btn {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            transition: .15s;
+            padding: 0;
+            line-height: 1;
+            font-weight: bold;
+            position: relative
+        }
+        .wc-btn::after {
+            content: attr(data-tip);
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, .85);
+            color: #fff;
+            font-size: 9px;
+            padding: 2px 5px;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: .15s
+        }
+        .wc-btn:hover::after {
+            opacity: 1
+        }
+        .wc-close {
+            background: #ff5f57;
+            box-shadow: 0 0 4px rgba(255, 95, 87, .6)
+        }
+        .wc-minimize {
+            background: #febc2e;
+            box-shadow: 0 0 4px rgba(254, 188, 46, .6)
+        }
+        .wc-maximize {
+            background: #28c840;
+            box-shadow: 0 0 4px rgba(40, 200, 64, .6)
+        }
+        .wc-close:hover {
+            background: #ff2d20;
+            box-shadow: 0 0 10px rgba(255, 45, 32, .8)
+        }
+        .wc-minimize:hover {
+            background: #f5a623;
+            box-shadow: 0 0 10px rgba(245, 166, 35, .8)
+        }
+        .wc-maximize:hover {
+            background: #00c820;
+            box-shadow: 0 0 10px rgba(0, 200, 32, .8)
+        }
+        .panel.minimized>.panel-wc-bar~* {
+            display: none !important
+        }
+        .panel.minimized {
+            min-height: 38px !important;
+            flex: unset !important
+        }
+        .panel.maximized {
+            position: fixed !important;
+            inset: 52px 0 26px 0 !important;
+            z-index: 90 !important;
+            border-radius: 0 !important;
+            width: auto !important
+        }
+        .panel {
+            min-width: 0;
+            min-height: 0;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: border-color .3s, box-shadow .3s;
+        }
+        .panel:focus-within {
+            border-color: var(--cyan2);
+            box-shadow: 0 0 35px rgba(85, 220, 255, .15), 0 0 2px var(--elec-color), var(--shadow)
+        }
+
+        /* ==========================================================================
+           WORKSPACE GRID
+           ========================================================================== */
+        .workspace {
+            min-height: 0;
+            display: grid;
+            grid-template-columns: var(--sidebar-w, 260px) minmax(320px, 1fr) var(--ai-w, 360px);
+            gap: 8px;
+            padding: 8px
+        }
+        .resize-handle {
+            position: absolute;
+            z-index: 30;
+            background: transparent;
+            transition: background .15s
+        }
+        .resize-handle:hover,
+        .resize-handle.dragging {
+            background: rgba(85, 220, 255, .45)
+        }
+        .resize-handle-v {
+            width: 5px;
+            top: 0;
+            bottom: 0;
+            cursor: col-resize;
+            border-radius: 3px
+        }
+        .resize-handle-h {
+            height: 5px;
+            left: 0;
+            right: 0;
+            cursor: row-resize;
+            border-radius: 3px
+        }
+
+        .side-scroll {
+            overflow: auto;
+            min-height: 0;
+            padding: 10px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 9px
+        }
+        .label {
+            font-size: 9px;
+            letter-spacing: .13em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin: 3px 0 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700
+        }
+        .project-meter {
+            padding: 9px;
+            border: 1px solid var(--line);
+            border-radius: 11px;
+            background: rgba(0, 0, 0, .22)
+        }
+        .meter-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px
+        }
+        .meter {
+            height: 5px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, .08);
+            margin-top: 7px;
+            overflow: hidden
+        }
+        .meter span {
+            display: block;
+            height: 100%;
+            width: 38%;
+            background: linear-gradient(90deg, var(--violet), var(--cyan));
+            box-shadow: 0 0 10px var(--cyan);
+            transition: width .4s ease
+        }
+        .goal {
+            width: 100%;
+            min-height: 64px;
+            resize: vertical;
+            color: var(--text);
+            background: rgba(0, 0, 0, .25);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 7px;
+            outline: 0;
+            font-size: 11.5px;
+            line-height: 1.4
+        }
+        .goal:focus {
+            border-color: var(--line2)
+        }
+        .task {
+            display: grid;
+            grid-template-columns: 18px 1fr auto auto;
+            gap: 7px;
+            align-items: center;
+            padding: 6px;
+            border-radius: 8px;
+            font-size: 11px;
+            border: 1px solid transparent;
+            transition: .15s
+        }
+        .task:hover {
+            background: rgba(255, 255, 255, .04);
+            border-color: var(--line)
+        }
+        .task input {
+            accent-color: var(--cyan)
+        }
+        .task.done span {
+            text-decoration: line-through;
+            color: var(--muted)
+        }
+        .task button {
+            background: none;
+            border: 0;
+            color: var(--muted);
+            cursor: pointer;
+            opacity: 0
+        }
+        .task:hover button {
+            opacity: 1
+        }
+        .badge {
+            font-size: 8px;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em
+        }
+        .badge.high {
+            background: rgba(255, 109, 130, .2);
+            color: var(--red);
+            border: 1px solid rgba(255, 109, 130, .4)
+        }
+        .badge.med {
+            background: rgba(85, 220, 255, .2);
+            color: var(--cyan);
+            border: 1px solid rgba(85, 220, 255, .4)
+        }
+        .badge.low {
+            background: rgba(127, 160, 173, .2);
+            color: var(--muted);
+            border: 1px solid rgba(127, 160, 173, .4)
+        }
+        .add-row {
+            display: flex;
+            gap: 4px
+        }
+        .mini-input {
+            width: 100%;
+            min-width: 0;
+            background: rgba(0, 0, 0, .25);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            color: var(--text);
+            padding: 5px 7px;
+            outline: 0;
+            font-size: 11px
+        }
+        .mini-input:focus {
+            border-color: var(--line2)
+        }
+        .mini-select {
+            background: rgba(0, 0, 0, .3);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 10px;
+            padding: 4px;
+            outline: 0
+        }
+
+        .side {
+            transition: width .2s ease, opacity .2s ease
+        }
+        .side.collapsed {
+            width: 0 !important;
+            min-width: 0 !important;
+            opacity: 0;
+            overflow: hidden;
+            padding: 0;
+            border: none;
+            margin: 0
+        }
+
+        .file-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 3px
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 8px;
+            border-radius: 8px;
+            color: #b8d1d9;
+            font: 11px var(--mono);
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: .15s
+        }
+        .file-item:hover {
+            background: rgba(255, 255, 255, .03)
+        }
+        .file-item.active {
+            background: rgba(85, 220, 255, .1);
+            border-color: var(--line2);
+            color: #ffffff;
+            box-shadow: inset 3px 0 0 var(--cyan)
+        }
+        .file-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 8px currentColor
+        }
+        .file-item[data-type=css] .file-dot {
+            background: var(--violet)
+        }
+        .file-item[data-type=js] .file-dot {
+            background: var(--gold)
+        }
+        .file-item[data-type=md] .file-dot {
+            background: var(--green)
+        }
+        .file-item button {
+            margin-left: auto;
+            background: none;
+            border: 0;
+            color: var(--muted);
+            cursor: pointer;
+            opacity: 0;
+            font-size: 12px
+        }
+        .file-item:hover button {
+            opacity: 1
+        }
+        .timeline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-height: 140px;
+            overflow-y: auto;
+            padding-right: 4px
+        }
+        .snapshot-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 8px;
+            background: rgba(0, 0, 0, .2);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            font-size: 10.5px
+        }
+        .snapshot-item:hover {
+            border-color: var(--line2);
+            background: rgba(85, 220, 255, .04)
+        }
+
+        /* ==========================================================================
+           CENTER EDITOR
+           ========================================================================== */
+        .center {
+            display: grid;
+            grid-template-rows: 38px minmax(200px, 1fr) var(--lower-h, 220px);
+            min-height: 0;
+            position: relative
+        }
+        .mode-tabs,
+        .editor-tabs {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            overflow-x: auto
+        }
+        .mode-tab,
+        .editor-tab {
+            height: 24px;
+            padding: 0 10px;
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            transition: .15s;
+            -webkit-user-select: none;
+            user-select: none
+        }
+        .mode-tab.active,
+        .editor-tab.active {
+            background: rgba(85, 220, 255, .12);
+            color: var(--text);
+            box-shadow: inset 0 0 0 1px rgba(85, 220, 255, .25);
+            font-weight: 600
+        }
+        .editor-tab {
+            position: relative;
+            padding-right: 20px !important
+        }
+        .editor-tab .tab-close {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            line-height: 1;
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 0;
+            opacity: 0;
+            transition: .15s
+        }
+        .editor-tab:hover .tab-close,
+        .editor-tab.active .tab-close {
+            opacity: 1
+        }
+        .editor-tab .tab-close:hover {
+            background: rgba(255, 109, 130, .25);
+            color: var(--red)
+        }
+        .editor-wrap {
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid var(--line);
+            position: relative
+        }
+        .editor-toolbar {
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 9px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(0, 0, 0, .2);
+            flex-shrink: 0
+        }
+        .editor-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+        .find-bar {
+            display: none;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 9px;
+            background: rgba(13, 29, 42, .96);
+            border-bottom: 1px solid var(--line2);
+            z-index: 15;
+            flex-wrap: wrap
+        }
+        .find-bar.show {
+            display: flex;
+            animation: cascadeIn .2s ease
+        }
+        .find-bar input {
+            background: rgba(0, 0, 0, .3);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            color: var(--text);
+            padding: 4px 7px;
+            font-size: 11px;
+            outline: 0;
+            width: 120px
+        }
+        .editor-split-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            flex: 1;
+            min-height: 0;
+            position: relative
+        }
+        .editor-split-container.split-mode {
+            grid-template-columns: 1fr 1fr
+        }
+        .code-shell {
+            position: relative;
+            min-height: 0;
+            background: #060d13;
+            display: flex;
+            overflow: hidden;
+            flex: 1
+        }
+        .code-shell.right-pane {
+            display: none;
+            border-left: 1px solid var(--line2)
+        }
+        .editor-split-container.split-mode .code-shell.right-pane {
+            display: flex
+        }
+        .line-nums {
+            width: 42px;
+            padding: 13px 4px;
+            text-align: right;
+            overflow: hidden;
+            background: rgba(0, 0, 0, .25);
+            border-right: 1px solid var(--line);
+            color: #42606b;
+            font: var(--font-size)/var(--line-height) var(--mono);
+            -webkit-user-select: none;
+            user-select: none;
+            flex-shrink: 0
+        }
+        .line-nums .bm-pin {
+            color: var(--red);
+            font-weight: bold;
+            margin-right: 2px
+        }
+        .editor-layer-box {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+            height: 100%;
+            overflow: auto
+        }
+        .syntax-overlay,
+        .code,
+        .ghost-overlay {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            padding: 13px 15px;
+            font: var(--font-size)/var(--line-height) var(--mono);
+            tab-size: 2;
+            white-space: pre;
+            overflow: hidden;
+            margin: 0;
+            border: 0;
+            outline: 0
+        }
+        .syntax-overlay {
+            pointer-events: none;
+            color: #cceef7;
+            z-index: 1
+        }
+        .ghost-overlay {
+            pointer-events: none;
+            color: rgba(127, 160, 173, .45);
+            z-index: 1;
+            font-style: italic
+        }
+        .code {
+            background: transparent;
+            color: transparent;
+            caret-color: var(--cyan);
+            z-index: 2;
+            resize: none
+        }
+        .optical-spark {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--cyan);
+            filter: blur(6px);
+            pointer-events: none;
+            animation: sparkFade .4s ease-out forwards;
+            z-index: 3
+        }
+        .syn-tag {
+            color: var(--cyan);
+            font-weight: 600
+        }
+        .syn-attr {
+            color: var(--violet)
+        }
+        .syn-str {
+            color: var(--gold)
+        }
+        .syn-key {
+            color: var(--red);
+            font-weight: 600
+        }
+        .syn-cmnt {
+            color: #486470;
+            font-style: italic
+        }
+        .syn-num {
+            color: var(--green)
+        }
+        .color-swatch-box {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            border: 1px solid #fff;
+            margin-left: 3px;
+            vertical-align: middle;
+            cursor: pointer;
+            box-shadow: 0 0 6px rgba(0, 0, 0, .5);
+            pointer-events: auto;
+            z-index: 10
+        }
+        .minimap-container {
+            width: 48px;
+            background: rgba(0, 0, 0, .3);
+            border-left: 1px solid var(--line);
+            flex-shrink: 0;
+            position: relative;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            overflow: hidden
+        }
+        .minimap-canvas {
+            width: 100%;
+            height: 100%;
+            display: block
+        }
+        .minimap-viewport {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: rgba(85, 220, 255, .15);
+            border: 1px solid rgba(85, 220, 255, .3);
+            border-radius: 3px;
+            pointer-events: none;
+            min-height: 15px
+        }
+        .minimap-radar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+            opacity: 0;
+            pointer-events: none
+        }
+        .inline-action-chip {
+            position: absolute;
+            z-index: 25;
+            background: linear-gradient(135deg, #0c2231, #08131c);
+            border: 1px solid var(--line2);
+            padding: 4px 8px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            display: none;
+            align-items: center;
+            gap: 5px
+        }
+        .inline-action-chip.show {
+            display: flex;
+            animation: cascadeIn .15s ease
+        }
+        .markdown-preview,
+        .diagram-canvas-box {
+            padding: 16px;
+            overflow: auto;
+            min-height: 0;
+            flex: 1;
+            background: #050a0f;
+            color: var(--text);
+            font-family: var(--sans);
+            display: none
+        }
+        .markdown-preview h1,
+        .markdown-preview h2 {
+            color: var(--cyan);
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 5px
+        }
+        .markdown-preview pre {
+            background: rgba(0, 0, 0, .4);
+            padding: 9px;
+            border-radius: 8px;
+            font: 11px var(--mono);
+            border: 1px solid var(--line)
+        }
+        .diagram-node {
+            display: inline-block;
+            padding: 7px 13px;
+            background: rgba(85, 220, 255, .12);
+            border: 1px solid var(--cyan);
+            border-radius: 10px;
+            font-weight: bold;
+            margin: 7px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .4);
+            animation: cascadeIn .4s ease
+        }
+
+        /* Lower Preview & Console */
+        .lower {
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative
+        }
+        .lower-resize-handle {
+            position: absolute;
+            top: -4px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            cursor: row-resize;
+            z-index: 25;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+        .lower-resize-handle::after {
+            content: '';
+            display: block;
+            width: 44px;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--line2);
+            transition: background .2s
+        }
+        .lower-resize-handle:hover::after,
+        .lower-resize-handle.dragging::after {
+            background: var(--cyan)
+        }
+        .preview-pane,
+        .console-pane {
+            min-width: 0;
+            min-height: 0;
+            display: flex;
+            flex-direction: column
+        }
+        .preview-pane {
+            border-right: 1px solid var(--line)
+        }
+        .pane-toolbar {
+            min-height: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 9px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(0, 0, 0, .2);
+            overflow-x: auto;
+            flex-shrink: 0
+        }
+        .device-tabs {
+            display: flex;
+            align-items: center;
+            gap: 3px
+        }
+        .device {
+            border: 0;
+            background: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 3px 6px;
+            border-radius: 5px;
+            font-size: 10.5px
+        }
+        .device.active {
+            color: var(--cyan);
+            background: rgba(85, 220, 255, .12);
+            font-weight: 600
+        }
+        .dim-input {
+            width: 40px;
+            background: rgba(0, 0, 0, .4);
+            border: 1px solid var(--line);
+            border-radius: 5px;
+            color: var(--text);
+            text-align: center;
+            font: 10px var(--mono);
+            padding: 2px
+        }
+        .preview-stage {
+            flex: 1;
+            min-height: 0;
+            padding: 8px;
+            background: radial-gradient(circle at center, rgba(85, 220, 255, .06), transparent 70%), #03070a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: auto
+        }
+        .preview-frame {
+            width: 100%;
+            height: 100%;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+            transition: transform .25s ease, opacity .25s ease, width .25s ease, height .25s ease
+        }
+        .preview-frame.zooming {
+            transform: scale(0.95);
+            opacity: 0
+        }
+        .preview-frame.tablet {
+            width: 768px;
+            height: 1024px;
+            max-height: 100%
+        }
+        .preview-frame.mobile {
+            width: 390px;
+            height: 844px;
+            max-height: 100%
+        }
+        .console {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 7px;
+            background: #04080d;
+            font: 11px/1.55 var(--mono);
+            display: flex;
+            flex-direction: column
+        }
+        .console-line {
+            display: grid;
+            grid-template-columns: 50px 1fr auto auto;
+            gap: 5px;
+            padding: 4px 5px;
+            border-bottom: 1px dashed rgba(255, 255, 255, .05);
+            align-items: start;
+            animation: cascadeIn .2s ease
+        }
+        .console-line:hover {
+            background: rgba(255, 255, 255, .02)
+        }
+        .console-line .kind {
+            color: var(--cyan);
+            font-weight: 700
+        }
+        .console-line.error .kind,
+        .console-line.error .msg {
+            color: var(--red)
+        }
+        .console-line.warn .kind {
+            color: var(--gold)
+        }
+        .console-obj-btn,
+        .ask-why-btn {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid var(--line);
+            color: var(--cyan2);
+            border-radius: 4px;
+            padding: 2px 5px;
+            font-size: 9.5px;
+            cursor: pointer
+        }
+        .ask-why-btn {
+            background: rgba(255, 109, 130, .12);
+            border-color: var(--red);
+            color: #ffccd2;
+            margin-left: 3px
+        }
+        .console-obj-tree {
+            display: none;
+            grid-column: 2/-1;
+            background: rgba(0, 0, 0, .4);
+            padding: 7px;
+            border-radius: 6px;
+            border: 1px solid var(--line);
+            margin-top: 3px;
+            overflow: auto
+        }
+        .console-obj-tree.show {
+            display: block
+        }
+        .empty {
+            color: #52707b;
+            padding: 16px;
+            text-align: center;
+            font-family: var(--sans);
+            font-size: 12px
+        }
+        .test-lab {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 11px;
+            background: #04080d;
+            display: none;
+            flex-direction: column;
+            gap: 9px
+        }
+        .test-suite-box {
+            background: rgba(0, 0, 0, .3);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 7px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px
+        }
+        .test-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 9px;
+            background: rgba(255, 255, 255, .02);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            font-size: 11px
+        }
+        .test-badge {
+            padding: 2px 6px;
+            border-radius: 5px;
+            font: 10px var(--mono);
+            font-weight: bold
+        }
+        .test-badge.pass {
+            background: rgba(94, 255, 182, .15);
+            color: var(--green);
+            border: 1px solid var(--green)
+        }
+        .test-badge.fail {
+            background: rgba(255, 109, 130, .15);
+            color: var(--red);
+            border: 1px solid var(--red)
+        }
+
+        /* ==========================================================================
+           AI COPILOT PANEL
+           ========================================================================== */
+        .ai {
+            display: flex;
+            flex-direction: column
+        }
+        .ai-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: var(--muted)
+        }
+        .pulse {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green);
+            animation: pulse 2s infinite
+        }
+        .complexity-radar-box {
+            padding: 5px 11px;
+            background: rgba(0, 0, 0, .3);
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            font-family: var(--mono)
+        }
+        .radar-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(85, 220, 255, .12);
+            border: 1px solid var(--line2);
+            color: var(--cyan);
+            font-weight: bold
+        }
+        .quick-actions {
+            padding: 7px 9px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(0, 0, 0, .15)
+        }
+        .quick {
+            min-height: 40px;
+            text-align: left;
+            padding: 7px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            color: #c9e3eb;
+            background: rgba(255, 255, 255, .02);
+            cursor: pointer;
+            transition: .18s
+        }
+        .quick:hover {
+            border-color: var(--line2);
+            background: rgba(85, 220, 255, .06);
+            transform: translateY(-1px)
+        }
+        .quick b {
+            display: block;
+            font-size: 10.5px
+        }
+        .quick small {
+            display: block;
+            color: var(--muted);
+            font-size: 8px;
+            margin-top: 1px
+        }
+        .chat {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 11px;
+            display: flex;
+            flex-direction: column;
+            gap: 11px
+        }
+        .bubble {
+            max-width: 94%;
+            padding: 10px 12px;
+            border-radius: 14px;
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .25);
+            position: relative
+        }
+        .bubble.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, rgba(85, 220, 255, .22), rgba(85, 220, 255, .09));
+            border: 1px solid rgba(85, 220, 255, .35);
+            border-bottom-right-radius: 4px
+        }
+        .bubble.ai {
+            align-self: flex-start;
+            background: rgba(20, 35, 48, .88);
+            border: 1px solid var(--line);
+            border-bottom-left-radius: 4px
+        }
+        .bubble .tag {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 9px;
+            letter-spacing: .12em;
+            color: var(--muted);
+            margin-bottom: 5px;
+            text-transform: uppercase
+        }
+        .bubble pre {
+            white-space: pre-wrap;
+            background: rgba(0, 0, 0, .45);
+            border: 1px solid var(--line2);
+            border-radius: 8px;
+            padding: 9px 9px 9px 11px;
+            font: 11px/1.5 var(--mono);
+            overflow: auto;
+            margin: 5px 0 0;
+            position: relative
+        }
+        .bubble pre:hover .copy-code-btn {
+            opacity: 1
+        }
+        .copy-code-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 2px 6px;
+            font-size: 9px;
+            opacity: 0;
+            transition: .15s;
+            background: rgba(85, 220, 255, .15);
+            border: 1px solid var(--line2);
+            border-radius: 5px;
+            color: var(--cyan2);
+            cursor: pointer
+        }
+        .diff-merge-btn,
+        .tts-btn {
+            margin-top: 5px;
+            font-size: 10px;
+            padding: 3px 8px
+        }
+        .tts-btn {
+            background: rgba(255, 255, 255, .05);
+            color: var(--cyan2);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 4px
+        }
+        .composer {
+            padding: 9px;
+            border-top: 1px solid var(--line);
+            background: rgba(0, 0, 0, .2);
+            position: relative
+        }
+        .composer textarea {
+            width: 100%;
+            height: 64px;
+            resize: none;
+            background: rgba(0, 0, 0, .35);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            color: var(--text);
+            padding: 7px;
+            padding-right: 36px;
+            outline: 0;
+            font-size: 11.5px;
+            transition: .2s
+        }
+        .composer textarea:focus {
+            border-color: var(--line2);
+            box-shadow: 0 0 12px rgba(85, 220, 255, .08)
+        }
+        .speech-btn {
+            position: absolute;
+            right: 16px;
+            top: 15px;
+            background: none;
+            border: 0;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 15px;
+            transition: .2s
+        }
+        .speech-btn:hover {
+            color: var(--cyan)
+        }
+        .speech-btn.recording {
+            color: var(--red);
+            animation: pulse 1s infinite
+        }
+        .composer-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 5px
+        }
+        .context-toggle {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--muted);
+            font-size: 10px;
+            cursor: pointer
+        }
+        .context-toggle input {
+            accent-color: var(--cyan)
+        }
+
+        /* ==========================================================================
+           STATUS BAR
+           ========================================================================== */
+        .statusbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 11px;
+            border-top: 1px solid var(--line);
+            background: rgba(3, 8, 13, .95);
+            color: var(--muted);
+            font: 10px var(--mono);
+            letter-spacing: .03em;
+            z-index: 20
+        }
+        .status-left,
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 11px
+        }
+        .status-ok {
+            color: var(--green);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+        .diag-pill {
+            cursor: pointer;
+            padding: 2px 5px;
+            border-radius: 4px;
+            transition: .15s
+        }
+        .diag-pill:hover {
+            background: rgba(255, 255, 255, .08)
+        }
+        .diag-pill.warn {
+            color: var(--gold);
+            border: 1px solid rgba(255, 199, 90, .3)
+        }
+        .sel-count {
+            color: var(--violet);
+            font-weight: 600;
+            font-size: 9px;
+            padding: 1px 4px;
+            border-radius: 4px;
+            background: rgba(155, 124, 255, .12);
+            border: 1px solid rgba(155, 124, 255, .3);
+            display: none
+        }
+        .sel-count.show {
+            display: inline
+        }
+        #statusWave {
+            width: 75px;
+            height: 17px;
+            display: block;
+            opacity: 0.8
+        }
+
+        /* ==========================================================================
+           MODALS & TOASTS
+           ========================================================================== */
+        .modal-backdrop,
+        .palette-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .75);
+            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-backdrop.show,
+        .palette-backdrop.show {
+            display: flex;
+            animation: modalFade .2s ease
+        }
+        .template-card,
+        .tilt-card {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 11px;
+            background: rgba(0, 0, 0, .25);
+            cursor: pointer;
+            transition: transform .15s ease, border-color .2s, background .2s, box-shadow .2s;
+            text-align: left;
+            transform-style: preserve-3d;
+            will-change: transform
+        }
+        .template-card:hover,
+        .template-card.active {
+            border-color: var(--cyan);
+            background: rgba(85, 220, 255, .08);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .4), 0 0 15px rgba(85, 220, 255, .1)
+        }
+        .modal {
+            width: min(640px, 100%);
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid var(--line2);
+            border-radius: 18px;
+            background: linear-gradient(160deg, #0f2232, #071018);
+            box-shadow: 0 30px 100px #000;
+            padding: 20px;
+            position: relative
+        }
+        .modal h3 {
+            margin: 0 0 6px;
+            font-size: 16px;
+            color: var(--cyan2);
+            display: flex;
+            align-items: center;
+            gap: 7px
+        }
+        .modal p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+            margin: 0 0 13px
+        }
+        .field {
+            margin: 11px 0
+        }
+        .field label {
+            display: block;
+            font-size: 9px;
+            color: var(--muted);
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            font-weight: 700
+        }
+        .field input,
+        .field select {
+            width: 100%;
+            background: rgba(0, 0, 0, .35);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            color: var(--text);
+            padding: 7px;
+            outline: 0
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 7px;
+            margin-top: 14px
+        }
+        .template-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            margin-top: 11px
+        }
+        .diff-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-height: 360px;
+            overflow-y: auto;
+            font: 11px/1.5 var(--mono);
+            background: rgba(0, 0, 0, .4);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 9px
+        }
+        .diff-line {
+            display: flex;
+            gap: 9px;
+            padding: 2px 4px;
+            border-radius: 3px
+        }
+        .diff-line.add {
+            background: rgba(94, 255, 182, .15);
+            color: var(--green)
+        }
+        .diff-line.del {
+            background: rgba(255, 109, 130, .15);
+            color: var(--red);
+            text-decoration: line-through
+        }
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px
+        }
+        .shortcut-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 9px;
+            background: rgba(255, 255, 255, .02);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            font-size: 11px
+        }
+        .palette {
+            width: min(640px, 100%);
+            border: 1px solid var(--line2);
+            border-radius: 16px;
+            background: #0b1924;
+            box-shadow: 0 30px 100px #000;
+            overflow: hidden
+        }
+        .palette input {
+            width: 100%;
+            border: 0;
+            border-bottom: 1px solid var(--line);
+            outline: 0;
+            background: rgba(0, 0, 0, .35);
+            color: var(--text);
+            padding: 13px;
+            font-size: 14px
+        }
+        .command-list {
+            max-height: 340px;
+            overflow: auto;
+            padding: 7px
+        }
+        .command {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 11px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: .15s
+        }
+        .command:hover,
+        .command.active {
+            background: rgba(85, 220, 255, .12);
+            color: #ffffff
+        }
+        .toast-stack {
+            position: fixed;
+            right: 15px;
+            bottom: 38px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 7px
+        }
+        .toast {
+            border: 1px solid var(--line2);
+            background: linear-gradient(135deg, #0d202d, #071219);
+            color: var(--text);
+            padding: 9px 13px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            font-size: 12px;
+            animation: toastIn .25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            display: flex;
+            align-items: center;
+            gap: 7px
+        }
+        .hidden {
+            display: none !important
+        }
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(117, 224, 255, .2);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: padding-box
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(117, 224, 255, .4);
+            background-clip: padding-box
+        }
+
+        /* ==========================================================================
+           ELECTRICITY / LIGHTNING VISUAL STYLES
+           ========================================================================== */
+        .elec-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 9px;
+            font-weight: 700;
+            background: rgba(85, 220, 255, .15);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            animation: electricPulse 2s infinite
+        }
+        .elec-active .panel-wc-bar {
+            animation: electricBorder 2s infinite
+        }
+        @keyframes typingElec {
+            0%,
+            100% {
+                box-shadow: 0 0 0 rgba(85, 220, 255, 0)
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(85, 220, 255, .5), 0 0 40px rgba(85, 220, 255, .2)
+            }
+        }
+        .code:focus {
+            animation: typingElec 0.8s infinite
+        }
+
+        /* ==========================================================================
+           DRAG AND DROP — Panel & Tab Reordering Visuals
+           ========================================================================== */
+        .dragging-over {
+            border-color: var(--cyan) !important;
+            box-shadow: 0 0 30px rgba(85, 220, 255, .25) !important;
+            transition: border-color .15s, box-shadow .15s;
+        }
+        .drag-ghost {
+            opacity: 0.4;
+            transform: scale(0.95);
+            transition: opacity .15s, transform .15s;
+        }
+        .drop-target {
+            border: 2px dashed var(--cyan) !important;
+            background: rgba(85, 220, 255, .08) !important;
+            border-radius: var(--radius);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+            font-size: 11px;
+            font-weight: 600;
+            transition: border-color .2s, background .2s;
+        }
+        .drop-target-text {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas Surfaces -->
+    <canvas id="bgCanvas"></canvas>
+    <canvas id="electricCanvas"></canvas>
+    <canvas id="confettiCanvas"></canvas>
+    <div class="noise"></div>
+    <div class="grid"></div>
+    <div class="glow"></div>
+
+    <div class="app">
+        <!-- TOP NAVIGATION BAR -->
+        <header class="topbar">
+            <div class="brand">
+                <div class="brandmark" draggable="false">A</div>
+                <div><b>AXIOM // 2040</b><small>v4 PERFECTED</small></div>
+            </div>
+            <button class="icon-btn" id="sidebarToggleBtn" title="Toggle Sidebar (Ctrl+\)" style="flex-shrink:0;font-size:13px">☰</button>
+            <div class="project-vault-bar">
+                <select id="projectSelector" class="project-selector" title="Switch project vault" aria-label="Switch project vault"></select>
+                <div class="project-title"><input id="projectName" value="Nebula Interface" aria-label="Project name" title="Rename project"></div>
+                <button class="icon-btn" id="galleryBtn" title="Vault Tag Gallery">🏢</button>
+            </div>
+            <div class="top-actions">
+                <span class="elec-badge">⚡ LIVE</span>
+                <button class="icon-btn" id="electricToggleBtn" title="Toggle Electricity Effect">⚡</button>
+                <button class="icon-btn" id="audioToggleBtn" title="Web Audio Key-Click Synth">🔇</button>
+                <button class="btn" id="keyModeBtn" title="Keyboard Navigation Mode">⌨️ Normal</button>
+                <button class="btn hide-sm" id="commandBtn" title="Command Palette">Commands <span class="kbd">Ctrl+K</span></button>
+                <button class="icon-btn" id="themeBtn" title="Theme Accent Studio">◐</button>
+                <button class="icon-btn" id="fontStudioBtn" title="Typography & Font Studio">Aa</button>
+                <button class="icon-btn" id="shortcutsBtn" title="Keyboard Shortcuts">?</button>
+                <button class="icon-btn" id="settingsBtn" title="AI Connection Settings">⚙</button>
+                <button class="btn primary" id="exportBtn" title="Export Project Package">Export</button>
+            </div>
+        </header>
+
+        <!-- MAIN WORKSPACE -->
+        <main class="workspace" id="workspaceMain">
+            <!-- SIDEBAR -->
+            <aside class="panel side" id="sidePanel" draggable="false">
+                <div class="panel-wc-bar" draggable="false">
+                    <div class="panel-title">
+                        <div class="panel-wc">
+                            <button class="wc-btn wc-close" data-tip="Close" data-panel="sidePanel" data-action="close">✕</button>
+                            <button class="wc-btn wc-minimize" data-tip="Minimize" data-panel="sidePanel" data-action="minimize">−</button>
+                            <button class="wc-btn wc-maximize" data-tip="Maximize" data-panel="sidePanel" data-action="maximize">+</button>
+                        </div>
+                        <span>Project Vault</span>
+                    </div>
+                    <span class="panel-meta" id="saveState">saved</span>
+                </div>
+                <div class="side-scroll" draggable="false">
+                    <div class="project-meter cascade-item">
+                        <div class="meter-line"><span>Readiness Score</span><strong id="readiness">38%</strong></div>
+                        <div class="meter"><span id="meterFill"></span></div>
+                    </div>
+                    <div class="label"><span>Mission Statement</span></div>
+                    <textarea class="goal cascade-item" id="projectGoal" placeholder="Describe the goal...">Build a responsive, accessible product landing page with an interactive hero and zero external dependencies.</textarea>
+                    <div class="label">
+                        <span>Task Matrix</span>
+                        <button class="btn" id="aiVerifyTasksBtn" style="padding:2px 5px;font-size:9px;border-color:var(--cyan)">🤖 AI Verify</button>
+                    </div>
+                    <div id="taskList"></div>
+                    <div class="add-row">
+                        <input class="mini-input" id="taskInput" placeholder="New objective...">
+                        <select id="taskPriority" class="mini-select" title="Task Priority" aria-label="Task Priority"><option value="high">HI</option><option value="med" selected>MED</option><option value="low">LO</option></select>
+                        <button class="icon-btn" id="addTaskBtn" title="Add Task">+</button>
+                    </div>
+                    <div class="label">
+                        <span>Workspace Files</span>
+                        <button class="btn" id="autoReadmeBtn" style="padding:2px 5px;font-size:9px;border-color:var(--violet)">📝 README</button>
+                    </div>
+                    <div class="file-tree" id="fileTree"></div>
+                    <div class="add-row" style="margin-top:2px">
+                        <input class="mini-input" id="fileInput" placeholder="new-component.js">
+                        <button class="icon-btn" id="addFileBtn" title="Create File">+</button>
+                    </div>
+                    <div class="label">
+                        <span>Version Timeline</span>
+                        <span id="snapshotCount" style="text-transform:none">0 builds</span>
+                    </div>
+                    <div class="timeline-list" id="timelineList">
+                        <div class="empty" style="padding:5px;font-size:10px">No snapshots yet. Auto-guard active (60s).</div>
+                    </div>
+                    <div class="add-row">
+                        <input class="mini-input" id="snapshotMsg" placeholder="Commit note...">
+                        <button class="btn" id="takeSnapshotBtn" style="white-space:nowrap;padding:3px 7px">📸 Save</button>
+                        <button class="icon-btn" id="openRecoveryBtn" title="Time-Travel Recovery Sandbox">⏪</button>
+                    </div>
+                    <div class="label"><span>Vault Actions</span></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:2px">
+                        <button class="btn" id="importBtn">📥 Import</button>
+                        <button class="btn primary" id="newBtn">✨ New Vault</button>
+                    </div>
+                    <input id="importFile" class="hidden" type="file" accept="application/json,.json">
+                </div>
+            </aside>
+
+            <!-- CENTER EDITOR -->
+            <section class="panel center" id="centerPanel" draggable="false">
+                <div class="panel-wc-bar" draggable="false">
+                    <div class="panel-title">
+                        <div class="panel-wc">
+                            <button class="wc-btn wc-close" data-tip="Close" data-panel="centerPanel" data-action="close">✕</button>
+                            <button class="wc-btn wc-minimize" data-tip="Minimize" data-panel="centerPanel" data-action="minimize">−</button>
+                            <button class="wc-btn wc-maximize" data-tip="Maximize" data-panel="centerPanel" data-action="maximize">+</button>
+                        </div>
+                        <div class="mode-tabs">
+                            <button class="mode-tab active" data-view="code">Code Lab</button>
+                            <button class="mode-tab" data-view="brief">Project Brief</button>
+                            <button class="mode-tab" data-view="markdown">MD Preview</button>
+                            <button class="mode-tab" data-view="diagram">Architecture</button>
+                        </div>
+                    </div>
+                    <span class="panel-meta" id="fileMeta" style="color:var(--cyan2);font-weight:bold">index.html</span>
+                </div>
+
+                <!-- Code Lab View -->
+                <div class="editor-wrap" id="codeView">
+                    <div class="editor-toolbar" draggable="false">
+                        <div class="editor-tabs" id="editorTabs" title="Drag and drop tabs to reorder"></div>
+                        <div class="editor-actions">
+                            <button class="btn" id="splitEditorBtn" style="padding:2px 6px;font-size:10px" title="Toggle Split Editor">◫ Split</button>
+                            <button class="icon-btn" id="findToggleBtn" title="Find & Replace (Ctrl+F)">🔍</button>
+                            <button class="icon-btn" id="bookmarkToggleBtn" title="Toggle Bookmark Pin (Ctrl+B)">🚩</button>
+                            <button class="icon-btn" id="commentBtn" title="Toggle Comment (Ctrl+/)">💬</button>
+                            <button class="icon-btn" id="formatBtn" title="Format Code (Ctrl+Alt+L)">≡</button>
+                        </div>
+                    </div>
+                    <div class="find-bar" id="findBar">
+                        <input id="findInput" placeholder="Find text or regex...">
+                        <button class="btn" id="findPrevBtn">▲</button>
+                        <button class="btn" id="findNextBtn">▼</button>
+                        <input id="replaceInput" placeholder="Replace with...">
+                        <button class="btn" id="replaceBtn">Replace</button>
+                        <button class="btn" id="replaceAllBtn">All</button>
+                        <button class="btn" id="regexAssistBtn" style="border-color:var(--violet);color:var(--cyan2)" title="Semantic Regex Assistant">✨ Regex AI</button>
+                        <label style="font-size:10px;color:var(--muted);display:flex;align-items:center;gap:3px"><input type="checkbox" id="findCase"> Aa</label>
+                        <button class="icon-btn" id="closeFindBtn" style="margin-left:auto;width:20px;height:20px">×</button>
+                    </div>
+                    <div class="editor-split-container" id="splitContainer">
+                        <!-- Primary Editor Pane -->
+                        <div class="code-shell left-pane">
+                            <div class="line-nums" id="lineNums">1</div>
+                            <div class="editor-layer-box" id="editorLayerBox">
+                                <div class="inline-action-chip" id="actionChip">
+                                    <button class="btn" data-chip="explain" style="padding:3px 6px;font-size:9.5px">💡 Explain</button>
+                                    <button class="btn" data-chip="refactor" style="padding:3px 6px;font-size:9.5px">⚡ Refactor</button>
+                                    <button class="btn" data-chip="bugfix" style="padding:3px 6px;font-size:9.5px">🔧 Fix</button>
+                                </div>
+                                <pre class="ghost-overlay" id="ghostOverlay" aria-hidden="true"></pre>
+                                <pre class="syntax-overlay" id="syntaxOverlay" aria-hidden="true"></pre>
+                                <textarea class="code" id="codeEditor" spellcheck="false" aria-label="Primary Code editor"></textarea>
+                            </div>
+                            <div class="minimap-container" id="minimapWrap" title="Click or drag to scroll code">
+                                <canvas class="minimap-canvas" id="minimap"></canvas>
+                                <div class="minimap-viewport" id="minimapViewport"></div>
+                                <div class="minimap-radar" id="minimapRadar"></div>
+                            </div>
+                        </div>
+                        <!-- Secondary Right Pane -->
+                        <div class="code-shell right-pane">
+                            <div style="width:100%;display:flex;flex-direction:column">
+                                <div style="height:26px;background:rgba(0,0,0,.3);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 7px;gap:7px">
+                                    <span style="font-size:10px;color:var(--muted);text-transform:uppercase">Right Pane:</span>
+                                    <select id="rightPaneFileSel" class="mini-select" style="max-width:150px;font-size:10px" title="Select Right Pane File" aria-label="Select Right Pane File"></select>
+                                </div>
+                                <div style="position:relative;flex:1;min-height:0;display:flex">
+                                    <textarea class="code" id="rightEditor" style="background:#060d13;color:#cceef7" spellcheck="false" aria-label="Secondary Code Editor Pane"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Project Brief View -->
+                <div class="editor-wrap hidden" id="briefView">
+                    <div class="editor-toolbar" draggable="false">
+                        <span style="font-size:11px;color:var(--muted)">AI-ready structural prompt assembled from project vault.</span>
+                        <button class="btn primary" id="copyBriefBtn">Copy Brief</button>
+                    </div>
+                    <div style="padding:14px;overflow:auto;min-height:0;flex:1"><pre id="briefText" style="white-space:pre-wrap;font:11px/1.6 var(--mono);color:#cceef7;margin:0"></pre></div>
+                </div>
+                <!-- MD Preview View -->
+                <div class="markdown-preview hidden" id="mdView">
+                    <div id="mdRendered">Select a .md file or generate a README to view formatted document structure.</div>
+                </div>
+                <!-- Architecture Diagram View -->
+                <div class="diagram-canvas-box hidden" id="diagramView">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                        <span style="font-size:11px;color:var(--muted)">Native Architecture Dependency Diagram</span>
+                        <button class="btn primary" id="generateDiagramBtn">🔄 Regenerate</button>
+                    </div>
+                    <div id="diagramRenderStage" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:18px;min-height:180px;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;padding:18px"></div>
+                </div>
+
+                <!-- LOWER: LIVE PREVIEW & CONSOLE/TEST LAB -->
+                <div class="lower" id="lowerPane">
+                    <div class="lower-resize-handle" id="lowerResizeHandle"></div>
+                    <!-- Live Preview Pane -->
+                    <div class="preview-pane">
+                        <div class="pane-toolbar" draggable="false">
+                            <div class="device-tabs">
+                                <button class="device active" data-device="desktop">Desktop</button>
+                                <button class="device" data-device="tablet">Tablet</button>
+                                <button class="device" data-device="mobile">Mobile</button>
+                                <input class="dim-input" id="customW" placeholder="W" aria-label="Custom preview width">
+                                <span style="color:var(--muted);font-size:9px">×</span>
+                                <input class="dim-input" id="customH" placeholder="H" aria-label="Custom preview height">
+                                <button class="device" id="rotateBtn" title="Rotate Orientation">🔄</button>
+                            </div>
+                            <div class="device-tabs">
+                                <button class="device" id="inspectDomBtn" title="Inspect & Ask AI element picker">🎯 Picker</button>
+                                <button class="device" id="wireframeToggle" title="Toggle Live Wireframe">🕸️ Wire</button>
+                                <button class="device" id="screenshotBtn" title="Capture PNG Screenshot">📷 Snap</button>
+                                <button class="device" id="refreshPreview" title="Force Refresh">↻</button>
+                                <button class="device" id="popOutBtn" title="Pop out live preview">↗</button>
+                            </div>
+                        </div>
+                        <div class="preview-stage"><iframe id="preview" class="preview-frame" title="Live preview" sandbox="allow-scripts allow-modals allow-same-origin"></iframe></div>
+                    </div>
+                    <!-- Console & Test Lab Pane -->
+                    <div class="console-pane">
+                        <div class="pane-toolbar" draggable="false">
+                            <div class="device-tabs">
+                                <button class="device active" id="tabConsoleBtn">Runtime Console</button>
+                                <button class="device" id="tabTestBtn">Test Lab 🧪</button>
+                            </div>
+                            <div class="device-tabs" id="consoleControls">
+                                <span style="font-size:9px;color:var(--muted)">Filter:</span>
+                                <button class="device active" data-filter="all">All <span id="cntAll">0</span></button>
+                                <button class="device" data-filter="error">Err <span id="cntErr" style="color:var(--red)">0</span></button>
+                                <button class="device" data-filter="warn">Warn <span id="cntWarn" style="color:var(--gold)">0</span></button>
+                                <button class="device" id="clearConsole">Clear</button>
+                            </div>
+                            <div class="device-tabs hidden" id="testControls">
+                                <button class="btn primary" id="runTestsBtn" style="padding:2px 7px;font-size:10px">▶ Run Suite</button>
+                            </div>
+                        </div>
+                        <div class="console" id="consoleOut"><div class="empty">Runtime console initialized. Zero errors detected.</div></div>
+                        <div class="test-lab" id="testLabView">
+                            <div style="font-size:11px;color:var(--muted);display:flex;justify-content:space-between">
+                                <span>Automated Sandbox Assertion Suite</span>
+                                <span id="testSummary" style="font-weight:bold">Ready</span>
+                            </div>
+                            <div class="test-suite-box" id="testList"></div>
+                            <div class="add-row">
+                                <input class="mini-input" id="testInput" placeholder="assert(document.querySelector('h1'), 'Heading exists')">
+                                <button class="btn" id="addTestBtn">Add Assertion</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT: AI COPILOT -->
+            <aside class="panel ai" id="aiPanel" draggable="false">
+                <div class="panel-wc-bar" draggable="false">
+                    <div class="panel-title">
+                        <div class="panel-wc">
+                            <button class="wc-btn wc-close" data-tip="Close" data-panel="aiPanel" data-action="close">✕</button>
+                            <button class="wc-btn wc-minimize" data-tip="Minimize" data-panel="aiPanel" data-action="minimize">−</button>
+                            <button class="wc-btn wc-maximize" data-tip="Maximize" data-panel="aiPanel" data-action="maximize">+</button>
+                        </div>
+                        <span>AI Copilot 2040</span>
+                    </div>
+                    <div class="ai-status">
+                        <span class="pulse"></span>
+                        <select id="promptStudioSel" class="mini-select" style="font-size:9px;padding:2px;background:rgba(85,220,255,.15);border-color:var(--cyan2)" title="Prompt Studio Preset Selection" aria-label="Prompt Studio Preset Selection">
+                            <option value="">⚡ Prompt Studio</option>
+                            <option value="security">🛡️ Security Audit</option>
+                            <option value="wcag">♿ WCAG Audit</option>
+                            <option value="perf">⚡ Performance Profile</option>
+                            <option value="tests">🧪 Generate Tests</option>
+                        </select>
+                        <button class="icon-btn" id="openSnippetsBtn" style="width:22px;height:22px" title="AI Snippet Scrapbook">✂️</button>
+                    </div>
+                </div>
+                <div class="complexity-radar-box">
+                    <span>Radar Scorecard:</span>
+                    <div>
+                        <span class="radar-badge" id="radarTime" title="Cyclomatic Complexity">⚡ O(n)</span>
+                        <span class="radar-badge" id="radarSec" title="Security Scan" style="color:var(--green);border-color:var(--green)">🔒 Safe</span>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button class="quick cascade-item" data-ai="plan"><b>Generate Plan</b><small>Architect feature workflow</small></button>
+                    <button class="quick cascade-item" data-ai="review"><b>Deep Code Review</b><small>Scan security & patterns</small></button>
+                    <button class="quick cascade-item" data-ai="debug"><b>Debug Runtime</b><small>Inspect console & traces</small></button>
+                    <button class="quick cascade-item" data-ai="improve"><b>UI/UX Upgrade</b><small>Suggest modern aesthetics</small></button>
+                </div>
+                <div class="chat" id="chat">
+                    <div class="bubble ai cascade-item">
+                        <span class="tag"><span>Axiom 2040 Intelligence</span><span>SYSTEM</span></span>
+                        Workspace v4 Perfected active. All cross-browser vendor prefixes (-webkit-mask-image, -webkit-backdrop-filter, -webkit-user-select) and accessibility labels added!
+                    </div>
+                </div>
+                <div class="composer">
+                    <textarea id="promptInput" placeholder="Ask AI Copilot... (Ctrl+Enter to submit, Up/Down for history)" aria-label="Ask AI Copilot input"></textarea>
+                    <button class="speech-btn" id="speechBtn" title="Toggle Voice Dictation">🎤</button>
+                    <div class="composer-foot">
+                        <label class="context-toggle"><input id="includeContext" type="checkbox" checked> Inject project context</label>
+                        <div style="display:flex;gap:5px">
+                            <button class="btn" id="clearChatBtn" style="padding:3px 7px;font-size:10px">Clear</button>
+                            <button class="btn primary" id="sendBtn">Send ↗</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- STATUS BAR -->
+        <footer class="statusbar">
+            <div class="status-left">
+                <span class="status-ok">● VAULT ONLINE</span>
+                <span id="cursorStatus">Ln 1, Col 1</span>
+                <span id="charCount">0 chars</span>
+                <span id="wordCount" style="color:var(--muted)">0 words</span>
+                <span id="selCount" class="sel-count">0 selected</span>
+                <span class="diag-pill" id="diagStatus" title="Click to review code lints">🟢 Zero Lints</span>
+                <canvas id="statusWave" width="75" height="17" title="Real-time Activity Waveform"></canvas>
+            </div>
+            <div class="status-right">
+                <span id="assetWeight">Bundle: 0 KB</span>
+                <span id="vaultStorage">Storage: 0 KB</span>
+                <span style="color:var(--cyan2);font-weight:bold">LOCAL-FIRST</span>
+                <span id="clock"></span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- MODALS -->
+    <!-- Typography Modal -->
+    <div class="modal-backdrop" id="typographyModal"><div class="modal" style="width:min(440px,100%)">
+            <h3>Aa Typography & Font Studio</h3>
+            <p>Customize coding typography, line height, and rendering scale.</p>
+            <div class="field"><label>Monospace Font Family</label>
+                <select id="fontFamilySel" title="Monospace Font Selection" aria-label="Monospace Font Selection">
+                    <option value='"Cascadia Code","Fira Code",Consolas,monospace'>Cascadia Code / Fira Code</option>
+                    <option value='"JetBrains Mono","Courier New",monospace'>JetBrains Mono</option>
+                    <option value='"Inconsolata","Monaco",monospace'>Inconsolata / Monaco</option>
+                    <option value='"Courier New",monospace'>Classic Retro Bitmap</option>
+                </select>
+            </div>
+            <div class="field"><label>Font Size (<span id="fontSizeVal">12px</span>)</label>
+                <input type="range" id="fontSizeSlider" min="10" max="22" value="12" aria-label="Font Size Slider">
+            </div>
+            <div class="field"><label>Line Height (<span id="lineHeightVal">1.6</span>)</label>
+                <input type="range" id="lineHeightSlider" min="1.2" max="2.2" step="0.1" value="1.6" aria-label="Line Height Slider">
+            </div>
+            <div class="modal-actions"><button class="btn primary" id="closeTypographyModal">Apply Styles</button></div>
+    </div></div>
+
+    <!-- Vault Gallery Modal -->
+    <div class="modal-backdrop" id="galleryModal"><div class="modal" style="width:min(740px,100%)">
+            <h3>🏢 Project Vault Gallery</h3>
+            <p>Filter saved workspace vaults by custom keyword tags.</p>
+            <div style="display:flex;gap:7px;margin-bottom:11px">
+                <input id="gallerySearchInput" class="mini-input" placeholder="Search by vault name or #tag..." aria-label="Search vaults">
+                <button class="btn" id="filterTagAll" style="border-color:var(--cyan)">All Tags</button>
+                <button class="btn" data-gallery-tag="#dashboard">#dashboard</button>
+                <button class="btn" data-gallery-tag="#game">#game</button>
+                <button class="btn" data-gallery-tag="#glass">#glass</button>
+            </div>
+            <div class="template-grid" id="galleryGrid"></div>
+            <div class="modal-actions"><button class="btn primary" id="closeGalleryModal">Close</button></div>
+    </div></div>
+
+    <!-- Snippet Vault Modal -->
+    <div class="modal-backdrop" id="snippetModal"><div class="modal" style="width:min(580px,100%)">
+            <h3>✂️ AI Snippet Scrapbook</h3>
+            <p>Save reusable CSS animations, Javascript algorithms, or HTML architectures across vaults.</p>
+            <div id="snippetList" style="display:flex;flex-direction:column;gap:7px;max-height:260px;overflow-y:auto"></div>
+            <div class="field" style="margin-top:13px"><label>Save Selection as Snippet:</label>
+                <div class="add-row">
+                    <input id="snippetTitleInput" class="mini-input" placeholder="Snippet Title..." aria-label="Snippet Title">
+                    <button class="btn primary" id="saveSnippetBtn">➕ Bookmark</button>
+                </div>
+            </div>
+            <div class="modal-actions"><button class="btn" id="closeSnippetModal">Done</button></div>
+    </div></div>
+
+    <!-- Recovery Sandbox Modal -->
+    <div class="modal-backdrop" id="recoveryModal"><div class="modal" style="width:min(560px,100%)">
+            <h3>⏪ Time-Travel Autoguard Sandbox</h3>
+            <p>Axiom automatically journals your workspace state every 60 seconds. Roll back instantly to any timestamp.</p>
+            <div id="recoveryTimelineBox" style="display:flex;flex-direction:column;gap:7px;max-height:300px;overflow-y:auto;margin-top:9px"></div>
+            <div class="modal-actions"><button class="btn primary" id="closeRecoveryModal">Close</button></div>
+    </div></div>
+
+    <!-- Settings Modal -->
+    <div class="modal-backdrop" id="settingsModal"><div class="modal">
+            <h3>⚙️ AI Connection Settings</h3>
+            <p>Operate offline via local engine or connect your custom server-side streaming API proxy.</p>
+            <div class="field"><label>Operation Mode</label><select id="aiMode" title="Operation Mode Selection" aria-label="Operation Mode Selection"><option value="demo">Local Intelligence Engine (Offline)</option><option value="anthropic">Anthropic Claude API</option><option value="proxy">Custom Server Proxy API</option></select></div>
+            <div class="field"><label>Proxy Endpoint URL</label><input id="proxyEndpoint" placeholder="https://api.yourdomain.com/v1/copilot" aria-label="Proxy Endpoint URL"></div>
+            <div class="field"><label>Model Identifier Label</label><input id="modelLabel" placeholder="e.g., Gemini 3.6 Flash" aria-label="Model Identifier Label"></div>
+            <div class="modal-actions"><button class="btn" id="closeSettings">Cancel</button><button class="btn primary" id="saveSettings">Save Configuration</button></div>
+    </div></div>
+
+    <!-- Template Picker Modal -->
+    <div class="modal-backdrop" id="templateModal"><div class="modal" style="width:min(740px,100%)">
+            <h3>✨ Create New Project Vault</h3>
+            <p>Select an architectural starter blueprint. This initializes a new isolated vault without overwriting existing workspaces!</p>
+            <div class="field"><label>New Project Name</label><input id="newProjectNameInput" value="Quantum Dashboard" placeholder="Project title..." aria-label="New Project Name"></div>
+            <div class="field"><label>Assign Keyword Tag</label><input id="newProjectTagInput" value="#dashboard" placeholder="#react, #game, #ui..." aria-label="Assign Keyword Tag"></div>
+            <label style="font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:700">Select Blueprint Template:</label>
+            <div class="template-grid" id="templatePickerGrid">
+                <div class="template-card tilt-card active" data-template="nebula"><b>🌌 Nebula Landing Page</b><span>Responsive product hero with ambient interactive canvas glow and zero external dependencies.</span></div>
+                <div class="template-card tilt-card" data-template="saas"><b>📊 SaaS Analytics Matrix</b><span>Enterprise dashboard blueprint with animated SVG telemetry chart and data table grid.</span></div>
+                <div class="template-card tilt-card" data-template="glass"><b>🔮 Glassmorphism UI Studio</b><span>Modern frosted glass UI elements, sliders, modal popups, and toast systems.</span></div>
+                <div class="template-card tilt-card" data-template="physics"><b>🪐 Particle Physics Arcade</b><span>HTML5 canvas collision sandbox with gravitational attraction and velocity vectors.</span></div>
+            </div>
+            <div class="modal-actions"><button class="btn" id="closeTemplateModal">Cancel</button><button class="btn primary" id="confirmNewProjectBtn">🚀 Initialize Vault</button></div>
+    </div></div>
+
+    <!-- Theme Modal -->
+    <div class="modal-backdrop" id="themeModal"><div class="modal" style="width:min(500px,100%)">
+            <h3>🎨 Theme Accent Studio</h3>
+            <p>Select visual color tokens with smooth radial theme morph transitions.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px" id="themeButtonsGrid">
+                <button class="btn primary" data-theme-btn="cyber" style="background:#0c2535;border-color:#55dcff;color:#fff;height:43px">⚡ Cyber Cyan</button>
+                <button class="btn" data-theme-btn="violet" style="background:#1b1130;border-color:#c27eff;color:#f5eeff;height:43px">🟣 Violet Nebula</button>
+                <button class="btn" data-theme-btn="emerald" style="background:#092518;border-color:#2ef296;color:#eafff5;height:43px">🌿 Emerald Matrix</button>
+                <button class="btn" data-theme-btn="solar" style="background:#282110;border-color:#ffba3b;color:#fffbe9;height:43px">☀️ Solarized Amber</button>
+                <button class="btn" data-theme-btn="oled" style="background:#0d0d0d;border-color:#ffffff;color:#ffffff;height:43px">🖤 OLED Charcoal</button>
+                <button class="btn" data-theme-btn="light" style="background:#e3ecf1;border-color:#0b8db2;color:#0d232e;height:43px">❄️ Arctic Light</button>
+            </div>
+            <div class="modal-actions" style="margin-top:18px"><button class="btn primary" id="closeThemeModal">Done</button></div>
+    </div></div>
+
+    <!-- Diff Modal -->
+    <div class="modal-backdrop" id="diffModal"><div class="modal" style="width:min(820px,100%)">
+            <h3>⚖️ Code Merge Diff Inspection</h3>
+            <p>Review proposed insertions and deletions before committing edits to your workspace file.</p>
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px">
+                <span style="color:var(--muted)">Target: <strong id="diffTargetFile" style="color:var(--cyan)">index.html</strong></span>
+                <span><span style="color:var(--green)">+ Insertions</span> | <span style="color:var(--red)">- Deletions</span></span>
+            </div>
+            <div class="diff-container" id="diffContent"></div>
+            <div class="modal-actions"><button class="btn" id="closeDiffModal">Cancel</button><button class="btn primary" id="confirmMergeBtn" style="background:var(--green);color:#03120a;border-color:var(--green)">✅ Apply Merge</button></div>
+    </div></div>
+
+    <!-- Shortcuts Modal -->
+    <div class="modal-backdrop" id="shortcutsModal"><div class="modal" style="width:min(660px,100%)">
+            <h3>⌨️ Keyboard Shortcuts Cheat Sheet</h3>
+            <p>Axiom v4 is built for fluid, keyboard-driven navigation. All active bindings:</p>
+            <div class="shortcuts-grid">
+                <div class="shortcut-row"><span>Command Palette</span><span class="kbd">Ctrl + K</span></div>
+                <div class="shortcut-row"><span>Find & Replace Panel</span><span class="kbd">Ctrl + F</span></div>
+                <div class="shortcut-row"><span>Toggle Line Bookmark</span><span class="kbd">Ctrl + B</span></div>
+                <div class="shortcut-row"><span>Jump to Next Bookmark</span><span class="kbd">Ctrl + J</span></div>
+                <div class="shortcut-row"><span>Accept Ghost Auto-Complete</span><span class="kbd">Tab / →</span></div>
+                <div class="shortcut-row"><span>Toggle Line Comment</span><span class="kbd">Ctrl + /</span></div>
+                <div class="shortcut-row"><span>Duplicate Line</span><span class="kbd">Alt + Down</span></div>
+                <div class="shortcut-row"><span>Format Code</span><span class="kbd">Ctrl + Alt + L</span></div>
+                <div class="shortcut-row"><span>Submit AI Prompt</span><span class="kbd">Ctrl + Enter</span></div>
+                <div class="shortcut-row"><span>Force Preview Refresh</span><span class="kbd">Ctrl + R</span></div>
+                <div class="shortcut-row"><span>Toggle Sidebar</span><span class="kbd">Ctrl + \</span></div>
+                <div class="shortcut-row"><span>Toggle Electricity</span><span class="kbd">Ctrl + E</span></div>
+            </div>
+            <div class="modal-actions"><button class="btn primary" id="closeShortcutsModal">Got It</button></div>
+    </div></div>
+
+    <!-- Command Palette -->
+    <div class="palette-backdrop" id="palette"><div class="palette">
+            <input id="paletteInput" placeholder="Type a command or shortcut... (Escape to dismiss)" aria-label="Command palette input">
+            <div class="command-list" id="commandList"></div>
+    </div></div>
+    <div class="toast-stack" id="toasts"></div>
+
+    <script>
+        (() => {
+            'use strict';
+            const $ = (s, p = document) => p.querySelector(s),
+                $$ = (s, p = document) => [...p.querySelectorAll(s)];
+
+            /* ==========================================================================
+               ELECTRICITY / LIGHTNING ENGINE
+               ========================================================================== */
+            const electricCanvas = $('#electricCanvas');
+            const elecCtx = electricCanvas.getContext('2d');
+            let electricEnabled = true;
+            let elecW, elecH;
+
+            function resizeElec() {
+                elecW = electricCanvas.width = window.innerWidth;
+                elecH = electricCanvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeElec);
+            resizeElec();
+
+            function lightningPath(x1, y1, x2, y2, roughness = 0.5, depth = 0) {
+                if (depth > 5) return [
+                    [x1, y1],
+                    [x2, y2]
+                ];
+                const mx = (x1 + x2) / 2,
+                    my = (y1 + y2) / 2;
+                const dx = x2 - x1,
+                    dy = y2 - y1,
+                    len = Math.sqrt(dx * dx + dy * dy);
+                const offset = (Math.random() - 0.5) * len * roughness;
+                const px = -dy / len * offset,
+                    py = dx / len * offset;
+                const mid = [mx + px, my + py];
+                return [...lightningPath(x1, y1, mid[0], mid[1], roughness * .65, depth + 1), ...lightningPath(mid[0], mid[1],
+                    x2, y2, roughness * .65, depth + 1)];
+            }
+
+            function drawLightning(x1, y1, x2, y2, color = 'rgba(85,220,255,', alpha = 0.8, width = 1.5) {
+                const pts = lightningPath(x1, y1, x2, y2, 0.6);
+                elecCtx.beginPath();
+                elecCtx.moveTo(pts[0][0], pts[0][1]);
+                for (let i = 1; i < pts.length; i++) elecCtx.lineTo(pts[i][0], pts[i][1]);
+                elecCtx.strokeStyle = color + alpha + ')';
+                elecCtx.lineWidth = width;
+                elecCtx.shadowColor = color + '1)';
+                elecCtx.shadowBlur = 12;
+                elecCtx.stroke();
+                elecCtx.shadowBlur = 0;
+                elecCtx.beginPath();
+                elecCtx.moveTo(pts[0][0], pts[0][1]);
+                for (let i = 1; i < pts.length; i++) elecCtx.lineTo(pts[i][0], pts[i][1]);
+                elecCtx.strokeStyle = color + (alpha * 0.3) + ')';
+                elecCtx.lineWidth = width * 4;
+                elecCtx.stroke();
+            }
+
+            let elecBolts = [];
+            let elecFrame = 0;
+
+            function spawnElecBolt() {
+                const startX = Math.random() * elecW;
+                const startY = Math.random() * elecH * 0.4;
+                const endX = startX + (Math.random() - 0.5) * 400;
+                const endY = startY + Math.random() * elecH * 0.6;
+                const colors = [
+                    'rgba(85,220,255,', 'rgba(155,124,255,', 'rgba(94,255,182,', 'rgba(255,199,90,'
+                ];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                elecBolts.push({ x1: startX, y1: startY, x2: endX, y2: endY, color, life: 0, maxLife: Math.random() * 18 +
+                        8, alpha: Math.random() * 0.6 + 0.3, width: Math.random() * 1.5 + 0.5 });
+                if (Math.random() > 0.5) {
+                    const bx = endX + (Math.random() - 0.5) * 120,
+                        by = endY + Math.random() * 100;
+                    elecBolts.push({ x1: endX, y1: endY, x2: bx, y2: by, color, life: 0, maxLife: Math.random() * 10 + 5,
+                        alpha: Math.random() * 0.35 + 0.15, width: 0.5 });
+                }
+            }
+
+            function drawPanelArc() {
+                const panels = [$('#sidePanel'), $('#centerPanel'), $('#aiPanel')];
+                panels.forEach(p => {
+                    if (!p || p.classList.contains('minimized')) return;
+                    const r = p.getBoundingClientRect();
+                    if (r.width === 0) return;
+                    const side = Math.floor(Math.random() * 4);
+                    let x1, y1, x2, y2;
+                    if (side === 0) { x1 = r.left + Math.random() * r.width;
+                        y1 = r.top;
+                        x2 = x1 + (Math.random() - 0.5) * 60;
+                        y2 = r.top - Math.random() * 40; } else if (side === 1) { x1 = r.right;
+                        y1 = r.top + Math.random() * r.height;
+                        x2 = r.right + Math.random() * 40;
+                        y2 = y1 + (Math.random() - 0.5) * 60; } else if (side === 2) { x1 = r.left + Math.random() * r.width;
+                        y1 = r.bottom;
+                        x2 = x1 + (Math.random() - 0.5) * 60;
+                        y2 = r.bottom + Math.random() * 40; } else { x1 = r.left;
+                        y1 = r.top + Math.random() * r.height;
+                        x2 = r.left - Math.random() * 40;
+                        y2 = y1 + (Math.random() - 0.5) * 60; }
+                    drawLightning(x1, y1, x2, y2, 'rgba(85,220,255,', 0.4 + Math.random() * 0.4, 0.8);
+                });
+            }
+
+            function animateElectricity() {
+                if (!electricEnabled) { elecCtx.clearRect(0, 0, elecW, elecH);
+                    requestAnimationFrame(animateElectricity); return; }
+                elecCtx.clearRect(0, 0, elecW, elecH);
+                elecFrame++;
+                if (Math.random() < 0.08) spawnElecBolt();
+                if (Math.random() < 0.04) drawPanelArc();
+                elecBolts = elecBolts.filter(b => {
+                    const t = b.life / b.maxLife;
+                    const a = b.alpha * (1 - t) * Math.max(0.1, Math.sin(t * Math.PI));
+                    drawLightning(b.x1, b.y1, b.x2, b.y2, b.color, a, b.width);
+                    b.life++;
+                    return b.life < b.maxLife;
+                });
+                requestAnimationFrame(animateElectricity);
+            }
+            animateElectricity();
+
+            $('#electricToggleBtn').onclick = () => {
+                electricEnabled = !electricEnabled;
+                $('#electricToggleBtn').style.borderColor = electricEnabled ? 'var(--cyan)' : 'var(--line)';
+                toast(electricEnabled ? '⚡ Electricity FX Enabled' : '⚡ Electricity FX Disabled');
+            };
+            window.addEventListener('keydown', e => {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'e' && !['INPUT', 'TEXTAREA', 'SELECT']
+                    .includes(document.activeElement.tagName)) {
+                    e.preventDefault();
+                    $('#electricToggleBtn').click();
+                }
+            });
+            $('#workspaceMain').addEventListener('click', e => {
+                if (electricEnabled && Math.random() > 0.6) {
+                    const x = e.clientX,
+                        y = e.clientY;
+                    for (let i = 0; i < 3; i++) {
+                        const tx = x + (Math.random() - 0.5) * 200,
+                            ty = y + Math.random() * 100;
+                        elecBolts.push({ x1: x, y1: y, x2: tx, y2: ty, color: 'rgba(85,220,255,', life: 0,
+                            maxLife: 12, alpha: 0.9, width: 2 });
+                    }
+                }
+            });
+
+            /* ==========================================================================
+               INTERACTIVE PARTICLE BACKGROUND
+               ========================================================================== */
+            const bgCanvas = $('#bgCanvas'),
+                statusWave = $('#statusWave');
+            let bgCtx = bgCanvas.getContext('2d'),
+                waveCtx = statusWave.getContext('2d');
+            let bgW, bgH;
+            const particles = Array.from({ length: 35 }, () => ({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                r: Math.random() * 2 + 1,
+                alpha: Math.random() * 0.5 + 0.2
+            }));
+            let mouseX = window.innerWidth / 2,
+                mouseY = window.innerHeight / 2;
+            window.addEventListener('mousemove', e => { mouseX = e.clientX;
+                mouseY = e.clientY; });
+
+            function resizeBg() { bgW = bgCanvas.width = window.innerWidth;
+                bgH = bgCanvas.height = window.innerHeight; }
+            window.addEventListener('resize', resizeBg);
+            resizeBg();
+
+            let waveStep = 0;
+
+            function animateLoops() {
+                bgCtx.clearRect(0, 0, bgW, bgH);
+                bgCtx.fillStyle = 'rgba(85,220,255,0.4)';
+                bgCtx.strokeStyle = 'rgba(85,220,255,0.12)';
+                particles.forEach((p, i) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > bgW) p.vx *= -1;
+                    if (p.y < 0 || p.y > bgH) p.vy *= -1;
+                    let dx = p.x - mouseX,
+                        dy = p.y - mouseY,
+                        dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) { p.x += (dx / dist) * 0.8;
+                        p.y += (dy / dist) * 0.8; }
+                    bgCtx.beginPath();
+                    bgCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    bgCtx.fill();
+                    for (let j = i + 1; j < particles.length; j++) {
+                        let p2 = particles[j],
+                            d2 = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
+                        if (d2 < 140) { bgCtx.beginPath();
+                            bgCtx.moveTo(p.x, p.y);
+                            bgCtx.lineTo(p2.x, p2.y);
+                            bgCtx.stroke(); }
+                    }
+                });
+                waveStep += 0.15;
+                waveCtx.clearRect(0, 0, 75, 17);
+                waveCtx.beginPath();
+                waveCtx.strokeStyle = '#5effb6';
+                waveCtx.lineWidth = 1.5;
+                for (let x = 0; x <= 75; x += 3) {
+                    let y = 8.5 + Math.sin(x * 0.1 + waveStep) * 4.5 * Math.cos(waveStep * 0.5);
+                    if (x === 0) waveCtx.moveTo(x, y);
+                    else waveCtx.lineTo(x, y);
+                }
+                waveCtx.stroke();
+                requestAnimationFrame(animateLoops);
+            }
+            animateLoops();
+
+            /* ==========================================================================
+               WEB AUDIO MECHANICAL KEY-CLICK SYNTHESIZER
+               ========================================================================== */
+            let audioMuted = true;
+            const audioToggleBtn = $('#audioToggleBtn');
+            let audioCtx = null;
+            audioToggleBtn.onclick = () => {
+                audioMuted = !audioMuted;
+                audioToggleBtn.textContent = audioMuted ? '🔇' : '🔊';
+                toast(audioMuted ? '🔇 Audio Muted' : '🔊 Mechanical Audio Synth Enabled');
+                if (!audioMuted && !audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            };
+
+            function playKeyClick(type = 'key') {
+                if (audioMuted) return;
+                try {
+                    if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                    const osc = audioCtx.createOscillator(),
+                        gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    if (type === 'key') { osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(180 + Math.random() * 40, audioCtx.currentTime);
+                        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 0.05); } else if (type === 'success') { osc.type = 'sine';
+                        osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+                        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
+                        gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 0.2); }
+                } catch (e) {}
+            }
+
+            /* ==========================================================================
+               VICTORY CONFETTI & FIREWORKS ENGINE
+               ========================================================================== */
+            const confCanvas = $('#confettiCanvas');
+            const confCtx = confCanvas.getContext('2d');
+            let confParticles = [],
+                confTimer = null;
+
+            function fireConfetti() {
+                confCanvas.width = window.innerWidth;
+                confCanvas.height = window.innerHeight;
+                confParticles = Array.from({ length: 130 }, () => ({
+                    x: window.innerWidth / 2,
+                    y: window.innerHeight / 2,
+                    vx: (Math.random() - 0.5) * 16,
+                    vy: (Math.random() - 0.8) * 16,
+                    size: Math.random() * 8 + 4,
+                    color: ['#55dcff', '#9b7cff', '#ffc75a', '#5effb6', '#ff6d82'][Math.floor(Math.random() * 5)],
+                    rot: Math.random() * 360,
+                    vrot: (Math.random() - 0.5) * 10
+                }));
+                playKeyClick('success');
+                if (!confTimer) confTimer = requestAnimationFrame(animateConfetti);
+            }
+
+            function animateConfetti() {
+                confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+                if (confParticles.length === 0) { confTimer = null; return; }
+                confParticles.forEach((p, i) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.3;
+                    p.rot += p.vrot;
+                    confCtx.save();
+                    confCtx.translate(p.x, p.y);
+                    confCtx.rotate((p.rot * Math.PI) / 180);
+                    confCtx.fillStyle = p.color;
+                    confCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    confCtx.restore();
+                    if (p.y > confCanvas.height) confParticles.splice(i, 1);
+                });
+                confTimer = requestAnimationFrame(animateConfetti);
+            }
+
+            /* ==========================================================================
+               3D HOLOGRAPHIC TILT CARD PHYSICS
+               ========================================================================== */
+            function bindTiltPhysics() {
+                $$('.tilt-card').forEach(card => {
+                    card.onmousemove = e => {
+                        const r = card.getBoundingClientRect();
+                        const x = e.clientX - r.left - r.width / 2,
+                            y = e.clientY - r.top - r.height / 2;
+                        card.style.transform =
+                            `perspective(800px) rotateY(${x/12}deg) rotateX(${-y/12}deg) scale3d(1.02,1.02,1.02)`;
+                    };
+                    card.onmouseleave = () => { card.style.transform =
+                        'perspective(800px) rotateY(0deg) rotateX(0deg) scale3d(1,1,1)'; };
+                });
+            }
+            bindTiltPhysics();
+
+            /* ==========================================================================
+               PANEL WINDOW CONTROLS — Minimize / Maximize / Close
+               ========================================================================== */
+            const panelStates = {};
+
+            function applyPanelAction(panelId, action) {
+                const panel = $('#' + panelId);
+                if (!panel) return;
+                if (!panelStates[panelId]) panelStates[panelId] = { minimized: false, maximized: false, origStyle: {} };
+                const st = panelStates[panelId];
+                if (action === 'close') {
+                    panel.style.display = 'none';
+                    toast(`${panelId.replace('Panel','')} panel closed. Reload page to restore.`);
+                    return;
+                }
+                if (action === 'minimize') {
+                    if (st.maximized) { applyPanelAction(panelId, 'maximize'); return; }
+                    st.minimized = !st.minimized;
+                    panel.classList.toggle('minimized', st.minimized);
+                    toast(st.minimized ? `${panelId} minimized` : `${panelId} restored`);
+                    return;
+                }
+                if (action === 'maximize') {
+                    st.maximized = !st.maximized;
+                    panel.classList.toggle('maximized', st.maximized);
+                    if (st.minimized) { st.minimized = false;
+                        panel.classList.remove('minimized'); }
+                    toast(st.maximized ? `${panelId} maximized (Esc to restore)` : `${panelId} restored`);
+                    return;
+                }
+            }
+            document.addEventListener('click', e => {
+                const btn = e.target.closest('.wc-btn');
+                if (!btn) return;
+                const panelId = btn.dataset.panel,
+                    action = btn.dataset.action;
+                if (panelId && action) applyPanelAction(panelId, action);
+            });
+            window.addEventListener('keydown', e => {
+                if (e.key === 'Escape') {
+                    Object.entries(panelStates).forEach(([id, st]) => {
+                        if (st && st.maximized) applyPanelAction(id, 'maximize');
+                    });
+                }
+            });
+
+            /* ==========================================================================
+               DRAG AND DROP — Panel Reordering & Tab Drag & Drop
+               ========================================================================== */
+            let dragState = { type: null, element: null, ghost: null, sourcePanel: null, targetPanel: null };
+
+            function initPanelDragDrop() {
+                const panels = $$('.panel');
+                panels.forEach(panel => {
+                    panel.draggable = true;
+                    panel.addEventListener('dragstart', e => {
+                        dragState.type = 'panel';
+                        dragState.element = panel;
+                        dragState.sourcePanel = panel;
+                        e.dataTransfer.setData('text/plain', panel.id);
+                        panel.classList.add('drag-ghost');
+                        setTimeout(() => { e.dataTransfer.effectAllowed = 'move'; }, 0);
+                    });
+                    panel.addEventListener('dragend', e => {
+                        panel.classList.remove('drag-ghost');
+                        $$('.drop-target').forEach(el => el.remove());
+                        dragState = { type: null, element: null, ghost: null, sourcePanel: null,
+                        targetPanel: null };
+                    });
+                    panel.addEventListener('dragover', e => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                        if (dragState.type === 'panel' && dragState.element !== panel) {
+                            panel.classList.add('dragging-over');
+                        }
+                    });
+                    panel.addEventListener('dragleave', e => {
+                        panel.classList.remove('dragging-over');
+                    });
+                    panel.addEventListener('drop', e => {
+                        e.preventDefault();
+                        panel.classList.remove('dragging-over');
+                        const sourceId = e.dataTransfer.getData('text/plain');
+                        const sourcePanel = $('#' + sourceId);
+                        if (!sourcePanel || sourcePanel === panel) return;
+                        const workspace = $('#workspaceMain');
+                        const children = $$('.panel', workspace);
+                        const sourceIdx = children.indexOf(sourcePanel);
+                        const targetIdx = children.indexOf(panel);
+                        if (sourceIdx === -1 || targetIdx === -1 || sourceIdx === targetIdx) return;
+                        const parent = workspace;
+                        if (sourceIdx < targetIdx) {
+                            panel.parentNode.insertBefore(sourcePanel, panel.nextSibling);
+                        } else {
+                            panel.parentNode.insertBefore(sourcePanel, panel);
+                        }
+                        toast('🔀 Panels reordered via drag & drop');
+                        queueSave();
+                    });
+                });
+            }
+            initPanelDragDrop();
+
+            /* ==========================================================================
+               STARTER BLUEPRINTS & STATE MANAGEMENT
+               ========================================================================== */
+            const templates = {
+                nebula: {
+                    goal: 'Build a responsive, accessible product landing page with an interactive hero and zero external dependencies.',
+                    tag: '#dashboard',
+                    tasks: [
+                        { text: 'Define architecture and semantic structure', done: true, priority: 'high' },
+                        { text: 'Build mobile-first responsive layout', done: true, priority: 'high' },
+                        { text: 'Implement glassmorphism interactive states', done: false, priority: 'med' },
+                        { text: 'Execute accessibility and contrast review', done: false, priority: 'med' }
+                    ],
+                    tests: [
+                        { code: "assert(document.querySelector('h1'), 'Page contains main heading')", done: false,
+                            pass: false },
+                        { code: "assert(document.querySelectorAll('button, a').length > 0, 'Interactive elements exist')",
+                            done: false, pass: false },
+                        { code: "assert(getComputedStyle(document.body).backgroundColor !== '', 'Background is loaded')",
+                            done: false, pass: false }
+                    ],
+                    files: {
+                        'index.html': `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Nebula Interface</title>\n  <link rel="stylesheet" href="styles.css">\n</head>\n<body>\n  <main class="hero">\n    <div class="orb" aria-hidden="true"></div>\n    <p class="eyebrow">NEXT-GENERATION AI SURFACE</p>\n    <h1>Build beyond the ordinary.</h1>\n    <p class="lead">A clean project surface engineered for high-velocity software creation.</p>\n    <div class="actions">\n      <button id="launch">Launch Experience</button>\n      <a href="#features">Explore features</a>\n    </div>\n    <p id="status" role="status"></p>\n  </main>\n  <script src="app.js"><\/script>\n</body>\n</html>`,
+                        'styles.css': `:root {\n  color-scheme: dark;\n  --bg: #050912;\n  --text: #edfaff;\n  --accent: #54ddff;\n}\n* { box-sizing: border-box; }\nbody {\n  min-height: 100vh;\n  margin: 0;\n  display: grid;\n  place-items: center;\n  overflow: hidden;\n  color: var(--text);\n  background: radial-gradient(circle at 50% 10%, #12354b, var(--bg) 60%);\n  font-family: Inter, system-ui, sans-serif;\n}\n.hero {\n  width: min(860px, 90vw);\n  position: relative;\n  padding: 72px 24px;\n  text-align: center;\n}\n.orb {\n  width: 280px;\n  aspect-ratio: 1;\n  position: absolute;\n  z-index: -1;\n  left: 50%;\n  top: 0;\n  translate: -50% -42%;\n  border: 1px solid rgba(84,221,255,0.35);\n  border-radius: 50%;\n  background: radial-gradient(circle at 35% 30%, #b9f5ff, #187a9b 24%, #111831 58%, transparent 70%);\n  box-shadow: 0 0 80px rgba(84,221,255,0.25);\n}\n.eyebrow { color: var(--accent); letter-spacing: .22em; font-size: .72rem; font-weight: 700; }\nh1 { margin: 18px 0; font-size: clamp(2.8rem, 8vw, 5.5rem); line-height: .95; letter-spacing: -.06em; }\n.lead { width: min(640px, 100%); margin: 0 auto; color: #9ebbc6; font-size: 1.05rem; line-height: 1.7; }\n.actions { margin-top: 32px; display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; }\nbutton, a { border-radius: 999px; padding: 13px 22px; font: inherit; font-weight: 700; transition: .2s; }\nbutton { border: 1px solid #8deaff; background: var(--accent); color: #031017; cursor: pointer; }\nbutton:hover { box-shadow: 0 0 25px rgba(84,221,255,0.6); transform: translateY(-2px); }\na { color: var(--text); text-decoration: none; border: 1px solid rgba(255,255,255,0.15); }\na:hover { border-color: var(--accent); background: rgba(255,255,255,0.05); }\n#status { margin-top: 24px; min-height: 1.5em; color: var(--accent); font-weight: 600; }`,
+                        'app.js': `const launchButton = document.querySelector('#launch');\nconst status = document.querySelector('#status');\nlet launches = 0;\n\nlaunchButton.addEventListener('click', () => {\n  launches += 1;\n  status.textContent = \`Experience initialized · Launch Sequence #\${launches}\`;\n  console.log('Nebula telemetry', { status: 'OK', sequence: launches });\n});`
+                    }
+                },
+                saas: { goal: 'Build an enterprise SaaS analytics telemetry matrix.', tag: '#dashboard', tasks: [{ text: 'Configure dashboard CSS grid', done: true, priority: 'high' }], tests: [{ code: "assert(document.querySelector('.stat'), 'Stat cards render')", done: false,
+                        pass: false }], files: { 'index.html': `<!doctype html>\n<html><head><title>SaaS Matrix</title><link rel="stylesheet" href="styles.css"></head>\n<body>\n  <div class="dash">\n    <header class="head"><h2>⚡ Quantum Telemetry Matrix</h2><span class="badge">LIVE FEED</span></header>\n    <div class="grid">\n      <div class="card stat"><span>Server Throughput</span><h3>1,428 req/s</h3><small style="color:#5effb6">+14.2% vs yesterday</small></div>\n      <div class="card stat"><span>API Latency</span><h3>18.4 ms</h3><small style="color:#5effb6">99.99% percentile</small></div>\n      <div class="card stat"><span>Active Node Load</span><h3>42.8 %</h3><small style="color:#ffc75a">Optimal zone</small></div>\n    </div>\n    <div class="card chart-box">\n      <h3>Realtime Saturation Waveform</h3>\n      <svg viewBox="0 0 500 100" class="chart"><path id="wave" d="M0 50 Q 50 20, 100 50 T 200 50 T 300 50 T 400 50 T 500 50 V 100 H 0 Z" fill="rgba(85,220,255,0.2)" stroke="#55dcff" stroke-width="2"/></svg>\n    </div>\n  </div>\n  <script src="app.js"><\/script>\n</body></html>`, 'styles.css': `body { background: #070d14; color: #e1f4ff; font-family: system-ui; margin: 0; padding: 20px; }\n.dash { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }\n.head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(117,224,255,0.2); padding-bottom: 12px; }\nh2, h3 { margin: 0; }\n.badge { background: rgba(94,255,182,0.15); color: #5effb6; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid #5effb6; }\n.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }\n.card { background: rgba(15,29,42,0.8); border: 1px solid rgba(117,224,255,0.2); border-radius: 12px; padding: 18px; }\n.stat span { color: #8faebd; font-size: 12px; text-transform: uppercase; }\n.stat h3 { font-size: 28px; margin: 8px 0; color: #fff; }\n.chart { width: 100%; height: 120px; margin-top: 10px; }`, 'app.js': `const wave = document.querySelector('#wave'); let step = 0;\nsetInterval(() => {\n  step += 10;\n  const d = \`M0 50 Q 50 \${20+Math.sin(step/20)*20}, 100 50 T 200 \${50+Math.cos(step/15)*20} T 300 50 T 400 \${40+Math.sin(step/10)*15} T 500 50 V 100 H 0 Z\`;\n  wave.setAttribute('d', d);\n}, 100);` } },
+                glass: { goal: 'Build ultra-sleek Glassmorphism UI Component Studio.', tag: '#glass', tasks: [{ text: 'Implement backdrop-filter blur hierarchy', done: true, priority: 'high' }], tests: [{ code: "assert(document.querySelector('.glass-card'), 'Glass card rendered')",
+                        done: false, pass: false }], files: { 'index.html': `<!doctype html><html><head><title>Glass Studio</title><link rel="stylesheet" href="styles.css"></head><body><div class="bg-shape shape1"></div><div class="container"><div class="glass-card"><h2>🔮 Glassmorphism Studio</h2><p>Next-generation frosted design language.</p><div class="slider-box"><label>Opacity: <span id="val">18%</span></label><input type="range" id="slider" min="5" max="50" value="18"></div><button id="notifyBtn" class="glass-btn">Trigger Toast</button><div id="toast" class="toast hidden">✨ System event dispatched!</div></div></div><script src="app.js"><\/script></body></html>`, 'styles.css': `body { margin: 0; min-height: 100vh; background: #0c1020; font-family: system-ui; display: grid; place-items: center; color: #fff; }\n.bg-shape { position: absolute; border-radius: 50%; filter: blur(70px); z-index: -1; }\n.shape1 { width: 350px; height: 350px; background: #9245ff; top: 10%; left: 20%; }\n.glass-card { width: min(480px, 90vw); padding: 32px; background: rgba(255,255,255,0.12); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; }\nh2 { margin-top: 0; font-size: 24px; }\n.glass-btn { padding: 12px 24px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 999px; color: #fff; font-weight: bold; cursor: pointer; }\n.toast { margin-top: 16px; padding: 12px; background: rgba(0,229,255,0.2); border: 1px solid #00e5ff; border-radius: 10px; text-align: center; }\n.hidden { opacity: 0; }`, 'app.js': `const slider=document.querySelector('#slider'), card=document.querySelector('.glass-card'), btn=document.querySelector('#notifyBtn'), toast=document.querySelector('#toast');\nslider.addEventListener('input', e => { card.style.background = \`rgba(255,255,255,\${e.target.value/100})\`; });\nbtn.addEventListener('click', () => { toast.classList.remove('hidden'); setTimeout(()=>toast.classList.add('hidden'), 2000); });` } },
+                physics: { goal: 'Create HTML5 Canvas particle physics arcade sandbox.', tag: '#game', tasks: [{ text: 'Configure canvas loop', done: true, priority: 'high' }], tests: [{ code: "assert(document.querySelector('canvas'), 'Canvas surface exists')",
+                        done: false, pass: false }], files: { 'index.html': `<!doctype html><html><head><title>Physics Arcade</title><link rel="stylesheet" href="styles.css"></head><body><div class="hud"><h3>🪐 Quantum Gravity Sandbox</h3><span>Move mouse to attract · Click to blast</span></div><canvas id="stage"></canvas><script src="app.js"><\/script></body></html>`, 'styles.css': `body { margin: 0; background: #04080c; color: #fff; font-family: system-ui; overflow: hidden; }\n.hud { position: absolute; top: 20px; left: 20px; z-index: 10; pointer-events: none; }\nh3 { margin: 0; color: #55dcff; }\ncanvas { display: block; width: 100vw; height: 100vh; }`, 'app.js': `const canvas=document.querySelector('#stage'), ctx=canvas.getContext('2d');\nlet w=canvas.width=window.innerWidth, h=canvas.height=window.innerHeight;\nconst balls=Array.from({length:50},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-0.5)*4,vy:(Math.random()-0.5)*4,r:Math.random()*8+4,color:'#55dcff'}));\nlet mouse={x:w/2,y:h/2};\nwindow.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});\nfunction loop(){\n  ctx.fillStyle='rgba(4,8,12,0.2)'; ctx.fillRect(0,0,w,h);\n  balls.forEach(b=>{\n    b.x+=(b.vx+=(mouse.x-b.x)*0.0005); b.y+=(b.vy+=(mouse.y-b.y)*0.0005);\n    b.vx*=0.99; b.vy*=0.99;\n    ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fillStyle=b.color; ctx.fill();\n  });\n  requestAnimationFrame(loop);\n}\nloop();` } }
+            };
+
+            function clone(v) { return JSON.parse(JSON.stringify(v)) }
+            const defaultProject = () => ({
+                id: 'proj-' + Math.random().toString(36).substring(2, 9),
+                name: 'Nebula Interface',
+                tag: '#dashboard',
+                goal: templates.nebula.goal,
+                files: clone(templates.nebula.files),
+                active: 'index.html',
+                open: ['index.html', 'styles.css', 'app.js'],
+                tasks: clone(templates.nebula.tasks),
+                tests: clone(templates.nebula.tests)
+            });
+        });
+    </script>
+    <!-- 8 INTEGRATED HIGH-FIDELITY VECTOR SVG ASSET ICONS -->
+    <div id="axiom-svg-relics" style="display:none;" aria-hidden="true">
+        <!-- 1. Quantum Core -->
+        <svg id="svg-axiom-core" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="38" fill="#08111a" stroke="#55dcff" stroke-width="4"/><circle cx="50" cy="50" r="16" fill="#55dcff"/></svg>
+        <!-- 2. Neural Router -->
+        <svg id="svg-axiom-router" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,15 85,35 85,75 50,95 15,75 15,35" fill="#05090e" stroke="#9b7cff" stroke-width="4"/></svg>
+        <!-- 3. Security Shield -->
+        <svg id="svg-axiom-linter" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 12 L82 26 V50 C82 68 50 86 50 86 C50 86 18 68 18 50 V26 Z" fill="#071711" stroke="#5effb6" stroke-width="4"/></svg>
+        <!-- 4. Holographic Cube -->
+        <svg id="svg-axiom-cube" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 15 L85 35 L50 55 L15 35 Z M15 35 V70 L50 90 V55 Z M85 35 V70 L50 90 V55 Z" fill="none" stroke="#55dcff" stroke-width="3"/></svg>
+        <!-- 5. Dictation Mic -->
+        <svg id="svg-axiom-mic" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="38" y="20" width="24" height="40" rx="12" fill="#ffc75a"/><path d="M25 45 C25 68 75 68 75 45" fill="none" stroke="#fff" stroke-width="4"/></svg>
+        <!-- 6. Docker Container -->
+        <svg id="svg-axiom-docker" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="15" y="45" width="70" height="35" rx="8" fill="#55dcff"/><rect x="25" y="30" width="12" height="10" fill="#8eecff"/></svg>
+        <!-- 7. Prompt Studio -->
+        <svg id="svg-axiom-prompt" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="15" y="20" width="70" height="60" rx="14" fill="#120b22" stroke="#9b7cff" stroke-width="4"/></svg>
+        <!-- 8. Quantum Engineering Badge -->
+        <svg id="svg-axiom-badge" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,10 63,35 90,38 70,57 76,85 50,70 24,85 30,57 10,38 37,35" fill="#ffd700" stroke="#fff" stroke-width="2"/></svg>
+    </div>
+</body>
+</html>

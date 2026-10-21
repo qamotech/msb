@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ NEXUS AI // The Ultimate Machine Intelligence Directory & Toolkit</title>
+  <!-- Inline Dynamic SVG Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%236366f1'/><stop offset='50%' stop-color='%23ec4899'/><stop offset='100%' stop-color='%2306b6d4'/></linearGradient></defs><circle cx='50' cy='50' r='48' fill='%230a0b14'/><path d='M50 15 L80 80 L50 62 L20 80 Z' fill='url(%23g)'/><circle cx='50' cy='42' r='8' fill='%23ffffff'/></svg>">
+  
+  <!-- Inter & JetBrains Mono Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       DESIGN TOKENS & RESET
+       ═══════════════════════════════════════════════════════ */
+    :root {
+      --bg-dark: #07090e;
+      --bg-surface: #0e121b;
+      --bg-glass: rgba(16, 21, 34, 0.75);
+      --card-bg: rgba(18, 24, 38, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      
+      --accent-primary: #6366f1;
+      --accent-cyan: #06b6d4;
+      --accent-magenta: #ec4899;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-full: 9999px;
+      
+      --shadow-glow: 0 0 35px -5px rgba(99, 102, 241, 0.35);
+      --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.5;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 65%, rgba(236, 72, 153, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(6, 182, 212, 0.07) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    code, .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       INTERACTIVE CANVAS & PARTICLES
+       ═══════════════════════════════════════════════════════ */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       HEADER & NAVIGATION
+       ═══════════════════════════════════════════════════════ */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(7, 9, 14, 0.8);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-svg {
+      width: 38px;
+      height: 38px;
+      animation: pulse-spin 12s linear infinite;
+    }
+
+    .brand-text {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff 20%, #a5b4fc 60%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-badge {
+      font-size: 0.65rem;
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid var(--accent-primary);
+      color: #c7d2fe;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .nav-search {
+      position: relative;
+      flex: 1;
+      max-width: 440px;
+    }
+
+    .nav-search input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 0.6rem 1rem 0.6rem 2.5rem;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      outline: none;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+
+    .nav-search input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.5;
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-magenta));
+      color: white !important;
+      padding: 0.5rem 1.1rem;
+      border-radius: var(--radius-full);
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.35);
+      border: none;
+      cursor: pointer;
+    }
+
+    .cta-button:hover {
+      box-shadow: 0 6px 22px rgba(236, 72, 153, 0.6);
+      transform: scale(1.03) !important;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCROLL-DRIVEN PARALLAX HERO
+       ═══════════════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 82vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 1.5rem 2rem;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .hero-parallax-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.35;
+      pointer-events: none;
+      transform: translateY(var(--scroll-y, 0px));
+      transition: transform 0.1s linear;
+      z-index: -1;
+    }
+
+    .hero-svg-bg {
+      width: 780px;
+      height: 780px;
+      animation: rotate-slow 40s linear infinite;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      padding: 0.45rem 1.2rem;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #a5b4fc;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 6.5vw, 4.8rem);
+      font-weight: 800;
+      line-height: 1.1;
+      max-width: 1050px;
+      letter-spacing: -2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 35%, #f472b6 70%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: hue-cycle 12s infinite linear;
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+
+    .stats-ticker {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      background: var(--bg-glass);
+      padding: 1.25rem 2.5rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .stat-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       INTERACTIVE CATEGORY DOCK / PILLS
+       ═══════════════════════════════════════════════════════ */
+    .filter-section {
+      position: sticky;
+      top: 65px;
+      z-index: 90;
+      background: rgba(7, 9, 14, 0.9);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .filter-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      gap: 0.65rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .filter-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-btn {
+      white-space: nowrap;
+      background: var(--bg-surface);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.55rem 1.15rem;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(236, 72, 153, 0.3));
+      border-color: var(--accent-magenta);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(236, 72, 153, 0.35);
+    }
+
+    .filter-count {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       CATALOG / DUAL-STYLED COMPACT CARDS
+       ═══════════════════════════════════════════════════════ */
+    .content-area {
+      max-width: 1440px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+      z-index: 10;
+      position: relative;
+    }
+
+    .section-header-wrap {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--accent-magenta);
+      padding-left: 1rem;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.6rem;
+    }
+
+    /* DOUBLE-STYLED CARD COMPONENT */
+    .ai-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      transition: var(--transition);
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(12px);
+    }
+
+    .ai-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--card-accent, #6366f1), transparent);
+      opacity: 0.6;
+      transition: var(--transition);
+    }
+
+    .ai-card:hover {
+      transform: translateY(-6px) scale(1.015);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 25px -5px var(--card-accent, rgba(99, 102, 241, 0.4));
+    }
+
+    .ai-card:hover::before {
+      opacity: 1;
+      height: 4px;
+    }
+
+    /* Card Tier 1: Identity & Meta Header */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-avatar-wrap {
+      position: relative;
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .card-avatar-svg {
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4));
+    }
+
+    .card-header-info {
+      flex: 1;
+    }
+
+    .card-name-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.2rem;
+    }
+
+    .card-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .pricing-pill {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.5px;
+    }
+
+    .price-free {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid var(--accent-emerald);
+      color: #6ee7b7;
+    }
+
+    .price-freemium {
+      background: rgba(6, 182, 212, 0.2);
+      border: 1px solid var(--accent-cyan);
+      color: #67e8f9;
+    }
+
+    .price-paid {
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid var(--accent-amber);
+      color: #fde68a;
+    }
+
+    .price-opensource {
+      background: rgba(236, 72, 153, 0.2);
+      border: 1px solid var(--accent-magenta);
+      color: #fbcfe8;
+    }
+
+    .card-subtext {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1.1rem;
+    }
+
+    /* Card Tier 2: The Metrics & Telemetry Grid (Dual Section) */
+    .metrics-dashboard {
+      background: rgba(9, 12, 18, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .metric-cell {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .metric-title {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.4px;
+    }
+
+    .metric-data {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+
+    /* Tags & Action Row */
+    .card-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .tag-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .tag-item {
+      font-size: 0.68rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .card-link-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--radius-md);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .card-link-btn:hover {
+      background: #fff;
+      color: #000;
+      transform: scale(1.05);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SPOTLIGHT HIGHLIGHT CAROUSEL / GRID
+       ═══════════════════════════════════════════════════════ */
+    .curated-banner {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(6, 182, 212, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      margin: 4rem auto;
+      max-width: 1400px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .curated-banner::after {
+      content: '🚀 100% COMMUNITY CURATED';
+      position: absolute;
+      bottom: -15px;
+      right: 20px;
+      font-size: 4rem;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.02);
+      pointer-events: none;
+    }
+
+    .curated-content h3 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .curated-content p {
+      color: var(--text-muted);
+      max-width: 650px;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════ */
+    footer {
+      background: #040609;
+      border-top: 1px solid var(--card-border);
+      padding: 5rem 2rem 2.5rem;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 10;
+    }
+
+    .footer-grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr repeat(4, 1fr);
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .footer-about {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .footer-col h4 {
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .footer-col a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .footer-col a:hover {
+      color: var(--accent-cyan);
+      transform: translateX(3px);
+    }
+
+    .footer-bottom {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.82rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       KEYFRAME ANIMATIONS
+       ═══════════════════════════════════════════════════════ */
+    @keyframes pulse-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes rotate-slow {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.08); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes hue-cycle {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       RESPONSIVE BREAKPOINTS
+       ═══════════════════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+      }
+      .nav-search {
+        width: 100%;
+        max-width: 100%;
+      }
+      .nav-links {
+        overflow-x: auto;
+        width: 100%;
+        padding-bottom: 0.4rem;
+      }
+      .grid-container {
+        grid-template-columns: 1fr;
+      }
+      .hero-title {
+        font-size: 2.2rem;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Dynamic Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ═══════════════════════════════════════════════════════
+       NAVIGATION HEADER
+       ═══════════════════════════════════════════════════════ -->
+  <header>
+    <a href="#" class="brand">
+      <svg class="brand-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" stroke="url(#h-grad)" stroke-width="6" stroke-dasharray="10 8"/>
+        <polygon points="50,20 78,75 50,60 22,75" fill="url(#h-grad)"/>
+        <circle cx="50" cy="42" r="7" fill="#ffffff"/>
+        <defs>
+          <linearGradient id="h-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6366f1"/>
+            <stop offset="50%" stop-color="#ec4899"/>
+            <stop offset="100%" stop-color="#06b6d4"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div>
+        <span class="brand-text">NEXUS.AI</span>
+        <span class="brand-badge">v4.8 PRO</span>
+      </div>
+    </a>
+
+    <div class="nav-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="site-search" placeholder="Search 60+ models, benchmarks, APIs, free tools... (Press '/' to focus)" autocomplete="off">
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="#directory">⚡ Directory</a></li>
+      <li><a href="#free-tier">🎁 Free Forever</a></li>
+      <li><a href="#metrics">📊 Benchmark Matrix</a></li>
+      <li><a href="#resources">📚 Guides</a></li>
+      <li><button class="cta-button" onclick="submitToolModal()">+ Submit AI</button></li>
+    </ul>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCROLL-DRIVEN PARALLAX HERO SECTION
+       ═══════════════════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero-parallax-bg" id="parallax-bg">
+      <!-- High Res Complex Vector Background Geometry -->
+      <svg class="hero-svg-bg" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="mesh-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#6366f1" stop-opacity="0.8"/>
+            <stop offset="50%" stop-color="#ec4899" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="400" cy="400" r="350" stroke="url(#mesh-grad)" stroke-width="1.5" stroke-dasharray="8 6"/>
+        <circle cx="400" cy="400" r="280" stroke="#ec4899" stroke-opacity="0.3" stroke-width="2"/>
+        <circle cx="400" cy="400" r="200" stroke="#06b6d4" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="12 12"/>
+        <path d="M400 50 L750 400 L400 750 L50 400 Z" stroke="#6366f1" stroke-opacity="0.25" stroke-width="2"/>
+        <path d="M400 120 L680 400 L400 680 L120 400 Z" stroke="#a855f7" stroke-opacity="0.3" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <div class="hero-tag">
+      <span>✨ THE SYNTHETIC INTELLIGENCE COMPENDIUM</span>
+      <span style="opacity: 0.4">•</span>
+      <span>UPDATED HOURLY 🔥</span>
+    </div>
+
+    <h1 class="hero-title">
+      Every AI Model, Free Agent & API.<br>
+      <span class="gradient-text">Unified In One Hyper-Catalog.</span>
+    </h1>
+
+    <p class="hero-desc">
+      Stop jumping across scattered tabs. Explore exhaustive dual-metric performance cards, latency stats, context window capacities, and direct free-tier access for top frontier LLMs, coding agents, multimodal engines, and open-source networks.
+    </p>
+
+    <!-- Real-time Live Stats Ticker -->
+    <div class="stats-ticker">
+      <div class="stat-node">
+        <span class="stat-val mono">128+</span>
+        <span class="stat-label">AI Platforms Analyzed</span>
+      </div>
+      <div class="stat-node">
+        <span class="stat-val mono" style="color: var(--accent-emerald);">42 Free</span>
+        <span class="stat-label">Zero-Cost Tier Engines</span>
+      </div>
+      <div class="stat-node">
+        <span class="stat-val mono" style="color: var(--accent-cyan);">2M+ Tkn</span>
+        <span class="stat-label">Peak Context Benchmarked</span>
+      </div>
+      <div class="stat-node">
+        <span class="stat-val mono" style="color: var(--accent-magenta);">99.98%</span>
+        <span class="stat-label">Telemetry Accuracy</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       INTERACTIVE CATEGORY DOCK / PILL BAR
+       ═══════════════════════════════════════════════════════ -->
+  <section class="filter-section">
+    <div class="filter-wrapper" id="filter-wrapper">
+      <button class="filter-btn active" data-cat="all">🌐 All Ecosystems <span class="filter-count">ALL</span></button>
+      <button class="filter-btn" data-cat="free">🎁 100% Free / Open <span class="filter-count">24</span></button>
+      <button class="filter-btn" data-cat="llm">🧠 Frontier LLMs & Chat <span class="filter-count">14</span></button>
+      <button class="filter-btn" data-cat="code">💻 Dev Agents & Terminals <span class="filter-count">12</span></button>
+      <button class="filter-btn" data-cat="vision">🎨 Image & Generative Art <span class="filter-count">9</span></button>
+      <button class="filter-btn" data-cat="audio">🎵 Speech, Voice & Music <span class="filter-count">8</span></button>
+      <button class="filter-btn" data-cat="video">🎬 Motion & Video FX <span class="filter-count">7</span></button>
+      <button class="filter-btn" data-cat="research">🔬 Research, RAG & Search <span class="filter-count">8</span></button>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MAIN DIRECTORY & DOUBLE STYLED COMPACT CARDS
+       ═══════════════════════════════════════════════════════ -->
+  <main class="content-area" id="directory">
+    
+    <div class="section-header-wrap">
+      <div>
+        <h2 class="section-title">⚡ Telemetry-Grade AI Showcase</h2>
+        <p style="color: var(--text-dim); font-size: 0.9rem;">Compact double-tier cards displaying live latency, context windows, benchmark percentiles, and licensing tiers.</p>
+      </div>
+      <span class="mono" style="font-size: 0.85rem; color: var(--accent-cyan);" id="results-count">Displaying all tools</span>
+    </div>
+
+    <!-- The Universal Dynamic AI Grid -->
+    <div class="grid-container" id="ai-grid">
+      
+      <!-- CARD 1: CLAUDE 3.7 SONNET -->
+      <article class="ai-card" data-category="llm code" style="--card-accent: #f97316;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <rect width="100" height="100" rx="20" fill="#f97316" fill-opacity="0.15"/>
+                <path d="M30 70 L50 25 L70 70 L55 70 L50 55 L45 70 Z" fill="#ea580c"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">Claude 3.7 Sonnet</h3>
+                <span class="pricing-pill price-freemium">Freemium</span>
+              </div>
+              <div class="card-subtext">
+                <span>Anthropic</span>
+                <span>•</span>
+                <span>Hybrid Reasoning</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">State-of-the-art hybrid reasoning model combining instant inference with step-by-step thinking scratchpads for complex engineering tasks.</p>
+        </div>
+
+        <div>
+          <!-- DUAL STYLED METRICS CLUSTER -->
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">Context</span>
+              <span class="metric-data" style="color:#f97316">200K</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Speed</span>
+              <span class="metric-data">78 t/s</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">SWE-Bench</span>
+              <span class="metric-data" style="color:var(--accent-emerald)">70.3%</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">MMLU-Pro</span>
+              <span class="metric-data">89.4%</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">🧠 Reasoning</span>
+              <span class="tag-item">⚡ 3.7 Gen</span>
+            </div>
+            <a href="https://claude.ai" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 2: DEEPSEEK R1 & V3 -->
+      <article class="ai-card" data-category="free llm code" style="--card-accent: #06b6d4;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#06b6d4" fill-opacity="0.15"/>
+                <path d="M25 50 Q50 20 75 50 T25 50" fill="none" stroke="#0891b2" stroke-width="8"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">DeepSeek-R1</h3>
+                <span class="pricing-pill price-opensource">MIT Open</span>
+              </div>
+              <div class="card-subtext">
+                <span>DeepSeek Inc.</span>
+                <span>•</span>
+                <span>Open Weights</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">Groundbreaking open-weights reasoning model matching frontier performance via pure RL and novel multi-head latent attention (MLA).</p>
+        </div>
+
+        <div>
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">Context</span>
+              <span class="metric-data" style="color:var(--accent-cyan)">128K</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Params</span>
+              <span class="metric-data">671B MoE</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">MATH-500</span>
+              <span class="metric-data" style="color:var(--accent-emerald)">97.3%</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Cost</span>
+              <span class="metric-data">$0.14/M</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">🎁 Free App</span>
+              <span class="tag-item">💻 Open Weights</span>
+            </div>
+            <a href="https://chat.deepseek.com" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 3: GOOGLE AI STUDIO (GEMINI 2.5 / 2.0 FLASH) -->
+      <article class="ai-card" data-category="free llm code research" style="--card-accent: #3b82f6;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <polygon points="50,10 90,50 50,90 10,50" fill="#3b82f6" fill-opacity="0.2"/>
+                <circle cx="50" cy="50" r="18" fill="#2563eb"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">Google AI Studio</h3>
+                <span class="pricing-pill price-free">Free Tier</span>
+              </div>
+              <div class="card-subtext">
+                <span>Google DeepMind</span>
+                <span>•</span>
+                <span>Multimodal Native</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">Frontier 2-Million token context window supporting native audio, real-time video streaming, vision parsing, and massive codebases.</p>
+        </div>
+
+        <div>
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">Context</span>
+              <span class="metric-data" style="color:var(--accent-magenta)">2,000,000</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Latency</span>
+              <span class="metric-data">190ms</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">RPM Free</span>
+              <span class="metric-data">15 RPM</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Video</span>
+              <span class="metric-data">Native</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">🎁 Free API</span>
+              <span class="tag-item">🎥 Video In</span>
+            </div>
+            <a href="https://aistudio.google.com" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 4: CURSOR IDE -->
+      <article class="ai-card" data-category="code" style="--card-accent: #a855f7;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <rect width="100" height="100" rx="20" fill="#a855f7" fill-opacity="0.15"/>
+                <path d="M30 25 L75 50 L50 55 L35 75 Z" fill="#9333ea"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">Cursor Editor</h3>
+                <span class="pricing-pill price-freemium">Freemium</span>
+              </div>
+              <div class="card-subtext">
+                <span>Anysphere</span>
+                <span>•</span>
+                <span>AI-First Code Editor</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">The flagship AI-native fork of VS Code with deep repository indexing, smart multi-file diffing, background terminal agent execution, and tab autocomplete.</p>
+        </div>
+
+        <div>
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">Base</span>
+              <span class="metric-data">VS Code</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Models</span>
+              <span class="metric-data">Multi-LLM</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Free Quota</span>
+              <span class="metric-data">2k Completions</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Agent</span>
+              <span class="metric-data">Composer</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">💻 Code Agent</span>
+              <span class="tag-item">⚡ Tab Auto</span>
+            </div>
+            <a href="https://cursor.com" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 5: AIDER CLI -->
+      <article class="ai-card" data-category="free code" style="--card-accent: #10b981;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <rect width="100" height="100" rx="20" fill="#10b981" fill-opacity="0.15"/>
+                <path d="M25 35 L45 50 L25 65 M50 65 L75 65" stroke="#10b981" stroke-width="8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">Aider Chat</h3>
+                <span class="pricing-pill price-opensource">Apache 2.0</span>
+              </div>
+              <div class="card-subtext">
+                <span>Paul Gauthier</span>
+                <span>•</span>
+                <span>Terminal CLI Agent</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">Pair programming directly inside your terminal with automatic Git commit trees, repo map compression, and leader in terminal SWE-bench ratings.</p>
+        </div>
+
+        <div>
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">Interface</span>
+              <span class="metric-data">Terminal</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Git Sync</span>
+              <span class="metric-data">Auto</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Bench</span>
+              <span class="metric-data" style="color:var(--accent-emerald)">#1 CLI</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">License</span>
+              <span class="metric-data">100% Free</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">🎁 FOSS</span>
+              <span class="tag-item">📟 Terminal</span>
+            </div>
+            <a href="https://aider.chat" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 6: MIDJOURNEY V7 -->
+      <article class="ai-card" data-category="vision" style="--card-accent: #ec4899;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#ec4899" fill-opacity="0.15"/>
+                <path d="M35 70 C35 40 65 40 65 70 Z" fill="#db2777"/>
+                <circle cx="50" cy="35" r="8" fill="#f472b6"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">Midjourney</h3>
+                <span class="pricing-pill price-paid">Subscription</span>
+              </div>
+              <div class="card-subtext">
+                <span>Midjourney Lab</span>
+                <span>•</span>
+                <span>Photorealism</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">The industry standard generative art pipeline known for supreme coherence, cinematic lighting, and precision web generation canvas.</p>
+        </div>
+
+        <div>
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">Max Res</span>
+              <span class="metric-data">4096²</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Gen Time</span>
+              <span class="metric-data">18s</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">UI</span>
+              <span class="metric-data">Web & Discord</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Inpainting</span>
+              <span class="metric-data">Vary (Region)</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">🎨 High-Res</span>
+              <span class="tag-item">✨ Cinema FX</span>
+            </div>
+            <a href="https://midjourney.com" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 7: FLUX.1 (SCHNELL & DEV) -->
+      <article class="ai-card" data-category="free vision" style="--card-accent: #8b5cf6;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <rect width="100" height="100" rx="20" fill="#8b5cf6" fill-opacity="0.15"/>
+                <path d="M25 25 H75 V45 H45 V55 H70 V75 H25 Z" fill="#7c3aed"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">FLUX.1 Schnell</h3>
+                <span class="pricing-pill price-opensource">Apache 2.0</span>
+              </div>
+              <div class="card-subtext">
+                <span>Black Forest Labs</span>
+                <span>•</span>
+                <span>12B Rectified Flow</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">High-speed, 4-step rectified flow transformer model generating extraordinary typography, hands, and anatomy with zero subscription fees.</p>
+        </div>
+
+        <div>
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">Steps</span>
+              <span class="metric-data">4-Step Latent</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Params</span>
+              <span class="metric-data">12B</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Text Coherence</span>
+              <span class="metric-data" style="color:var(--accent-emerald)">98%</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">License</span>
+              <span class="metric-data">Commercial OK</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">🎁 Free Local</span>
+              <span class="tag-item">⚡ 4-Step</span>
+            </div>
+            <a href="https://huggingface.co/black-forest-labs/FLUX.1-schnell" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 8: RUNWAY GEN-3 ALPHA -->
+      <article class="ai-card" data-category="video" style="--card-accent: #f43f5e;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <rect width="100" height="100" rx="20" fill="#f43f5e" fill-opacity="0.15"/>
+                <polygon points="40,30 75,50 40,70" fill="#e11d48"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">Runway Gen-3</h3>
+                <span class="pricing-pill price-freemium">Freemium</span>
+              </div>
+              <div class="card-subtext">
+                <span>RunwayML</span>
+                <span>•</span>
+                <span>World Models</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">Pioneering cinematic video synthesis featuring camera motion control, physics realism, structural video-to-video style transfer, and lip synchronization.</p>
+        </div>
+
+        <div>
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">FPS</span>
+              <span class="metric-data">60 FPS</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Max Clip</span>
+              <span class="metric-data">10s (Extendable)</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Motion Brush</span>
+              <span class="metric-data">Supported</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Resolution</span>
+              <span class="metric-data">1080p / 4K</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">🎬 Video Gen</span>
+              <span class="tag-item">🎥 Motion FX</span>
+            </div>
+            <a href="https://runwayml.com" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 9: ELEVENLABS VOICE ENGINE -->
+      <article class="ai-card" data-category="audio" style="--card-accent: #0ea5e9;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#0ea5e9" fill-opacity="0.15"/>
+                <path d="M30 60 L30 40 M40 70 L40 30 M50 85 L50 15 M60 70 L60 30 M70 60 L70 40" stroke="#0284c7" stroke-width="6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">ElevenLabs</h3>
+                <span class="pricing-pill price-freemium">Freemium</span>
+              </div>
+              <div class="card-subtext">
+                <span>ElevenLabs</span>
+                <span>•</span>
+                <span>Neural Speech & FX</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">Hyper-realistic conversational speech synthesis, zero-shot voice cloning, sound effects generation, and real-time bidirectional audio agents.</p>
+        </div>
+
+        <div>
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">TTS Latency</span>
+              <span class="metric-data">&lt;150ms</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Languages</span>
+              <span class="metric-data">32+</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Cloning</span>
+              <span class="metric-data">Instant (1m)</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Free Plan</span>
+              <span class="metric-data">10k Chars/mo</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">🎙️ Voice Clone</span>
+              <span class="tag-item">⚡ Low Latency</span>
+            </div>
+            <a href="https://elevenlabs.io" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 10: PERPLEXITY PRO SEARCH -->
+      <article class="ai-card" data-category="free research" style="--card-accent: #14b8a6;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <rect width="100" height="100" rx="20" fill="#14b8a6" fill-opacity="0.15"/>
+                <circle cx="45" cy="45" r="22" stroke="#0d9488" stroke-width="7" fill="none"/>
+                <line x1="62" y1="62" x2="82" y2="82" stroke="#0d9488" stroke-width="8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">Perplexity AI</h3>
+                <span class="pricing-pill price-freemium">Freemium</span>
+              </div>
+              <div class="card-subtext">
+                <span>Perplexity</span>
+                <span>•</span>
+                <span>Answer Engine</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">Conversational deep research engine that indexes real-time internet data, verifies claims with inline citations, and performs multi-step recursive searches.</p>
+        </div>
+
+        <div>
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">Index</span>
+              <span class="metric-data">Live Web</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Citations</span>
+              <span class="metric-data">100% Sourced</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Free Queries</span>
+              <span class="metric-data">Unlimited Basic</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Pro Engine</span>
+              <span class="metric-data">Claude/R1</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">🔬 Live RAG</span>
+              <span class="tag-item">🎁 Free Search</span>
+            </div>
+            <a href="https://perplexity.ai" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 11: OLLAMA LOCAL RUNTIME -->
+      <article class="ai-card" data-category="free code research" style="--card-accent: #f59e0b;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#f59e0b" fill-opacity="0.15"/>
+                <circle cx="38" cy="40" r="6" fill="#d97706"/>
+                <circle cx="62" cy="40" r="6" fill="#d97706"/>
+                <path d="M35 65 Q50 80 65 65" stroke="#d97706" stroke-width="6" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">Ollama</h3>
+                <span class="pricing-pill price-opensource">MIT Open</span>
+              </div>
+              <div class="card-subtext">
+                <span>Ollama Team</span>
+                <span>•</span>
+                <span>Local Engine Daemon</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">Run DeepSeek-R1, Llama 3.3, Mistral, and Qwen locally on your macOS, Linux, or Windows GPU with an OpenAI-compatible REST endpoint.</p>
+        </div>
+
+        <div>
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">Privacy</span>
+              <span class="metric-data">100% Offline</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">API</span>
+              <span class="metric-data">OpenAI Comp.</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Quantization</span>
+              <span class="metric-data">GGUF (Q4-Q8)</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Cost</span>
+              <span class="metric-data">$0.00 Forever</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">🎁 FOSS</span>
+              <span class="tag-item">🔒 Local Private</span>
+            </div>
+            <a href="https://ollama.com" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 12: SUNO AI V4 -->
+      <article class="ai-card" data-category="audio" style="--card-accent: #e11d48;">
+        <div>
+          <div class="card-top">
+            <div class="card-avatar-wrap">
+              <svg class="card-avatar-svg" viewBox="0 0 100 100">
+                <rect width="100" height="100" rx="20" fill="#e11d48" fill-opacity="0.15"/>
+                <circle cx="50" cy="50" r="28" stroke="#be123c" stroke-width="6" fill="none"/>
+                <circle cx="50" cy="50" r="10" fill="#be123c"/>
+              </svg>
+            </div>
+            <div class="card-header-info">
+              <div class="card-name-row">
+                <h3 class="card-name">Suno v4</h3>
+                <span class="pricing-pill price-freemium">Freemium</span>
+              </div>
+              <div class="card-subtext">
+                <span>Suno AI</span>
+                <span>•</span>
+                <span>Full Song Generation</span>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">Generate radio-ready full compositions with vocals, guitar solos, mixing, and stem separation from a single sentence prompt.</p>
+        </div>
+
+        <div>
+          <div class="metrics-dashboard mono">
+            <div class="metric-cell">
+              <span class="metric-title">Audio Quality</span>
+              <span class="metric-data">48kHz / 24-bit</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Track Len</span>
+              <span class="metric-data">Up to 4:00</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Stems</span>
+              <span class="metric-data">Vocal/Instrum.</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-title">Free Plan</span>
+              <span class="metric-data">50 Credits/day</span>
+            </div>
+          </div>
+          <div class="card-footer-row">
+            <div class="tag-cluster">
+              <span class="tag-item">🎵 Music Gen</span>
+              <span class="tag-item">🎤 Vocals</span>
+            </div>
+            <a href="https://suno.com" target="_blank" class="card-link-btn">Launch ↗</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FEATURED CURATED COMMUNITY BANNER
+       ═══════════════════════════════════════════════════════ -->
+  <section class="curated-banner" id="free-tier">
+    <div class="curated-content">
+      <span class="hero-tag" style="background: rgba(16, 185, 129, 0.15); border-color: var(--accent-emerald); color: #6ee7b7;">
+        🎁 ZERO-DOLLAR STACK INITIATIVE
+      </span>
+      <h3>Build a Production AI Pipeline for Free</h3>
+      <p>Combine Ollama for local offline inference, Google AI Studio for huge 2M token analysis, and Hugging Face spaces for zero-dollar cloud microservices.</p>
+    </div>
+    <div>
+      <a href="#directory" class="cta-button" style="text-decoration: none; display: inline-block; padding: 0.8rem 1.6rem;">Explore Free Engines ↓</a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       COMPREHENSIVE GLOBAL FOOTER
+       ═══════════════════════════════════════════════════════ -->
+  <footer id="resources">
+    <div class="footer-grid">
+      
+      <!-- Brand & Mission Column -->
+      <div class="footer-about">
+        <a href="#" class="brand">
+          <svg class="brand-svg" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="45" stroke="#ec4899" stroke-width="6"/>
+            <polygon points="50,20 78,75 50,60 22,75" fill="#6366f1"/>
+          </svg>
+          <span class="brand-text">NEXUS.AI</span>
+        </a>
+        <p style="font-size: 0.88rem; line-height: 1.6;">
+          The web's premier decentralized machine intelligence directory. Curating frontier reasoning models, high-throughput APIs, benchmarks, and community-verified developer harnesses.
+        </p>
+        <div style="display: flex; gap: 0.8rem; margin-top: 0.5rem;">
+          <span style="font-size: 1.2rem; cursor: pointer;">🐙</span>
+          <span style="font-size: 1.2rem; cursor: pointer;">💬</span>
+          <span style="font-size: 1.2rem; cursor: pointer;">🐦</span>
+          <span style="font-size: 1.2rem; cursor: pointer;">🌐</span>
+        </div>
+      </div>
+
+      <!-- Links Col 1: Reasoning & LLMs -->
+      <div class="footer-col">
+        <h4>Reasoning & Chat</h4>
+        <ul>
+          <li><a href="https://claude.ai" target="_blank">Claude 3.7 Sonnet</a></li>
+          <li><a href="https://chat.deepseek.com" target="_blank">DeepSeek-R1 (FOSS)</a></li>
+          <li><a href="https://chatgpt.com" target="_blank">OpenAI ChatGPT / o3</a></li>
+          <li><a href="https://aistudio.google.com" target="_blank">Google Gemini 2.5</a></li>
+          <li><a href="https://chat.mistral.ai" target="_blank">Le Chat Mistral</a></li>
+          <li><a href="https://x.ai" target="_blank">Grok 3 (xAI)</a></li>
+        </ul>
+      </div>
+
+      <!-- Links Col 2: Code & Agentic Systems -->
+      <div class="footer-col">
+        <h4>Dev & Terminals</h4>
+        <ul>
+          <li><a href="https://cursor.com" target="_blank">Cursor Code IDE</a></li>
+          <li><a href="https://aider.chat" target="_blank">Aider CLI Terminal</a></li>
+          <li><a href="https://windsurf.com" target="_blank">Windsurf Agent IDE</a></li>
+          <li><a href="https://v0.dev" target="_blank">v0 Generative UI</a></li>
+          <li><a href="https://bolt.new" target="_blank">Bolt.new Cloud Sandbox</a></li>
+          <li><a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a></li>
+        </ul>
+      </div>
+
+      <!-- Links Col 3: Recommended Resources -->
+      <div class="footer-col">
+        <h4>Top Directories</h4>
+        <ul>
+          <li><a href="https://fmhy.net" target="_blank">⭐ FMHY Developer Hub</a></li>
+          <li><a href="https://huggingface.co" target="_blank">🤗 Hugging Face Models</a></li>
+          <li><a href="https://openrouter.ai" target="_blank">⚡ OpenRouter API Pool</a></li>
+          <li><a href="https://arena.lmsys.org" target="_blank">🏆 LMSYS Chatbot Arena</a></li>
+          <li><a href="https://paperswithcode.com" target="_blank">📄 Papers With Code</a></li>
+          <li><a href="https://github.com/vllm-project/vllm" target="_blank">🚀 vLLM High Throughput</a></li>
+        </ul>
+      </div>
+
+      <!-- Links Col 4: Benchmarks & Docs -->
+      <div class="footer-col" id="metrics">
+        <h4>Telemetry Bench</h4>
+        <ul>
+          <li><a href="#">SWE-bench Verified</a></li>
+          <li><a href="#">LiveBench 2026</a></li>
+          <li><a href="#">Artificial Analysis</a></li>
+          <li><a href="#">MMLU-Pro Leaderboards</a></li>
+          <li><a href="#">Needle In A Haystack</a></li>
+          <li><a href="#">API Price Per Token</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Bottom Copyright & Status -->
+    <div class="footer-bottom">
+      <div>
+        <span>© 2026 NEXUS.AI COMPENDIUM. Built for engineers, researchers, and creators.</span>
+      </div>
+      <div class="mono" style="display: flex; gap: 1.5rem; align-items: center;">
+        <span style="display: flex; align-items: center; gap: 6px;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981;"></span>
+          Telemetry Online
+        </span>
+        <span>Latency: 12ms</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════
+       VANILLA JAVASCRIPT: ENGINE & PARALLAX LOGIC
+       ═══════════════════════════════════════════════════════ -->
+  <script>
+    // 1. Dynamic Canvas Ambient Particle Wave
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const count = 38;
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 2 + 0.6,
+        dx: (Math.random() - 0.5) * 0.45,
+        dy: (Math.random() - 0.5) * 0.45,
+        color: ['rgba(99,102,241,', 'rgba(236,72,153,', 'rgba(6,182,212,'][Math.floor(Math.random()*3)]
+      });
+    }
+
+    function renderCanvas() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < count; i++) {
+        const p = particles[i];
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color + '0.7)';
+        ctx.fill();
+
+        // Connect near neighbors
+        for (let j = i + 1; j < count; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = p.color + (0.15 * (1 - dist / 120)) + ')';
+            ctx.lineWidth = 0.75;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(renderCanvas);
+    }
+    renderCanvas();
+
+    // 2. Scroll-Driven Parallax Vector Hero
+    const parallaxBg = document.getElementById('parallax-bg');
+    window.addEventListener('scroll', () => {
+      const scrollY = window.pageYOffset;
+      if (parallaxBg) {
+        parallaxBg.style.transform = `translateY(${scrollY * 0.4}px) rotate(${scrollY * 0.04}deg)`;
+      }
+    });
+
+    // 3. Category Filter Tabs
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.ai-card');
+    const resultsCount = document.getElementById('results-count');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const cat = btn.getAttribute('data-cat');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const cardCategories = card.getAttribute('data-category') || '';
+          if (cat === 'all' || cardCategories.includes(cat)) {
+            card.style.display = 'flex';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        resultsCount.textContent = `Showing ${visibleCount} platforms`;
+      });
+    });
+
+    // 4. Live Search Filtering
+    const searchInput = document.getElementById('site-search');
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(q)) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      resultsCount.textContent = q ? `Found ${visibleCount} matches` : `Displaying all tools`;
+    });
+
+    // Keyboard shortcut '/' to search
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+    // Tool Submission Modal helper
+    function submitToolModal() {
+      alert("⚡ NEXUS.AI Submissions: Open-weights & verified API listings can be submitted to our GitHub repository index!");
+    }
+  </script>
+</body>
+</html>

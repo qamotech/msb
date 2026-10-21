@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10120f">
+<meta name="description" content="24 natural conversation starters for meaningful connections, personal growth, ambition, and opportunity.">
+<title>The Conversation Deck — 24 Questions</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2310120f'/%3E%3Cpath d='M23 28h54v35H48L32 77V63h-9z' fill='none' stroke='%23e6c77b' stroke-width='5' stroke-linejoin='round'/%3E%3Ccircle cx='38' cy='45' r='3' fill='%23e6c77b'/%3E%3Ccircle cx='50' cy='45' r='3' fill='%23e6c77b'/%3E%3Ccircle cx='62' cy='45' r='3' fill='%23e6c77b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#10120f;--panel:#181b16;--panel2:#20241d;--text:#f2f0e8;
+  --muted:#a5a99a;--gold:#e6c77b;--gold2:#bda15d;
+  --line:rgba(230,199,123,.19);--green:#9ba98b;
+  --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',sans-serif;
+  --max:1240px;--radius:22px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
+  line-height:1.65;overflow-x:hidden}
+body.light{--bg:#f4f0e7;--panel:#fffdf6;--panel2:#eae4d6;--text:#22251e;
+  --muted:#686d60;--line:rgba(115,91,36,.22);--gold:#8b6a23;--gold2:#b08a39;
+  --green:#53654b}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:5px}
+::selection{background:var(--gold);color:#10120f}
+img{display:block;width:100%;height:100%;object-fit:cover}
+.wrap{width:min(var(--max),calc(100% - 48px));margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.19em;font-size:.72rem;font-weight:700;color:var(--gold)}
+.serif{font-family:var(--serif)}
+.muted{color:var(--muted)}
+.gold{color:var(--gold)}
+/* 01: scroll progress */
+.progress{position:fixed;z-index:1000;top:0;left:0;width:100%;height:3px;background:transparent}
+.progress span{display:block;width:0;height:100%;background:var(--gold);box-shadow:0 0 14px var(--gold);transition:width .08s linear}
+/* 02: navigation blur */
+.nav{position:fixed;top:0;left:0;right:0;z-index:90;border-bottom:1px solid transparent;
+  transition:background .3s,border-color .3s,box-shadow .3s}
+.nav.scrolled{background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(18px);border-color:var(--line)}
+.nav-inner{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-weight:700;letter-spacing:-.03em}
+.brand-icon{width:36px;height:36px;border:1px solid var(--gold);border-radius:12px;display:grid;place-items:center;color:var(--gold);font-size:19px}
+.nav-links{display:flex;gap:26px;align-items:center}
+.nav-links a{text-decoration:none;color:var(--muted);font-size:.83rem;transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-actions{display:flex;gap:9px}
+.icon-btn{width:42px;height:42px;border:1px solid var(--line);background:var(--panel);color:var(--text);
+  border-radius:50%;display:grid;place-items:center;transition:transform .25s,background .25s,border-color .25s}
+.icon-btn:hover{transform:translateY(-3px) rotate(-5deg);border-color:var(--gold)}
+/* 03: cinematic parallax hero */
+.hero{min-height:760px;min-height:min(900px,100svh);position:relative;display:flex;align-items:center;isolation:isolate;overflow:hidden}
+.hero-bg{position:absolute;inset:-12% 0;z-index:-3;background:
+  linear-gradient(90deg,rgba(12,15,12,.94) 0%,rgba(12,15,12,.75) 48%,rgba(12,15,12,.12) 100%),
+  linear-gradient(0deg,var(--bg) 0%,transparent 30%),
+  url('https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=2400&q=90') center 48%/cover;
+  transform:translateY(0) scale(1.08);will-change:transform}
+.hero-content{padding-top:100px;padding-bottom:110px;max-width:770px}
+.hero-kicker{display:inline-flex;gap:10px;align-items:center;border:1px solid rgba(230,199,123,.4);
+  border-radius:99px;padding:8px 14px;background:rgba(16,18,15,.35);color:#e6d8af;
+  font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;animation:fadeUp .8s both}
+.pulse-dot{width:7px;height:7px;background:var(--gold);border-radius:50%;box-shadow:0 0 0 0 rgba(230,199,123,.7);animation:pulse 2s infinite}
+.hero h1{font:500 clamp(3.4rem,8.2vw,7.7rem)/.99 var(--serif);letter-spacing:-.065em;margin:32px 0 25px;
+  max-width:800px;animation:fadeUp .9s .1s both}
+.hero h1 em{color:var(--gold);font-weight:500}
+.hero-desc{font-size:clamp(1rem,1.5vw,1.18rem);color:#d0d1c8;max-width:530px;line-height:1.85;animation:fadeUp .9s .22s both}
+.hero-actions{display:flex;flex-wrap:wrap;gap:13px;margin-top:32px;animation:fadeUp .9s .32s both}
+.btn{border:1px solid var(--line);border-radius:99px;padding:13px 22px;background:var(--panel);color:var(--text);
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-weight:600;font-size:.87rem;
+  transition:transform .25s,background .25s,box-shadow .25s}
+.btn:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(0,0,0,.2)}
+.btn-primary{background:var(--gold);color:#171810;border-color:var(--gold)}
+.btn-primary:hover{background:#f0d99c}
+.btn-glass{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.28);color:#fff}
+.hero-note{margin-top:43px;font-size:.76rem;color:#c2c5b8;letter-spacing:.035em;animation:fadeUp .9s .45s both}
+.hero-note span{margin-right:10px}
+/* 04: floating ambient lights */
+.orb{position:absolute;width:340px;height:340px;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:-1;opacity:.14}
+.orb.one{background:#caa85c;right:8%;top:25%;animation:drift 12s ease-in-out infinite alternate}
+.orb.two{background:#5b7751;left:15%;bottom:3%;animation:drift 16s ease-in-out infinite alternate-reverse}
+/* intro ticker */
+.ticker{overflow:hidden;border-block:1px solid var(--line);padding:15px 0;background:var(--panel)}
+.ticker-track{display:flex;width:max-content;animation:marquee 36s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker span{font-size:.75rem;text-transform:uppercase;letter-spacing:.17em;color:var(--muted);padding:0 26px;white-space:nowrap}
+.ticker b{color:var(--gold);font-weight:400}
+/* section intro */
+.section{padding:100px 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:38px}
+.section-head h2{font:500 clamp(2.5rem,5vw,4.4rem)/1.08 var(--serif);letter-spacing:-.045em;margin:12px 0 0}
+.section-head p{max-width:370px;color:var(--muted);font-size:.93rem;margin:0 0 4px}
+.stat-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px}
+.stat{border:1px solid var(--line);border-radius:13px;padding:11px 15px;color:var(--muted);font-size:.78rem;background:var(--panel)}
+.stat strong{color:var(--gold);margin-right:5px}
+/* category filter pills */
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:28px}
+.filter{border:1px solid var(--line);background:transparent;color:var(--muted);padding:10px 16px;border-radius:99px;
+  font-size:.8rem;transition:all .25s}
+.filter:hover{border-color:var(--gold);color:var(--text);transform:translateY(-2px)}
+.filter.active{background:var(--gold);color:#15160f;border-color:var(--gold);font-weight:700}
+.search-row{display:flex;gap:12px;margin-bottom:28px;align-items:center}
+.searchbox{flex:1;position:relative}
+.searchbox span{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.searchbox input{width:100%;height:48px;border:1px solid var(--line);background:var(--panel);color:var(--text);
+  border-radius:14px;padding:0 16px 0 43px;font:inherit;font-size:.87rem;outline:none;transition:border .2s}
+.searchbox input:focus{border-color:var(--gold)}
+.searchbox input::placeholder{color:var(--muted)}
+/* 05: interactive image cards, hover lift and image zoom */
+.deck{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}
+.card{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--panel);
+  min-width:0;display:flex;flex-direction:column;position:relative;isolation:isolate;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .35s;
+  animation:cardIn .65s both;animation-delay:calc(var(--i,0)*45ms)}
+.card:hover{transform:translateY(-8px);border-color:rgba(230,199,123,.55);box-shadow:0 24px 65px rgba(0,0,0,.2)}
+.card-media{height:190px;position:relative;overflow:hidden;background:var(--panel2)}
+.card-media img{transition:transform .8s cubic-bezier(.2,.8,.2,1),filter .5s;filter:brightness(.8) saturate(.8)}
+.card:hover .card-media img{transform:scale(1.08);filter:brightness(.95) saturate(1)}
+.card-media:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(16,18,15,.72),transparent 75%)}
+.card-number{position:absolute;z-index:2;top:15px;left:16px;font-size:.73rem;letter-spacing:.12em;color:#fff;
+  border:1px solid rgba(255,255,255,.4);border-radius:99px;padding:5px 10px;background:rgba(15,17,14,.35);backdrop-filter:blur(8px)}
+.card-emoji{position:absolute;z-index:2;right:16px;bottom:14px;font-size:1.65rem;filter:drop-shadow(0 3px 7px #000)}
+.card-body{padding:22px;display:flex;flex:1;flex-direction:column}
+.card-cat{font-size:.68rem;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.card h3{font:500 1.48rem/1.35 var(--serif);letter-spacing:-.025em;margin:12px 0 13px}
+.card .why{font-size:.83rem;line-height:1.75;color:var(--muted);margin:0 0 22px}
+.card-bottom{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:16px;border-top:1px solid var(--line)}
+.card-bottom small{font-size:.7rem;color:var(--muted)}
+.card-copy{width:38px;height:38px;flex-shrink:0;border-radius:50%;border:1px solid var(--line);background:transparent;
+  color:var(--text);transition:all .25s;display:grid;place-items:center}
+.card-copy:hover{background:var(--gold);color:#171810;border-color:var(--gold);transform:rotate(-8deg) scale(1.08)}
+.empty{grid-column:1/-1;padding:50px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius)}
+/* 06: scroll reveals */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+/* feature band */
+.feature{position:relative;min-height:430px;border-radius:30px;overflow:hidden;display:flex;align-items:center;
+  background:var(--panel);isolation:isolate}
+.feature-bg{position:absolute;inset:0;z-index:-2;background:
+  linear-gradient(90deg,rgba(14,17,13,.95) 0%,rgba(14,17,13,.78) 54%,rgba(14,17,13,.2) 100%),
+  url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=2000&q=85') center/cover}
+.feature-content{padding:clamp(30px,6vw,70px);max-width:760px}
+.feature h2{font:500 clamp(2.5rem,5vw,4.4rem)/1.08 var(--serif);letter-spacing:-.05em;margin:14px 0 20px}
+.feature p{color:#d0d2c7;max-width:520px;font-size:.95rem;line-height:1.9}
+.feature .btn{margin-top:12px}
+/* principles */
+.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:17px;margin-top:30px}
+.principle{padding:25px;border:1px solid var(--line);border-radius:18px;background:var(--panel);transition:transform .3s,border-color .3s}
+.principle:hover{transform:translateY(-5px);border-color:var(--gold)}
+.principle .emoji{font-size:1.6rem}
+.principle h3{font:500 1.3rem var(--serif);margin:13px 0 7px}
+.principle p{font-size:.83rem;color:var(--muted);line-height:1.8;margin:0}
+/* daily random question panel */
+.random-panel{margin-top:26px;border:1px solid var(--line);border-radius:24px;padding:clamp(25px,4vw,44px);
+  background:radial-gradient(ellipse at 100% 0%,rgba(230,199,123,.1),transparent 45%),var(--panel);
+  position:relative;overflow:hidden}
+.random-panel:before{content:"“";position:absolute;right:22px;top:-50px;font:15rem var(--serif);color:var(--gold);opacity:.08}
+.random-panel .random-label{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+.random-question{font:500 clamp(1.7rem,3.6vw,2.8rem)/1.3 var(--serif);max-width:850px;margin:20px 0 26px}
+.random-actions{display:flex;flex-wrap:wrap;gap:10px}
+/* tips */
+.tips{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tip{padding:28px;border:1px solid var(--line);border-radius:20px;background:var(--panel)}
+.tip .tip-head{display:flex;align-items:center;gap:12px;margin-bottom:13px}
+.tip-icon{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:var(--panel2);font-size:1.2rem}
+.tip h3{font:500 1.35rem var(--serif);margin:0}
+.tip p{font-size:.87rem;color:var(--muted);margin:0;line-height:1.85}
+/* 07: magnetic-feeling CTA / animated border */
+.closing{position:relative;margin:90px 0 0;padding:clamp(35px,7vw,80px);border-radius:30px;text-align:center;
+  background:var(--panel);overflow:hidden;border:1px solid var(--line)}
+.closing:before{content:"";position:absolute;inset:-150%;background:conic-gradient(from 0deg,transparent 0 75%,rgba(230,199,123,.1) 80%,transparent 85%);
+  animation:spin 14s linear infinite;pointer-events:none}
+.closing-inner{position:relative}
+.closing h2{font:500 clamp(2.8rem,6vw,5.3rem)/1.05 var(--serif);letter-spacing:-.05em;margin:15px auto 18px;max-width:800px}
+.closing p{color:var(--muted);max-width:530px;margin:0 auto 28px}
+.footer{border-top:1px solid var(--line);margin-top:90px;padding:35px 0 100px}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.footer-links{display:flex;gap:22px;flex-wrap:wrap}
+.footer-links a{font-size:.78rem;color:var(--muted);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--gold)}
+.footer-note{font-size:.75rem;color:var(--muted)}
+/* 08: floating quick menu */
+.float-menu{position:fixed;z-index:80;right:24px;bottom:25px;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.float-main{width:58px;height:58px;border:1px solid #f2d995;border-radius:50%;background:var(--gold);color:#171810;
+  font-size:1.5rem;box-shadow:0 8px 30px rgba(0,0,0,.28);transition:transform .3s,box-shadow .3s}
+.float-main:hover{transform:rotate(12deg) scale(1.08);box-shadow:0 0 0 8px rgba(230,199,123,.13)}
+.float-options{display:flex;flex-direction:column;align-items:flex-end;gap:8px;opacity:0;transform:translateY(12px) scale(.96);
+  pointer-events:none;transition:all .25s}
+.float-menu.open .float-options{opacity:1;transform:none;pointer-events:auto}
+.float-option{border:1px solid var(--line);border-radius:99px;padding:10px 14px;background:var(--panel);color:var(--text);
+  box-shadow:0 8px 24px rgba(0,0,0,.18);font-size:.8rem;white-space:nowrap;transition:transform .2s,border-color .2s}
+.float-option:hover{transform:translateX(-4px);border-color:var(--gold)}
+/* toast */
+.toast{position:fixed;z-index:200;left:50%;bottom:30px;transform:translate(-50%,30px);opacity:0;pointer-events:none;
+  border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:12px 18px;border-radius:99px;
+  font-size:.82rem;box-shadow:0 10px 35px rgba(0,0,0,.3);transition:all .3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+/* 09: subtle hover glint */
+.card:after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.045) 45%,transparent 70%);
+  transform:translateX(-120%);transition:transform .7s}
+.card:hover:after{transform:translateX(120%)}
+/* animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(230,199,123,.6)}70%{box-shadow:0 0 0 9px rgba(230,199,123,0)}100%{box-shadow:0 0 0 0 rgba(230,199,123,0)}}
+@keyframes drift{from{transform:translate3d(-20px,-15px,0)}to{transform:translate3d(30px,35px,0)}}
+@keyframes marquee{to{transform:translateX(-50%)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.reveal{opacity:1;transform:none}}
+@media(max-width:950px){.deck{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{min-height:740px}.nav-links{gap:14px}.principles{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.wrap{width:calc(100% - 30px)}.nav-inner{height:66px}.nav-links{display:none}.hero{min-height:760px;min-height:94svh}.hero-bg{background-position:60% center;background-image:linear-gradient(90deg,rgba(12,15,12,.91),rgba(12,15,12,.58)),linear-gradient(0deg,var(--bg),transparent 30%),url('https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1400&q=85')}.hero h1{font-size:clamp(3.5rem,16vw,5.6rem)}.section{padding:70px 0}.section-head{align-items:start;flex-direction:column;gap:15px}.deck{grid-template-columns:1fr}.card-media{height:220px}.card-body{padding:20px}.principles,.tips{grid-template-columns:1fr}.search-row{align-items:stretch}.feature{min-height:470px}.float-menu{right:15px;bottom:15px}.float-main{width:52px;height:52px}.footer-inner{align-items:flex-start;flex-direction:column}.closing{margin-top:60px}.footer{margin-top:60px}.stat-row{gap:8px}.stat{padding:9px 11px}}
+</style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand"><span class="brand-icon">✳</span><span>THE CONVERSATION DECK</span></a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#questions">The 24</a><a href="#approach">The approach</a><a href="#practice">Practice</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle light or dark theme" title="Change theme">☼</button>
+      <button class="icon-btn" id="navRandom" aria-label="Get a random question" title="Surprise me">↗</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div><div class="orb one"></div><div class="orb two"></div>
+  <div class="wrap">
+    <div class="hero-content">
+      <div class="hero-kicker"><span class="pulse-dot"></span> A field guide to better conversations</div>
+      <h1>Ask better.<br>Connect <em>deeper.</em></h1>
+      <p class="hero-desc">24 thoughtful questions to move beyond small talk, discover what matters to people, and create conversations that feel real. No scripts. No pressure. Just curiosity. ✨</p>
+      <div class="hero-actions">
+        <a href="#questions" class="btn btn-primary">Explore the 24 <span>↘</span></a>
+        <button class="btn btn-glass" id="heroRandom">✳ Give me a question</button>
+      </div>
+      <div class="hero-note"><span>✦</span> Relationship first. Curiosity always. Outcomes without pressure.</div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-label="Guiding principles">
+  <div class="ticker-track" aria-hidden="true">
+    <span>✳ <b>Curiosity</b> over assumptions</span><span>✳ <b>Connection</b> over persuasion</span><span>✳ <b>Listen</b> before leading</span><span>✳ <b>Space</b> over pressure</span><span>✳ <b>Clarity</b> over complexity</span><span>✳ <b>Curiosity</b> over assumptions</span><span>✳ <b>Connection</b> over persuasion</span><span>✳ <b>Listen</b> before leading</span><span>✳ <b>Space</b> over pressure</span><span>✳ <b>Clarity</b> over complexity</span>
+  </div>
+</div>
+
+<section class="section" id="questions">
+<div class="wrap">
+  <div class="section-head reveal">
+    <div><div class="eyebrow">Your conversation toolkit · 01—24</div><h2 class="serif">Find the right<br><em class="gold">question.</em></h2></div>
+    <p>Use these as starting points, not a checklist. Choose the question that fits the moment and give the other person room to answer.</p>
+  </div>
+  <div class="stat-row reveal">
+    <div class="stat"><strong>24</strong> conversation starters</div>
+    <div class="stat"><strong>6</strong> themes</div>
+    <div class="stat"><strong>01</strong> principle: no pressure</div>
+  </div>
+  <div class="filters reveal" id="filters" aria-label="Filter questions by category">
+    <button class="filter active" data-filter="all">✳ All questions</button>
+    <button class="filter" data-filter="focus">🌱 Current focus</button>
+    <button class="filter" data-filter="ambition">🚀 Ambition</button>
+    <button class="filter" data-filter="lifestyle">☀️ Lifestyle</button>
+    <button class="filter" data-filter="mindset">🧠 Mindset</button>
+    <button class="filter" data-filter="opportunity">🔭 Possibilities</button>
+    <button class="filter" data-filter="values">💫 Values</button>
+  </div>
+  <div class="search-row reveal">
+    <label class="searchbox"><span>⌕</span><input id="searchInput" type="search" placeholder="Find a question by keyword..." aria-label="Search conversation questions"></label>
+    <button class="icon-btn" id="shuffleBtn" title="Shuffle questions" aria-label="Shuffle questions">⤨</button>
+  </div>
+  <div class="deck" id="deck" aria-live="polite"></div>
+</div>
+</section>
+
+<section class="section" id="approach" style="padding-top:20px">
+<div class="wrap">
+  <div class="feature reveal">
+    <div class="feature-bg"></div>
+    <div class="feature-content">
+      <div class="eyebrow">The difference is how you listen</div>
+      <h2>Make space for<br>the real answer.</h2>
+      <p>A great question isn't a tactic for steering someone toward your outcome. It's an invitation to understand their world. Listen to what they actually say, not just what you hope to hear.</p>
+      <a class="btn btn-primary" href="#practice">Explore the approach ↗</a>
+    </div>
+  </div>
+
+  <div class="section-head reveal" style="margin-top:85px">
+    <div><div class="eyebrow">A simple framework</div><h2 class="serif">Good posture.<br><em class="gold">Every time.</em></h2></div>
+    <p>You don't need to sound impressive. You need to be present, genuinely curious, and comfortable letting the conversation unfold.</p>
+  </div>
+  <div class="principles">
+    <article class="principle reveal"><div class="emoji">👂</div><h3>Listen before leading</h3><p>Follow the part of their answer that has energy. One thoughtful follow-up beats three questions in a row.</p></article>
+    <article class="principle reveal"><div class="emoji">🤝</div><h3>Make it mutual</h3><p>Share a little of your own experience, too. A conversation is an exchange, not an interview.</p></article>
+    <article class="principle reveal"><div class="emoji">🕊️</div><h3>Leave room for no</h3><p>People can be content where they are. Respect their answer instead of treating it like an obstacle.</p></article>
+  </div>
+</div>
+</section>
+
+<section class="section" id="practice">
+<div class="wrap">
+  <div class="section-head reveal">
+    <div><div class="eyebrow">Your daily rep</div><h2 class="serif">One question.<br><em class="gold">One real connection.</em></h2></div>
+    <p>Not sure where to start? Let the deck choose. Use the question as inspiration and adapt it to the person in front of you.</p>
+  </div>
+  <div class="random-panel reveal" aria-live="polite">
+    <div class="random-label">✳ Your question for the moment</div>
+    <div class="random-question" id="randomQuestion">“What’s been taking up most of your attention lately, in a good way?”</div>
+    <div class="random-actions">
+      <button class="btn btn-primary" id="nextQuestion">↻ Another question</button>
+      <button class="btn" id="copyRandom">▢ Copy question</button>
+      <button class="btn" id="saveRandom">♡ Save for later</button>
+    </div>
+    <p id="saveStatus" class="muted" style="font-size:.78rem;margin:16px 0 0">Your saved questions stay in this page while it's open.</p>
+  </div>
+
+  <div class="section-head reveal" style="margin-top:90px">
+    <div><div class="eyebrow">A little reminder</div><h2 class="serif">Less strategy.<br><em class="gold">More presence.</em></h2></div>
+  </div>
+  <div class="tips">
+    <article class="tip reveal"><div class="tip-head"><div class="tip-icon">🌉</div><h3>Start with a bridge</h3></div><p>Connect the question to something real: a recent post, a shared experience, or something they mentioned. Relevance makes curiosity feel natural.</p></article>
+    <article class="tip reveal"><div class="tip-head"><div class="tip-icon">🔎</div><h3>Follow their words</h3></div><p>If they say they're building, learning, or exploring something, ask what drew them to it. Let their answer shape the next question.</p></article>
+    <article class="tip reveal"><div class="tip-head"><div class="tip-icon">🗣️</div><h3>Share your side</h3></div><p>Offer a short, authentic example from your own life. Then give them room to respond without immediately moving to another question.</p></article>
+    <article class="tip reveal"><div class="tip-head"><div class="tip-icon">🌿</div><h3>Let the answer be enough</h3></div><p>A short answer isn't an invitation to push harder. If the conversation isn't opening up, respect the moment and let it breathe.</p></article>
+  </div>
+
+  <div class="closing reveal">
+    <div class="closing-inner">
+      <div class="eyebrow">Your next conversation starts here</div>
+      <h2>Be interested.<br><em class="gold">Not impressive.</em></h2>
+      <p>You don't have to use all 24 questions. Find one that feels right, ask it naturally, and listen to what comes back. That's the work. ✨</p>
+      <a href="#questions" class="btn btn-primary">Choose your next question ↗</a>
+    </div>
+  </div>
+</div>
+</section>
+</main>
+
+<footer class="footer">
+<div class="wrap footer-inner">
+  <a href="#top" class="brand"><span class="brand-icon">✳</span><span>THE CONVERSATION DECK</span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="#questions">All questions</a><a href="#approach">Our approach</a><a href="#practice">Practice</a><a href="#top">Back to top ↑</a>
+  </nav>
+  <div class="footer-note">Made for meaningful conversations. 💛</div>
+</div>
+</footer>
+
+<div class="float-menu" id="floatMenu">
+  <div class="float-options">
+    <button class="float-option" id="floatRandom">🎲 Random question</button>
+    <button class="float-option" id="floatCopy">📋 Copy current question</button>
+    <button class="float-option" id="floatSaved">♡ Show saved question</button>
+    <button class="float-option" id="floatTop">↑ Back to top</button>
+  </div>
+  <button class="float-main" id="floatToggle" aria-label="Open quick actions" aria-expanded="false">✳</button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite">Copied ✨</div>
+
+<script>
+const questions = [
+{n:1,cat:"focus",label:"Current focus",emoji:"🌱",image:"photo-1455390582262-044cdead277a",q:"What’s been taking up most of your attention lately, in a good way?",why:"An easy, open-ended way to discover what genuinely interests them right now."},
+{n:2,cat:"focus",label:"Current focus",emoji:"✨",image:"photo-1490730141103-6cac27aaab94",q:"Anything you’ve been getting into lately that you didn’t expect to enjoy so much?",why:"Invites a personal story without making the conversation feel too serious."},
+{n:3,cat:"focus",label:"Current focus",emoji:"🌿",image:"photo-1441974231531-c6227db76b6e",q:"What’s something you’ve been wanting to make more time for lately?",why:"Opens the door to interests, priorities, and lifestyle goals."},
+{n:4,cat:"focus",label:"Current focus",emoji:"🎯",image:"photo-1516321318423-f06f85e504b3",q:"What’s one thing you’ve been working on that you’re pretty excited about?",why:"Lets them choose whether to talk about work, a personal goal, or something else entirely."},
+{n:5,cat:"ambition",label:"Ambition",emoji:"🧭",image:"photo-1521737711867-e3b97375f902",q:"Have you always wanted to do what you’re doing now, or did you find your way into it?",why:"Uncovers their story, motivations, and how their direction has evolved."},
+{n:6,cat:"ambition",label:"Ambition",emoji:"🚀",image:"photo-1519681393784-d120267933ba",q:"If the next couple of years went really well for you, what would be different?",why:"Explores their vision without assuming they are unhappy with their current life."},
+{n:7,cat:"ambition",label:"Ambition",emoji:"🌄",image:"photo-1470252649378-9c29740c9fa8",q:"Do you feel like you’re in a season of growth right now, or more of a season of enjoying what you’ve built?",why:"Respects both ambition and contentment instead of assuming everyone wants more."},
+{n:8,cat:"ambition",label:"Ambition",emoji:"🔭",image:"photo-1470770841072-f978cf4d019e",q:"Is there anything you can see yourself getting into down the road that you haven’t explored yet?",why:"Creates space for new interests or ventures without fishing for a business lead."},
+{n:9,cat:"lifestyle",label:"Lifestyle",emoji:"☀️",image:"photo-1500530855697-b586d89ba3ee",q:"What does a really good week look like for you these days?",why:"Reveals what they value in everyday life, not just their career."},
+{n:10,cat:"lifestyle",label:"Lifestyle",emoji:"🪴",image:"photo-1449247709967-d4461a6a6103",q:"If you could redesign one part of your day-to-day, what would you change?",why:"Invites reflection without suggesting their current situation needs fixing."},
+{n:11,cat:"lifestyle",label:"Lifestyle",emoji:"🌅",image:"photo-1470071459604-3b5ec3a7fe05",q:"What’s something you value a lot more now than you did five years ago?",why:"Encourages a meaningful conversation about changing priorities and perspective."},
+{n:12,cat:"lifestyle",label:"Lifestyle",emoji:"🌊",image:"photo-1473116763249-2faaef81ccda",q:"What are you trying to make more room for in your life these days?",why:"Can lead to conversations about family, travel, health, hobbies, or flexibility."},
+{n:13,cat:"mindset",label:"Mindset",emoji:"🧠",image:"photo-1500534623283-312aade485b7",q:"What’s something you used to overthink that you handle pretty differently now?",why:"Opens a conversation about maturity and lessons learned without becoming overly intense."},
+{n:14,cat:"mindset",label:"Mindset",emoji:"🧗",image:"photo-1464822759023-fed622ff2c3b",q:"When you’re deciding whether to pursue something new, what usually makes you take the leap?",why:"Reveals how they approach risk and opportunity through a normal conversation."},
+{n:15,cat:"mindset",label:"Mindset",emoji:"📖",image:"photo-1455390582262-044cdead277a",q:"What’s a lesson you’ve learned the hard way that you’re glad you learned?",why:"Gives them room to share a story at whatever depth feels comfortable."},
+{n:16,cat:"mindset",label:"Mindset",emoji:"🔥",image:"photo-1500534623283-312aade485b7",q:"When something matters to you, what helps you stay consistent with it?",why:"Explores discipline and personal standards without sounding like a performance review."},
+{n:17,cat:"opportunity",label:"Possibilities",emoji:"💡",image:"photo-1456324504439-367cee3b3c32",q:"Have you come across anything lately that’s genuinely changed the way you think about things?",why:"Invites them to discuss a book, person, experience, or new idea."},
+{n:18,cat:"opportunity",label:"Possibilities",emoji:"🛤️",image:"photo-1500530855697-b586d89ba3ee",q:"Are you someone who likes to keep your options open, or do you prefer to go all-in on one thing?",why:"A relaxed way to understand how they think about focus, flexibility, and new possibilities."},
+{n:19,cat:"opportunity",label:"Possibilities",emoji:"🔍",image:"photo-1519681393784-d120267933ba",q:"What’s something you’ve been curious about but haven’t had a chance to explore yet?",why:"Lets them introduce a potential interest naturally, without you planting one."},
+{n:20,cat:"opportunity",label:"Possibilities",emoji:"🌱",image:"photo-1521737711867-e3b97375f902",q:"Have you ever started something on the side that ended up becoming a bigger part of your life than you expected?",why:"Opens a door to entrepreneurial experiences without presuming they want another venture."},
+{n:21,cat:"values",label:"Values",emoji:"🤝",image:"photo-1529156069898-49953e39b3ac",q:"What kind of people do you find yourself learning the most from?",why:"Reveals what they respect and the environments in which they grow."},
+{n:22,cat:"values",label:"Values",emoji:"✨",image:"photo-1470770841072-f978cf4d019e",q:"What’s something you want to be able to look back on and say you made the most of?",why:"Creates room for meaningful goals without forcing a conversation about money or career."},
+{n:23,cat:"values",label:"Values",emoji:"💫",image:"photo-1500530855697-b586d89ba3ee",q:"What does success mean to you now that maybe it didn’t mean to you earlier in life?",why:"Helps uncover their current values and how their definition of success has changed."},
+{n:24,cat:"values",label:"Values",emoji:"🌠",image:"photo-1464822759023-fed622ff2c3b",q:"If you could learn from anyone who’s a few steps ahead of where you want to be, what would you want to learn from them?",why:"Reveals aspirations and openness to learning without immediately offering a connection."}
+];
+
+const photo = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1000&q=85`;
+const deck = document.getElementById('deck');
+const searchInput = document.getElementById('searchInput');
+const filters = document.getElementById('filters');
+const toast = document.getElementById('toast');
+const randomQuestion = document.getElementById('randomQuestion');
+const saveStatus = document.getElementById('saveStatus');
+let activeFilter = 'all';
+let currentQuestion = questions[0];
+let savedQuestion = null;
+let toastTimer;
+let shuffled = false;
+
+function cardTemplate(item,i){
+ return `<article class="card" style="--i:${i}" data-number="${item.n}">
+  <div class="card-media">
+    <img src="${photo(item.image)}" alt="${item.label} — atmospheric photography" loading="${i<3?'eager':'lazy'}" onerror="this.style.opacity='.15'">
+    <span class="card-number">NO. ${String(item.n).padStart(2,'0')}</span>
+    <span class="card-emoji">${item.emoji}</span>
+  </div>
+  <div class="card-body">
+    <div class="card-cat">${item.label}</div>
+    <h3>${item.q}</h3>
+    <p class="why">${item.why}</p>
+    <div class="card-bottom">
+      <small>✳ Ask naturally. Listen fully.</small>
+      <button class="card-copy" data-copy="${item.n}" aria-label="Copy question ${item.n}" title="Copy question">▢</button>
+    </div>
+  </div>
+ </article>`;
+}
+function filteredQuestions(){
+ const term=searchInput.value.trim().toLowerCase();
+ let list=questions.filter(x=>(activeFilter==='all'||x.cat===activeFilter)&&(!term||(x.q+' '+x.why+' '+x.label).toLowerCase().includes(term)));
+ if(shuffled) list=[...list].sort((a,b)=>a.n-b.n).sort(()=>Math.random()-.5);
+ return list;
+}
+function renderDeck(){
+ const list=filteredQuestions();
+ deck.innerHTML=list.length?list.map(cardTemplate).join(''):`<div class="empty">🔎 No questions found. Try another keyword or category.</div>`;
+}
+function showToast(message){
+ toast.textContent=message;toast.classList.add('show');
+ clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2300);
+}
+async function copyText(text){
+ try{await navigator.clipboard.writeText(text);showToast('Copied to clipboard ✨')}
+ catch(e){
+  const el=document.createElement('textarea');el.value=text;el.style.position='fixed';el.style.opacity='0';
+  document.body.appendChild(el);el.select();
+  try{document.execCommand('copy');showToast('Copied to clipboard ✨')}
+  catch(err){showToast('Select and copy the question manually')}
+  el.remove();
+ }
+}
+function pickRandom(){
+ const list=questions.filter(q=>q.n!==currentQuestion.n);
+ currentQuestion=list[Math.floor(Math.random()*list.length)];
+ randomQuestion.textContent='“'+currentQuestion.q+'”';
+ document.querySelector('.random-label').textContent=`✳ QUESTION ${String(currentQuestion.n).padStart(2,'0')} · ${currentQuestion.label.toUpperCase()}`;
+}
+function goRandom(){
+ pickRandom();
+ document.getElementById('practice').scrollIntoView({behavior:'smooth'});
+}
+filters.addEventListener('click',e=>{
+ const b=e.target.closest('[data-filter]');if(!b)return;
+ activeFilter=b.dataset.filter;
+ filters.querySelectorAll('.filter').forEach(x=>x.classList.toggle('active',x===b));
+ renderDeck();
+});
+searchInput.addEventListener('input',renderDeck);
+document.getElementById('shuffleBtn').addEventListener('click',()=>{
+ shuffled=!shuffled;renderDeck();showToast(shuffled?'Questions shuffled 🎲':'Original order restored');
+});
+deck.addEventListener('click',e=>{
+ const b=e.target.closest('[data-copy]');if(!b)return;
+ const item=questions.find(q=>q.n===Number(b.dataset.copy));
+ if(item){currentQuestion=item;copyText(item.q)}
+});
+document.getElementById('heroRandom').addEventListener('click',goRandom);
+document.getElementById('navRandom').addEventListener('click',goRandom);
+document.getElementById('nextQuestion').addEventListener('click',pickRandom);
+document.getElementById('copyRandom').addEventListener('click',()=>copyText(currentQuestion.q));
+document.getElementById('saveRandom').addEventListener('click',()=>{
+ savedQuestion=currentQuestion;
+ saveStatus.textContent='♡ Saved question '+String(savedQuestion.n).padStart(2,'0')+' — '+savedQuestion.q;
+ document.getElementById('saveRandom').textContent='♥ Saved';
+ showToast('Question saved for this session 💛');
+});
+document.getElementById('themeToggle').addEventListener('click',()=>{
+ document.body.classList.toggle('light');
+ const light=document.body.classList.contains('light');
+ document.getElementById('themeToggle').textContent=light?'☾':'☼';
+ showToast(light?'Light theme enabled ☀️':'Dark theme enabled 🌙');
+});
+const floatMenu=document.getElementById('floatMenu');
+const floatToggle=document.getElementById('floatToggle');
+floatToggle.addEventListener('click',()=>{
+ const open=floatMenu.classList.toggle('open');
+ floatToggle.setAttribute('aria-expanded',String(open));
+ floatToggle.textContent=open?'×':'✳';
+});
+document.getElementById('floatRandom').addEventListener('click',()=>{floatMenu.classList.remove('open');goRandom()});
+document.getElementById('floatCopy').addEventListener('click',()=>{floatMenu.classList.remove('open');copyText(currentQuestion.q)});
+document.getElementById('floatSaved').addEventListener('click',()=>{
+ floatMenu.classList.remove('open');
+ if(savedQuestion){currentQuestion=savedQuestion;randomQuestion.textContent='“'+currentQuestion.q+'”';document.getElementById('practice').scrollIntoView({behavior:'smooth'});showToast('Your saved question 💛')}
+ else{showToast('Save a question first ♡')}
+});
+document.getElementById('floatTop').addEventListener('click',()=>{floatMenu.classList.remove('open');window.scrollTo({top:0,behavior:'smooth'})});
+document.addEventListener('click',e=>{if(!floatMenu.contains(e.target)){floatMenu.classList.remove('open');floatToggle.setAttribute('aria-expanded','false');floatToggle.textContent='✳'}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){floatMenu.classList.remove('open');floatToggle.setAttribute('aria-expanded','false');floatToggle.textContent='✳'}});
+
+/* Scroll progress, navigation glass and gentle parallax */
+let ticking=false;
+function onScroll(){
+ if(ticking)return;ticking=true;
+ requestAnimationFrame(()=>{
+  const max=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('progressBar').style.width=(max>0?window.scrollY/max*100:0)+'%';
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>30);
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+   const heroBg=document.getElementById('heroBg');
+   if(window.scrollY<window.innerHeight*1.2)heroBg.style.transform=`translateY(${window.scrollY*.24}px) scale(1.08)`;
+  }
+  ticking=false;
+ });
+}
+window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+/* Reveal elements as they enter the viewport */
+if('IntersectionObserver' in window){
+ const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}});
+ },{threshold:.12,rootMargin:'0px 0px -35px 0px'});
+ document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+}else{document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'))}
+
+/* Initialise */
+renderDeck();
+</script>
+</body>
+</html>

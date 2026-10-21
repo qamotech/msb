@@ -1,0 +1,1683 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Walking Water Field Trip</title>
+<meta name="description" content="A science-field-trip style interactive page for the walking water experiment: cups, water, food coloring and paper towels.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FFC72C">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='3' y='12' width='48' height='34' rx='8' fill='%23FFC72C' stroke='%231f1a2e' stroke-width='3'/%3E%3Crect x='44' y='24' width='17' height='22' rx='5' fill='%23FFC72C' stroke='%231f1a2e' stroke-width='3'/%3E%3Crect x='9' y='18' width='9' height='10' rx='2' fill='%23bfe9ff'/%3E%3Crect x='22' y='18' width='9' height='10' rx='2' fill='%23bfe9ff'/%3E%3Crect x='35' y='18' width='9' height='10' rx='2' fill='%23bfe9ff'/%3E%3Crect x='3' y='33' width='58' height='3' fill='%231f1a2e'/%3E%3Ccircle cx='17' cy='48' r='7' fill='%231f1a2e'/%3E%3Ccircle cx='47' cy='48' r='7' fill='%231f1a2e'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bus:#FFC72C;--bus-d:#E8A700;--ink:#1f1a2e;--paper:#fff8e7;--card:#fff;
+  --teal:#0e9c9c;--pink:#e5487f;--purple:#6c45d6;--sky:#cdeeff;--grass:#7cc65a;--muted:#5d5670;
+  --red:#d61c2e;--yel:#ffcc00;--blu:#1258d6;
+  --r:18px;--shadow:5px 5px 0 var(--ink);
+  --fh:"Fredoka","Baloo 2","Arial Rounded MT Bold",system-ui,sans-serif;
+  --fb:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;font-family:var(--fb);font-size:16px;line-height:1.55;color:var(--ink);
+  background-color:var(--paper);
+  background-image:radial-gradient(rgba(31,26,46,.07) 1.2px,transparent 1.2px);background-size:22px 22px}
+img,svg{max-width:100%}
+[hidden]{display:none!important}
+h1,h2,h3,h4{font-family:var(--fh);line-height:1.1;margin:0 0 .4em}
+h2{font-size:clamp(1.7rem,3.6vw,2.5rem)}
+p{margin:0 0 .8em}
+a{color:var(--purple)}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px dashed var(--purple);outline-offset:3px}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:0;z-index:60;background:var(--bus);border-bottom:3px solid var(--ink)}
+.top .wrap{display:flex;align-items:center;gap:14px;min-height:62px;flex-wrap:wrap;padding-block:6px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:none;border:0;cursor:pointer;padding:0}
+.brand svg{width:64px;height:36px}
+.brand b{font-family:var(--fh);font-size:1.25rem;line-height:1}
+.brand small{display:block;font:700 .62rem var(--fh);letter-spacing:.18em;background:var(--ink);color:var(--bus);padding:2px 6px;border-radius:6px;margin-top:3px;width:max-content}
+.brand:hover svg{animation:honkshake .35s}
+@keyframes honkshake{25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+nav.links{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+nav.links a{font:600 .92rem var(--fh);color:var(--ink);text-decoration:none;padding:.35em .7em;border-radius:999px;border:2px solid transparent}
+nav.links a:hover{border-color:var(--ink);background:#fff}
+.iconbtn{border:3px solid var(--ink);background:#fff;border-radius:999px;width:40px;height:40px;display:grid;place-items:center;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+.iconbtn svg{width:20px;height:20px}
+
+/* ---------- buttons / cards ---------- */
+.btn{font:600 1rem var(--fh);color:var(--ink);border:3px solid var(--ink);border-radius:999px;padding:.5em 1.1em;background:#fff;
+  box-shadow:3px 3px 0 var(--ink);cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;display:inline-flex;align-items:center;gap:.45em;text-decoration:none;line-height:1.2}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.btn.pink{background:var(--pink);color:#fff}.btn.yellow{background:var(--bus)}.btn.teal{background:var(--teal);color:#fff}.btn.purple{background:var(--purple);color:#fff}
+.btn.sm{font-size:.88rem;padding:.35em .8em}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+.btn svg{width:1.1em;height:1.1em}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:var(--r);box-shadow:var(--shadow);padding:20px}
+.tag{display:inline-block;font:700 .75rem var(--fh);letter-spacing:.12em;text-transform:uppercase;background:var(--ink);color:var(--bus);padding:.3em .7em;border-radius:8px;margin-bottom:.6em}
+section{padding-block:60px}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.sec-head p{max-width:60ch;color:var(--muted);margin:0}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;background:linear-gradient(#7fd0ff 0%,#c6ecff 62%,#e9f8ff 100%);border-bottom:3px solid var(--ink);padding-block:42px 190px}
+.hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center}
+.hero h1{font-size:clamp(2.3rem,6vw,4.4rem);letter-spacing:-.01em;text-shadow:3px 3px 0 #fff}
+.hero h1 span{color:var(--pink)}
+.hero .lede{font-size:1.15rem;max-width:52ch}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.speech{position:relative;background:#fff;border:3px solid var(--ink);border-radius:18px;padding:10px 14px;font:600 1rem var(--fh);box-shadow:3px 3px 0 var(--ink);display:inline-block;margin-bottom:14px}
+.speech::after{content:"";position:absolute;left:28px;bottom:-14px;width:18px;height:18px;background:#fff;border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg) skew(10deg,10deg)}
+.hero-art{position:relative}
+.hero-art svg.scene{width:100%;height:auto}
+.hero-art .mascot{position:absolute;right:-6px;top:-26px;width:74px;animation:floaty 3s ease-in-out infinite}
+@keyframes floaty{50%{transform:translateY(-10px) rotate(4deg)}}
+.sun{position:absolute;right:7%;top:24px;width:90px;height:90px;border-radius:50%;background:#ffe36b;border:3px solid var(--ink);box-shadow:0 0 0 14px rgba(255,227,107,.35);z-index:1}
+.cloud{position:absolute;z-index:1;background:#fff;border:3px solid var(--ink);border-radius:60px;height:38px;animation:drift linear infinite}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border:3px solid var(--ink);border-bottom:none;border-radius:50% 50% 0 0}
+.cloud::before{width:44px;height:30px;left:16px;top:-22px}
+.cloud::after{width:30px;height:22px;left:50px;top:-15px}
+@keyframes drift{from{transform:translateX(-200px)}to{transform:translateX(calc(100vw + 200px))}}
+.road{position:absolute;left:0;right:0;bottom:0;height:72px;background:#3a3846;border-top:4px solid var(--ink);z-index:1}
+.road::after{content:"";position:absolute;left:0;right:0;top:32px;height:6px;background:repeating-linear-gradient(90deg,#ffd84d 0 46px,transparent 46px 92px);animation:lane 1s linear infinite}
+@keyframes lane{to{background-position:-92px 0}}
+.grass{position:absolute;left:0;right:0;bottom:72px;height:18px;background:var(--grass);border-top:3px solid var(--ink);z-index:1}
+.hero-bus{position:absolute;bottom:44px;left:0;width:min(210px,42vw);z-index:3;--spin:running;animation:drive 13s linear infinite}
+.hero-bus .bob{animation:bob .32s ease-in-out infinite alternate;display:block}
+.hero-bus svg{width:100%;height:auto;display:block}
+.puff{position:absolute;left:-6px;bottom:18px;width:14px;height:14px;border-radius:50%;background:#e9e9ef;border:2px solid var(--ink);animation:puff 1s ease-out infinite;opacity:0}
+.puff:nth-child(2){animation-delay:.33s}.puff:nth-child(3){animation-delay:.66s}
+@keyframes puff{0%{opacity:.9;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(-46px,-18px) scale(1.8)}}
+@keyframes drive{from{transform:translateX(-300px)}to{transform:translateX(calc(100vw + 40px))}}
+@keyframes bob{to{transform:translateY(-3px)}}
+.wheel{transform-box:fill-box;transform-origin:center;animation:spin .55s linear infinite;animation-play-state:var(--spin,paused)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bubble{position:absolute;bottom:-40px;border-radius:50%;border:2px solid rgba(255,255,255,.95);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.9),rgba(255,255,255,.1) 60%);z-index:1;animation:rise linear infinite}
+@keyframes rise{to{transform:translateY(-120vh) translateX(30px)}}
+.dash-red{stroke-dasharray:100;stroke-dashoffset:100;animation:wick 9s ease-out infinite}
+.dash-yel{stroke-dasharray:100;stroke-dashoffset:100;animation:wick 9s ease-out infinite .6s}
+@keyframes wick{0%{stroke-dashoffset:100}55%,100%{stroke-dashoffset:0}}
+
+/* ---------- facts ticker ---------- */
+.ticker{background:var(--ink);color:#fff;border-bottom:3px solid var(--ink)}
+.ticker .wrap{display:flex;gap:12px;align-items:center;min-height:52px;padding-block:8px}
+.ticker b{font-family:var(--fh);color:var(--bus);white-space:nowrap}
+#fact{transition:opacity .35s ease,transform .35s ease}
+#fact.out{opacity:0;transform:translateY(6px)}
+
+/* ---------- lab ---------- */
+.lab-grid{display:grid;grid-template-columns:1fr 290px;gap:22px;align-items:start}
+.stage{padding:0;overflow:hidden;position:relative}
+.stage canvas{display:block;width:100%;cursor:pointer;touch-action:manipulation}
+.stage .hud{position:absolute;left:12px;top:12px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}
+.pill{font:600 .85rem var(--fh);background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:.25em .75em;box-shadow:2px 2px 0 var(--ink)}
+.pill.live{background:var(--bus)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px;border-top:3px solid var(--ink);background:#fffdf6}
+.ctl{display:flex;flex-direction:column;gap:2px;font:600 .8rem var(--fh);color:var(--muted)}
+.ctl select,.ctl input[type=range]{font:600 .95rem var(--fb);accent-color:var(--pink)}
+.ctl select{border:2.5px solid var(--ink);border-radius:10px;padding:.3em .5em;background:#fff;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;border-top:2px dashed #d9d2bf;background:#fffdf6}
+.chips .lbl{font:600 .8rem var(--fh);color:var(--muted);align-self:center;margin-right:4px}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 .82rem var(--fh);border:2px solid var(--ink);border-radius:999px;padding:.2em .65em .2em .3em;background:#fff;cursor:pointer}
+.chip i{width:16px;height:16px;border-radius:50%;border:2px solid var(--ink);display:inline-block}
+.meter{height:14px;border:2.5px solid var(--ink);border-radius:999px;overflow:hidden;background:#fff}
+.meter span{display:block;height:100%;width:0;background:repeating-linear-gradient(45deg,var(--teal) 0 10px,#12b5b5 10px 20px);transition:width .3s ease}
+.guide{display:flex;flex-direction:column;gap:14px}
+.guide .who{display:flex;gap:12px;align-items:center}
+.guide .who svg{width:56px;height:66px;flex:none}
+.guide .who b{font-family:var(--fh);font-size:1.15rem}
+.say{background:#eefaff;border:3px solid var(--ink);border-radius:16px;padding:12px 14px;font-weight:600;min-height:118px}
+.say.pop{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{0%{transform:scale(.94)}100%{transform:scale(1)}}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{border:2.5px solid var(--ink);border-radius:12px;padding:8px 10px;background:#fff}
+.stat small{display:block;font:600 .72rem var(--fh);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.stat b{font:700 1.15rem var(--fh)}
+.legend{font-size:.85rem;color:var(--muted)}
+
+/* ---------- setup ---------- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.mats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mat{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;border:2.5px solid var(--ink);border-radius:14px;padding:12px 8px;background:#fff;cursor:pointer;transition:background .2s ease,transform .15s ease}
+.mat:hover{transform:translateY(-2px)}
+.mat svg{width:56px;height:56px}
+.mat span{font:600 .9rem var(--fh);line-height:1.15}
+.mat input{position:absolute;top:8px;right:8px;width:20px;height:20px;accent-color:var(--teal)}
+.mat:has(input:checked){background:#e2fbf4}
+.steps{counter-reset:s;list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.steps li{counter-increment:s;position:relative;padding:10px 12px 10px 54px;border:2.5px solid var(--ink);border-radius:14px;background:#fff}
+.steps li::before{content:counter(s);position:absolute;left:10px;top:9px;width:32px;height:32px;border-radius:50%;background:var(--bus);border:2.5px solid var(--ink);display:grid;place-items:center;font:700 1rem var(--fh)}
+.note{background:#fff1f6;border:2.5px dashed var(--pink);border-radius:14px;padding:10px 14px;margin-top:12px;font-size:.92rem}
+
+/* ---------- micro dialog ---------- */
+dialog#micro{width:min(980px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:4px solid var(--ink);border-radius:22px;padding:0;box-shadow:8px 8px 0 var(--ink);background:#0d2a44;color:#fff;overflow:auto}
+dialog#micro::backdrop{background:rgba(20,10,40,.7)}
+.mhead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;background:var(--bus);color:var(--ink);border-bottom:4px solid var(--ink)}
+.mhead h3{margin:0;font-size:1.3rem}
+#microCanvas{display:block;width:100%}
+.mfoot{display:grid;grid-template-columns:1fr auto;gap:14px;padding:14px 16px;background:#123756;border-top:4px solid var(--ink)}
+.narr h4{color:var(--bus);margin-bottom:.25em;font-size:1.1rem}
+.narr p{margin:0;min-height:3.2em}
+.mctl{display:flex;flex-direction:column;gap:8px;min-width:220px}
+.mctl label{font:600 .85rem var(--fh);display:flex;flex-direction:column;gap:2px}
+.mctl input[type=range]{accent-color:var(--bus)}
+.mctl .row{display:flex;gap:8px;flex-wrap:wrap}
+.dots{display:flex;gap:6px;margin-top:8px}
+.dots i{width:10px;height:10px;border-radius:50%;background:#456;border:2px solid #fff}
+.dots i.on{background:var(--bus)}
+#flyBus{position:fixed;width:120px;z-index:100;pointer-events:none;--spin:running}
+.flash{position:fixed;inset:0;z-index:99;background:radial-gradient(circle,#fff,rgba(255,255,255,0) 70%);pointer-events:none;animation:flash .6s ease-out forwards}
+@keyframes flash{from{opacity:1}to{opacity:0}}
+
+/* ---------- mixer ---------- */
+.mixer{display:grid;grid-template-columns:1fr 220px 1fr;gap:20px;align-items:center}
+.pots{display:grid;gap:12px}
+.pot{display:flex;align-items:center;gap:10px;border:2.5px solid var(--ink);border-radius:14px;padding:8px 10px;background:#fff}
+.pot svg{width:38px;height:48px;flex:none}
+.pot b{font-family:var(--fh);flex:1}
+.pot output{font:700 1.1rem var(--fh);width:1.6em;text-align:center}
+.beaker-wrap{position:relative;display:grid;place-items:center}
+.beaker-wrap svg{width:200px;height:auto}
+#mixLiquid{transition:y .5s cubic-bezier(.3,1.4,.5,1),height .5s cubic-bezier(.3,1.4,.5,1),fill .6s ease}
+.drop{position:absolute;top:-10px;width:16px;height:22px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;border:2px solid var(--ink);animation:fall .55s cubic-bezier(.5,0,1,1) forwards;z-index:2}
+@keyframes fall{to{transform:translateY(150px) scale(.8);opacity:.2}}
+.result{text-align:center}
+.result .swatch{width:84px;height:84px;border-radius:50%;border:3px solid var(--ink);margin:0 auto 10px;box-shadow:3px 3px 0 var(--ink);transition:background .5s ease}
+.result h3{font-size:1.6rem}
+.target{display:inline-flex;align-items:center;gap:8px;font:600 1rem var(--fh);background:var(--bus);border:2.5px solid var(--ink);border-radius:999px;padding:.3em .9em;margin-bottom:10px}
+
+/* ---------- journal / timer ---------- */
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;font:600 .9rem var(--fh)}
+.field textarea,.field input,.field select{font:400 1rem var(--fb);border:2.5px solid var(--ink);border-radius:12px;padding:.55em .7em;background:#fffef9;color:var(--ink);width:100%}
+.field textarea{min-height:80px;resize:vertical}
+.obs-row{display:flex;gap:8px;flex-wrap:wrap}
+.obs-row input{flex:1 1 200px}
+.log{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:8px;max-height:280px;overflow:auto}
+.log li{border:2px solid var(--ink);border-radius:12px;padding:8px 10px;background:#fff;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start}
+.log time{font:600 .78rem var(--fh);color:var(--muted);white-space:nowrap}
+.log .src{font:700 .7rem var(--fh);background:var(--sky);border:1.5px solid var(--ink);border-radius:6px;padding:0 6px;white-space:nowrap}
+.log button{border:0;background:none;cursor:pointer;font-size:1.1rem;line-height:1;color:var(--muted)}
+.empty{color:var(--muted);font-style:italic}
+.clock{font:700 clamp(2.4rem,7vw,3.6rem) var(--fh);letter-spacing:.02em;text-align:center;background:var(--ink);color:var(--bus);border-radius:16px;padding:10px;margin-bottom:12px;font-variant-numeric:tabular-nums}
+.miles{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:6px}
+.miles li{display:flex;gap:10px;align-items:center;padding:6px 10px;border:2px solid #ddd5c2;border-radius:12px;background:#fff;transition:background .3s ease,border-color .3s ease}
+.miles li .t{font:700 .8rem var(--fh);min-width:4.2em;color:var(--muted)}
+.miles li.hit{background:#e2fbf4;border-color:var(--teal)}
+.miles li.hit::after{content:"✓";margin-left:auto;font-weight:800;color:var(--teal)}
+
+/* ---------- extras ---------- */
+.xgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.xcard{display:flex;flex-direction:column;gap:8px;transition:transform .2s ease}
+.xcard:hover{transform:rotate(-.6deg) translateY(-3px)}
+.xcard .pic{height:120px;border:2.5px solid var(--ink);border-radius:12px;background:#eaf7ff;display:grid;place-items:center;overflow:hidden}
+.xcard .pic svg{height:108px;width:auto}
+.xcard h3{font-size:1.2rem;margin:4px 0 0}
+.xcard .why{font-size:.9rem;color:var(--muted)}
+details{border-top:2px dashed #d9d2bf;padding-top:8px;margin-top:auto}
+summary{font:600 .95rem var(--fh);cursor:pointer;color:var(--purple)}
+details ol{padding-left:1.2em;margin:.5em 0 0;font-size:.92rem}
+
+/* ---------- quiz ---------- */
+.quiz{max-width:760px;margin:0 auto}
+.qprog{display:flex;gap:6px;margin-bottom:14px}
+.qprog i{flex:1;height:10px;border-radius:999px;border:2px solid var(--ink);background:#fff}
+.qprog i.ok{background:var(--teal)}.qprog i.no{background:var(--pink)}.qprog i.cur{background:var(--bus)}
+.qtext{font:600 1.35rem var(--fh);margin-bottom:14px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ans{font:600 1rem var(--fb);text-align:left;border:2.5px solid var(--ink);border-radius:14px;padding:12px 14px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .1s ease,background .2s ease}
+.ans:hover:not([disabled]){transform:translate(-1px,-1px)}
+.ans.right{background:#c9f5e6}.ans.wrong{background:#ffd6e3}
+.ans[disabled]{cursor:default}
+.qfeed{margin-top:14px;padding:12px 14px;border-radius:14px;border:2.5px solid var(--ink);background:#fffbe6}
+.score{text-align:center}
+.score .big{font:700 4rem var(--fh);color:var(--pink);line-height:1}
+
+footer{background:var(--ink);color:#fff;padding-block:30px;margin-top:30px}
+footer .wrap{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+footer small{color:#bdb6d0;max-width:60ch}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:200;width:100%;height:100%}
+
+@media (max-width:900px){
+  .lab-grid{grid-template-columns:1fr}
+  .hero .wrap{grid-template-columns:1fr}
+  .hero-art{max-width:420px}
+  .two{grid-template-columns:1fr}
+  .mixer{grid-template-columns:1fr;justify-items:center}
+  .pots{width:100%;max-width:360px}
+  .mfoot{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  nav.links{display:none}
+  .top .wrap{justify-content:space-between}
+  .mats{grid-template-columns:repeat(2,1fr)}
+  .answers{grid-template-columns:1fr}
+  .hero{padding-bottom:170px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .hero-bus{animation:none!important;left:50%;transform:translateX(-50%)}
+  .cloud,.bubble,.puff{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SVG sprite sheet ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="bus" viewBox="0 0 200 112">
+      <g stroke="#1f1a2e" stroke-width="4" stroke-linejoin="round">
+        <rect x="148" y="40" width="46" height="46" rx="10" fill="#FFC72C"/>
+        <rect x="6" y="10" width="160" height="76" rx="16" fill="#FFC72C"/>
+        <rect x="6" y="56" width="188" height="6" fill="#1f1a2e" stroke="none"/>
+        <g fill="#bfe9ff">
+          <rect x="18" y="20" width="22" height="24" rx="5"/><rect x="45" y="20" width="22" height="24" rx="5"/>
+          <rect x="72" y="20" width="22" height="24" rx="5"/><rect x="99" y="20" width="22" height="24" rx="5"/>
+          <rect x="128" y="20" width="22" height="56" rx="5"/>
+        </g>
+        <path d="M152 24h4a6 6 0 0 1 6 6v14h-10z" fill="#bfe9ff" stroke-width="3"/>
+        <rect x="190" y="72" width="8" height="14" rx="3" fill="#9a98a6"/>
+        <circle cx="187" cy="52" r="5" fill="#fff4a3" stroke-width="3"/>
+        <rect x="2" y="68" width="9" height="11" rx="3" fill="#e5487f" stroke-width="3"/>
+        <path d="M139 44v12" stroke-width="3"/>
+      </g>
+      <text x="68" y="78" font-family="Fredoka,Arial Rounded MT Bold,sans-serif" font-weight="700" font-size="12" text-anchor="middle" fill="#1f1a2e">FIELD TRIP</text>
+      <g class="wheel"><circle cx="44" cy="88" r="17" fill="#26222f" stroke="#1f1a2e" stroke-width="4"/><circle cx="44" cy="88" r="7" fill="#d8d6e2"/><path d="M44 73v30M29 88h30" stroke="#d8d6e2" stroke-width="3"/></g>
+      <g class="wheel"><circle cx="160" cy="88" r="17" fill="#26222f" stroke="#1f1a2e" stroke-width="4"/><circle cx="160" cy="88" r="7" fill="#d8d6e2"/><path d="M160 73v30M145 88h30" stroke="#d8d6e2" stroke-width="3"/></g>
+    </symbol>
+    <symbol id="drip" viewBox="0 0 60 72">
+      <path d="M30 3C30 3 7 30 7 46a23 23 0 0 0 46 0C53 30 30 3 30 3z" fill="#5ab8ff" stroke="#1f1a2e" stroke-width="3"/>
+      <path d="M15 44c0-9 6-17 9-21" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".75"/>
+      <rect x="13" y="36" width="15" height="12" rx="6" fill="#fff" stroke="#1f1a2e" stroke-width="2.5"/>
+      <rect x="32" y="36" width="15" height="12" rx="6" fill="#fff" stroke="#1f1a2e" stroke-width="2.5"/>
+      <path d="M28 41h4" stroke="#1f1a2e" stroke-width="2.5"/>
+      <circle cx="21" cy="42" r="2.8" fill="#1f1a2e"/><circle cx="39" cy="42" r="2.8" fill="#1f1a2e"/>
+      <path d="M23 55q7 6 14 0" stroke="#1f1a2e" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="14" cy="54" r="3" fill="#ff8fb3"/><circle cx="46" cy="54" r="3" fill="#ff8fb3"/>
+    </symbol>
+    <symbol id="i-cup" viewBox="0 0 64 64">
+      <path d="M14 10h36l-5 46H19z" fill="#eaf6ff" stroke="#1f1a2e" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M17.5 28h29l-3 28H20z" fill="#7cc8ff"/>
+      <path d="M21 16l3 34" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-towel" viewBox="0 0 64 64">
+      <rect x="10" y="10" width="30" height="44" rx="6" fill="#fffaf0" stroke="#1f1a2e" stroke-width="3"/>
+      <ellipse cx="25" cy="32" rx="5" ry="18" fill="#e9e0cc" stroke="#1f1a2e" stroke-width="2"/>
+      <path d="M40 18h12v30H40" fill="#fffaf0" stroke="#1f1a2e" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M44 24v2M48 30v2M44 36v2M48 42v2" stroke="#c9bfa8" stroke-width="2.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-dye" viewBox="0 0 64 64">
+      <path d="M8 26h12v28a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2z" fill="#d61c2e" stroke="#1f1a2e" stroke-width="2.5"/>
+      <path d="M11 26l3-10 3 10" fill="#fff" stroke="#1f1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M26 26h12v28a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2z" fill="#ffcc00" stroke="#1f1a2e" stroke-width="2.5"/>
+      <path d="M29 26l3-10 3 10" fill="#fff" stroke="#1f1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M44 26h12v28a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2z" fill="#1258d6" stroke="#1f1a2e" stroke-width="2.5"/>
+      <path d="M47 26l3-10 3 10" fill="#fff" stroke="#1f1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-pitcher" viewBox="0 0 64 64">
+      <path d="M16 12h28l-4 8 2 34H16z" fill="#eaf6ff" stroke="#1f1a2e" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M17 26h24l1 28H17z" fill="#7cc8ff"/>
+      <path d="M42 24c10 0 10 20 0 20" fill="none" stroke="#1f1a2e" stroke-width="3"/>
+      <path d="M16 12l-6 6" stroke="#1f1a2e" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-scissors" viewBox="0 0 64 64">
+      <circle cx="18" cy="46" r="8" fill="#e5487f" stroke="#1f1a2e" stroke-width="3"/>
+      <circle cx="38" cy="50" r="8" fill="#e5487f" stroke="#1f1a2e" stroke-width="3"/>
+      <path d="M23 40L52 10M32 43L46 12" stroke="#1f1a2e" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="31" cy="33" r="2.5" fill="#fff" stroke="#1f1a2e" stroke-width="2"/>
+    </symbol>
+    <symbol id="i-tray" viewBox="0 0 64 64">
+      <path d="M6 34h52l-6 14H12z" fill="#0e9c9c" stroke="#1f1a2e" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M18 34v-8h8v8M36 34v-12h8v12" fill="#fffaf0" stroke="#1f1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 64 64">
+      <circle cx="32" cy="34" r="22" fill="#fff" stroke="#1f1a2e" stroke-width="3"/>
+      <path d="M32 20v14l9 6" stroke="#e5487f" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <path d="M24 8h16" stroke="#1f1a2e" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ top bar ============ -->
+<header class="top">
+  <div class="wrap">
+    <button class="brand" id="brand" type="button" aria-label="Walking Water Field Trip — honk the horn">
+      <svg viewBox="0 0 200 112" aria-hidden="true"><use href="#bus"/></svg>
+      <span><b>Walking Water</b><small>FIELD TRIP</small></span>
+    </button>
+    <nav class="links" aria-label="Sections">
+      <a href="#lab">Lab</a><a href="#setup">Real Setup</a><a href="#mix">Mixing</a><a href="#journal">Journal</a><a href="#extras">Extras</a><a href="#quiz">Quiz</a>
+    </nav>
+    <button class="iconbtn" id="muteBtn" type="button" aria-pressed="false" aria-label="Mute sounds">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1f1a2e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#FFC72C"/><path id="muteWaves" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path id="muteX" d="M16 9l5 6M21 9l-5 6" hidden/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+<!-- ============ hero ============ -->
+<section class="hero" aria-labelledby="heroTitle">
+  <div class="sun" aria-hidden="true"></div>
+  <div class="cloud" style="top:40px;width:120px;animation-duration:46s" aria-hidden="true"></div>
+  <div class="cloud" style="top:120px;width:90px;animation-duration:62s;animation-delay:-30s" aria-hidden="true"></div>
+  <div class="cloud" style="top:70px;width:140px;animation-duration:80s;animation-delay:-55s" aria-hidden="true"></div>
+  <div id="bubbles" aria-hidden="true"></div>
+  <div class="wrap">
+    <div>
+      <div class="speech">Seatbelts on, scientists — we’re riding into a paper towel!</div>
+      <h1 id="heroTitle">The <span>Walking Water</span> Field Trip</h1>
+      <p class="lede">Two cups of colored water, one empty cup, and a folded paper towel. Wait a while and the colors climb the towel, cross over, and mix in the empty cup. Run it here, shrink down to see why it works, then try it with real cups.</p>
+      <div class="cta">
+        <a class="btn pink" href="#lab">Start the Lab
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <button class="btn yellow" id="heroShrink" type="button">Shrink the Bus!</button>
+        <a class="btn" href="#setup">Do it for real</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg class="scene" viewBox="0 0 360 220" role="img" aria-label="Illustration: red cup and yellow cup bridged by paper towels into a middle cup that fills with orange water">
+        <defs>
+          <clipPath id="hc2"><path d="M150 100L158 190H212L220 100Z"/></clipPath>
+        </defs>
+        <rect x="6" y="186" width="348" height="26" rx="8" fill="#c98b4f" stroke="#1f1a2e" stroke-width="3"/>
+        <path d="M14 196h80M120 202h90M240 196h100" stroke="#a96f3a" stroke-width="3" stroke-linecap="round"/>
+        <!-- cups back -->
+        <g stroke="#1f1a2e" stroke-width="3" stroke-linejoin="round">
+          <path d="M40 100L48 190H102L110 100Z" fill="#f2faff"/>
+          <path d="M150 100L158 190H212L220 100Z" fill="#f2faff"/>
+          <path d="M260 100L268 190H322L330 100Z" fill="#f2faff"/>
+        </g>
+        <path d="M43 122L48.6 188H101.4L107 122Z" fill="#d61c2e" opacity=".88">
+          <animate attributeName="d" values="M43 122L48.6 188H101.4L107 122Z;M43 122L48.6 188H101.4L107 122Z;M44.5 140L48.6 188H101.4L105.5 140Z;M44.5 140L48.6 188H101.4L105.5 140Z" keyTimes="0;.35;.85;1" dur="9s" repeatCount="indefinite"/>
+        </path>
+        <path d="M263 122L268.6 188H321.4L327 122Z" fill="#ffcc00" opacity=".9">
+          <animate attributeName="d" values="M263 122L268.6 188H321.4L327 122Z;M263 122L268.6 188H321.4L327 122Z;M264.5 140L268.6 188H321.4L325.5 140Z;M264.5 140L268.6 188H321.4L325.5 140Z" keyTimes="0;.35;.85;1" dur="9s" repeatCount="indefinite"/>
+        </path>
+        <g clip-path="url(#hc2)">
+          <rect x="140" y="190" width="90" height="100" fill="#f0711f" opacity=".9">
+            <animate attributeName="y" values="190;190;140;140" keyTimes="0;.35;.85;1" dur="9s" repeatCount="indefinite"/>
+          </rect>
+        </g>
+        <!-- towels -->
+        <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M94 184L101 104C106 46 150 46 156 104L163 184" stroke="#1f1a2e" stroke-width="13"/>
+          <path d="M94 184L101 104C106 46 150 46 156 104L163 184" stroke="#fbf8f0" stroke-width="8"/>
+          <path class="dash-red" pathLength="100" d="M94 184L101 104C106 46 150 46 156 104L163 184" stroke="#d61c2e" stroke-width="8"/>
+          <path d="M276 184L269 104C264 46 220 46 214 104L207 184" stroke="#1f1a2e" stroke-width="13"/>
+          <path d="M276 184L269 104C264 46 220 46 214 104L207 184" stroke="#fbf8f0" stroke-width="8"/>
+          <path class="dash-yel" pathLength="100" d="M276 184L269 104C264 46 220 46 214 104L207 184" stroke="#f2b900" stroke-width="8"/>
+        </g>
+        <g fill="none" stroke="#1f1a2e" stroke-width="3" stroke-linejoin="round">
+          <path d="M40 100L48 190H102L110 100Z"/><path d="M150 100L158 190H212L220 100Z"/><path d="M260 100L268 190H322L330 100Z"/>
+        </g>
+        <g stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8">
+          <path d="M48 110l5 70"/><path d="M158 110l5 70"/><path d="M268 110l5 70"/>
+        </g>
+        <g font-family="Fredoka,Arial Rounded MT Bold,sans-serif" font-weight="700" font-size="13" text-anchor="middle" fill="#fff" stroke="#1f1a2e" stroke-width="3" paint-order="stroke">
+          <text x="75" y="206">RED</text><text x="185" y="206">EMPTY?</text><text x="295" y="206">YELLOW</text>
+        </g>
+      </svg>
+      <svg class="mascot" viewBox="0 0 60 72" role="img" aria-label="Drip, the water-droplet guide"><use href="#drip"/></svg>
+    </div>
+  </div>
+  <div class="grass" aria-hidden="true"></div>
+  <div class="road" aria-hidden="true"></div>
+  <div class="hero-bus" aria-hidden="true">
+    <span class="puff"></span><span class="puff"></span><span class="puff"></span>
+    <span class="bob"><svg viewBox="0 0 200 112"><use href="#bus"/></svg></span>
+  </div>
+</section>
+
+<div class="ticker" role="region" aria-label="Fun facts">
+  <div class="wrap"><b>Did you know?</b><span id="fact" aria-live="polite"></span></div>
+</div>
+
+<!-- ============ LAB ============ -->
+<section id="lab" aria-labelledby="labTitle">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="tag">Stop 1 · The Lab</span><h2 id="labTitle">Walking Water Simulator</h2></div>
+      <p>Press <b>Start</b> to fast-forward through the experiment. Tap any cup to change what's in it, try a different towel material, or shrink down into a fiber.</p>
+    </div>
+    <div class="lab-grid">
+      <div class="card stage">
+        <canvas id="labCanvas" aria-label="Simulation of cups connected by paper towel strips" role="img"></canvas>
+        <div class="hud">
+          <span class="pill live" id="clockPill">0h 00m</span>
+          <span class="pill" id="matPill">Paper towel</span>
+        </div>
+        <div class="chips" id="chips" aria-label="Cup contents — tap to change"></div>
+        <div class="controls">
+          <button class="btn pink" id="playBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path id="playIcon" d="M7 4l13 8-13 8z"/></svg><span>Start</span></button>
+          <button class="btn sm" id="hourBtn" type="button">+1 hour</button>
+          <button class="btn sm" id="resetBtn" type="button">Reset</button>
+          <label class="ctl">Speed <input type="range" id="speed" min="0.1" max="3" step="0.1" value="0.5"><span id="speedOut">0.5 hours / sec</span></label>
+          <label class="ctl">Towel material
+            <select id="material">
+              <option value="towel">Paper towel</option><option value="napkin">Paper napkin</option>
+              <option value="tp">Toilet paper</option><option value="filter">Coffee filter</option><option value="plastic">Plastic wrap</option>
+            </select></label>
+          <label class="ctl">Cups
+            <select id="cupCount"><option value="3">3 cups</option><option value="5">5 cups</option><option value="7">7 cups</option></select></label>
+          <button class="btn yellow" id="shrinkBtn" type="button">
+            <svg viewBox="0 0 200 112" aria-hidden="true" style="width:1.8em"><use href="#bus"/></svg>Shrink the Bus!</button>
+        </div>
+      </div>
+      <aside class="card guide" aria-label="Field trip guide">
+        <div class="who">
+          <svg viewBox="0 0 60 72" aria-hidden="true"><use href="#drip"/></svg>
+          <div><b>Drip</b><br><small class="legend">your water-droplet guide</small></div>
+        </div>
+        <div class="say" id="say" aria-live="polite">Hi! I'm Drip. Our red, yellow and blue cups each have a paper towel bridge. Press <b>Start</b> and watch the color climb!</div>
+        <div>
+          <small class="legend">Walk-o-meter</small>
+          <div class="meter" aria-hidden="true"><span id="meter"></span></div>
+        </div>
+        <div class="stats">
+          <div class="stat"><small>Bridges wet</small><b id="stBridges">0 / 6</b></div>
+          <div class="stat"><small>New colors</small><b id="stColors">0</b></div>
+          <div class="stat"><small>Water moved</small><b id="stMoved">0%</b></div>
+          <div class="stat"><small>Status</small><b id="stStatus">Ready</b></div>
+        </div>
+        <p class="legend" id="matTip"></p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SETUP ============ -->
+<section id="setup" aria-labelledby="setupTitle" style="background:#fff3cf;border-block:3px solid var(--ink)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="tag">Stop 2 · Real World</span><h2 id="setupTitle">Do It With Real Cups</h2></div>
+      <p>Get your supplies together and check them off. Your checklist is saved in this browser.</p>
+    </div>
+    <div class="two">
+      <div class="card">
+        <h3>Supplies</h3>
+        <div class="mats" id="mats">
+          <label class="mat"><input type="checkbox" data-k="cups"><svg aria-hidden="true"><use href="#i-cup"/></svg><span>7 clear cups</span></label>
+          <label class="mat"><input type="checkbox" data-k="towel"><svg aria-hidden="true"><use href="#i-towel"/></svg><span>Paper towels (6 sheets)</span></label>
+          <label class="mat"><input type="checkbox" data-k="dye"><svg aria-hidden="true"><use href="#i-dye"/></svg><span>Red, yellow &amp; blue food coloring</span></label>
+          <label class="mat"><input type="checkbox" data-k="water"><svg aria-hidden="true"><use href="#i-pitcher"/></svg><span>Water</span></label>
+          <label class="mat"><input type="checkbox" data-k="scissors"><svg aria-hidden="true"><use href="#i-scissors"/></svg><span>Scissors (adult helper)</span></label>
+          <label class="mat"><input type="checkbox" data-k="tray"><svg aria-hidden="true"><use href="#i-tray"/></svg><span>Tray or old towel</span></label>
+        </div>
+        <div class="note"><b>Heads up:</b> Food coloring stains clothes and counters. Set up on a tray and wear an old shirt. Don't drink the water when you're done.</div>
+      </div>
+      <div class="card">
+        <h3>Steps</h3>
+        <ol class="steps">
+          <li>Line up 7 clear cups in a row (a circle works too and makes a color wheel).</li>
+          <li>Fill cups <b>1, 3, 5 and 7</b> about ¾ full of water. Leave cups <b>2, 4 and 6</b> empty.</li>
+          <li>Add about 10 drops of coloring: <b style="color:var(--red)">red</b> in 1 and 7, <b style="color:#b38a00">yellow</b> in 3, <b style="color:var(--blu)">blue</b> in 5. Stir.</li>
+          <li>Fold each paper towel lengthwise in half, then in half again, to make a long skinny strip. Trim to about 2 cups tall.</li>
+          <li>Bend each strip into an arch, with one end in a full cup and the other in the empty cup next to it.</li>
+          <li>Start the <a href="#journal">Field Trip Timer</a> and check every 30 minutes. Let it sit overnight to see the finish.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MIXING ============ -->
+<section id="mix" aria-labelledby="mixTitle">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="tag">Stop 3 · Color Lab</span><h2 id="mixTitle">Mixing Station</h2></div>
+      <p>The empty cups get colors that weren't in any cup at the start. Add drops of the three primary colors and try to match the target color.</p>
+    </div>
+    <div class="card mixer">
+      <div class="pots" id="pots"></div>
+      <div class="beaker-wrap" id="beakerWrap">
+        <svg viewBox="0 0 160 200" role="img" aria-label="Mixing beaker">
+          <defs><clipPath id="beakerClip"><path d="M34 30v130a14 14 0 0 0 14 14h64a14 14 0 0 0 14-14V30z"/></clipPath></defs>
+          <path d="M34 30v130a14 14 0 0 0 14 14h64a14 14 0 0 0 14-14V30z" fill="#f2faff"/>
+          <g clip-path="url(#beakerClip)"><rect id="mixLiquid" x="20" y="174" width="120" height="10" fill="#cfe9fb"/></g>
+          <path d="M26 24h108M34 30v130a14 14 0 0 0 14 14h64a14 14 0 0 0 14-14V30" fill="none" stroke="#1f1a2e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M112 60h14M116 85h10M112 110h14M116 135h10" stroke="#1f1a2e" stroke-width="3" stroke-linecap="round"/>
+          <path d="M44 44v110" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+        </svg>
+      </div>
+      <div class="result">
+        <div class="target">Target: <span id="target">Orange</span></div>
+        <div class="swatch" id="swatch" style="background:#eaf6ff"></div>
+        <h3 id="mixName">Add some drops!</h3>
+        <p class="legend" id="mixHint">Primary colors mix to make secondary colors.</p>
+        <div class="cta" style="justify-content:center">
+          <button class="btn sm" id="mixReset" type="button">Empty beaker</button>
+          <button class="btn sm teal" id="mixNew" type="button">New target</button>
+        </div>
+        <p class="legend">Matched: <b id="mixScore">0</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ JOURNAL + TIMER ============ -->
+<section id="journal" aria-labelledby="jTitle" style="background:#e6f6ff;border-block:3px solid var(--ink)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="tag">Stop 4 · Notebook</span><h2 id="jTitle">Science Journal &amp; Field Trip Timer</h2></div>
+      <p>Write down your guess first, then what you see. Real scientists keep notes, even when they turn out to be wrong.</p>
+    </div>
+    <div class="two">
+      <div class="card">
+        <h3>My Journal</h3>
+        <label class="field">My hypothesis (what I think will happen)
+          <textarea id="hypo" maxlength="1000" placeholder="I think the empty cup between red and yellow will turn..."></textarea></label>
+        <label class="field" for="obsText">New observation</label>
+        <div class="obs-row">
+          <input id="obsText" maxlength="300" placeholder="The red is halfway up the towel!" class="field" style="margin:0;border:2.5px solid var(--ink);border-radius:12px;padding:.55em .7em;font:400 1rem var(--fb)">
+          <select id="obsSrc" aria-label="Observation source" style="border:2.5px solid var(--ink);border-radius:12px;padding:.4em;font:600 .9rem var(--fh)"><option>Real cups</option><option>Simulator</option></select>
+          <button class="btn sm pink" id="obsAdd" type="button">Add</button>
+        </div>
+        <ul class="log" id="log"></ul>
+        <div class="cta">
+          <button class="btn sm" id="jDownload" type="button">Download journal (.txt)</button>
+          <button class="btn sm" id="jClear" type="button">Clear observations</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Field Trip Timer</h3>
+        <div class="clock" id="tClock" aria-live="off">00:00:00</div>
+        <div class="cta" style="justify-content:center;margin-top:0">
+          <button class="btn pink" id="tStart" type="button">Start timer</button>
+          <button class="btn sm" id="tReset" type="button">Reset</button>
+        </div>
+        <p class="legend" style="text-align:center;margin-top:8px">Keeps counting if you close the page.</p>
+        <ul class="miles" id="miles"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXTRAS ============ -->
+<section id="extras" aria-labelledby="xTitle">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="tag">Stop 5 · Side Trips</span><h2 id="xTitle">More Experiments Like This One</h2></div>
+      <p>Each one uses the same ideas as walking water: capillary action, dissolving, or color mixing.</p>
+    </div>
+    <div class="xgrid">
+      <article class="card xcard">
+        <div class="pic"><svg viewBox="0 0 160 110" aria-hidden="true">
+          <path d="M50 105l6-60h48l6 60z" fill="#eaf6ff" stroke="#1f1a2e" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M53 105l3-34h48l3 34z" fill="#1258d6" opacity=".55"/>
+          <path d="M72 100V22M80 100V18M88 100V24" stroke="#7cc65a" stroke-width="9" stroke-linecap="round"/>
+          <path d="M72 100V22M80 100V18M88 100V24" stroke="#1f1a2e" stroke-width="2" stroke-dasharray="4 8" opacity=".25"/>
+          <g fill="#3b7fe8" stroke="#1f1a2e" stroke-width="2"><ellipse cx="66" cy="18" rx="10" ry="6" transform="rotate(-30 66 18)"/><ellipse cx="80" cy="10" rx="9" ry="6"/><ellipse cx="94" cy="18" rx="10" ry="6" transform="rotate(30 94 18)"/></g>
+        </svg></div>
+        <h3>Rainbow Celery</h3>
+        <p class="why">Plants drink through tiny tubes called <b>xylem</b>. Colored water shows you the path.</p>
+        <details><summary>How to do it</summary><ol><li>Put 20 drops of coloring in a cup of water.</li><li>Have an adult trim the bottom of a celery stalk (keep the leaves on).</li><li>Stand it in the cup and wait 1–2 days.</li><li>Slice the stalk across and look for colored dots. Those are the xylem tubes.</li></ol></details>
+      </article>
+      <article class="card xcard">
+        <div class="pic"><svg viewBox="0 0 160 110" aria-hidden="true">
+          <circle cx="80" cy="55" r="48" fill="#fffaf0" stroke="#1f1a2e" stroke-width="3"/>
+          <circle cx="80" cy="55" r="40" fill="none" stroke="#7d3fd1" stroke-width="6" opacity=".55"/>
+          <circle cx="80" cy="55" r="30" fill="none" stroke="#1258d6" stroke-width="6" opacity=".5"/>
+          <circle cx="80" cy="55" r="20" fill="none" stroke="#e5487f" stroke-width="6" opacity=".55"/>
+          <circle cx="80" cy="55" r="9" fill="#2a2140"/>
+        </svg></div>
+        <h3>Marker Chromatography</h3>
+        <p class="why">Black marker ink is made of several dyes. Water carries each one a different distance.</p>
+        <details><summary>How to do it</summary><ol><li>Draw a thick dot of washable black marker in the middle of a coffee filter.</li><li>Poke a small hole in the dot and push a rolled paper-towel "wick" through.</li><li>Set the filter on a cup of water so only the wick touches the water.</li><li>Watch rings of purple, blue and pink spread out.</li></ol></details>
+      </article>
+      <article class="card xcard">
+        <div class="pic"><svg viewBox="0 0 160 110" aria-hidden="true">
+          <circle cx="80" cy="55" r="50" fill="#fff" stroke="#1f1a2e" stroke-width="3"/>
+          <g opacity=".75"><path d="M80 55L80 9A46 46 0 0 1 120 32z" fill="#d61c2e"/><path d="M80 55L120 32A46 46 0 0 1 120 78z" fill="#f0711f"/><path d="M80 55L120 78A46 46 0 0 1 80 101z" fill="#ffcc00"/><path d="M80 55L80 101A46 46 0 0 1 40 78z" fill="#4caf50"/><path d="M80 55L40 78A46 46 0 0 1 40 32z" fill="#1258d6"/><path d="M80 55L40 32A46 46 0 0 1 80 9z" fill="#7d3fd1"/></g>
+          <circle cx="80" cy="55" r="18" fill="#eaf6ff"/>
+        </svg></div>
+        <h3>Candy Rainbow Plate</h3>
+        <p class="why">The colored candy coating <b>dissolves</b> and spreads through warm water in stripes.</p>
+        <details><summary>How to do it</summary><ol><li>Put a ring of colorful coated candies around the edge of a white plate.</li><li>Gently pour warm water into the middle until it touches every candy.</li><li>Don't bump the plate! Watch the stripes spread toward the center.</li><li>Try cold water next time. Which is faster?</li></ol></details>
+      </article>
+      <article class="card xcard">
+        <div class="pic"><svg viewBox="0 0 160 110" aria-hidden="true">
+          <ellipse cx="80" cy="78" rx="52" ry="14" fill="#c98b4f" stroke="#1f1a2e" stroke-width="3"/>
+          <path d="M28 76a52 14 0 0 0 104 0" fill="none" stroke="#a96f3a" stroke-width="3"/>
+          <path d="M34 74C34 30 126 30 126 74" fill="#7cc8ff" stroke="#1f1a2e" stroke-width="3" opacity=".9"/>
+          <path d="M52 52c8-10 22-12 30-12" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none"/>
+        </svg></div>
+        <h3>Penny Drop Challenge</h3>
+        <p class="why">Water molecules hold onto each other (<b>cohesion</b>) so tightly they make a dome.</p>
+        <details><summary>How to do it</summary><ol><li>Lay a dry penny flat.</li><li>Guess how many drops of water fit on it.</li><li>Add drops one at a time with an eyedropper or straw, counting each one.</li><li>Watch the dome grow until it spills. Was your guess close? (20–40 is common!)</li></ol></details>
+      </article>
+      <article class="card xcard">
+        <div class="pic"><svg viewBox="0 0 160 110" aria-hidden="true">
+          <g stroke="#1f1a2e" stroke-width="3"><rect x="20" y="16" width="24" height="84" rx="4" fill="#fffaf0"/><rect x="68" y="16" width="24" height="84" rx="4" fill="#fffaf0"/><rect x="116" y="16" width="24" height="84" rx="4" fill="#fffaf0"/></g>
+          <rect x="22" y="30" width="20" height="68" fill="#1258d6" opacity=".55"/><rect x="70" y="58" width="20" height="40" fill="#1258d6" opacity=".55"/><rect x="118" y="80" width="20" height="18" fill="#1258d6" opacity=".55"/>
+          <path d="M10 100h140" stroke="#1f1a2e" stroke-width="4" stroke-linecap="round"/>
+        </svg></div>
+        <h3>Towel Race</h3>
+        <p class="why">Which paper wicks fastest? The size of the gaps between fibers changes the speed.</p>
+        <details><summary>How to do it</summary><ol><li>Cut equal strips of paper towel, napkin, toilet paper and coffee filter.</li><li>Dip all the ends into colored water at the same moment.</li><li>Every 5 minutes, mark how high each one has climbed.</li><li>Compare with the simulator: <button class="btn sm" type="button" data-race="filter">Load coffee filter</button></li></ol></details>
+      </article>
+      <article class="card xcard">
+        <div class="pic"><svg viewBox="0 0 160 110" aria-hidden="true">
+          <g stroke="#1f1a2e" stroke-width="2.5">
+            <circle cx="80" cy="16" r="10" fill="#d61c2e" opacity=".85"/><circle cx="110" cy="30" r="10" fill="#fff" />
+            <circle cx="120" cy="58" r="10" fill="#ffcc00" opacity=".9"/><circle cx="104" cy="88" r="10" fill="#fff"/>
+            <circle cx="56" cy="88" r="10" fill="#1258d6" opacity=".85"/><circle cx="40" cy="58" r="10" fill="#fff"/><circle cx="50" cy="30" r="10" fill="#fff"/>
+          </g>
+          <g fill="none" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M90 18q14 0 18 6" stroke="#d61c2e"/><path d="M118 40q8 6 4 10" stroke="#ffcc00"/><path d="M116 68q-2 10-6 12" stroke="#ffcc00"/><path d="M66 90h28" stroke="#1258d6"/><path d="M48 80q-8-8-8-12" stroke="#1258d6"/></g>
+        </svg></div>
+        <h3>Walking Water Color Wheel</h3>
+        <p class="why">Put the cups in a circle (red, empty, yellow, empty, blue, empty) and you get a full color wheel.</p>
+        <details><summary>How to do it</summary><ol><li>Arrange 6 cups in a ring.</li><li>Fill every other cup and color them red, yellow and blue.</li><li>Bridge every neighbor pair, including the last cup back to the first.</li><li>You'll get orange, green and purple between the primaries.</li></ol></details>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section id="quiz" aria-labelledby="qTitle" style="background:#f1ebff;border-top:3px solid var(--ink)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="tag">Final Stop · Quiz</span><h2 id="qTitle">Field Trip Quiz</h2></div>
+      <p>Eight questions about what you saw. Get 6 or more right for the confetti.</p>
+    </div>
+    <div class="card quiz" id="quizBox"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div style="display:flex;gap:12px;align-items:center">
+      <svg viewBox="0 0 200 112" width="70" aria-hidden="true"><use href="#bus"/></svg>
+      <b style="font-family:var(--fh);font-size:1.1rem">Get curious. Get messy. Get science-y!</b>
+    </div>
+    <small>A fan-made educational page inspired by classic kids' science field-trip TV shows. Not affiliated with or endorsed by Scholastic or any show's creators. Always do experiments with a grown-up nearby.</small>
+  </div>
+</footer>
+
+<!-- shrink dialog -->
+<dialog id="micro" aria-labelledby="microTitle">
+  <div class="mhead">
+    <h3 id="microTitle">Inside the Paper Towel</h3>
+    <button class="btn sm" id="microClose" type="button">Back to the lab</button>
+  </div>
+  <canvas id="microCanvas" role="img" aria-label="Zoomed-in view: water molecules climbing between cellulose fibers"></canvas>
+  <div class="mfoot">
+    <div class="narr">
+      <h4 id="narrTitle"></h4>
+      <p id="narrText" aria-live="polite"></p>
+      <div class="dots" id="narrDots" aria-hidden="true"></div>
+      <div class="cta" style="margin-top:10px">
+        <button class="btn sm" id="narrPrev" type="button">Back</button>
+        <button class="btn sm yellow" id="narrNext" type="button">Next</button>
+      </div>
+    </div>
+    <div class="mctl">
+      <label>Gap between fibers <input type="range" id="gap" min="14" max="64" step="2" value="26"><span id="gapOut"></span></label>
+      <label>Dye riding along
+        <select id="dye" style="border-radius:8px;padding:.25em;font:600 .9rem var(--fh)"><option value="red">Red</option><option value="yellow">Yellow</option><option value="blue">Blue</option></select></label>
+      <div class="row">
+        <button class="btn sm" id="replay" type="button">Replay climb</button>
+        <button class="btn sm" id="labelsBtn" type="button" aria-pressed="true">Labels on</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<div id="flyBus" hidden aria-hidden="true"><svg viewBox="0 0 200 112"><use href="#bus"/></svg></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const RM = matchMedia('(prefers-reduced-motion: reduce)');
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+
+/* ---------------- storage ---------------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('wwft:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('wwft:' + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------------- audio ---------------- */
+let actx = null, muted = !!store.get('muted', false);
+function ac() {
+  if (muted) return null;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+    return actx;
+  } catch (e) { return null; }
+}
+function tone(f, dur, type = 'sine', vol = .12, slide) {
+  const a = ac(); if (!a) return;
+  const o = a.createOscillator(), g = a.createGain(), t = a.currentTime;
+  o.type = type; o.frequency.setValueAtTime(f, t);
+  if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0008, t + dur);
+  o.connect(g).connect(a.destination); o.start(t); o.stop(t + dur + .03);
+}
+const sfx = {
+  honk() { tone(392, .17, 'square', .07); setTimeout(() => tone(330, .3, 'square', .07), 170); },
+  bloop() { tone(640, .16, 'sine', .12, 220); },
+  ding() { tone(880, .12, 'triangle', .1); setTimeout(() => tone(1320, .22, 'triangle', .08), 110); },
+  buzz() { tone(150, .25, 'sawtooth', .05); },
+  whoosh() { tone(1400, .7, 'sine', .06, 80); },
+  tada() { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => tone(f, .25, 'triangle', .09), i * 110)); }
+};
+function paintMute() {
+  $('#muteBtn').setAttribute('aria-pressed', String(muted));
+  $('#muteBtn').setAttribute('aria-label', muted ? 'Unmute sounds' : 'Mute sounds');
+  $('#muteWaves').toggleAttribute('hidden', muted);
+  $('#muteX').toggleAttribute('hidden', !muted);
+}
+$('#muteBtn').addEventListener('click', () => { muted = !muted; store.set('muted', muted); paintMute(); if (!muted) sfx.bloop(); });
+paintMute();
+$('#brand').addEventListener('click', () => { sfx.honk(); window.scrollTo({ top: 0, behavior: RM.matches ? 'auto' : 'smooth' }); });
+
+/* ---------------- canvas helper ---------------- */
+function fitCanvas(cv, h) {
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const w = Math.max(200, cv.clientWidth);
+  cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); cv.style.height = h + 'px';
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { w, h, ctx };
+}
+function rrect(ctx, x, y, w, h, r) {
+  ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+
+/* ---------------- color science ---------------- */
+const PIG = { red: [214, 28, 46], yellow: [255, 204, 0], blue: [18, 88, 214] };
+const ABS = {}; for (const k in PIG) ABS[k] = PIG[k].map(c => -Math.log(Math.max(c, 6) / 255));
+const CLEAR = [214, 236, 252];
+// Subtractive (Beer–Lambert style) mixing: absorbances add, weighted by concentration.
+function mixRGB(p, vol) {
+  const A = [0, 0, 0];
+  for (const k in PIG) { const c = (p[k] || 0) / vol; for (let i = 0; i < 3; i++) A[i] += c * ABS[k][i] * .92; }
+  return A.map((a, i) => Math.round(255 * Math.exp(-a) * CLEAR[i] / 255));
+}
+function colorName(p, vol) {
+  if (vol < .02) return 'Empty';
+  const t = (p.red || 0) + (p.yellow || 0) + (p.blue || 0), conc = t / vol;
+  if (conc < .05) return 'Clear water';
+  const r = p.red / t, y = p.yellow / t, b = p.blue / t, th = .15;
+  const R = r > th, Y = y > th, B = b > th;
+  let n;
+  if (R && Y && B) n = 'Brown';
+  else if (R && Y) n = r > .7 ? 'Red-orange' : y > .7 ? 'Yellow-orange' : 'Orange';
+  else if (Y && B) n = y > .7 ? 'Yellow-green' : b > .7 ? 'Blue-green' : 'Green';
+  else if (R && B) n = r > .7 ? 'Red-violet' : b > .7 ? 'Blue-violet' : 'Purple';
+  else n = R ? 'Red' : Y ? 'Yellow' : 'Blue';
+  return conc < .3 ? 'Light ' + n.toLowerCase() : n;
+}
+const css = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+
+/* ---------------- fun facts ---------------- */
+const FACTS = [
+  'A paper towel is mostly empty space. Air gaps between fibers are what make it soak things up.',
+  'Water climbs higher in narrower gaps. Scientists call this Jurin’s law.',
+  'Capillary action helps move water up through the thin tubes inside plants.',
+  'Walking water usually starts dripping into the empty cups after an hour or two, and is fully done by the next morning.',
+  'Paper is made of cellulose, the same tough material in tree trunks and celery strings.',
+  'Water striders can walk on ponds because water molecules cling to each other (cohesion).',
+  'Red, yellow and blue are the primary colors for mixing paints and dyes.',
+  'The tear ducts in the corners of your eyes use capillary action to drain tears.',
+  'Water stops walking when both cups reach the same level, because gravity balances it out.'
+];
+let factI = Math.floor(Math.random() * FACTS.length);
+const factEl = $('#fact');
+factEl.textContent = FACTS[factI];
+const factTimer = setInterval(() => {
+  if (document.hidden) return;
+  factEl.classList.add('out');
+  setTimeout(() => { factI = (factI + 1) % FACTS.length; factEl.textContent = FACTS[factI]; factEl.classList.remove('out'); }, 350);
+}, 8000);
+
+/* ---------------- hero bubbles ---------------- */
+(() => {
+  const host = $('#bubbles');
+  for (let i = 0; i < 12; i++) {
+    const b = document.createElement('span'); b.className = 'bubble';
+    const s = 10 + Math.random() * 26;
+    b.style.cssText = `left:${Math.random() * 100}%;width:${s}px;height:${s}px;animation-duration:${9 + Math.random() * 10}s;animation-delay:${-Math.random() * 18}s`;
+    host.appendChild(b);
+  }
+})();
+
+/* =========================================================
+   WALKING WATER SIMULATOR
+   ========================================================= */
+const MATERIALS = {
+  towel:   { name: 'Paper towel',   D: .045, absorb: .10, K: .24, tip: 'Paper towels are full of cellulose fibers with lots of tiny gaps for water to climb through.' },
+  napkin:  { name: 'Paper napkin',  D: .028, absorb: .06, K: .13, tip: 'Napkins are thinner than towels, so less water fits through and the walk is slower.' },
+  tp:      { name: 'Toilet paper',  D: .06,  absorb: .08, K: .2, tip: 'Toilet paper soaks up water fast, but it gets floppy and can fall apart when wet.' },
+  filter:  { name: 'Coffee filter', D: .016, absorb: .04, K: .08, tip: 'Coffee filters are pressed tight on purpose to slow water down. This one takes a while.' },
+  plastic: { name: 'Plastic wrap',  D: 0,    absorb: 0,   K: 0,   tip: 'Plastic wrap has no fibers or gaps, and water slides right off it. Nothing climbs.' }
+};
+const CYCLE = ['red', 'yellow', 'blue', 'clear', 'empty'];
+const KIND_LABEL = { red: 'Red', yellow: 'Yellow', blue: 'Blue', clear: 'Plain water', empty: 'Empty' };
+const LAYOUTS = {
+  3: ['red', 'empty', 'blue'],
+  5: ['red', 'empty', 'yellow', 'empty', 'blue'],
+  7: ['red', 'empty', 'yellow', 'empty', 'blue', 'empty', 'red']
+};
+const labCanvas = $('#labCanvas');
+let lab = null, geom = null;
+const sim = {
+  cups: [], towels: [], t: 0, running: false, done: false, flags: {}, act: 1, moved: 0, startVol: 1,
+  speed: clamp(+store.get('speed', .5) || .5, .1, 3),
+  material: MATERIALS[store.get('material', 'towel')] ? store.get('material', 'towel') : 'towel',
+  n: [3, 5, 7].includes(store.get('cups', 0)) ? store.get('cups', 0) : (innerWidth < 560 ? 5 : 7),
+  layout: store.get('layout', null)
+};
+
+function makeCup(kind) {
+  const c = { kind, vol: 0, p: { red: 0, yellow: 0, blue: 0 }, wasEmpty: kind === 'empty' };
+  if (kind !== 'empty') { c.vol = .8; if (kind !== 'clear') c.p[kind] = .8; }
+  return c;
+}
+function cupRGB(c) { return c.vol < .004 ? null : mixRGB(c.p, c.vol); }
+
+function computeGeom() {
+  if (!lab) return;
+  const W = lab.w, H = lab.h, n = sim.cups.length || sim.n;
+  const slot = W / n;
+  const cupW = Math.min(118, slot * .6);
+  const cupH = Math.min(H * .46, cupW * 1.3);
+  const bottomY = H - 54, topY = bottomY - cupH;
+  const bw = cupW * .76, tw = Math.max(5, cupW * .16);
+  const archH = Math.min(topY - 28, cupH * .55);
+  const cx = Array.from({ length: n }, (_, i) => slot * (i + .5));
+  const towels = [];
+  for (let i = 0; i < n - 1; i++) {
+    const A = cx[i], B = cx[i + 1], inset = cupW * .17;
+    const p0 = [A + bw / 2 - inset, bottomY - 6], p1 = [A + cupW / 2 - inset * .55, topY + 3];
+    const q1 = [B - cupW / 2 + inset * .55, topY + 3], q0 = [B - bw / 2 + inset, bottomY - 6];
+    const apexY = topY - archH * 1.33;
+    const pts = [];
+    for (let k = 0; k <= 14; k++) { const u = k / 14; pts.push([lerp(p0[0], p1[0], u), lerp(p0[1], p1[1], u)]); }
+    for (let k = 1; k <= 32; k++) {
+      const u = k / 32, m = 1 - u;
+      pts.push([m * m * m * p1[0] + 3 * m * m * u * p1[0] + 3 * m * u * u * q1[0] + u * u * u * q1[0],
+                m * m * m * p1[1] + 3 * m * m * u * apexY + 3 * m * u * u * apexY + u * u * u * q1[1]]);
+    }
+    for (let k = 1; k <= 14; k++) { const u = k / 14; pts.push([lerp(q1[0], q0[0], u), lerp(q1[1], q0[1], u)]); }
+    const s = [0]; let L = 0;
+    for (let k = 1; k < pts.length; k++) { L += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]); s.push(L); }
+    for (let k = 0; k < s.length; k++) s[k] /= L;
+    towels.push({ pts, s, rimS: s[14] });
+  }
+  geom = { W, H, n, slot, cupW, cupH, bottomY, topY, bw, tw, cx, towels, rimS: towels[0] ? towels[0].rimS : .3 };
+}
+function pointAt(T, s) {
+  const S = T.s; let k = 1;
+  while (k < S.length - 1 && S[k] < s) k++;
+  const u = clamp((s - S[k - 1]) / ((S[k] - S[k - 1]) || 1), 0, 1);
+  return [lerp(T.pts[k - 1][0], T.pts[k][0], u), lerp(T.pts[k - 1][1], T.pts[k][1], u)];
+}
+
+function resetSim(announce = true) {
+  if (!Array.isArray(sim.layout) || sim.layout.length !== sim.n || !sim.layout.every(k => CYCLE.includes(k))) sim.layout = LAYOUTS[sim.n].slice();
+  sim.cups = sim.layout.map(makeCup);
+  sim.towels = Array.from({ length: sim.n - 1 }, () => ({ wL: 0, wR: 0, conn: false, q: 0 }));
+  sim.t = 0; sim.done = false; sim.flags = {}; sim.act = 1; sim.moved = 0;
+  sim.startVol = sim.cups.reduce((a, c) => a + c.vol, 0) || 1;
+  sim.running = false;
+  computeGeom(); renderChips(); paintPlay(); updateStats();
+  if (announce) say('Cups are ready! Each full cup has a paper towel bridge to its neighbor. Press <b>Start</b> to begin.');
+}
+
+function drain(c, v) { if (c.vol <= 0) return; const f = clamp(v / c.vol, 0, 1); for (const k in c.p) c.p[k] *= 1 - f; c.vol = Math.max(0, c.vol - v); }
+function transfer(A, B, q) {
+  if (A.vol <= 0) return; const f = clamp(q / A.vol, 0, 1);
+  for (const k in A.p) { const d = A.p[k] * f; A.p[k] -= d; B.p[k] += d; }
+  A.vol -= q; B.vol += q;
+}
+function wick(w, cup, m, dt) {
+  if (m.D <= 0 || cup.vol < .015 || w >= 1) return w;
+  const sub = geom.rimS * Math.min(1, cup.vol);
+  if (w < sub) w = sub;
+  let rate;
+  if (w < .5) { const x = w - sub; rate = m.D / (x + .03) * Math.max(.08, 1 - x / .6); } // Washburn-style: fast at first, slows as it climbs
+  else rate = m.D * 28;                                                                 // downhill: gravity helps
+  const dw = Math.min(rate * dt, 1 - w), need = dw * m.absorb;
+  if (need > cup.vol - .01) return w;
+  drain(cup, need);
+  return w + dw;
+}
+function step(dt) {
+  const m = MATERIALS[sim.material]; let act = 0, wAct = 0;
+  sim.towels.forEach((tw, i) => {
+    const A = sim.cups[i], B = sim.cups[i + 1];
+    if (!tw.conn) {
+      const a = wick(tw.wL, A, m, dt), b = wick(tw.wR, B, m, dt);
+      act += (a - tw.wL) + (b - tw.wR); wAct += (a - tw.wL) + (b - tw.wR); tw.wL = a; tw.wR = b;
+      if (tw.wL + tw.wR >= 1) { tw.conn = true; onConnect(i); }
+    }
+    if (tw.conn && m.K > 0) {
+      const d = A.vol - B.vol, lim = Math.abs(d) / 4;
+      const q = clamp(m.K * d * dt, -lim, lim);
+      if (q > 0) transfer(A, B, q); else if (q < 0) transfer(B, A, -q);
+      tw.q = q / dt; act += Math.abs(q); sim.moved += Math.abs(q);
+    } else tw.q = 0;
+  });
+  sim.t += dt;
+  sim.act = act / dt; sim.wAct = wAct / dt;
+}
+function advance(hours) {
+  while (hours > 1e-9) { const h = Math.min(.01, hours); step(h); hours -= h; if (checkEvents()) break; }
+  updateStats();
+}
+
+/* events / narration */
+const sayEl = $('#say');
+function say(msg) {
+  // tiny safe markup: only <b>…</b> becomes bold; everything else is plain text
+  sayEl.replaceChildren(...String(msg).split(/<\/?b>/).map((part, i) => {
+    if (i % 2 === 0) return document.createTextNode(part);
+    const b = document.createElement('b'); b.textContent = part; return b;
+  }));
+  sayEl.classList.remove('pop'); void sayEl.offsetWidth; sayEl.classList.add('pop');
+}
+function onConnect(i) {
+  if (!sim.flags.conn) {
+    sim.flags.conn = true; sfx.bloop();
+    say(`Bridge ${i + 1} is soaked all the way across. Water is moving into the next cup! It goes from the higher cup to the lower one.`);
+  }
+}
+function checkEvents() {
+  const f = sim.flags, m = MATERIALS[sim.material];
+  if (!f.climb && sim.towels.some(tw => tw.wL > geom.rimS * .85 + .04 || tw.wR > geom.rimS * .85 + .04)) {
+    f.climb = true; say('Look! The color is climbing up the towel, against gravity. That’s <b>capillary action</b>. Tap <b>Shrink the Bus!</b> to see how it works up close.');
+  }
+  if (!f.apex && sim.towels.some(tw => tw.wL >= .5 || tw.wR >= .5)) {
+    f.apex = true; say('Over the top! Now the water is heading downhill, so gravity is helping it along.');
+  }
+  sim.cups.forEach((c, i) => {
+    if (c.wasEmpty && c.vol > .12 && !f['c' + i]) {
+      f['c' + i] = true; sfx.ding();
+      const nm = colorName(c.p, c.vol);
+      const from = [sim.cups[i - 1], sim.cups[i + 1]].filter(Boolean).filter(x => !x.wasEmpty).map(x => KIND_LABEL[x.kind].toLowerCase());
+      say(`Cup ${i + 1} is turning <b>${nm.toLowerCase()}</b>!${from.length === 2 && from[0] !== from[1] ? ` That’s ${from[0]} + ${from[1]} mixing.` : ''}`);
+    }
+  });
+  const maxD = Math.max(0, ...sim.towels.map((tw, i) => tw.conn ? Math.abs(sim.cups[i].vol - sim.cups[i + 1].vol) : 0));
+  if (sim.t > 1 && sim.wAct < 1e-4 && maxD < .04) {
+    sim.done = true; sim.running = false; paintPlay();
+    const made = sim.cups.filter(c => c.wasEmpty && c.vol > .05).map(c => colorName(c.p, c.vol).toLowerCase());
+    if (m.D === 0) { sfx.buzz(); say('Hmm, nothing happened. <b>Plastic wrap</b> doesn’t have fibers or gaps, and water won’t stick to it. No capillary action means no walk. Try paper towel!'); }
+    else if (sim.cups.every(c => c.vol < .02)) say('No water, no walk! Tap the cups to fill some.');
+    else {
+      sfx.tada(); if (made.length) confetti(90);
+      say(`Done! All the cups evened out after about ${fmtH(sim.t)}.${made.length ? ` New colors: <b>${[...new Set(made)].join(', ')}</b>.` : ''} The walk stops when the water levels match. <b>Reset</b> to go again.`);
+    }
+    return true;
+  }
+  return false;
+}
+
+/* stats */
+const fmtH = t => { const tm = Math.round(t * 60), h = Math.floor(tm / 60), m = tm % 60; return `${h}h ${String(m).padStart(2, '0')}m`; };
+function updateStats() {
+  $('#clockPill').textContent = fmtH(sim.t);
+  const total = sim.towels.length, conn = sim.towels.filter(t => t.conn).length;
+  $('#stBridges').textContent = `${conn} / ${total}`;
+  const newCols = new Set(sim.cups.filter(c => c.wasEmpty && c.vol > .05).map(c => colorName(c.p, c.vol)).filter(n => n !== 'Clear water'));
+  $('#stColors').textContent = newCols.size;
+  $('#stMoved').textContent = Math.round(100 * Math.min(1, sim.moved / sim.startVol)) + '%';
+  $('#stStatus').textContent = sim.done ? 'Finished' : sim.running ? 'Walking…' : sim.t > 0 ? 'Paused' : 'Ready';
+  let p = 0;
+  sim.towels.forEach((tw, i) => {
+    if (tw.conn) { const d = Math.abs(sim.cups[i].vol - sim.cups[i + 1].vol); p += .55 + .45 * (1 - Math.min(1, d / .8)); }
+    else p += .55 * Math.min(1, tw.wL + tw.wR);
+  });
+  $('#meter').style.width = (sim.done ? 100 : total ? Math.round(100 * p / total) : 0) + '%';
+}
+
+/* drawing */
+function cupPath(ctx, cx) {
+  const g = geom; ctx.beginPath();
+  ctx.moveTo(cx - g.cupW / 2, g.topY); ctx.lineTo(cx - g.bw / 2, g.bottomY);
+  ctx.lineTo(cx + g.bw / 2, g.bottomY); ctx.lineTo(cx + g.cupW / 2, g.topY); ctx.closePath();
+}
+function drawLab(time) {
+  if (!lab || !geom) return;
+  const { ctx, w, h } = lab, g = geom, still = RM.matches;
+  ctx.clearRect(0, 0, w, h);
+  let grd = ctx.createLinearGradient(0, 0, 0, h);
+  grd.addColorStop(0, '#eef9ff'); grd.addColorStop(1, '#d4edfb');
+  ctx.fillStyle = grd; ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = 'rgba(14,156,156,.09)'; ctx.lineWidth = 1; ctx.beginPath();
+  for (let x = 0; x < w; x += 24) { ctx.moveTo(x + .5, 0); ctx.lineTo(x + .5, g.bottomY); }
+  for (let y = 0; y < g.bottomY; y += 24) { ctx.moveTo(0, y + .5); ctx.lineTo(w, y + .5); }
+  ctx.stroke();
+  // table
+  const ty = g.bottomY + 1;
+  grd = ctx.createLinearGradient(0, ty, 0, h); grd.addColorStop(0, '#d79a5c'); grd.addColorStop(1, '#b77a3f');
+  ctx.fillStyle = grd; ctx.fillRect(0, ty, w, h - ty);
+  ctx.strokeStyle = '#1f1a2e'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, ty); ctx.lineTo(w, ty); ctx.stroke();
+  ctx.strokeStyle = 'rgba(120,70,30,.35)'; ctx.lineWidth = 2;
+  for (let k = 0; k < 4; k++) { ctx.beginPath(); const yy = ty + 10 + k * 11; ctx.moveTo(0, yy); ctx.bezierCurveTo(w * .3, yy + 4, w * .6, yy - 4, w, yy + 2); ctx.stroke(); }
+  // cup backs + water
+  sim.cups.forEach((c, i) => {
+    const cx = g.cx[i];
+    ctx.fillStyle = 'rgba(0,0,0,.16)'; ctx.beginPath(); ctx.ellipse(cx, g.bottomY + 3, g.bw * .62, 4.5, 0, 0, 7); ctx.fill();
+    cupPath(ctx, cx); ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.fill();
+    if (c.vol > .004) {
+      const col = cupRGB(c), wy = g.bottomY - c.vol * (g.cupH - 6);
+      ctx.save(); cupPath(ctx, cx); ctx.clip();
+      ctx.beginPath(); ctx.moveTo(cx - g.cupW, g.bottomY + 2);
+      for (let x = cx - g.cupW / 2; x <= cx + g.cupW / 2 + 3; x += 3) ctx.lineTo(x, wy + (still ? 0 : Math.sin(x * .17 + time * 2.4 + i) * 1.3));
+      ctx.lineTo(cx + g.cupW, g.bottomY + 2); ctx.closePath();
+      const wg = ctx.createLinearGradient(0, wy, 0, g.bottomY);
+      wg.addColorStop(0, `rgba(${col},.82)`); wg.addColorStop(1, `rgba(${col.map(v => Math.round(v * .82))},.95)`);
+      ctx.fillStyle = wg; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 2; ctx.beginPath();
+      for (let x = cx - g.cupW / 2; x <= cx + g.cupW / 2 + 3; x += 3) { const y = wy + (still ? 0 : Math.sin(x * .17 + time * 2.4 + i) * 1.3); x === cx - g.cupW / 2 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+      ctx.stroke(); ctx.restore();
+    }
+  });
+  // towels
+  sim.towels.forEach((tw, i) => drawTowel(ctx, i, tw, time));
+  // glass fronts
+  sim.cups.forEach((c, i) => {
+    const cx = g.cx[i];
+    ctx.lineJoin = 'round'; cupPath(ctx, cx); ctx.strokeStyle = '#1f1a2e'; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath();
+    ctx.moveTo(cx - g.cupW / 2 + 8, g.topY + 10); ctx.lineTo(cx - g.bw / 2 + 7, g.bottomY - 10); ctx.stroke();
+    ctx.strokeStyle = '#1f1a2e'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(cx, g.topY, g.cupW / 2, Math.max(3, g.cupW * .07), 0, 0, 7); ctx.stroke();
+    // labels
+    const fs = clamp(g.slot / 7.5, 10, 15);
+    ctx.fillStyle = '#1f1a2e'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = `700 ${fs}px Fredoka, "Arial Rounded MT Bold", sans-serif`;
+    const nm = colorName(c.p, c.vol);
+    ctx.fillText(nm, cx, g.bottomY + 20);
+    ctx.font = `600 ${fs * .8}px Nunito, system-ui, sans-serif`; ctx.fillStyle = '#3d2a14';
+    ctx.fillText(`Cup ${i + 1} · ${Math.round(c.vol * 100)}%`, cx, g.bottomY + 20 + fs * 1.15);
+  });
+}
+function drawTowel(ctx, i, tw, time) {
+  const g = geom, T = g.towels[i]; if (!T) return;
+  const pts = T.pts, S = T.s, W = g.tw;
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const trace = () => { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let k = 1; k < pts.length; k++) ctx.lineTo(pts[k][0], pts[k][1]); };
+  trace(); ctx.strokeStyle = '#1f1a2e'; ctx.lineWidth = W + 3.5; ctx.stroke();
+  trace(); ctx.strokeStyle = sim.material === 'plastic' ? '#e8f4ff' : '#fbf8f0'; ctx.lineWidth = W; ctx.stroke();
+  trace(); ctx.setLineDash([2, 5]); ctx.strokeStyle = sim.material === 'plastic' ? 'rgba(255,255,255,.9)' : '#e2d9c6'; ctx.lineWidth = W * .45; ctx.stroke(); ctx.setLineDash([]);
+  const A = sim.cups[i], B = sim.cups[i + 1];
+  const cA = cupRGB(A), cB = cupRGB(B);
+  for (let k = 0; k < pts.length - 1; k++) {
+    const s = (S[k] + S[k + 1]) / 2; let col = null;
+    if (tw.conn) {
+      if (!cA && !cB) col = null;
+      else if (!cB || B.vol < .03) col = cA;
+      else if (!cA || A.vol < .03) col = cB;
+      else { const u = clamp((s - .25) / .5, 0, 1), e = u * u * (3 - 2 * u); col = [0, 1, 2].map(j => Math.round(lerp(cA[j], cB[j], e))); }
+    } else if (s <= tw.wL && cA) col = cA;
+    else if (s >= 1 - tw.wR && cB) col = cB;
+    if (!col) continue;
+    ctx.strokeStyle = `rgba(${col},.9)`; ctx.lineWidth = W - 1.5;
+    ctx.beginPath(); ctx.moveTo(pts[k][0], pts[k][1]); ctx.lineTo(pts[k + 1][0], pts[k + 1][1]); ctx.stroke();
+  }
+  // glowing wet fronts
+  if (!tw.conn) {
+    [[tw.wL, A], [1 - tw.wR, B]].forEach(([s, c], j) => {
+      if (c.vol < .015 || (j === 0 ? tw.wL : tw.wR) <= .02) return;
+      const [x, y] = pointAt(T, s);
+      ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.beginPath(); ctx.arc(x, y, W * .32 + (RM.matches ? 0 : Math.sin(time * 6) * 1), 0, 7); ctx.fill();
+    });
+  }
+  // flow sparkles
+  if (tw.conn && Math.abs(tw.q) > .004 && !RM.matches) {
+    for (let k = 0; k < 5; k++) {
+      let s = (time * .25 + k / 5) % 1; if (tw.q < 0) s = 1 - s;
+      const [x, y] = pointAt(T, s);
+      ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.beginPath(); ctx.arc(x, y, Math.max(1.5, W * .16), 0, 7); ctx.fill();
+    }
+  }
+}
+
+/* controls */
+function paintPlay() {
+  $('#playBtn span').textContent = sim.running ? 'Pause' : sim.done ? 'Done!' : sim.t > 0 ? 'Resume' : 'Start';
+  $('#playIcon').setAttribute('d', sim.running ? 'M6 4h4v16H6zM14 4h4v16h-4z' : 'M7 4l13 8-13 8z');
+  $('#playBtn').disabled = sim.done; $('#hourBtn').disabled = sim.done;
+  updateStats();
+}
+function renderChips() {
+  const host = $('#chips'); host.textContent = '';
+  const l = document.createElement('span'); l.className = 'lbl'; l.textContent = 'Tap to change:'; host.appendChild(l);
+  sim.layout.forEach((k, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip';
+    const dot = document.createElement('i');
+    dot.style.background = k === 'empty' ? '#fff' : k === 'clear' ? css(CLEAR) : css(PIG[k]);
+    b.append(dot, `${i + 1}: ${KIND_LABEL[k]}`);
+    b.setAttribute('aria-label', `Cup ${i + 1} starts as ${KIND_LABEL[k]}. Activate to change.`);
+    b.addEventListener('click', () => cycleCup(i));
+    host.appendChild(b);
+  });
+}
+function cycleCup(i) {
+  sim.layout[i] = CYCLE[(CYCLE.indexOf(sim.layout[i]) + 1) % CYCLE.length];
+  store.set('layout', sim.layout); sfx.bloop();
+  resetSim(false);
+  say(`Cup ${i + 1} now starts as <b>${KIND_LABEL[sim.layout[i]].toLowerCase()}</b>. The experiment reset so you can try your new setup.`);
+}
+$('#playBtn').addEventListener('click', () => {
+  if (sim.done) return;
+  sim.running = !sim.running; paintPlay();
+  if (sim.running) { ac(); if (sim.t === 0) say('Here we go! Watch the bottom of each towel. The water soaks in and starts to climb.'); }
+});
+$('#hourBtn').addEventListener('click', () => { if (!sim.done) { advance(1); sfx.bloop(); } });
+$('#resetBtn').addEventListener('click', () => { resetSim(); sfx.bloop(); });
+const speedEl = $('#speed');
+speedEl.value = sim.speed;
+const paintSpeed = () => { $('#speedOut').textContent = `${(+sim.speed).toFixed(1)} hours / sec`; };
+paintSpeed();
+speedEl.addEventListener('input', () => { sim.speed = +speedEl.value; paintSpeed(); store.set('speed', sim.speed); });
+const matEl = $('#material');
+function paintMaterial() {
+  matEl.value = sim.material; $('#matPill').textContent = MATERIALS[sim.material].name;
+  $('#matTip').textContent = MATERIALS[sim.material].tip;
+}
+function setMaterial(m) { sim.material = m; store.set('material', m); paintMaterial(); resetSim(false);
+  say(`Switched to <b>${MATERIALS[m].name.toLowerCase()}</b>. ${MATERIALS[m].tip} Press Start!`); }
+matEl.addEventListener('change', () => setMaterial(matEl.value));
+const countEl = $('#cupCount');
+countEl.value = sim.n;
+countEl.addEventListener('change', () => { sim.n = +countEl.value; store.set('cups', sim.n); sim.layout = null; store.set('layout', null); resetSim(); });
+labCanvas.addEventListener('click', e => {
+  if (!geom) return;
+  const r = labCanvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+  const i = Math.floor(x / geom.slot);
+  if (i >= 0 && i < sim.cups.length && Math.abs(x - geom.cx[i]) < geom.cupW / 2 + 6 && y > geom.topY - 8 && y < geom.bottomY + 40) cycleCup(i);
+});
+document.querySelectorAll('[data-race]').forEach(b => b.addEventListener('click', () => {
+  setMaterial(b.dataset.race); $('#lab').scrollIntoView({ behavior: RM.matches ? 'auto' : 'smooth' });
+}));
+
+function sizeLab() {
+  const h = labCanvas.clientWidth < 560 ? 320 : 410;
+  lab = fitCanvas(labCanvas, h); computeGeom();
+}
+let labVisible = true;
+new IntersectionObserver(es => { labVisible = es[0].isIntersecting; }).observe(labCanvas);
+new ResizeObserver(() => sizeLab()).observe(labCanvas.parentElement);
+sizeLab(); paintMaterial(); resetSim(false);
+
+/* main loop */
+let last = performance.now(), rafId = 0;
+function frame(now) {
+  const dtR = Math.min(.05, (now - last) / 1000); last = now;
+  if (sim.running && !sim.done) advance(dtR * sim.speed);
+  if (labVisible) drawLab(now / 1000);
+  rafId = requestAnimationFrame(frame);
+}
+function startLoop() { if (!rafId) { last = performance.now(); rafId = requestAnimationFrame(frame); } }
+function stopLoop() { cancelAnimationFrame(rafId); rafId = 0; }
+document.addEventListener('visibilitychange', () => document.hidden ? stopLoop() : startLoop());
+startLoop();
+
+/* =========================================================
+   SHRINK THE BUS — micro view
+   ========================================================= */
+const microDlg = $('#micro'), microCv = $('#microCanvas');
+const NARR = [
+  ['Shrinking complete!', 'We’re now smaller than a speck of dust. Those tan logs are cellulose fibers, the stuff paper is made of. The dark spaces between them are tiny tunnels.'],
+  ['Adhesion: water grabs on', 'Water molecules stick to cellulose. They grab the fiber walls and pull upward, which is why the water surface curves up at the edges.'],
+  ['Cohesion: holding hands', 'Water molecules also stick to each other. When the ones at the edge climb, they pull their neighbors up with them.'],
+  ['Gravity pulls back', 'Gravity pulls the water down. The climb stops when the two pulls are even. Move the gap slider: narrow gaps let water climb higher.'],
+  ['Hitching a ride', 'The dye molecules are carried along with the water. That’s how the color travels over the towel and into the next cup. Back to the lab!']
+];
+const micro = { t: 0, gap: 26, dye: 'red', labels: true, step: 0, on: false, raf: 0, last: 0 };
+function microBuild() {
+  const w = Math.max(280, microCv.clientWidth || 600);
+  const h = Math.round(clamp(w * .55, 300, 440));
+  Object.assign(micro, fitCanvas(microCv, h));
+  const fw = 16; micro.fw = fw; micro.chan = []; micro.fibers = [];
+  let x = 26;
+  while (x + fw + micro.gap + fw <= micro.w - 26) { micro.fibers.push(x); micro.chan.push({ xL: x + fw, xR: x + fw + micro.gap }); x += fw + micro.gap; }
+  micro.fibers.push(x);
+  const per = Math.round(clamp(micro.gap * 1.5, 18, 70));
+  micro.mols = [];
+  micro.chan.forEach((c, ci) => { for (let k = 0; k < per; k++) micro.mols.push({ c: ci, u: Math.random(), v: Math.random(), ph: Math.random() * 6.28, dye: Math.random() < .16 }); });
+  micro.res = Array.from({ length: Math.round(micro.w / 7) }, () => ({ x: Math.random() * micro.w, y: Math.random(), ph: Math.random() * 6.28, dye: Math.random() < .16 }));
+  micro.t = RM.matches ? 99 : 0;
+  $('#gapOut').textContent = micro.gap <= 22 ? 'Narrow: water climbs high' : micro.gap >= 46 ? 'Wide: water stays low' : 'Medium gap';
+}
+function h2o(ctx, x, y, a, dye) {
+  if (dye) { ctx.fillStyle = css(PIG[micro.dye]); ctx.beginPath(); ctx.arc(x, y, 4.2, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.stroke(); return; }
+  ctx.fillStyle = '#fff';
+  for (const d of [-.9, .9]) { ctx.beginPath(); ctx.arc(x + Math.cos(a + d) * 4.4, y + Math.sin(a + d) * 4.4, 2.3, 0, 7); ctx.fill(); }
+  ctx.fillStyle = '#3d8bff'; ctx.beginPath(); ctx.arc(x, y, 3.8, 0, 7); ctx.fill();
+}
+function label(ctx, text, bx, by, px, py) {
+  ctx.font = '600 13px Fredoka, "Arial Rounded MT Bold", sans-serif';
+  const tw = ctx.measureText(text).width + 16;
+  bx = clamp(bx, 6, micro.w - tw - 6);
+  ctx.strokeStyle = '#FFC72C'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(bx + tw / 2, by + 12); ctx.lineTo(px, py); ctx.stroke();
+  ctx.fillStyle = '#FFC72C'; ctx.beginPath(); ctx.arc(px, py, 3.5, 0, 7); ctx.fill();
+  rrect(ctx, bx, by, tw, 24, 8); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#1f1a2e'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#1f1a2e'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(text, bx + 8, by + 12.5);
+}
+function drawMiniBus(ctx, x, y, s) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.fillStyle = 'rgba(255,244,163,.18)'; ctx.beginPath(); ctx.moveTo(98, 20); ctx.lineTo(-60, 160); ctx.lineTo(40, 170); ctx.closePath(); ctx.fill();
+  ctx.lineWidth = 3; ctx.strokeStyle = '#1f1a2e'; ctx.fillStyle = '#FFC72C';
+  rrect(ctx, 0, 0, 84, 40, 9); ctx.fill(); ctx.stroke(); rrect(ctx, 74, 14, 26, 26, 6); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#bfe9ff'; for (let k = 0; k < 4; k++) { rrect(ctx, 7 + k * 17, 6, 12, 13, 3); ctx.fill(); }
+  ctx.fillStyle = '#1f1a2e'; ctx.fillRect(0, 24, 100, 3);
+  ctx.beginPath(); ctx.arc(22, 42, 8, 0, 7); ctx.arc(80, 42, 8, 0, 7); ctx.fill();
+  ctx.fillStyle = '#fff4a3'; ctx.beginPath(); ctx.arc(98, 20, 3, 0, 7); ctx.fill();
+  ctx.restore();
+}
+function microDraw(dt) {
+  const { ctx, w, h } = micro; if (!ctx) return;
+  micro.t += dt;
+  const p = 1 - Math.exp(-2.2 * Math.sqrt(micro.t / 6));
+  const resTop = h - 64;
+  const jurin = Math.min(resTop - 34, 7200 / micro.gap);
+  const hc = jurin * p, men = Math.min(micro.gap * .4, 14) * p;
+  const colH = u => hc + men * Math.pow(2 * u - 1, 2);
+  const dye = PIG[micro.dye];
+  const t = micro.t;
+  let g = ctx.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#0b2238'); g.addColorStop(1, '#13385a');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  // dust specks
+  ctx.fillStyle = 'rgba(255,255,255,.08)';
+  for (let k = 0; k < 40; k++) { const x = (k * 97.3 + t * 6) % w, y = (k * 53.7) % resTop; ctx.beginPath(); ctx.arc(x, y, 1.5, 0, 7); ctx.fill(); }
+  const waterFill = `rgba(${Math.round(lerp(90, dye[0], .35))},${Math.round(lerp(170, dye[1], .35))},${Math.round(lerp(255, dye[2], .35))},.45)`;
+  // reservoir
+  ctx.fillStyle = waterFill; ctx.fillRect(0, resTop, w, h - resTop);
+  // columns
+  micro.chan.forEach(c => {
+    ctx.beginPath(); ctx.moveTo(c.xL, resTop + 1);
+    for (let k = 0; k <= 12; k++) { const u = k / 12; ctx.lineTo(lerp(c.xL, c.xR, u), resTop - colH(u)); }
+    ctx.lineTo(c.xR, resTop + 1); ctx.closePath(); ctx.fillStyle = waterFill; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let k = 0; k <= 12; k++) { const u = k / 12, x = lerp(c.xL, c.xR, u), y = resTop - colH(u); k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke();
+  });
+  // molecules
+  const gw = micro.gap;
+  micro.mols.forEach(m => {
+    const c = micro.chan[m.c], hh = colH(m.u);
+    if (hh < 4) return;
+    const x = c.xL + 5 + m.u * Math.max(0, gw - 10) + Math.sin(t * 2.3 + m.ph) * 1.2;
+    const y = resTop - 4 - m.v * (hh - 6) + Math.cos(t * 3.1 + m.ph) * 1.4;
+    h2o(ctx, x, y, m.ph + t * .8, m.dye);
+  });
+  micro.res.forEach(m => h2o(ctx, (m.x + Math.sin(t + m.ph) * 4 + w) % w, resTop + 8 + m.y * (h - resTop - 14) + Math.cos(t * 2 + m.ph) * 2, m.ph + t, m.dye));
+  // fibers
+  micro.fibers.forEach((x, i) => {
+    ctx.fillStyle = '#e8d3a6'; ctx.strokeStyle = '#7a5a2b'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(x, h);
+    for (let y = h; y >= 0; y -= 12) ctx.lineTo(x + Math.sin(y * .05 + i) * 1.4, y);
+    ctx.lineTo(x + micro.fw, 0);
+    for (let y = 0; y <= h; y += 12) ctx.lineTo(x + micro.fw + Math.sin(y * .05 + i + 1) * 1.4, y);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(122,90,43,.55)'; ctx.lineWidth = 1.3;
+    for (let y = 10 + (i % 2) * 10; y < h; y += 20) { // glucose rings = cellulose
+      const cx = x + micro.fw / 2; ctx.beginPath();
+      for (let a = 0; a < 6; a++) { const ang = a / 6 * Math.PI * 2 + Math.PI / 6; ctx[a ? 'lineTo' : 'moveTo'](cx + Math.cos(ang) * 5, y + Math.sin(ang) * 5); }
+      ctx.closePath(); ctx.stroke();
+    }
+  });
+  // gravity arrow
+  ctx.strokeStyle = '#ff8fb3'; ctx.fillStyle = '#ff8fb3'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+  const gx = w - 14, gy = resTop - hc - 10;
+  if (micro.labels && hc > 40) {
+    ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + 54); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(gx - 7, gy + 46); ctx.lineTo(gx, gy + 58); ctx.lineTo(gx + 7, gy + 46); ctx.fill();
+  }
+  // bus
+  drawMiniBus(ctx, w - 150 + Math.sin(t * .7) * 10, 16 + Math.sin(t * 1.3) * 6, .8);
+  // labels
+  if (micro.labels && micro.chan.length > 2) {
+    const c1 = micro.chan[1], cm = micro.chan[Math.floor(micro.chan.length / 2)];
+    label(ctx, 'Cellulose fiber', micro.fibers[1] - 10, 12, micro.fibers[1] + micro.fw / 2, 70);
+    if (hc > 30) {
+      label(ctx, 'Adhesion: sticks to fibers', c1.xL + 40, Math.max(56, resTop - hc - 80), c1.xL + 3, resTop - colH(0) + 4);
+      label(ctx, 'Cohesion: holds together', cm.xL - 60, resTop - hc * .5 - 12, (cm.xL + cm.xR) / 2, resTop - hc * .45);
+      label(ctx, 'Gravity', w - 96, gy + 62, gx, gy + 40);
+    }
+  }
+  // readout
+  ctx.font = '700 14px Fredoka, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  rrect(ctx, 10, h - 32, 210, 24, 8); ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fill();
+  ctx.fillStyle = '#FFC72C'; ctx.fillText(`Climb height: ${Math.round(hc)} µm-ish`, 18, h - 15);
+}
+function microLoop(now) {
+  if (!micro.on) return;
+  const dt = Math.min(.05, (now - micro.last) / 1000); micro.last = now;
+  microDraw(RM.matches ? 0 : dt);
+  micro.raf = requestAnimationFrame(microLoop);
+}
+function paintNarr() {
+  const [t, x] = NARR[micro.step];
+  $('#narrTitle').textContent = `${micro.step + 1}. ${t}`; $('#narrText').textContent = x;
+  $('#narrPrev').disabled = micro.step === 0;
+  $('#narrNext').textContent = micro.step === NARR.length - 1 ? 'Back to the lab' : 'Next';
+  const d = $('#narrDots'); d.textContent = '';
+  NARR.forEach((_, i) => { const e = document.createElement('i'); if (i === micro.step) e.className = 'on'; d.appendChild(e); });
+}
+function openMicro() {
+  if (microDlg.open) return;
+  micro.step = 0; paintNarr();
+  if (typeof microDlg.showModal === 'function') microDlg.showModal(); else microDlg.setAttribute('open', '');
+  microBuild(); micro.on = true; micro.last = performance.now(); micro.raf = requestAnimationFrame(microLoop);
+}
+function closeMicro() { if (microDlg.open) microDlg.close(); }
+microDlg.addEventListener('close', () => { micro.on = false; cancelAnimationFrame(micro.raf); sfx.whoosh(); say('Welcome back to full size! Now you know the secret: <b>adhesion</b> pulls water up the fibers, <b>cohesion</b> brings the rest along, and gravity pulls back.'); });
+$('#microClose').addEventListener('click', closeMicro);
+$('#narrPrev').addEventListener('click', () => { if (micro.step > 0) { micro.step--; paintNarr(); } });
+$('#narrNext').addEventListener('click', () => {
+  if (micro.step === NARR.length - 1) return closeMicro();
+  micro.step++; paintNarr(); sfx.bloop();
+  if (micro.step === 3) { micro.gap = 18; $('#gap').value = 18; microBuild(); }
+});
+$('#gap').addEventListener('input', e => { micro.gap = +e.target.value; microBuild(); });
+$('#dye').addEventListener('change', e => { micro.dye = e.target.value; });
+$('#replay').addEventListener('click', () => { micro.t = 0; sfx.bloop(); });
+$('#labelsBtn').addEventListener('click', e => {
+  micro.labels = !micro.labels; e.currentTarget.setAttribute('aria-pressed', String(micro.labels));
+  e.currentTarget.textContent = micro.labels ? 'Labels on' : 'Labels off';
+});
+window.addEventListener('resize', () => { if (micro.on) microBuild(); });
+
+function shrinkTrip(fromEl) {
+  sfx.whoosh();
+  if (sim.running) { sim.running = false; paintPlay(); }
+  const el = $('#flyBus');
+  if (RM.matches || !el.animate || !geom || !geom.towels.length) return openMicro();
+  const from = fromEl.getBoundingClientRect(), cr = labCanvas.getBoundingClientRect();
+  const T = geom.towels[Math.floor(geom.towels.length / 2)], [ax, ay] = pointAt(T, .5);
+  const sx = from.left + from.width / 2, sy = from.top + from.height / 2;
+  let tx = cr.left + ax, ty = cr.top + ay;
+  if (ty < 0 || ty > innerHeight) { tx = innerWidth / 2; ty = innerHeight / 2; }
+  el.hidden = false; el.style.left = (sx - 60) + 'px'; el.style.top = (sy - 34) + 'px';
+  const dx = tx - sx, dy = ty - sy;
+  const a = el.animate([
+    { transform: 'translate(0,0) scale(1) rotate(0)', opacity: 1 },
+    { transform: `translate(${dx * .45}px,${dy * .45 - 90}px) scale(.75) rotate(-14deg)`, opacity: 1, offset: .5 },
+    { transform: `translate(${dx}px,${dy}px) scale(.03) rotate(25deg)`, opacity: .3 }
+  ], { duration: 1250, easing: 'cubic-bezier(.45,0,.55,1)' });
+  let landed = false;
+  const land = () => {
+    if (landed) return; landed = true;
+    a.cancel(); el.hidden = true;
+    const f = document.createElement('div'); f.className = 'flash'; document.body.appendChild(f);
+    setTimeout(() => f.remove(), 650);
+    openMicro();
+  };
+  a.onfinish = land; setTimeout(land, 1400);
+}
+$('#shrinkBtn').addEventListener('click', e => shrinkTrip(e.currentTarget));
+$('#heroShrink').addEventListener('click', e => shrinkTrip(e.currentTarget));
+
+/* =========================================================
+   SETUP CHECKLIST
+   ========================================================= */
+const mats = store.get('mats', {});
+document.querySelectorAll('#mats input').forEach(cb => {
+  cb.checked = !!mats[cb.dataset.k];
+  cb.addEventListener('change', () => {
+    mats[cb.dataset.k] = cb.checked; store.set('mats', mats);
+    if (cb.checked) sfx.bloop();
+    const all = [...document.querySelectorAll('#mats input')].every(x => x.checked);
+    if (all && cb.checked) { sfx.tada(); confetti(70); }
+  });
+});
+
+/* =========================================================
+   MIXING STATION
+   ========================================================= */
+const drops = { red: 0, yellow: 0, blue: 0 };
+const TARGETS = ['Orange', 'Green', 'Purple', 'Brown', 'Red-orange', 'Yellow-green', 'Blue-violet', 'Yellow-orange', 'Blue-green', 'Red-violet'];
+let target = 'Orange', mixScore = +store.get('mixScore', 0), matched = false;
+const potsEl = $('#pots');
+['red', 'yellow', 'blue'].forEach(k => {
+  const row = document.createElement('div'); row.className = 'pot';
+  const NS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 38 48'); svg.setAttribute('aria-hidden', 'true');
+  [['M10 14h18v28a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4z', css(PIG[k])], ['M14 14l5-11 5 11', '#fff']].forEach(([d, fill]) => {
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', d); p.setAttribute('fill', fill); p.setAttribute('stroke', '#1f1a2e'); p.setAttribute('stroke-width', '2.5'); p.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(p);
+  });
+  const name = document.createElement('b'); name.textContent = KIND_LABEL[k];
+  const out = document.createElement('output'); out.id = 'o-' + k; out.setAttribute('aria-live', 'polite'); out.textContent = '0';
+  const mk = (d, sym, lbl) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn sm'; b.textContent = sym; b.setAttribute('aria-label', lbl); b.addEventListener('click', () => addDrop(k, d)); return b; };
+  row.append(svg, name, mk(-1, '−', `Remove a ${k} drop`), out, mk(1, '+', `Add a ${k} drop`));
+  potsEl.appendChild(row);
+});
+function addDrop(k, d) {
+  const nv = clamp(drops[k] + d, 0, 9); if (nv === drops[k]) return;
+  drops[k] = nv;
+  if (d > 0) {
+    sfx.bloop();
+    if (!RM.matches) {
+      const dr = document.createElement('span'); dr.className = 'drop'; dr.style.background = css(PIG[k]);
+      dr.style.left = `calc(50% - 8px + ${(Math.random() * 30 - 15).toFixed(0)}px)`;
+      $('#beakerWrap').appendChild(dr); dr.addEventListener('animationend', () => dr.remove());
+    }
+  }
+  paintMix();
+}
+function paintMix() {
+  ['red', 'yellow', 'blue'].forEach(k => { $('#o-' + k).textContent = drops[k]; });
+  const tot = drops.red + drops.yellow + drops.blue;
+  const liq = $('#mixLiquid'), hgt = tot ? 30 + tot * 4.2 : 6;
+  liq.setAttribute('y', 174 - hgt); liq.setAttribute('height', hgt + 10);
+  if (!tot) {
+    liq.setAttribute('fill', '#cfe9fb'); $('#swatch').style.background = '#eaf6ff';
+    $('#mixName').textContent = 'Add some drops!'; $('#mixHint').textContent = 'Primary colors mix to make secondary colors.'; return;
+  }
+  const c = mixRGB(drops, tot), nm = colorName(drops, tot);
+  liq.setAttribute('fill', css(c)); $('#swatch').style.background = css(c);
+  $('#mixName').textContent = nm;
+  if (nm === target && !matched) {
+    matched = true; mixScore++; store.set('mixScore', mixScore); $('#mixScore').textContent = mixScore;
+    $('#mixHint').textContent = `You made ${target.toLowerCase()}! Press “New target” for another.`;
+    sfx.tada(); confetti(60);
+  } else if (!matched) {
+    $('#mixHint').textContent = nm === 'Brown' && target !== 'Brown' ? 'Mixing all three makes brown. Empty the beaker and try two colors.' : `Keep adjusting to make ${target.toLowerCase()}.`;
+  }
+}
+function newTarget() {
+  let n; do { n = TARGETS[Math.floor(Math.random() * TARGETS.length)]; } while (n === target);
+  target = n; matched = false; $('#target').textContent = target;
+  drops.red = drops.yellow = drops.blue = 0; paintMix();
+}
+$('#mixReset').addEventListener('click', () => { drops.red = drops.yellow = drops.blue = 0; matched = false; paintMix(); });
+$('#mixNew').addEventListener('click', () => { newTarget(); sfx.bloop(); });
+$('#mixScore').textContent = mixScore; paintMix();
+
+/* =========================================================
+   JOURNAL
+   ========================================================= */
+const journal = store.get('journal', { hypo: '', obs: [] });
+if (!Array.isArray(journal.obs)) journal.obs = [];
+const hypoEl = $('#hypo'), logEl = $('#log');
+hypoEl.value = typeof journal.hypo === 'string' ? journal.hypo : '';
+let hypoT = 0;
+hypoEl.addEventListener('input', () => { clearTimeout(hypoT); hypoT = setTimeout(() => { journal.hypo = hypoEl.value; store.set('journal', journal); }, 300); });
+const fmtDate = ts => new Date(ts).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+function renderLog() {
+  logEl.textContent = '';
+  if (!journal.obs.length) { const li = document.createElement('li'); li.className = 'empty'; li.style.display = 'block'; li.textContent = 'No observations yet. What do you notice?'; logEl.appendChild(li); return; }
+  journal.obs.slice().reverse().forEach(o => {
+    const li = document.createElement('li');
+    const tm = document.createElement('time'); tm.dateTime = new Date(o.ts).toISOString(); tm.textContent = fmtDate(o.ts) + (o.sim ? ` · sim ${o.sim}` : '');
+    const body = document.createElement('div'); const src = document.createElement('span'); src.className = 'src'; src.textContent = o.src;
+    body.append(src, ' ', o.text);
+    const del = document.createElement('button'); del.type = 'button'; del.textContent = '×'; del.setAttribute('aria-label', 'Delete this observation');
+    del.addEventListener('click', () => { journal.obs = journal.obs.filter(x => x !== o); store.set('journal', journal); renderLog(); });
+    li.append(tm, body, del); logEl.appendChild(li);
+  });
+}
+function addObs() {
+  const t = $('#obsText').value.trim(); if (!t) { $('#obsText').focus(); return; }
+  const src = $('#obsSrc').value;
+  journal.obs.push({ ts: Date.now(), text: t.slice(0, 300), src, sim: src === 'Simulator' ? fmtH(sim.t) : '' });
+  if (journal.obs.length > 200) journal.obs.shift();
+  store.set('journal', journal); $('#obsText').value = ''; renderLog(); sfx.bloop();
+}
+$('#obsAdd').addEventListener('click', addObs);
+$('#obsText').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addObs(); } });
+$('#jDownload').addEventListener('click', () => {
+  const lines = ['WALKING WATER FIELD TRIP — SCIENCE JOURNAL', '='.repeat(44), '', 'Hypothesis:', hypoEl.value || '(none yet)', '', 'Observations:'];
+  journal.obs.forEach(o => lines.push(`- [${fmtDate(o.ts)}${o.sim ? ' | sim ' + o.sim : ''}] (${o.src}) ${o.text}`));
+  if (!journal.obs.length) lines.push('(none yet)');
+  const blob = new Blob([lines.join('\r\n')], { type: 'text/plain' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'walking-water-journal.txt';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+});
+let clearArm = 0;
+$('#jClear').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (!journal.obs.length) return;
+  if (!clearArm) { b.textContent = 'Tap again to clear'; b.classList.add('pink'); clearArm = setTimeout(() => { clearArm = 0; b.textContent = 'Clear observations'; b.classList.remove('pink'); }, 3000); return; }
+  clearTimeout(clearArm); clearArm = 0; b.textContent = 'Clear observations'; b.classList.remove('pink');
+  journal.obs = []; store.set('journal', journal); renderLog();
+});
+renderLog();
+
+/* =========================================================
+   TIMER
+   ========================================================= */
+const MILES = [
+  [0, 'Cups set up, towels in place'],
+  [10 * 60, 'Color starts creeping up the towels'],
+  [45 * 60, 'Color reaches the top of the arch'],
+  [2 * 3600, 'First drips into the empty cups'],
+  [6 * 3600, 'Empty cups are noticeably filling'],
+  [12 * 3600, 'Water levels are almost even'],
+  [24 * 3600, 'Done! Record your final colors']
+];
+const timer = Object.assign({ startAt: 0, acc: 0, running: false }, store.get('timer', {}));
+const milesEl = $('#miles');
+MILES.forEach(([s, txt]) => {
+  const li = document.createElement('li');
+  const t = document.createElement('span'); t.className = 't'; t.textContent = s < 3600 ? `${s / 60}m` : `${s / 3600}h`;
+  li.append(t, txt); milesEl.appendChild(li);
+});
+let lastHit = -1;
+const elapsed = () => (timer.acc + (timer.running ? Date.now() - timer.startAt : 0)) / 1000;
+function paintTimer() {
+  const e = Math.floor(elapsed()), h = Math.floor(e / 3600), m = Math.floor(e % 3600 / 60), s = e % 60;
+  $('#tClock').textContent = [h, m, s].map(v => String(v).padStart(2, '0')).join(':');
+  $('#tStart').textContent = timer.running ? 'Pause timer' : e > 0 ? 'Resume timer' : 'Start timer';
+  let hit = -1;
+  [...milesEl.children].forEach((li, i) => { const on = (timer.running || e > 0) && e >= MILES[i][0]; li.classList.toggle('hit', on); if (on) hit = i; });
+  if (timer.running && lastHit !== -1 && hit > lastHit) sfx.ding();
+  lastHit = hit;
+}
+$('#tStart').addEventListener('click', () => {
+  if (timer.running) { timer.acc += Date.now() - timer.startAt; timer.running = false; }
+  else { timer.startAt = Date.now(); timer.running = true; sfx.honk(); }
+  store.set('timer', timer); paintTimer();
+});
+$('#tReset').addEventListener('click', () => { timer.acc = 0; timer.running = false; timer.startAt = 0; store.set('timer', timer); lastHit = -1; paintTimer(); });
+paintTimer();
+const tInt = setInterval(() => { if (timer.running && !document.hidden) paintTimer(); }, 1000);
+window.addEventListener('pagehide', () => { clearInterval(tInt); clearInterval(factTimer); });
+
+/* =========================================================
+   QUIZ
+   ========================================================= */
+const QUIZ = [
+  ['What makes the water climb up the paper towel?', ['Capillary action', 'Magnets in the paper', 'Wind blowing on it', 'Static electricity'], 0, 'Water creeps up the tiny gaps between fibers. That’s capillary action.'],
+  ['Paper towels are made of tiny fibers called…', ['Plastic', 'Cellulose', 'Cotton candy', 'Rubber'], 1, 'Cellulose comes from plants. It’s what makes wood and paper strong.'],
+  ['Red water and yellow water walking into an empty cup make…', ['Purple', 'Green', 'Orange', 'Brown'], 2, 'Red + yellow = orange. It’s a secondary color.'],
+  ['Water sticking to the towel fibers is called…', ['Cohesion', 'Evaporation', 'Adhesion', 'Condensation'], 2, 'Adhesion means sticking to something different. Cohesion means sticking to itself.'],
+  ['Why does the water eventually stop walking?', ['The towel gets tired', 'The water levels become even', 'The color runs out', 'It gets dark outside'], 1, 'When both cups are at the same level, gravity pulls equally on both sides, so the flow stops.'],
+  ['Would strips of plastic wrap work instead of paper towels?', ['Yes, even faster', 'Only with warm water', 'No, they have no fibers or gaps', 'Only with blue water'], 2, 'Plastic has no tiny gaps, and water doesn’t stick to it, so there’s no capillary action.'],
+  ['In a narrower gap, water climbs…', ['Higher', 'Lower', 'Exactly the same', 'Not at all'], 0, 'Narrower gaps give the water more wall to grab compared with how much water it has to lift (Jurin’s law).'],
+  ['Which part of a plant carries water up like our towel does?', ['Petals', 'Pollen', 'Xylem', 'Seeds'], 2, 'Xylem tubes carry water from the roots up to the leaves. Try the Rainbow Celery experiment!']
+];
+const quizBox = $('#quizBox');
+let qi = 0, qScore = 0, qMarks = [];
+function qProg() {
+  const p = document.createElement('div'); p.className = 'qprog'; p.setAttribute('aria-hidden', 'true');
+  QUIZ.forEach((_, i) => { const d = document.createElement('i'); if (qMarks[i] === true) d.className = 'ok'; else if (qMarks[i] === false) d.className = 'no'; else if (i === qi) d.className = 'cur'; p.appendChild(d); });
+  return p;
+}
+function renderQ() {
+  quizBox.textContent = '';
+  if (qi >= QUIZ.length) return renderScore();
+  const [q, opts, right, why] = QUIZ[qi];
+  const qt = document.createElement('div'); qt.className = 'qtext'; qt.textContent = `${qi + 1}. ${q}`;
+  const ans = document.createElement('div'); ans.className = 'answers';
+  const feed = document.createElement('div'); feed.className = 'qfeed'; feed.hidden = true; feed.setAttribute('aria-live', 'polite');
+  opts.forEach((o, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'ans'; b.textContent = o;
+    b.addEventListener('click', () => {
+      const ok = i === right; qMarks[qi] = ok; if (ok) qScore++;
+      [...ans.children].forEach((x, j) => { x.disabled = true; if (j === right) x.classList.add('right'); });
+      if (!ok) b.classList.add('wrong');
+      ok ? sfx.ding() : sfx.buzz();
+      feed.hidden = false; feed.textContent = '';
+      const strong = document.createElement('b'); strong.textContent = ok ? 'Correct! ' : 'Not quite. ';
+      const next = document.createElement('button'); next.type = 'button'; next.className = 'btn sm pink'; next.style.marginLeft = '8px';
+      next.textContent = qi === QUIZ.length - 1 ? 'See my score' : 'Next question';
+      next.addEventListener('click', () => { qi++; renderQ(); quizBox.querySelector('button')?.focus(); });
+      feed.append(strong, why, ' ', next);
+      quizBox.replaceChild(qProg(), quizBox.firstChild);
+      next.focus();
+    });
+    ans.appendChild(b);
+  });
+  quizBox.append(qProg(), qt, ans, feed);
+}
+function renderScore() {
+  const box = document.createElement('div'); box.className = 'score';
+  const big = document.createElement('div'); big.className = 'big'; big.textContent = `${qScore}/${QUIZ.length}`;
+  const msg = document.createElement('p'); msg.style.fontSize = '1.15rem';
+  msg.textContent = qScore === QUIZ.length ? 'Perfect score! You’re officially a walking-water expert.' : qScore >= 6 ? 'Awesome work, scientist! Field trip complete.' : 'Good try! Go back to the lab and the shrink view, then try again.';
+  const again = document.createElement('button'); again.type = 'button'; again.className = 'btn yellow'; again.textContent = 'Take the quiz again';
+  again.addEventListener('click', () => { qi = 0; qScore = 0; qMarks = []; renderQ(); });
+  box.append(big, msg, again);
+  quizBox.append(qProg(), box);
+  const best = store.get('quizBest', 0); if (qScore > best) store.set('quizBest', qScore);
+  if (qScore >= 6) { sfx.tada(); confetti(160); } else sfx.bloop();
+}
+renderQ();
+
+/* =========================================================
+   CONFETTI
+   ========================================================= */
+const cfCv = $('#confetti'); let cf = [], cfRaf = 0, cfCtx = null;
+function confetti(n = 100) {
+  if (RM.matches) return;
+  const dpr = Math.min(2, devicePixelRatio || 1);
+  cfCv.width = innerWidth * dpr; cfCv.height = innerHeight * dpr;
+  cfCtx = cfCv.getContext('2d'); cfCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const cols = ['#FFC72C', '#e5487f', '#0e9c9c', '#6c45d6', '#d61c2e', '#1258d6', '#7cc65a'];
+  for (let i = 0; i < n; i++) cf.push({ x: innerWidth / 2 + (Math.random() - .5) * 200, y: innerHeight * .35, vx: (Math.random() - .5) * 13, vy: -Math.random() * 13 - 4, r: Math.random() * 6.28, vr: (Math.random() - .5) * .4, s: 6 + Math.random() * 6, c: cols[i % cols.length], life: 0 });
+  if (!cfRaf) cfRaf = requestAnimationFrame(cfTick);
+}
+function cfTick() {
+  cfCtx.clearRect(0, 0, innerWidth, innerHeight);
+  cf = cf.filter(p => p.y < innerHeight + 30 && p.life < 260);
+  cf.forEach(p => {
+    p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
+    cfCtx.save(); cfCtx.translate(p.x, p.y); cfCtx.rotate(p.r); cfCtx.fillStyle = p.c; cfCtx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); cfCtx.restore();
+  });
+  cfRaf = cf.length ? requestAnimationFrame(cfTick) : 0;
+  if (!cf.length) cfCtx.clearRect(0, 0, innerWidth, innerHeight);
+}
+})();
+</script>
+</body>
+</html>

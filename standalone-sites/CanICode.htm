@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CodeN8R Capabilities Showcase</title>
+  <style>
+    :root {
+      --bg: #07111d;
+      --surface: #0f1c2e;
+      --surface-border: #1d2f47;
+      --primary: #00d8ff;
+      --primary-hover: #33e1ff;
+      --accent: #ff2a74;
+      --text: #effcff;
+      --text-dim: #8fa0b5;
+      --radius: 12px;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      max-width: 800px;
+      margin-bottom: 2rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(0, 216, 255, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(0, 216, 255, 0.3);
+      padding: 0.35rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #effcff 30%, var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.75rem;
+    }
+
+    p.subtitle {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    main {
+      width: min(1000px, 95vw);
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    /* Navigation Tabs */
+    .tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid var(--surface-border);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 1rem;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: rgba(0, 216, 255, 0.05);
+    }
+
+    /* Tab Content Area */
+    .content-area {
+      padding: 1.5rem;
+      min-height: 420px;
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Control Bar */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #040a12;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--surface-border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-border);
+      color: #fff;
+    }
+
+    /* Canvas styling */
+    canvas {
+      width: 100%;
+      height: 320px;
+      background: #040a12;
+      border-radius: 8px;
+      border: 1px solid var(--surface-border);
+      display: block;
+    }
+
+    /* Utility Form Controls */
+    textarea {
+      width: 100%;
+      height: 180px;
+      background: #040a12;
+      border: 1px solid var(--surface-border);
+      color: var(--primary);
+      font-family: monospace;
+      padding: 1rem;
+      border-radius: 8px;
+      resize: vertical;
+      font-size: 0.9rem;
+    }
+
+    textarea:focus {
+      outline: 1px solid var(--primary);
+    }
+
+    /* Grid Display Cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+      width: min(1000px, 95vw);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0, 216, 255, 0.4);
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* Audio Synth Pad Grid */
+    .synth-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      max-width: 500px;
+      margin: 1rem auto;
+    }
+
+    .synth-pad {
+      aspect-ratio: 1;
+      background: var(--surface-border);
+      border: 2px solid transparent;
+      border-radius: 8px;
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.1s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+
+    .synth-pad:active, .synth-pad.active {
+      background: var(--primary);
+      color: #000;
+      box-shadow: 0 0 15px var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="badge">CodeN8R Engine Ready</span>
+    <h1>What Can I Code For You?</h1>
+    <p class="subtitle">I generate complete, interactive, high-performance HTML/CSS/JS applications. Click through the live mini-demos below to see examples.</p>
+  </header>
+
+  <main>
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn active" onclick="switchTab('physics')" role="tab">⚡ Physics & Canvas</button>
+      <button class="tab-btn" onclick="switchTab('data')" role="tab">📊 Data & Charts</button>
+      <button class="tab-btn" onclick="switchTab('audio')" role="tab">🎵 Web Audio API</button>
+      <button class="tab-btn" onclick="switchTab('tools')" role="tab">🛠️ Developer Tools</button>
+    </nav>
+
+    <div class="content-area">
+      <!-- PANEL 1: PHYSICS & CANVAS -->
+      <section id="physics" class="tab-panel active" role="tabpanel">
+        <div class="controls">
+          <button class="btn" onclick="addParticles(20)">+ Add 20 Particles</button>
+          <button class="btn btn-secondary" onclick="clearParticles()">Clear</button>
+          <span style="color: var(--text-dim); font-size: 0.85rem; margin-left: auto;">Click canvas to burst</span>
+        </div>
+        <canvas id="physicsCanvas"></canvas>
+      </section>
+
+      <!-- PANEL 2: DATA & CHARTS -->
+      <section id="data" class="tab-panel" role="tabpanel">
+        <div class="controls">
+          <button class="btn" onclick="randomizeData()">🎲 Randomize Data</button>
+          <span style="color: var(--text-dim); font-size: 0.85rem; margin-left: auto;">Real-time Canvas Rendering</span>
+        </div>
+        <canvas id="chartCanvas"></canvas>
+      </section>
+
+      <!-- PANEL 3: WEB AUDIO -->
+      <section id="audio" class="tab-panel" role="tabpanel">
+        <div class="controls" style="justify-content: center;">
+          <p style="color: var(--text-dim); font-size: 0.9rem;">Click pads to play synthesizer tones (Uses Web Audio API):</p>
+        </div>
+        <div class="synth-grid" id="synthGrid"></div>
+      </section>
+
+      <!-- PANEL 4: DEVELOPER TOOLS -->
+      <section id="tools" class="tab-panel" role="tabpanel">
+        <div class="controls">
+          <button class="btn" onclick="formatJSON()">Format JSON</button>
+          <button class="btn btn-secondary" onclick="minifyJSON()">Minify JSON</button>
+        </div>
+        <textarea id="jsonInput" placeholder="Paste raw JSON here...">{"name":"CodeN8R","version":"1.0.0","capabilities":["Single-file Apps","UI/UX Dashboards","Canvas & WebGL","Web Audio API"],"status":"Online"}</textarea>
+      </section>
+    </div>
+  </main>
+
+  <section class="cards-grid">
+    <div class="card">
+      <h3>🎨 Custom Web Applications</h3>
+      <p>Single Page Applications (SPAs) with reactive state management, clean component hierarchy, dark modes, and accessibility built-in.</p>
+    </div>
+    <div class="card">
+      <h3>🎮 Mini Games & Canvas</h3>
+      <p>Interactive 2D physics simulations, custom particle visualizers, games, WebGL rendering, and high-FPS animation loops.</p>
+    </div>
+    <div class="card">
+      <h3>📊 Dashboards & Analytics</h3>
+      <p>Interactive data dashboards, custom SVG & Canvas charts, telemetry visualizers, live filters, and data manipulation tools.</p>
+    </div>
+  </section>
+
+  <script>
+    // Tab Navigation Logic
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+      
+      event.currentTarget.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+
+      if (tabId === 'physics') resizeCanvas(physicsCanvas);
+      if (tabId === 'data') drawChart();
+    }
+
+    // --- PANEL 1: PHYSICS & CANVAS ENGINE ---
+    const physicsCanvas = document.getElementById('physicsCanvas');
+    const pCtx = physicsCanvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas(canvas) {
+      canvas.width = canvas.clientWidth * window.devicePixelRatio;
+      canvas.height = canvas.clientHeight * window.devicePixelRatio;
+    }
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x || Math.random() * physicsCanvas.width;
+        this.y = y || Math.random() * physicsCanvas.height;
+        this.vx = (Math.random() - 0.5) * 6;
+        this.vy = (Math.random() - 0.5) * 6;
+        this.radius = Math.random() * 6 + 3;
+        this.color = `hsl(${Math.random() * 60 + 170}, 100%, 60%)`;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x - this.radius < 0 || this.x + this.radius > physicsCanvas.width) this.vx *= -1;
+        if (this.y - this.radius < 0 || this.y + this.radius > physicsCanvas.height) this.vy *= -1;
+      }
+
+      draw() {
+        pCtx.beginPath();
+        pCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        pCtx.fillStyle = this.color;
+        pCtx.shadowBlur = 10;
+        pCtx.shadowColor = this.color;
+        pCtx.fill();
+        pCtx.shadowBlur = 0;
+      }
+    }
+
+    function addParticles(count) {
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+    }
+
+    function clearParticles() { particles = []; }
+
+    physicsCanvas.addEventListener('click', (e) => {
+      const rect = physicsCanvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) * window.devicePixelRatio;
+      const y = (e.clientY - rect.top) * window.devicePixelRatio;
+      for (let i = 0; i < 15; i++) particles.push(new Particle(x, y));
+    });
+
+    function physicsLoop() {
+      pCtx.fillStyle = 'rgba(4, 10, 18, 0.25)';
+      pCtx.fillRect(0, 0, physicsCanvas.width, physicsCanvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(physicsLoop);
+    }
+
+    // --- PANEL 2: DATA & CHART RENDERING ---
+    const chartCanvas = document.getElementById('chartCanvas');
+    const cCtx = chartCanvas.getContext('2d');
+    let chartValues = [40, 65, 30, 85, 95, 55, 70];
+
+    function randomizeData() {
+      chartValues = chartValues.map(() => Math.floor(Math.random() * 80) + 15);
+      drawChart();
+    }
+
+    function drawChart() {
+      resizeCanvas(chartCanvas);
+      const w = chartCanvas.width;
+      const h = chartCanvas.height;
+      const padding = 50;
+      
+      cCtx.clearRect(0, 0, w, h);
+      
+      // Draw grid lines
+      cCtx.strokeStyle = '#1d2f47';
+      cCtx.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {
+        const y = padding + (h - padding * 2) * (i / 4);
+        cCtx.beginPath();
+        cCtx.moveTo(padding, y);
+        cCtx.lineTo(w - padding, y);
+        cCtx.stroke();
+      }
+
+      // Draw area fill
+      const step = (w - padding * 2) / (chartValues.length - 1);
+      cCtx.beginPath();
+      cCtx.moveTo(padding, h - padding);
+      chartValues.forEach((v, i) => {
+        const x = padding + i * step;
+        const y = h - padding - (v / 100) * (h - padding * 2);
+        cCtx.lineTo(x, y);
+      });
+      cCtx.lineTo(w - padding, h - padding);
+      cCtx.closePath();
+
+      const grad = cCtx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, 'rgba(0, 216, 255, 0.4)');
+      grad.addColorStop(1, 'rgba(0, 216, 255, 0.0)');
+      cCtx.fillStyle = grad;
+      cCtx.fill();
+
+      // Draw line & nodes
+      cCtx.beginPath();
+      chartValues.forEach((v, i) => {
+        const x = padding + i * step;
+        const y = h - padding - (v / 100) * (h - padding * 2);
+        if (i === 0) cCtx.moveTo(x, y);
+        else cCtx.lineTo(x, y);
+      });
+      cCtx.strokeStyle = '#00d8ff';
+      cCtx.lineWidth = 3;
+      cCtx.stroke();
+
+      chartValues.forEach((v, i) => {
+        const x = padding + i * step;
+        const y = h - padding - (v / 100) * (h - padding * 2);
+        cCtx.beginPath();
+        cCtx.arc(x, y, 5, 0, Math.PI * 2);
+        cCtx.fillStyle = '#effcff';
+        cCtx.fill();
+      });
+    }
+
+    // --- PANEL 3: WEB AUDIO SYNTHESIZER ---
+    const synthGrid = document.getElementById('synthGrid');
+    const freqs = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
+    const notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
+    let audioCtx;
+
+    notes.forEach((note, index) => {
+      const pad = document.createElement('button');
+      pad.className = 'synth-pad';
+      pad.textContent = note;
+      pad.addEventListener('mousedown', () => playTone(freqs[index], pad));
+      synthGrid.appendChild(pad);
+    });
+
+    function playTone(freq, pad) {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.8);
+
+      pad.classList.add('active');
+      setTimeout(() => pad.classList.remove('active'), 150);
+    }
+
+    // --- PANEL 4: DEVELOPER UTILITIES ---
+    function formatJSON() {
+      const txt = document.getElementById('jsonInput');
+      try {
+        const parsed = JSON.parse(txt.value);
+        txt.value = JSON.stringify(parsed, null, 2);
+      } catch (e) {
+        alert('Invalid JSON input');
+      }
+    }
+
+    function minifyJSON() {
+      const txt = document.getElementById('jsonInput');
+      try {
+        const parsed = JSON.parse(txt.value);
+        txt.value = JSON.stringify(parsed);
+      } catch (e) {
+        alert('Invalid JSON input');
+      }
+    }
+
+    // Init App
+    window.addEventListener('resize', () => {
+      resizeCanvas(physicsCanvas);
+      drawChart();
+    });
+
+    resizeCanvas(physicsCanvas);
+    addParticles(25);
+    physicsLoop();
+  </script>
+</body>
+</html>

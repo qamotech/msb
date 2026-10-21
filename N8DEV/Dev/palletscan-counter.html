@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0e14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0e14'/%3E%3Ctext x='32' y='42' font-size='30' text-anchor='middle' fill='%2300e5ff' font-family='sans-serif' font-weight='bold'%3EP%3C/text%3E%3C/svg%3E">
+<title>PalletScan Counter — Warehouse Counting Tool</title>
+<style>
+:root{
+  --bg:#0a0e14; --bg2:#10161f; --panel:#141c28; --line:#232f42;
+  --txt:#e8eef7; --dim:#8b98ad; --acc:#00e5ff; --acc2:#7c4dff;
+  --ok:#00e676; --warn:#ffab40; --bad:#ff5252;
+  --r:12px; --tap:56px;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;}
+body{padding-bottom:96px;}
+body.lg{font-size:19px;}
+body.lg .btn{min-height:64px;font-size:19px;}
+body.lg .stepper button{width:76px;height:66px;}
+button{touch-action:manipulation;}
+header{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#0d1420,#0a0e14);
+  border-bottom:1px solid var(--line);padding:12px 14px 10px;}
+header h1{margin:0;font-size:19px;letter-spacing:.5px;}
+header h1 .cy{color:var(--acc);}
+header .sub{color:var(--dim);font-size:12px;margin-top:2px;}
+header .sub b{color:var(--acc);}
+#scanner-id{margin-top:8px;display:flex;gap:8px;align-items:center;}
+#scanner-id input{flex:1;background:var(--bg2);border:1px solid var(--line);color:var(--txt);
+  border-radius:8px;padding:10px 12px;font-size:15px;}
+#sessionbar{margin-top:8px;display:flex;gap:8px;}
+#sessionbar select{flex:1;background:var(--bg2);border:1px solid var(--line);color:var(--txt);
+  border-radius:8px;padding:10px;font-size:14px;}
+#sessionbar button{background:var(--bg2);border:1px solid var(--acc);color:var(--acc);
+  border-radius:8px;padding:10px 14px;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap;}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:50;display:flex;
+  background:#0d1420;border-top:1px solid var(--line);}
+nav.tabs button{flex:1;background:none;border:none;color:var(--dim);font-size:13px;font-weight:700;
+  padding:14px 4px 16px;letter-spacing:.4px;cursor:pointer;min-height:64px;position:relative;}
+nav.tabs button.on{color:var(--acc);box-shadow:inset 0 3px 0 var(--acc);}
+.badge{position:absolute;top:6px;right:50%;transform:translateX(22px);background:var(--acc);
+  color:#04121a;font-size:11px;font-weight:900;border-radius:10px;padding:1px 7px;display:none;}
+.badge.show{display:block;}
+.tab{display:none;padding:14px;max-width:900px;margin:0 auto;}
+.tab.on{display:block;}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px;margin-bottom:14px;}
+.card h2{margin:0 0 10px;font-size:15px;color:var(--acc);letter-spacing:.6px;text-transform:uppercase;}
+label.f{display:block;font-size:12px;color:var(--dim);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.5px;}
+input[type=text],input[type=number],input[type=date],select,textarea{
+  width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--txt);
+  border-radius:8px;padding:12px;font-size:16px;}
+input:focus,select:focus{outline:none;border-color:var(--acc);}
+input.warn-field{border-color:var(--warn);background:#1d1508;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.btn{display:block;width:100%;min-height:var(--tap);border:none;border-radius:10px;
+  font-size:17px;font-weight:800;letter-spacing:.5px;cursor:pointer;margin-top:10px;
+  background:linear-gradient(135deg,var(--acc),#00a8cc);color:#04121a;}
+.btn.ghost{background:var(--bg2);color:var(--txt);border:1px solid var(--line);}
+.btn.ok{background:linear-gradient(135deg,var(--ok),#00b248);color:#04160c;}
+.btn.warn{background:linear-gradient(135deg,var(--warn),#ff6d00);color:#1a0e04;}
+.btn.bad{background:var(--bg2);color:var(--bad);border:1px solid var(--bad);}
+.btn.sm{min-height:44px;font-size:14px;}
+.btn.armed{background:linear-gradient(135deg,var(--warn),#ff6d00);color:#1a0e04;animation:pulse 1s infinite;}
+@keyframes pulse{50%{filter:brightness(1.25);}}
+.seg{display:flex;gap:8px;margin-bottom:12px;}
+.seg button{flex:1;min-height:48px;border-radius:10px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--dim);font-weight:700;font-size:14px;cursor:pointer;}
+.seg button.on{background:#0e2a33;color:var(--acc);border-color:var(--acc);}
+.toggle{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:14px;color:var(--dim);cursor:pointer;user-select:none;}
+.toggle .sw{width:52px;height:30px;border-radius:15px;background:var(--bg2);border:1px solid var(--line);position:relative;flex:none;}
+.toggle .sw::after{content:"";position:absolute;top:3px;left:4px;width:22px;height:22px;border-radius:50%;background:var(--dim);transition:all .18s;}
+.toggle.on{color:var(--txt);}
+.toggle.on .sw{background:#0e2a33;border-color:var(--acc);}
+.toggle.on .sw::after{left:24px;background:var(--acc);}
+#cam-wrap{position:relative;background:#000;border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--line);min-height:240px;display:flex;align-items:center;justify-content:center;}
+#cam-wrap video,#cam-wrap img{width:100%;display:block;}
+#cam-wrap .hint{color:var(--dim);padding:30px;text-align:center;font-size:14px;}
+.cam-tools{display:flex;gap:8px;margin-top:8px;}
+.cam-tools button{flex:1;}
+.stepper{display:flex;align-items:center;gap:10px;background:var(--bg2);
+  border:1px solid var(--line);border-radius:10px;padding:8px;margin-top:8px;}
+.stepper .lab{flex:1;font-weight:800;font-size:15px;}
+.stepper .lab small{display:block;color:var(--dim);font-weight:400;font-size:11px;}
+.stepper button{width:64px;height:56px;border-radius:10px;border:1px solid var(--line);
+  background:var(--panel);color:var(--acc);font-size:26px;font-weight:900;cursor:pointer;user-select:none;}
+.stepper button:active{background:#0e2a33;}
+.stepper .val{min-width:64px;text-align:center;font-size:26px;font-weight:900;color:var(--txt);}
+#live-total{background:#0e2a33;border:1px solid var(--acc);border-radius:var(--r);
+  padding:14px;margin-top:12px;text-align:center;}
+#live-total .n{font-size:34px;font-weight:900;color:var(--acc);}
+#live-total .d{font-size:12px;color:var(--dim);margin-top:4px;}
+table.grid{width:100%;border-collapse:collapse;font-size:13px;}
+table.grid th{background:#0d1622;color:var(--acc);text-align:left;padding:8px 6px;
+  position:sticky;top:0;font-size:11px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;cursor:pointer;user-select:none;}
+table.grid th .arr{color:var(--warn);}
+table.grid td{padding:8px 6px;border-top:1px solid var(--line);vertical-align:top;}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);max-height:60vh;overflow-y:auto;}
+.totbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+.tot{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;flex:1;min-width:130px;}
+.tot .k{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;}
+.tot .v{font-size:22px;font-weight:900;color:var(--acc);}
+.sumrow{display:flex;justify-content:space-between;padding:9px 2px;border-bottom:1px solid var(--line);font-size:15px;}
+.sumrow b{color:var(--acc);}
+#confirm-card{border:2px solid var(--warn);}
+#confirm-card h2{color:var(--warn);}
+.ocr-raw{background:#000;border:1px solid var(--line);border-radius:8px;padding:10px;
+  font-family:monospace;font-size:12px;color:#9fd8ff;white-space:pre-wrap;max-height:150px;overflow:auto;}
+.note{font-size:13px;color:var(--dim);line-height:1.5;}
+.dupwarn{background:#2a1503;border:1px solid var(--warn);color:var(--warn);border-radius:8px;
+  padding:10px 12px;font-weight:700;font-size:14px;margin-top:10px;display:none;}
+.dupwarn.show{display:block;}
+.expflag{font-size:13px;font-weight:800;margin-top:6px;display:none;}
+.expflag.show{display:block;}
+.expflag.past{color:var(--bad);}
+.expflag.soon{color:var(--warn);}
+.hidden{display:none!important;}
+#toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#0e2a33;
+  border:1px solid var(--acc);color:var(--txt);padding:12px 18px;border-radius:10px;
+  font-weight:700;z-index:99;display:none;max-width:92vw;text-align:center;}
+#undoToast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1d1508;
+  border:1px solid var(--warn);color:var(--txt);padding:10px 14px;border-radius:10px;
+  z-index:99;display:none;align-items:center;gap:12px;font-size:14px;max-width:92vw;}
+#undoToast button{background:var(--warn);border:none;border-radius:8px;padding:10px 16px;
+  font-weight:900;cursor:pointer;color:#1a0e04;}
+.prog{height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;margin-top:10px;}
+.prog i{display:block;height:100%;width:0;background:var(--acc);transition:width .2s;}
+.filterbar{display:flex;gap:8px;margin-bottom:10px;}
+.filterbar input{flex:2;}
+.filterbar select{flex:1;}
+.iconbtn{background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:8px;
+  padding:8px 10px;font-size:16px;cursor:pointer;min-height:44px;min-width:48px;}
+.flag{color:var(--warn);font-weight:900;}
+@media(min-width:700px){ .row2{grid-template-columns:1fr 1fr 1fr 1fr;} }
+</style>
+</head>
+<body>
+<header>
+  <h1>PALLET<span class="cy">SCAN</span> COUNTER</h1>
+  <div class="sub">Scan &middot; Confirm &middot; Count &middot; Export &mdash; <b id="hdrStats">0 rows</b></div>
+  <div id="scanner-id">
+    <input type="text" id="scannerName" placeholder="Scanner name (e.g. Nate)" autocomplete="off">
+  </div>
+  <div id="sessionbar">
+    <select id="sessionSel" title="Count session"></select>
+    <button id="btnNewSession">+ Session</button>
+  </div>
+</header>
+
+<!-- ============ SCAN TAB ============ -->
+<section class="tab on" id="tab-scan">
+  <div class="card">
+    <h2>1 &mdash; Capture pallet label</h2>
+    <div class="seg" id="scanModes">
+      <button data-m="barcode" class="on">Barcode</button>
+      <button data-m="photo">Photo + OCR</button>
+      <button data-m="manual">Manual</button>
+    </div>
+
+    <div id="mode-barcode">
+      <div id="cam-wrap"><div class="hint">Tap START SCANNER, point at the label barcode.<br>Works with QR, Code128, UPC/EAN, DataMatrix.</div></div>
+      <div class="cam-tools">
+        <button class="btn ghost sm" id="btnTorch" style="margin-top:8px">TORCH: OFF</button>
+        <button class="btn ghost sm" id="btnFlipCam" style="margin-top:8px">FLIP CAMERA</button>
+      </div>
+      <button class="btn" id="btnStartScan">START SCANNER</button>
+      <button class="btn ghost hidden" id="btnStopScan">STOP SCANNER</button>
+      <div class="toggle" id="rapidToggle"><span class="sw"></span><span>Rapid-scan mode: decoded barcodes auto-add as 1 pallet, no confirm screen. <b id="rapidCount"></b></span></div>
+      <div class="note" style="margin-top:8px">Normal mode: decoded value drops into the Lot / Code field for confirmation.</div>
+    </div>
+
+    <div id="mode-photo" class="hidden">
+      <div id="cam-wrap2" style="position:relative;background:#000;border-radius:12px;overflow:hidden;border:1px solid var(--line);min-height:200px;display:flex;align-items:center;justify-content:center;">
+        <div class="hint" id="photoHint">Take or pick a photo of the pallet label.<br>Text is read on-device, then you confirm every field.</div>
+        <img id="photoPrev" class="hidden" style="width:100%;display:block;">
+      </div>
+      <input type="file" id="photoInput" accept="image/*" capture="environment" class="hidden">
+      <button class="btn" id="btnTakePhoto">TAKE / PICK LABEL PHOTO</button>
+      <div class="row2">
+        <button class="btn ok hidden" id="btnRunOcr" style="margin-top:10px">READ TEXT FROM PHOTO</button>
+        <button class="btn ghost hidden" id="btnRetake" style="margin-top:10px">RETAKE</button>
+      </div>
+      <div class="prog hidden" id="ocrProg"><i></i></div>
+      <div class="note" id="ocrNote" style="margin-top:8px"></div>
+    </div>
+
+    <div id="mode-manual" class="hidden">
+      <div class="note">No camera needed. Tap below to open the entry form.</div>
+      <button class="btn" id="btnManualEntry">OPEN ENTRY FORM</button>
+    </div>
+  </div>
+
+  <div class="card hidden" id="confirm-card">
+    <h2 id="confirmTitle">2 &mdash; Confirm transcription</h2>
+    <div class="note" style="margin-bottom:8px">Check every field. Amber borders = scan didn't find a value. Fix, then confirm.</div>
+    <div class="ocr-raw hidden" id="ocrRaw"></div>
+    <label class="f">Brand</label><select id="fBrand"></select>
+    <div class="row2">
+      <div><label class="f">Item / Code</label><input type="text" id="fItem" list="itemCodes" placeholder="e.g. VP, Gridlock" autocomplete="off"></div>
+      <div><label class="f">Lot</label><input type="text" id="fLot" placeholder="e.g. A234AO05626A" autocomplete="off"></div>
+    </div>
+    <label class="f">Quick shorthand (e.g. 3p 2r 5c)</label>
+    <input type="text" id="fShort" placeholder="type pallets/rows/cases, Enter to apply" autocomplete="off">
+    <div class="row2">
+      <div><label class="f">Best By</label><input type="text" id="fBestBy" placeholder="MM/DD/YYYY" autocomplete="off"><div class="expflag" id="expFlag"></div></div>
+      <div><label class="f">Label Date</label><input type="text" id="fDate" placeholder="MM/DD/YYYY" autocomplete="off"></div>
+    </div>
+    <div class="row3">
+      <div><label class="f">Pallets</label><input type="number" id="fP" min="0" value="1"></div>
+      <div><label class="f">Rows</label><input type="number" id="fR" min="0" value="0"></div>
+      <div><label class="f">Cases</label><input type="number" id="fC" min="0" value="0"></div>
+    </div>
+    <div class="row2">
+      <div><label class="f">Case Pack</label><input type="number" id="fPack" min="1" value="24"></div>
+      <div><label class="f">Location</label><input type="text" id="fLoc" placeholder="e.g. A-12-3" autocomplete="off"></div>
+    </div>
+    <label class="f">Notes</label><input type="text" id="fNotes" placeholder="optional" autocomplete="off">
+    <div id="confirm-total" class="note" style="margin-top:10px;font-size:15px;"></div>
+    <div class="dupwarn" id="dupWarn"></div>
+    <button class="btn ok" id="btnConfirm">CONFIRM &amp; ADD TO TABLE</button>
+    <button class="btn ghost" id="btnCancelConfirm">Discard</button>
+  </div>
+</section>
+
+<!-- ============ COUNT TAB ============ -->
+<section class="tab" id="tab-count">
+  <div class="card">
+    <h2>Quick count &mdash; merged counter</h2>
+    <div class="note" style="margin-bottom:6px">Same P / R / C math as your cyber-count sheets. Tap (or hold) to count, LOG COUNT drops it in the table.</div>
+    <label class="f">Brand</label><select id="cBrand"></select>
+    <label class="f">Item / Code (optional)</label><input type="text" id="cItem" list="itemCodes" placeholder="e.g. VP, Summer Popz" autocomplete="off">
+    <label class="f">Quick shorthand (e.g. 3p 2r 5c)</label>
+    <input type="text" id="cShort" placeholder="type counts, Enter to apply" autocomplete="off">
+    <div class="stepper"><div class="lab">PALLETS<small id="cPInfo"></small></div>
+      <button data-s="P" data-d="-1">&minus;</button><div class="val" id="cP">0</div><button data-s="P" data-d="1">+</button></div>
+    <div class="stepper"><div class="lab">ROWS<small id="cRInfo"></small></div>
+      <button data-s="R" data-d="-1">&minus;</button><div class="val" id="cR">0</div><button data-s="R" data-d="1">+</button></div>
+    <div class="stepper"><div class="lab">CASES<small id="cCInfo"></small></div>
+      <button data-s="C" data-d="-1">&minus;</button><div class="val" id="cC">0</div><button data-s="C" data-d="1">+</button></div>
+    <div id="live-total"><div class="n" id="cTotal">0</div><div class="d">TOTAL CANS &middot; <span id="cDetail"></span></div></div>
+    <div class="row2">
+      <div><label class="f">Location</label><input type="text" id="cLoc" placeholder="e.g. B-04-1" autocomplete="off"></div>
+      <div><label class="f">Lot (optional)</label><input type="text" id="cLot" placeholder="lot code" autocomplete="off"></div>
+    </div>
+    <button class="btn ok" id="btnLogCount">LOG COUNT</button>
+    <button class="btn ghost sm" id="btnResetCount">Reset counters</button>
+  </div>
+</section>
+
+<!-- ============ TABLE TAB ============ -->
+<section class="tab" id="tab-table">
+  <div class="card">
+    <h2>Count table</h2>
+    <div class="filterbar">
+      <input type="text" id="fltQ" placeholder="Filter: lot, item, location…" autocomplete="off">
+      <select id="fltBrand"><option value="">All brands</option></select>
+    </div>
+    <div class="tblwrap"><table class="grid" id="grid">
+      <thead><tr>
+        <th data-k="ts">Time</th><th data-k="scanner">Scanner</th><th data-k="brand">Brand</th>
+        <th data-k="item">Item</th><th data-k="lot">Lot</th><th data-k="bestBy">Best&nbsp;By</th>
+        <th data-k="p">P</th><th data-k="r">R</th><th data-k="c">C</th>
+        <th data-k="cans">Cans</th><th data-k="loc">Loc</th><th></th>
+      </tr></thead>
+      <tbody id="gridBody"></tbody>
+    </table></div>
+    <div class="note" style="margin-top:6px">Tap a column header to sort. <span class="flag">⚠</span> = cases exceed a full pallet — recount as pallets.</div>
+    <div class="totbar">
+      <div class="tot"><div class="k">Rows</div><div class="v" id="tRows">0</div></div>
+      <div class="tot"><div class="k">Pallets</div><div class="v" id="tPallets">0</div></div>
+      <div class="tot"><div class="k">Total cans</div><div class="v" id="tCans">0</div></div>
+    </div>
+    <button class="btn" id="btnCsv">DOWNLOAD CSV</button>
+    <div class="row2">
+      <button class="btn ghost sm" id="btnCopy">Copy CSV</button>
+      <button class="btn ghost sm" id="btnJson">Backup JSON</button>
+    </div>
+    <div class="row2">
+      <button class="btn ghost sm" id="btnImport">Import CSV/JSON</button>
+      <button class="btn bad sm" id="btnClear">Clear table</button>
+    </div>
+    <input type="file" id="importInput" accept=".csv,.json" class="hidden">
+    <div class="note" style="margin-top:8px">CSV columns match your count sheets and import straight into Google Sheets. JSON backup restores every session.</div>
+  </div>
+</section>
+
+<!-- ============ SUMMARY TAB ============ -->
+<section class="tab" id="tab-sum">
+  <div class="card">
+    <h2>Session summary</h2>
+    <div class="note" id="sessInfo" style="margin-bottom:8px"></div>
+    <div id="sumBody"><div class="note">Nothing counted yet.</div></div>
+    <div class="totbar">
+      <div class="tot"><div class="k">Grand total cans</div><div class="v" id="sCans">0</div></div>
+      <div class="tot"><div class="k">Grand total pallets</div><div class="v" id="sPallets">0</div></div>
+    </div>
+    <h2 style="margin-top:16px">By location</h2>
+    <div id="locBody"><div class="note">—</div></div>
+  </div>
+  <div class="card">
+    <h2>Display &amp; setup</h2>
+    <div class="toggle" id="sizeToggle"><span class="sw"></span><span>Large text mode (glove-friendly)</span></div>
+    <div class="toggle on" id="wakeToggle"><span class="sw"></span><span>Keep screen awake while counting</span></div>
+    <div class="note" style="margin-top:10px">
+      &bull; Camera needs <b>HTTPS</b> (or localhost). Host on GitHub Pages or any https static host for scanning.<br>
+      &bull; Barcode + OCR libraries load from CDN on first open &mdash; needs internet once.<br>
+      &bull; Everything saves on-device (localStorage) &mdash; nothing leaves the phone until you export.<br>
+      &bull; Brand specs live in the file (search <b>BRANDS</b>).
+    </div>
+  </div>
+</section>
+
+<nav class="tabs">
+  <button data-t="tab-scan" class="on">SCAN</button>
+  <button data-t="tab-count">COUNT</button>
+  <button data-t="tab-table">TABLE<span class="badge" id="tabBadge"></span></button>
+  <button data-t="tab-sum">SUMMARY</button>
+</nav>
+<div id="toast"></div>
+<div id="undoToast"><span id="undoMsg">Row deleted</span><button id="btnUndo">UNDO</button></div>
+<datalist id="itemCodes"></datalist>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+"use strict";
+/* ================= BRAND SPECS (from your cyber-count sheets) ================
+   p = cans per pallet | rpp = rows per pallet | c = cans per case (case pack)  */
+const BRANDS = [
+  {id:"popz",     name:"Popz",              p:2400, rpp:10, c:24, spec:"24-Pack"},
+  {id:"waves",    name:"Waves",             p:2496, rpp:8,  c:24, spec:"24-Pack"},
+  {id:"bellevie", name:"Belle Vie",         p:2400, rpp:10, c:24, spec:"24-Pack"},
+  {id:"frost",    name:"Frost / Sum Frost", p:1680, rpp:7,  c:12, spec:"12-Pack"},
+  {id:"gridlock", name:"Gridlock",          p:1680, rpp:7,  c:12, spec:"12-Pack"},
+  {id:"other",    name:"Other / Mixed",     p:2400, rpp:10, c:24, spec:"24-Pack"},
+];
+const ITEM_CODES = ["VP","RWB","OV","RS","LL","SL","Cola","Raspberry Rose","CL",
+  "KiwiGuava","Watermelon","Orange","Berry","Peach","Tropical"];
+const brandById = id => BRANDS.find(b=>b.id===id) || BRANDS[BRANDS.length-1];
+/* Pack-aware math: custom case pack rescales pallet & row can values */
+const casesPerPallet = b => Math.max(1, Math.round(b.p / b.c));
+const casesPerRow    = b => Math.max(1, Math.round(casesPerPallet(b) / b.rpp));
+const palletCans = (b,pack) => casesPerPallet(b) * pack;
+const rowCans    = (b,pack) => casesPerRow(b) * pack;
+const cansFor = (b,pack,P,R,C) => P*palletCans(b,pack) + R*rowCans(b,pack) + C*pack;
+const casesFor = (b,P,R,C) => P*casesPerPallet(b) + R*casesPerRow(b) + C;
+
+/* ================= STATE + SESSIONS ================= */
+const LS_V2="palletscan_v2", LS_V1="palletscan_rows_v1";
+let state=null;
+try{ state=JSON.parse(localStorage.getItem(LS_V2)||"null"); }catch(e){ state=null; }
+if(!state || !Array.isArray(state.sessions)){
+  let old=[]; try{ old=JSON.parse(localStorage.getItem(LS_V1)||"[]"); }catch(e){}
+  const s={id:"s"+Date.now(), name:"Default", created:Date.now(), rows:old};
+  state={sessions:[s], activeId:s.id, settings:{}};
+}
+const S = () => state.sessions.find(s=>s.id===state.activeId) || state.sessions[0];
+let rows = S().rows;
+const save = () => { try{ localStorage.setItem(LS_V2, JSON.stringify(state)); }catch(e){} };
+const settings = () => (state.settings = state.settings || {});
+const scanner = () => (document.getElementById("scannerName").value||"").trim();
+
+/* ================= UTILS ================= */
+const $ = id => document.getElementById(id);
+const fmt = n => Number(n||0).toLocaleString("en-US");
+const esc = s => String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const stamp = () => { const d=new Date();
+  return d.toLocaleString("en-US",{month:"2-digit",day:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}); };
+const fileStamp = () => { const d=new Date(), p=n=>String(n).padStart(2,"0");
+  return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"_"+p(d.getHours())+p(d.getMinutes()); };
+const sessSlug = () => S().name.replace(/[^a-z0-9]+/gi,"-").replace(/^-+|-+$/g,"").slice(0,40)||"session";
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.style.display="block";
+  clearTimeout(t._h); t._h=setTimeout(()=>t.style.display="none",2200); }
+/* audio + haptics */
+let AC=null;
+function beep(f,d){ f=f||880; d=d||0.12;
+  try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==="suspended") AC.resume();
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type="sine"; o.frequency.value=f;
+    g.gain.setValueAtTime(0.18,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+d);
+    o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime+d);
+  }catch(e){} }
+function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms||60); }catch(e){} }
+/* shorthand: "3p 2r 5c", "107p,+1p" */
+function parseShort(s){ const out={P:0,R:0,C:0}; if(!s) return out;
+  const mP=s.match(/(\d+)\s*p/gi), mR=s.match(/(\d+)\s*r/gi), mC=s.match(/(\d+)\s*c/gi);
+  const sum=a=>a?a.reduce((t,m)=>t+parseInt(m,10),0):0;
+  out.P=sum(mP); out.R=sum(mR); out.C=sum(mC); return out; }
+/* wake lock */
+let wlOn = settings().wake !== false, wl=null;
+async function keepAwake(){ if(!wlOn) return;
+  try{ if("wakeLock" in navigator){ wl=await navigator.wakeLock.request("screen"); } }catch(e){} }
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") keepAwake(); });
+
+/* ================= TABS ================= */
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.remove("on"));
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); $(b.dataset.t).classList.add("on");
+  if(b.dataset.t==="tab-table") renderTable();
+  if(b.dataset.t==="tab-sum") renderSummary();
+}));
+function updateBadge(){ const b=$("tabBadge");
+  b.textContent=rows.length; b.classList.toggle("show", rows.length>0);
+  $("hdrStats").textContent=rows.length+" rows · "+fmt(rows.reduce((t,r)=>t+r.cans,0))+" cans"; }
+
+/* ================= SESSIONS ================= */
+function renderSessionSel(){ const sel=$("sessionSel"); sel.innerHTML="";
+  state.sessions.forEach(s=>{ const o=document.createElement("option");
+    o.value=s.id; o.textContent=s.name+" ("+s.rows.length+")"; sel.appendChild(o); });
+  sel.value=state.activeId; }
+$("sessionSel").addEventListener("change",e=>{ setActive(e.target.value); });
+function setActive(id){ state.activeId=id; rows=S().rows; save();
+  renderSessionSel(); updateBadge(); renderTable(); renderSummary();
+  cnt.P=cnt.R=cnt.C=0; updCount(); }
+$("btnNewSession").addEventListener("click",()=>{
+  const name=prompt("New session name:", "Count "+new Date().toLocaleDateString("en-US",{month:"2-digit",day:"2-digit"}));
+  if(!name) return;
+  const s={id:"s"+Date.now(), name:name.trim().slice(0,40), created:Date.now(), rows:[]};
+  state.sessions.push(s); setActive(s.id); toast("Session started: "+s.name); });
+
+/* ================= SCAN MODES ================= */
+document.querySelectorAll("#scanModes button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("#scanModes button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");
+  ["barcode","photo","manual"].forEach(m=>$("mode-"+m).classList.toggle("hidden", m!==b.dataset.m));
+  if(b.dataset.m!=="barcode") stopScan();
+}));
+$("btnManualEntry").addEventListener("click",()=>openConfirm({}));
+
+/* ---- Barcode (html5-qrcode) ---- */
+let hq=null, scanning=false, facingMode="environment", torchOn=false, rapidMode=false, rapidCount=0;
+const qrRegionId="qr-region";
+$("rapidToggle").addEventListener("click",()=>{ rapidMode=!rapidMode;
+  $("rapidToggle").classList.toggle("on",rapidMode);
+  if(rapidMode){ rapidCount=0; $("rapidCount").textContent=""; } });
+async function startScan(){
+  if(typeof Html5Qrcode==="undefined"){ toast("Scanner library failed to load — check internet once, then reload."); return; }
+  const wrap=$("cam-wrap");
+  if(!$(qrRegionId)){ const d=document.createElement("div"); d.id=qrRegionId; d.style.width="100%"; wrap.innerHTML=""; wrap.appendChild(d); }
+  try{
+    hq=new Html5Qrcode(qrRegionId); scanning=true; torchOn=false; $("btnTorch").textContent="TORCH: OFF";
+    $("btnStartScan").classList.add("hidden"); $("btnStopScan").classList.remove("hidden");
+    await hq.start({facingMode:facingMode},
+      {fps:10, qrbox:{width:260,height:160},
+       formatsToSupport:[Html5QrcodeSupportedFormats.QR_CODE, Html5QrcodeSupportedFormats.CODE_128,
+         Html5QrcodeSupportedFormats.CODE_39, Html5QrcodeSupportedFormats.EAN_13,
+         Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.UPC_A,
+         Html5QrcodeSupportedFormats.UPC_E, Html5QrcodeSupportedFormats.DATA_MATRIX,
+         Html5QrcodeSupportedFormats.ITF]},
+      txt=>{ beep(880,0.1); buzz(50); stopScan(); onBarcode(txt); });
+  }catch(err){ scanning=false;
+    $("btnStartScan").classList.remove("hidden"); $("btnStopScan").classList.add("hidden");
+    toast("Camera blocked: open this page over HTTPS and allow camera access."); }
+}
+async function stopScan(){ if(hq&&scanning){ try{ await hq.stop(); await hq.clear(); }catch(e){} }
+  scanning=false; torchOn=false;
+  $("btnStartScan").classList.remove("hidden"); $("btnStopScan").classList.add("hidden"); }
+$("btnStartScan").addEventListener("click",startScan);
+$("btnStopScan").addEventListener("click",stopScan);
+$("btnFlipCam").addEventListener("click",async()=>{
+  facingMode = facingMode==="environment" ? "user" : "environment";
+  if(scanning){ await stopScan(); startScan(); }
+  toast("Camera: "+(facingMode==="environment"?"back":"front")); });
+$("btnTorch").addEventListener("click",async()=>{
+  if(!hq||!scanning){ toast("Start the scanner first."); return; }
+  try{ torchOn=!torchOn;
+    await hq.applyVideoConstraints({advanced:[{torch:torchOn}]});
+    $("btnTorch").textContent="TORCH: "+(torchOn?"ON":"OFF");
+  }catch(e){ toast("Torch not supported on this camera."); torchOn=false; } });
+function onBarcode(txt){
+  if(rapidMode){ rapidAdd(txt); return; }
+  toast("Barcode read: "+txt.slice(0,40));
+  openConfirm({lot:txt, raw:"BARCODE: "+txt});
+}
+function rapidAdd(txt){
+  const b=brandById("other"), pack=b.c;
+  rows.push({ts:stamp(), scanner:scanner()||"—", brand:b.name, item:"", lot:txt,
+    bestBy:"", date:"", pack:pack, p:1, r:0, c:0, cans:cansFor(b,pack,1,0,0),
+    loc:lastLoc(), notes:"rapid scan"});
+  rapidCount++; save(); updateBadge();
+  $("rapidCount").textContent="· "+rapidCount+" added";
+  toast("Rapid +"+rapidCount+": "+txt.slice(0,30));
+}
+
+/* ---- Photo + OCR (tesseract.js) ---- */
+let photoURL=null;
+$("btnTakePhoto").addEventListener("click",()=>$("photoInput").click());
+$("btnRetake").addEventListener("click",()=>{ photoURL=null; $("photoInput").value="";
+  $("photoPrev").classList.add("hidden"); $("photoHint").classList.remove("hidden");
+  $("btnRunOcr").classList.add("hidden"); $("btnRetake").classList.add("hidden");
+  $("ocrNote").textContent=""; });
+$("photoInput").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return;
+  photoURL=URL.createObjectURL(f);
+  const img=$("photoPrev"); img.src=photoURL; img.classList.remove("hidden");
+  $("photoHint").classList.add("hidden");
+  $("btnRunOcr").classList.remove("hidden"); $("btnRetake").classList.remove("hidden");
+  $("ocrNote").textContent="";
+});
+function downscale(src,maxDim){ return new Promise(res=>{ const img=new Image();
+  img.onload=()=>{ const s=Math.min(1,(maxDim||1600)/Math.max(img.width,img.height));
+    const c=document.createElement("canvas");
+    c.width=Math.round(img.width*s); c.height=Math.round(img.height*s);
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    res(c.toDataURL("image/jpeg",0.85)); };
+  img.onerror=()=>res(src); img.src=src; }); }
+$("btnRunOcr").addEventListener("click",async()=>{
+  if(typeof Tesseract==="undefined"){ toast("OCR library failed to load — check internet once, then reload."); return; }
+  const prog=$("ocrProg"); prog.classList.remove("hidden");
+  const bar=prog.querySelector("i"); bar.style.width="2%";
+  $("ocrNote").textContent="Reading label text…";
+  try{
+    const src=await downscale(photoURL||$("photoPrev").src,1600);
+    const res=await Tesseract.recognize(src,"eng",
+      {logger:m=>{ if(m.status==="recognizing text"&&m.progress) bar.style.width=Math.round(m.progress*100)+"%"; }});
+    bar.style.width="100%";
+    const text=(res.data&&res.data.text||"").trim();
+    if(!text){ $("ocrNote").textContent="No text found — try a closer, sharper photo."; return; }
+    openConfirm(parseLabel(text));
+  }catch(err){ $("ocrNote").textContent="OCR failed: "+err.message; }
+  setTimeout(()=>prog.classList.add("hidden"),600);
+});
+
+/* ---- Label text parser (tuned for your ALDI-style pallet labels) ---- */
+function parseLabel(text){
+  const t=text.replace(/\r/g,"\n"), up=t.toUpperCase(), out={raw:text, found:{}};
+  const grab=(re,key)=>{ const m=t.match(re); const v=m?(m[1]||m[0]).trim():"";
+    if(v&&key) out.found[key]=true; return v; };
+  out.lot   = grab(/LOT[:\s#]*([A-Z0-9-]{5,})/i,"lot") || grab(/\b([A-Z]\d{2,}[A-Z0-9]{4,})\b/,"lot");
+  out.bestBy= grab(/BEST\s*BY[:\s]*(\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4})/i,"bestBy");
+  const dates=[...t.matchAll(/(\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4})/g)].map(m=>m[1]);
+  out.date  = dates.find(d=>d!==out.bestBy)||"";
+  if(out.date) out.found.date=true;
+  const cases=grab(/CASES[:\s]*(\d{1,4})/i,"cases");
+  if(cases) out.cases=parseInt(cases,10);
+  const pack=grab(/CASE\s*PACK[:\s]*(\d{1,3})/i,"pack") || grab(/(\d{1,3})\s*[- ]?PACK/i,"pack");
+  if(pack) out.pack=parseInt(pack,10);
+  const sap=grab(/SAP[:\s]*([A-Z0-9]{4,})/i); if(sap){ out.sap=sap; out.found.sap=true; }
+  for(const code of ITEM_CODES){ if(up.includes(code.toUpperCase())){ out.item=code; out.found.item=true; break; } }
+  if(!out.item) for(const b of BRANDS){
+    if(b.name!=="Other / Mixed"&&up.includes(b.name.toUpperCase().split(" /")[0])){
+      out.brand=b.id; out.item=b.name; out.found.item=true; out.found.brand=true; break; } }
+  return out;
+}
+
+/* ================= CONFIRM CARD ================= */
+const brandSel=$("fBrand"), cBrandSel=$("cBrand");
+BRANDS.forEach(b=>{ for(const s of [brandSel,cBrandSel]){
+  const o=document.createElement("option"); o.value=b.id;
+  o.textContent=b.name+" — "+b.spec; s.appendChild(o); } });
+const fltBrand=$("fltBrand");
+BRANDS.forEach(b=>{ const o=document.createElement("option"); o.value=b.name; o.textContent=b.name; fltBrand.appendChild(o); });
+$("itemCodes").innerHTML = ITEM_CODES.map(c=>"<option value='"+esc(c)+"'>").join("");
+let editingIndex=-1, dupArmed=false, lastLocCache="";
+function lastLoc(){ return lastLocCache || ""; }
+function openConfirm(p, idx){
+  editingIndex=(idx==null?-1:idx); dupArmed=false;
+  const card=$("confirm-card"); card.classList.remove("hidden");
+  $("confirmTitle").innerHTML = editingIndex>=0 ? "2 — Edit row" : "2 — Confirm transcription";
+  $("btnConfirm").textContent = editingIndex>=0 ? "SAVE CHANGES" : "CONFIRM & ADD TO TABLE";
+  $("btnConfirm").classList.remove("armed");
+  const raw=$("ocrRaw");
+  if(p.raw){ raw.textContent=p.raw; raw.classList.remove("hidden"); } else raw.classList.add("hidden");
+  brandSel.value=p.brandId||p.brand&&brandIdByName(p.brand)||guessBrand(p.item)||sticky("brand","other");
+  syncPack();
+  $("fItem").value=p.item||"";
+  $("fLot").value=p.lot||"";
+  $("fBestBy").value=p.bestBy||"";
+  $("fDate").value=p.date||"";
+  $("fShort").value="";
+  $("fP").value=p.p!=null?p.p:1;
+  $("fR").value=p.r||0; $("fC").value=p.cases!=null?p.cases:(p.c||0);
+  if(p.pack) $("fPack").value=p.pack;
+  $("fLoc").value=p.loc||lastLoc();
+  $("fNotes").value=p.notes||(p.sap?("SAP "+p.sap):"");
+  $("dupWarn").classList.remove("show");
+  markFound(p.found||{});
+  updConfirmTotal(); checkExpiry();
+  card.scrollIntoView({behavior:"smooth"});
+  ["fP","fR","fC","fPack"].forEach(id=>$(id).oninput=()=>{dupArmed=false;$("btnConfirm").classList.remove("armed");updConfirmTotal();});
+  ["fItem","fLot"].forEach(id=>$(id).oninput=()=>{dupArmed=false;$("btnConfirm").classList.remove("armed");$("dupWarn").classList.remove("show");});
+  brandSel.onchange=()=>{ syncPack(); updConfirmTotal(); };
+  $("fBestBy").oninput=checkExpiry;
+}
+function brandIdByName(n){ const b=BRANDS.find(x=>x.name===n); return b?b.id:"other"; }
+function sticky(k,fb){ try{ return localStorage.getItem("palletscan_sticky_"+k)||fb; }catch(e){ return fb; } }
+function setSticky(k,v){ try{ localStorage.setItem("palletscan_sticky_"+k,v); }catch(e){} }
+function guessBrand(item){ if(!item) return null;
+  const u=item.toUpperCase();
+  if(/GRIDLOCK/.test(u)) return "gridlock";
+  if(/WAVE/.test(u)) return "waves";
+  if(/FROST/.test(u)) return "frost";
+  if(/BELLE/.test(u)) return "bellevie";
+  if(/POPZ|VP|RWB|OV|RS|LL|SL|COLA|KIWI|WATERMELON|ORANGE|BERRY|PEACH|TROPICAL|RASPBERRY/.test(u)) return "popz";
+  return null; }
+function syncPack(){ const b=brandById(brandSel.value);
+  if(!document.querySelector("#confirm-card").dataset.touched) $("fPack").value=b.c; }
+$("fPack").addEventListener("input",()=>{ document.querySelector("#confirm-card").dataset.touched="1"; updConfirmTotal(); });
+function markFound(f){ [["fItem","item"],["fLot","lot"],["fBestBy","bestBy"],["fDate","date"]]
+  .forEach(([id,k])=>$(id).classList.toggle("warn-field", !$(id).value && !f[k])); }
+function curVals(){
+  const b=brandById(brandSel.value), pack=+$("fPack").value||b.c;
+  return {b,pack,P:+$("fP").value||0,R:+$("fR").value||0,C:+$("fC").value||0}; }
+function updConfirmTotal(){
+  const {b,pack,P,R,C}=curVals();
+  const cans=cansFor(b,pack,P,R,C), cs=casesFor(b,P,R,C);
+  $("confirm-total").innerHTML="Computed: <b style='color:var(--acc)'>"+fmt(cans)+" cans</b>"+
+    " · "+fmt(cs)+" cases ("+P+"P + "+R+"R + "+C+"C, pack "+pack+")";
+}
+function parseBestBy(s){ const m=String(s||"").match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
+  if(!m) return null; let y=+m[3]; if(y<100) y+=2000;
+  return new Date(y,+m[1]-1,+m[2]); }
+function checkExpiry(){ const el=$("expFlag"), d=parseBestBy($("fBestBy").value);
+  el.classList.remove("show","past","soon"); if(!d) return;
+  const days=Math.round((d-new Date())/864e5);
+  if(days<0){ el.textContent="EXPIRED "+Math.abs(days)+" days ago"; el.classList.add("show","past"); }
+  else if(days<=60){ el.textContent="Expires in "+days+" days"; el.classList.add("show","soon"); } }
+$("fShort").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault();
+  const s=parseShort($("fShort").value);
+  $("fP").value=s.P; $("fR").value=s.R; $("fC").value=s.C; updConfirmTotal(); }});
+document.querySelectorAll("#confirm-card input").forEach(i=>i.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&i.id!=="fShort"){ e.preventDefault(); $("btnConfirm").click(); }}));
+$("btnCancelConfirm").addEventListener("click",()=>$("confirm-card").classList.add("hidden"));
+function dupCount(lot, skipIdx){ if(!lot) return 0;
+  const l=lot.trim().toLowerCase();
+  return rows.filter((r,i)=>i!==skipIdx && String(r.lot||"").trim().toLowerCase()===l).length; }
+$("btnConfirm").addEventListener("click",()=>{
+  const {b,pack,P,R,C}=curVals();
+  const lot=$("fLot").value.trim();
+  if(editingIndex<0 && !dupArmed){
+    const n=dupCount(lot, -1);
+    if(n>0){ dupArmed=true;
+      const w=$("dupWarn");
+      w.innerHTML="DUPLICATE LOT — already scanned "+n+" time"+(n>1?"s":"")+" this session. Tap CONFIRM again to add anyway.";
+      w.classList.add("show");
+      $("btnConfirm").textContent="TAP AGAIN TO ADD DUPLICATE";
+      $("btnConfirm").classList.add("armed");
+      beep(440,0.2); return; } }
+  const row={ts: editingIndex>=0?rows[editingIndex].ts:stamp(),
+    scanner:scanner()||"—", brand:b.name, brandId:b.id,
+    item:$("fItem").value.trim(), lot:lot,
+    bestBy:$("fBestBy").value.trim(), date:$("fDate").value.trim(),
+    pack:pack, p:P, r:R, c:C, cans:cansFor(b,pack,P,R,C),
+    loc:$("fLoc").value.trim(), notes:$("fNotes").value.trim()};
+  if(editingIndex>=0){ rows[editingIndex]=row; toast("Row updated"); }
+  else { rows.push(row); toast("Added — "+fmt(row.cans)+" cans"); }
+  if(row.loc) lastLocCache=row.loc;
+  setSticky("brand",b.id);
+  beep(1040,0.12); buzz(60);
+  save(); updateBadge(); renderTable();
+  $("confirm-card").classList.add("hidden");
+  delete document.querySelector("#confirm-card").dataset.touched;
+});
+
+/* ================= COUNT TAB ================= */
+const cnt={P:0,R:0,C:0};
+function cntBrand(){ return brandById(cBrandSel.value); }
+function updCount(){
+  const b=cntBrand();
+  $("cP").textContent=cnt.P; $("cR").textContent=cnt.R; $("cC").textContent=cnt.C;
+  $("cPInfo").textContent="1 pallet = "+fmt(palletCans(b,b.c))+" cans";
+  $("cRInfo").textContent="1 row = "+fmt(rowCans(b,b.c))+" cans";
+  $("cCInfo").textContent="1 case = "+b.c+" cans";
+  const t=cansFor(b,b.c,cnt.P,cnt.R,cnt.C);
+  $("cTotal").textContent=fmt(t);
+  $("cDetail").textContent=cnt.P+"P + "+cnt.R+"R + "+cnt.C+"C · "+b.spec;
+}
+function bindHold(btn,fn){ let t1,t2;
+  const start=e=>{ e.preventDefault(); fn();
+    t1=setTimeout(()=>{ t2=setInterval(fn,90); },450); };
+  const end=()=>{ clearTimeout(t1); clearInterval(t2); };
+  btn.addEventListener("pointerdown",start);
+  ["pointerup","pointerleave","pointercancel"].forEach(ev=>btn.addEventListener(ev,end)); }
+document.querySelectorAll(".stepper button").forEach(btn=>bindHold(btn,()=>{
+  const s=btn.dataset.s, d=+btn.dataset.d;
+  cnt[s]=Math.max(0,cnt[s]+d); updCount(); }));
+cBrandSel.addEventListener("change",updCount);
+cBrandSel.value=sticky("brand","popz"); updCount();
+$("cShort").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault();
+  const s=parseShort($("cShort").value); cnt.P=s.P; cnt.R=s.R; cnt.C=s.C; updCount(); }});
+$("btnResetCount").addEventListener("click",()=>{ cnt.P=cnt.R=cnt.C=0; updCount(); });
+$("btnLogCount").addEventListener("click",()=>{
+  const b=cntBrand();
+  if(!cnt.P&&!cnt.R&&!cnt.C){ toast("Nothing to log — tap + first."); return; }
+  const lot=$("cLot").value.trim();
+  const n=dupCount(lot,-1);
+  if(lot&&n>0&&!confirm("Lot "+lot+" already scanned "+n+"x this session. Log anyway?")) return;
+  const row={ts:stamp(), scanner:scanner()||"—", brand:b.name, brandId:b.id,
+    item:$("cItem").value.trim(), lot:lot, bestBy:"", date:"", pack:b.c,
+    p:cnt.P, r:cnt.R, c:cnt.C, cans:cansFor(b,b.c,cnt.P,cnt.R,cnt.C),
+    loc:$("cLoc").value.trim(), notes:"quick count"};
+  rows.push(row);
+  if(row.loc) lastLocCache=row.loc;
+  setSticky("brand",b.id);
+  beep(1040,0.12); buzz(60);
+  save(); updateBadge(); cnt.P=cnt.R=cnt.C=0; updCount();
+  toast("Count logged — "+fmt(row.cans)+" cans");
+});
+
+/* ================= TABLE ================= */
+let sortKey=null, sortDir=1, filterQ="", filterBrand="";
+$("fltQ").addEventListener("input",e=>{ filterQ=e.target.value.trim().toLowerCase(); renderTable(); });
+$("fltBrand").addEventListener("change",e=>{ filterBrand=e.target.value; renderTable(); });
+document.querySelectorAll("th[data-k]").forEach(th=>th.addEventListener("click",()=>{
+  const k=th.dataset.k;
+  if(sortKey===k) sortDir*=-1; else { sortKey=k; sortDir=1; }
+  renderTable(); }));
+function outlier(r){ const b=brandById(r.brandId||brandIdByName(r.brand));
+  return r.c > casesPerPallet(b); }
+function viewRows(){
+  let v=rows.map((r,i)=>({r,i}));
+  if(filterBrand) v=v.filter(x=>x.r.brand===filterBrand);
+  if(filterQ) v=v.filter(x=>[x.r.lot,x.r.item,x.r.loc,x.r.brand,x.r.scanner]
+    .join(" ").toLowerCase().includes(filterQ));
+  if(sortKey){ const k=sortKey,d=sortDir;
+    v.sort((a,b)=>{ const x=a.r[k],y=b.r[k];
+      return (typeof x==="number"&&typeof y==="number"?x-y:String(x??"").localeCompare(String(y??"")))*d; }); }
+  return v; }
+function renderTable(){
+  const tb=$("gridBody"); tb.innerHTML="";
+  const v=viewRows();
+  let pallets=0,cans=0;
+  rows.forEach(r=>{ pallets+=r.p; cans+=r.cans; });
+  v.forEach(({r,i})=>{
+    const tr=document.createElement("tr");
+    const flag=outlier(r)?" <span class='flag' title='Cases exceed a full pallet'>⚠</span>":"";
+    tr.innerHTML="<td>"+r.ts+"</td><td>"+esc(r.scanner)+"</td><td>"+esc(r.brand)+"</td>"+
+      "<td>"+esc(r.item)+"</td><td>"+esc(r.lot)+"</td><td>"+esc(r.bestBy)+"</td>"+
+      "<td>"+r.p+"</td><td>"+r.r+"</td><td>"+r.c+flag+"</td><td><b>"+fmt(r.cans)+"</b></td>"+
+      "<td>"+esc(r.loc)+"</td>"+
+      "<td style='white-space:nowrap'><button class='iconbtn' data-a='edit' data-i='"+i+"'>✎</button> "+
+      "<button class='iconbtn' data-a='del' data-i='"+i+"'>&times;</button></td>";
+    tb.appendChild(tr);
+  });
+  if(!rows.length)
+    tb.innerHTML="<tr><td colspan='12' style='text-align:center;color:var(--dim);padding:20px'>No rows yet.<br><br>"+
+      "<button class='btn sm' style='max-width:280px;margin:0 auto' onclick=\"document.querySelector('[data-t=tab-scan]').click()\">GO TO SCAN</button><br>"+
+      "<button class='btn ghost sm' style='max-width:280px;margin:8px auto 0' onclick=\"document.querySelector('[data-t=tab-count]').click()\">GO TO COUNT</button></td></tr>";
+  else if(!v.length)
+    tb.innerHTML="<tr><td colspan='12' style='text-align:center;color:var(--dim);padding:20px'>No rows match the filter.</td></tr>";
+  $("tRows").textContent=rows.length;
+  $("tPallets").textContent=fmt(pallets);
+  $("tCans").textContent=fmt(cans);
+  document.querySelectorAll("th[data-k]").forEach(th=>{
+    th.querySelector(".arr")&&th.querySelector(".arr").remove();
+    if(th.dataset.k===sortKey){ const s=document.createElement("span");
+      s.className="arr"; s.textContent=sortDir>0?" ▲":" ▼"; th.appendChild(s); } });
+  tb.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.i;
+    if(b.dataset.a==="edit"){ const r=rows[i];
+      openConfirm({brandId:r.brandId||brandIdByName(r.brand), item:r.item, lot:r.lot,
+        bestBy:r.bestBy, date:r.date, p:r.p, r:r.r, cases:r.c, pack:r.pack,
+        loc:r.loc, notes:r.notes, found:{item:1,lot:1}}, i);
+      document.querySelector('[data-t="tab-scan"]').click();
+    } else delRow(i);
+  }));
+  updateBadge();
+}
+let lastDel=null, undoTimer=null;
+function delRow(i){
+  lastDel={row:rows[i], idx:i, sid:state.activeId};
+  rows.splice(i,1); save(); renderTable();
+  const u=$("undoToast"); $("undoMsg").textContent="Row deleted ("+fmt(lastDel.row.cans)+" cans)";
+  u.style.display="flex"; clearTimeout(undoTimer);
+  undoTimer=setTimeout(()=>u.style.display="none",6000);
+}
+$("btnUndo").addEventListener("click",()=>{
+  if(!lastDel||lastDel.sid!==state.activeId){ $("undoToast").style.display="none"; return; }
+  const s=S(); s.rows.splice(Math.min(lastDel.idx,s.rows.length),0,lastDel.row);
+  rows=s.rows; lastDel=null; clearTimeout(undoTimer);
+  $("undoToast").style.display="none";
+  save(); renderTable(); toast("Row restored");
+});
+
+/* ---- CSV / JSON ---- */
+const CSV_HEAD=["Timestamp","Scanner","Brand","Item/Code","Lot","Best By","Label Date","Case Pack","Pallets","Rows","Cases","Total Cans","Location","Notes"];
+const csvCell=v=>{ v=String(v==null?"":v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; };
+function buildCsv(rs){ return CSV_HEAD.join(",")+"\n"+rs.map(r=>
+  [r.ts,r.scanner,r.brand,r.item,r.lot,r.bestBy,r.date,r.pack,r.p,r.r,r.c,r.cans,r.loc,r.notes]
+  .map(csvCell).join(",")).join("\n"); }
+function dl(name, text, type){ const blob=new Blob([text],{type:type});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=name; document.body.appendChild(a); a.click(); a.remove(); }
+$("btnCsv").addEventListener("click",()=>{
+  if(!rows.length){ toast("Nothing to export yet."); return; }
+  dl("palletscan_"+sessSlug()+"_"+fileStamp()+".csv", buildCsv(rows), "text/csv");
+  toast("CSV downloaded"); });
+$("btnCopy").addEventListener("click",async()=>{
+  if(!rows.length){ toast("Nothing to copy yet."); return; }
+  try{ await navigator.clipboard.writeText(buildCsv(rows)); toast("CSV copied — paste into Sheets"); }
+  catch(e){ toast("Copy blocked by browser — use Download instead."); } });
+$("btnJson").addEventListener("click",()=>{
+  dl("palletscan_backup_"+fileStamp()+".json",
+    JSON.stringify({app:"palletscan-counter",version:2,exported:new Date().toISOString(),sessions:state.sessions},null,1),
+    "application/json");
+  toast("Backup downloaded"); });
+$("btnImport").addEventListener("click",()=>$("importInput").click());
+$("importInput").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{ try{
+      if(/\.json$/i.test(f.name)){
+        const d=JSON.parse(rd.result);
+        const sess=d.sessions||[];
+        if(!sess.length) throw new Error("no sessions found");
+        sess.forEach(s=>{ s.id="s"+Date.now()+Math.floor(Math.random()*1e6);
+          s.name="Import "+(s.name||"backup"); state.sessions.push(s); });
+        setActive(state.sessions[state.sessions.length-1].id);
+        toast("Imported "+sess.length+" session(s)");
+      } else {
+        const parsed=parseCsv(rd.result);
+        if(!parsed.length) throw new Error("no rows found");
+        const s={id:"s"+Date.now(), name:"Import "+fileStamp(), created:Date.now(), rows:parsed};
+        state.sessions.push(s); setActive(s.id);
+        toast("Imported "+parsed.length+" rows");
+      }
+    }catch(err){ toast("Import failed: "+err.message); }
+    $("importInput").value=""; };
+  rd.readAsText(f); });
+function parseCsv(text){
+  const lines=text.trim().split(/\r?\n/); if(lines.length<2) return [];
+  const head=splitCsvLine(lines[0]).map(h=>h.trim().toLowerCase());
+  const idx=n=>head.indexOf(n);
+  const out=[];
+  for(let i=1;i<lines.length;i++){ const c=splitCsvLine(lines[i]); if(!c.length) continue;
+    const g=n=>{ const j=idx(n); return j>=0?(c[j]||"").trim():""; };
+    const b=brandById(brandIdByName(g("brand")));
+    const P=+g("pallets")||0,R=+g("rows")||0,C=+g("cases")||0,pack=+g("case pack")||b.c;
+    out.push({ts:g("timestamp")||stamp(),scanner:g("scanner")||"—",brand:g("brand")||b.name,
+      brandId:b.id,item:g("item/code"),lot:g("lot"),bestBy:g("best by"),date:g("label date"),
+      pack:pack,p:P,r:R,c:C,cans:+g("total cans")||cansFor(b,pack,P,R,C),
+      loc:g("location"),notes:g("notes")}); }
+  return out; }
+function splitCsvLine(line){ const out=[]; let cur="",q=false;
+  for(let i=0;i<line.length;i++){ const ch=line[i];
+    if(q){ if(ch==='"'){ if(line[i+1]==='"'){cur+='"';i++;} else q=false; } else cur+=ch; }
+    else if(ch==='"') q=true; else if(ch===","){ out.push(cur); cur=""; } else cur+=ch; }
+  out.push(cur); return out; }
+$("btnClear").addEventListener("click",()=>{
+  if(!rows.length) return;
+  if(confirm("Clear ALL "+rows.length+" rows in '"+S().name+"'? Export CSV first if you need them.")){
+    S().rows=[]; rows=S().rows; save(); renderTable(); renderSummary(); } });
+
+/* ================= SUMMARY ================= */
+function renderSummary(){
+  const by={}, loc={}; let cans=0,pallets=0;
+  rows.forEach(r=>{ cans+=r.cans; pallets+=r.p;
+    const b=by[r.brand]=by[r.brand]||{rows:0,cans:0,pallets:0};
+    b.rows++; b.cans+=r.cans; b.pallets+=r.p;
+    const l=loc[r.loc||"(no location)"]=loc[r.loc||"(no location)"]||{rows:0,cans:0};
+    l.rows++; l.cans+=r.cans; });
+  const names=Object.keys(by).sort((a,b)=>by[b].cans-by[a].cans);
+  $("sumBody").innerHTML=names.length? names.map(n=>
+    "<div class='sumrow'><span>"+esc(n)+" <small style='color:var(--dim)'>"+by[n].rows+" rows</small></span>"+
+    "<b>"+fmt(by[n].cans)+" cans · "+fmt(by[n].pallets)+" plt</b></div>").join("")
+    : "<div class='note'>Nothing counted yet.</div>";
+  const ln=Object.keys(loc).sort((a,b)=>loc[b].cans-loc[a].cans);
+  $("locBody").innerHTML=ln.length? ln.map(n=>
+    "<div class='sumrow'><span>"+esc(n)+"</span><b>"+fmt(loc[n].cans)+" cans</b></div>").join("")
+    : "<div class='note'>—</div>";
+  $("sCans").textContent=fmt(cans);
+  $("sPallets").textContent=fmt(pallets);
+  const el=Date.now()-S().created, h=Math.floor(el/36e5), m=Math.floor(el%36e5/6e4);
+  $("sessInfo").innerHTML="Session: <b style='color:var(--txt)'>"+esc(S().name)+"</b> · "+
+    rows.length+" rows · elapsed "+h+"h "+m+"m";
+}
+
+/* ================= SETTINGS ================= */
+function applySize(){ document.body.classList.toggle("lg", !!settings().lg);
+  $("sizeToggle").classList.toggle("on", !!settings().lg); }
+$("sizeToggle").addEventListener("click",()=>{ settings().lg=!settings().lg; save(); applySize(); });
+function applyWake(){ wlOn=settings().wake!==false;
+  $("wakeToggle").classList.toggle("on",wlOn); if(wlOn) keepAwake(); }
+$("wakeToggle").addEventListener("click",()=>{ settings().wake=!wlOn; save(); applyWake(); });
+
+/* ================= INIT ================= */
+try{ $("scannerName").value=localStorage.getItem("palletscan_name")||""; }catch(e){}
+$("scannerName").addEventListener("change",e=>{
+  try{ localStorage.setItem("palletscan_name",e.target.value); }catch(_){}
+  renderTable(); });
+renderSessionSel(); applySize(); applyWake(); updCount(); updateBadge(); keepAwake();
+if(!window.isSecureContext){
+  const n=document.createElement("div"); n.className="card";
+  n.innerHTML="<h2>Camera note</h2><div class='note'>This page was opened over an insecure connection, so the phone camera is blocked by the browser. Host the file on HTTPS (e.g. GitHub Pages) to enable scanning — manual entry and counting work fine regardless.</div>";
+  $("tab-scan").prepend(n);
+}
+</script>
+</body>
+</html>

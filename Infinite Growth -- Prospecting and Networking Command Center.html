@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>∞</text></svg>">
+<title>Infinite Growth — Partnership Command Center</title>
+<style>
+:root{
+  --bg:#07061a;--bg2:#0e0c2a;--card:#141238;--card2:#1b1846;--line:#2c2868;--txt:#f1efff;--mut:#9d98cc;
+  --pur:#a855f7;--vio:#7c3aed;--cy:#22d3ee;--grn:#34d399;--amb:#fbbf24;--red:#f87171;--pink:#ec4899;--r:14px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+body{padding-bottom:88px;background:var(--bg)}
+.parallax-bg{position:fixed;top:-50px;left:-50px;right:-50px;bottom:-50px;background:radial-gradient(1200px 600px at 10% -10%,#2a1063 0%,transparent 60%),radial-gradient(900px 500px at 110% 0%,#06364a 0%,transparent 55%);z-index:-1;pointer-events:none;}
+header{position:sticky;top:0;z-index:50;background:rgba(7,6,26,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 16px 10px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--vio),var(--cy));display:grid;place-items:center;font-weight:900;font-size:18px;box-shadow:0 0 18px rgba(168,85,247,.55)}
+header h1{margin:0;font-size:18px;letter-spacing:.4px}
+header h1 .ig{background:linear-gradient(90deg,#c084fc,var(--cy));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900}
+header p{margin:2px 0 0;font-size:11.5px;color:var(--mut)}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pill{display:inline-flex;align-items:center;gap:5px;background:#17143f;border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:12px;font-weight:700}
+main{padding:14px 14px 0;max-width:900px;margin:0 auto}
+.view{display:none;animation:fade .18s ease-in}.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:linear-gradient(180deg,var(--card),#120f33);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:14px;transition:transform 0.25s cubic-bezier(0.4,0,0.2,1),box-shadow 0.25s cubic-bezier(0.4,0,0.2,1),border-color 0.25s}
+.card:hover{transform:translateY(-2px);box-shadow:0 12px 24px -10px rgba(0,0,0,0.5),0 0 15px rgba(168,85,247,0.15);border-color:#4c1d95}
+.book-shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:14px;margin-top:14px;}
+.book{perspective:1000px;cursor:pointer;height:180px;}
+.book-inner{position:relative;width:100%;height:100%;transition:transform 0.6s;transform-style:preserve-3d;}
+.book.open .book-inner{transform:rotateY(-180deg);}
+.book-front,.book-back{position:absolute;width:100%;height:100%;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:8px;padding:12px;display:flex;flex-direction:column;justify-content:center;border:1px solid var(--line);}
+.book-front{background:linear-gradient(135deg,#3b0764,#172554);color:#fff;font-weight:800;font-size:13.5px;text-align:center;box-shadow:inset -4px 0 10px rgba(0,0,0,0.4),2px 2px 10px rgba(0,0,0,0.5);}
+.book-front::after{content:'';position:absolute;left:5px;top:0;bottom:0;width:3px;background:rgba(255,255,255,0.15);}
+.book-back{background:#1e1a52;transform:rotateY(180deg);font-size:11px;color:var(--mut);line-height:1.4;overflow-y:auto;text-align:center;}
+.card h2{margin:0 0 10px;font-size:16px}
+.card h3{margin:14px 0 8px;font-size:13.5px;color:#c4b5fd;text-transform:uppercase;letter-spacing:.5px}
+.mut{color:var(--mut);font-size:13px}.small{font-size:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:520px){.grid3{grid-template-columns:1fr 1fr}}
+.stat{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:11px;text-align:center}
+.stat .n{font-size:22px;font-weight:800}.stat .l{font-size:10.5px;color:var(--mut);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.btn{display:inline-block;border:0;border-radius:10px;padding:10px 15px;font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--vio),var(--cy));color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.25)}
+.btn.ghost{background:var(--card2);color:var(--txt);border:1px solid var(--line);text-shadow:none}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#3a2404;text-shadow:none}
+.btn.danger{background:linear-gradient(135deg,#ef4444,#f87171)}
+.btn.armed{background:#7f1d1d;color:#fff}
+.btn.sm{padding:6px 10px;font-size:12px;border-radius:8px}.btn.block{width:100%;margin-top:8px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row.between{justify-content:space-between}
+input,select,textarea{width:100%;background:#0b0a24;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:9px 11px;font-size:14px;margin:4px 0 10px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--pur);border-color:var(--pur)}
+label{font-size:11.5px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.item{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:9px}
+.item.click{cursor:pointer}.item.click:hover{border-color:var(--pur)}
+.nm{font-weight:800;font-size:15px}
+.tag{display:inline-block;font-size:10.5px;font-weight:800;border-radius:999px;padding:2px 9px;margin:4px 4px 0 0;border:1px solid var(--line);background:#100e30;color:#c4b5fd}
+.tag.a{color:#6ee7b7;border-color:#065f46;background:#062a20}.tag.w{color:#fcd34d;border-color:#92400e;background:#2a1c05}.tag.r{color:#fca5a5;border-color:#7f1d1d;background:#2a0b0b}.tag.c{color:#67e8f9;border-color:#155e75;background:#062430}
+.due{font-size:12px;color:var(--amb);font-weight:700;margin-top:5px}.due.over{color:var(--red)}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(10,9,32,.96);border-top:1px solid var(--line);display:flex;padding:5px 2px calc(7px + env(safe-area-inset-bottom))}
+nav button{flex:1;background:none;border:0;color:var(--mut);font-size:9.5px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 1px;cursor:pointer}
+nav button .ic{font-size:19px}nav button.on{color:#e9d5ff}nav button.on .ic{filter:drop-shadow(0 0 6px var(--pur))}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(3,2,14,.8);display:none;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.sheet{background:var(--bg2);border-top:1px solid var(--line);border-radius:18px 18px 0 0;width:100%;max-width:900px;max-height:93vh;overflow-y:auto;padding:16px 16px calc(20px + env(safe-area-inset-bottom))}
+.sheet h2{margin:0 0 10px;font-size:17px}
+.bar{height:9px;background:#0b0a24;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.bar>div{height:100%;background:linear-gradient(90deg,var(--vio),var(--cy));transition:width .3s}
+.ring{width:72px;height:72px;flex:none}
+.counter{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:9px;text-align:center}
+.counter .v{font-size:24px;font-weight:800}.counter .t{font-size:10.5px;color:var(--mut);margin:2px 0 7px;text-transform:uppercase;letter-spacing:.4px;min-height:26px}
+.counter .ops{display:flex;gap:6px;justify-content:center}
+.counter .ops button{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:#0b0a24;color:var(--txt);font-size:18px;font-weight:800;cursor:pointer}
+.cal{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.day{aspect-ratio:1;border-radius:6px;border:1px solid var(--line);background:#0b0a24;display:flex;align-items:center;justify-content:center;font-size:9.5px;color:var(--mut);cursor:pointer}
+.day.done{background:linear-gradient(135deg,var(--vio),var(--cy));color:#fff;font-weight:800;border-color:transparent}
+.day.today{box-shadow:0 0 0 2px var(--amb)}.day.future{opacity:.3;cursor:default}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:3px}
+.tabs button{white-space:nowrap;background:var(--card2);border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:700;cursor:pointer}
+.tabs button.on{background:linear-gradient(135deg,var(--vio),var(--cy));color:#fff;border-color:transparent}
+.guide{background:var(--card2);border:1px solid var(--line);border-left:3px solid var(--pur);border-radius:12px;padding:11px 12px;margin-bottom:9px}
+.guide .t{font-weight:800;font-size:14px;color:#e9d5ff;margin-bottom:5px}
+.guide p{margin:0;font-size:14px;line-height:1.55}
+.guide .why{margin-top:6px;font-size:12px;color:var(--mut)}
+.pipe{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.pcol{min-width:138px;background:#0b0a24;border:1px solid var(--line);border-radius:12px;padding:7px}
+.pcol h4{margin:2px 0 7px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);text-align:center}
+.pcard{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:7px;margin-bottom:6px;font-size:12px;cursor:pointer}
+.hist{font-size:12px;color:var(--mut);border-left:2px solid var(--line);padding-left:8px;margin-top:6px}
+.empty{text-align:center;color:var(--mut);padding:22px 10px;font-size:14px}
+.chk{display:flex;gap:9px;align-items:flex-start;padding:7px 0;cursor:pointer;border-bottom:1px dashed #241f58}
+.chk:last-child{border-bottom:0}.chk .b{font-size:18px;line-height:1}.chk.on .x{text-decoration:line-through;color:var(--mut)}
+.score{display:flex;gap:4px}.score button{flex:1;border:1px solid var(--line);background:#0b0a24;color:var(--mut);border-radius:7px;padding:6px 0;font-weight:800;cursor:pointer}
+.score button.on{background:linear-gradient(135deg,var(--vio),var(--cy));color:#fff;border-color:transparent}
+.quote{border-left:3px solid var(--cy);padding:6px 12px;margin:6px 0;font-size:14.5px;line-height:1.5;background:#0d1838;border-radius:0 10px 10px 0}
+.post{background:linear-gradient(135deg,#2a0f5e,#0b3a52);border:1px solid #4c1d95;border-radius:14px;padding:13px;margin-bottom:14px}
+.post b{color:#e9d5ff}
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:#1e1a52;border:1px solid var(--pur);color:#fff;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:700;z-index:200;display:none;max-width:90vw}
+table.t{width:100%;border-collapse:collapse;font-size:13px}table.t td,table.t th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left}table.t th{color:var(--mut);font-size:11px;text-transform:uppercase}
+.vision-card{background:linear-gradient(180deg,#1c164a,#120f34);border:1px solid #4338ca;border-radius:12px;padding:12px;position:relative;transition:all .2s ease;cursor:pointer}
+.vision-card:hover{transform:translateY(-3px);border-color:#38bdf8;box-shadow:0 8px 24px rgba(56,189,248,.2)}
+.vision-badge{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:999px;display:inline-block}
+.vision-title{font-size:14.5px;font-weight:800;color:#f1efff;margin-bottom:4px}
+/* FORCE SUCCESSFULNESS ENGINE STYLES */
+.success-banner{background:linear-gradient(135deg,#1b103e,#0a2035);border:1px solid #6366f1;border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 8px 30px rgba(99,102,241,.25);position:relative;overflow:hidden}
+.pulse-glow{animation:pulseGlow 2.2s infinite ease-in-out}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 12px rgba(234,179,8,.4)}50%{box-shadow:0 0 26px rgba(234,179,8,.85);transform:scale(1.02)}}
+.sprint-timer{font-size:46px;font-weight:900;font-variant-numeric:tabular-nums;background:linear-gradient(90deg,#facc15,#38bdf8);-webkit-background-clip:text;background-clip:text;color:transparent;text-align:center;margin:4px 0}
+.phase-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-size:11.5px;font-weight:800;border:1px solid var(--line);background:#100e30;color:var(--mut)}
+.phase-pill.active{border-color:#38bdf8;background:rgba(56,189,248,.18);color:#a5f3fc}
+.phase-pill.done{border-color:#10b981;background:rgba(16,185,129,.18);color:#6ee7b7}
+.action-box{background:#0b0a24;border:1px solid #312e81;border-radius:12px;padding:12px;margin-bottom:10px}
+.quick-script-btn{background:rgba(255,255,255,.04);border:1px solid #38bdf833;border-radius:8px;padding:8px 10px;text-align:left;cursor:pointer;font-size:12.5px;color:#e2e8f0;transition:all .2s;margin-bottom:6px}
+.quick-script-btn:hover{background:rgba(56,189,248,.15);border-color:#38bdf8}
+/* RICH EVENTS & GOOGLE CALENDAR STYLES */
+.event-rich-card{background:linear-gradient(180deg,#16123f 0%,#0e0c28 100%);border:1px solid #4338ca;border-radius:16px;overflow:hidden;margin-bottom:18px;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:transform .2s ease,border-color .2s ease}
+.event-rich-card:hover{border-color:#38bdf8}
+.event-hero{position:relative;height:190px;background-size:cover;background-position:center;overflow:hidden}
+.event-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,6,26,.3) 0%,rgba(7,6,26,.92) 100%)}
+.event-hero-content{position:absolute;bottom:12px;left:14px;right:14px;z-index:2}
+.event-body{padding:14px}
+.event-badge-strip{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.agenda-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.agenda-item{background:#0b0a24;border:1px solid #282460;border-left:4px solid #38bdf8;border-radius:10px;padding:12px;transition:all .2s ease}
+.agenda-item:hover{border-color:#7c3aed;background:#100d33}
+.event-gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+@media(max-width:600px){.event-gallery-grid{grid-template-columns:1fr}}
+.event-gallery-thumb{border-radius:10px;border:1px solid #312e81;overflow:hidden;position:relative;aspect-ratio:16/9;background:#000}
+.event-gallery-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
+.event-gallery-thumb:hover img{transform:scale(1.05)}
+.event-gallery-thumb span{position:absolute;bottom:4px;left:6px;right:6px;background:rgba(0,0,0,.75);font-size:10px;padding:2px 6px;border-radius:4px;color:#fff;font-weight:700}
+.gcal-btn{background:linear-gradient(135deg,#2563eb,#06b6d4);color:#fff!important;border:0;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:5px;text-decoration:none!important;box-shadow:0 2px 10px rgba(37,99,235,.3);transition:all .18s ease}
+.gcal-btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.ics-btn{background:#1e1a52;color:#c4b5fd;border:1px solid #4c1d95;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .18s ease}
+.ics-btn:hover{background:#2a2468;color:#fff}
+.tab-pill-sm{background:#0b0a24;border:1px solid #312e81;color:var(--mut);border-radius:999px;padding:5px 12px;font-size:11.5px;font-weight:700;cursor:pointer;transition:all .15s}
+.tab-pill-sm.active{background:#3b0764;border-color:#a855f7;color:#fff;box-shadow:0 0 10px rgba(168,85,247,.3)}
+@media (prefers-reduced-motion: reduce){
+  *,::before,::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}
+}
+@media print{nav,header,.noprint,#toast{display:none!important}body{background:#fff;color:#000;padding:0}.view{display:none!important}.view.printme{display:block!important}.card{border:1px solid #999;background:#fff;color:#000}.mut{color:#333}input{border:0;color:#000;background:#fff}}
+</style>
+</head>
+<body>
+<div class="parallax-bg" id="pbg"></div>
+<header>
+  <div class="brand"><div class="logo">∞</div>
+    <div><h1><span class="ig">INFINITE GROWTH</span> · Partnership HQ</h1>
+    <p>We vet and select partners. We don't sell or convince. Sort, serve, and let mentorship do the presenting.</p></div></div>
+  <div class="pills"><span class="pill">🔥 <span id="streakTxt">0-day streak</span></span><span class="pill" id="rankPill" style="cursor:pointer" data-act="showRankInfo">🎖️ <span id="rankTxt">Prospector</span></span><button class="pill" data-act="goDream" style="border-color:#a855f7;background:rgba(168,85,247,.25);color:#f1efff;cursor:pointer;font-weight:800;box-shadow:0 0 10px rgba(168,85,247,.3)" title="Jump to $8K Vision Board">🎯 <span id="goalPill">$8K/mo in 6.6mo</span></button><span class="pill">🎯 <span id="qiPill">0/2 QIs this week</span></span><span class="pill">💎 <span id="pvPill">0/150 PV</span></span><span class="pill" id="runPill">🏁 90-Day Run</span><button class="pill" data-act="joinHuddle" title="Open or configure Dex Huddle" style="background:linear-gradient(135deg,var(--vio),var(--cy));color:#fff;border-color:transparent;cursor:pointer;font-weight:800;box-shadow:0 0 12px rgba(34,211,238,.35)">🎙️ Dex Huddle</button><button class="pill" id="soundPill" data-act="toggleSound" style="background:#110e38;border-color:#4338ca;color:#cbd5e1;cursor:pointer" title="Toggle audio sound FX">🔊 Sound ON</button></div>
+</header>
+<main>
+<!-- HOME -->
+<section class="view active" id="v-home">
+  <div class="post" id="thought"></div>
+  <!-- 8K VISION BOARD & FREEDOM GOAL HERO -->
+  <div class="card" id="visionHero" style="background:linear-gradient(135deg,#1c1242 0%,#0c1e34 100%);border:1px solid #7c3aed88;box-shadow:0 8px 32px rgba(124,58,237,.25);position:relative;overflow:hidden;margin-bottom:14px">
+    <div style="position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(34,211,238,.2),transparent 70%);pointer-events:none"></div>
+    <div class="row between" style="align-items:flex-start">
+      <div>
+        <div class="tag" style="background:#2e1065;color:#c084fc;border-color:#7c3aed;margin-bottom:6px">🎯 THE FREEDOM TARGET · $8,000 / MO</div>
+        <h2 id="visionTargetAmt" style="margin:2px 0 6px;font-size:22px;letter-spacing:.3px;background:linear-gradient(90deg,#f1efff,#38bdf8);-webkit-background-clip:text;background-clip:text;color:transparent">
+          $8,000 / Month in 6.6 Months
+        </h2>
+        <p class="mut small" id="visionCountdown" style="margin:0 0 10px;color:#a5f3fc">
+          ⏳ Freedom Date: April 30, 2027 · Calculating countdown...
+        </p>
+      </div>
+      <div class="row">
+        <button class="btn sm" data-act="editDreamTarget" style="background:linear-gradient(135deg,var(--vio),var(--cy));color:#fff">⚙️ Edit Goal</button>
+        <button class="btn sm ghost" data-act="addVisionCard">+ Dream Card</button>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <div style="font-size:11px;font-weight:800;color:#c4b5fd;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🖼️ Our 8K Vision Board (Our "WHY")</div>
+      <div class="grid3" id="visionGrid"></div>
+    </div>
+    <div id="visionPaceOut" style="margin-top:12px;padding-top:10px;border-top:1px dashed #312e81;font-size:12.5px;color:var(--mut)"></div>
+  </div>
+  <!-- NEXT MAJOR FUNCTION SPOTLIGHT (LTD SUMMIT 2026) -->
+  <div class="card" id="homeSummitSpotlight" style="background:linear-gradient(135deg,#15103a 0%,#091b2c 100%);border:1px solid #38bdf855;box-shadow:0 6px 24px rgba(34,211,238,.15);position:relative;overflow:hidden;margin-bottom:14px">
+    <div class="row between" style="align-items:flex-start">
+      <div>
+        <div class="tag" style="background:#0c2a38;color:#38bdf8;border-color:#0284c7;margin-bottom:4px">🌟 NEXT MAJOR FUNCTION · LOUISVILLE, KY</div>
+        <h3 style="margin:2px 0 4px;font-size:17px;color:#fff">💎 LTD Summit 2026 — Oct 2–4, 2026</h3>
+        <p class="mut small" style="margin:0 0 6px">KFC Yum! Center · Keynote: Gary &amp; Tammy Newell · 1,500+ IBOs Registered</p>
+      </div>
+      <div class="row" style="gap:6px">
+        <button class="gcal-btn" data-act="openSummitGCal" title="Open Google Calendar to add LTD Summit 2026">📅 Add to Google Cal</button>
+        <button class="btn sm ghost" data-act="goNumsEvents" style="border-color:#38bdf8">View Full Agenda ➔</button>
+      </div>
+    </div>
+    <div class="row" style="gap:10px;margin-top:8px;align-items:center;flex-wrap:wrap">
+      <div style="width:110px;height:65px;border-radius:8px;overflow:hidden;border:1px solid #312e81;flex:none;background:#000">
+        <img src="louisville_yum_center_1790936137138.jpg" alt="KFC Yum! Center" style="width:100%;height:100%;object-fit:cover" onerror="this.src='leadership_networking_1790933363739.jpg'">
+      </div>
+      <div style="flex:1;min-width:200px">
+        <div class="row" style="gap:8px;margin-bottom:4px">
+          <span class="pill" style="font-size:11px;padding:2px 8px;background:#17143f" id="homeSummitCountdown">⏳ Oct 2–4, 2026 · KFC Yum! Center</span>
+          <span class="pill" style="font-size:11px;padding:2px 8px;background:#17143f" id="homeSummitTix">🎟️ <span id="homeTixVal">0</span> tickets committed</span>
+        </div>
+        <div class="small mut" style="line-height:1.4">
+          "Winners are in the room. Bring your rising partners &amp; prospects into the association."
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- FORCE SUCCESSFULNESS ENGINE -->
+  <div class="success-banner" id="successBanner">
+    <div class="row between" style="align-items:flex-start">
+      <div>
+        <div class="row" style="gap:6px;margin-bottom:4px">
+          <span class="tag" id="successLockTag" style="background:#1e1b4b;border-color:#6366f1;color:#a5f3fc;font-weight:900">⚡ DAILY SUCCESS CONTRACT</span>
+          <span class="tag" id="rankBadge" style="background:#312e81;border-color:#818cf8;color:#e0e7ff">🎖️ Level 1 · Prospector</span>
+        </div>
+        <h3 id="successLockTitle" style="margin:2px 0 4px;font-size:16px;color:#fff;text-shadow:0 0 10px rgba(99,102,241,.5)">
+          Lock In Today's Momentum
+        </h3>
+        <p class="mut small" id="successLockDesc" style="margin:0">
+          Daily Minimum Standard: 5 Hellos · 1 QI / Follow-Through · 15m People-Skills Reading.
+        </p>
+      </div>
+      <div class="row" style="gap:6px">
+        <button class="btn sm pulse-glow" data-act="startSprint" style="background:linear-gradient(135deg,#eab308,#f59e0b);color:#1c1917;font-weight:900" title="Launch 20-min focused prospecting sprint">⚡ 20-Min Power Sprint</button>
+        <button class="btn sm ghost" data-act="openPostureShield" style="border-color:#ec4899;color:#fbcfe8" title="Reframing & customer pivot tool">🛡️ Posture Shield</button>
+      </div>
+    </div>
+    <div id="overdueAlert" style="display:none;margin-top:10px;padding:8px 12px;background:rgba(239,68,68,.15);border:1px solid #ef4444;border-radius:8px;font-size:12px;color:#fca5a5"></div>
+    <div style="margin-top:12px">
+      <div class="row between small" style="margin-bottom:4px">
+        <span class="mut" id="successReqLabel">Today's Progress</span>
+        <b id="successScorePct" style="color:#facc15">0%</b>
+      </div>
+      <div class="bar"><div id="successScoreBar" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="row between"><h2 style="margin:0">Today · <span id="todayStr"></span></h2>
+      <svg class="ring" viewBox="0 0 74 74"><circle cx="37" cy="37" r="31" fill="none" stroke="#0b0a24" stroke-width="9"/>
+      <circle id="ringFg" cx="37" cy="37" r="31" fill="none" stroke="url(#gr)" stroke-width="9" stroke-linecap="round" stroke-dasharray="194.8" stroke-dashoffset="194.8" transform="rotate(-90 37 37)"/>
+      <defs><linearGradient id="gr"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+      <text id="ringTxt" x="37" y="42" text-anchor="middle" fill="#f1efff" font-size="16" font-weight="800">0%</text></svg></div>
+    <p class="mut" id="dmoSummary"></p>
+    <div class="row"><button class="btn sm" data-go="habits">Log habits</button><button class="btn sm ghost" data-act="newCand">+ Add a name</button><button class="btn sm ghost" data-act="newNote">+ Meeting notes</button><button class="btn sm" data-act="joinHuddle" style="background:linear-gradient(135deg,#7c3aed,#22d3ee);color:#fff;box-shadow:0 0 12px rgba(124,58,237,.35)">🎙️ Dex Huddle</button></div>
+  </div>
+  <div class="card"><h2>⚡ Next steps due</h2><div id="dueList"></div></div>
+  <div class="card"><h2>🗓️ Today's time blocks</h2><div id="todayBlocks"></div></div>
+  <div class="card"><h2>📊 Candidate pipeline</h2><div class="grid3" id="pipeStats"></div></div>
+  <div class="card"><h2>📈 Last 14 days</h2><div id="hist14" class="row" style="align-items:flex-end;gap:3px;height:86px;flex-wrap:nowrap"></div><p class="mut" id="hist14lbl" style="margin:8px 0 0"></p></div>
+  <div class="card noprint"><h2>⚙️ Profile & data</h2>
+    <div class="grid2"><div><label>Your name(s)</label><input id="setName" placeholder="e.g. N8 &amp; Shawna"></div><div><label>Your coach / mentor</label><input id="setCoach" placeholder="Who you edify (3rd person)"></div></div>
+    <div class="grid2"><div><label>Dex Huddle (Custom GPT / Meeting URL)</label><input id="setHuddle" placeholder="https://chatgpt.com/g/... or meeting URL"></div><div><label>Huddle Schedule / Notes</label><input id="setHuddleNote" placeholder="e.g. Daily Mentorship &amp; Custom GPT Assistant"></div></div>
+    <div class="row"><button class="btn sm ghost" data-act="exportData">⬇️ Export backup</button><button class="btn sm ghost" data-act="importData">⬆️ Restore backup</button><input type="file" id="importFile" accept=".json,application/json" hidden><button class="btn sm danger" data-act="wipe" data-arm="Tap again to erase everything">Erase all data</button></div>
+    <p class="mut small">Everything is saved privately in this browser on this device. Export a backup regularly.</p></div>
+</section>
+
+<!-- CANDIDATES -->
+<section class="view" id="v-cands">
+  <div class="card">
+    <div class="row between"><h2 style="margin:0">Candidates</h2><button class="btn sm" data-act="newCand">+ Add</button></div>
+    <p class="mut small">We're the CEO selecting players. Look for a gap, character, coachability and follow-through — then let them prove it.</p>
+    <input id="cSearch" placeholder="🔍 Search names, notes, gaps…">
+    <div class="tabs" id="stageTabs"></div>
+    <div id="candList"></div>
+  </div>
+  <div class="card"><h2>Process board</h2><div class="pipe" id="kanban"></div><p class="mut small">Tap a card to open. Moving forward is earned; releasing respectfully is a win too.</p></div>
+  <div class="card"><h2>🔎 Funnel truth</h2><div id="funnel"></div></div>
+</section>
+
+<!-- HABITS -->
+<section class="view" id="v-habits">
+  <div class="card">
+    <div class="row between"><h2 style="margin:0">Daily method</h2><input type="date" id="dmoDate" style="width:auto;margin:0"></div>
+    <p class="mut small">Consistency defines winning. Say hi to 5 new people a day; feed your mind daily; touch your customers.</p>
+    <div class="grid2" id="dmoCounters"></div>
+    <div style="margin-top:12px"><div class="row between"><span class="mut">Daily completion</span><b id="dmoPct">0%</b></div><div class="bar"><div id="dmoBar" style="width:0%"></div></div></div>
+  </div>
+  <div class="card">
+    <div class="row between"><h2 style="margin:0">🧭 9 Core weekly audit</h2><button class="btn sm ghost" data-act="editCore">Edit list</button></div>
+    <p class="mut small">Rate yourself 0–5 on each habit every week. Operating on false expectations hurts your timeline — be honest.</p>
+    <div id="coreAudit"></div><div class="row between"><span class="mut">This week's average</span><b id="coreAvg">—</b></div>
+    <div id="coreTrend" class="row" style="align-items:flex-end;gap:4px;height:50px;margin-top:8px;flex-wrap:nowrap"></div>
+  </div>
+  <div class="card">
+    <div class="row between"><h2 style="margin:0">🏁 90-Day Run</h2><button class="btn sm ghost" data-act="editRun">Set up</button></div>
+    <p class="mut" id="runInfo"></p><div class="cal" id="runGrid"></div>
+    <p class="mut small">Tap a day when you hit your daily method. Small daily increases break through levels.</p>
+  </div>
+  <div class="card"><h2>⏱️ Time blocking</h2><p class="mut small">Focus · Plan · Execute. Block business time like appointments with your future.</p>
+    <div class="tabs" id="tbDays"></div><div id="tbList"></div>
+    <div class="grid3"><input id="tbStart" type="time" value="19:00"><input id="tbEnd" type="time" value="20:00"><input id="tbLabel" placeholder="QI / Info session / Reading"></div>
+    <button class="btn sm" data-act="addBlock">+ Add block</button></div>
+</section>
+
+<!-- CONVERSATIONS -->
+<section class="view" id="v-talk">
+  <div class="card" style="background:linear-gradient(135deg,#1b1344,#0b233a);border:1px solid #7c3aed66;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+    <div>
+      <b style="color:#67e8f9;font-size:14px">🎙️ Need Real-Time Mentorship or Script Roleplay?</b>
+      <p class="mut small" style="margin:2px 0 0">Launch Dex Huddle custom GPT companion popup to practice conversations or handle complex candidate questions.</p>
+    </div>
+    <button class="btn sm" data-act="joinHuddle" style="background:linear-gradient(135deg,var(--vio),var(--cy));color:#fff;font-weight:800;box-shadow:0 0 12px rgba(34,211,238,.35)">Launch Dex Huddle ↗</button>
+  </div>
+  <div class="card"><h2>🗣️ Conversation guides</h2>
+    <p class="mut small">Curiosity, listening and sorting. We ask, we listen, we let the right people raise their hands. No pitching, no pressure, no convincing.</p>
+    <div class="tabs" id="guideTabs"></div><div id="guideList"></div></div>
+  <div class="card"><h2>🧭 Posture cards <span class="mut" style="font-weight:400">— tap to flip</span></h2>
+    <div class="item click" id="flash" style="min-height:150px;display:flex;flex-direction:column;justify-content:center;text-align:center">
+      <div class="mut small" id="flashTag">When they say…</div><div id="flashTxt" style="font-size:16px;line-height:1.5;margin-top:6px"></div></div>
+    <div class="row" style="justify-content:center"><button class="btn sm ghost" data-act="flashPrev">← Prev</button><span class="mut" id="flashIdx"></span><button class="btn sm ghost" data-act="flashNext">Next →</button><button class="btn sm warn" data-act="flashShuffle">🔀</button></div>
+    <p class="mut small" style="text-align:center">Hesitation is information, not an obstacle. Ask, listen, and sort.</p></div>
+  <div class="card"><h2>⏱️ 50-second story builder</h2>
+    <p class="mut small">Relate your desire to the business in under a minute, in the 3rd person ("my mentor", "the people I work with").</p>
+    <label>Where we were</label><textarea id="stA" rows="2" placeholder="What life looked like — honest and brief"></textarea>
+    <label>The gap we felt</label><textarea id="stB" rows="2" placeholder="Time, money, freedom, purpose…"></textarea>
+    <label>Who we found (3rd person)</label><textarea id="stC" rows="2" placeholder="We met some business owners / a mentor who…"></textarea>
+    <label>Where we're going</label><textarea id="stD" rows="2" placeholder="The dream: what and when"></textarea>
+    <div class="quote" id="storyOut"></div><div class="row between"><span class="mut small" id="storyLen"></span><button class="btn sm ghost" data-act="copyStory">📋 Copy</button></div></div>
+</section>
+
+<!-- NUMBERS -->
+<section class="view" id="v-nums">
+  <div class="card"><div class="row between"><h2 style="margin:0">💎 Counsel sheet</h2><input type="month" id="csMonth" pattern="[0-9]{4}-[0-9]{2}" placeholder="YYYY-MM" style="width:auto;margin:0"></div>
+    <p class="mut small">Bring this to your counsel session. Standard: 150 PV with 60% from verified customer sales (VCS).</p>
+    <div class="grid3"><div><label>Personal use PV</label><input type="number" min="0" id="csPersonal"></div><div><label>Client PV</label><input type="number" min="0" id="csClient"></div><div><label>Group PV</label><input type="number" min="0" id="csGroup"></div></div>
+    <div class="grid3"><div><label>LTD bundle</label><select id="csBundle"><option value="">—</option><option>Yes</option><option>No</option></select></div><div><label>My tickets (next event)</label><input type="number" min="0" id="csTix"></div><div><label>Team tickets</label><input type="number" min="0" id="csTeamTix"></div></div>
+    <div class="grid2"><div><label>Team bundles</label><input type="number" min="0" id="csTeamBundles"></div><div><label>Customers on Ditto</label><input type="number" min="0" id="csDitto"></div></div>
+    <div id="csCalc"></div>
+    <h3>Personal candidates this month</h3><div id="csCands"></div>
+    <div class="row noprint"><button class="btn sm ghost" data-act="printCounsel">🖨️ Print counsel sheet</button></div></div>
+  <div class="card"><h2>🎯 Weekly standards</h2><div id="weekBoard"></div><button class="btn sm ghost" data-act="editGoals">Edit standards</button></div>
+  <div class="card"><h2>🌅 What &amp; When (FT2 for yourself)</h2>
+    <p class="mut small">Make the dream specific: what, how much a month, and by when. Your coach helps you turn it into activity.</p>
+    <label>The dream (what)</label><input id="drWhat" placeholder="e.g. Shawna home full-time; debt free; endless summer">
+    <div class="grid2"><div><label>Monthly income goal ($)</label><input type="number" min="0" id="drAmt"></div><div><label>By when</label><input type="date" id="drDate"></div></div>
+    <div class="grid2"><div><label>Partners your coach says it takes</label><input type="number" min="0" id="drPartners" placeholder="ask your coach"></div><div><label>Your QIs per partner (live)</label><input id="drRatio" disabled></div></div>
+    <div id="drOut" class="quote"></div></div>
+  <div class="card" id="eventsSection">
+    <div class="row between" style="align-items:flex-start;margin-bottom:10px">
+      <div>
+        <h2 style="margin:0 0 2px">🎟️ Major Functions &amp; Events Hub</h2>
+        <p class="mut small" style="margin:0">Winners are in the room. Sync all sessions directly to Google Calendar, download .ICS files, and rally your team tickets.</p>
+      </div>
+      <div class="row" style="gap:6px">
+        <button class="ics-btn" data-act="dlSummitIcs" title="Download all summit sessions as an .ICS calendar bundle">📥 Download Summit .ICS</button>
+        <button class="gcal-btn" data-act="openSummitGCal" title="Add LTD Summit 2026 directly to your Google Calendar">📅 Add to Google Cal</button>
+      </div>
+    </div>
+    <div id="evList"></div>
+    <div style="background:#0b0a24;border:1px solid #282460;border-radius:12px;padding:12px;margin-top:16px">
+      <h3 style="margin:0 0 6px;color:#c4b5fd;font-size:13.5px;text-transform:uppercase;letter-spacing:.5px">➕ Add Custom Team Event</h3>
+      <div class="grid3">
+        <input id="evName" placeholder="Event Name (e.g. Regional Rally, BPM, Mastermind)">
+        <input id="evDate" type="date">
+        <input id="evTix" type="number" min="0" placeholder="My Tickets">
+      </div>
+      <div class="grid2">
+        <input id="evLoc" placeholder="Location or Virtual Zoom Link">
+        <input id="evDesc" placeholder="Description / Speakers / Dress Code">
+      </div>
+      <button class="btn sm" data-act="addEvent">+ Add Event &amp; Generate Calendar Links</button>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="view" id="v-team">
+  <div class="card" style="background:linear-gradient(135deg,#16133f,#0a253a);border:1px solid #38bdf844">
+    <div class="row between">
+      <div>
+        <h3 style="margin:0 0 4px;color:#67e8f9;display:flex;align-items:center;gap:6px;font-size:15px">🎙️ Dex Huddle &amp; Play-Huddle</h3>
+        <p class="mut small" id="teamHuddleSub" style="margin:0">Daily/weekly mentorship &amp; play-huddle. Connect with upline &amp; team.</p>
+      </div>
+      <div class="row">
+        <button class="btn sm" data-act="joinHuddle">Join Huddle ↗</button>
+        <button class="btn sm ghost" data-act="editHuddle">⚙️ Configure link</button>
+      </div>
+    </div>
+  </div>
+  <div class="card"><div class="row between"><h2 style="margin:0">🌱 Partners</h2><button class="btn sm" data-act="newTeam">+ Add</button></div>
+    <p class="mut small">Great entrepreneurs build great teams. Track each partner's launch, PV and next step.</p><div id="teamList"></div></div>
+  <div class="card"><h2>🚀 Launch checklist (per partner)</h2><p class="mut small">Open a partner to tick their launch steps: Launch → Business Plan → Budget → Ditto → List Activation → Huddle.</p><div id="launchRef"></div></div>
+</section>
+
+<!-- LIBRARY -->
+<section class="view" id="v-lib">
+  <div class="card"><h2>📚 Learning library</h2><div class="tabs" id="libTabs"></div><div id="libBody"></div></div>
+  <div class="card"><div class="row between"><h2 style="margin:0">📝 IG WKLY meeting notes</h2><button class="btn sm" data-act="newNote">+ Add</button></div><div id="noteList"></div></div>
+</section>
+
+<!-- PRACTICE -->
+<section class="view" id="v-prac">
+  <div class="card">
+    <h2>🎯 F.O.R.M. Simulator</h2>
+    <p class="mut small">Sharpen your saw. Practice finding the gap and responding with posture. Choose the best response below.</p>
+    <div id="simScenario" class="quote" style="margin-top:16px;border-color:var(--amb)">Loading scenario...</div>
+    <div id="simOptions" style="display:flex;flex-direction:column;gap:8px;margin-top:16px;"></div>
+    <div id="simFeedback" style="margin-top:12px;display:none;padding:12px;border-radius:10px;font-size:13px;line-height:1.5;"></div>
+    <button class="btn sm block" style="margin-top:16px;" data-act="simNext">Next Scenario ➜</button>
+  </div>
+</section>
+</main>
+
+<nav>
+  <button class="on" data-go="home"><span class="ic">🏠</span>Home</button>
+  <button data-go="cands"><span class="ic">🧭</span>Candidates</button>
+  <button data-go="habits"><span class="ic">✅</span>Habits</button>
+  <button data-go="talk"><span class="ic">🗣️</span>Guides</button>
+  <button data-go="nums"><span class="ic">💎</span>Numbers</button>
+  <button data-go="team"><span class="ic">🌱</span>Team</button>
+  <button data-go="lib"><span class="ic">📚</span>Library</button>
+  <button data-go="prac"><span class="ic">🎯</span>Practice</button>
+</nav>
+
+<!-- Candidate modal -->
+<div class="modal" id="m-cand"><div class="sheet">
+  <h2 id="cmTitle">Add a name</h2><input type="hidden" id="cId">
+  <label>Name</label><input id="cName" placeholder="Full name">
+  <div class="grid2"><div><label>Phone</label><input id="cPhone"></div><div><label>Email</label><input id="cEmail"></div></div>
+  <div class="grid2"><div><label>Stage</label><select id="cStage"></select></div><div><label>How we know them</label><input id="cSource" placeholder="Work, gym, church, referral…"></div></div>
+  <div class="grid2"><div><label>Next step</label><input id="cNext" placeholder="e.g. QI 2 coffee, FT1 call"></div><div><label>When</label><input type="date" id="cNextDate"></div></div>
+  <h3>F.O.R.M. — find the gap</h3>
+  <div class="grid2"><div><label>Family</label><input id="fF"></div><div><label>Occupation</label><input id="fO"></div></div>
+  <div class="grid2"><div><label>Recreation</label><input id="fR"></div><div><label>Money / motivation</label><input id="fM"></div></div>
+  <label>The gap (in their words)</label><textarea id="cGap" rows="2" placeholder="No gap, no QI. What's missing that they want?"></textarea>
+  <div class="grid2"><div><label>Spouse / partner aligned?</label><select id="cSpouse"><option value="">Not discussed</option><option>Aligned</option><option>Curious</option><option>Not aligned</option><option>Single</option></select></div><div><label>Dream: monthly goal / when</label><input id="cDream" placeholder="$2,000/mo by next summer"></div></div>
+  <h3>Vetting scorecard (0–5)</h3><div id="scoreBox"></div><div class="row between"><span class="mut">Fit score</span><b id="fitOut">—</b></div>
+  <h3>Proving tasks — follow-through</h3><p class="mut small">Give 9 Core tasks (a book, an audio, an info session, a call back on time). Consistency over a few weeks reveals the player.</p>
+  <div id="taskBox"></div>
+  <div class="grid3"><input id="tkText" placeholder="Task" list="taskPresets"><input id="tkDue" type="date"><button class="btn sm" data-act="addTask">+ Task</button></div>
+  <datalist id="taskPresets"><option>Read a chapter of the assigned book</option><option>Listen to an assigned audio</option><option>Attend an info session</option><option>Call back at the agreed time</option><option>Write their dream &amp; when</option><option>Meet my mentor (3-way)</option><option>Watch the web tour</option></datalist>
+  <label>Notes</label><textarea id="cNotes" rows="3"></textarea>
+  <div id="readiness"></div>
+  <div class="row"><button class="btn" style="flex:1" data-act="saveCand">Save</button><button class="btn ghost" data-act="close" data-m="m-cand">Cancel</button></div>
+  <div class="row" style="margin-top:8px"><button class="btn sm ghost" data-act="advance">Advance ➜</button><button class="btn sm ghost" data-act="toCustomer">Make customer</button><button class="btn sm ghost" data-act="release">Release (Not now)</button></div>
+  <div id="cHist"></div>
+  <button class="btn danger block" id="cDel" data-act="delCand" data-arm="Tap again to delete">Delete</button>
+</div></div>
+
+<!-- Team modal -->
+<div class="modal" id="m-team"><div class="sheet">
+  <h2 id="tmTitle">Add partner</h2><input type="hidden" id="tId">
+  <label>Name</label><input id="tName">
+  <div class="grid2"><div><label>Status</label><select id="tLevel"><option>Launching</option><option>Building</option><option>150 PV</option><option>Leader in training</option><option>Leader</option></select></div><div><label>PV this month</label><input id="tPV" type="number" min="0"></div></div>
+  <label>Next step / focus</label><input id="tFocus">
+  <h3>Launch checklist</h3><div id="tLaunch"></div>
+  <h3>Post-launch audios (8 weeks)</h3><div id="tAudios"></div>
+  <label>Notes</label><textarea id="tNotes" rows="3"></textarea>
+  <div class="row"><button class="btn" style="flex:1" data-act="saveTeam">Save</button><button class="btn ghost" data-act="close" data-m="m-team">Cancel</button></div>
+  <button class="btn danger block" id="tDel" data-act="delTeam" data-arm="Tap again to remove">Remove</button>
+</div></div>
+
+<!-- 20-Min Power Sprint Modal -->
+<div class="modal" id="m-sprint"><div class="sheet" style="max-width:760px">
+  <div class="row between">
+    <div>
+      <div class="tag" style="background:#854d0e;color:#fef08a;border-color:#ca8a04">⚡ RELENTLESS EXECUTION ARENA</div>
+      <h2 style="margin:4px 0 2px">20-Minute Power Sprint</h2>
+      <p class="mut small" style="margin:0">No distraction. No overthinking. Set posture, execute with speed, and let the numbers work.</p>
+    </div>
+    <button class="btn sm ghost" data-act="close" data-m="m-sprint">✕ Close</button>
+  </div>
+  
+  <div style="background:#090820;border:1px solid #312e81;border-radius:14px;padding:14px;margin:14px 0;text-align:center">
+    <div class="sprint-timer" id="spTimer">20:00</div>
+    <div class="row" style="justify-content:center;gap:8px;margin-bottom:10px">
+      <span class="phase-pill active" id="spPhase1Pill">1️⃣ Connect (5m)</span>
+      <span class="phase-pill" id="spPhase2Pill">2️⃣ Advance &amp; Book (10m)</span>
+      <span class="phase-pill" id="spPhase3Pill">3️⃣ Add Names &amp; Seal (5m)</span>
+    </div>
+    <div class="row" style="justify-content:center;gap:8px">
+      <button class="btn sm" id="spTimerToggleBtn" data-act="toggleSprintTimer" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff">▶️ Start Sprint</button>
+      <button class="btn sm ghost" data-act="resetSprintTimer">↺ Reset</button>
+      <button class="btn sm ghost" id="spDroneBtn" data-act="toggleSprintDrone">🎧 Focus Drone: OFF</button>
+    </div>
+  </div>
+
+  <div id="spStepContent">
+    <!-- Active Step 1: Connect -->
+    <div class="action-box">
+      <div class="row between">
+        <b>Phase 1: 5 High-Energy Connects (Say Hi)</b>
+        <span class="mut small">Goal: Open 5 conversations</span>
+      </div>
+      <p class="small mut" style="margin:4px 0 8px">Tap each hello as you send it. Don't pitch business. Say hi, ask what they've been up to, or compliment them.</p>
+      <div class="grid3" id="spHellosGrid" style="margin-bottom:8px">
+        <button class="btn sm ghost" data-act="spCheckHello" data-i="0" id="spH0">⬜ Hello 1</button>
+        <button class="btn sm ghost" data-act="spCheckHello" data-i="1" id="spH1">⬜ Hello 2</button>
+        <button class="btn sm ghost" data-act="spCheckHello" data-i="2" id="spH2">⬜ Hello 3</button>
+        <button class="btn sm ghost" data-act="spCheckHello" data-i="3" id="spH3">⬜ Hello 4</button>
+        <button class="btn sm ghost" data-act="spCheckHello" data-i="4" id="spH4">⬜ Hello 5</button>
+      </div>
+      <div style="margin-top:10px">
+        <div class="small" style="color:#c4b5fd;font-weight:700;margin-bottom:4px">1-Tap Conversation Starters (tap to copy):</div>
+        <div class="quick-script-btn" data-act="spCopyScript" data-txt="Hey! Thinking of you, hope you’re having a great week! What have you been up to lately?">💬 "Hey! Thinking of you, hope you’re having a great week! What have you been up to lately?"</div>
+        <div class="quick-script-btn" data-act="spCopyScript" data-txt="Hey man, saw your post earlier — looks awesome! How’s the family doing?">💬 "Hey man, saw your post earlier — looks awesome! How’s the family doing?"</div>
+      </div>
+    </div>
+
+    <!-- Active Step 2: Advance & Book -->
+    <div class="action-box">
+      <div class="row between">
+        <b>Phase 2: Book QIs &amp; Overdue Follow-ups</b>
+        <span class="mut small">Speed = Posture</span>
+      </div>
+      <p class="small mut" style="margin:4px 0 8px">Your candidates waiting for a next step right now:</p>
+      <div id="spCandidateQueue"></div>
+    </div>
+
+    <!-- Active Step 3: Expand list -->
+    <div class="action-box">
+      <div class="row between">
+        <b>Phase 3: Add 3 Names to List</b>
+        <span class="mut small">Never let the list dry up</span>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <input id="spNewName" placeholder="Name (e.g. Mike from gym)" style="flex:2;margin:0">
+        <input id="spNewSource" placeholder="Where you know them" style="flex:1;margin:0">
+        <button class="btn sm" data-act="spAddFastName">+ Add Name</button>
+      </div>
+      <div id="spNamesAddedList" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:12px">
+    <button class="btn block" data-act="finishSprint" style="background:linear-gradient(135deg,#7c3aed,#22d3ee);font-weight:800">🏆 Finish Sprint &amp; Lock Momentum</button>
+  </div>
+</div></div>
+
+<!-- Posture Shield Modal -->
+<div class="modal" id="m-posture"><div class="sheet" style="max-width:700px">
+  <div class="row between">
+    <div>
+      <div class="tag" style="background:#500724;color:#f472b6;border-color:#db2777">🛡️ POSTURE SHIELD &amp; OBJECTION REFRAMER</div>
+      <h2 style="margin:4px 0 2px">Turn Rejection into Fuel</h2>
+      <p class="mut small" style="margin:0">Amateurs get hurt and quit. Professionals reset posture in 5 seconds and maintain control.</p>
+    </div>
+    <button class="btn sm ghost" data-act="close" data-m="m-posture">✕ Close</button>
+  </div>
+
+  <div style="margin:14px 0">
+    <label>What happened?</label>
+    <select id="psScenarioSelect">
+      <option value="no">They said "No, I'm not interested in the business"</option>
+      <option value="ghost">They ghosted or didn't show up to the info session</option>
+      <option value="time">They said "I work too much, I don't have time"</option>
+      <option value="mlm">They asked "Is this Amway / is this network marketing?"</option>
+      <option value="money">They said "I don't have any money to start"</option>
+      <option value="spouse">They said "My spouse doesn't want me doing this"</option>
+      <option value="cynical">They were negative, cynical, or said it's a scam</option>
+    </select>
+  </div>
+
+  <div id="psOutput"></div>
+
+  <div class="row" style="margin-top:14px">
+    <button class="btn ghost block" data-act="close" data-m="m-posture">Done · Posture Restored</button>
+  </div>
+</div></div>
+
+<!-- Reach Out Modal -->
+<div class="modal" id="m-reach"><div class="sheet" style="max-width:600px">
+  <div class="row between">
+    <div>
+      <h2 style="margin:0" id="roTitle">Reach Out to Candidate</h2>
+      <p class="mut small" id="roSub" style="margin:0"></p>
+    </div>
+    <button class="btn sm ghost" data-act="close" data-m="m-reach">✕ Close</button>
+  </div>
+  <input type="hidden" id="roCandId">
+  <div style="margin:12px 0">
+    <label>Choose Outreach Script Template:</label>
+    <div id="roTemplates" style="display:flex;flex-direction:column;gap:8px;margin-top:6px"></div>
+  </div>
+  <label>Customized Message Preview:</label>
+  <textarea id="roCustomMsg" rows="3"></textarea>
+  <div class="row" style="margin-top:8px">
+    <button class="btn sm" id="roSmsBtn" data-act="roSendSms" style="flex:1">📱 Send SMS</button>
+    <button class="btn sm ghost" id="roCopyBtn" data-act="roCopyMsg" style="flex:1">📋 Copy to Clipboard</button>
+  </div>
+</div></div>
+
+<!-- Dex Huddle Custom GPT Popup Modal -->
+<div class="modal" id="m-huddle">
+  <div class="sheet" style="max-width:640px;background:linear-gradient(180deg,#18143d 0%,#0b0a24 100%);border:1px solid #7c3aed88;box-shadow:0 12px 40px rgba(124,58,237,.3)">
+    <div class="row between" style="align-items:flex-start;margin-bottom:12px">
+      <div>
+        <div class="tag" style="background:#2e1065;color:#c084fc;border-color:#7c3aed;margin-bottom:4px">🤖 CUSTOM GPT · MENTORSHIP HUDDLE</div>
+        <h2 style="margin:2px 0 4px;font-size:18px;color:#fff;display:flex;align-items:center;gap:6px">
+          🎙️ Dex Huddle AI Assistant
+        </h2>
+        <p class="mut small" style="margin:0">Available in a dedicated pop-up window or browser tab to mentor, roleplay, and analyze your business on demand.</p>
+      </div>
+      <button class="btn sm ghost" data-act="close" data-m="m-huddle">✕ Close</button>
+    </div>
+
+    <!-- MAIN LAUNCH BUTTONS -->
+    <div class="row" style="gap:8px;margin-bottom:14px">
+      <button class="btn" data-act="launchHuddlePopup" style="flex:2;background:linear-gradient(135deg,#7c3aed,#22d3ee);color:#fff;font-weight:900;padding:12px;box-shadow:0 4px 18px rgba(34,211,238,.35)">
+        🚀 Open Pop-up Window
+      </button>
+      <button class="btn ghost" data-act="launchHuddleTab" style="flex:1;border-color:#38bdf8;color:#a5f3fc;padding:12px">
+        ↗️ New Tab
+      </button>
+      <button class="btn sm ghost" data-act="editHuddle" title="Configure custom URL" style="padding:12px 10px">
+        ⚙️ Config
+      </button>
+    </div>
+
+    <div style="background:#0e0c2a;border:1px solid #282460;border-radius:10px;padding:8px 12px;margin-bottom:14px;font-size:11.5px;color:var(--mut);display:flex;align-items:center;justify-content:space-between">
+      <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:8px">
+        <span style="color:#a5f3fc;font-weight:700">Link:</span> <span id="huddleLinkDisplay">https://chatgpt.com/g/g-68926e42a284819199944d3e43dda9ff-dex-huddle</span>
+      </div>
+      <button class="btn sm ghost" data-act="copyHuddleLink" style="padding:2px 8px;font-size:11px">📋 Copy Link</button>
+    </div>
+
+    <!-- QUICK PROMPT STARTERS -->
+    <h3 style="margin:0 0 8px;font-size:13px;color:#c4b5fd;text-transform:uppercase;letter-spacing:.5px">⚡ Quick Prompts for Dex Huddle (Click to Copy &amp; Open)</h3>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="action-box" style="padding:10px;margin-bottom:0;cursor:pointer;transition:all .15s" data-act="copyAndLaunchHuddle" data-prompt="Help me evaluate a prospective partner. We had a great conversation, but I need to vet if they have genuine ambition or if they are just curious. How should I structure our QI 1 call?">
+        <div class="row between">
+          <b style="color:#67e8f9;font-size:13px">💡 Candidate Vetting &amp; QI Strategy</b>
+          <span class="tag" style="background:#082f49;border-color:#0284c7;color:#38bdf8;font-size:10px">Copy &amp; Launch ➔</span>
+        </div>
+        <p class="mut small" style="margin:4px 0 0;line-height:1.4">"Help me evaluate a prospective partner. We had a great conversation, but I need to vet if they have genuine ambition or if they are just curious..."</p>
+      </div>
+
+      <div class="action-box" style="padding:10px;margin-bottom:0;cursor:pointer;transition:all .15s" data-act="copyAndLaunchHuddle" data-prompt="Roleplay with me as an experienced mentor. A candidate hesitated and asked 'Is this network marketing / Amway?'. How do I keep my posture, avoid defensiveness, and guide them back to mentorship?">
+        <div class="row between">
+          <b style="color:#a78bfa;font-size:13px">🛡️ Objection Handling &amp; High Posture</b>
+          <span class="tag" style="background:#2e1065;border-color:#7c3aed;color:#c084fc;font-size:10px">Copy &amp; Launch ➔</span>
+        </div>
+        <p class="mut small" style="margin:4px 0 0;line-height:1.4">"Roleplay with me as an experienced mentor. A candidate hesitated and asked 'Is this network marketing / Amway?'. How do I keep my posture..."</p>
+      </div>
+
+      <div class="action-box" style="padding:10px;margin-bottom:0;cursor:pointer;transition:all .15s" data-act="copyAndLaunchHuddle" data-prompt="I decided a prospect is not a good fit for business partnership right now. Help me execute the customer pivot rooted in my 'WHY' (time freedom for our family) so they can support our customer base with Nutrilite.">
+        <div class="row between">
+          <b style="color:#34d399;font-size:13px">🤝 Customer Pivot &amp; Family WHY</b>
+          <span class="tag" style="background:#064e3b;border-color:#059669;color:#6ee7b7;font-size:10px">Copy &amp; Launch ➔</span>
+        </div>
+        <p class="mut small" style="margin:4px 0 0;line-height:1.4">"I decided a prospect is not a good fit for business partnership right now. Help me execute the customer pivot rooted in my 'WHY'..."</p>
+      </div>
+
+      <div class="action-box" style="padding:10px;margin-bottom:0;cursor:pointer;transition:all .15s" data-act="copyAndLaunchHuddle" data-prompt="Review my 9 Core daily scorecard and weekly standards. I want to build towards $8,000/month in residual income. What daily activities should I lock in this week?">
+        <div class="row between">
+          <b style="color:#fbbf24;font-size:13px">📊 9 Core Audit &amp; $8K Goal Roadmap</b>
+          <span class="tag" style="background:#451a03;border-color:#b45309;color:#fcd34d;font-size:10px">Copy &amp; Launch ➔</span>
+        </div>
+        <p class="mut small" style="margin:4px 0 0;line-height:1.4">"Review my 9 Core daily scorecard and weekly standards. I want to build towards $8,000/month in residual income..."</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Generic modal -->
+<div class="modal" id="m-gen"><div class="sheet"><h2 id="gTitle"></h2><div id="gBody"></div>
+  <div class="row"><button class="btn" style="flex:1" id="gSave">Save</button><button class="btn ghost" data-act="close" data-m="m-gen">Cancel</button></div></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+/* ================= DATA ================= */
+const LS='ig_hq_v2', OLD='ig_hq_v1';
+const STAGES=['Names List','Connecting','QI 1 · Connection','QI 2 · Vetting','Info Session','FT1 · Vision','FT2 · Dream','Proving','Partnered','Customer','Not Now'];
+const ACTIVE=STAGES.slice(0,8);
+const SCORE=[['character','Character'],['coach','Coachability'],['work','Work ethic'],['follow','Follow-through'],['ambition','Ambition / gap'],['align','Spouse/team alignment']];
+const DMO=[{k:'hi',t:'New people said hi to',goal:5},{k:'qi',t:'QIs done',goal:0},{k:'info',t:'Info sessions / web tours',goal:0},{k:'ft',t:'Follow-throughs (FT1/FT2)',goal:1},{k:'read',t:'People-skills reading (min)',goal:15,step:5},{k:'audio',t:'Audios listened',goal:1},{k:'cust',t:'Customer touches (VCS)',goal:1},{k:'comm',t:'Upline communication',goal:1}];
+const CORE_DEFAULT=['Dream & goals written and reviewed','Read people-skills books daily','Listen to audios daily','Attend every function (Ditto your tickets)','Be coached — counsel session','150 PV (60% verified customer sales)','Ditto set for you and customers','2+ QIs every week','Communicate with your upline'];
+const LAUNCH=[['Day 1 · Launch','Listen “How to Make Aware” / DTM 101','Write story (A, B, C list)','Amway launched: personal retail site + skeleton Ditto','LTD launched: ticket to next conference','Apps: media playlist + messaging (upline group)'],['Day 3 · Business plan','Budget sheet','Record audio story','Goal setting & activity plan','Customer list (×30) · 50 PV customer volume'],['Day 7 · Budget meeting','Add products to Ditto','Record selfie video of story','Review budget (spending/Ditto) & debt plan','Review 9 Core daily habits'],['Day 10–15 · Ditto','Record story video','Set Ditto on the 1st','Plan customer-list approach: call/text 5+ households'],['Day 10–15 · List activation','Make 5–10 selected candidates aware','Play-huddle: how to interrupt · F.O.R.M. · door to mentorship'],['Huddle (ongoing)','Select more candidates','Review common questions','Review 9 Core habits & time budget']];
+const AUDIOS=['W1 · 10 Seconds of Courage','W1 · The Secret of the Corn','W1 · Keep the Money in the Family','W1 · Untapped Potential','W1 · A Broke Mentality','W2 · Ditto & Duplicate','W2 · Let’s Go!','W2 · Why We Fought','W2 · Refine Your Skill Set / Access Mentorship','W2 · Generation Entrepreneur','W3 · The Four Tests of a Dream','W3 · Ruby to Diamond','W3 · Level Up','W3 · Tomorrow is Too Late','W4 · Domesticated','W4 · A Whole Pack of Free People','W4 · The Treasures Within','W4 · Fear & Doubt','W4 · Hunter Ruby Rally','W5 · Defining Moments','W5 · The Two Skills','W5 · 9-5-3 Mentality','W5 · Snip, Snip!','W5 · Self Awareness Leads to Good Mentorship','W6 · Camelot','W6 · What’s Your Reality','W6 · Get Single Minded','W6 · Arrichion','W7 · Seed Time, Progression & Harvest','W7 · Emerald Success Story','W7 · New Crowns','W7 · Down in Depth','W7 · Seal Team Leadership Strategies','W8 · No Heroes, No Game','W8 · The Spirit of an Entrepreneur','W8 · You’re Worth More','W8 · Drama Free Business, Drama Free Life'];
+const DEFAULT_CARDS=[
+ {icon:'👶',tag:'Family & Legacy',title:'Another Baby Boy!',desc:'Welcoming our next baby boy into our family with total abundance, joyful presence, and zero time debt. Present for every smile, bath, and milestone with complete peace of mind.'},
+ {icon:'🏡',tag:'Time Sovereignty',title:'Shawna & Family Full-Time',desc:'Living completely free of the corporate rat race and alarms. Freedom to travel, homeschool, and design our days together on our own terms.'},
+ {icon:'💎',tag:'Leveraged Cashflow',title:'$8,000 / Month Residual',desc:'Sustainable asset-based monthly income built on a 150 PV foundation, 60% verified customer sales (VCS), and duplicated leadership.'}
+];
+const DEFAULT_EVENTS = [
+  {
+    id: 'ev-ltd-2026',
+    name: 'LTD Summit 2026 — Unleash The Power Of Leadership',
+    shortName: 'LTD Summit 2026',
+    tagline: 'Path to A70 (70th Anniversary) • 1,500+ IBOs Registered',
+    date: '2026-10-02',
+    endDate: '2026-10-04',
+    time: 'Oct 2, 9:00 AM – Oct 4, 1:00 PM EDT',
+    location: 'KFC Yum! Center, 1 Arena Plaza, Louisville, KY 40202',
+    mapUrl: 'https://maps.google.com/maps?q=KFC+Yum!+Center,+1+Arena+Plaza,+Louisville,+KY+40202',
+    img: 'louisville_yum_center_1790936137138.jpg',
+    heroImg: 'summit_hero_background_1790933353686.jpg',
+    netImg: 'leadership_networking_1790933363739.jpg',
+    desc: 'The annual premier Leadership Team Development Summit. Connect with top leaders, exchange high-level scaling strategies, and learn directly from Gary & Tammy Newell, Bobby & Lisa Campbell, and Diamond executive leadership.',
+    startUtc: '20261002T130000Z',
+    endUtc: '20261004T170000Z',
+    tix: 0,
+    sessions: [
+      {
+        id: 's1',
+        time: '9:00 AM – 10:30 AM EDT',
+        date: '2026-10-02',
+        title: 'Registration & Welcome Coffee Mixer',
+        speaker: 'LTD Welcome Committee & Crossline Leaders',
+        location: 'KFC Yum! Center (IBO Networking Hub - Level 1)',
+        desc: 'Badge pickup, arrival networking, welcome coffee, and meeting leaders.',
+        startUtc: '20261002T130000Z',
+        endUtc: '20261002T143000Z',
+        badge: 'Arrival'
+      },
+      {
+        id: 's2',
+        time: '10:30 AM – 1:00 PM EDT',
+        date: '2026-10-02',
+        title: 'Keynote: The Infinite Growth Mindset',
+        speaker: 'Gary & Tammy Newell',
+        location: 'Main Stage Arena (Level 1)',
+        desc: 'Kick off the summit with a foundational session on building a holistic legacy. If you only win economically, you have lost.',
+        startUtc: '20261002T143000Z',
+        endUtc: '20261002T170000Z',
+        badge: 'Keynote'
+      },
+      {
+        id: 's3',
+        time: '1:00 PM – 3:00 PM EDT',
+        date: '2026-10-02',
+        title: 'Power Lunch & IBO Strategic Mixer',
+        speaker: 'All IBO Leaders & Mastermind Matches',
+        location: 'VIP Dining & Networking Hub (Level 1 & 2)',
+        desc: 'Catered lunch & facilitated mastermind networking. Matchmaker connections and crossline synergy.',
+        startUtc: '20261002T170000Z',
+        endUtc: '20261002T190000Z',
+        badge: 'Networking'
+      },
+      {
+        id: 's4',
+        time: '3:00 PM – 6:00 PM EDT',
+        date: '2026-10-02',
+        title: 'Mastermind Breakouts: Health, Wealth & Relationships',
+        speaker: 'Diamond Mentors & Top Producers',
+        location: 'Platinum Mastermind & Breakout Rooms (Level 2)',
+        desc: 'Intimate deep-dive sessions focusing on physical health (Nutrilite), financial architecture & debt-freedom, and relational endurance.',
+        startUtc: '20261002T190000Z',
+        endUtc: '20261002T220000Z',
+        badge: 'Mastermind'
+      },
+      {
+        id: 's5',
+        time: '7:00 PM – 10:00 PM EDT',
+        date: '2026-10-02',
+        title: 'After-Hours Leadership & Night Owl Networking',
+        speaker: 'Team & Crossline Leaders',
+        location: 'Fourth Street Live! & Whiskey Row, Louisville, KY',
+        desc: 'Casual leadership dinners, high-level talks, and night owl fellowship across Louisville entertainment district.',
+        startUtc: '20261002T230000Z',
+        endUtc: '20261003T020000Z',
+        badge: 'Social'
+      },
+      {
+        id: 's6',
+        time: '10:00 AM – 4:00 PM EDT',
+        date: '2026-10-03',
+        title: 'Saturday General Session & Leadership Rally',
+        speaker: 'Bobby & Lisa Campbell, Gary & Tammy Newell, Emerald & Diamond Panel',
+        location: 'Main Stage Arena (Level 1)',
+        desc: 'Pin recognitions, belief building, duplication mechanics, and enterprise vision.',
+        startUtc: '20261003T140000Z',
+        endUtc: '20261003T200000Z',
+        badge: 'Main Rally'
+      },
+      {
+        id: 's7',
+        time: '9:00 AM – 1:00 PM EDT',
+        date: '2026-10-04',
+        title: 'Sunday Mastermind & Team Send-Off Rally',
+        speaker: 'Executive Leadership',
+        location: 'Main Stage Arena (Level 1)',
+        desc: 'Quarterly game plan execution, Q4 goal setting, and charged team send-off.',
+        startUtc: '20261004T130000Z',
+        endUtc: '20261004T170000Z',
+        badge: 'Closing'
+      }
+    ]
+  },
+  {
+    id: 'ev-wkly-huddle',
+    name: 'IG WKLY Strategy & Huddle Meeting',
+    shortName: 'IG WKLY Huddle',
+    tagline: 'Team Vision, Recognition & Launchpad',
+    date: '2026-10-18',
+    time: 'Every Sunday 8:00 PM – 9:00 PM EDT',
+    location: 'Zoom / Dex Huddle Virtual Room',
+    mapUrl: '',
+    img: 'leadership_networking_1790933363739.jpg',
+    heroImg: 'leadership_networking_1790933363739.jpg',
+    netImg: 'leadership_networking_1790933363739.jpg',
+    desc: 'Weekly team strategy meeting. DMO accountability, new partner launches, candidate reviews, and training.',
+    startUtc: '20261018T240000Z',
+    endUtc: '20261019T010000Z',
+    tix: 0,
+    sessions: [
+      {
+        id: 's-wkly-1',
+        time: '8:00 PM – 9:00 PM EDT',
+        date: '2026-10-18',
+        title: 'Weekly Strategy, Recognition & Launch Review',
+        speaker: 'Team Mentors',
+        location: 'Dex Huddle Room',
+        desc: 'Weekly numbers review, counsel check-in, and core activity alignment.',
+        startUtc: '20261018T240000Z',
+        endUtc: '20261019T010000Z',
+        badge: 'Weekly'
+      }
+    ]
+  }
+];
+const DEFAULT_DREAM={what:'Another baby boy! Family home full-time, complete financial peace and freedom.',amt:'8000',date:'2027-04-30',partners:8,cards:DEFAULT_CARDS};
+let DB={v:2,cands:[],dmo:{},core:{defs:CORE_DEFAULT.slice(),audits:{}},counsel:{},goals:{qi:2,info:2,ft:3,names:5},run:{start:null,goal:'',days:{}},dream:Object.assign({},DEFAULT_DREAM),team:[],notes:[],events:structuredClone(DEFAULT_EVENTS),blocks:{},story:{},settings:{}};
+
+function makeGCalUrl(item, parentLoc){
+  const title = encodeURIComponent(item.name || item.title || 'LTD Function');
+  let dates;
+  if(item.startUtc && item.endUtc){
+    dates = `${item.startUtc}/${item.endUtc}`;
+  } else if(item.date){
+    const dStr = String(item.date).replace(/-/g, '');
+    dates = `${dStr}T130000Z/${dStr}T210000Z`;
+  } else {
+    dates = '20261002T130000Z/20261004T170000Z';
+  }
+  const loc = encodeURIComponent(item.location || parentLoc || 'KFC Yum! Center, 1 Arena Plaza, Louisville, KY 40202');
+  let d = (item.desc || '') + '\n\n';
+  if(item.speaker) d += `Speaker: ${item.speaker}\n`;
+  if(item.time) d += `Time: ${item.time}\n`;
+  d += 'Infinite Growth — Partnership Command Center';
+  const details = encodeURIComponent(d.trim());
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${loc}`;
+}
+
+function generateIcs(ev){
+  const uidStr = (ev.id || uid()) + '@infinitegrowth.local';
+  const now = new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  const start = ev.startUtc ? ev.startUtc : `${(ev.date||today()).replace(/-/g,'')}T130000Z`;
+  const end = ev.endUtc ? ev.endUtc : `${(ev.endDate||ev.date||today()).replace(/-/g,'')}T210000Z`;
+  const sum = (ev.name || ev.title || 'Event').replace(/\n/g, ' ');
+  const loc = (ev.location || 'Louisville, KY').replace(/\n/g, ' ');
+  const desc = ((ev.desc || '') + (ev.speaker ? `\\nSpeaker: ${ev.speaker}` : '')).replace(/\n/g, '\\n');
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Infinite Growth//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    `UID:${uidStr}`,
+    `DTSTAMP:${now}`,
+    `DTSTART:${start}`,
+    `DTEND:${end}`,
+    `SUMMARY:${sum}`,
+    `LOCATION:${loc}`,
+    `DESCRIPTION:${desc}`,
+    'STATUS:CONFIRMED',
+    'TRANSP:OPAQUE',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+}
+
+function downloadIcs(filename, content){
+  const blob = new Blob([content], {type: 'text/calendar;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+  toast(`Calendar file ${filename} downloaded!`);
+}
+
+function syncEventsWithDefaults(){
+  if(!DB.events || !Array.isArray(DB.events) || !DB.events.length){
+    DB.events = structuredClone(DEFAULT_EVENTS);
+    return;
+  }
+  const ltdIdx = DB.events.findIndex(e => e.id === 'ev-ltd-2026' || e.id === 'ev1' || (e.name && e.name.toLowerCase().includes('ltd summit')));
+  if(ltdIdx !== -1){
+    const existing = DB.events[ltdIdx];
+    const defaultLtd = DEFAULT_EVENTS[0];
+    DB.events[ltdIdx] = Object.assign({}, defaultLtd, existing, {
+      sessions: defaultLtd.sessions,
+      img: defaultLtd.img,
+      heroImg: defaultLtd.heroImg,
+      netImg: defaultLtd.netImg,
+      location: defaultLtd.location,
+      mapUrl: defaultLtd.mapUrl,
+      tagline: defaultLtd.tagline,
+      desc: defaultLtd.desc,
+      time: defaultLtd.time,
+      startUtc: defaultLtd.startUtc,
+      endUtc: defaultLtd.endUtc
+    });
+  } else {
+    DB.events.unshift(structuredClone(DEFAULT_EVENTS[0]));
+  }
+  if(!DB.events.some(e => e.id === 'ev-wkly-huddle' || (e.name && e.name.toLowerCase().includes('wkly strategy')))){
+    DB.events.push(structuredClone(DEFAULT_EVENTS[1]));
+  }
+}
+
+const DEFAULT_HUDDLE_URL = 'https://chatgpt.com/g/g-68926e42a284819199944d3e43dda9ff-dex-huddle';
+
+function openHuddlePopup(urlToOpen){
+  const url = (urlToOpen || DB.settings.huddleUrl || DEFAULT_HUDDLE_URL).trim();
+  const w = 540, h = 820;
+  const left = Math.max(20, Math.round((window.screen.width - w) / 2));
+  const top = Math.max(20, Math.round((window.screen.height - h) / 2));
+  const feats = `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no,toolbar=no,menubar=no,location=yes`;
+  try {
+    const win = window.open(url, 'DexHuddlePopup', feats);
+    if(win && !win.closed) {
+      win.focus();
+      toast('Dex Huddle popup window opened!');
+      return win;
+    }
+  } catch(e) {}
+  window.open(url, '_blank', 'noopener,noreferrer');
+  toast('Dex Huddle opened in new tab!');
+  return null;
+}
+
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(LS)||'null');if(d&&typeof d==='object'){DB=Object.assign(DB,d);
+    DB.settings=DB.settings||{};if(DB.settings.soundEnabled===undefined)DB.settings.soundEnabled=true;
+    if(!DB.settings.huddleUrl || !DB.settings.huddleUrl.includes('chatgpt.com/g/')) DB.settings.huddleUrl = DEFAULT_HUDDLE_URL;
+    if(!DB.settings.huddleNote) DB.settings.huddleNote = 'Daily Mentorship & Custom GPT Assistant';
+    if(!DB.dream||!DB.dream.amt)DB.dream=Object.assign({},DEFAULT_DREAM,DB.dream||{});
+    if(!DB.dream.cards||!DB.dream.cards.length)DB.dream.cards=structuredClone(DEFAULT_CARDS);
+    syncEventsWithDefaults();
+    return;}}catch(e){toast('Saved data was unreadable; starting clean (old copy kept).');}
+  try{const o=JSON.parse(localStorage.getItem(OLD)||'null');if(o)migrate(o);}catch(e){}
+  DB.settings=DB.settings||{};if(DB.settings.soundEnabled===undefined)DB.settings.soundEnabled=true;
+  if(!DB.settings.huddleUrl || !DB.settings.huddleUrl.includes('chatgpt.com/g/')) DB.settings.huddleUrl = DEFAULT_HUDDLE_URL;
+  if(!DB.settings.huddleNote) DB.settings.huddleNote = 'Daily Mentorship & Custom GPT Assistant';
+  if(!DB.dream||!DB.dream.amt)DB.dream=Object.assign({},DEFAULT_DREAM,DB.dream||{});
+  if(!DB.dream.cards||!DB.dream.cards.length)DB.dream.cards=structuredClone(DEFAULT_CARDS);
+  syncEventsWithDefaults();
+}
+function migrate(o){/* v1 → v2: keep every prospect, DMO day and team member */
+  const map={New:'Names List',Contacted:'Connecting','Follow-Up':'QI 1 · Connection',Presented:'Info Session',Enrolled:'Partnered','Not Now':'Not Now'};
+  DB.cands=(o.prospects||[]).map(p=>({id:p.id||uid(),name:p.name,phone:p.phone||'',email:p.email||'',source:p.source||'',stage:map[p.stage]||'Names List',next:'',nextDate:p.followUp||'',form:{},gap:'',spouse:'',dream:'',score:{},tasks:[],notes:p.notes||'',created:p.created||today(),history:(p.history||[]).concat([{d:today(),t:'Imported from the previous version'}])}));
+  Object.entries(o.dmo||{}).forEach(([k,d])=>{DB.dmo[k]={hi:d.contacts||0,ft:d.followups||0,info:d.presentations||0,read:d.dev||0};});
+  DB.team=(o.team||[]).map(m=>({id:m.id||uid(),name:m.name,level:'Building',pv:'',focus:m.focus||'',notes:m.notes||'',launch:{},audios:{}}));
+  if(o.challenge&&o.challenge.start)DB.run={start:o.challenge.start,goal:'Carried over from the 30-day challenge',days:o.challenge.days||{}};
+  save();toast('Your previous data was carried over.');
+}
+let saveT=0;function save(){clearTimeout(saveT);saveT=setTimeout(saveNow,150);}
+function saveNow(){try{localStorage.setItem(LS,JSON.stringify(DB));}catch(e){toast('Could not save: browser storage is full or blocked. Export a backup.');}}
+addEventListener('pagehide',()=>{if(SPRINT.timerId){clearInterval(SPRINT.timerId);SPRINT.timerId=null;}SFX.toggleDrone(false);saveNow();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(SPRINT.droneOn)SFX.toggleDrone(false);saveNow();}else if(!document.hidden&&SPRINT.droneOn){SFX.toggleDrone(true);}});
+const uid=()=>'id'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,10);};
+const today=()=>iso(new Date());
+const addDays=(k,n)=>{const d=new Date(k+'T12:00:00');d.setDate(d.getDate()+n);return iso(d);};
+const fmtD=k=>k?new Date(k+'T12:00:00').toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}):'';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
+const weekKey=(k=today())=>{const d=new Date(k+'T12:00:00');d.setDate(d.getDate()-((d.getDay()+6)%7));return iso(d);};
+const monthKey=()=>today().slice(0,7);
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display='none',2600);}
+function hist(c,t){(c.history=c.history||[]).push({d:today(),t});}
+
+/* ================= NAV / EVENTS ================= */
+let VIEW='home';
+function go(v){VIEW=v;document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='v-'+v));
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===v));scrollTo(0,0);render();}
+function openM(id){$(id).classList.add('open');}function closeM(id){$(id).classList.remove('open');}
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.open').forEach(m=>m.classList.remove('open'));});
+/* two-step confirm instead of blocking dialogs */
+function armed(btn){if(!btn.dataset.arm)return true;if(btn.classList.contains('armed'))return true;
+ const t=btn.textContent;btn.classList.add('armed');btn.textContent=btn.dataset.arm;setTimeout(()=>{btn.classList.remove('armed');btn.textContent=t;},3000);return false;}
+document.addEventListener('click',e=>{
+ const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return;}
+ const b=e.target.closest('[data-act]');if(!b)return;
+ if(!armed(b))return;
+ const f=ACT[b.dataset.act];if(f)f(b,e);
+});
+function render(){renderHeader();({home:renderHome,cands:renderCands,habits:renderHabits,talk:renderTalk,nums:renderNums,team:renderTeam,lib:renderLib,prac:renderPrac})[VIEW]();}
+
+/* ================= PRACTICE ================= */
+const SIM_SCENARIOS = [
+  { s: "Prospect: 'I work 50 hours a week and then I have to take the kids to soccer practice. I barely have time to breathe.'", 
+    opts: [
+      { t: "You just need better time management. Let me show you how to block out 10 hours a week.", correct: false, f: "Pitching/fixing instead of listening. They will feel defensive." },
+      { t: "So it sounds like you’re doing all the right things but running out of hours in the day. Is that fair?", correct: true, f: "Perfect. Name the gap back to them and let them own it." },
+      { t: "My mentors have a system that creates passive income so you don't have to work 50 hours.", correct: false, f: "Too fast! You jumped straight to the solution without confirming the gap." }
+    ]
+  },
+  { s: "Prospect: 'I really love my job as a teacher, it’s super fulfilling. But the pay just isn't enough to save for a house.'", 
+    opts: [
+      { t: "You should quit teaching, there's no money in it.", correct: false, f: "Never insult their profession. Respect what they do." },
+      { t: "What if you could make an extra $2000 a month on the side without giving up teaching?", correct: false, f: "A bit too pitchy/salesy. Focus on finding out if they are looking first." },
+      { t: "I love that you find it fulfilling. If you could change one thing, is it just finding a way to create that extra income for a house?", correct: true, f: "Exactly. Validate what they like, isolate the gap." }
+    ]
+  },
+  { s: "Prospect: 'I don't really want to do any extra work. I like my free time on the weekends.'", 
+    opts: [
+      { t: "Are you sure? You'll be working until you're 65 if you don't build an asset.", correct: false, f: "Argumentative. We sort, we don't convince." },
+      { t: "I totally understand. It sounds like you're pretty happy with where things are at. (Release)", correct: true, f: "Perfect. No gap, no QI. Release them respectfully." },
+      { t: "This doesn't take much time, just a few hours a week on your phone.", correct: false, f: "Don't minimize the work. It takes real effort. Never convince." }
+    ]
+  },
+  { s: "Prospect: 'I tried a business like this before and didn't make any money.'", 
+    opts: [
+      { t: "Ours is different, we have better products and a better comp plan.", correct: false, f: "Defensive and salesy." },
+      { t: "That happens a lot when people don't have the right mentorship. What do you think was missing?", correct: true, f: "Great posture. Validates their experience and pivots to mentorship/curiosity." },
+      { t: "You probably just didn't work hard enough.", correct: false, f: "Insulting. Keep your posture and professionalism." }
+    ]
+  }
+];
+let simIdx = -1;
+function renderPrac(){
+  if(simIdx === -1) simIdx = Math.floor(Math.random() * SIM_SCENARIOS.length);
+  const sc = SIM_SCENARIOS[simIdx];
+  $('simScenario').textContent = sc.s;
+  $('simFeedback').style.display = 'none';
+  $('simOptions').innerHTML = sc.opts.map((o, i) => `<button class="btn ghost" style="text-align:left;padding:12px;height:auto;line-height:1.4" data-act="simAns" data-i="${i}">${esc(o.t)}</button>`).join('');
+}
+
+window.addEventListener('scroll', () => {
+  const pbg = document.getElementById('pbg');
+  if(pbg) {
+    const y = window.scrollY;
+    pbg.style.transform = `translateY(${y * 0.3}px)`;
+  }
+});
+
+/* ================= SOUND ENGINE (WEB AUDIO API) ================= */
+const SFX = {
+ ctx: null, droneOsc: null, droneGain: null,
+ init(){
+  if(!this.ctx){
+   const AC=window.AudioContext||window.webkitAudioContext;
+   if(AC)this.ctx=new AC();
+  }
+  if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume();
+ },
+ playTone(freq, type, dur, gainVal=0.14){
+  if(DB.settings.soundEnabled===false)return;
+  try{
+   this.init();if(!this.ctx)return;
+   const osc=this.ctx.createOscillator(),gain=this.ctx.createGain();
+   osc.type=type;osc.frequency.setValueAtTime(freq,this.ctx.currentTime);
+   gain.gain.setValueAtTime(gainVal,this.ctx.currentTime);
+   gain.gain.exponentialRampToValueAtTime(0.0001,this.ctx.currentTime+dur);
+   osc.connect(gain);gain.connect(this.ctx.destination);
+   osc.start();osc.stop(this.ctx.currentTime+dur);
+  }catch(e){}
+ },
+ chime(){
+  this.playTone(587.33,'sine',0.18,0.1);
+  setTimeout(()=>this.playTone(880,'sine',0.32,0.12),80);
+ },
+ beep(high=false){
+  this.playTone(high?880:440,'triangle',0.12,0.1);
+ },
+ victory(){
+  [523.25,659.25,783.99,1046.50].forEach((f,i)=>{
+   setTimeout(()=>this.playTone(f,'sine',0.45,0.14),i*110);
+  });
+ },
+ toggleDrone(on){
+  try{
+   this.init();if(!this.ctx)return;
+   if(on&&!this.droneOsc){
+    this.droneOsc=this.ctx.createOscillator();
+    this.droneGain=this.ctx.createGain();
+    this.droneOsc.type='sine';
+    this.droneOsc.frequency.setValueAtTime(108,this.ctx.currentTime);
+    this.droneGain.gain.setValueAtTime(0.03,this.ctx.currentTime);
+    this.droneOsc.connect(this.droneGain);
+    this.droneGain.connect(this.ctx.destination);
+    this.droneOsc.start();
+   } else if(!on&&this.droneOsc){
+    this.droneGain.gain.exponentialRampToValueAtTime(0.0001,this.ctx.currentTime+0.3);
+    setTimeout(()=>{
+     if(this.droneOsc){this.droneOsc.stop();this.droneOsc.disconnect();this.droneOsc=null;this.droneGain=null;}
+    },300);
+   }
+  }catch(e){}
+ }
+};
+
+/* ================= SUCCESS & RANK ENGINE ================= */
+function getRankInfo(){
+ const totQI=Object.values(DB.dmo).reduce((s,d)=>s+(d.qi||0),0);
+ const part=DB.cands.filter(c=>c.stage==='Partnered').length+DB.team.length;
+ if(totQI>=100||part>=8)return {lvl:5,name:'Crown Architect',next:null,pct:100,totQI};
+ if(totQI>=60)return {lvl:4,name:'90-Day Pacesetter',next:100,pct:Math.round((totQI-60)/40*100),totQI};
+ if(totQI>=30)return {lvl:3,name:'Posture Master',next:60,pct:Math.round((totQI-30)/30*100),totQI};
+ if(totQI>=10)return {lvl:2,name:'Active Connector',next:30,pct:Math.round((totQI-10)/20*100),totQI};
+ return {lvl:1,name:'Prospector',next:10,pct:Math.round(totQI/10*100),totQI};
+}
+
+function renderSuccessLock(){
+ if(!$('successBanner'))return;
+ const rk=getRankInfo();
+ if($('rankBadge'))$('rankBadge').textContent=`🎖️ Level ${rk.lvl} · ${rk.name}`;
+ if($('rankTxt'))$('rankTxt').textContent=rk.name;
+ 
+ const d=dmoDay(today());
+ const hiCount=d.hi||0;
+ const advCount=(d.qi||0)+(d.ft||0)+(d.info||0);
+ const growthCount=((d.read||0)>=15||(d.audio||0)>=1)?1:0;
+ 
+ const hiPart=Math.min(hiCount/5,1);
+ const advPart=Math.min(advCount/1,1);
+ const growthPart=growthCount;
+ 
+ const successPct=Math.round(((hiPart+advPart+growthPart)/3)*100);
+ 
+ if($('successScorePct'))$('successScorePct').textContent=`${successPct}%`;
+ if($('successScoreBar'))$('successScoreBar').style.width=`${successPct}%`;
+ 
+ const isLocked=successPct>=100;
+ if($('successLockTag')){
+  $('successLockTag').style.background=isLocked?'#064e3b':'#1e1b4b';
+  $('successLockTag').style.borderColor=isLocked?'#10b981':'#6366f1';
+  $('successLockTag').style.color=isLocked?'#6ee7b7':'#a5f3fc';
+  $('successLockTag').textContent=isLocked?'🔒 SUCCESS LOCKED TODAY':'⚡ DAILY SUCCESS CONTRACT';
+ }
+ if($('successLockTitle')){
+  $('successLockTitle').textContent=isLocked?'✅ Standard Met: You Executed Like an Owner Today':`${3-(hiPart>=1?1:0)-(advPart>=1?1:0)-growthPart} Actions Remaining to Lock Today's Success`;
+ }
+ if($('successLockDesc')){
+  $('successLockDesc').innerHTML=`<b>Status:</b> ${hiCount}/5 Hellos · ${advCount}/1 Advanced/QI · ${growthCount?'✅ Growth Done':'15m Growth needed'}. <i>“Consistency defines winning.”</i>`;
+ }
+ 
+ const t=today();
+ const overdueCands=DB.cands.filter(c=>c.nextDate&&c.nextDate<t&&ACTIVE.includes(c.stage));
+ if($('overdueAlert')){
+  if(overdueCands.length>0){
+   $('overdueAlert').style.display='block';
+   $('overdueAlert').innerHTML=`<b>⚠️ Posture Warning:</b> ${overdueCands.length} candidate(s) are overdue for a next step (${overdueCands.map(c=>esc(c.name)).slice(0,3).join(', ')}${overdueCands.length>3?'...':''}). <i>Delayed follow-through projects amateurs. Finish these in your Power Sprint!</i>`;
+  } else {
+   $('overdueAlert').style.display='none';
+  }
+ }
+}
+
+/* ================= 20-MIN POWER SPRINT CONTROLLER ================= */
+let SPRINT={
+ running:false,
+ timer:1200,
+ timerId:null,
+ hellos:[false,false,false,false,false],
+ droneOn:false,
+ addedNames:[]
+};
+
+function updateSprintUI(){
+ if(!$('spTimer'))return;
+ const m=Math.floor(SPRINT.timer/60).toString().padStart(2,'0');
+ const s=(SPRINT.timer%60).toString().padStart(2,'0');
+ $('spTimer').textContent=`${m}:${s}`;
+ 
+ const t=SPRINT.timer;
+ const p1=$('spPhase1Pill'),p2=$('spPhase2Pill'),p3=$('spPhase3Pill');
+ if(p1&&p2&&p3){
+  p1.className='phase-pill '+(t>900?'active':SPRINT.hellos.every(Boolean)?'done':'');
+  p2.className='phase-pill '+(t<=900&&t>300?'active':'');
+  p3.className='phase-pill '+(t<=300?'active':SPRINT.addedNames.length>=3?'done':'');
+ }
+ 
+ for(let i=0;i<5;i++){
+  const btn=$('spH'+i);
+  if(btn){
+   btn.textContent=SPRINT.hellos[i]?'✅ Hello '+(i+1):'⬜ Hello '+(i+1);
+   btn.className='btn sm '+(SPRINT.hellos[i]?'':'ghost');
+  }
+ }
+ 
+ const toggleBtn=$('spTimerToggleBtn');
+ if(toggleBtn){
+  toggleBtn.textContent=SPRINT.running?'⏸️ Pause Sprint':'▶️ '+(SPRINT.timer<1200?'Resume Sprint':'Start Sprint');
+  toggleBtn.style.background=SPRINT.running?'linear-gradient(135deg,#f59e0b,#d97706)':'linear-gradient(135deg,#22c55e,#16a34a)';
+ }
+ 
+ if($('spDroneBtn')){
+  $('spDroneBtn').textContent='🎧 Focus Drone: '+(SPRINT.droneOn?'ON':'OFF');
+  $('spDroneBtn').className='btn sm '+(SPRINT.droneOn?'':'ghost');
+ }
+ 
+ if($('spCandidateQueue')){
+  const cands=DB.cands.filter(c=>ACTIVE.includes(c.stage)&&(c.nextDate||c.tasks?.length)).sort((a,b)=>(a.nextDate||'9')<(b.nextDate||'9')?-1:1).slice(0,5);
+  $('spCandidateQueue').innerHTML=cands.length?cands.map(c=>`
+   <div class="item" style="padding:8px 10px;margin-bottom:6px">
+     <div class="row between">
+       <b>${esc(c.name)}</b>
+       <span class="tag c">${esc(c.stage)}</span>
+     </div>
+     <div class="small mut" style="margin:2px 0">${c.nextDate?`📅 ${fmtD(c.nextDate)} · `:''}${esc(c.next||'Follow up')}</div>
+     <div class="row" style="margin-top:4px">
+       <button class="btn sm" data-act="reachCand" data-id="${c.id}" style="padding:2px 8px;font-size:11px">📱 Reach Out</button>
+       <button class="btn sm ghost" data-act="spMarkDone" data-id="${c.id}" style="padding:2px 8px;font-size:11px">✓ Done</button>
+     </div>
+   </div>
+  `).join(''):'<div class="mut small">No active candidates with next steps. Add names in Phase 3!</div>';
+ }
+ 
+ if($('spNamesAddedList')){
+  $('spNamesAddedList').innerHTML=SPRINT.addedNames.length?`<div class="small" style="color:#6ee7b7">✅ Added ${SPRINT.addedNames.length} names this sprint: ${SPRINT.addedNames.map(esc).join(', ')}</div>`:'';
+ }
+}
+
+function tickSprint(){
+ if(!SPRINT.running)return;
+ if(SPRINT.timer>0){
+  SPRINT.timer--;
+  if(SPRINT.timer===900||SPRINT.timer===300){
+   SFX.beep(true);
+   toast(SPRINT.timer===900?'⚡ Phase 2: Advance & Book QIs!':'⚡ Phase 3: Add Names & Seal the DMO!');
+  }
+  updateSprintUI();
+ } else {
+  SPRINT.running=false;
+  clearInterval(SPRINT.timerId);
+  SPRINT.timerId=null;
+  SFX.victory();
+  toast('🎉 20-Min Sprint Complete! Momentum Locked!');
+  updateSprintUI();
+ }
+}
+
+/* ================= POSTURE SHIELD REFRAIMING DATA ================= */
+const POSTURE_REVIEWS={
+ no:{
+  why:"Rejection isn't personal — it is sorting. You are the CEO interviewing partners, not a salesperson chasing commissions. Bobby Campbell: 'Every no gets you closer to the hungry person.'",
+  anchor:"Remember why you are building this: $8,000 / month and another baby boy with Shawna! One person's opinion does not change your family's freedom.",
+  msg:"“Totally understand, [Name]! I appreciate you being upfront. It's definitely not for everyone. Let’s definitely stay in touch!”",
+  pivot:"“Since the business side isn’t a fit, would you be open to supporting my family as a customer? My whole reason for building this is our family freedom, and having you as a customer would mean the world. Can I send you a link to our exclusive wellness / clean home essentials?”"
+ },
+ ghost:{
+  why:"Manny Joshua: 'Ghosting tells you everything you need to know about their current character and capacity.' Do not chase or send paragraphs. Silence is posture.",
+  anchor:"Your timeline is 6.6 months. You do not have time to convince people who lack the courtesy to communicate.",
+  msg:"“Hey [Name], missed you on our call earlier! Hope everything is okay. If now isn’t the right season to look at this, no problem at all — wish you the best!”",
+  pivot:"(Wait 3-5 days before reaching out with a casual relationship touch, then pivot to products later)."
+ },
+ time:{
+  why:"Gary Newell: 'Everyone has the same 24 hours. Lack of time is lack of priority.' Validate what they do, then isolate the gap.",
+  anchor:"You work hard too — that's exactly why you are building residual cash flow, so you own your time.",
+  msg:"“That's completely honest, [Name] — most people we partner with are super busy. If time weren't an issue, is building extra residual cash flow something you'd even want?”",
+  pivot:"“I completely get that you’re swamped. If you don't have time to build a business, you might love our energy and wellness products that actually save you time and boost your focus. Want me to send a quick link?”"
+ },
+ mlm:{
+  why:"Manny Joshua: 'Never get defensive. If you defend, you lose posture.' Let mentorship do the heavy lifting.",
+  anchor:"You have an ironclad legal partnership with Amway and LTD. You are proud of your mentorship.",
+  msg:"“Fair question — I asked the exact same thing when I was first introduced. Rather than me explain how our mentorship circle is completely different, would you be open to asking my mentor directly?”",
+  pivot:"“Totally fine if that’s your perspective! Regardless, I love our products and use them every single day. Would you be open to trying our clean home / energy products just to support me?”"
+ },
+ money:{
+  why:"Bobby Campbell: 'Is money the reason you can't, or the reason you MUST?' Find out if they want to change their situation.",
+  anchor:"Freedom costs discipline, not a fortune.",
+  msg:"“I appreciate you being transparent with me, [Name]. Is having no money the gap you want to solve, or the reason not to look?”",
+  pivot:"“No problem at all! You can always support as a client, or let me know who you know who is looking to earn extra income.”"
+ },
+ spouse:{
+  why:"Alignment at home is critical. Never pit a candidate against their spouse.",
+  anchor:"Unity at home is part of the LTD culture.",
+  msg:"“I love that — they should 100% be part of the evaluation. Would you and your spouse want to set a quick 15-minute intro with me and my mentor together so both of you can see it with zero pressure?”",
+  pivot:"“Awesome! And if you both decide the business isn't a fit, we'd still love to earn your business as customers!”"
+ },
+ cynical:{
+  why:"Release them immediately. 'You cannot change realities you haven't first accepted.' Never argue or debate.",
+  anchor:"Your team is an elite growth circle. Cynics do not belong on your team.",
+  msg:"“You might be right! We aren't here to debate or convince anyone. We are strictly looking for people who are looking. Wish you all the best!” (Release and delete tension)",
+  pivot:"Do not pitch products to cynics. Release with complete dignity."
+ }
+};
+
+function renderPostureShield(){
+ const sel=$('psScenarioSelect');
+ const key=sel?sel.value:'no';
+ const p=POSTURE_REVIEWS[key]||POSTURE_REVIEWS.no;
+ if($('psOutput')){
+  $('psOutput').innerHTML=`
+   <div class="action-box" style="border-color:#ec4899">
+     <div class="small" style="color:#f472b6;font-weight:800;text-transform:uppercase;margin-bottom:4px">💡 Posture Mindset Anchor</div>
+     <div style="font-size:13.5px;line-height:1.5;color:#f1efff">${esc(p.why)}</div>
+   </div>
+   <div class="action-box" style="border-color:#a855f7">
+     <div class="small" style="color:#c084fc;font-weight:800;text-transform:uppercase;margin-bottom:4px">🎯 Realign with Your WHY ($8K &amp; Baby Boy)</div>
+     <div style="font-size:13.5px;line-height:1.5;color:#e2e8f0">${esc(p.anchor)}</div>
+   </div>
+   <div class="action-box" style="border-color:#38bdf8">
+     <div class="small" style="color:#38bdf8;font-weight:800;text-transform:uppercase;margin-bottom:4px">💬 The High-Posture Response (Tap to Copy)</div>
+     <div class="quick-script-btn" data-act="copyRaw" data-t="${esc(p.msg)}" style="margin-top:6px">${esc(p.msg)}</div>
+   </div>
+   ${p.pivot?`
+   <div class="action-box" style="border-color:#10b981">
+     <div class="small" style="color:#34d399;font-weight:800;text-transform:uppercase;margin-bottom:4px">🔄 The Customer Pivot (Turn No into VCS Volume)</div>
+     <div class="quick-script-btn" data-act="copyRaw" data-t="${esc(p.pivot)}" style="margin-top:6px">${esc(p.pivot)}</div>
+   </div>`:''}
+  `;
+ }
+}
+
+/* ================= OUTREACH LAUNCHER ================= */
+const REACH_TEMPLATES=[
+ {t:'F.O.R.M. Catch-Up',b:'Hey {name}! Thinking of you, hope you’re having an awesome week! What have you been up to lately?'},
+ {t:'QI 1 · Asking if Looking',b:'Hey {name}, hope you are doing well! Quick question — I know you are busy with {work}, but are you keeping your business options open outside of what you do?'},
+ {t:'Follow-up / Booking QI 2',b:'Hey {name}! Really enjoyed catching up. Would you have 20 minutes this week to grab a coffee or jump on a quick Zoom to dig into what we chatted about?'},
+ {t:'Post-Info Session Check-in',b:'Hey {name}! Thanks for jumping on the session. What did you like best about what you saw?'},
+ {t:'Customer Pivot',b:'Hey {name}! Since the business side isn’t a fit, would you be open to trying a product to support my family? My whole reason for building this is our time freedom, and your support means the world!'}
+];
+
+function openReachModal(candId){
+ const c=DB.cands.find(x=>x.id===candId);
+ if(!c)return;
+ $('roCandId').value=c.id;
+ $('roTitle').textContent=`Reach Out to ${c.name}`;
+ $('roSub').textContent=`Stage: ${c.stage}${c.phone?' · Phone: '+c.phone:''}`;
+ const firstName=c.name.split(' ')[0]||c.name;
+ $('roTemplates').innerHTML=REACH_TEMPLATES.map((tmpl,i)=>`
+   <button class="btn sm ghost" style="text-align:left;line-height:1.4;height:auto;padding:8px" data-act="roSelectTemplate" data-i="${i}">
+     <b>${esc(tmpl.t)}</b><div class="small mut">${esc(tmpl.b.replace('{name}',firstName).replace('{work}',c.form?.O||'work'))}</div>
+   </button>
+ `).join('');
+ const defaultMsg=REACH_TEMPLATES[0].b.replace('{name}',firstName).replace('{work}',c.form?.O||'work');
+ $('roCustomMsg').value=defaultMsg;
+ $('roSmsBtn').style.display=c.phone?'block':'none';
+ openM('m-reach');
+}
+
+/* ================= SCORES ================= */
+const dmoDay=k=>DB.dmo[k]||{};
+function dmoScore(k){const d=dmoDay(k),ds=DMO.filter(x=>x.goal>0);return Math.round(ds.reduce((s,x)=>s+Math.min((d[x.k]||0)/x.goal,1),0)/ds.length*100);}
+function weekSum(k,wk=weekKey()){let s=0;for(let i=0;i<7;i++)s+=dmoDay(addDays(wk,i))[k]||0;return s;}
+function fit(c){const v=SCORE.map(([k])=>c.score?.[k]).filter(x=>x!=null);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;}
+function follow(c){const due=(c.tasks||[]).filter(t=>t.done||(t.due&&t.due<today()));if(!due.length)return null;return due.filter(t=>t.done&&(!t.due||t.doneOn<=t.due)).length/due.length;}
+function signal(c){const f=fit(c),ft=follow(c),n=(c.tasks||[]).length;
+ if(f!=null&&f>=4&&ft!=null&&ft>=.8&&n>=3)return['a','A-player signals'];
+ if((ft!=null&&ft<.5)||(f!=null&&f<2.5))return['r','Not showing fit yet'];
+ if(!c.gap&&ACTIVE.indexOf(c.stage)>=2)return['w','No gap recorded'];return null;}
+function renderHeader(){
+ let s=0,d=today();if(dmoScore(d)<60)d=addDays(d,-1);while(dmoScore(d)>=60){s++;d=addDays(d,-1);}
+ $('streakTxt').textContent=s+'-day streak';
+ $('qiPill').textContent=`${weekSum('qi')}/${DB.goals.qi} QIs this week`;
+ const cs=DB.counsel[monthKey()]||{},pv=(+cs.personal||0)+(+cs.client||0);$('pvPill').textContent=`${pv}/150 PV`;
+ const r=DB.run;$('runPill').textContent=r.start?`🏁 Run day ${Math.min(90,Math.max(1,Math.round((new Date(today())-new Date(r.start))/864e5)+1))}/90 · ${Object.values(r.days).filter(Boolean).length} hit`:'🏁 Start a 90-Day Run';
+ if($('goalPill')){
+  const dm=DB.dream||DEFAULT_DREAM,amtNum=parseInt(dm.amt)||8000,amtK=amtNum>=1000?(amtNum/1000).toFixed(0)+'K':amtNum;
+  const daysLeft=dm.date?Math.max(0,Math.round((new Date(dm.date+'T12:00:00')-new Date(today()+'T12:00:00'))/864e5)):0,moLeft=(daysLeft/30.4).toFixed(1);
+  $('goalPill').textContent=`🎯 $${amtK}/mo in ${moLeft}mo`;
+ }
+ const rk=getRankInfo();
+ if($('rankTxt'))$('rankTxt').textContent=rk.name;
+ if($('soundPill'))$('soundPill').textContent=DB.settings.soundEnabled===false?'🔇 Sound OFF':'🔊 Sound ON';
+}
+
+/* ================= 8K VISION HERO ================= */
+function renderVisionHero(){
+ if(!$('visionHero'))return;
+ const dr=DB.dream||DEFAULT_DREAM,amtNum=parseInt(dr.amt)||8000,amtFmt='$'+amtNum.toLocaleString(),targetDate=dr.date||'2027-04-30';
+ const msDiff=new Date(targetDate+'T12:00:00')-new Date(today()+'T12:00:00'),days=Math.max(0,Math.round(msDiff/864e5)),months=(days/30.4).toFixed(1);
+ if($('visionTargetAmt'))$('visionTargetAmt').textContent=`${amtFmt} / Month in ${days>0?months+' Months':'Target Achieved!'}`;
+ if($('visionCountdown'))$('visionCountdown').innerHTML=`⏳ <b>Target:</b> ${fmtD(targetDate)} · <b>${days} days (${months} months) remaining</b> · <i>${esc(dr.what||'Another baby boy! Complete family time freedom.')}</i>`;
+ if($('visionGrid')){
+  const cards=(dr.cards&&dr.cards.length)?dr.cards:DEFAULT_CARDS;
+  $('visionGrid').innerHTML=cards.map((c,i)=>`<div class="vision-card click" data-act="editVisionCard" data-idx="${i}" title="Tap to edit this vision card">
+   <div style="font-size:26px;margin-bottom:6px">${esc(c.icon||'✨')}</div>
+   <div class="vision-badge">${esc(c.tag||'Dream')}</div>
+   <div class="vision-title">${esc(c.title||'')}</div>
+   <div class="vision-desc">${esc(c.desc||'')}</div>
+  </div>`).join('');
+ }
+ if($('visionPaceOut')){
+  const totQI=Object.values(DB.dmo).reduce((s,d)=>s+(d.qi||0),0),partnered=DB.cands.filter(c=>c.stage==='Partnered').length+DB.team.length,targetPartners=dr.partners||8;
+  $('visionPaceOut').innerHTML=`🔥 <b>Freedom Pace:</b> ${partnered}/${targetPartners} key partners launched · ${totQI} total QIs logged · <b>Standard:</b> 2+ QIs/wk locks in your ${months}-month timeline.`;
+ }
+}
+
+/* ================= HOME ================= */
+const THOUGHTS=[['Consistency defines winning.','Gary Newell masterclass'],['Information without context leaves you isolated. Relationships make knowledge useful.','Manny · IG mastermind'],['A spot in the growth circle is earned through character, dedication and finishing capacity — not by launching.','Manny · IG mastermind'],['Fast motion without a vetted direction is wasted energy. Mentorship is the direction lock.','Elijah · IG mastermind'],['You are the CEO and coach of your team — you select the players.','Rebuilding talk'],['100 QIs gives you a far better chance of finding a strong player than 10.','Rebuilding talk'],['You cannot change realities you have not first accepted.','D.A.W.G. mentality'],['Your decisions, not your circumstances, determine your destiny.','Defining Decisions'],['A purpose will always outweigh a promotion.','Defining Decisions'],['Professionals have coaches; amateurs don’t.','QI 2 · Newell'],['No gap, no QI.','QI 1 · Newell'],['Say hi to 5 people a day. Small daily increases lead to the 90-Day Runs.','Newell']];
+function renderHome(){
+ renderVisionHero();
+ renderSuccessLock();
+ const summitEv = (DB.events||[]).find(e => e.id === 'ev-ltd-2026' || (e.name && e.name.toLowerCase().includes('summit')));
+ if(summitEv){
+   const daysLeft = Math.ceil((new Date('2026-10-02T09:00:00-04:00') - new Date()) / 864e5);
+   if($('homeSummitCountdown')) $('homeSummitCountdown').textContent = daysLeft > 0 ? `⏳ ${daysLeft} days to Summit · Oct 2–4` : '🎉 Summit is Live!';
+   if($('homeTixVal')) $('homeTixVal').textContent = summitEv.tix || 0;
+ }
+ const q=THOUGHTS[Math.floor(Date.now()/864e5)%THOUGHTS.length];
+ $('thought').innerHTML=`<div class="mut small">Today's IG thought</div><div style="font-size:16px;font-weight:700;margin:4px 0">“${esc(q[0])}”</div><div class="small" style="color:#a5f3fc">— ${esc(q[1])}</div>`;
+ $('todayStr').textContent=fmtD(today());
+ const sc=dmoScore(today());$('ringFg').style.strokeDashoffset=194.8*(1-sc/100);$('ringTxt').textContent=sc+'%';
+ const d=dmoDay(today());
+ $('dmoSummary').textContent=sc?`Today: ${DMO.map(x=>`${d[x.k]||0} ${x.t.toLowerCase()}`).join(' · ')}.`:'Nothing logged yet today. Say hi to five new people — that is the whole first step.';
+ const t=today(),due=DB.cands.filter(c=>c.nextDate&&c.nextDate<=addDays(t,1)&&ACTIVE.includes(c.stage)).sort((a,b)=>a.nextDate<b.nextDate?-1:1);
+ const tasks=[];DB.cands.forEach(c=>(c.tasks||[]).forEach(k=>{if(!k.done&&k.due&&k.due<=t)tasks.push({c,k});}));
+ $('dueList').innerHTML=(due.map(c=>`<div class="item click" data-act="openCand" data-id="${c.id}"><div class="row between"><span class="nm">${esc(c.name)}</span><span class="tag">${esc(c.stage)}</span></div><div class="due ${c.nextDate<t?'over':''}">${c.nextDate<t?'⚠️ Overdue':'📅'} ${fmtD(c.nextDate)} · ${esc(c.next||'next step')}</div></div>`).join('')+
+  tasks.map(({c,k})=>`<div class="item click" data-act="openCand" data-id="${c.id}"><b>${esc(c.name)}</b> <span class="mut small">· proving task due ${fmtD(k.due)}</span><div class="small">${esc(k.t)}</div></div>`).join(''))||'<div class="empty">Nothing due. Add names and set next steps — the list is the business.</div>';
+ const dow=new Date().getDay(),bl=(DB.blocks[dow]||[]).slice().sort((a,b)=>a.s<b.s?-1:1);
+ $('todayBlocks').innerHTML=bl.length?bl.map(b=>`<div class="row between item" style="padding:8px 11px"><b>${esc(b.s)}–${esc(b.e)}</b><span>${esc(b.l)}</span></div>`).join(''):'<div class="mut">No blocks for today. Set them in Habits → Time blocking.</div>';
+ const cnt=s=>DB.cands.filter(c=>c.stage===s).length;
+ $('pipeStats').innerHTML=[['Names','Names List'],['QI 1','QI 1 · Connection'],['QI 2','QI 2 · Vetting'],['Info','Info Session'],['Proving','Proving'],['Partners','Partnered']].map(([l,s])=>`<div class="stat"><div class="n">${cnt(s)}</div><div class="l">${l}</div></div>`).join('');
+ let html='',tot=0;for(let i=13;i>=0;i--){const k=addDays(t,-i),dd=dmoDay(k),a=(dd.hi||0)+(dd.qi||0)*3+(dd.info||0)*3+(dd.ft||0)*2;tot+=(dd.qi||0);
+  html+=`<div title="${k}" style="flex:1;background:linear-gradient(180deg,#a855f7,#22d3ee);border-radius:4px;height:${Math.max(4,Math.min(a/15,1)*82)}px;${a?'':'opacity:.15'}"></div>`;}
+ $('hist14').innerHTML=html;$('hist14lbl').textContent=`${tot} QIs in the last 14 days (standard: 2+ a week).`;
+ $('setName').value=DB.settings.name||'';$('setCoach').value=DB.settings.coach||'';
+ $('setHuddle').value=DB.settings.huddleUrl||'';$('setHuddleNote').value=DB.settings.huddleNote||'';
+ if($('teamHuddleSub'))$('teamHuddleSub').textContent=DB.settings.huddleNote?`Schedule: ${DB.settings.huddleNote}`:'Daily/weekly mentorship & play-huddle. Connect with upline & team.';
+}
+$('setName').addEventListener('change',e=>{DB.settings.name=e.target.value.trim();save();});
+$('setCoach').addEventListener('change',e=>{DB.settings.coach=e.target.value.trim();save();});
+$('setHuddle').addEventListener('change',e=>{DB.settings.huddleUrl=e.target.value.trim()||DEFAULT_HUDDLE_URL;if($('huddleLinkDisplay'))$('huddleLinkDisplay').textContent=DB.settings.huddleUrl;save();});
+$('setHuddleNote').addEventListener('change',e=>{DB.settings.huddleNote=e.target.value.trim();save();if($('teamHuddleSub'))$('teamHuddleSub').textContent=e.target.value.trim()||'Daily/weekly mentorship & play-huddle.';});
+
+/* ================= CANDIDATES ================= */
+let cFilter='Active';
+function renderCands(){
+ const tabs=['Active',...STAGES,'All'];
+ $('stageTabs').innerHTML=tabs.map(t=>`<button class="${cFilter===t?'on':''}" data-act="cTab" data-t="${esc(t)}">${esc(t)} (${t==='All'?DB.cands.length:t==='Active'?DB.cands.filter(c=>ACTIVE.includes(c.stage)).length:DB.cands.filter(c=>c.stage===t).length})</button>`).join('');
+ const q=($('cSearch').value||'').toLowerCase(),t=today();
+ const list=DB.cands.filter(c=>(cFilter==='All'||(cFilter==='Active'?ACTIVE.includes(c.stage):c.stage===cFilter))&&[c.name,c.notes,c.gap,c.source,c.next].join(' ').toLowerCase().includes(q)).sort((a,b)=>(a.nextDate||'9')<(b.nextDate||'9')?-1:1);
+ $('candList').innerHTML=list.length?list.map(c=>{const f=fit(c),ft=follow(c),sg=signal(c);return `<div class="item click" data-act="openCand" data-id="${c.id}">
+  <div class="row between"><span class="nm">${esc(c.name)}</span><span class="tag c">${esc(c.stage)}</span></div>
+  ${f!=null?`<span class="tag">Fit ${f.toFixed(1)}/5</span>`:''}${ft!=null?`<span class="tag ${ft>=.8?'a':ft<.5?'r':'w'}">Follow-through ${Math.round(ft*100)}%</span>`:''}${sg?`<span class="tag ${sg[0]}">${sg[1]}</span>`:''}
+  ${c.gap?`<div class="small" style="margin-top:5px">🕳️ ${esc(c.gap.slice(0,110))}</div>`:''}
+  ${c.nextDate?`<div class="due ${c.nextDate<t?'over':''}">${c.nextDate<t?'⚠️ Overdue':'📅'} ${fmtD(c.nextDate)} · ${esc(c.next||'')}</div>`:''}
+  <div class="row" style="margin-top:6px" onclick="event.stopPropagation()">
+    <button class="btn sm" data-act="reachCand" data-id="${c.id}" style="padding:3px 9px;font-size:11.5px">📱 Reach Out</button>
+    <button class="btn sm ghost" data-act="openCand" data-id="${c.id}" style="padding:3px 9px;font-size:11.5px">Profile</button>
+  </div></div>`;}).join(''):'<div class="empty">No one here. Write your names list — everyone you know, no prejudging.</div>';
+ $('kanban').innerHTML=STAGES.map(s=>{const cs=DB.cands.filter(c=>c.stage===s);return `<div class="pcol"><h4>${esc(s)} (${cs.length})</h4>${cs.map(c=>`<div class="pcard" data-act="openCand" data-id="${c.id}"><b>${esc(c.name)}</b>${fit(c)!=null?`<div class="mut">fit ${fit(c).toFixed(1)}</div>`:''}</div>`).join('')||'<div class="mut small" style="text-align:center">—</div>'}</div>`;}).join('');
+ const reached=i=>DB.cands.filter(c=>{const si=STAGES.indexOf(c.stage);return (si>=i&&si<=8)||(c.history||[]).some(h=>h.t.includes(STAGES[i]));}).length;
+ const qi=reached(2),part=reached(8),totQI=Object.values(DB.dmo).reduce((s,d)=>s+(d.qi||0),0);
+ $('funnel').innerHTML=`<table class="t"><tr><th>Stage reached</th><th>People</th></tr>${[1,2,3,4,5,6,7,8].map(i=>`<tr><td>${esc(STAGES[i])}</td><td>${reached(i)}</td></tr>`).join('')}</table>
+  <p class="mut small" style="margin-top:8px">QIs logged all-time: <b style="color:var(--txt)">${totQI}</b>. ${part&&qi?`You partner with about <b style="color:var(--txt)">${Math.round(part/qi*10*10)/10}</b> of every 10 people you QI.`:'Partner ratio appears once people reach Partnered.'} Benchmark from Gary Newell's masterclass: 1–2 out of every 10. Check in with your coach every 10 QIs (next at ${Math.ceil((totQI+1)/10)*10}).</p>`;
+}
+$('cSearch').addEventListener('input',renderCands);
+let editTasks=[],editScore={};
+function openCand(id){
+ const c=id?DB.cands.find(x=>x.id===id):null;
+ $('cmTitle').textContent=c?c.name:'Add a name';$('cId').value=c?c.id:'';
+ $('cStage').innerHTML=STAGES.map(s=>`<option ${c&&c.stage===s?'selected':''}>${esc(s)}</option>`).join('');
+ const set=(id,v)=>$(id).value=v||'';
+ set('cName',c?.name);set('cPhone',c?.phone);set('cEmail',c?.email);set('cSource',c?.source);set('cNext',c?.next);set('cNextDate',c?.nextDate);
+ set('fF',c?.form?.F);set('fO',c?.form?.O);set('fR',c?.form?.R);set('fM',c?.form?.M);set('cGap',c?.gap);set('cSpouse',c?.spouse);set('cDream',c?.dream);set('cNotes',c?.notes);
+ editTasks=structuredClone(c?.tasks||[]);editScore=Object.assign({},c?.score||{});
+ drawScore();drawTasks();drawReady();
+ $('cHist').innerHTML=c?.history?.length?`<h3>History</h3><div class="hist">${c.history.slice().reverse().map(h=>`<div><b>${fmtD(h.d)}</b> — ${esc(h.t)}</div>`).join('')}</div>`:'';
+ $('cDel').style.display=c?'block':'none';openM('m-cand');setTimeout(()=>$('cName').focus(),120);
+}
+function drawScore(){$('scoreBox').innerHTML=SCORE.map(([k,l])=>`<div style="margin-bottom:6px"><div class="small mut">${l}</div><div class="score">${[0,1,2,3,4,5].map(n=>`<button type="button" class="${editScore[k]===n?'on':''}" data-act="setScore" data-k="${k}" data-n="${n}">${n}</button>`).join('')}</div></div>`).join('');
+ const f=fit({score:editScore});$('fitOut').textContent=f==null?'—':f.toFixed(1)+' / 5';}
+function drawTasks(){$('taskBox').innerHTML=editTasks.length?editTasks.map((t,i)=>`<div class="chk ${t.done?'on':''}" data-act="togTask" data-i="${i}"><span class="b">${t.done?'✅':'⬜'}</span><span class="x" style="flex:1">${esc(t.t)}<div class="mut small">${t.due?'due '+fmtD(t.due):''}${t.done?' · done '+fmtD(t.doneOn)+(t.due&&t.doneOn>t.due?' (late)':''):''}</div></span><button class="btn sm ghost" data-act="rmTask" data-i="${i}">✕</button></div>`).join(''):'<div class="mut small">No proving tasks yet.</div>';drawReady();}
+function drawReady(){const c={score:editScore,tasks:editTasks,gap:$('cGap').value,stage:$('cStage').value},f=fit(c),ft=follow(c),sg=signal(c),warn=[];
+ if(!c.gap&&ACTIVE.indexOf(c.stage)>=2)warn.push('No gap recorded — no gap, no QI.');
+ if(['Proving','Partnered'].includes(c.stage)&&editTasks.length<3)warn.push('Fewer than 3 proving tasks — give them a few weeks of the basics first.');
+ if($('cSpouse').value==='Not aligned')warn.push('Spouse not aligned — invite both to the next conversation with your mentor.');
+ $('readiness').innerHTML=`<div class="item"><b>Readiness</b> ${sg?`<span class="tag ${sg[0]}">${sg[1]}</span>`:''}<div class="small mut">Fit ${f==null?'—':f.toFixed(1)} · follow-through ${ft==null?'—':Math.round(ft*100)+'%'} · ${editTasks.filter(t=>t.done).length}/${editTasks.length} tasks done</div>${warn.map(w=>`<div class="small" style="color:var(--amb);margin-top:4px">⚠️ ${esc(w)}</div>`).join('')}</div>`;}
+['cGap','cStage','cSpouse'].forEach(id=>$(id).addEventListener('input',drawReady));
+function collectCand(){return{name:$('cName').value.trim(),phone:$('cPhone').value.trim(),email:$('cEmail').value.trim(),source:$('cSource').value.trim(),stage:$('cStage').value,next:$('cNext').value.trim(),nextDate:$('cNextDate').value,form:{F:$('fF').value.trim(),O:$('fO').value.trim(),R:$('fR').value.trim(),M:$('fM').value.trim()},gap:$('cGap').value.trim(),spouse:$('cSpouse').value,dream:$('cDream').value.trim(),notes:$('cNotes').value.trim(),score:editScore,tasks:editTasks};}
+function saveCand(silent){const d=collectCand();if(!d.name){toast('Add a name first.');$('cName').focus();return null;}
+ const id=$('cId').value;let c;
+ if(id){c=DB.cands.find(x=>x.id===id);if(c.stage!==d.stage)hist(c,`${c.stage} → ${d.stage}`);if(d.nextDate&&d.nextDate!==c.nextDate)hist(c,`Next step: ${d.next||'—'} on ${fmtD(d.nextDate)}`);Object.assign(c,d);}
+ else{c=Object.assign({id:uid(),created:today(),history:[]},d);hist(c,`Added at ${d.stage}`);DB.cands.push(c);$('cId').value=c.id;}
+ save();if(!silent){closeM('m-cand');toast('Saved.');}render();return c;}
+
+/* ================= HABITS ================= */
+function renderHabits(){
+ const di=$('dmoDate');if(!di.value)di.value=today();const k=di.value,d=dmoDay(k);
+ $('dmoCounters').innerHTML=DMO.map(x=>{const v=d[x.k]||0,g=x.goal||(x.k==='qi'?Math.ceil(DB.goals.qi/7*10)/10:1);return `<div class="counter"><div class="v">${v}</div><div class="t">${x.t}</div><div class="bar" style="margin-bottom:7px"><div style="width:${Math.min(v/g,1)*100}%"></div></div><div class="ops"><button data-act="bump" data-k="${x.k}" data-d="-1" aria-label="minus">−</button><button data-act="bump" data-k="${x.k}" data-d="1" aria-label="plus">+</button></div><div class="mut small" style="margin-top:5px">${x.goal?'daily goal '+x.goal:x.k==='qi'?`${weekSum('qi',weekKey(k))}/${DB.goals.qi} this week`:`${weekSum(x.k,weekKey(k))} this week`}</div></div>`;}).join('');
+ const sc=dmoScore(k);$('dmoPct').textContent=sc+'%';$('dmoBar').style.width=sc+'%';
+ const wk=weekKey(),a=DB.core.audits[wk]||{};
+ $('coreAudit').innerHTML=DB.core.defs.map((t,i)=>`<div style="margin-bottom:7px"><div class="small">${i+1}. ${esc(t)}</div><div class="score">${[0,1,2,3,4,5].map(n=>`<button class="${a[i]===n?'on':''}" data-act="core" data-i="${i}" data-n="${n}">${n}</button>`).join('')}</div></div>`).join('');
+ const avg=w=>{const x=DB.core.audits[w]||{},v=Object.values(x);return v.length?v.reduce((s,y)=>s+y,0)/v.length:null;};
+ const av=avg(wk);$('coreAvg').textContent=av==null?'—':av.toFixed(1)+' / 5';
+ let tr='';for(let i=7;i>=0;i--){const w=addDays(wk,-7*i),v=avg(w);tr+=`<div title="${w}: ${v==null?'—':v.toFixed(1)}" style="flex:1;border-radius:4px;background:linear-gradient(180deg,#a855f7,#22d3ee);height:${v==null?3:Math.max(3,v/5*48)}px;${v==null?'opacity:.15':''}"></div>`;}
+ $('coreTrend').innerHTML=tr;
+ const r=DB.run,t=today();
+ if(!r.start){$('runInfo').textContent='No run yet — set one up with a specific goal (e.g. 2 QIs a week and 150 PV for 90 days).';$('runGrid').innerHTML='';}
+ else{const hit=Object.values(r.days).filter(Boolean).length;$('runInfo').textContent=`${r.goal||'90-Day Run'} · started ${fmtD(r.start)} · ${hit} days hit`;
+  let h='';for(let i=0;i<90;i++){const kk=addDays(r.start,i),fut=kk>t;h+=`<div class="day ${r.days[kk]?'done':''} ${kk===t?'today':''} ${fut?'future':''}" ${fut?'':`data-act="runDay" data-k="${kk}"`}>${i+1}</div>`;}$('runGrid').innerHTML=h;}
+ const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+ $('tbDays').innerHTML=days.map((n,i)=>`<button class="${tbDay===i?'on':''}" data-act="tbDay" data-i="${i}">${n} (${(DB.blocks[i]||[]).length})</button>`).join('');
+ $('tbList').innerHTML=(DB.blocks[tbDay]||[]).slice().sort((a,b)=>a.s<b.s?-1:1).map(b=>`<div class="row between item" style="padding:8px 11px"><span><b>${esc(b.s)}–${esc(b.e)}</b> ${esc(b.l)}</span><button class="btn sm ghost" data-act="rmBlock" data-id="${b.id}">✕</button></div>`).join('')||'<div class="mut small" style="margin-bottom:8px">No blocks for this day.</div>';
+}
+let tbDay=new Date().getDay();
+$('dmoDate').addEventListener('change',renderHabits);
+
+/* ================= CONVERSATIONS ================= */
+const GUIDES={
+ 'Posture':[
+  {t:'We vet and select',b:'Our job is not to talk anyone into anything. We look for people with a gap, good character and follow-through, and we invite them into a vetting process. The right people raise their hands.',w:'You are the CEO selecting players — not a salesperson chasing buyers.'},
+  {t:'Sort, don’t convince',b:'If someone needs to be convinced, they will need to be convinced every week. Ask good questions, listen, and let them decide. A respectful “not now” is a successful conversation.',w:'Convincing creates dependents; sorting finds partners.'},
+  {t:'Keep it in the 3rd person',b:'“Some business owners I work with…”, “my mentor teaches…”, “the team I’m part of…”. The information belongs to the mentorship, not to you — that keeps it duplicable and low-pressure.',w:'From the Newell masterclass: 3rd-person validation.'},
+  {t:'Mentorship is earned',b:'A spot in the growth circle is earned through character, dedication and finishing capacity. We’re looking for finishers, not starters.',w:'Manny · IG mastermind.'},
+  {t:'Listen more than you talk',b:'Listen vs. no ears is the first non-negotiable. Mirror their energy, take notes, ask the next question. First impressions are mostly how you show up, not what you say.',w:'Five non-negotiables · Newell.'}],
+ 'QI 1 · Connection':[
+  {t:'Open with genuine interest (F.O.R.M.)',b:'Family: “How’s the family — what are the kids into?” Occupation: “How long have you been doing that? Do you enjoy it?” Recreation: “What do you do for fun?” Money/motivation: “If you could change one thing about your situation, what would it be?”',w:'Listen for the gap. No gap, no QI.'},
+  {t:'The “next” question',b:'“What’s next for you?” · “Where do you see yourself in five years if nothing changes?” · “Is that what you want?”',w:'Finding out about the person — the “Next Mentality”.'},
+  {t:'Name the gap back to them',b:'“So if I heard you right, you love the work but you never get time with the kids — is that fair?” Let them confirm it in their own words, then write it down.',w:'Their words become the reason later, not yours.'},
+  {t:'Leave a door, not a pitch',b:'“I work with some business owners who mentor people in exactly that situation. I don’t know if it’s a fit — would you be open to a deeper conversation sometime?” If there’s no interest, keep the friendship.',w:'Curiosity over pressure.'}],
+ 'QI 2 · Vetting':[
+  {t:'Ambition and trade-offs',b:'“What would you be willing to trade — TV time, weekends, scrolling — to close that gap?” · “Have you ever been coached at anything? Professionals have coaches; amateurs don’t.”',w:'We’re vetting willingness, not selling an outcome.'},
+  {t:'The spouse question',b:'“How does your wife/husband feel about building something?” · “Would they want to be part of the next conversation?”',w:'Alignment at home predicts follow-through.'},
+  {t:'Character and follow-through',b:'“When you start something, how do you usually finish?” Then give one small task: read a chapter, listen to an audio, call back at a set time. Watch what they do.',w:'Proof beats promises.'},
+  {t:'Invite to meet the mentor',b:'“Based on what you said, I think you’d enjoy meeting [mentor]. They only spend time with people who are serious, so let’s see if the timing makes sense.”',w:'Edify the mentor; never “my upline”.'}],
+ 'FT1 · Vision':[
+  {t:'What did you like best?',b:'“What did you like best about what you saw?” Then stop talking. Let them answer fully.',w:'Their answer tells you what matters to them.'},
+  {t:'Connect it to the gap',b:'“You mentioned [their gap] — how could this help close it?” Let them draw the line, not you.',w:'Helping them see how the business closes the gap.'},
+  {t:'Questions, not rebuttals',b:'“What questions came up?” Answer honestly or say “Great question — let’s ask [mentor].”',w:'Third-party credibility over your own persuasion.'}],
+ 'FT2 · Dream':[
+  {t:'The what',b:'“If this worked the way you hope, what would you do with it — specifically?” Write it down in their words.',w:'The four tests of a dream: specific, written, timed, believed.'},
+  {t:'The when',b:'“By when would you want that?” · “What would you need it to produce each month?” Set a date and a monthly number.',w:'Calculate monthly income goals and set dates to hit them.'},
+  {t:'The commitment conversation',b:'“Here’s how people who hit that pace spend their week. Does that fit what you’re willing to do right now?” If yes, set the launch. If not, “not now” is fine.',w:'Their pace, their decision.'}],
+ 'Releasing well':[
+  {t:'The graceful release',b:'“I really appreciate your honesty. This isn’t for everyone and that’s okay — we’re pretty selective about who we partner with. Can I keep you in the loop if something changes?”',w:'The relationship outlasts the conversation.'},
+  {t:'Customer, not partner',b:'“Even if the business isn’t a fit, a lot of people just love the products. Want me to set you up with a few things you already use?”',w:'Verified customer sales (VCS) build a real business.'},
+  {t:'Not now, not never',b:'“Totally understand the timing. Mind if I check in after [season/event]?” Set a date and move on with respect.',w:'Patience — reality and expectations align over time.'}],
+ 'The Customer Pivot':[
+  {t:'When to pivot',b:'If they lack the gap, ambition, or character for the business, or just give a solid "no", release the business tension and lean into the relationship.',w:'A "no" to the business is a "maybe" to the products. Do not convince.'},
+  {t:'Root it in your WHY',b:'“Since the business isn’t a fit, would you be open to trying a product to support me? I’m doing this to [Your Dream/WHY], and I’d love to earn your business.”',w:'People support people they like and reasons they believe in. Be genuine.'},
+  {t:'Ask for the referral',b:'“Who do you know that is ambitious and looking for a change?”',w:'Their network might have your next A-player.'}]
+};
+const POSTURE=[
+ ['The Customer Pivot (Not a business fit)','“I appreciate you being upfront. Since the business side isn’t a fit right now, would you be open to supporting me as a customer? My whole reason for building this is [Your WHY], and your support means the world.”'],
+ ['They ask: “What products do you sell?”','“We have exclusive partnerships in health, beauty, and home. I actually have a few things I use every day — I can send you a quick link to check out.” Pivot to a product focus!'],
+ ['They want to argue or debate','“You might be right! We aren’t looking to debate or convince anyone. We are just looking for people who are looking. Wish you the best!” Stay professional, maintain posture.'],
+ ['“How much money are YOU making?”','“My mentors are the ones with the results I’m pointing you to. I’m just getting started, but my goal is [Your Dream/When]. Would you want to meet the people teaching me?”'],
+ ['They are negative about MLMs','“I totally get that, a lot of people do it wrong and spam their friends. We do it differently—mentorship and vetting. But it sounds like this isn’t for you, which is totally fine! Can we stay in touch?”'],
+ ['“I don’t have time.”','“That’s honest — most people we work with are busy. If time weren’t an issue, would this be something you’d want? … If now’s not the season, no problem at all.” Ask, listen, release if needed.'],
+ ['“I don’t have the money.”','“I appreciate you saying that. Is the money the gap you’d want to close, or the reason not to look?” Their answer sorts it. No pressure either way.'],
+ ['“Is this one of those pyramid things?”','“Fair question — I asked the same thing. Rather than me explain it, would you want to ask my mentor directly?” Third person, calm, and let them choose.'],
+ ['“I need to think about it.”','“Of course. What specifically would you want to think through? … Should I check back on [date], or would you rather reach out when you’re ready?” Then honor it.'],
+ ['“I’m not a salesperson.”','“Good — neither are we. We don’t sell people; we look for a few who want to grow and we mentor them.” Then listen.'],
+ ['“Let me talk to my spouse.”','“I’d love that — they should be part of it. Want us to set a time for the three of you (or four, with my mentor)?” Alignment at home matters.'],
+ ['They’re excited but don’t do the first task','Excitement isn’t evidence. Give one more small task with a date. Follow-through is the signal; if it doesn’t happen, release with respect.'],
+ ['They want you to convince their friend','“The best thing you can do is share your story and let them ask questions. We sort; we don’t convince.” Duplicate the posture.'],
+ ['You feel the urge to over-explain','Stop. Ask a question instead: “What part would be most helpful to dig into?” Information without context isolates — let the mentor provide context.'],
+ ['They ghost after the info session','One respectful follow-up: “What did you like best?” If no answer, close the loop kindly and keep the relationship. Patience is part of the process.']];
+let gTab='Posture',fi=0,fFlip=false;
+function renderTalk(){
+ $('guideTabs').innerHTML=Object.keys(GUIDES).map(k=>`<button class="${gTab===k?'on':''}" data-act="gTab" data-t="${esc(k)}">${esc(k)}</button>`).join('');
+ $('guideList').innerHTML=GUIDES[gTab].map((g,i)=>`<div class="guide"><div class="t">${esc(g.t)}</div><p>${esc(g.b)}</p><div class="why">${esc(g.w)}</div><button class="btn sm ghost" style="margin-top:7px" data-act="copyGuide" data-i="${i}">📋 Copy</button></div>`).join('');
+ showFlash();
+ const s=DB.story||{};['stA','stB','stC','stD'].forEach(k=>$(k).value=s[k]||'');story();
+}
+function showFlash(){const f=POSTURE[fi];$('flashTag').textContent=fFlip?'Posture response':'When this happens…';$('flashTxt').textContent=fFlip?f[1]:f[0];$('flashIdx').textContent=`${fi+1} / ${POSTURE.length}`;}
+$('flash').addEventListener('click',()=>{fFlip=!fFlip;showFlash();});
+function story(){const s=['stA','stB','stC','stD'].map(k=>$(k).value.trim()).filter(Boolean).join(' ');$('storyOut').textContent=s||'Your story will appear here.';
+ const w=s?s.split(/\s+/).length:0,sec=Math.round(w/2.5);$('storyLen').textContent=`${w} words · about ${sec}s spoken ${sec>50?'— trim to stay under 50s':w?'✓ under 50s':''}`;}
+['stA','stB','stC','stD'].forEach(k=>$(k).addEventListener('input',()=>{DB.story[k]=$(k).value;save();story();}));
+function copy(t){(navigator.clipboard?.writeText(t)||Promise.reject()).then(()=>toast('Copied.'),()=>toast('Copy blocked by the browser — select and copy manually.'));}
+
+/* ================= NUMBERS ================= */
+const CS_FIELDS={csPersonal:'personal',csClient:'client',csGroup:'group',csBundle:'bundle',csTix:'tix',csTeamTix:'teamTix',csTeamBundles:'teamBundles',csDitto:'ditto'};
+function renderNums(){
+ const mi=$('csMonth');if(!mi.value)mi.value=monthKey();const m=mi.value,cs=DB.counsel[m]||{};
+ Object.entries(CS_FIELDS).forEach(([id,k])=>$(id).value=cs[k]??'');
+ const per=+cs.personal||0,cl=+cs.client||0,tot=per+cl,vcs=tot?cl/tot*100:0;
+ $('csCalc').innerHTML=`<div class="grid3"><div class="stat"><div class="n">${tot}</div><div class="l">Total PV / 150</div></div><div class="stat"><div class="n" style="color:${vcs>=60?'var(--grn)':'var(--amb)'}">${Math.round(vcs)}%</div><div class="l">VCS (goal 60%)</div></div><div class="stat"><div class="n">${Math.max(0,150-tot)}</div><div class="l">PV to standard</div></div></div><div class="bar" style="margin:8px 0"><div style="width:${Math.min(tot/150,1)*100}%"></div></div>`;
+ const inMonth=c=>(c.history||[]).some(h=>h.d.startsWith(m))||c.created?.startsWith(m);
+ const mc=DB.cands.filter(c=>inMonth(c)&&c.stage!=='Names List');
+ $('csCands').innerHTML=mc.length?`<table class="t"><tr><th>Candidate</th><th>Step in process</th><th>Fit</th></tr>${mc.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.stage)}</td><td>${fit(c)==null?'—':fit(c).toFixed(1)}</td></tr>`).join('')}</table><p class="mut small">${DB.cands.filter(c=>(c.history||[]).some(h=>h.d.startsWith(m)&&h.t.includes('Info Session'))).length} candidate(s) reached an info session this month.</p>`:'<div class="mut small">No candidate activity recorded this month.</div>';
+ const wk=weekKey(),items=[['QIs','qi',DB.goals.qi],['Info sessions / web tours','info',DB.goals.info],['Follow-throughs (FT1/FT2)','ft',DB.goals.ft]];
+ const newNames=DB.cands.filter(c=>c.created>=wk).length;
+ $('weekBoard').innerHTML=items.map(([l,k,g])=>{const v=weekSum(k);return `<div style="margin-bottom:10px"><div class="row between"><span>${l}</span><b>${v} / ${g}</b></div><div class="bar"><div style="width:${Math.min(v/(g||1),1)*100}%"></div></div></div>`;}).join('')+
+  `<div style="margin-bottom:10px"><div class="row between"><span>New names added</span><b>${newNames} / ${DB.goals.names}</b></div><div class="bar"><div style="width:${Math.min(newNames/(DB.goals.names||1),1)*100}%"></div></div></div><p class="mut small">Week of ${fmtD(wk)}. The QI standard is a minimum, not a maximum.</p>`;
+ const dr=DB.dream;$('drWhat').value=dr.what||'';$('drAmt').value=dr.amt||'';$('drDate').value=dr.date||'';$('drPartners').value=dr.partners||'';
+ const totQI=Object.values(DB.dmo).reduce((s,d)=>s+(d.qi||0),0),parts=DB.cands.filter(c=>c.stage==='Partnered').length,ratio=parts?totQI/parts:null;
+ $('drRatio').value=ratio?ratio.toFixed(1)+' QIs per partner':'needs a partner first';
+ let out='Fill in what, how much and when.';
+ if(dr.date){const months=Math.max(0,(new Date(dr.date)-new Date())/(30.44*864e5)),wks=months*4.345;
+  out=`${dr.what?`“${esc(dr.what)}” — `:''}${dr.amt?`$${(+dr.amt).toLocaleString()}/month `:''}in ${months.toFixed(1)} months (${Math.round(wks)} weeks).`;
+  if(dr.partners&&ratio){const q=dr.partners*ratio;out+=` At your current ratio that is about ${Math.round(q)} QIs — ${(q/Math.max(wks,1)).toFixed(1)} per week.`;}
+  else if(dr.partners)out+=` At the 1–2-in-10 benchmark, ${dr.partners} partners means roughly ${dr.partners*5}–${dr.partners*10} QIs — about ${(dr.partners*5/Math.max(wks,1)).toFixed(1)}–${(dr.partners*10/Math.max(wks,1)).toFixed(1)} per week.`;}
+ $('drOut').innerHTML=out;
+   renderEvents();
+}
+
+function renderEvents(){
+  const list = (DB.events || []).slice().sort((a,b)=>a.date<b.date?-1:1);
+  if(!list.length){
+    $('evList').innerHTML = '<div class="mut small">No events scheduled. Use the form below to add one.</div>';
+    return;
+  }
+  $('evList').innerHTML = list.map(e => {
+    if(e.sessions && e.sessions.length){
+      return `
+      <div class="event-rich-card" id="ev-card-${e.id}">
+        <div class="event-hero" style="background-image:url('${e.heroImg || e.img || ''}')">
+          <div class="event-hero-content">
+            <div class="event-badge-strip">
+              <span class="tag" style="background:#0c2a38;color:#38bdf8;border-color:#0284c7">💎 MAJOR FUNCTION</span>
+              <span class="tag" style="background:#2e1065;color:#c084fc;border-color:#7c3aed">📍 LOUISVILLE, KY</span>
+              <span class="tag" style="background:#064e3b;color:#6ee7b7;border-color:#059669">${fmtD(e.date)}${e.endDate ? ' – ' + fmtD(e.endDate) : ''}</span>
+            </div>
+            <h2 style="margin:2px 0 4px;font-size:18px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,0.85)">${esc(e.name)}</h2>
+            <p style="margin:0;font-size:12px;color:#e2e8f0;text-shadow:0 1px 6px rgba(0,0,0,0.85)">${esc(e.tagline || e.location)}</p>
+          </div>
+        </div>
+        <div class="event-body">
+          <div class="row between" style="align-items:center;padding-bottom:10px;border-bottom:1px solid #282460;margin-bottom:12px;gap:8px">
+            <div style="font-size:13px;color:#cbd5e1">
+              <div><b>📍 Venue:</b> ${esc(e.location)}</div>
+              <div class="mut small" style="margin-top:2px"><b>⏰ Time:</b> ${esc(e.time || fmtD(e.date))}</div>
+            </div>
+            <div class="row" style="gap:6px">
+              <a href="${makeGCalUrl(e)}" target="_blank" rel="noopener noreferrer" class="gcal-btn" title="Add full event to Google Calendar">
+                📅 Add to Google Cal
+              </a>
+              <button class="ics-btn" data-act="dlEventIcs" data-id="${e.id}" title="Download .ICS file for this event">
+                📥 .ICS
+              </button>
+              ${e.mapUrl ? `<a href="${e.mapUrl}" target="_blank" rel="noopener noreferrer" class="btn sm ghost" style="font-size:12px" title="Open Venue Map">🗺️ Map</a>` : ''}
+              <button class="btn sm ghost danger" data-act="rmEvent" data-id="${e.id}" title="Remove Event">✕</button>
+            </div>
+          </div>
+
+          <!-- TICKET COUNTER -->
+          <div class="row between" style="background:#131038;border:1px solid #312e81;border-radius:10px;padding:8px 12px;margin-bottom:12px">
+            <div class="small">
+              <b style="color:#e9d5ff">🎟️ My Team Ticket Commitments:</b>
+              <span class="mut" style="margin-left:6px">${+e.tix || 0} tickets committed</span>
+            </div>
+            <div class="row" style="gap:6px;align-items:center">
+              <button class="btn sm ghost" data-act="bumpEventTix" data-id="${e.id}" data-d="-1" style="padding:3px 9px;font-weight:900">-</button>
+              <span style="font-weight:900;font-size:15px;min-width:24px;text-align:center">${+e.tix || 0}</span>
+              <button class="btn sm" data-act="bumpEventTix" data-id="${e.id}" data-d="1" style="padding:3px 9px;font-weight:900">+</button>
+            </div>
+          </div>
+
+          <!-- SUB-SECTIONS NAVIGATION -->
+          <div class="row" style="gap:6px;margin-bottom:10px">
+            <button class="tab-pill-sm active" data-act="togEvTab" data-id="${e.id}" data-tab="agenda">📋 Full Agenda (${e.sessions.length} Sessions)</button>
+            <button class="tab-pill-sm" data-act="togEvTab" data-id="${e.id}" data-tab="photos">📸 Venue Photos</button>
+            <button class="tab-pill-sm" data-act="togEvTab" data-id="${e.id}" data-tab="guide">🚗 Louisville Guide</button>
+          </div>
+
+          <!-- AGENDA TAB -->
+          <div id="ev-tab-agenda-${e.id}" class="ev-tab-content">
+            <div class="agenda-list">
+              ${e.sessions.map(s => `
+                <div class="agenda-item">
+                  <div class="row between" style="align-items:flex-start;gap:8px">
+                    <div style="flex:1">
+                      <div class="row" style="gap:6px;margin-bottom:3px">
+                        <span class="tag" style="background:#1e1b4b;color:#a5f3fc;border-color:#6366f1">${esc(s.badge || 'Session')}</span>
+                        <span style="font-size:12px;font-weight:800;color:#facc15">${esc(s.time)}</span>
+                        <span class="mut small">• ${fmtD(s.date)}</span>
+                      </div>
+                      <div style="font-weight:800;font-size:14.5px;color:#f8fafc">${esc(s.title)}</div>
+                      ${s.speaker ? `<div class="small" style="color:#c084fc;margin:2px 0">🎤 <b>${esc(s.speaker)}</b></div>` : ''}
+                      <div class="small mut" style="margin:2px 0 6px">📍 ${esc(s.location)}</div>
+                      <div class="small" style="color:#cbd5e1;line-height:1.4">${esc(s.desc)}</div>
+                    </div>
+                    <div style="flex:none">
+                      <a href="${makeGCalUrl(s, e.location)}" target="_blank" rel="noopener noreferrer" class="gcal-btn" style="padding:5px 9px;font-size:11px" title="Add this specific session to Google Calendar">
+                        📅 Add Session
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- PHOTOS TAB -->
+          <div id="ev-tab-photos-${e.id}" class="ev-tab-content" style="display:none">
+            <div class="event-gallery-grid">
+              <div class="event-gallery-thumb">
+                <img src="${e.img || 'louisville_yum_center_1790936137138.jpg'}" alt="KFC Yum! Center" onerror="this.src='leadership_networking_1790933363739.jpg'">
+                <span>KFC Yum! Center Venue</span>
+              </div>
+              <div class="event-gallery-thumb">
+                <img src="${e.heroImg || 'summit_hero_background_1790933353686.jpg'}" alt="Main Stage Arena" onerror="this.src='leadership_networking_1790933363739.jpg'">
+                <span>Main Stage Arena &amp; Keynote</span>
+              </div>
+              <div class="event-gallery-thumb">
+                <img src="${e.netImg || 'leadership_networking_1790933363739.jpg'}" alt="Leadership Mixer" onerror="this.src='louisville_yum_center_1790936137138.jpg'">
+                <span>IBO Leadership Mixer</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- GUIDE TAB -->
+          <div id="ev-tab-guide-${e.id}" class="ev-tab-content" style="display:none">
+            <div style="background:#0b0a24;border:1px solid #312e81;border-radius:10px;padding:12px;margin-top:8px">
+              <h4 style="margin:0 0 8px;color:#38bdf8">🚗 Roadtrip Stops (Baltimore to Louisville)</h4>
+              <div class="small mut" style="line-height:1.5;margin-bottom:10px">
+                • <b>Morgantown, WV (I-68):</b> Mountain State burritos &amp; local craft coffee.<br/>
+                • <b>Charleston, WV (I-64):</b> Artisan pizza &amp; midway stretch point.<br/>
+                • <b>Lexington, KY:</b> 1 hour out from Louisville, quick sandwich stop.
+              </div>
+              <h4 style="margin:10px 0 6px;color:#34d399">🥂 After-Hours Leadership Hotspots</h4>
+              <div class="small mut" style="line-height:1.5">
+                • <b>Fourth Street Live!:</b> Louisville premier dining and group networking.<br/>
+                • <b>Whiskey Row:</b> Historic Main St bourbon lounges for high-level talks.<br/>
+                • <b>Waterfront Park:</b> Ohio River scenic walking under the stars.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      `;
+    } else {
+      return `
+      <div class="row between item" style="padding:10px 12px;align-items:center;margin-bottom:8px">
+        <div>
+          <b>${esc(e.name)}</b>
+          <span class="mut small">• ${fmtD(e.date)}${e.date < today() ? ' (past)' : ''}</span>
+          ${e.location ? `<div class="small mut" style="margin-top:2px">📍 ${esc(e.location)}</div>` : ''}
+          ${e.desc ? `<div class="small mut" style="margin-top:2px">${esc(e.desc)}</div>` : ''}
+        </div>
+        <div class="row" style="gap:6px;align-items:center">
+          <span class="tag">${+e.tix || 0} 🎟️</span>
+          <a href="${makeGCalUrl(e)}" target="_blank" rel="noopener noreferrer" class="gcal-btn" style="padding:4px 8px;font-size:11px">📅 Google Cal</a>
+          <button class="ics-btn" data-act="dlEventIcs" data-id="${e.id}" style="padding:4px 8px;font-size:11px">📥 .ICS</button>
+          <button class="btn sm ghost danger" data-act="rmEvent" data-id="${e.id}" style="padding:4px 8px">✕</button>
+        </div>
+      </div>
+      `;
+    }
+  }).join('');
+}
+Object.entries(CS_FIELDS).forEach(([id,k])=>$(id).addEventListener('change',()=>{const m=$('csMonth').value||monthKey();(DB.counsel[m]=DB.counsel[m]||{})[k]=$(id).value;save();renderNums();renderHeader();}));
+$('csMonth').addEventListener('change',renderNums);
+['drWhat','drAmt','drDate','drPartners'].forEach(id=>$(id).addEventListener('change',()=>{DB.dream=Object.assign(DB.dream||{},{what:$('drWhat').value.trim(),amt:$('drAmt').value,date:$('drDate').value,partners:+$('drPartners').value||0});save();renderNums();renderVisionHero();renderHeader();}));
+
+/* ================= TEAM ================= */
+let tLaunch={},tAud={};
+function renderTeam(){
+ $('teamList').innerHTML=DB.team.length?DB.team.map(m=>{const n=LAUNCH.reduce((s,g)=>s+g.length-1,0),d=Object.values(m.launch||{}).filter(Boolean).length,a=Object.values(m.audios||{}).filter(Boolean).length;return `<div class="item click" data-act="openTeam" data-id="${m.id}"><div class="row between"><span class="nm">${esc(m.name)}</span><span class="tag c">${esc(m.level)}</span></div><div class="small mut" style="margin:4px 0">Launch ${d}/${n} · audios ${a}/${AUDIOS.length}${m.pv?` · ${esc(m.pv)} PV`:''}</div><div class="bar"><div style="width:${d/n*100}%"></div></div>${m.focus?`<div class="small" style="margin-top:5px">🎯 ${esc(m.focus)}</div>`:''}</div>`;}).join(''):'<div class="empty">No partners yet. When a candidate reaches Partnered, add them here to run their launch.</div>';
+ $('launchRef').innerHTML=LAUNCH.map(g=>`<div class="item"><b>${esc(g[0])}</b>${g.slice(1).map(x=>`<div class="small mut">• ${esc(x)}</div>`).join('')}</div>`).join('');
+}
+function openTeam(id,prefill){const m=id?DB.team.find(x=>x.id===id):null;
+ $('tmTitle').textContent=m?m.name:'Add partner';$('tId').value=m?m.id:'';$('tName').value=m?.name||prefill||'';$('tLevel').value=m?.level||'Launching';$('tPV').value=m?.pv||'';$('tFocus').value=m?.focus||'';$('tNotes').value=m?.notes||'';
+ tLaunch=Object.assign({},m?.launch||{});tAud=Object.assign({},m?.audios||{});drawLaunch();$('tDel').style.display=m?'block':'none';openM('m-team');}
+function drawLaunch(){
+ $('tLaunch').innerHTML=LAUNCH.map((g,gi)=>`<div class="small" style="color:#c4b5fd;font-weight:800;margin-top:6px">${esc(g[0])}</div>`+g.slice(1).map((x,xi)=>{const k=gi+'.'+xi;return `<div class="chk ${tLaunch[k]?'on':''}" data-act="togLaunch" data-k="${k}"><span class="b">${tLaunch[k]?'✅':'⬜'}</span><span class="x">${esc(x)}</span></div>`;}).join('')).join('');
+ $('tAudios').innerHTML=AUDIOS.map((x,i)=>`<div class="chk ${tAud[i]?'on':''}" data-act="togAud" data-i="${i}"><span class="b">${tAud[i]?'🎧':'⬜'}</span><span class="x small">${esc(x)}</span></div>`).join('');}
+
+/* ================= LIBRARY ================= */
+const LIB={
+ 'Our process':`<div class="quote">We vet and select our partnerships. We don't sell and we don't convince.</div>
+  <ol style="line-height:1.7;padding-left:20px;font-size:14px"><li><b>Names list</b> — everyone, no prejudging (A, B, C list).</li><li><b>Connect</b> — say hi to 5 new people a day; build real relationships.</li><li><b>QI 1 · Connection</b> — F.O.R.M., the “next” mentality, find the gap. No gap, no QI.</li><li><b>QI 2 · Vetting</b> — ambition, trade-offs, spouse, coachability. Professionals have coaches.</li><li><b>Info session</b> — the mentor presents; you stay in the 3rd person.</li><li><b>FT1 · Vision</b> — “What did you like best?” See how it closes the gap.</li><li><b>FT2 · Dream</b> — the what and the when; monthly goal and dates.</li><li><b>Proving</b> — 9 Core tasks over a few weeks; consistency reveals the player.</li><li><b>Partnered</b> — launch checklist, Ditto, 150 PV with 60% VCS, tickets to the next function.</li></ol>
+  <p class="mut small">Team standards: 150 PV (60% verified customer sales) · 2+ QIs a week (the minimum) · rate your 9 Core honestly each week · aim for 1–2 partners out of every 10.</p>`,
+ 'Mastermind (Manny)':`<p class="mut small">Amway mastermind · candidate overview & vetting, June 9, 2026 (from your notes).</p>
+  <div class="quote">Information must lead to actionable conversations. Information without context — like self-teaching from YouTube — leaves business owners isolated; vetted relationships make knowledge useful. <span class="mut">— Manny</span></div>
+  <div class="quote">There's a strict vetting process to earn mentorship. Startups vs. finishers: finishing requires exceptional personal character. <span class="mut">— Manny</span></div>
+  <div class="quote">Fast motion without a precise direction is wasted energy. Mentorship gave a clear roadmap. <span class="mut">— Elijah</span></div>
+  <div class="quote">The shift from the corporate-ladder template to intentional life design. <span class="mut">— Ash</span></div>
+  <div class="quote">Athletic team accountability applies to building a business; seasoned perspectives reduce solo exposure. <span class="mut">— Marcus</span></div>
+  <div class="quote">For beginners: block out noise, take notes, and build your business self-image over outside opinions. <span class="mut">— Lisa (with Bobby)</span></div>`,
+ 'Newell masterclass':`<p class="mut small">Gary Newell masterclass, Feb 21, 2026 (from your notes).</p>
+  <h3>Five non-negotiables</h3><ul style="line-height:1.7;font-size:14px"><li>Listen vs. no ears</li><li>Faith vs. sight</li><li>Work ethic vs. excuses</li><li>Consistency vs. distractions (80/20)</li><li>Competency vs. amateurs (the 9 Core)</li></ul>
+  <h3>Vetting & sponsoring</h3><p style="font-size:14px;line-height:1.6">QI 1 finds the gap (no gap, no QI). QI 2 vets ambition and trade-offs — “What's next?”, “How does your spouse feel about that?”. FT1: “What did you like best?”. FT2: the what and the when — monthly income goals and dates. 3rd-person validation, the 50-second story, mirroring. Find 1–2 partners out of every 10. “Consistency defines winning.”</p>`,
+ 'Rebuilding':`<p class="mut small">Leadership, expectations & rebuilding (Mo Leake & Earl McLauren, from your notes).</p>
+  <table class="t"><tr><th>Factor</th><th>Yours?</th><th>Key idea</th></tr><tr><td>Leadership</td><td>Upline: no · your team: yes</td><td>Lead yourself first: 150 PV.</td></tr><tr><td>Players</td><td>Yes</td><td>You select them: talent, character, consistency.</td></tr><tr><td>Strategy</td><td>No</td><td>The system is proven — use it.</td></tr><tr><td>Work habit</td><td>Yes</td><td>2 QIs/week minimum; 100 QIs beats 10.</td></tr><tr><td>Expectations</td><td>Yes</td><td>Audit the 9 Core 0–5; believe before you see it.</td></tr><tr><td>Patience</td><td>Yes</td><td>Years, not days. Do the mundane daily.</td></tr></table>
+  <p style="font-size:14px">Filter prospects with 9 Core tasks for a few weeks; check in with your coach every 10 QIs.</p>`,
+ 'D.A.W.G.':`<p class="mut small">Deliberate And Willing Grind (from your notes).</p><ul style="line-height:1.7;font-size:14px"><li>Results stall? Check the pipes (mindset) before changing the sink.</li><li>Accept reality to change it; every problem can be solved.</li><li>Know what you want — don't judge it.</li><li>List all the options (abundance) and look for gaps.</li><li>Change your state on purpose: “What would I do if I weren't afraid?”</li><li>Only value opinions from people who embody who you want to become.</li><li>Make the decision, then make it right.</li></ul>`,
+ 'Defining decisions':`<p class="mut small">From your notes.</p><div class="quote">It is your decisions, not your circumstances, that determine your destiny.</div><ul style="line-height:1.7;font-size:14px"><li><b>Clarity</b> — know why; your biggest enemy is your excuses.</li><li><b>Courage</b> — great decisions precede great destinies.</li><li><b>Commitment to ownership</b> — a purpose outweighs a promotion. The miracle of Valley Forge was that they stayed.</li></ul>`,
+ 'Audios & books':`<p style="font-size:14px">Books: <b>The Compound Effect</b> · <b>Entrepreneur Rollercoaster</b> · <b>Live the Dream, No More Excuses</b> · <b>Crucial Conversations</b> · <b>Tough Times Never Last, But Tough People Do!</b></p><p class="mut small">The 8-week post-launch audio plan is tracked per partner in Team.</p><ul style="font-size:13px;line-height:1.6">${AUDIOS.map(a=>`<li>${esc(a)}</li>`).join('')}</ul>`,
+ 'Podcast':`<p style="font-size:14px">The <b>Infinite Growth Podcast</b> (Infinite Growth Team, hosted by Manny Joshua): mindsets for winning as an entrepreneur — speakers from real estate, network marketing, manufacturing and more. Episodes include Jaime Johnson on overcoming fear with faith, focus and courage.</p>
+  <p><a href="https://open.spotify.com/show/6ceg6IufMGGrJjIHxPNB2A" target="_blank" rel="noopener noreferrer" style="color:#67e8f9">Open on Spotify ↗</a></p><p class="mut small">Log what you learn from each episode in IG WKLY notes below.</p>`,
+ 'Recommended Books':`<p class="mut small">Core reading list recommended by LTD and our mentorship. Tap a book to see why we read it.</p>
+  <div class="book-shelf">
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Tongue - A Creative Force</div><div class="book-back"><b>Charles Capps</b><br/><br/>Explores how the words we speak shape our reality and circumstances.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Outwitting the Devil</div><div class="book-back"><b>Napoleon Hill</b><br/><br/>A deep dive into overcoming fear, procrastination, and negativity to achieve success.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">No Limits</div><div class="book-back"><b>John C. Maxwell</b><br/><br/>Learn how to identify and remove self-imposed limitations to reach your true capacity.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">How to Win Friends & Influence People</div><div class="book-back"><b>Dale Carnegie</b><br/><br/>Essential for developing the interpersonal skills required for team building.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Atomic Habits</div><div class="book-back"><b>James Clear</b><br/><br/>Building the consistent, small habits required for long-term personal and team success.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Infinite Game</div><div class="book-back"><b>Simon Sinek</b><br/><br/>A framework for adopting a long-term, visionary mindset in business and life.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Skill With People</div><div class="book-back"><b>Les Giblin</b><br/><br/>A concise guide on human relations and effectively communicating with others.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Fanatical Prospecting</div><div class="book-back"><b>Jeb Blount</b><br/><br/>Strategies for keeping the pipeline full and mastering the art of prospecting.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">How to Have Confidence and Power in Dealing with People</div><div class="book-back"><b>Les Giblin</b><br/><br/>Techniques for mastering human relations and gaining confidence.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Becoming a Person of Influence</div><div class="book-back"><b>John C. Maxwell & Jim Dornan</b><br/><br/>Discover how to positively impact the lives of others and expand your influence.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Never Split the Difference</div><div class="book-back"><b>Chris Voss and Tahl Raz</b><br/><br/>Field-tested negotiation strategies from a former FBI hostage negotiator.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Richest Man in Babylon</div><div class="book-back"><b>George S. Clason</b><br/><br/>Timeless parables detailing the fundamental principles of wealth building.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The 4 Laws of Financial Prosperity</div><div class="book-back"><b>Blaine Harris</b><br/><br/>Practical steps to achieving financial independence and taking control of your money.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Art of Dealing With People</div><div class="book-back"><b>Les Giblin</b><br/><br/>Mastering human nature to communicate effectively and get better results.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Four Tendencies</div><div class="book-back"><b>Gretchen Rubin</b><br/><br/>Understand personality profiles to predict how you and others respond to expectations.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Thinking for a Change</div><div class="book-back"><b>John C. Maxwell</b><br/><br/>Maximize your potential by shifting how you think and approach challenges.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The 15 Invaluable Laws of Growth</div><div class="book-back"><b>John C. Maxwell</b><br/><br/>Proven principles for continuous personal and professional development.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">One Word That Will Change Your Life</div><div class="book-back"><b>Jon Gordon, Dan Britton, Jimmy Page</b><br/><br/>Simplify your focus and create a powerful vision using a single word for the year.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Crucial Conversations</div><div class="book-back"><b>Kerry Patterson, et al.</b><br/><br/>Tools for handling high-stakes, emotional, or difficult conversations with grace.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Think and Grow Rich</div><div class="book-back"><b>Napoleon Hill</b><br/><br/>The foundational philosophy of success, wealth, and personal achievement.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Lessons from a Third Grade Dropout</div><div class="book-back"><b>Rick Rigsby</b><br/><br/>Timeless life lessons and wisdom passed down from the author's father.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Tough Times Never Last, But Tough People Do!</div><div class="book-back"><b>Robert H. Schuller</b><br/><br/>A motivational guide to overcoming adversity and building resilience.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Three Feet from Gold</div><div class="book-back"><b>Sharon L. Lechter & Greg S. Reid</b><br/><br/>Turning obstacles into opportunities by persisting when you are close to success.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">How to Start a Conversation and Make Friends</div><div class="book-back"><b>Don Gabor</b><br/><br/>Practical advice for networking, communicating, and building new relationships.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">How I Raised Myself from Failure to Success in Selling</div><div class="book-back"><b>Frank Bettger</b><br/><br/>Classic sales principles based on enthusiasm, organization, and overcoming fear.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Power of Your Potential</div><div class="book-back"><b>John C. Maxwell</b><br/><br/>A guide to breaking through your limits and reaching the next level of growth.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">No More Excuses</div><div class="book-back"><b>Sam Silverstein</b><br/><br/>The five accountabilities for personal and professional growth.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Start with Why</div><div class="book-back"><b>Simon Sinek</b><br/><br/>Discover the core purpose behind your actions to inspire yourself and your team.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Rich Dad's CASHFLOW Quadrant</div><div class="book-back"><b>Robert T. Kiyosaki</b><br/><br/>A guide to financial freedom and understanding different paths to generating income.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Boundaries</div><div class="book-back"><b>Dr. Henry Cloud & Dr. Townsend</b><br/><br/>Establish healthy boundaries to take control of your life and relationships.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Master Key to Riches</div><div class="book-back"><b>Napoleon Hill</b><br/><br/>Unlock the secrets of personal achievement and the principles of success.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Art of Public Speaking</div><div class="book-back"><b>Dale Carnegie</b><br/><br/>Build confidence and master the fundamentals of effective communication.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Coffee Bean</div><div class="book-back"><b>Jon Gordon & Damon West</b><br/><br/>A simple lesson on creating positive change and transforming your environment.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Chase the Lion</div><div class="book-back"><b>Mark Batterson</b><br/><br/>Overcome fear and pursue your biggest dreams with bold faith.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">10 Self-Help Classics to Guide You to Financial Freedom</div><div class="book-back"><b>Napoleon Hill et al.</b><br/><br/>A curated collection of timeless wisdom on wealth and personal growth.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Today Matters</div><div class="book-back"><b>John C. Maxwell</b><br/><br/>Focus on daily practices and decisions to guarantee a successful future.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Million Dollar Habits</div><div class="book-back"><b>Brian Tracy</b><br/><br/>Proven power practices to double and triple your income and achieve success.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Everybody, Always</div><div class="book-back"><b>Bob Goff</b><br/><br/>Becoming love in a world full of setbacks and difficult people.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">How to Stop Worrying and Start Living</div><div class="book-back"><b>Dale Carnegie</b><br/><br/>Practical techniques to eliminate anxiety and embrace a fulfilling life.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The 10X Rule</div><div class="book-back"><b>Grant Cardone</b><br/><br/>Scale your goals and efforts by ten to guarantee massive success.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Storyteller's Secret</div><div class="book-back"><b>Carmine Gallo</b><br/><br/>Learn how to inspire, motivate, and lead through the power of storytelling.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Way of the Superior Man</div><div class="book-back"><b>David Deida</b><br/><br/>A spiritual guide to navigating relationships, purpose, and masculine energy.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Mindset: The New Psychology of Success</div><div class="book-back"><b>Carol S. Dweck</b><br/><br/>Discover how a growth mindset can transform your life and career.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Acres of Diamonds</div><div class="book-back"><b>Russell H. Conwell</b><br/><br/>A classic speech on finding wealth and opportunity right where you are.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">How to Think Bigger</div><div class="book-back"><b>Martin Meadows</b><br/><br/>Aim higher, get more motivated, and accomplish major goals.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Success! The Glenn Bland Method</div><div class="book-back"><b>Glenn Bland</b><br/><br/>How to set goals, make plans, and build a balanced, successful life.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The 7 Habits of Highly Effective People</div><div class="book-back"><b>Stephen R. Covey</b><br/><br/>Foundational principles for personal effectiveness and professional success.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">How Successful People Think</div><div class="book-back"><b>John C. Maxwell</b><br/><br/>Change your thinking and change your life with focused thought processes.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Developing the Leader Within You 2.0</div><div class="book-back"><b>John C. Maxwell</b><br/><br/>Foundational principles for aspiring leaders to build influence and character.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Chop Wood Carry Water</div><div class="book-back"><b>Joshua Medcalf</b><br/><br/>A modern fable on the process of mastery and trusting the journey.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Bringing Out the Best in People</div><div class="book-back"><b>Alan Loy McGinnis</b><br/><br/>Learn how to motivate and inspire others to achieve excellence.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">Good Leaders Ask Great Questions</div><div class="book-back"><b>John C. Maxwell</b><br/><br/>Harness the power of questions to transform your leadership and team.</div></div></div>
+    <div class="book" onclick="this.classList.toggle('open')"><div class="book-inner"><div class="book-front">The Go-Getter</div><div class="book-back"><b>Peter B. Kyne</b><br/><br/>A classic story of determination, persistence, and getting the job done.</div></div></div>
+  </div>`
+};
+let lTab='Our process';
+function renderLib(){$('libTabs').innerHTML=Object.keys(LIB).map(k=>`<button class="${lTab===k?'on':''}" data-act="lTab" data-t="${esc(k)}">${esc(k)}</button>`).join('');$('libBody').innerHTML=LIB[lTab];
+ $('noteList').innerHTML=DB.notes.length?DB.notes.slice().sort((a,b)=>a.date<b.date?1:-1).map(n=>`<div class="item click" data-act="openNote" data-id="${n.id}"><div class="row between"><b>${esc(n.title||'Meeting')}</b><span class="mut small">${fmtD(n.date)}</span></div>${n.speaker?`<div class="small mut">${esc(n.speaker)}</div>`:''}<div class="small" style="margin-top:4px;white-space:pre-wrap">${esc((n.take||'').slice(0,200))}</div>${n.act?`<div class="small" style="color:var(--amb);margin-top:4px">➜ ${esc(n.act.slice(0,140))}</div>`:''}</div>`).join(''):'<div class="empty">No notes yet. Capture each IG WKLY, mastermind and podcast.</div>';}
+
+/* ================= GENERIC FORMS ================= */
+function form(title,fields,onSave){$('gTitle').textContent=title;
+ $('gBody').innerHTML=fields.map(f=>`<label>${esc(f.l)}</label>${f.type==='textarea'?`<textarea id="g_${f.k}" rows="${f.rows||3}">${esc(f.v)}</textarea>`:`<input id="g_${f.k}" type="${f.type||'text'}" value="${esc(f.v)}">`}`).join('');
+ $('gSave').onclick=()=>{const o={};fields.forEach(f=>o[f.k]=$('g_'+f.k).value);if(onSave(o)!==false){closeM('m-gen');save();render();}};openM('m-gen');}
+
+/* ================= ACTIONS ================= */
+const ACT={
+ close:b=>closeM(b.dataset.m),
+ newCand:()=>openCand(null),openCand:b=>openCand(b.dataset.id),saveCand:()=>saveCand(),
+ cTab:b=>{cFilter=b.dataset.t;renderCands();},
+ setScore:b=>{editScore[b.dataset.k]=+b.dataset.n;drawScore();drawReady();},
+ addTask:()=>{const t=$('tkText').value.trim();if(!t){toast('Describe the task.');return;}editTasks.push({id:uid(),t,due:$('tkDue').value||addDays(today(),3),done:false});$('tkText').value='';drawTasks();},
+ togTask:(b,e)=>{if(e.target.closest('[data-act="rmTask"]'))return;const t=editTasks[+b.dataset.i];t.done=!t.done;t.doneOn=t.done?today():null;if(t.done)SFX.chime();drawTasks();},
+ rmTask:(b,e)=>{e.stopPropagation();editTasks.splice(+b.dataset.i,1);drawTasks();},
+ advance:()=>{const i=STAGES.indexOf($('cStage').value);if(i<8){$('cStage').value=STAGES[i+1];drawReady();}const c=saveCand(true);if(c){SFX.victory();toast(`${c.name} → ${c.stage}`);openCand(c.id);if(c.stage==='Partnered'&&!DB.team.some(m=>m.name===c.name)){DB.team.push({id:uid(),name:c.name,level:'Launching',launch:{},audios:{},focus:'Day 1 launch'});save();toast(`${c.name} added to your partners for their launch.`);}}},
+ toCustomer:()=>{$('cStage').value='Customer';const c=saveCand(true);if(c){SFX.chime();toast(`${c.name} is a customer — VCS counts.`);openCand(c.id);}},
+ release:()=>{$('cStage').value='Not Now';if(!$('cNextDate').value)$('cNextDate').value=addDays(today(),90);$('cNext').value=$('cNext').value||'Respectful check-in';const c=saveCand(true);if(c){toast('Released with respect. Check-in set in 90 days.');openCand(c.id);}},
+ delCand:()=>{const id=$('cId').value;DB.cands=DB.cands.filter(x=>x.id!==id);save();closeM('m-cand');render();toast('Deleted.');},
+ bump:b=>{const k=$('dmoDate').value||today(),def=DMO.find(x=>x.k===b.dataset.k),step=def.step||1;DB.dmo[k]=DB.dmo[k]||{};DB.dmo[k][def.k]=Math.max(0,(DB.dmo[k][def.k]||0)+(+b.dataset.d)*step);if(+b.dataset.d>0)SFX.chime();save();renderHabits();renderHeader();renderSuccessLock();},
+ core:b=>{const wk=weekKey();(DB.core.audits[wk]=DB.core.audits[wk]||{})[b.dataset.i]=+b.dataset.n;save();renderHabits();},
+ editCore:()=>form('Your 9 Core (one per line)',[{k:'d',l:'Edit to match your team’s official list',type:'textarea',rows:10,v:DB.core.defs.join('\n')}],o=>{const d=o.d.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,12);if(!d.length)return false;DB.core.defs=d;}),
+ editRun:()=>form('90-Day Run',[{k:'goal',l:'The run (be specific)',v:DB.run.goal||'2+ QIs a week, 150 PV, daily method every day'},{k:'start',l:'Start date',type:'date',v:DB.run.start||today()}],o=>{DB.run={start:o.start||today(),goal:o.goal.trim(),days:DB.run.start===o.start?DB.run.days:{}};}),
+ runDay:b=>{DB.run.days[b.dataset.k]=!DB.run.days[b.dataset.k];save();renderHabits();renderHeader();},
+ tbDay:b=>{tbDay=+b.dataset.i;renderHabits();},
+ addBlock:()=>{const s=$('tbStart').value,e=$('tbEnd').value,l=$('tbLabel').value.trim();if(!s||!e||!l){toast('Set a start, end and label.');return;}if(e<=s){toast('End must be after start.');return;}(DB.blocks[tbDay]=DB.blocks[tbDay]||[]).push({id:uid(),s,e,l});$('tbLabel').value='';save();renderHabits();},
+ rmBlock:b=>{DB.blocks[tbDay]=(DB.blocks[tbDay]||[]).filter(x=>x.id!==b.dataset.id);save();renderHabits();},
+ gTab:b=>{gTab=b.dataset.t;renderTalk();},copyGuide:b=>{const g=GUIDES[gTab][+b.dataset.i];copy(g.b);},
+ flashNext:()=>{fi=(fi+1)%POSTURE.length;fFlip=false;showFlash();},flashPrev:()=>{fi=(fi-1+POSTURE.length)%POSTURE.length;fFlip=false;showFlash();},
+ flashShuffle:()=>{fi=Math.floor(Math.random()*POSTURE.length);fFlip=false;showFlash();},
+ copyStory:()=>copy($('storyOut').textContent),
+ editGoals:()=>form('Weekly standards',[{k:'qi',l:'QIs per week (team standard 2 — a minimum)',type:'number',v:DB.goals.qi},{k:'info',l:'Info sessions / web tours',type:'number',v:DB.goals.info},{k:'ft',l:'Follow-throughs (FT1/FT2)',type:'number',v:DB.goals.ft},{k:'names',l:'New names added',type:'number',v:DB.goals.names}],o=>{for(const k in o)DB.goals[k]=Math.max(0,parseInt(o[k])||0);}),
+ printCounsel:()=>{document.querySelectorAll('.view').forEach(v=>v.classList.toggle('printme',v.id==='v-nums'));print();},
+ addEvent:()=>{
+  const n=$('evName').value.trim(), d=$('evDate').value;
+  if(!n||!d){toast('Event name and date required.');return;}
+  const tix=+$('evTix').value||0;
+  const loc=$('evLoc')?$('evLoc').value.trim():'';
+  const desc=$('evDesc')?$('evDesc').value.trim():'';
+  const newEv={id:uid(),name:n,shortName:n,date:d,tix,location:loc,desc};
+  DB.events.push(newEv);
+  $('evName').value=$('evTix').value='';
+  if($('evLoc'))$('evLoc').value='';
+  if($('evDesc'))$('evDesc').value='';
+  save();renderNums();toast(`Event "${n}" added with Google Calendar link!`);
+ },
+ bumpEventTix:b=>{
+  const ev=(DB.events||[]).find(e=>e.id===b.dataset.id);if(!ev)return;
+  ev.tix=Math.max(0,(+ev.tix||0)+(+b.dataset.d||0));
+  save();renderNums();if($('homeTixVal'))$('homeTixVal').textContent=ev.tix;
+  toast(`Tickets updated: ${ev.tix}`);
+ },
+ dlEventIcs:b=>{
+  const ev=(DB.events||[]).find(e=>e.id===b.dataset.id);if(!ev)return;
+  const ics=generateIcs(ev);
+  downloadIcs(`${(ev.shortName||ev.name||'event').toLowerCase().replace(/[^a-z0-9]/g,'-')}.ics`,ics);
+ },
+ dlSummitIcs:()=>{
+  const a=document.createElement('a');a.href='ltd-summit-2026-calendar.ics';a.download='ltd-summit-2026-calendar.ics';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  toast('LTD Summit 2026 .ICS Calendar downloaded!');
+ },
+ openSummitGCal:()=>{
+  const ev=(DB.events||[]).find(e=>e.id==='ev-ltd-2026'||(e.name&&e.name.toLowerCase().includes('summit')))||DEFAULT_EVENTS[0];
+  window.open(makeGCalUrl(ev),'_blank','noopener,noreferrer');
+ },
+ goNumsEvents:()=>{
+  go('nums');
+  setTimeout(()=>{
+    const el=document.getElementById('eventsSection');
+    if(el)el.scrollIntoView({behavior:'smooth'});
+  },100);
+ },
+ togEvTab:b=>{
+  const evId=b.dataset.id, tab=b.dataset.tab;
+  const parent=document.getElementById(`ev-card-${evId}`);if(!parent)return;
+  parent.querySelectorAll('.tab-pill-sm').forEach(btn=>btn.classList.toggle('active',btn.dataset.tab===tab));
+  parent.querySelectorAll('.ev-tab-content').forEach(c=>c.style.display='none');
+  const target=document.getElementById(`ev-tab-${tab}-${evId}`);if(target)target.style.display='block';
+ },
+ rmEvent:b=>{DB.events=DB.events.filter(e=>e.id!==b.dataset.id);save();renderNums();},
+ newTeam:()=>openTeam(null),openTeam:b=>openTeam(b.dataset.id),
+ togLaunch:b=>{tLaunch[b.dataset.k]=!tLaunch[b.dataset.k];drawLaunch();},togAud:b=>{tAud[b.dataset.i]=!tAud[b.dataset.i];drawLaunch();},
+ saveTeam:()=>{const name=$('tName').value.trim();if(!name){toast('Name your partner.');return;}const id=$('tId').value,d={name,level:$('tLevel').value,pv:$('tPV').value,focus:$('tFocus').value.trim(),notes:$('tNotes').value.trim(),launch:tLaunch,audios:tAud};
+  if(id)Object.assign(DB.team.find(x=>x.id===id),d);else DB.team.push(Object.assign({id:uid()},d));save();closeM('m-team');render();toast('Saved.');},
+ delTeam:()=>{DB.team=DB.team.filter(x=>x.id!==$('tId').value);save();closeM('m-team');render();},
+ lTab:b=>{lTab=b.dataset.t;renderLib();},
+ newNote:()=>noteForm(null),openNote:b=>noteForm(b.dataset.id),
+ exportData:()=>{const blob=new Blob([JSON.stringify(DB,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`infinite-growth-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000);toast('Backup downloaded.');},
+ importData:()=>$('importFile').click(),
+ wipe:()=>{localStorage.removeItem(LS);location.reload();},
+ simAns:b=>{
+  const opt = SIM_SCENARIOS[simIdx].opts[+b.dataset.i];
+  const fb = $('simFeedback');
+  fb.style.display = 'block';
+  fb.style.background = opt.correct ? 'rgba(52, 211, 153, 0.15)' : 'rgba(248, 113, 113, 0.15)';
+  fb.style.border = `1px solid ${opt.correct ? 'var(--grn)' : 'var(--red)'}`;
+  fb.innerHTML = `<b>${opt.correct ? '✅ Posture kept!' : '❌ Lost posture.'}</b><br/>${esc(opt.f)}`;
+  document.querySelectorAll('#simOptions button').forEach(btn => btn.style.opacity = '0.5');
+  b.style.opacity = '1';
+  b.style.borderColor = opt.correct ? 'var(--grn)' : 'var(--red)';
+ },
+ simNext:()=>{ simIdx = Math.floor(Math.random() * SIM_SCENARIOS.length); renderPrac(); },
+ joinHuddle:()=>{
+  openHuddlePopup();
+  if($('huddleLinkDisplay')) $('huddleLinkDisplay').textContent = (DB.settings.huddleUrl || DEFAULT_HUDDLE_URL);
+  openM('m-huddle');
+ },
+ launchHuddlePopup:()=>{
+  openHuddlePopup();
+ },
+ launchHuddleTab:()=>{
+  const url=(DB.settings.huddleUrl||DEFAULT_HUDDLE_URL).trim();
+  window.open(url,'_blank','noopener,noreferrer');
+ },
+ copyHuddleLink:()=>{
+  const url=(DB.settings.huddleUrl||DEFAULT_HUDDLE_URL).trim();
+  copy(url);
+ },
+ copyAndLaunchHuddle:b=>{
+  const prompt=b.dataset.prompt||'';
+  if(prompt) copy(prompt);
+  openHuddlePopup();
+  toast('Prompt copied! Paste it directly into Dex Huddle.');
+ },
+ editHuddle:()=>form('🎙️ Dex Huddle Custom GPT Settings',[
+  {k:'url',l:'Custom GPT or Meeting URL',v:DB.settings.huddleUrl||DEFAULT_HUDDLE_URL},
+  {k:'note',l:'Schedule / Routine (e.g. Mon–Fri 7:30 AM EST & 24/7 AI Mentorship)',v:DB.settings.huddleNote||'Daily Mentorship & Custom GPT Assistant'}
+ ],o=>{
+  DB.settings.huddleUrl=o.url.trim()||DEFAULT_HUDDLE_URL;
+  DB.settings.huddleNote=o.note.trim();
+  $('setHuddle').value=DB.settings.huddleUrl;
+  $('setHuddleNote').value=DB.settings.huddleNote;
+  if($('huddleLinkDisplay'))$('huddleLinkDisplay').textContent=DB.settings.huddleUrl;
+  if($('teamHuddleSub'))$('teamHuddleSub').textContent=DB.settings.huddleNote?`Schedule: ${DB.settings.huddleNote}`:'Daily/weekly mentorship & play-huddle. Connect with upline & team.';
+  save();toast('Dex Huddle link saved.');
+ }),
+ goDream:()=>{
+  go('home');
+  const el=$('visionHero');
+  if(el){
+   el.scrollIntoView({behavior:'smooth',block:'center'});
+   el.style.boxShadow='0 0 35px rgba(56,189,248,0.7)';
+   setTimeout(()=>{el.style.boxShadow='0 8px 32px rgba(124,58,237,.25)';},2200);
+  }
+ },
+ editDreamTarget:()=>form('🎯 Freedom Goal & Target Timeline',[
+  {k:'amt',l:'Monthly Residual Income Target ($)',type:'number',v:DB.dream.amt||8000},
+  {k:'date',l:'Target Date (By When)',type:'date',v:DB.dream.date||'2027-04-30'},
+  {k:'what',l:'The Big Dream / Our WHY',type:'textarea',rows:3,v:DB.dream.what||''},
+  {k:'partners',l:'Key Partners needed to reach this',type:'number',v:DB.dream.partners||8}
+ ],o=>{
+  DB.dream.amt=parseInt(o.amt)||8000;
+  DB.dream.date=o.date||'2027-04-30';
+  DB.dream.what=o.what.trim();
+  DB.dream.partners=parseInt(o.partners)||8;
+  if($('drAmt'))$('drAmt').value=DB.dream.amt;
+  if($('drDate'))$('drDate').value=DB.dream.date;
+  if($('drWhat'))$('drWhat').value=DB.dream.what;
+  if($('drPartners'))$('drPartners').value=DB.dream.partners;
+  toast('Freedom goal updated!');
+ }),
+ addVisionCard:()=>form('✨ Add Vision / Dream Card',[
+  {k:'icon',l:'Emoji / Icon (e.g. 👶, 🏖️, 🏡, 💎, 🕊️)',v:'✨'},
+  {k:'tag',l:'Badge / Category (e.g. Family, Lifestyle, Freedom)',v:'Dream'},
+  {k:'title',l:'Card Title',v:''},
+  {k:'desc',l:'Vivid description (emotional WHY)',type:'textarea',rows:3,v:''}
+ ],o=>{
+  if(!o.title.trim()){toast('Please provide a title.');return false;}
+  DB.dream.cards=DB.dream.cards||[];
+  DB.dream.cards.push({icon:o.icon.trim()||'✨',tag:o.tag.trim()||'Dream',title:o.title.trim(),desc:o.desc.trim()});
+  toast('Vision card added!');
+ }),
+ editVisionCard:b=>{
+  const idx=+b.dataset.idx;
+  const card=DB.dream.cards[idx];
+  if(!card)return;
+  form(`Edit Vision Card (${card.title||'Dream'})`,[
+   {k:'icon',l:'Emoji / Icon',v:card.icon||'✨'},
+   {k:'tag',l:'Category / Badge',v:card.tag||'Dream'},
+   {k:'title',l:'Card Title',v:card.title||''},
+   {k:'desc',l:'Description',type:'textarea',rows:3,v:card.desc||''},
+   {k:'del',l:'Type DELETE to remove this card',v:''}
+  ],o=>{
+   if(o.del&&o.del.trim().toUpperCase()==='DELETE'){
+    DB.dream.cards.splice(idx,1);
+    toast('Vision card removed.');
+    return;
+   }
+   card.icon=o.icon.trim()||'✨';
+   card.tag=o.tag.trim()||'Dream';
+   card.title=o.title.trim();
+   card.desc=o.desc.trim();
+   toast('Vision card updated!');
+  });
+ },
+ toggleSound:()=>{
+  DB.settings.soundEnabled=DB.settings.soundEnabled===false?true:false;
+  save();renderHeader();
+  if(DB.settings.soundEnabled)SFX.chime();
+  toast(DB.settings.soundEnabled?'🔊 Sound FX Enabled':'🔇 Sound FX Muted');
+ },
+ showRankInfo:()=>{
+  const rk=getRankInfo();
+  SFX.chime();
+  toast(`🎖️ ${rk.name} · Level ${rk.lvl} (${rk.totQI} total QIs logged)`);
+ },
+ startSprint:()=>{
+  SPRINT.timer=1200;SPRINT.running=false;
+  if(SPRINT.timerId){clearInterval(SPRINT.timerId);SPRINT.timerId=null;}
+  updateSprintUI();openM('m-sprint');
+ },
+ toggleSprintTimer:()=>{
+  if(SPRINT.running){
+   SPRINT.running=false;clearInterval(SPRINT.timerId);SPRINT.timerId=null;
+  } else {
+   SPRINT.running=true;
+   if(SPRINT.timer<=0)SPRINT.timer=1200;
+   SPRINT.timerId=setInterval(tickSprint,1000);
+   SFX.beep(true);
+  }
+  updateSprintUI();
+ },
+ resetSprintTimer:()=>{
+  SPRINT.running=false;clearInterval(SPRINT.timerId);SPRINT.timerId=null;
+  SPRINT.timer=1200;updateSprintUI();
+ },
+ toggleSprintDrone:()=>{
+  SPRINT.droneOn=!SPRINT.droneOn;
+  SFX.toggleDrone(SPRINT.droneOn);
+  updateSprintUI();
+ },
+ spCheckHello:b=>{
+  const idx=+b.dataset.i;
+  SPRINT.hellos[idx]=!SPRINT.hellos[idx];
+  if(SPRINT.hellos[idx])SFX.chime();
+  const count=SPRINT.hellos.filter(Boolean).length;
+  const d=dmoDay(today());
+  d.hi=Math.max(d.hi||0,count);
+  save();renderHeader();renderSuccessLock();updateSprintUI();
+ },
+ spCopyScript:b=>{
+  copy(b.dataset.txt);SFX.chime();
+ },
+ spMarkDone:b=>{
+  const c=DB.cands.find(x=>x.id===b.dataset.id);
+  if(c){
+   c.nextDate=addDays(today(),3);
+   (c.history=c.history||[]).push({d:today(),t:'Contacted in Power Sprint'});
+   save();SFX.chime();updateSprintUI();renderHome();renderCands();
+   toast(`Next step advanced for ${c.name}`);
+  }
+ },
+ spAddFastName:()=>{
+  const n=$('spNewName').value.trim(),src=$('spNewSource').value.trim();
+  if(!n){toast('Enter a name');return;}
+  const newCand={id:uid(),name:n,stage:'Names List',source:src||'Power Sprint',next:'Say hi / F.O.R.M.',nextDate:today(),created:today(),history:[{d:today(),t:'Added during Power Sprint'}]};
+  DB.cands.push(newCand);
+  SPRINT.addedNames.push(n);
+  $('spNewName').value='';$('spNewSource').value='';
+  SFX.chime();save();updateSprintUI();renderCands();renderHome();
+  toast(`Added ${n} to list!`);
+ },
+ finishSprint:()=>{
+  SPRINT.running=false;
+  if(SPRINT.timerId){clearInterval(SPRINT.timerId);SPRINT.timerId=null;}
+  if(SPRINT.droneOn){SPRINT.droneOn=false;SFX.toggleDrone(false);}
+  SFX.victory();
+  closeM('m-sprint');
+  save();render();
+  toast('🏆 20-Min Sprint Complete! You locked in today’s standard.');
+ },
+ openPostureShield:()=>{
+  renderPostureShield();
+  openM('m-posture');
+ },
+ reachCand:b=>{
+  openReachModal(b.dataset.id);
+ },
+ roSelectTemplate:b=>{
+  const tmpl=REACH_TEMPLATES[+b.dataset.i];
+  const c=DB.cands.find(x=>x.id===$('roCandId').value);
+  const fn=c?c.name.split(' ')[0]:'friend';
+  $('roCustomMsg').value=tmpl.b.replace('{name}',fn).replace('{work}',c?.form?.O||'work');
+  SFX.chime();
+ },
+ roSendSms:()=>{
+  const c=DB.cands.find(x=>x.id===$('roCandId').value);
+  if(c&&c.phone){
+   const txt=encodeURIComponent($('roCustomMsg').value);
+   SFX.chime();
+   window.open(`sms:${c.phone}?body=${txt}`,'_blank');
+   closeM('m-reach');
+  } else {
+   toast('No phone number saved for this candidate. Copy message instead.');
+  }
+ },
+ roCopyMsg:()=>{
+  copy($('roCustomMsg').value);
+  SFX.chime();
+  closeM('m-reach');
+ },
+ copyRaw:b=>{
+  copy(b.dataset.t);
+  SFX.chime();
+ }
+};
+function noteForm(id){const n=id?DB.notes.find(x=>x.id===id):null;
+ form(n?'Edit notes':'IG WKLY / mastermind notes',[{k:'date',l:'Date',type:'date',v:n?.date||today()},{k:'title',l:'Meeting / episode',v:n?.title||'IG WKLY'},{k:'speaker',l:'Speakers',v:n?.speaker||''},{k:'take',l:'Key takeaways',type:'textarea',rows:5,v:n?.take||''},{k:'act',l:'Action items',type:'textarea',v:n?.act||''}],o=>{if(n)Object.assign(n,o);else DB.notes.push(Object.assign({id:uid()},o));});}
+$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+ try{if(f.size>5e6)throw new Error('file too large');const d=JSON.parse(await f.text());if(!d||!Array.isArray(d.cands)||typeof d.dmo!=='object')throw new Error('not an Infinite Growth backup');DB=Object.assign(DB,d);saveNow();render();toast('Backup restored.');}
+ catch(err){toast('Not restored: '+err.message);}});
+$('psScenarioSelect').addEventListener('change',renderPostureShield);
+
+/* ================= INIT ================= */
+load();render();
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightnin Library Vault</title>
+    <meta name="description" content="A robust asset manager and file repository system for storing and previewing local PDFs, videos, and zip files.">
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌩️</text></svg>">
+    
+    <style>
+        :root {
+            --bg: #0f172a; --panel: #1e293b;
+            --text: #e2e8f0; --muted: #94a3b8;
+            --brand: #38bdf8; --border: #334155;
+            --font: system-ui, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        header { padding: 1.5rem 2rem; background: var(--panel); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--brand); display: flex; align-items: center; gap: 0.5rem; }
+        
+        .hero-banner { 
+            background: linear-gradient(135deg, var(--brand), #1d4ed8); 
+            color: white; padding: 3rem 2rem; text-align: center;
+        }
+        
+        main { display: grid; grid-template-columns: 250px 1fr; gap: 2rem; padding: 2rem; flex: 1; max-width: 1400px; margin: 0 auto; width: 100%; }
+        @media(max-width:800px) { main { grid-template-columns: 1fr; } }
+        
+        .sidebar { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+        .sidebar h4 { color: var(--brand); margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        
+        ul { list-style: none; }
+        ul li { margin-bottom: 0.5rem; }
+        ul a { color: var(--muted); text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+        ul a:hover { color: var(--brand); }
+
+        .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+        .file-card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; transition: transform 0.2s; cursor: pointer; }
+        .file-card:hover { transform: translateY(-4px); border-color: var(--brand); }
+        .file-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .file-name { font-weight: bold; font-size: 0.9rem; margin-bottom: 0.5rem; word-break: break-all;}
+        .file-size { color: var(--muted); font-size: 0.8rem; }
+
+        footer { background: var(--panel); border-top: 1px solid var(--border); padding: 2rem; display: flex; justify-content: space-between; align-items: flex-start; margin-top: auto; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">🌩️ Lightnin Vault</div>
+        <div>
+            <button style="background:var(--brand); color:#000; border:none; padding:0.5rem 1rem; border-radius:4px; font-weight:bold; cursor:pointer;">Upload Files</button>
+        </div>
+    </header>
+
+    <div class="hero-banner">
+        <!-- SVG Graphic -->
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:1rem;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        <h1>Asset Repository</h1>
+        <p>Centralized secure storage for documents, binaries, and compressed archives.</p>
+    </div>
+
+    <main>
+        <aside class="sidebar">
+            <div>
+                <h4>📁 Categories</h4>
+                <ul>
+                    <li><a href="#">📄 Documents (PDFs)</a></li>
+                    <li><a href="#">📦 Archives (ZIPs)</a></li>
+                    <li><a href="#">🖼️ Media Assets</a></li>
+                    <li><a href="#">💻 Binaries</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4>📚 Resources</h4>
+                <ul>
+                    <li><a href="#">⚙️ Storage Limits</a></li>
+                    <li><a href="#">🔒 Encryption Info</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4>🔗 Suggested Sites</h4>
+                <ul>
+                    <li><a href="https://drive.google.com" target="_blank">☁️ Google Drive</a></li>
+                    <li><a href="https://dropbox.com" target="_blank">📦 Dropbox</a></li>
+                    <li><a href="https://mega.io" target="_blank">🔴 MEGA</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <section>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+                <h2 style="color:var(--brand);">Recent Uploads</h2>
+                <input type="text" placeholder="Search files..." style="padding:0.5rem; border-radius:4px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
+            </div>
+            
+            <div class="file-grid">
+                <div class="file-card">
+                    <div class="file-icon">📄</div>
+                    <div class="file-name">Q4_Financial_Report.pdf</div>
+                    <div class="file-size">4.2 MB</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-icon">📦</div>
+                    <div class="file-name">legacy_assets_v2.zip</div>
+                    <div class="file-size">142 MB</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-icon">🖼️</div>
+                    <div class="file-name">hero_background.png</div>
+                    <div class="file-size">1.8 MB</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-icon">💻</div>
+                    <div class="file-name">linux_installer.tar.gz</div>
+                    <div class="file-size">89 MB</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div>
+            <h4 style="color:var(--brand); margin-bottom:0.5rem;">Lightnin Library Vault</h4>
+            <p style="color:var(--muted); font-size:0.9rem;">Fast, secure, local file repository.</p>
+        </div>
+        <div style="color:var(--muted); font-size:0.9rem; align-self: flex-end;">
+            &copy; 2026 qamotech - Internal tool.
+        </div>
+    </footer>
+
+</body>
+</html>

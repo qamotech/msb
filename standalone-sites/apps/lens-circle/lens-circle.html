@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Floating Squares & Central Lens</title>
+  <style>
+    /* Reset and Base Styles */
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #0f172a; /* Dark slate background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+
+    /* Central Lens / Circle */
+    .lens-circle {
+      position: absolute;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      border: 2px solid rgba(56, 189, 248, 0.5);
+      box-shadow: 
+        0 0 40px rgba(56, 189, 248, 0.4), 
+        inset 0 0 20px rgba(56, 189, 248, 0.2);
+      
+      /* Glass/Lens effect */
+      backdrop-filter: blur(10px) brightness(1.2);
+      -webkit-backdrop-filter: blur(10px) brightness(1.2);
+      
+      z-index: 10;
+      animation: pulse 4s ease-in-out infinite alternate;
+    }
+        /* Subtle pulsing effect for the lens */
+    @keyframes pulse {
+      0% { 
+        transform: scale(1); 
+      }
+      100% { 
+        transform: scale(1.25); 
+        box-shadow: 
+          0 0 60px rgba(56, 189, 248, 0.6), 
+          inset 0 0 30px rgba(56, 189, 248, 0.4); 
+      }
+    }
+
+    /* Container for the squares */
+    .squares-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* Keep squares behind the lens */
+    }
+
+    /* Base Square Styles */
+    .square {
+      position: absolute;
+      bottom: -150px; /* Start off-screen at the bottom */
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: floatUp linear infinite;
+    }
+
+    /* Floating and Rotating Animation */
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-120vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Individual Colored Squares (Position, Size, Timing, Color) */
+    .sq-1 { 
+      left: 15%; width: 80px; height: 80px; 
+      animation-duration: 12s; 
+      background: rgba(239, 68, 68, 0.5); /* Red */
+    }
+    
+    .sq-2 { 
+      left: 35%; width: 50px; height: 50px; 
+      animation-duration: 9s; animation-delay: 2s; 
+      background: rgba(245, 158, 11, 0.5); /* Orange */
+    }
+    
+    .sq-3 { 
+      left: 55%; width: 100px; height: 100px; 
+      animation-duration: 15s; animation-delay: 4s; 
+      background: rgba(16, 185, 129, 0.5); /* Green */
+    }
+    
+    .sq-4 { 
+      left: 75%; width: 60px; height: 60px; 
+      animation-duration: 11s; 
+      background: rgba(139, 92, 246, 0.5); /* Purple */
+    }
+    
+    .sq-5 { 
+      left: 85%; width: 40px; height: 40px; 
+      animation-duration: 8s; animation-delay: 6s; 
+      background: rgba(236, 72, 153, 0.5); /* Pink */
+    }
+    
+    .sq-6 { 
+      left: 25%; width: 70px; height: 70px; 
+      animation-duration: 14s; animation-delay: 1s; 
+      background: rgba(59, 130, 246, 0.5); /* Blue */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Central Lens -->
+  <div class="lens-circle"></div>
+
+  <!-- Floating Squares -->
+  <div class="squares-wrapper">
+    <div class="square sq-1"></div>
+    <div class="square sq-2"></div>
+    <div class="square sq-3"></div>
+    <div class="square sq-4"></div>
+    <div class="square sq-5"></div>
+    <div class="square sq-6"></div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+/* Shared classroom repairs. Each resource retains its own content and storage. */
+img, video, iframe {max-width:100%;}
+button, a, input, select, textarea {touch-action:manipulation;}
+:focus-visible {outline:3px solid #d97706;outline-offset:3px;}
+body {overflow-wrap:break-word;}
+/* Long packet text must remain visible on screen as well as in print. */
+#document-container .sheet {height:auto;min-height:11in;overflow:visible;}
+#document-container .sheet-content {height:auto;min-height:7in;overflow:visible;}
+#document-container .sheet-footer {position:relative;inset:auto;margin-top:1rem;}
+.clark-quiz {max-width:850px;margin:1.5rem auto;padding:1.25rem;background:#102139;color:#f8fafc;border:2px solid #38bdf8;border-radius:16px;}
+.clark-quiz fieldset {margin:1rem 0;padding:1rem;border:1px solid #94a3b8;border-radius:8px;}
+.clark-quiz legend {padding:0 .4rem;font-weight:700;}
+.clark-quiz label {display:block;padding:.65rem;margin:.35rem 0;border:1px solid #64748b;border-radius:6px;cursor:pointer;}
+.clark-quiz input {width:auto;margin-right:.6rem;}
+.clark-quiz button {padding:.8rem 1rem;margin:.3rem;border:0;border-radius:8px;font:inherit;cursor:pointer;}
+.clark-quiz-feedback {font-weight:700;color:#fde047;}
+.clark-quiz-actions {display:flex;flex-wrap:wrap;gap:.5rem;}
+#clark-module-notice {position:fixed;top:0;left:0;right:0;z-index:100001;padding:1rem;background:#fffbeb;color:#78350f;font:16px system-ui;}
+@media screen and (max-width:800px) {
+  body:has(.preview-area) {display:block;}
+  body:has(.preview-area) .config-panel {position:relative;width:100%;height:auto;max-height:none;overflow:visible;}
+  .preview-area {padding:12px;min-width:0;}
+  .worksheet-paper {width:100%;min-width:0;padding:20px;}
+  .ws-header {flex-wrap:wrap;gap:1rem;}
+  .ws-student-info {width:100%;}
+  .modal-content {max-width:calc(100vw - 24px);max-height:90dvh;overflow:auto;}
+  #document-container .sheet {height:auto;min-height:0;overflow:visible;padding:1rem;}
+  #document-container .sheet-content {height:auto;overflow:visible;}
+  #document-container .sheet-header,#document-container .sheet-footer {position:relative;inset:auto;}
+}
+@media print {
+  #msb-hub-return-dock,#global-fs-btn,#clark-module-notice,.clark-quiz-actions {display:none!important;}
+  .sheet {height:auto!important;min-height:11in;overflow:visible!important;}
+  .sheet-content {height:auto!important;overflow:visible!important;}
+  .sheet-footer {position:relative!important;inset:auto!important;margin-top:1rem;}
+  .question-block, .clark-quiz fieldset {break-inside:avoid;}
+  body.clark-print-quiz #overcharge > header,body.clark-print-quiz main > section:not(#worksheets),body.clark-print-quiz #worksheetSelector,body.clark-print-quiz .progress-container {display:none!important;}
+  .clark-quiz {background:white;color:black;border:0;}
+  .clark-quiz-feedback {color:black;}
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+}

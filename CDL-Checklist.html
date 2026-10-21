@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>CDL Loadout Checklist</title>
+<meta name="description" content="Printable, save-as-you-go checklist for getting a US commercial driver's license (CDL).">
+<meta name="theme-color" content="#1c1d21">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='2' y='14' width='36' height='30' rx='3' fill='%23ffc61a' stroke='%231c1d21' stroke-width='3'/%3E%3Cpath d='M38 24h12l10 10v10H38z' fill='%23ffc61a' stroke='%231c1d21' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M42 27h7l6 7H42z' fill='%23bfe4ff'/%3E%3Ccircle cx='14' cy='48' r='6' fill='%231c1d21'/%3E%3Ccircle cx='48' cy='48' r='6' fill='%231c1d21'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1d21;--asphalt:#2a2c31;--paper:#f6f4ef;--card:#fff;--line:#dedad0;--muted:#62646c;
+  --yel:#ffc61a;--yel-d:#e0a800;--grn:#1f9d55;--red:#d64045;--blue:#2563eb;
+  --fh:"Barlow Condensed","Arial Narrow",Impact,system-ui,sans-serif;--fb:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 var(--fb)}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+h1,h2,h3{font-family:var(--fh);line-height:1.05;margin:0;letter-spacing:.01em}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px}
+
+/* header */
+header.hero{background:var(--asphalt);color:#fff;position:relative;overflow:hidden;padding-block:34px 58px}
+header.hero::after{content:"";position:absolute;left:0;right:0;bottom:22px;height:8px;background:repeating-linear-gradient(90deg,var(--yel) 0 60px,transparent 60px 110px);animation:lane 2.4s linear infinite}
+@keyframes lane{to{background-position:-110px 0}}
+.hero .wrap{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.hero svg.logo{width:120px;height:auto;flex:none;animation:roll 3s ease-in-out infinite}
+@keyframes roll{50%{transform:translateX(6px)}}
+.hero h1{font-size:clamp(2.4rem,7vw,4rem);text-transform:uppercase}
+.hero h1 span{color:var(--yel)}
+.hero p{margin:.3em 0 0;color:#cfd0d6;max-width:56ch}
+.shield{display:inline-flex;align-items:center;gap:6px;font:700 .8rem var(--fh);letter-spacing:.14em;text-transform:uppercase;background:var(--yel);color:var(--ink);padding:.25em .7em;border-radius:6px;margin-bottom:.5em}
+
+/* sticky progress */
+.bar{position:sticky;top:0;z-index:20;background:rgba(246,244,239,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:14px;padding-block:10px;flex-wrap:wrap}
+.prog{flex:1;min-width:180px}
+.prog .track{height:14px;border-radius:99px;background:#e6e2d7;overflow:hidden;border:2px solid var(--ink)}
+.prog .fill{height:100%;width:0;background:repeating-linear-gradient(45deg,var(--yel) 0 12px,var(--yel-d) 12px 24px);transition:width .5s cubic-bezier(.3,1.2,.5,1)}
+.prog small{display:flex;justify-content:space-between;font:600 .85rem var(--fb);color:var(--muted);margin-top:3px}
+.btn{font:700 .95rem var(--fh);letter-spacing:.06em;text-transform:uppercase;border:2px solid var(--ink);background:#fff;color:var(--ink);border-radius:8px;padding:.45em .9em;cursor:pointer;transition:transform .1s ease,background .15s ease}
+.btn:hover{background:#fff6d6}
+.btn:active{transform:translateY(1px)}
+.btn.pri{background:var(--yel)}
+.btn.danger{border-color:var(--red);color:var(--red)}
+
+/* nav chips */
+.toc{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 6px}
+.toc a{font:600 .85rem var(--fb);text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:99px;padding:.25em .75em;display:inline-flex;gap:6px;align-items:center}
+.toc a.done{background:#e3f6ea;border-color:#9fd9b5}
+.toc a.done::before{content:"✓";color:var(--grn);font-weight:800}
+
+/* step cards */
+main{padding-block:10px 40px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin-top:16px;box-shadow:0 2px 0 rgba(0,0,0,.04);overflow:hidden;break-inside:avoid}
+.step>header{display:flex;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);background:linear-gradient(#fff,#fbfaf6)}
+.num{flex:none;width:40px;height:40px;display:grid;place-items:center;font:800 1.3rem var(--fh);background:var(--yel);border:2px solid var(--ink);border-radius:8px;transform:rotate(45deg)}
+.num span{transform:rotate(-45deg)}
+.step h2{font-size:1.6rem;text-transform:uppercase;flex:1}
+.cnt{font:700 .85rem var(--fb);color:var(--muted);white-space:nowrap}
+.cnt.full{color:var(--grn)}
+.body{padding:12px 16px 16px}
+.lede{color:var(--muted);margin:0 0 10px}
+ul.tasks{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.task{display:flex;gap:12px;align-items:flex-start;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .15s ease}
+.task:hover{background:#faf6ea}
+.task input{appearance:none;-webkit-appearance:none;flex:none;width:24px;height:24px;margin:1px 0 0;border:2px solid var(--ink);border-radius:6px;background:#fff;display:grid;place-items:center;cursor:pointer;transition:background .15s ease,transform .15s cubic-bezier(.3,1.8,.5,1)}
+.task input::after{content:"";width:11px;height:6px;border-left:3px solid #fff;border-bottom:3px solid #fff;transform:rotate(-45deg) translate(1px,-1px) scale(0);transition:transform .2s cubic-bezier(.3,1.8,.5,1)}
+.task input:checked{background:var(--grn);border-color:var(--grn);transform:scale(1.08)}
+.task input:checked::after{transform:rotate(-45deg) translate(1px,-1px) scale(1)}
+.task .t{flex:1}
+.task input:checked + .t b{text-decoration:line-through;text-decoration-thickness:2px;color:var(--muted)}
+.task .t b{font-weight:600}
+.task .t small{display:block;color:var(--muted);font-size:.88rem}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.field{display:flex;flex-direction:column;gap:4px;font:600 .88rem var(--fb)}
+.field input,.field select,.field textarea{font:500 1rem var(--fb);border:2px solid #cfcabd;border-radius:8px;padding:.45em .6em;background:#fff;color:var(--ink);width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--ink);outline:0}
+.field textarea{min-height:70px;resize:vertical}
+.calc{font:600 .9rem var(--fb);padding:8px 10px;border-radius:8px;background:#f3f1ea;border-left:4px solid var(--yel)}
+.calc.warn{border-left-color:var(--red);background:#fdeeee}
+.calc.ok{border-left-color:var(--grn);background:#e9f7ef}
+
+/* class picker */
+.classes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cls{position:relative;border:2px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:6px;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease;background:#fff}
+.cls:hover{transform:translateY(-2px)}
+.cls input{position:absolute;opacity:0}
+.cls:has(input:checked){border-color:var(--ink);box-shadow:4px 4px 0 var(--yel)}
+.cls:has(input:focus-visible){outline:3px solid var(--blue);outline-offset:2px}
+.cls h3{font-size:1.5rem}
+.cls svg{height:52px;width:auto;align-self:flex-start}
+.cls p{margin:0;font-size:.9rem;color:var(--muted)}
+.endos{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:12px}
+.endo{display:flex;gap:10px;align-items:center;border:2px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer;background:#fff}
+.endo:has(input:checked){border-color:var(--ink);background:#fff8de}
+.endo b{font:800 1.3rem var(--fh);width:1.4em;text-align:center}
+.endo span{font-size:.9rem;line-height:1.25}
+.endo input{width:20px;height:20px;accent-color:var(--ink)}
+
+/* budget */
+table.budget{width:100%;border-collapse:collapse}
+.budget td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
+.budget td:last-child{width:130px}
+.budget input{width:100%;font:600 1rem var(--fb);border:2px solid #cfcabd;border-radius:8px;padding:.3em .5em;text-align:right}
+.budget small{color:var(--muted);display:block}
+.budget tfoot td{font:800 1.4rem var(--fh);border:0;padding-top:12px}
+.budget tfoot td:last-child{text-align:right}
+
+footer{color:var(--muted);font-size:.85rem;padding-block:20px 40px;border-top:1px solid var(--line)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+
+@media (max-width:640px){
+  .classes{grid-template-columns:1fr}
+  .hero svg.logo{width:90px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+@media print{
+  @page{margin:12mm}
+  body{background:#fff;font-size:11pt}
+  header.hero{background:#fff;color:#000;padding:0 0 8px;border-bottom:3px solid #000}
+  header.hero::after,.hero svg.logo,.bar .actions,.toc,#confetti{display:none!important}
+  .hero p{color:#333}
+  .bar{position:static;background:#fff;border:0}
+  .step{box-shadow:none;border:1px solid #999;margin-top:10px}
+  .step>header{background:#fff;padding:8px 12px}
+  .num{width:30px;height:30px;font-size:1rem}
+  .task{padding:3px 6px}
+  .task input{width:16px;height:16px;border-width:1.5px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .task:hover{background:none}
+  .cls:not(:has(input:checked)),.endo:not(:has(input:checked)){display:none}
+  .field input,.field select,.field textarea,.budget input{border:0;border-bottom:1px solid #999;border-radius:0;padding:2px 0}
+  .prog .fill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <svg class="logo" viewBox="0 0 160 90" role="img" aria-label="Semi truck">
+      <rect x="4" y="16" width="92" height="50" rx="4" fill="#fff" stroke="#ffc61a" stroke-width="4"/>
+      <text x="50" y="48" text-anchor="middle" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="800" font-size="22" fill="#1c1d21">CDL</text>
+      <path d="M100 30h28l20 20v16h-48z" fill="#ffc61a" stroke="#1c1d21" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M108 36h17l13 13h-30z" fill="#bfe4ff" stroke="#1c1d21" stroke-width="2"/>
+      <rect x="148" y="54" width="8" height="10" rx="2" fill="#fff3a8" stroke="#1c1d21" stroke-width="2"/>
+      <g fill="#1c1d21" stroke="#fff" stroke-width="3"><circle cx="24" cy="72" r="10"/><circle cx="50" cy="72" r="10"/><circle cx="116" cy="72" r="10"/><circle cx="138" cy="72" r="10"/></g>
+    </svg>
+    <div>
+      <div class="shield">US federal steps · fill in your state</div>
+      <h1>Your <span>CDL</span> Loadout</h1>
+      <p>Everything it takes to get a commercial driver's license, in order. Check items off as you go: your progress saves in this browser, and the page prints cleanly.</p>
+    </div>
+  </div>
+</header>
+
+<div class="bar">
+  <div class="wrap">
+    <div class="prog" aria-live="polite">
+      <div class="track" role="progressbar" aria-label="Overall progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="track"><div class="fill" id="fill"></div></div>
+      <small><span id="progTxt">0 of 0 done</span><span id="progPct">0%</span></small>
+    </div>
+    <div class="actions" style="display:flex;gap:8px">
+      <button class="btn pri" type="button" id="printBtn">Print</button>
+      <button class="btn danger" type="button" id="resetBtn">Reset</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <nav class="toc" id="toc" aria-label="Steps"></nav>
+  <div id="steps"></div>
+</main>
+
+<footer class="wrap">
+  This checklist covers the federal minimums (FMCSA). Your state's DMV sets fees, forms, test scheduling and permit length, so always check its CDL manual. Figures are typical ranges, not quotes. Not legal advice.
+</footer>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const RM = matchMedia('(prefers-reduced-motion: reduce)');
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v; else if (k === 'text') el.textContent = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v); else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) el.append(c instanceof Node ? c : String(c));
+  return el;
+}
+const svgFrom = (w, hgt, paths) => { // tiny truck silhouettes for the class picker (static markup only)
+  const NS = 'http://www.w3.org/2000/svg', s = document.createElementNS(NS, 'svg');
+  s.setAttribute('viewBox', `0 0 ${w} ${hgt}`); s.setAttribute('aria-hidden', 'true');
+  paths.forEach(([tag, attrs]) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); s.appendChild(e); });
+  return s;
+};
+
+/* ---------- state ---------- */
+const KEY = 'cdl-loadout:v1';
+const DEF = { cls: 'A', endo: {}, done: {}, f: {}, budget: {} };
+let S;
+try { S = Object.assign({}, DEF, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { S = { ...DEF }; }
+['endo', 'done', 'f', 'budget'].forEach(k => { if (!S[k] || typeof S[k] !== 'object') S[k] = {}; });
+if (!['A', 'B', 'C'].includes(S.cls)) S.cls = 'A';
+let saveT = 0;
+const save = () => { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }, 200); };
+const has = e => !!S.endo[e];
+
+/* ---------- content ---------- */
+const ENDOS = [
+  ['H', 'Hazmat', 'Written test + TSA background check'],
+  ['N', 'Tanker', 'Written test'],
+  ['T', 'Doubles / triples', 'Written test'],
+  ['P', 'Passenger', 'Written + skills test'],
+  ['S', 'School bus', 'Needs P too; written + skills test']
+];
+const STEPS = [
+  { id: 'class', title: 'Pick your class', custom: 'class' },
+  { id: 'elig', title: 'Confirm you qualify', lede: 'Federal minimums. Your state may add more.', items: [
+    ['age', 'Old enough', '18+ to drive within your state; 21+ to cross state lines or haul hazmat.'],
+    ['lic', 'Valid regular driver’s license', 'Some states also want about a year of driving history.'],
+    ['rec', 'Driving record is clean enough', 'A DUI, leaving the scene of a crash, or a felony involving a vehicle can disqualify you. Pull your record from the DMV to check.'],
+    ['eng', 'Can read and speak English well enough for the job', 'Road signs, officers’ questions and paperwork. Strictly enforced since 2025.'],
+    ['ch', 'Clear in the FMCSA Drug & Alcohol Clearinghouse', 'The DMV checks it before issuing a permit or license. A “prohibited” status blocks you.']
+  ] },
+  { id: 'docs', title: 'Gather your documents', lede: 'Bring originals to the DMV. Check your state’s list for the exact documents it accepts.', items: [
+    ['id', 'Proof of identity and citizenship or lawful presence', 'Passport, or birth certificate plus photo ID.'],
+    ['ssn', 'Social Security number', 'Card or a document showing the full number.'],
+    ['res', 'Two proofs of residency in your state', 'Utility bill, lease, bank statement or pay stub with your address.'],
+    ['curlic', 'Current driver’s license'],
+    ['cert', 'Self-certification of driving type', 'Most new drivers choose “non-excepted interstate” (crossing state lines, medical card required).'],
+    ['fee', 'Money for the application and test fees']
+  ] },
+  { id: 'med', title: 'Pass the DOT physical', lede: 'Typical cost: $75–$150.', items: [
+    ['nreg', 'Book an examiner from the FMCSA National Registry', 'Search “FMCSA National Registry of Certified Medical Examiners” for one near you. Exams by doctors not on the registry don’t count.'],
+    ['meds', 'Bring a list of your medications and any specialist paperwork', 'Diabetes, sleep apnea, heart conditions and so on. Insulin users need an extra form (MCSA-5870) from their treating doctor.'],
+    ['glasses', 'Bring your glasses or contacts', 'You need 20/40 in each eye (glasses allowed) and a 70° field of vision. They also check hearing and blood pressure.'],
+    ['medcard', 'Get your medical card and give a copy to the DMV', 'It lasts up to 24 months, or less if they want to monitor a condition.']
+  ], fields: 'med' },
+  { id: 'clp', title: 'Get your learner’s permit (CLP)', lede: 'Study your state’s CDL manual (free on the DMV site) and use practice-test apps.', items: 'clp', fields: 'clp' },
+  { id: 'eldt', title: 'Finish Entry-Level Driver Training', lede: 'Required since February 2022 for a first Class A or B, an upgrade from B to A, and a first H, P or S endorsement.', items: [
+    ['tpr', 'Confirm the school is on the FMCSA Training Provider Registry', 'If it isn’t listed, the training doesn’t count.'],
+    ['theory', 'Pass the classroom part (80% or better)'],
+    ['btwr', 'Finish the behind-the-wheel practice-yard part', 'Backing, coupling, turning and inspections.'],
+    ['btwp', 'Finish the behind-the-wheel public-road part'],
+    ['upload', 'Confirm the school reported your completion to the registry', 'You can’t take the skills test until it’s on file.']
+  ], fields: 'eldt' },
+  { id: 'skills', title: 'Pass the skills test', lede: 'Three parts, in a truck of the class you’re testing for. Most people fail the pre-trip, so drill it.', items: [
+    ['wait', 'Held your permit at least 14 days', 'Federal minimum. See the date calculator in step 5.'],
+    ['book', 'Book the test', 'At the DMV or an approved third-party tester.'],
+    ['truck', 'Line up a truck for the test (manual with air brakes avoids license restrictions)', 'An automatic adds the “E” restriction (no manual transmission). A truck without air brakes adds a restriction on air-brake vehicles.'],
+    ['pre', 'Pre-trip inspection: memorize the full walk-around script'],
+    ['air', 'Air brake check: memorize the in-cab test steps'],
+    ['bc1', 'Basic control: straight backing'],
+    ['bc2', 'Basic control: offset backing'],
+    ['bc3', 'Basic control: parallel parking or alley dock'],
+    ['road', 'Road test: turns, lane changes, intersections, railroad crossings, shifting'],
+    ['pass', 'Passed. Pay the fee and get your CDL issued']
+  ], fields: 'skills' },
+  { id: 'endo', title: 'Endorsements (optional, but they pay)', custom: 'endo' },
+  { id: 'budget', title: 'Budget', custom: 'budget' },
+  { id: 'state', title: 'My state’s details', custom: 'state' },
+  { id: 'after', title: 'After you’re licensed', items: [
+    ['renewmed', 'Put your medical card expiry date on the calendar', 'If it lapses, the state downgrades your CDL.'],
+    ['ch2', 'Register in the Drug & Alcohol Clearinghouse', 'Employers need your consent in the system to run their checks.'],
+    ['firstjob', 'Find a carrier that hires drivers fresh out of school', 'Most new drivers do 6–12 months of over-the-road driving to build the experience local jobs ask for.'],
+    ['logs', 'Learn electronic logs (ELD) and hours-of-service rules', '11 hours of driving within a 14-hour window, 30-minute break, 60/70-hour weekly limits.']
+  ] }
+];
+function clpItems() {
+  const a = [
+    ['vision', 'Pass the vision test'],
+    ['gk', 'Pass the General Knowledge test'],
+    ['ab', 'Pass the Air Brakes test', 'Skipping it adds an air-brake restriction to your license.']
+  ];
+  if (S.cls === 'A') a.push(['cv', 'Pass the Combination Vehicles test']);
+  if (S.cls === 'C') a.push(['cnote', 'Class C needs a P or H endorsement test for what you’ll drive', 'Pick it in step 8.']);
+  ENDOS.forEach(([c, n]) => { if (has(c)) a.push(['k' + c, `Pass the ${n} (${c}) written test`]); });
+  a.push(['clpgot', 'Get your permit issued', 'From now on you can drive a truck only with a licensed CDL holder in the passenger seat.']);
+  return a;
+}
+function endoItems() {
+  const a = [];
+  if (has('H')) a.push(['htsa', 'Hazmat: apply for the TSA background check and get fingerprinted', 'Usually about $85–$90 and takes a few weeks, so start early. You must be 21 or older.'], ['heldt', 'Hazmat: finish the required hazmat classroom training']);
+  if (has('H') && has('N')) a.push(['x', 'H + N together go on your license as an “X” endorsement']);
+  if (has('P')) a.push(['pskill', 'Passenger: pass the skills test in a passenger vehicle']);
+  if (has('S')) { a.push(['sskill', 'School bus: pass the skills test in a school bus'], ['scheck', 'School bus: pass your state’s background check']); if (!has('P')) a.push(['sp', 'School bus also needs the Passenger (P) endorsement']); }
+  if (has('P') || has('S')) a.push(['pseldt', 'Finish the required training for the P/S endorsement']);
+  return a;
+}
+const listFor = st => st.items === 'clp' ? clpItems() : st.id === 'endo' ? endoItems() : Array.isArray(st.items) ? st.items : [];
+
+/* ---------- render ---------- */
+const stepsEl = $('#steps'), tocEl = $('#toc');
+const cards = {};
+function taskList(st) {
+  const ul = h('ul', { class: 'tasks' });
+  listFor(st).forEach(([id, text, tip]) => {
+    const key = st.id + '.' + id;
+    const cb = h('input', { type: 'checkbox', id: 'cb-' + key });
+    cb.checked = !!S.done[key];
+    cb.addEventListener('change', () => { S.done[key] = cb.checked; if (!cb.checked) delete S.done[key]; save(); tally(cb.checked ? cb : null); });
+    ul.appendChild(h('li', {}, h('label', { class: 'task', for: 'cb-' + key }, cb, h('span', { class: 't' }, h('b', { text }), tip ? h('small', { text: tip }) : null))));
+  });
+  return ul;
+}
+function field(label, key, type = 'text', attrs = {}) {
+  const tag = type === 'textarea' ? 'textarea' : type === 'select' ? 'select' : 'input';
+  const el = h(tag, Object.assign(type === 'textarea' || type === 'select' ? {} : { type }, { id: 'f-' + key }, attrs));
+  if (type === 'select') (attrs.options || []).forEach(([v, t]) => el.appendChild(h('option', { value: v, text: t })));
+  el.removeAttribute('options');
+  if (S.f[key] != null) el.value = S.f[key];
+  el.addEventListener('input', () => { S.f[key] = el.value; save(); calc(); });
+  return h('label', { class: 'field', for: 'f-' + key }, label, el);
+}
+const calcBox = id => h('div', { class: 'calc', id: 'calc-' + id, 'aria-live': 'polite' });
+function fieldsFor(st) {
+  if (st.fields === 'med') return h('div', { class: 'fields' }, field('Exam date', 'medDate', 'date'), field('Card valid for (months)', 'medMonths', 'number', { min: '1', max: '24', placeholder: '24' }), field('Examiner / clinic', 'medWho'), calcBox('med'));
+  if (st.fields === 'clp') return h('div', { class: 'fields' }, field('Permit issue date', 'clpDate', 'date'), field('Permit valid for (days, check your state)', 'clpDays', 'number', { min: '30', max: '365', placeholder: '180' }), calcBox('clp'));
+  if (st.fields === 'eldt') return h('div', { class: 'fields' },
+    field('Training path', 'path', 'select', { options: [['', 'Choose…'], ['company', 'Company-sponsored (low or no cost, work commitment)'], ['private', 'Private CDL school'], ['college', 'Community college'], ['grant', 'Grant-funded (WIOA / VA benefits)']] }),
+    field('School name', 'school'), field('Start date', 'eldtStart', 'date'), field('Recruiter / contact', 'contact'));
+  if (st.fields === 'skills') return h('div', { class: 'fields' }, field('Skills test date', 'skillDate', 'date'), field('Test location', 'skillWhere'), calcBox('skills'));
+  return null;
+}
+const TRUCKS = {
+  A: [['rect', { x: 2, y: 6, width: 66, height: 26, rx: 2, fill: '#ffc61a', stroke: '#1c1d21', 'stroke-width': 2 }], ['path', { d: 'M70 14h14l10 10v8H70z', fill: '#1c1d21' }], ['circle', { cx: 14, cy: 36, r: 5 }], ['circle', { cx: 26, cy: 36, r: 5 }], ['circle', { cx: 78, cy: 36, r: 5 }], ['circle', { cx: 90, cy: 36, r: 5 }]],
+  B: [['rect', { x: 2, y: 4, width: 54, height: 28, rx: 2, fill: '#ffc61a', stroke: '#1c1d21', 'stroke-width': 2 }], ['path', { d: 'M58 12h14l10 10v10H58z', fill: '#1c1d21' }], ['circle', { cx: 16, cy: 36, r: 5 }], ['circle', { cx: 70, cy: 36, r: 5 }]],
+  C: [['rect', { x: 4, y: 6, width: 70, height: 26, rx: 6, fill: '#ffc61a', stroke: '#1c1d21', 'stroke-width': 2 }], ['rect', { x: 10, y: 11, width: 12, height: 8, fill: '#bfe4ff' }], ['rect', { x: 26, y: 11, width: 12, height: 8, fill: '#bfe4ff' }], ['rect', { x: 42, y: 11, width: 12, height: 8, fill: '#bfe4ff' }], ['rect', { x: 58, y: 11, width: 12, height: 8, fill: '#bfe4ff' }], ['circle', { cx: 18, cy: 36, r: 5 }], ['circle', { cx: 60, cy: 36, r: 5 }]]
+};
+function customFor(st) {
+  if (st.custom === 'class') {
+    const box = h('div', { class: 'classes', role: 'radiogroup', 'aria-label': 'CDL class' });
+    [['A', 'Class A', 'Truck pulling a trailer: combined weight over 26,000 lb, trailer over 10,000 lb. Tractor-trailers. Also covers most B and C vehicles.'],
+     ['B', 'Class B', 'Single vehicle over 26,000 lb, towing up to 10,000 lb. Dump trucks, box trucks, city buses.'],
+     ['C', 'Class C', 'Smaller vehicles carrying 16+ people or placarded hazmat. Shuttles, small hazmat delivery.']].forEach(([v, t, d]) => {
+      const r = h('input', { type: 'radio', name: 'cls', value: v }); r.checked = S.cls === v;
+      r.addEventListener('change', () => { S.cls = v; save(); rerender(['clp', 'budget']); });
+      box.appendChild(h('label', { class: 'cls' }, r, svgFrom(100, 42, TRUCKS[v]), h('h3', { text: t }), h('p', { text: d })));
+    });
+    return [h('p', { class: 'lede', text: 'Not sure? Go Class A. It opens the most jobs and covers most B and C vehicles too.' }), box];
+  }
+  if (st.custom === 'endo') {
+    const box = h('div', { class: 'endos' });
+    ENDOS.forEach(([c, n, d]) => {
+      const cb = h('input', { type: 'checkbox' }); cb.checked = has(c);
+      cb.addEventListener('change', () => { S.endo[c] = cb.checked; save(); rerender(['clp', 'endo', 'budget']); });
+      box.appendChild(h('label', { class: 'endo' }, cb, h('b', { text: c }), h('span', {}, h('strong', { text: n }), h('br'), d)));
+    });
+    return [h('p', { class: 'lede', text: 'Pick the ones you want. Their written tests are added to step 5 and any extra tasks show up below.' }), box, endoItems().length ? taskList(st) : h('p', { class: 'lede', text: 'No extra tasks for the endorsements you picked.' })];
+  }
+  if (st.custom === 'budget') {
+    const rows = [
+      ['phys', 'DOT physical', '$75–$150', 110],
+      ['state', 'Permit, tests and license fees', 'Depends on state: $50–$250', 150],
+      ['train', 'Training (Entry-Level Driver Training)', S.f.path === 'company' ? 'Company-sponsored: often $0' : 'Private school $3,000–$10,000; company $0', S.f.path === 'company' ? 0 : 5000],
+      ['skill', 'Third-party skills test (if your state uses one)', '$100–$350', 200],
+      ['study', 'Study guides / practice apps', 'Optional', 0],
+      ...(has('H') ? [['tsa', 'Hazmat TSA background check', 'About $85–$90', 87]] : []),
+      ['misc', 'Travel, lodging, lost wages during training', 'Plan for it', 0]
+    ];
+    const tbody = h('tbody'), total = h('td', { id: 'budgetTotal' });
+    rows.forEach(([k, label, hint, def]) => {
+      const inp = h('input', { type: 'number', min: '0', step: '1', inputmode: 'decimal', 'aria-label': label + ' cost in dollars' });
+      inp.value = S.budget[k] ?? def;
+      inp.addEventListener('input', () => { S.budget[k] = inp.value; save(); sum(); });
+      tbody.appendChild(h('tr', {}, h('td', {}, label, h('small', { text: hint })), h('td', {}, inp)));
+    });
+    const sum = () => { let t = 0; tbody.querySelectorAll('input').forEach(i => t += Math.max(0, +i.value || 0)); total.textContent = '$' + t.toLocaleString(); };
+    const tbl = h('table', { class: 'budget' }, tbody, h('tfoot', {}, h('tr', {}, h('td', { text: 'Estimated total' }), total)));
+    sum();
+    return [h('p', { class: 'lede', text: 'Defaults are typical figures. Type in your real quotes.' }), tbl];
+  }
+  if (st.custom === 'state') {
+    return [h('p', { class: 'lede', text: 'Fill these in from your state DMV’s CDL page and manual.' }),
+      h('div', { class: 'fields', style: 'border:0;margin:0;padding:0' },
+        field('State', 'state', 'text', { placeholder: 'e.g. North Carolina' }), field('DMV office / testing site', 'dmv'),
+        field('Permit fee', 'feeClp', 'text', { placeholder: '$' }), field('License fee', 'feeCdl', 'text', { placeholder: '$' }),
+        field('Appointment needed?', 'appt', 'select', { options: [['', 'Not sure'], ['yes', 'Yes, book ahead'], ['no', 'Walk-ins OK']] }),
+        field('Phone / website', 'dmvContact')),
+      h('div', { class: 'fields' }, field('Notes', 'notes', 'textarea', { placeholder: 'Questions to ask, documents still missing, school quotes…' }))];
+  }
+  return null;
+}
+function buildCard(st, i) {
+  const cnt = h('span', { class: 'cnt' });
+  const body = h('div', { class: 'body' });
+  if (st.lede) body.appendChild(h('p', { class: 'lede', text: st.lede }));
+  const cust = customFor(st); if (cust) body.append(...[].concat(cust));
+  if (!st.custom) body.appendChild(taskList(st));
+  const f = fieldsFor(st); if (f) body.appendChild(f);
+  const sec = h('section', { class: 'step', id: st.id, 'aria-labelledby': 'h-' + st.id },
+    h('header', {}, h('div', { class: 'num' }, h('span', { text: i + 1 })), h('h2', { id: 'h-' + st.id, text: st.title }), cnt), body);
+  cards[st.id] = { sec, cnt };
+  return sec;
+}
+function renderAll() {
+  stepsEl.textContent = ''; tocEl.textContent = '';
+  STEPS.forEach((st, i) => {
+    stepsEl.appendChild(buildCard(st, i));
+    tocEl.appendChild(h('a', { href: '#' + st.id, id: 'toc-' + st.id, text: `${i + 1}. ${st.title.replace(/ \(.*/, '')}` }));
+  });
+  tally(); calc();
+}
+function rerender(ids) {
+  ids.forEach(id => { const i = STEPS.findIndex(s => s.id === id); const old = cards[id].sec; old.replaceWith(buildCard(STEPS[i], i)); });
+  tally(); calc();
+}
+
+/* ---------- progress ---------- */
+let wasComplete = null;
+function tally(justChecked) {
+  let all = 0, done = 0;
+  STEPS.forEach(st => {
+    const list = st.id === 'class' ? [['picked']] : listFor(st);
+    let d = 0;
+    list.forEach(([id]) => { if (st.id === 'class' || S.done[st.id + '.' + id]) d++; });
+    if (st.id === 'budget' || st.id === 'state') { cards[st.id].cnt.textContent = ''; return; }
+    all += list.length; done += d;
+    const full = list.length > 0 && d === list.length;
+    cards[st.id].cnt.textContent = list.length ? `${d}/${list.length}` : '';
+    cards[st.id].cnt.classList.toggle('full', full);
+    $('#toc-' + st.id)?.classList.toggle('done', full);
+    if (justChecked && full && cards[st.id].sec.contains(justChecked)) burst(justChecked, 40);
+  });
+  const pct = all ? Math.round(100 * done / all) : 0;
+  $('#fill').style.width = pct + '%'; $('#track').setAttribute('aria-valuenow', pct);
+  $('#progTxt').textContent = `${done} of ${all} done`; $('#progPct').textContent = pct + '%';
+  const complete = pct === 100;
+  if (complete && wasComplete === false) burst(null, 180);
+  wasComplete = complete;
+}
+
+/* ---------- date calculators ---------- */
+const parseD = v => { if (!v) return null; const [y, m, d] = v.split('-').map(Number); return y ? new Date(y, m - 1, d) : null; };
+const fmt = d => d.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+const daysFrom = d => Math.round((d - new Date(new Date().toDateString())) / 864e5);
+function setCalc(id, text, cls) { const el = $('#calc-' + id); if (!el) return; el.textContent = text; el.className = 'calc' + (cls ? ' ' + cls : ''); }
+function calc() {
+  const md = parseD(S.f.medDate);
+  if (md) {
+    const months = Math.min(24, Math.max(1, +S.f.medMonths || 24)); const exp = new Date(md); exp.setMonth(exp.getMonth() + months);
+    const left = daysFrom(exp);
+    setCalc('med', left < 0 ? `Medical card expired ${fmt(exp)}. Get a new physical.` : `Medical card good until ${fmt(exp)} (${left} days left).`, left < 0 ? 'warn' : left < 45 ? 'warn' : 'ok');
+  } else setCalc('med', 'Enter your exam date to see when the card expires.');
+  const cd = parseD(S.f.clpDate);
+  if (cd) {
+    const earliest = new Date(cd); earliest.setDate(earliest.getDate() + 14);
+    const exp = new Date(cd); exp.setDate(exp.getDate() + (Math.min(365, Math.max(30, +S.f.clpDays || 180))));
+    const e = daysFrom(earliest), x = daysFrom(exp);
+    setCalc('clp', `Earliest skills test: ${fmt(earliest)}${e > 0 ? ` (${e} days to go)` : ' (you can test now)'} · Permit expires ${fmt(exp)}${x < 0 ? ' (EXPIRED)' : ` (${x} days left)`}.`, x < 0 ? 'warn' : e <= 0 ? 'ok' : '');
+  } else setCalc('clp', 'Enter your permit issue date: you can take the skills test 14 days later.');
+  const sd = parseD(S.f.skillDate);
+  if (sd) {
+    const n = daysFrom(sd); let msg = n > 0 ? `Skills test in ${n} day${n === 1 ? '' : 's'} (${fmt(sd)}).` : n === 0 ? 'Skills test is today. Good luck!' : `Skills test was ${fmt(sd)}.`, cls = '';
+    if (cd) { const earliest = new Date(cd); earliest.setDate(earliest.getDate() + 14); if (sd < earliest) { msg += ` Too early: the earliest allowed date is ${fmt(earliest)}.`; cls = 'warn'; } }
+    setCalc('skills', msg, cls);
+  } else setCalc('skills', 'Enter your test date for a countdown.');
+}
+
+/* ---------- confetti ---------- */
+const cv = $('#confetti'), cx = cv.getContext('2d'); let parts = [], raf = 0;
+function burst(fromEl, n) {
+  if (RM.matches) return;
+  const dpr = Math.min(2, devicePixelRatio || 1); cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  let x = innerWidth / 2, y = innerHeight / 3;
+  if (fromEl) { const r = fromEl.getBoundingClientRect(); x = r.left + r.width / 2; y = r.top; }
+  const cols = ['#ffc61a', '#1c1d21', '#1f9d55', '#2563eb', '#d64045'];
+  for (let i = 0; i < n; i++) parts.push({ x, y, vx: (Math.random() - .5) * 11, vy: -Math.random() * 10 - 3, r: Math.random() * 6, vr: (Math.random() - .5) * .4, s: 5 + Math.random() * 5, c: cols[i % cols.length], life: 0 });
+  if (!raf) raf = requestAnimationFrame(tick);
+}
+function tick() {
+  cx.clearRect(0, 0, innerWidth, innerHeight);
+  parts = parts.filter(p => p.y < innerHeight + 20 && p.life < 220);
+  parts.forEach(p => { p.vy += .3; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++; cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); cx.restore(); });
+  raf = parts.length ? requestAnimationFrame(tick) : 0;
+  if (!parts.length) cx.clearRect(0, 0, innerWidth, innerHeight);
+}
+
+/* ---------- actions ---------- */
+$('#printBtn').addEventListener('click', () => window.print());
+let arm = 0;
+$('#resetBtn').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (!arm) { b.textContent = 'Tap again to erase'; arm = setTimeout(() => { arm = 0; b.textContent = 'Reset'; }, 3000); return; }
+  clearTimeout(arm); arm = 0; b.textContent = 'Reset';
+  S = JSON.parse(JSON.stringify(DEF)); try { localStorage.removeItem(KEY); } catch (err) {}
+  wasComplete = null; renderAll();
+});
+renderAll();
+})();
+</script>
+</body>
+</html>

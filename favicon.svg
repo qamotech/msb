@@ -6,16 +6,20 @@
     </linearGradient>
   </defs>
   <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+  <!-- Orbit rings -->
   <ellipse cx="32" cy="32" rx="27" ry="11" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3 2" transform="rotate(-20 32 32)"/>
   <circle cx="12" cy="25" r="2.5" fill="#38bdf8"/>
   <circle cx="52" cy="39" r="2.5" fill="#facc15"/>
+  <!-- School Bus -->
   <rect x="14" y="22" width="36" height="20" rx="4" fill="#ffd83d"/>
   <rect x="16" y="24" width="7" height="8" rx="1.5" fill="#1e293b"/>
   <rect x="25" y="24" width="7" height="8" rx="1.5" fill="#1e293b"/>
   <rect x="34" y="24" width="7" height="8" rx="1.5" fill="#1e293b"/>
   <rect x="43" y="24" width="6" height="8" rx="1.5" fill="#38bdf8"/>
+  <!-- Grille / bumper -->
   <rect x="48" y="34" width="3" height="5" rx="1" fill="#94a3b8"/>
   <circle cx="48" cy="37" r="1.5" fill="#fef08a"/>
+  <!-- Wheels -->
   <circle cx="23" cy="42" r="5" fill="#0f172a"/>
   <circle cx="23" cy="42" r="2" fill="#94a3b8"/>
   <circle cx="41" cy="42" r="5" fill="#0f172a"/>

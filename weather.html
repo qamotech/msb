@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090e1a">
+  <meta name="description" content="A live, beautifully detailed 14-day weather outlook for Baltimore, New York, and Raleigh.">
+  <title>Atmos — Weather, in a wider view</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23a7d8ff'/%3E%3Cstop offset='1' stop-color='%238d8aff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='20' fill='%230e1830'/%3E%3Ccircle cx='27' cy='25' r='12' fill='%23ffd98a'/%3E%3Cpath d='M17 46h27a9 9 0 0 0 0-18 13 13 0 0 0-24-3 11 11 0 0 0-3 21Z' fill='url(%23g)'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f2f4ff;
+      --muted: #919cb8;
+      --faint: #65708d;
+      --line: rgba(180, 198, 255, .11);
+      --panel: rgba(17, 25, 46, .76);
+      --panel-strong: rgba(22, 32, 57, .92);
+      --blue: #a7d8ff;
+      --violet: #b5a5ff;
+      --mint: #91e3d0;
+      --gold: #ffd98a;
+      --rose: #ff9eaa;
+      --shadow: 0 24px 80px rgba(0, 0, 0, .28);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    * { box-sizing: border-box; }
+    html { min-width: 320px; scroll-behavior: smooth; background: #090e1a; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 8% 4%, rgba(76, 112, 190, .2), transparent 34rem),
+        radial-gradient(ellipse at 94% 18%, rgba(126, 83, 173, .16), transparent 34rem),
+        linear-gradient(145deg, #0b1120 0%, #0a1020 48%, #10142a 100%);
+      overflow-x: hidden;
+    }
+    body::before {
+      position: fixed;
+      z-index: -1;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      opacity: .18;
+      background-image: radial-gradient(rgba(225, 234, 255, .45) .65px, transparent .65px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, black, transparent 72%);
+    }
+    button, a { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, a:focus-visible, summary:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 4px;
+    }
+    .shell { width: min(1440px, calc(100% - 64px)); margin: 0 auto; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 88px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { display: inline-flex; align-items: center; gap: 12px; color: var(--ink); text-decoration: none; }
+    .brand-mark {
+      display: grid;
+      width: 39px;
+      height: 39px;
+      place-items: center;
+      border: 1px solid rgba(187, 210, 255, .23);
+      border-radius: 13px;
+      background: linear-gradient(145deg, rgba(167, 216, 255, .2), rgba(181, 165, 255, .12));
+      box-shadow: inset 0 1px rgba(255, 255, 255, .13), 0 6px 24px rgba(104, 143, 231, .14);
+    }
+    .brand-mark svg { width: 25px; height: 25px; }
+    .brand-name { font-size: 17px; font-weight: 720; letter-spacing: -.045em; }
+    .brand-tag { margin-left: 2px; color: var(--muted); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; }
+    .top-actions { display: flex; align-items: center; gap: 16px; }
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid rgba(145, 227, 208, .18);
+      border-radius: 999px;
+      color: #b3efdf;
+      background: rgba(145, 227, 208, .07);
+      font-size: 11px;
+      font-weight: 650;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #78e4c5; box-shadow: 0 0 12px #78e4c5; }
+    .icon-button {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .035);
+      cursor: pointer;
+      transition: background .2s ease, border-color .2s ease, transform .2s ease;
+    }
+    .icon-button:hover { transform: translateY(-1px); border-color: rgba(167, 216, 255, .32); background: rgba(167, 216, 255, .09); }
+    .icon-button svg { width: 17px; height: 17px; }
+    .intro { padding: 46px 0 27px; }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 15px;
+      color: var(--blue);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { width: 21px; height: 1px; content: ""; background: linear-gradient(90deg, var(--blue), transparent); }
+    h1 { max-width: 760px; margin: 0; font-size: clamp(36px, 5.4vw, 66px); font-weight: 540; letter-spacing: -.065em; line-height: 1.02; }
+    h1 span { color: #aebcf0; }
+    .intro-copy { max-width: 580px; margin: 17px 0 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .city-tabs { display: flex; gap: 9px; margin-top: 28px; overflow-x: auto; scrollbar-width: none; }
+    .city-tabs::-webkit-scrollbar, .forecast-track::-webkit-scrollbar { display: none; }
+    .city-tab {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #c2c9dc;
+      background: rgba(255, 255, 255, .025);
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .city-tab:hover { border-color: rgba(167, 216, 255, .3); }
+    .city-tab[aria-pressed="true"] { border-color: rgba(167, 216, 255, .36); color: white; background: rgba(167, 216, 255, .1); box-shadow: 0 4px 18px rgba(93, 144, 209, .1); }
+    .city-tab .tab-mark { width: 7px; height: 7px; border-radius: 50%; background: var(--tab-color, var(--blue)); box-shadow: 0 0 10px var(--tab-color, var(--blue)); }
+    .city-tab .tab-temp { margin-left: 3px; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .dashboard { padding: 5px 0 52px; }
+    .city-section { margin: 21px 0 38px; scroll-margin-top: 18px; }
+    .city-section[hidden] { display: none; }
+    .city-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+    .city-title-row { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+    .city-title { margin: 0; font-size: 24px; font-weight: 570; letter-spacing: -.045em; }
+    .city-state { color: var(--muted); font-size: 12px; }
+    .local-clock { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+    .overview {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(225px, 1.05fr) minmax(0, 1.45fr) minmax(165px, .8fr);
+      min-height: 224px;
+      overflow: hidden;
+      border: 1px solid rgba(171, 196, 255, .14);
+      border-radius: 22px;
+      background:
+        radial-gradient(ellipse at 70% 0%, var(--city-glow, rgba(129, 172, 255, .2)), transparent 46%),
+        linear-gradient(120deg, rgba(26, 38, 65, .95), rgba(17, 24, 44, .91) 68%, rgba(26, 25, 51, .9));
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+    .overview::after {
+      position: absolute;
+      z-index: -1;
+      right: -45px;
+      bottom: -170px;
+      width: 360px;
+      height: 250px;
+      border: 1px solid rgba(188, 205, 255, .09);
+      border-radius: 50%;
+      content: "";
+      box-shadow: 0 -14px 0 -13px rgba(188, 205, 255, .06), 0 -30px 0 -29px rgba(188, 205, 255, .06), 0 -48px 0 -47px rgba(188, 205, 255, .05);
+      transform: rotate(-14deg);
+    }
+    .current-main { display: flex; flex-direction: column; justify-content: center; padding: 26px 28px; }
+    .current-label { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; letter-spacing: .13em; text-transform: uppercase; }
+    .current-label .sun-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 12px var(--gold); }
+    .current-weather { display: flex; align-items: center; gap: 15px; margin-top: 12px; }
+    .current-icon { width: 76px; height: 76px; filter: drop-shadow(0 5px 17px rgba(153, 197, 255, .24)); }
+    .current-temp { font-size: 58px; font-weight: 440; letter-spacing: -.09em; line-height: 1; font-variant-numeric: tabular-nums; }
+    .current-temp sup { margin-left: 2px; font-size: 25px; vertical-align: top; letter-spacing: -.04em; }
+    .current-description { margin-top: 7px; color: #c7d1e8; font-size: 13px; }
+    .current-feels { margin-top: 8px; color: var(--muted); font-size: 11px; }
+    .overview-middle { display: flex; align-items: center; padding: 26px 12px; }
+    .metric-grid { display: grid; width: 100%; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 17px 14px; }
+    .metric { min-width: 0; }
+    .metric-label { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 10px; }
+    .metric-label svg { width: 13px; height: 13px; color: #a8badc; flex: 0 0 auto; }
+    .metric-value { display: block; margin-top: 5px; color: #eef2ff; font-size: 15px; font-weight: 590; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .sun-panel { display: flex; flex-direction: column; justify-content: center; padding: 22px 24px; border-left: 1px solid var(--line); }
+    .sun-panel-title { margin-bottom: 14px; color: var(--muted); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    .sun-time { display: flex; justify-content: space-between; gap: 12px; margin: 7px 0; font-size: 11px; color: #dfe6fa; }
+    .sun-time span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .sun-arc { position: relative; height: 39px; margin-top: 4px; overflow: hidden; }
+    .sun-arc::before { position: absolute; right: 2px; bottom: -31px; left: 2px; height: 62px; border: 1px solid rgba(255, 217, 138, .5); border-bottom: 0; border-radius: 100% 100% 0 0; content: ""; }
+    .sun-arc::after { position: absolute; top: 15px; left: var(--sun-progress, 42%); width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 13px var(--gold); content: ""; }
+    .sun-range { display: flex; justify-content: space-between; color: var(--faint); font-size: 9px; }
+    .section-bar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 25px 0 12px; }
+    .section-heading { margin: 0; font-size: 12px; font-weight: 650; letter-spacing: .15em; text-transform: uppercase; }
+    .section-note { margin-left: 9px; color: var(--muted); font-size: 10px; letter-spacing: 0; text-transform: none; font-weight: 400; }
+    .scroll-tools { display: flex; gap: 7px; }
+    .scroll-button { width: 30px; height: 30px; border-radius: 10px; color: #c2cce4; }
+    .scroll-button:disabled { opacity: .35; cursor: default; transform: none; }
+    .forecast-track {
+      display: grid;
+      grid-auto-columns: minmax(226px, 1fr);
+      grid-auto-flow: column;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 2px 1px 10px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      overscroll-behavior-x: contain;
+    }
+    .day-card {
+      position: relative;
+      display: flex;
+      min-height: 286px;
+      flex-direction: column;
+      padding: 15px 15px 12px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: linear-gradient(155deg, rgba(26, 36, 61, .88), rgba(16, 23, 42, .9));
+      scroll-snap-align: start;
+      transition: border-color .22s ease, transform .22s ease, background .22s ease;
+      animation: rise-in .55s both;
+    }
+    .day-card:hover { z-index: 1; transform: translateY(-4px); border-color: rgba(167, 216, 255, .28); background: linear-gradient(155deg, rgba(34, 48, 79, .94), rgba(19, 27, 49, .94)); }
+    .day-card.is-today { border-color: rgba(255, 217, 138, .25); background: linear-gradient(155deg, rgba(47, 47, 65, .79), rgba(19, 27, 49, .92)); }
+    .day-card:nth-child(2) { animation-delay: 35ms; }
+    .day-card:nth-child(3) { animation-delay: 70ms; }
+    .day-card:nth-child(4) { animation-delay: 105ms; }
+    .day-card:nth-child(5) { animation-delay: 140ms; }
+    .day-card:nth-child(6) { animation-delay: 175ms; }
+    .day-card:nth-child(7) { animation-delay: 210ms; }
+    .day-card:nth-child(8) { animation-delay: 245ms; }
+    .day-card:nth-child(9) { animation-delay: 280ms; }
+    .day-card:nth-child(10) { animation-delay: 315ms; }
+    .day-card:nth-child(11) { animation-delay: 350ms; }
+    .day-card:nth-child(12) { animation-delay: 385ms; }
+    .day-card:nth-child(13) { animation-delay: 420ms; }
+    .day-card:nth-child(14) { animation-delay: 455ms; }
+    .day-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .day-name { font-size: 12px; font-weight: 680; }
+    .day-date { margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .today-tag { color: var(--gold); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+    .day-weather { display: flex; align-items: center; gap: 9px; min-height: 70px; padding: 9px 0 7px; }
+    .day-icon { width: 48px; height: 48px; flex: 0 0 auto; }
+    .day-condition { color: #dfe5f7; font-size: 11px; line-height: 1.35; }
+    .temp-row { display: flex; align-items: baseline; gap: 8px; }
+    .temp-high { font-size: 25px; font-weight: 590; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
+    .temp-low { color: #a4b1d0; font-size: 16px; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+    .temp-apparent { margin-left: auto; color: var(--muted); font-size: 9px; white-space: nowrap; }
+    .day-rule { height: 1px; margin: 10px 0; background: var(--line); }
+    .day-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 9px; }
+    .day-metric { display: flex; align-items: center; gap: 6px; min-width: 0; color: #c6cfe3; font-size: 10px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .day-metric svg { width: 13px; height: 13px; color: #9bb3da; flex: 0 0 auto; }
+    .day-metric .dim { color: var(--muted); }
+    .probability { height: 3px; margin-top: 8px; overflow: hidden; border-radius: 4px; background: rgba(174, 191, 230, .1); }
+    .probability span { display: block; width: var(--prob, 0%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, #80cbff, #a9a3ff); }
+    .probability-caption { display: flex; justify-content: space-between; margin-top: 4px; color: var(--faint); font-size: 9px; }
+    details.more-metrics { margin-top: auto; padding-top: 9px; }
+    details.more-metrics summary { display: flex; align-items: center; justify-content: space-between; color: #98a6c5; font-size: 9px; cursor: pointer; list-style: none; }
+    details.more-metrics summary::-webkit-details-marker { display: none; }
+    details.more-metrics summary::after { content: "+"; color: var(--blue); font-size: 14px; line-height: 10px; }
+    details.more-metrics[open] summary::after { content: "−"; }
+    .extra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; padding-top: 9px; color: #c9d3e9; font-size: 9px; }
+    .extra-grid span { color: var(--muted); }
+    .loading-card {
+      min-height: 286px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: linear-gradient(100deg, rgba(255,255,255,.025) 20%, rgba(255,255,255,.07) 40%, rgba(255,255,255,.025) 60%);
+      background-size: 220% 100%;
+      animation: shimmer 1.7s infinite linear;
+    }
+    .error-banner, .notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 12px 0;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 158, 170, .2);
+      border-radius: 12px;
+      color: #f0c3c9;
+      background: rgba(255, 158, 170, .07);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .notice { border-color: rgba(167, 216, 255, .16); color: #bdcce6; background: rgba(167, 216, 255, .05); }
+    .error-banner[hidden], .notice[hidden] { display: none; }
+    .refresh-note { display: flex; justify-content: space-between; gap: 18px; margin: 9px 2px 0; color: var(--faint); font-size: 10px; }
+    .refresh-note span:last-child { text-align: right; }
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px 0 28px;
+      border-top: 1px solid var(--line);
+      color: var(--faint);
+      font-size: 10px;
+    }
+    .footer-brand { color: #9eabc8; font-weight: 650; letter-spacing: .1em; text-transform: uppercase; }
+    .footer-meta { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 18px; }
+    .footer a { color: #b2c6e6; text-decoration: none; }
+    .footer a:hover { color: white; }
+    .weather-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .svg-sun-rays { transform-origin: center; animation: sun-pulse 7s ease-in-out infinite; }
+    .scene-rain { animation: rain-fall 1.2s linear infinite; }
+    .scene-snow { animation: snow-drift 3.8s ease-in-out infinite; }
+    .scene-cloud { transform-origin: center; animation: cloud-float 6s ease-in-out infinite; }
+    .scene-cloud.delay { animation-delay: -2.6s; }
+    .scene-spark { animation: twinkle 3s ease-in-out infinite; }
+    .scene-spark.delay { animation-delay: -1.4s; }
+    .scene-bolt { animation: lightning-flash 6s linear infinite; }
+    .scene-aurora { animation: cloud-float 8s ease-in-out infinite alternate; }
+    .scene-fog { animation: cloud-float 8s ease-in-out infinite alternate; }
+    .scene-heat { animation: sun-pulse 3s ease-in-out infinite; }
+    .scene-rainbow { animation: twinkle 5s ease-in-out infinite; }
+    @keyframes rise-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes shimmer { to { background-position: -220% 0; } }
+    @keyframes sun-pulse { 50% { transform: scale(1.07); opacity: .9; } }
+    @keyframes rain-fall { to { transform: translateY(8px); opacity: .42; } }
+    @keyframes snow-drift { 50% { transform: translate(3px, 5px); } }
+    @keyframes cloud-float { 50% { transform: translateX(3px); } }
+    @keyframes twinkle { 50% { opacity: .26; transform: scale(.72); } }
+    @keyframes lightning-flash { 0%, 8%, 12%, 100% { opacity: .2; } 9%, 10% { opacity: 1; } }
+    @media (max-width: 1050px) {
+      .shell { width: min(100% - 40px, 900px); }
+      .overview { grid-template-columns: minmax(205px, .9fr) minmax(0, 1.1fr); }
+      .sun-panel { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; gap: 8px 18px; padding: 13px 24px; border-top: 1px solid var(--line); border-left: 0; }
+      .sun-panel-title { margin: 0; }
+      .sun-arc { grid-column: 1 / 3; grid-row: 2; margin: -5px 0 0; }
+      .sun-range { grid-column: 3; grid-row: 2; }
+      .sun-time { margin: 0; }
+      .sun-time:first-of-type { grid-column: 2; }
+      .sun-time:last-of-type { grid-column: 3; }
+      .forecast-track { grid-auto-columns: minmax(224px, 34%); }
+    }
+    @media (max-width: 650px) {
+      .shell { width: calc(100% - 32px); }
+      .topbar { min-height: 70px; }
+      .brand-tag { display: none; }
+      .top-actions { gap: 9px; }
+      .live-pill { padding: 7px 9px; font-size: 9px; }
+      .intro { padding: 34px 0 21px; }
+      h1 { font-size: clamp(37px, 10vw, 54px); }
+      .intro-copy { margin-top: 13px; font-size: 13px; }
+      .city-tabs { gap: 7px; margin-top: 21px; }
+      .city-tab { padding: 9px 11px; font-size: 11px; }
+      .dashboard { padding-top: 2px; }
+      .city-section { margin: 18px 0 30px; }
+      .city-title { font-size: 21px; }
+      .city-head { align-items: flex-start; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+      .overview { grid-template-columns: 1fr 1fr; min-height: 0; border-radius: 18px; }
+      .current-main { padding: 19px 17px; }
+      .current-temp { font-size: 49px; }
+      .current-icon { width: 61px; height: 61px; }
+      .current-weather { gap: 9px; }
+      .overview-middle { padding: 19px 10px 19px 0; }
+      .metric-grid { grid-template-columns: 1fr 1fr; gap: 13px 8px; }
+      .metric-label { font-size: 9px; }
+      .metric-value { font-size: 13px; }
+      .sun-panel { grid-template-columns: 1fr 1fr; gap: 9px 13px; padding: 12px 17px; }
+      .sun-panel-title { grid-column: 1 / -1; }
+      .sun-time:first-of-type, .sun-time:last-of-type { grid-column: auto; }
+      .sun-arc { grid-column: 1; grid-row: 3; }
+      .sun-range { grid-column: 2; grid-row: 3; }
+      .section-bar { margin-top: 21px; }
+      .section-note { display: block; margin: 4px 0 0; }
+      .forecast-track { grid-auto-columns: minmax(224px, 78%); gap: 9px; }
+      .day-card { min-height: 280px; }
+      .refresh-note { flex-direction: column; gap: 4px; }
+      .refresh-note span:last-child { text-align: left; }
+      .footer { align-items: flex-start; flex-direction: column; gap: 10px; }
+      .footer-meta { justify-content: flex-start; }
+    }
+    @media (max-width: 390px) {
+      .overview { grid-template-columns: 1fr; }
+      .overview-middle { padding: 4px 17px 19px; }
+      .metric-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .sun-panel { grid-template-columns: 1fr 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <svg class="weather-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="icon-mark" viewBox="0 0 32 32">
+      <circle cx="13" cy="12" r="7" fill="#ffd98a"/>
+      <path d="M8 25h15a5.5 5.5 0 0 0 .4-11 8 8 0 0 0-14.7-1.4A6.3 6.3 0 0 0 8 25Z" fill="#b4d9ff"/>
+    </symbol>
+    <symbol id="icon-drop" viewBox="0 0 24 24"><path d="M12 3S5.5 10.3 5.5 14.4a6.5 6.5 0 0 0 13 0C18.5 10.3 12 3 12 3Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/><path d="M9 15a3 3 0 0 0 3 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"/></symbol>
+    <symbol id="icon-wind" viewBox="0 0 24 24"><path d="M3 8h13a3 3 0 1 0-3-3M2 12h18a2.5 2.5 0 1 1-2.5 2.5M5 16h9a2.5 2.5 0 1 1-2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.7"/></symbol>
+    <symbol id="icon-cloud" viewBox="0 0 24 24"><path d="M7 19h10a4 4 0 0 0 .2-8 6 6 0 0 0-11.3-1.1A4.5 4.5 0 0 0 7 19Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></symbol>
+    <symbol id="icon-pressure" viewBox="0 0 24 24"><path d="M4 17a8 8 0 1 1 16 0M12 13l4-4M7 17h10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/><circle cx="12" cy="17" r="1" fill="currentColor"/></symbol>
+    <symbol id="icon-snow" viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.5 5.2 12 7l2.5-1.8m-5 13.6L12 17l2.5 1.8m-8-7.4L5 9l-2.2-.2m18.4 6.4L19 15l-1.3 2m-12.9-2L5 15l-2.2.2m18.4-6.4L19 9l-1.3-2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/></symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.6"/></symbol>
+    <symbol id="wx-clear" viewBox="0 0 64 64">
+      <g class="svg-sun-rays" fill="none" stroke="#ffd98a" stroke-linecap="round" stroke-width="2.2">
+        <path d="M32 5v6M32 53v6M5 32h6M53 32h6M13 13l4.3 4.3M46.7 46.7l4.3 4.3M51 13l-4.3 4.3M17.3 46.7 13 51"/>
+      </g>
+      <circle cx="32" cy="32" r="13" fill="#ffd98a"/>
+      <circle cx="27" cy="27" r="8" fill="#fff0b8" opacity=".45"/>
+    </symbol>
+    <symbol id="wx-partly" viewBox="0 0 64 64">
+      <g class="svg-sun-rays" stroke="#ffd98a" stroke-linecap="round" stroke-width="2">
+        <path d="M38 7v5M53 18l-4 3M58 34h-5M24 18l4 3" fill="none"/>
+      </g>
+      <circle cx="40" cy="24" r="10" fill="#ffd98a"/>
+      <path d="M16 49h32a9 9 0 0 0 0-18h-1a13 13 0 0 0-24-2 10 10 0 0 0-7 20Z" fill="#b5d7ff"/>
+      <path d="M15 45h27" stroke="#e2f1ff" stroke-linecap="round" stroke-width="2" opacity=".65"/>
+    </symbol>
+    <symbol id="wx-cloud" viewBox="0 0 64 64">
+      <ellipse cx="34" cy="47" rx="22" ry="5" fill="#7e92bd" opacity=".13"/>
+      <path class="scene-cloud" d="M15 47h34a10 10 0 0 0 0-20h-2a15 15 0 0 0-28-3 11 11 0 0 0-4 23Z" fill="#b3c7e8"/>
+      <path d="M20 43h25" stroke="#eff6ff" stroke-linecap="round" stroke-width="2" opacity=".45"/>
+    </symbol>
+    <symbol id="wx-rain" viewBox="0 0 64 64">
+      <path d="M13 38h37a9 9 0 0 0 0-18h-2a15 15 0 0 0-28-3 11 11 0 0 0-7 21Z" fill="#a9bfdf"/>
+      <g class="scene-rain" fill="none" stroke="#83ceff" stroke-linecap="round" stroke-width="2.5">
+        <path d="m22 44-3 6M34 44l-3 6M46 44l-3 6"/>
+      </g>
+      <g fill="none" stroke="#83ceff" stroke-linecap="round" stroke-width="2">
+        <path d="m27 51-2 4M39 51l-2 4"/>
+      </g>
+    </symbol>
+    <symbol id="wx-drizzle" viewBox="0 0 64 64">
+      <path d="M13 37h37a9 9 0 0 0 0-18h-2a15 15 0 0 0-28-3 11 11 0 0 0-7 21Z" fill="#adbedb"/>
+      <g class="scene-rain" fill="#a7d8ff"><circle cx="22" cy="45" r="1.8"/><circle cx="34" cy="49" r="1.8"/><circle cx="46" cy="44" r="1.8"/></g>
+    </symbol>
+    <symbol id="wx-showers" viewBox="0 0 64 64">
+      <path d="M14 36h35a9 9 0 0 0 0-18h-2a15 15 0 0 0-28-3 11 11 0 0 0-5 21Z" fill="#9eb3d4"/>
+      <path class="scene-rain" d="m24 43-4 8m15-8-4 8m15-8-4 8" stroke="#91d6ff" stroke-linecap="round" stroke-width="3"/>
+      <path class="scene-spark" d="M50 8v5m-2.5-2.5h5" stroke="#ffd98a" stroke-linecap="round" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="wx-snow" viewBox="0 0 64 64">
+      <path d="M13 36h37a9 9 0 0 0 0-18h-2a15 15 0 0 0-28-3 11 11 0 0 0-7 21Z" fill="#adc3e2"/>
+      <g class="scene-snow" stroke="#d9f0ff" stroke-linecap="round" stroke-width="1.8">
+        <path d="M21 46v8m-3-4h6m-5.1-2.1 4.2 4.2m0-4.2-4.2 4.2M38 45v8m-3-4h6m-5.1-2.1 4.2 4.2m0-4.2-4.2 4.2M51 43v7m-2.5-3.5h5"/>
+      </g>
+    </symbol>
+    <symbol id="wx-thunder" viewBox="0 0 64 64">
+      <path d="M12 34h38a9 9 0 0 0 0-18h-2a15 15 0 0 0-28-3 11 11 0 0 0-8 21Z" fill="#94a8cd"/>
+      <path class="scene-bolt" d="m34 32-9 13h8l-3 11 12-16h-8l5-8Z" fill="#ffe08a" stroke="#ffe08a" stroke-linejoin="round" stroke-width="1.5"/>
+      <path class="scene-rain" d="m18 39-2 5m34-4-2 5" stroke="#91d6ff" stroke-linecap="round" stroke-width="2.4"/>
+    </symbol>
+    <symbol id="wx-fog" viewBox="0 0 64 64">
+      <path d="M18 32a13 13 0 0 1 25-6h2a8 8 0 0 1 0 16H18a5 5 0 0 1 0-10Z" fill="#aebed7" opacity=".85"/>
+      <g class="scene-fog" fill="none" stroke="#c5d4e8" stroke-linecap="round" stroke-width="2.2">
+        <path d="M11 45h37M17 51h29M14 57h24" opacity=".75"/>
+      </g>
+    </symbol>
+    <symbol id="wx-hail" viewBox="0 0 64 64">
+      <path d="M13 36h37a9 9 0 0 0 0-18h-2a15 15 0 0 0-28-3 11 11 0 0 0-7 21Z" fill="#9fb5d5"/>
+      <g class="scene-snow" fill="#e1f2ff"><circle cx="21" cy="46" r="3"/><circle cx="35" cy="51" r="3"/><circle cx="49" cy="44" r="3"/></g>
+    </symbol>
+    <symbol id="wx-hot" viewBox="0 0 64 64">
+      <circle cx="32" cy="26" r="12" fill="#ffd98a"/>
+      <g class="scene-heat" fill="none" stroke="#ffb77d" stroke-linecap="round" stroke-width="2.3">
+        <path d="M17 43c4-3 4-7 0-10M29 43c4-3 4-7 0-10M41 43c4-3 4-7 0-10M22 54c4-3 4-7 0-10M36 54c4-3 4-7 0-10"/>
+      </g>
+      <path class="scene-rainbow" d="M19 24a13 13 0 0 1 26 0" fill="none" stroke="#fff0b8" stroke-linecap="round" stroke-width="1.5" opacity=".5"/>
+    </symbol>
+    <symbol id="wx-night" viewBox="0 0 64 64">
+      <path d="M43 12a19 19 0 1 0 10 32A20 20 0 0 1 43 12Z" fill="#c5ccff"/>
+      <g class="scene-spark" fill="#eff1ff"><path d="M19 16h2v2h-2zM44 49h2v2h-2z"/><circle cx="27" cy="12" r="1.4"/></g>
+      <path class="scene-spark delay" d="M53 23v7m-3.5-3.5h7" stroke="#dce5ff" stroke-linecap="round" stroke-width="1.5"/>
+    </symbol>
+  </svg>
+
+  <header class="topbar shell">
+    <a class="brand" href="#" aria-label="Atmos weather home">
+      <span class="brand-mark"><svg aria-hidden="true"><use href="#icon-mark"/></svg></span>
+      <span class="brand-name">atmos</span>
+      <span class="brand-tag">weather, in a wider view</span>
+    </a>
+    <div class="top-actions">
+      <span class="live-pill"><span class="live-dot" aria-hidden="true"></span>Live outlook</span>
+      <button class="icon-button" id="refresh-button" type="button" aria-label="Refresh forecast" title="Refresh forecast">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.7 9A7 7 0 0 1 18 6l2 2M4 16l2 2a7 7 0 0 0 12.3-3"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">The eastern seaboard · 14 day forecast</p>
+      <h1 id="page-title">A little more <span>weather-wise.</span></h1>
+      <p class="intro-copy">Look beyond the next blue-sky icon. Explore the next two weeks across three East Coast cities, with the details that help you plan around every kind of day.</p>
+      <nav class="city-tabs" aria-label="Choose a city">
+        <button class="city-tab" type="button" data-city-tab="baltimore" aria-pressed="true" style="--tab-color:#91e3d0"><span class="tab-mark"></span>Baltimore<span class="tab-temp" data-tab-temp="baltimore">—°</span></button>
+        <button class="city-tab" type="button" data-city-tab="newyork" aria-pressed="false" style="--tab-color:#a7d8ff"><span class="tab-mark"></span>New York<span class="tab-temp" data-tab-temp="newyork">—°</span></button>
+        <button class="city-tab" type="button" data-city-tab="raleigh" aria-pressed="false" style="--tab-color:#c6a8ff"><span class="tab-mark"></span>Raleigh<span class="tab-temp" data-tab-temp="raleigh">—°</span></button>
+      </nav>
+    </section>
+
+    <div class="notice" id="api-notice" role="status" hidden>Forecast data loads from Open-Meteo. If your browser blocks network access for local files, open this page while connected to the internet or serve the file locally.</div>
+    <div class="dashboard" id="dashboard" aria-live="polite">
+      <section class="city-section" id="city-baltimore" data-city="baltimore" style="--city-glow:rgba(84,196,175,.19)">
+        <header class="city-head">
+          <div class="city-title-row"><h2 class="city-title">Baltimore</h2><span class="city-state">Maryland, United States</span></div>
+          <time class="local-clock" data-clock="baltimore">Local time loading…</time>
+        </header>
+        <div class="overview" data-overview="baltimore">
+          <div class="current-main">
+            <div class="current-label"><span class="sun-dot" aria-hidden="true"></span><span data-current-label="baltimore">Current conditions</span></div>
+            <div class="current-weather"><svg class="current-icon" data-current-icon="baltimore" aria-hidden="true"><use href="#wx-partly"/></svg><div><div class="current-temp" data-current-temp="baltimore">—<sup>°</sup></div><div class="current-description" data-current-summary="baltimore">Loading forecast…</div><div class="current-feels" data-current-feels="baltimore">Feels like —</div></div></div>
+          </div>
+          <div class="overview-middle"><div class="metric-grid" data-current-metrics="baltimore"></div></div>
+          <aside class="sun-panel" data-sun-panel="baltimore"><div class="sun-panel-title">Today’s daylight</div><div class="sun-time"><span>Sunrise</span><span data-sunrise="baltimore">—</span></div><div class="sun-time"><span>Sunset</span><span data-sunset="baltimore">—</span></div><div class="sun-arc" aria-hidden="true"></div><div class="sun-range"><span>Sunrise</span><span>Sunset</span></div></aside>
+        </div>
+        <div class="error-banner" data-error="baltimore" role="alert" hidden></div>
+        <div class="section-bar"><h3 class="section-heading">The next 14 days <span class="section-note">One card, one whole day</span></h3><div class="scroll-tools"><button class="icon-button scroll-button" type="button" data-scroll="baltimore" data-direction="-1" aria-label="Scroll forecast left">←</button><button class="icon-button scroll-button" type="button" data-scroll="baltimore" data-direction="1" aria-label="Scroll forecast right">→</button></div></div>
+        <div class="forecast-track" data-forecast="baltimore" aria-label="Baltimore 14-day forecast"><div class="loading-card" aria-hidden="true"></div><div class="loading-card" aria-hidden="true"></div><div class="loading-card" aria-hidden="true"></div><div class="loading-card" aria-hidden="true"></div></div>
+        <div class="refresh-note"><span data-updated="baltimore">Fetching current conditions…</span><span>Local times · °F · mph · inches</span></div>
+      </section>
+
+      <section class="city-section" id="city-newyork" data-city="newyork" hidden style="--city-glow:rgba(103,155,231,.2)">
+        <header class="city-head">
+          <div class="city-title-row"><h2 class="city-title">New York</h2><span class="city-state">New York, United States</span></div>
+          <time class="local-clock" data-clock="newyork">Local time loading…</time>
+        </header>
+        <div class="overview" data-overview="newyork">
+          <div class="current-main"><div class="current-label"><span class="sun-dot" aria-hidden="true"></span><span data-current-label="newyork">Current conditions</span></div><div class="current-weather"><svg class="current-icon" data-current-icon="newyork" aria-hidden="true"><use href="#wx-partly"/></svg><div><div class="current-temp" data-current-temp="newyork">—<sup>°</sup></div><div class="current-description" data-current-summary="newyork">Loading forecast…</div><div class="current-feels" data-current-feels="newyork">Feels like —</div></div></div></div>
+          <div class="overview-middle"><div class="metric-grid" data-current-metrics="newyork"></div></div>
+          <aside class="sun-panel" data-sun-panel="newyork"><div class="sun-panel-title">Today’s daylight</div><div class="sun-time"><span>Sunrise</span><span data-sunrise="newyork">—</span></div><div class="sun-time"><span>Sunset</span><span data-sunset="newyork">—</span></div><div class="sun-arc" aria-hidden="true"></div><div class="sun-range"><span>Sunrise</span><span>Sunset</span></div></aside>
+        </div>
+        <div class="error-banner" data-error="newyork" role="alert" hidden></div>
+        <div class="section-bar"><h3 class="section-heading">The next 14 days <span class="section-note">One card, one whole day</span></h3><div class="scroll-tools"><button class="icon-button scroll-button" type="button" data-scroll="newyork" data-direction="-1" aria-label="Scroll forecast left">←</button><button class="icon-button scroll-button" type="button" data-scroll="newyork" data-direction="1" aria-label="Scroll forecast right">→</button></div></div>
+        <div class="forecast-track" data-forecast="newyork" aria-label="New York 14-day forecast"><div class="loading-card" aria-hidden="true"></div><div class="loading-card" aria-hidden="true"></div><div class="loading-card" aria-hidden="true"></div><div class="loading-card" aria-hidden="true"></div></div>
+        <div class="refresh-note"><span data-updated="newyork">Fetching current conditions…</span><span>Local times · °F · mph · inches</span></div>
+      </section>
+
+      <section class="city-section" id="city-raleigh" data-city="raleigh" style="--city-glow:rgba(160,115,235,.18)" hidden>
+        <header class="city-head">
+          <div class="city-title-row"><h2 class="city-title">Raleigh</h2><span class="city-state">North Carolina, United States</span></div>
+          <time class="local-clock" data-clock="raleigh">Local time loading…</time>
+        </header>
+        <div class="overview" data-overview="raleigh">
+          <div class="current-main"><div class="current-label"><span class="sun-dot" aria-hidden="true"></span><span data-current-label="raleigh">Current conditions</span></div><div class="current-weather"><svg class="current-icon" data-current-icon="raleigh" aria-hidden="true"><use href="#wx-partly"/></svg><div><div class="current-temp" data-current-temp="raleigh">—<sup>°</sup></div><div class="current-description" data-current-summary="raleigh">Loading forecast…</div><div class="current-feels" data-current-feels="raleigh">Feels like —</div></div></div></div>
+          <div class="overview-middle"><div class="metric-grid" data-current-metrics="raleigh"></div></div>
+          <aside class="sun-panel" data-sun-panel="raleigh"><div class="sun-panel-title">Today’s daylight</div><div class="sun-time"><span>Sunrise</span><span data-sunrise="raleigh">—</span></div><div class="sun-time"><span>Sunset</span><span data-sunset="raleigh">—</span></div><div class="sun-arc" aria-hidden="true"></div><div class="sun-range"><span>Sunrise</span><span>Sunset</span></div></aside>
+        </div>
+        <div class="error-banner" data-error="raleigh" role="alert" hidden></div>
+        <div class="section-bar"><h3 class="section-heading">The next 14 days <span class="section-note">One card, one whole day</span></h3><div class="scroll-tools"><button class="icon-button scroll-button" type="button" data-scroll="raleigh" data-direction="-1" aria-label="Scroll forecast left">←</button><button class="icon-button scroll-button" type="button" data-scroll="raleigh" data-direction="1" aria-label="Scroll forecast right">→</button></div></div>
+        <div class="forecast-track" data-forecast="raleigh" aria-label="Raleigh 14-day forecast"><div class="loading-card" aria-hidden="true"></div><div class="loading-card" aria-hidden="true"></div><div class="loading-card" aria-hidden="true"></div><div class="loading-card" aria-hidden="true"></div></div>
+        <div class="refresh-note"><span data-updated="raleigh">Fetching current conditions…</span><span>Local times · °F · mph · inches</span></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer shell">
+    <span class="footer-brand">Atmos · weather, in a wider view</span>
+    <div class="footer-meta"><span>Forecast by <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a></span><span>Made for the days ahead</span><a href="#page-title">Back to top ↑</a></div>
+  </footer>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const cities = {
+        baltimore: { name: "Baltimore", timezone: "America/New_York", latitude: 39.2904, longitude: -76.6122 },
+        newyork: { name: "New York", timezone: "America/New_York", latitude: 40.7128, longitude: -74.006 },
+        raleigh: { name: "Raleigh", timezone: "America/New_York", latitude: 35.7796, longitude: -78.6382 }
+      };
+      const dailyFields = [
+        "weather_code", "temperature_2m_max", "temperature_2m_min", "apparent_temperature_max", "apparent_temperature_min",
+        "sunrise", "sunset", "daylight_duration", "sunshine_duration", "uv_index_max", "uv_index_clear_sky_max",
+        "precipitation_sum", "rain_sum", "showers_sum", "snowfall_sum", "precipitation_probability_max",
+        "wind_speed_10m_max", "wind_gusts_10m_max", "wind_direction_10m_dominant", "shortwave_radiation_sum",
+        "et0_fao_evapotranspiration"
+      ];
+      const hourlyFields = [
+        "relative_humidity_2m", "dew_point_2m", "apparent_temperature", "pressure_msl", "cloud_cover",
+        "visibility", "precipitation_probability", "precipitation", "rain", "snowfall", "weather_code"
+      ];
+      const currentFields = [
+        "temperature_2m", "relative_humidity_2m", "apparent_temperature", "precipitation", "rain", "showers",
+        "snowfall", "weather_code", "cloud_cover", "pressure_msl", "wind_speed_10m", "wind_direction_10m",
+        "wind_gusts_10m", "is_day"
+      ];
+      const iconMap = [
+        { max: 0, icon: "clear", label: "Clear sky" },
+        { max: 1, icon: "clear", label: "Mainly clear" },
+        { max: 2, icon: "partly", label: "Partly cloudy" },
+        { max: 3, icon: "cloud", label: "Overcast" },
+        { max: 45, icon: "fog", label: "Fog" },
+        { max: 48, icon: "fog", label: "Rime fog" },
+        { max: 51, icon: "drizzle", label: "Light drizzle" },
+        { max: 53, icon: "drizzle", label: "Drizzle" },
+        { max: 55, icon: "drizzle", label: "Dense drizzle" },
+        { max: 56, icon: "drizzle", label: "Freezing drizzle" },
+        { max: 57, icon: "drizzle", label: "Dense freezing drizzle" },
+        { max: 61, icon: "rain", label: "Light rain" },
+        { max: 63, icon: "rain", label: "Rain" },
+        { max: 65, icon: "rain", label: "Heavy rain" },
+        { max: 66, icon: "rain", label: "Freezing rain" },
+        { max: 67, icon: "rain", label: "Heavy freezing rain" },
+        { max: 71, icon: "snow", label: "Light snow" },
+        { max: 73, icon: "snow", label: "Snow" },
+        { max: 75, icon: "snow", label: "Heavy snow" },
+        { max: 77, icon: "hail", label: "Snow grains" },
+        { max: 80, icon: "showers", label: "Light showers" },
+        { max: 81, icon: "showers", label: "Rain showers" },
+        { max: 82, icon: "showers", label: "Heavy showers" },
+        { max: 85, icon: "snow", label: "Snow showers" },
+        { max: 86, icon: "snow", label: "Heavy snow showers" },
+        { max: 95, icon: "thunder", label: "Thunderstorm" },
+        { max: 96, icon: "thunder", label: "Thunderstorm with hail" },
+        { max: 99, icon: "thunder", label: "Severe thunderstorm" },
+        { max: Infinity, icon: "cloud", label: "Variable conditions" }
+      ];
+      const numberFormat = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
+      const oneDecimal = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
+      const dateFormat = new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
+      const dateLongFormat = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: "UTC" });
+      const cityResults = new Map();
+      let activeCity = "baltimore";
+
+      const iconFor = (code, isDay = true) => {
+        if (!isDay && Number(code) <= 2) return { icon: "night", label: Number(code) === 0 ? "Clear night" : "Clouds and moonlight" };
+        const numeric = Number(code);
+        return iconMap.find((entry) => numeric <= entry.max) || iconMap[iconMap.length - 1];
+      };
+      const fmt = (value, suffix = "", precision = 0) => {
+        if (value === null || value === undefined || !Number.isFinite(Number(value))) return "—";
+        const formatter = precision ? oneDecimal : numberFormat;
+        return `${formatter.format(Number(value))}${suffix}`;
+      };
+      const fmtInches = (value) => {
+        if (value === null || value === undefined || !Number.isFinite(Number(value))) return "—";
+        return `${oneDecimal.format(Number(value))} in`;
+      };
+      const avg = (values) => {
+        const valid = values.filter((value) => Number.isFinite(Number(value))).map(Number);
+        return valid.length ? valid.reduce((sum, value) => sum + value, 0) / valid.length : null;
+      };
+      const max = (values) => {
+        const valid = values.filter((value) => Number.isFinite(Number(value))).map(Number);
+        return valid.length ? Math.max(...valid) : null;
+      };
+      const min = (values) => {
+        const valid = values.filter((value) => Number.isFinite(Number(value))).map(Number);
+        return valid.length ? Math.min(...valid) : null;
+      };
+      const dailyValues = (hourly, field, dateKey) => {
+        if (!dateKey || !Array.isArray(hourly[field])) return [];
+        return hourly.time.reduce((values, time, index) => {
+          if (time.startsWith(dateKey)) values.push(hourly[field][index]);
+          return values;
+        }, []);
+      };
+      const compass = (degrees) => {
+        if (!Number.isFinite(Number(degrees))) return "—";
+        return ["N", "NE", "E", "SE", "S", "SW", "W", "NW"][Math.round(Number(degrees) / 45) % 8];
+      };
+      const timeLabel = (iso, timezone) => {
+        if (!iso) return "—";
+        const date = new Date(iso);
+        if (Number.isNaN(date.getTime())) return "—";
+        return new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", timeZone: timezone }).format(date);
+      };
+      const durationLabel = (seconds) => {
+        if (!Number.isFinite(Number(seconds))) return "—";
+        const hours = Math.floor(Number(seconds) / 3600);
+        const minutes = Math.round((Number(seconds) % 3600) / 60);
+        return `${hours}h ${minutes}m`;
+      };
+      const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[character]);
+      const symbol = (name) => `<svg aria-hidden="true"><use href="#${name}"/></svg>`;
+
+      function metric(label, value, icon) {
+        return `<div class="metric"><span class="metric-label">${symbol(icon)}${label}</span><strong class="metric-value">${value}</strong></div>`;
+      }
+      function dayMetric(label, value, icon, isDim = false) {
+        return `<div class="day-metric">${symbol(icon)}<span class="${isDim ? "dim" : ""}">${label}</span> ${value}</div>`;
+      }
+      function hourStats(hourly, dateKey) {
+        const temperatures = dailyValues(hourly, "apparent_temperature", dateKey);
+        const humidity = dailyValues(hourly, "relative_humidity_2m", dateKey);
+        const dewpoint = dailyValues(hourly, "dew_point_2m", dateKey);
+        const pressure = dailyValues(hourly, "pressure_msl", dateKey);
+        const clouds = dailyValues(hourly, "cloud_cover", dateKey);
+        const visibility = dailyValues(hourly, "visibility", dateKey);
+        return {
+          feelsHigh: max(temperatures), feelsLow: min(temperatures),
+          humidityAvg: avg(humidity), humidityMax: max(humidity),
+          dewAvg: avg(dewpoint), pressureAvg: avg(pressure), cloudsAvg: avg(clouds),
+          visibilityMin: min(visibility), visibilityAvg: avg(visibility)
+        };
+      }
+      function renderCurrent(cityKey, data) {
+        const city = cities[cityKey];
+        const current = data.current;
+        const weather = iconFor(current.weather_code, Boolean(current.is_day));
+        const icon = document.querySelector(`[data-current-icon="${cityKey}"] use`);
+        if (icon) icon.setAttribute("href", `#wx-${weather.icon}`);
+        document.querySelector(`[data-current-temp="${cityKey}"]`).innerHTML = `${fmt(current.temperature_2m)}<sup>°</sup>`;
+        document.querySelector(`[data-current-summary="${cityKey}"]`).textContent = weather.label;
+        document.querySelector(`[data-current-feels="${cityKey}"]`).textContent = `Feels like ${fmt(current.apparent_temperature, "°")} · ${current.is_day ? "Daytime" : "Nighttime"}`;
+        document.querySelector(`[data-current-label="${cityKey}"]`).textContent = `Right now · ${timeLabel(current.time, city.timezone)}`;
+        const metrics = [
+          metric("Humidity", fmt(current.relative_humidity_2m, "%"), "icon-drop"),
+          metric("Wind", `${fmt(current.wind_speed_10m, " mph")} ${compass(current.wind_direction_10m)}`, "icon-wind"),
+          metric("Gusts", fmt(current.wind_gusts_10m, " mph"), "icon-wind"),
+          metric("Rain", fmtInches(current.precipitation), "icon-drop"),
+          metric("Cloud cover", fmt(current.cloud_cover, "%"), "icon-cloud"),
+          metric("Pressure", fmt(current.pressure_msl, " hPa"), "icon-pressure")
+        ].join("");
+        document.querySelector(`[data-current-metrics="${cityKey}"]`).innerHTML = metrics;
+        const date = data.daily.time[0];
+        document.querySelector(`[data-sunrise="${cityKey}"]`).textContent = timeLabel(data.daily.sunrise[0], city.timezone);
+        document.querySelector(`[data-sunset="${cityKey}"]`).textContent = timeLabel(data.daily.sunset[0], city.timezone);
+        const now = new Date(current.time);
+        const sunrise = new Date(data.daily.sunrise[0]);
+        const sunset = new Date(data.daily.sunset[0]);
+        const progress = sunset > sunrise ? Math.max(3, Math.min(97, ((now - sunrise) / (sunset - sunrise)) * 100)) : 42;
+        document.querySelector(`[data-sun-panel="${cityKey}"] .sun-arc`).style.setProperty("--sun-progress", `${progress}%`);
+        document.querySelector(`[data-tab-temp="${cityKey}"]`).textContent = `${fmt(current.temperature_2m)}°`;
+        document.querySelector(`[data-clock="${cityKey}"]`).textContent = new Intl.DateTimeFormat("en-US", {
+          weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: city.timezone, timeZoneName: "short"
+        }).format(now);
+        const updated = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", timeZone: city.timezone }).format(new Date());
+        document.querySelector(`[data-updated="${cityKey}"]`).textContent = `Updated ${updated} · ${dateLongFormat.format(new Date(`${date}T12:00:00Z`))}`;
+        document.querySelector(`[data-error="${cityKey}"]`).hidden = true;
+        document.querySelector(`[data-overview="${cityKey}"]`).setAttribute("aria-label", `${city.name} current weather, ${weather.label}, ${fmt(current.temperature_2m)} degrees Fahrenheit`);
+      }
+      function renderDayCard(cityKey, data, index) {
+        const city = cities[cityKey];
+        const daily = data.daily;
+        const date = daily.time[index];
+        const weather = iconFor(daily.weather_code[index]);
+        const isToday = index === 0;
+        const stats = hourStats(data.hourly, date);
+        const probability = daily.precipitation_probability_max[index];
+        const daylightHours = Number(daily.daylight_duration[index]);
+        const dateObject = new Date(`${date}T12:00:00Z`);
+        const extra = [
+          ["Avg. humidity", fmt(stats.humidityAvg, "%")],
+          ["Peak humidity", fmt(stats.humidityMax, "%")],
+          ["Dew point", fmt(stats.dewAvg, "°F", 1)],
+          ["Pressure", fmt(stats.pressureAvg, " hPa")],
+          ["Cloud cover", fmt(stats.cloudsAvg, "%")],
+          ["Visibility", stats.visibilityMin === null ? "—" : `${oneDecimal.format(stats.visibilityMin / 5280)} mi min`],
+          ["Showers", fmtInches(daily.showers_sum[index])],
+          ["Sunshine", durationLabel(daily.sunshine_duration[index])],
+          ["Solar energy", fmt(daily.shortwave_radiation_sum[index], " MJ/m²", 1)],
+          ["Evapotranspiration", fmt(daily.et0_fao_evapotranspiration[index], " in", 1)],
+          ["Clear-sky UV", fmt(daily.uv_index_clear_sky_max[index], "", 1)],
+          ["Wind direction", compass(daily.wind_direction_10m_dominant[index])]
+        ].map(([label, value]) => `<div>${escapeHtml(label)} <span>${escapeHtml(value)}</span></div>`).join("");
+        return `<article class="day-card${isToday ? " is-today" : ""}" aria-label="${escapeHtml(city.name)} forecast for ${escapeHtml(dateLongFormat.format(dateObject))}">
+          <div class="day-top"><div><div class="day-name">${isToday ? "Today" : escapeHtml(dateFormat.format(dateObject).split(",")[0])}</div><div class="day-date">${escapeHtml(dateFormat.format(dateObject).replace(/^[^,]+,\\s*/, ""))}</div></div>${isToday ? '<span class="today-tag">Today</span>' : ""}</div>
+          <div class="day-weather"><svg class="day-icon" aria-label="${escapeHtml(weather.label)}" role="img"><use href="#wx-${weather.icon}"/></svg><span class="day-condition">${escapeHtml(weather.label)}</span></div>
+          <div class="temp-row"><strong class="temp-high">${fmt(daily.temperature_2m_max[index], "°")}</strong><span class="temp-low">${fmt(daily.temperature_2m_min[index], "°")}</span><span class="temp-apparent">feels ${fmt(stats.feelsHigh, "°")}/${fmt(stats.feelsLow, "°")}</span></div>
+          <div class="day-rule"></div>
+          <div class="day-metrics">
+            ${dayMetric("Rain", fmtInches(daily.precipitation_sum[index]), "icon-drop")}
+            ${dayMetric("Snow", fmt(daily.snowfall_sum[index], " in", 1), "icon-snow")}
+            ${dayMetric("Wind", fmt(daily.wind_speed_10m_max[index], " mph"), "icon-wind")}
+            ${dayMetric("Gust", fmt(daily.wind_gusts_10m_max[index], " mph"), "icon-wind", true)}
+            ${dayMetric("UV max", fmt(daily.uv_index_max[index], "", 1), "icon-sun")}
+            ${dayMetric("Daylight", durationLabel(daylightHours), "icon-sun")}
+          </div>
+          <div class="probability" role="img" aria-label="${fmt(probability, "%")} precipitation chance" style="--prob:${Math.max(0, Math.min(100, Number(probability) || 0))}%"><span></span></div>
+          <div class="probability-caption"><span>Precipitation chance</span><span>${fmt(probability, "%")}</span></div>
+          <details class="more-metrics"><summary>More weather details</summary><div class="extra-grid">${extra}</div></details>
+        </article>`;
+      }
+      function validateResponse(data) {
+        if (!data || !data.daily || !data.hourly || !data.current) throw new Error("The weather service returned an incomplete forecast.");
+        if (!Array.isArray(data.daily.time) || data.daily.time.length < 14) throw new Error("The weather service did not return a complete 14-day forecast.");
+        if (!Array.isArray(data.hourly.time) || !Array.isArray(data.hourly.relative_humidity_2m)) throw new Error("Hourly weather details are missing.");
+      }
+      async function loadCity(cityKey) {
+        const city = cities[cityKey];
+        const parameters = new URLSearchParams({
+          latitude: String(city.latitude), longitude: String(city.longitude), timezone: city.timezone,
+          temperature_unit: "fahrenheit", wind_speed_unit: "mph", precipitation_unit: "inch",
+          forecast_days: "14", daily: dailyFields.join(","), hourly: hourlyFields.join(","),           current: currentFields.join(",")
+        });
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?${parameters.toString()}`, { headers: { Accept: "application/json" }, cache: "no-store" });
+        if (!response.ok) throw new Error(`Weather service responded with ${response.status}.`);
+        const data = await response.json();
+        validateResponse(data);
+        renderCurrent(cityKey, data);
+        document.querySelector(`[data-forecast="${cityKey}"]`).innerHTML = data.daily.time.slice(0, 14).map((_, index) => renderDayCard(cityKey, data, index)).join("");
+        cityResults.set(cityKey, { loaded: true, data });
+      }
+      async function refreshForecasts() {
+        const refreshButton = document.getElementById("refresh-button");
+        refreshButton.disabled = true;
+        refreshButton.style.opacity = ".55";
+        const results = await Promise.allSettled(Object.keys(cities).map(async (cityKey) => {
+          try {
+            await loadCity(cityKey);
+          } catch (error) {
+            const target = document.querySelector(`[data-error="${cityKey}"]`);
+            target.textContent = `${cities[cityKey].name}: ${error instanceof Error ? error.message : "Unable to load forecast."} Check your connection and try refresh.`;
+            target.hidden = false;
+            document.querySelector(`[data-forecast="${cityKey}"]`).innerHTML = "";
+            document.getElementById("api-notice").hidden = false;
+          }
+        }));
+        if (results.some((result) => result.status === "rejected")) document.getElementById("api-notice").hidden = false;
+        refreshButton.disabled = false;
+        refreshButton.style.opacity = "";
+      }
+      function setActiveCity(cityKey) {
+        activeCity = cityKey;
+        document.querySelectorAll("[data-city-tab]").forEach((button) => {
+          const selected = button.dataset.cityTab === cityKey;
+          button.setAttribute("aria-pressed", String(selected));
+        });
+        document.querySelectorAll("[data-city]").forEach((section) => {
+          section.hidden = section.dataset.city !== cityKey;
+        });
+      }
+      function updateClocks() {
+        for (const [cityKey, city] of Object.entries(cities)) {
+          const clock = document.querySelector(`[data-clock="${cityKey}"]`);
+          if (clock && !cityResults.get(cityKey)?.loaded) {
+            clock.textContent = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: city.timezone, timeZoneName: "short" }).format(new Date());
+          }
+        }
+      }
+      document.querySelectorAll("[data-city-tab]").forEach((button) => {
+        button.addEventListener("click", () => setActiveCity(button.dataset.cityTab));
+      });
+      document.querySelectorAll("[data-scroll]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const track = document.querySelector(`[data-forecast="${button.dataset.scroll}"]`);
+          track.scrollBy({ left: Number(button.dataset.direction) * Math.max(250, track.clientWidth * .8), behavior: "smooth" });
+        });
+      });
+      document.getElementById("refresh-button").addEventListener("click", refreshForecasts);
+      setActiveCity(activeCity);
+      updateClocks();
+      window.setInterval(updateClocks, 60_000);
+      refreshForecasts();
+    })();
+  </script>
+</body>
+</html>

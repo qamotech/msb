@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Asset Engine (Super-Sampled & Optimized)</title>
+    <style>
+        body { background-color: #0d1117; color: #fff; font-family: monospace; padding: 20px; }
+        canvas { border: 1px solid #30363d; background-color: #161b22; margin-top: 10px; width: 800px; height: 500px; }
+        .log { color: #00ffcc; font-size: 14px; margin-bottom: 10px; }
+        .metrics { color: #ff00ff; font-size: 12px; }
+    </style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+    <h2>Optimized SVG Asset Engine</h2>
+    <div id="status" class="log">Initializing library...</div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="metrics" class="metrics"></div>
+
+<script>
+// 1. THE EXPANDED SVG DICTIONARY (8 Assets)
+const svgLibrary = ${JSON.stringify(svgLibrary, null, 4)};
+
+// 2. THE CACHE
+const bakedAssets = {};
+const SUPER_SAMPLE_SCALE = 4; // 4x Native Resolution
+
+// 3. THE OPTIMIZED BAKE FUNCTION
+async function bakeSVG(name, svgString) {
+    let logicalWidth = 100, logicalHeight = 100;
+    const viewBoxMatch = svgString.match(/viewBox="([\\d\\.\\s]+)"/);
+    
+    let highResSvg = svgString;
+    if (viewBoxMatch) {
+        const parts = viewBoxMatch[1].trim().split(/[\\s,]+/);
+        logicalWidth = parseFloat(parts[2]);
+        logicalHeight = parseFloat(parts[3]);
+        // [OPTIMIZATION 1]: Inject explicit upscaled dimensions for super-sampling
+        highResSvg = svgString.replace('<svg ', \`<svg width="\${logicalWidth * SUPER_SAMPLE_SCALE}" height="\${logicalHeight * SUPER_SAMPLE_SCALE}" \`);
+    }
+
+    const svgBlob = new Blob([highResSvg], {type: 'image/svg+xml;charset=utf-8'});
+    const url = URL.createObjectURL(svgBlob);
+    
+    const img = new Image();
+    await new Promise((resolve) => {
+        img.onload = resolve;
+        img.src = url;
+    });
+    
+    // [OPTIMIZATION 2]: createImageBitmap decodes asynchronously off the main thread 
+    // and stores the result on the GPU, vastly outperforming raw Image objects on canvas.
+    const bitmap = await createImageBitmap(img);
+    bakedAssets[name] = { bitmap, w: logicalWidth, h: logicalHeight };
+    URL.revokeObjectURL(url);
+}
+
+// 4. ENGINE INITIALIZATION
+async function loadGameAssets() {
+    const statusText = document.getElementById('status');
+    const assetNames = Object.keys(svgLibrary);
+    
+    statusText.innerText = \`Super-sampling \${assetNames.length} assets at 4x resolution...\`;
+    const start = performance.now();
+
+    await Promise.all(assetNames.map(name => bakeSVG(name, svgLibrary[name])));
+    
+    const end = performance.now();
+    document.getElementById('metrics').innerText = \`Bake Time: \${(end - start).toFixed(2)}ms\`;
+    statusText.innerText = "All assets baked! Engine running at 60fps.";
+    
+    startGameLoop();
+}
+
+// 5. RENDER LOOP
+function startGameLoop() {
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // [OPTIMIZATION 3]: High-DPI Display scaling
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = 800 * dpr;
+    canvas.height = 500 * dpr;
+    ctx.scale(dpr, dpr);
+
+    let time = 0;
+    
+    function render() {
+        time += 0.05;
+        // Clear specific logical area
+        ctx.clearRect(0, 0, 800, 500);
+
+        // Draw Menu
+        const p = bakedAssets['menu_hackerPanel'];
+        ctx.drawImage(p.bitmap, 50, 20, p.w, p.h);
+
+        // Draw UI
+        const b = bakedAssets['ui_cyberButton'];
+        ctx.drawImage(b.bitmap, 100, 100, b.w, b.h);
+        
+        const t = bakedAssets['ui_toggleSwitch'];
+        ctx.drawImage(t.bitmap, 100, 160, t.w, t.h);
+        
+        const s = bakedAssets['menu_statBar'];
+        ctx.drawImage(s.bitmap, 100, 220, s.w, s.h);
+
+        // Draw Reticule (Spinning)
+        const r = bakedAssets['hud_targetingReticule'];
+        ctx.save();
+        ctx.translate(450 + r.w/2, 50 + r.h/2);
+        ctx.rotate(time * 0.5);
+        ctx.drawImage(r.bitmap, -r.w/2, -r.h/2, r.w, r.h);
+        ctx.restore();
+
+        // Draw Compass
+        const c = bakedAssets['hud_compass'];
+        ctx.drawImage(c.bitmap, 440, 180, c.w, c.h);
+
+        // Draw Energy Core (Pulsing)
+        const e = bakedAssets['gfx_energyCore'];
+        const pulse = 1 + Math.sin(time) * 0.05;
+        ctx.save();
+        ctx.translate(620 + e.w/2, 50 + e.h/2);
+        ctx.scale(pulse, pulse);
+        ctx.drawImage(e.bitmap, -e.w/2, -e.h/2, e.w, e.h);
+        ctx.restore();
+
+        // Draw Data Node (Hovering)
+        const d = bakedAssets['gfx_dataNode'];
+        ctx.drawImage(d.bitmap, 610, 160 + Math.sin(time * 2) * 10, d.w, d.h);
+
+        requestAnimationFrame(render);
+    }
+    
+    requestAnimationFrame(render);
+}
+
+loadGameAssets();
+</script>
+
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body>
+</html>

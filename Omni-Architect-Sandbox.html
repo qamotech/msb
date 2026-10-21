@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omni Architect - AI Environment Sandbox</title>
+    <meta name="description" content="A multi-agent design environment sandbox for rapid web prototyping and architecture layout.">
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+    
+    <style>
+        :root {
+            --bg: #09090b; --panel: #18181b;
+            --text: #fafafa; --text-muted: #a1a1aa;
+            --accent: #6366f1; --accent-hover: #4f46e5;
+            --border: #27272a;
+            --font: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); }
+        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        header { padding: 1rem 1.5rem; background: var(--panel); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; color: var(--accent); }
+        
+        .ide-container { display: flex; flex: 1; overflow: hidden; }
+        
+        .sidebar { width: 250px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+        .sidebar-section { padding: 1rem; border-bottom: 1px solid var(--border); }
+        .sidebar-section h4 { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.75rem; letter-spacing: 1px; }
+        
+        ul { list-style: none; }
+        ul li { font-size: 0.85rem; padding: 0.4rem 0; cursor: pointer; color: var(--text-muted); transition: color 0.2s; }
+        ul li:hover { color: var(--accent); }
+        ul li.active { color: var(--accent); font-weight: bold; }
+        ul a { color: inherit; text-decoration: none; }
+        
+        .editor-area { flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative;}
+        
+        /* Decorative Background Pattern */
+        .editor-area::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px; opacity: 0.2; pointer-events: none;
+        }
+
+        .editor-header { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); display: flex; gap: 1rem; background: rgba(24, 24, 27, 0.8); backdrop-filter: blur(4px); z-index: 1;}
+        .tab { font-size: 0.85rem; color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 4px; background: var(--border); }
+        .tab.active { background: var(--accent); color: white; }
+
+        .editor-content { flex: 1; padding: 2rem; overflow-y: auto; z-index: 1; }
+        pre { color: #a5b4fc; font-size: 0.9rem; line-height: 1.5; outline: none; }
+        
+        footer { padding: 0.5rem 1.5rem; background: var(--panel); border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">🏗️ Omni Architect OS</div>
+        <div style="display:flex; gap:1rem;">
+            <button style="background:var(--accent); color:white; border:none; padding:0.4rem 1rem; border-radius:4px; font-family:inherit; cursor:pointer;">Deploy Agent</button>
+        </div>
+    </header>
+
+    <div class="ide-container">
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <h4>📂 Project Files</h4>
+                <ul>
+                    <li class="active">📝 index.html</li>
+                    <li>🎨 styles.css</li>
+                    <li>⚙️ logic.js</li>
+                    <li>🔧 config.json</li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h4>🛠️ Resources</h4>
+                <ul>
+                    <li><a href="#">📚 Documentation</a></li>
+                    <li><a href="#">📦 Package Registry</a></li>
+                    <li><a href="#">🔌 API Endpoints</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section" style="flex:1;">
+                <h4>🔗 Suggested Sites</h4>
+                <ul>
+                    <li><a href="https://github.com" target="_blank">🐙 GitHub</a></li>
+                    <li><a href="https://codepen.io" target="_blank">✒️ CodePen</a></li>
+                    <li><a href="https://vercel.com" target="_blank">▲ Vercel Hosting</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="editor-area">
+            <div class="editor-header">
+                <div class="tab active">index.html</div>
+                <div class="tab">styles.css</div>
+            </div>
+            <div class="editor-content">
+                <pre contenteditable="true" spellcheck="false">
+&lt;!-- Omni Architect Sandbox --&gt;
+&lt;div class="agent-container"&gt;
+    &lt;h1&gt;Agent Status: Active&lt;/h1&gt;
+    &lt;p&gt;Awaiting systemic input protocols...&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    class Agent {
+        constructor(name) {
+            this.name = name;
+            this.status = 'idle';
+        }
+        
+        execute(task) {
+            console.log(`Executing: ${task}`);
+            this.status = 'running';
+        }
+    }
+&lt;/script&gt;
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div>Status: System Online (Memory: 24%)</div>
+        <div>
+            <a href="#" style="color:inherit; margin-right:1rem; text-decoration:none;">Settings</a>
+            <span>qamotech // 2026</span>
+        </div>
+    </footer>
+
+</body>
+</html>

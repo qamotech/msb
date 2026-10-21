@@ -1,0 +1,2059 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web App Forge</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f1e8;
+      --surface: #fffdf6;
+      --panel: #ffffff;
+      --panel-2: #f8f6ee;
+      --ink: #181a1f;
+      --muted: #68707d;
+      --line: #d8d1c3;
+      --teal: #08756f;
+      --teal-2: #0a5b57;
+      --mint: #dcefe8;
+      --blue: #355f9e;
+      --blue-soft: #dce7f7;
+      --red: #b6453e;
+      --red-soft: #f5d9d5;
+      --gold: #98720e;
+      --gold-soft: #f4e3b7;
+      --green: #3f7d35;
+      --green-soft: #dcebd3;
+      --purple: #66518f;
+      --purple-soft: #e7dff4;
+      --shadow: 0 18px 44px rgba(27, 30, 36, 0.12);
+      --radius: 8px;
+      --mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-height: 100%;
+      background:
+        linear-gradient(140deg, rgba(8, 117, 111, 0.12), transparent 36%),
+        linear-gradient(315deg, rgba(152, 114, 14, 0.12), transparent 34%),
+        var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.45;
+    }
+
+    body[data-density="compact"] {
+      --pad: 10px;
+      --gap: 10px;
+      --font-small: 12px;
+    }
+
+    body[data-density="roomy"] {
+      --pad: 16px;
+      --gap: 14px;
+      --font-small: 13px;
+    }
+
+    body[data-contrast="high"] {
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --panel-2: #f5f5f5;
+      --line: #8f98a3;
+      --muted: #434a55;
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 7px 10px;
+      background: var(--panel);
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      cursor: pointer;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    button:hover {
+      border-color: #a9a295;
+      transform: translateY(-1px);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 3px solid rgba(8, 117, 111, 0.24);
+      outline-offset: 2px;
+    }
+
+    button.primary {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    button.accent {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #fff;
+    }
+
+    button.warn {
+      background: var(--gold-soft);
+      border-color: #d5bd78;
+      color: #604600;
+    }
+
+    button.danger {
+      background: var(--red-soft);
+      border-color: #e2aaa4;
+      color: #84231e;
+    }
+
+    button.icon {
+      width: 36px;
+      padding: 0;
+      flex: 0 0 36px;
+    }
+
+    button.tiny {
+      min-height: 28px;
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 9px 10px;
+      background: #fffef9;
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 94px;
+      resize: vertical;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #3f454e;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+    }
+
+    .rail {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 14px 10px;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 253, 246, 0.86);
+      backdrop-filter: blur(14px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, var(--ink) 0 48%, var(--teal) 48% 100%);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+    }
+
+    .nav {
+      display: grid;
+      align-content: start;
+      gap: 8px;
+    }
+
+    .nav button {
+      position: relative;
+      width: 62px;
+      height: 48px;
+      padding: 0;
+      border-color: transparent;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .nav button.active {
+      color: var(--ink);
+      background: var(--panel);
+      border-color: var(--line);
+      box-shadow: 0 8px 22px rgba(30, 32, 36, 0.09);
+    }
+
+    .nav button.active::before {
+      content: "";
+      position: absolute;
+      left: -8px;
+      width: 4px;
+      height: 26px;
+      border-radius: 4px;
+      background: var(--teal);
+    }
+
+    .main {
+      padding: 22px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 3.4vw, 48px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    h2, h3 {
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    h2 { font-size: 16px; }
+    h3 { font-size: 14px; }
+
+    .subtle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .actions,
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .actions { justify-content: end; }
+    .row.end { justify-content: end; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(140px, 1fr));
+      gap: var(--gap, 14px);
+    }
+
+    .metric {
+      min-height: 96px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.82);
+      display: grid;
+      gap: 7px;
+      box-shadow: 0 10px 24px rgba(32, 35, 40, 0.07);
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .meter {
+      height: 8px;
+      background: #e8e1d4;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .meter > i {
+      display: block;
+      width: var(--value, 0%);
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--green));
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 14px 32px rgba(31, 34, 39, 0.08);
+      overflow: hidden;
+    }
+
+    .panel > header {
+      min-height: 58px;
+      padding: 13px 15px;
+      background: rgba(255, 253, 246, 0.72);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel-body {
+      padding: var(--pad, 16px);
+      display: grid;
+      gap: var(--gap, 14px);
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+      display: grid;
+      gap: 12px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .tabs,
+    .segmented {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tabs button,
+    .segmented button {
+      min-height: 30px;
+      padding: 5px 9px;
+      font-size: 12px;
+      background: #fbfaf5;
+    }
+
+    .tabs button.active,
+    .segmented button.active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: var(--panel);
+      color: #444b55;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .pill.teal { background: var(--mint); color: #064f4b; border-color: #b5d9d2; }
+    .pill.blue { background: var(--blue-soft); color: #223f73; border-color: #b9caeb; }
+    .pill.gold { background: var(--gold-soft); color: #604600; border-color: #dcc47a; }
+    .pill.green { background: var(--green-soft); color: #2a5924; border-color: #bad5ae; }
+    .pill.red { background: var(--red-soft); color: #84231e; border-color: #e2aaa4; }
+    .pill.purple { background: var(--purple-soft); color: #463265; border-color: #cabce3; }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fffef9;
+      padding: 11px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .item-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .item-title {
+      font-weight: 900;
+      word-break: break-word;
+    }
+
+    .item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .codebox {
+      min-height: 126px;
+      max-height: 430px;
+      overflow: auto;
+      margin: 0;
+      border: 1px solid #c9c0b0;
+      border-radius: var(--radius);
+      background: #1e2127;
+      color: #f6efe4;
+      padding: 12px;
+      font: 13px/1.5 var(--mono);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .split-code {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .file-list {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .file-list button {
+      justify-content: start;
+      min-height: 38px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .file-list button.active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .preview-wrap {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #d9d5cc;
+      padding: 10px;
+      display: grid;
+      place-items: center;
+      overflow: auto;
+      min-height: 460px;
+    }
+
+    .preview-frame {
+      width: min(100%, var(--preview-width, 1120px));
+      height: 720px;
+      border: 0;
+      border-radius: 6px;
+      background: white;
+      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.18);
+    }
+
+    .canvas {
+      min-height: 280px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(90deg, rgba(8, 117, 111, 0.09) 0 1px, transparent 1px 100%),
+        linear-gradient(0deg, rgba(53, 95, 158, 0.08) 0 1px, transparent 1px 100%),
+        #fffef9;
+      background-size: 24px 24px;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .wire {
+      border: 2px solid var(--ink);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.74);
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .wire.hero { min-height: 120px; grid-template-columns: 1fr 0.55fr; }
+    .wire.sidebar { grid-template-columns: 180px 1fr; min-height: 190px; }
+    .wire.dashboard { grid-template-columns: repeat(3, 1fr); min-height: 170px; }
+    .wire.form { max-width: 640px; min-height: 220px; margin: 0 auto; }
+
+    .wire-block {
+      border: 1px dashed #8c877c;
+      border-radius: 6px;
+      background: rgba(255, 253, 246, 0.92);
+      min-height: 54px;
+      padding: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .swatch {
+      min-height: 64px;
+      border: 1px solid rgba(0, 0, 0, 0.16);
+      border-radius: 7px;
+      padding: 7px;
+      color: #fff;
+      display: grid;
+      align-content: end;
+      font: 11px/1.2 var(--mono);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    }
+
+    .checklist {
+      display: grid;
+      gap: 8px;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fffef9;
+    }
+
+    .check input {
+      width: 18px;
+      height: 18px;
+      padding: 0;
+    }
+
+    .empty {
+      border: 1px dashed #b9b1a2;
+      border-radius: var(--radius);
+      padding: 18px;
+      background: rgba(255, 253, 246, 0.65);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .mini {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 30;
+      max-width: min(430px, calc(100vw - 28px));
+      background: var(--ink);
+      color: #fff;
+      padding: 11px 13px;
+      border-radius: 7px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 25;
+      background: rgba(24, 26, 31, 0.45);
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+
+    .modal {
+      width: min(780px, 100%);
+      max-height: calc(100vh - 36px);
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1240px) {
+      .workspace { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(3, minmax(140px, 1fr)); }
+    }
+
+    @media (max-width: 820px) {
+      .app { grid-template-columns: 1fr; }
+      .rail {
+        position: static;
+        height: auto;
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: auto;
+        align-items: center;
+        padding: 10px;
+      }
+      .nav {
+        display: flex;
+        overflow-x: auto;
+      }
+      .nav button.active::before {
+        left: 14px;
+        bottom: -5px;
+        width: 28px;
+        height: 4px;
+      }
+      .main { padding: 14px; }
+      .topbar { grid-template-columns: 1fr; }
+      .actions { justify-content: start; }
+      .metrics, .grid-2, .grid-3, .grid-4, .split-code { grid-template-columns: 1fr; }
+      .wire.hero, .wire.sidebar, .wire.dashboard { grid-template-columns: 1fr; }
+      .preview-frame { height: 640px; }
+    }
+  </style>
+</head>
+<body data-density="roomy">
+  <div class="app">
+    <aside class="rail">
+      <div class="logo" aria-label="Web App Forge">WF</div>
+      <nav class="nav" aria-label="Forge sections">
+        <button class="active" data-view="brief" title="Brief" aria-label="Brief">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M4 3h16v18H4V3Zm2 2v14h12V5H6Zm2 2h8v2H8V7Zm0 4h8v2H8v-2Zm0 4h5v2H8v-2Z"/></svg>
+        </button>
+        <button data-view="architecture" title="Architecture" aria-label="Architecture">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M4 4h7v7H4V4Zm2 2v3h3V6H6Zm7-2h7v7h-7V4Zm2 2v3h3V6h-3ZM4 13h7v7H4v-7Zm2 2v3h3v-3H6Zm10-3 4 4-4 4-1.4-1.4 1.6-1.6H13v-2h3.2l-1.6-1.6L16 12Z"/></svg>
+        </button>
+        <button data-view="designer" title="Designer" aria-label="Designer">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 4h18v14H3V4Zm2 2v10h14V6H5Zm3 14h8v2H8v-2Z"/></svg>
+        </button>
+        <button data-view="components" title="Components" aria-label="Components">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M5 3h6v8H3V5a2 2 0 0 1 2-2Zm0 2v4h4V5H5Zm8-2h6a2 2 0 0 1 2 2v6h-8V3Zm2 2v4h4V5h-4ZM3 13h8v8H5a2 2 0 0 1-2-2v-6Zm2 2v4h4v-4H5Zm8-2h8v6a2 2 0 0 1-2 2h-6v-8Zm2 2v4h4v-4h-4Z"/></svg>
+        </button>
+        <button data-view="generator" title="Generator" aria-label="Generator">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="m8 7 5 5-5 5-1.4-1.4 3.6-3.6-3.6-3.6L8 7Zm6 10h6v2h-6v-2ZM4 3h16v2H4V3Zm0 16h6v2H4v-2Z"/></svg>
+        </button>
+        <button data-view="qa" title="QA" aria-label="QA">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2 4 5v6c0 5.1 3.4 9.9 8 11 4.6-1.1 8-5.9 8-11V5l-8-3Zm0 2.1 6 2.3V11c0 4-2.5 7.7-6 8.8C8.5 18.7 6 15 6 11V6.4l6-2.3Zm3.3 5.2L11 13.6l-2.3-2.3-1.4 1.4L11 16.4l5.7-5.7-1.4-1.4Z"/></svg>
+        </button>
+        <button data-view="handoff" title="Handoff" aria-label="Handoff">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M4 4h16v12H7l-3 3V4Zm2 2v8.2l.2-.2H18V6H6Zm3 3h6v2H9V9Zm0 3h8v2H9v-2Z"/></svg>
+        </button>
+      </nav>
+      <button id="contrastBtn" class="icon" title="Toggle contrast" aria-label="Toggle contrast">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20V2Zm0 2v16a8 8 0 0 1 0-16Z"/></svg>
+      </button>
+    </aside>
+
+    <main class="main">
+      <section class="topbar">
+        <div>
+          <h1>Web App Forge</h1>
+          <p class="subtle" id="dateLine"></p>
+        </div>
+        <div class="actions">
+          <button id="copyProjectBtn" class="accent">Copy project</button>
+          <button id="downloadFileBtn">Download file</button>
+          <button id="exportStateBtn">Export state</button>
+          <button id="importStateBtn">Import</button>
+          <button id="resetDemoBtn" class="danger">Reset demo</button>
+        </div>
+      </section>
+
+      <section class="metrics" aria-label="Project metrics">
+        <div class="metric">
+          <span>Readiness</span>
+          <strong id="readinessMetric">0%</strong>
+          <div class="meter"><i id="readinessMeter"></i></div>
+        </div>
+        <div class="metric">
+          <span>Generated files</span>
+          <strong id="filesMetric">0</strong>
+          <p class="mini">HTML, CSS, JS, tests, docs.</p>
+        </div>
+        <div class="metric">
+          <span>Components</span>
+          <strong id="componentsMetric">0</strong>
+          <p class="mini">Reusable UI blocks.</p>
+        </div>
+        <div class="metric">
+          <span>Risk</span>
+          <strong id="riskMetric">0</strong>
+          <div class="meter"><i id="riskMeter"></i></div>
+        </div>
+        <div class="metric">
+          <span>Scope size</span>
+          <strong id="scopeMetric">0</strong>
+          <p class="mini">Screens plus features.</p>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <div class="stack">
+          <section class="panel view" data-panel="brief">
+            <header>
+              <h2>Product Brief</h2>
+              <div class="row end">
+                <button id="quickSaasBtn" class="tiny">SaaS</button>
+                <button id="quickToolBtn" class="tiny">Tool</button>
+                <button id="quickDashboardBtn" class="tiny">Dashboard</button>
+              </div>
+            </header>
+            <div class="panel-body">
+              <div class="grid-3">
+                <label>App name
+                  <input id="appNameInput">
+                </label>
+                <label>Audience
+                  <input id="audienceInput">
+                </label>
+                <label>Primary outcome
+                  <input id="outcomeInput">
+                </label>
+              </div>
+              <div class="grid-2">
+                <label>Core workflow
+                  <textarea id="workflowInput"></textarea>
+                </label>
+                <label>Non-negotiables
+                  <textarea id="constraintsInput"></textarea>
+                </label>
+              </div>
+              <div class="grid-4">
+                <label>Visual tone
+                  <select id="toneInput">
+                    <option>quiet professional</option>
+                    <option>technical dense</option>
+                    <option>editorial premium</option>
+                    <option>playful utility</option>
+                    <option>clinical minimal</option>
+                  </select>
+                </label>
+                <label>Data source
+                  <select id="dataInput">
+                    <option>localStorage</option>
+                    <option>static JSON</option>
+                    <option>REST API</option>
+                    <option>GraphQL</option>
+                    <option>mocked first</option>
+                  </select>
+                </label>
+                <label>Framework
+                  <select id="frameworkInput">
+                    <option>vanilla</option>
+                    <option>react</option>
+                    <option>next</option>
+                    <option>vue</option>
+                    <option>svelte</option>
+                  </select>
+                </label>
+                <label>Ship target
+                  <select id="shipInput">
+                    <option>single HTML</option>
+                    <option>static site</option>
+                    <option>SPA</option>
+                    <option>full stack</option>
+                  </select>
+                </label>
+              </div>
+              <div class="grid-2">
+                <div>
+                  <div class="row">
+                    <input id="featureInput" placeholder="Add feature">
+                    <button id="addFeatureBtn" class="primary">Add</button>
+                  </div>
+                  <div class="list" id="featureList"></div>
+                </div>
+                <div>
+                  <div class="row">
+                    <input id="screenInput" placeholder="Add screen">
+                    <button id="addScreenBtn" class="primary">Add</button>
+                  </div>
+                  <div class="list" id="screenList"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel view hidden" data-panel="architecture">
+            <header>
+              <h2>Architecture Planner</h2>
+              <button id="addEntityBtn" class="tiny">Add entity</button>
+            </header>
+            <div class="panel-body">
+              <div class="grid-3">
+                <label>Entity name
+                  <input id="entityNameInput" placeholder="Project">
+                </label>
+                <label>Fields
+                  <input id="entityFieldsInput" placeholder="id, title, status, createdAt">
+                </label>
+                <label>Persistence
+                  <select id="entityPersistenceInput">
+                    <option>localStorage</option>
+                    <option>IndexedDB</option>
+                    <option>server API</option>
+                    <option>static JSON</option>
+                  </select>
+                </label>
+              </div>
+              <div class="list" id="entityList"></div>
+              <div class="grid-2">
+                <div class="panel">
+                  <header><h3>State Flow</h3></header>
+                  <div class="panel-body">
+                    <pre class="codebox" id="stateFlowOutput"></pre>
+                  </div>
+                </div>
+                <div class="panel">
+                  <header><h3>Route Map</h3></header>
+                  <div class="panel-body">
+                    <pre class="codebox" id="routeMapOutput"></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel view hidden" data-panel="designer">
+            <header>
+              <h2>Interface Designer</h2>
+              <div class="segmented" id="layoutTabs"></div>
+            </header>
+            <div class="panel-body">
+              <div class="grid-4">
+                <label>Accent
+                  <input id="accentInput" type="color">
+                </label>
+                <label>Surface
+                  <input id="surfaceInput" type="color">
+                </label>
+                <label>Radius
+                  <select id="radiusInput">
+                    <option value="4">4px</option>
+                    <option value="6">6px</option>
+                    <option value="8">8px</option>
+                  </select>
+                </label>
+                <label>Density
+                  <select id="densityInput">
+                    <option>compact</option>
+                    <option>roomy</option>
+                  </select>
+                </label>
+              </div>
+              <div class="palette" id="paletteOutput"></div>
+              <div class="canvas" id="wireframeOutput"></div>
+            </div>
+          </section>
+
+          <section class="panel view hidden" data-panel="components">
+            <header>
+              <h2>Component Factory</h2>
+              <button id="addComponentBtn" class="tiny">Add component</button>
+            </header>
+            <div class="panel-body">
+              <div class="grid-4">
+                <label>Name
+                  <input id="componentNameInput" placeholder="StatusCard">
+                </label>
+                <label>Type
+                  <select id="componentTypeInput">
+                    <option>card</option>
+                    <option>table</option>
+                    <option>form</option>
+                    <option>toolbar</option>
+                    <option>modal</option>
+                    <option>timeline</option>
+                  </select>
+                </label>
+                <label>Props
+                  <input id="componentPropsInput" placeholder="title, value, trend">
+                </label>
+                <label>State
+                  <select id="componentStateInput">
+                    <option>static</option>
+                    <option>interactive</option>
+                    <option>loading</option>
+                    <option>empty/error</option>
+                  </select>
+                </label>
+              </div>
+              <label>Behavior
+                <input id="componentBehaviorInput" placeholder="Filters rows and emits selected item">
+              </label>
+              <div class="list" id="componentList"></div>
+            </div>
+          </section>
+
+          <section class="panel view hidden" data-panel="generator">
+            <header>
+              <h2>Code Generator</h2>
+              <div class="tabs" id="fileTabs"></div>
+            </header>
+            <div class="panel-body">
+              <div class="grid-3">
+                <label>Preview size
+                  <select id="previewSizeInput">
+                    <option value="1120">Desktop</option>
+                    <option value="820">Tablet</option>
+                    <option value="390">Mobile</option>
+                  </select>
+                </label>
+                <label>Code style
+                  <select id="codeStyleInput">
+                    <option>plain</option>
+                    <option>commented</option>
+                    <option>terse</option>
+                  </select>
+                </label>
+                <label>Test depth
+                  <select id="testDepthInput">
+                    <option>smoke</option>
+                    <option>interaction</option>
+                    <option>accessibility</option>
+                  </select>
+                </label>
+              </div>
+              <div class="split-code">
+                <div class="file-list" id="fileList"></div>
+                <div>
+                  <div class="row end">
+                    <button id="copyFileBtn" class="tiny">Copy file</button>
+                    <button id="refreshPreviewBtn" class="tiny">Refresh preview</button>
+                  </div>
+                  <pre class="codebox" id="codeOutput"></pre>
+                </div>
+              </div>
+              <div class="preview-wrap">
+                <iframe id="previewFrame" class="preview-frame" title="Generated app preview"></iframe>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel view hidden" data-panel="qa">
+            <header>
+              <h2>QA Gate</h2>
+              <button id="markCoreQaBtn" class="tiny">Mark core pass</button>
+            </header>
+            <div class="panel-body">
+              <div class="checklist" id="qaList"></div>
+              <div class="grid-2">
+                <label>Risk notes
+                  <textarea id="riskNotesInput"></textarea>
+                </label>
+                <label>Verification commands
+                  <textarea id="verifyCommandsInput"></textarea>
+                </label>
+              </div>
+              <pre class="codebox" id="qaReportOutput"></pre>
+            </div>
+          </section>
+
+          <section class="panel view hidden" data-panel="handoff">
+            <header>
+              <h2>Agent Handoff</h2>
+              <div class="row end">
+                <button id="copyPromptBtn" class="tiny">Copy prompt</button>
+                <button id="copyReadmeBtn" class="tiny">Copy README</button>
+              </div>
+            </header>
+            <div class="panel-body">
+              <div class="grid-2">
+                <label>Next task
+                  <textarea id="nextTaskInput"></textarea>
+                </label>
+                <label>Known blockers
+                  <textarea id="blockersInput"></textarea>
+                </label>
+              </div>
+              <pre class="codebox" id="handoffOutput"></pre>
+            </div>
+          </section>
+        </div>
+
+        <aside class="stack">
+          <section class="panel">
+            <header>
+              <h2>Build Console</h2>
+              <button id="copyConsoleBtn" class="tiny">Copy</button>
+            </header>
+            <div class="panel-body">
+              <pre class="codebox" id="consoleOutput"></pre>
+            </div>
+          </section>
+
+          <section class="panel">
+            <header>
+              <h2>Snippet Library</h2>
+              <button id="addSnippetBtn" class="tiny">Add</button>
+            </header>
+            <div class="panel-body">
+              <div class="grid-2">
+                <label>Title
+                  <input id="snippetTitleInput">
+                </label>
+                <label>Tag
+                  <input id="snippetTagInput">
+                </label>
+              </div>
+              <label>Body
+                <textarea id="snippetBodyInput"></textarea>
+              </label>
+              <input id="snippetSearchInput" placeholder="Search snippets">
+              <div class="list" id="snippetList"></div>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <div id="importModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-label="Import project state">
+    <div class="modal">
+      <h2>Import State</h2>
+      <label>Paste exported JSON
+        <textarea id="importTextInput"></textarea>
+      </label>
+      <div class="row end">
+        <button id="cancelImportBtn">Cancel</button>
+        <button id="applyImportBtn" class="primary">Import</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY = "web-app-forge:v1";
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+
+    const defaultState = {
+      activeView: "brief",
+      selectedFile: "index.html",
+      previewWidth: 1120,
+      density: "roomy",
+      highContrast: false,
+      brief: {
+        appName: "LaunchDesk",
+        audience: "solo builders and small product teams",
+        outcome: "turn a rough web app idea into a verified working interface",
+        workflow: "Define the product, choose the architecture, compose screens, generate starter files, run QA gates, then hand off the next implementation step.",
+        constraints: "Local first. Fast to scan. Keyboard friendly. No backend required for the first working version.",
+        tone: "quiet professional",
+        data: "localStorage",
+        framework: "vanilla",
+        ship: "single HTML"
+      },
+      features: [
+        { id: id(), title: "Project brief builder", priority: 5, status: "must" },
+        { id: id(), title: "Responsive preview", priority: 5, status: "must" },
+        { id: id(), title: "Generated starter code", priority: 5, status: "must" },
+        { id: id(), title: "QA and handoff report", priority: 4, status: "should" }
+      ],
+      screens: [
+        { id: id(), name: "Dashboard", layout: "dashboard" },
+        { id: id(), name: "Builder", layout: "sidebar" },
+        { id: id(), name: "Settings", layout: "form" }
+      ],
+      architecture: {
+        entities: [
+          { id: id(), name: "Project", fields: "id, name, audience, outcome, createdAt", persistence: "localStorage" },
+          { id: id(), name: "Screen", fields: "id, name, layout, components", persistence: "localStorage" },
+          { id: id(), name: "Component", fields: "id, name, type, props, state", persistence: "localStorage" }
+        ]
+      },
+      design: {
+        layout: "dashboard",
+        accent: "#08756f",
+        surface: "#fffdf6",
+        radius: 8
+      },
+      components: [
+        { id: id(), name: "MetricCard", type: "card", props: "label, value, trend", state: "static", behavior: "Shows one scannable KPI and visual progress." },
+        { id: id(), name: "CommandBar", type: "toolbar", props: "actions, activeAction", state: "interactive", behavior: "Groups primary commands and exposes keyboard-friendly buttons." },
+        { id: id(), name: "DataTable", type: "table", props: "columns, rows, selectedId", state: "empty/error", behavior: "Filters, selects, and displays empty states." }
+      ],
+      generator: {
+        codeStyle: "plain",
+        testDepth: "smoke"
+      },
+      qa: {
+        checks: {
+          brief: true,
+          responsive: false,
+          keyboard: false,
+          contrast: false,
+          empty: true,
+          persistence: true,
+          tests: false,
+          handoff: false
+        },
+        riskNotes: "Preview generated code in a browser and verify the core workflow before real deployment.",
+        verifyCommands: "node -c app.js\nnpx playwright test\nnpx html-validate index.html"
+      },
+      handoff: {
+        nextTask: "Implement the highest-priority generated screen, wire persistence, and run the QA gate.",
+        blockers: "External APIs, auth, deployment target, and real data schemas are not connected yet."
+      },
+      snippets: [
+        { id: id(), title: "UX Acceptance Criteria", tag: "planning", body: "The user can complete the primary workflow without reading instructions. Empty, loading, error, and success states are visible. Mobile and desktop layouts preserve the same task path." },
+        { id: id(), title: "Frontend Review Prompt", tag: "review", body: "Review this web app for behavioral bugs, accessibility gaps, responsive layout issues, missing empty states, and weak test coverage. Prioritize findings by user impact." },
+        { id: id(), title: "Local Storage Adapter", tag: "code", body: "const store = { get: (key, fallback) => JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)), set: (key, value) => localStorage.setItem(key, JSON.stringify(value)) };" }
+      ]
+    };
+
+    const layoutNames = ["dashboard", "sidebar", "hero", "form"];
+    const qaLabels = {
+      brief: "Brief has audience, outcome, constraints, and workflow",
+      responsive: "Desktop, tablet, and mobile preview checked",
+      keyboard: "Controls are reachable and visible with keyboard focus",
+      contrast: "Text and controls hold readable contrast",
+      empty: "Empty and error states are represented",
+      persistence: "State storage and recovery path are defined",
+      tests: "Build, smoke, or interaction tests are listed",
+      handoff: "Next task and blockers are clear"
+    };
+
+    let state = load();
+    let generated = {};
+
+    function id() {
+      return Math.random().toString(36).slice(2, 10);
+    }
+
+    function clone(value) {
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? merge(clone(defaultState), JSON.parse(raw)) : clone(defaultState);
+      } catch {
+        return clone(defaultState);
+      }
+    }
+
+    function merge(base, incoming) {
+      for (const key of Object.keys(incoming || {})) {
+        if (incoming[key] && typeof incoming[key] === "object" && !Array.isArray(incoming[key])) {
+          base[key] = merge(base[key] || {}, incoming[key]);
+        } else {
+          base[key] = incoming[key];
+        }
+      }
+      return base;
+    }
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function esc(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function slug(value) {
+      return String(value || "app").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "app";
+    }
+
+    function render() {
+      generated = generateFiles();
+      document.body.dataset.density = state.density;
+      document.body.dataset.contrast = state.highContrast ? "high" : "normal";
+      renderDate();
+      renderNav();
+      renderMetrics();
+      renderBrief();
+      renderArchitecture();
+      renderDesigner();
+      renderComponents();
+      renderGenerator();
+      renderQa();
+      renderHandoff();
+      renderConsole();
+      renderSnippets();
+      save();
+    }
+
+    function renderDate() {
+      $("#dateLine").textContent = new Intl.DateTimeFormat(undefined, {
+        weekday: "long",
+        month: "short",
+        day: "numeric"
+      }).format(new Date());
+    }
+
+    function renderNav() {
+      $$(".nav button[data-view]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.view === state.activeView);
+      });
+      $$(".view").forEach((panel) => {
+        panel.classList.toggle("hidden", panel.dataset.panel !== state.activeView);
+      });
+    }
+
+    function renderMetrics() {
+      const ready = readiness();
+      const risk = riskScore();
+      $("#readinessMetric").textContent = ready + "%";
+      $("#readinessMeter").style.setProperty("--value", ready + "%");
+      $("#filesMetric").textContent = Object.keys(generated).length;
+      $("#componentsMetric").textContent = state.components.length;
+      $("#riskMetric").textContent = risk;
+      $("#riskMeter").style.setProperty("--value", Math.min(100, risk * 10) + "%");
+      $("#scopeMetric").textContent = state.screens.length + state.features.length;
+    }
+
+    function renderBrief() {
+      $("#appNameInput").value = state.brief.appName;
+      $("#audienceInput").value = state.brief.audience;
+      $("#outcomeInput").value = state.brief.outcome;
+      $("#workflowInput").value = state.brief.workflow;
+      $("#constraintsInput").value = state.brief.constraints;
+      $("#toneInput").value = state.brief.tone;
+      $("#dataInput").value = state.brief.data;
+      $("#frameworkInput").value = state.brief.framework;
+      $("#shipInput").value = state.brief.ship;
+
+      $("#featureList").innerHTML = state.features.length ? state.features.map((feature) => `
+        <article class="item">
+          <div class="item-top">
+            <div>
+              <div class="item-title">${esc(feature.title)}</div>
+              <div class="item-meta">
+                <span class="pill ${feature.status === "must" ? "red" : feature.status === "should" ? "gold" : "blue"}">${esc(feature.status)}</span>
+                <span class="pill teal">priority ${feature.priority}</span>
+              </div>
+            </div>
+            <button class="tiny danger" data-remove-feature="${feature.id}">Remove</button>
+          </div>
+        </article>
+      `).join("") : '<div class="empty">No features yet.</div>';
+
+      $("#screenList").innerHTML = state.screens.length ? state.screens.map((screen) => `
+        <article class="item">
+          <div class="item-top">
+            <div>
+              <div class="item-title">${esc(screen.name)}</div>
+              <div class="item-meta"><span class="pill purple">${esc(screen.layout)}</span></div>
+            </div>
+            <button class="tiny danger" data-remove-screen="${screen.id}">Remove</button>
+          </div>
+        </article>
+      `).join("") : '<div class="empty">No screens yet.</div>';
+    }
+
+    function renderArchitecture() {
+      $("#entityList").innerHTML = state.architecture.entities.map((entity) => `
+        <article class="item">
+          <div class="item-top">
+            <div>
+              <div class="item-title">${esc(entity.name)}</div>
+              <p class="subtle">${esc(entity.fields)}</p>
+              <div class="item-meta"><span class="pill teal">${esc(entity.persistence)}</span></div>
+            </div>
+            <button class="tiny danger" data-remove-entity="${entity.id}">Remove</button>
+          </div>
+        </article>
+      `).join("");
+      $("#stateFlowOutput").textContent = stateFlow();
+      $("#routeMapOutput").textContent = routeMap();
+    }
+
+    function renderDesigner() {
+      $("#layoutTabs").innerHTML = layoutNames.map((name) => `<button data-layout="${name}" class="${state.design.layout === name ? "active" : ""}">${name}</button>`).join("");
+      $("#accentInput").value = state.design.accent;
+      $("#surfaceInput").value = state.design.surface;
+      $("#radiusInput").value = String(state.design.radius);
+      $("#densityInput").value = state.density;
+      $("#paletteOutput").innerHTML = palette().map((color) => `<div class="swatch" style="background:${color}">${color}</div>`).join("");
+      $("#wireframeOutput").innerHTML = wireframeMarkup(state.design.layout);
+    }
+
+    function renderComponents() {
+      $("#componentList").innerHTML = state.components.length ? state.components.map((component) => `
+        <article class="item">
+          <div class="item-top">
+            <div>
+              <div class="item-title">${esc(component.name)}</div>
+              <p class="subtle">${esc(component.behavior)}</p>
+              <div class="item-meta">
+                <span class="pill blue">${esc(component.type)}</span>
+                <span class="pill purple">${esc(component.state)}</span>
+                <span class="pill">${esc(component.props)}</span>
+              </div>
+            </div>
+            <div class="row end">
+              <button class="tiny" data-copy-component="${component.id}">Copy</button>
+              <button class="tiny danger" data-remove-component="${component.id}">Remove</button>
+            </div>
+          </div>
+        </article>
+      `).join("") : '<div class="empty">No components yet.</div>';
+    }
+
+    function renderGenerator() {
+      $("#previewSizeInput").value = String(state.previewWidth);
+      $("#codeStyleInput").value = state.generator.codeStyle;
+      $("#testDepthInput").value = state.generator.testDepth;
+      const files = Object.keys(generated);
+      if (!generated[state.selectedFile]) state.selectedFile = files[0];
+      $("#fileTabs").innerHTML = files.map((file) => `<button data-file-tab="${esc(file)}" class="${file === state.selectedFile ? "active" : ""}">${esc(file)}</button>`).join("");
+      $("#fileList").innerHTML = files.map((file) => `<button data-file="${esc(file)}" class="${file === state.selectedFile ? "active" : ""}">${esc(file)}</button>`).join("");
+      $("#codeOutput").textContent = generated[state.selectedFile] || "";
+      $(".preview-frame").style.setProperty("--preview-width", state.previewWidth + "px");
+      refreshPreview();
+    }
+
+    function renderQa() {
+      $("#qaList").innerHTML = Object.entries(qaLabels).map(([key, label]) => `
+        <label class="check">
+          <input type="checkbox" data-qa="${key}" ${state.qa.checks[key] ? "checked" : ""}>
+          <strong>${esc(label)}</strong>
+          <span class="pill ${state.qa.checks[key] ? "green" : "red"}">${state.qa.checks[key] ? "pass" : "open"}</span>
+        </label>
+      `).join("");
+      $("#riskNotesInput").value = state.qa.riskNotes;
+      $("#verifyCommandsInput").value = state.qa.verifyCommands;
+      $("#qaReportOutput").textContent = qaReport();
+    }
+
+    function renderHandoff() {
+      $("#nextTaskInput").value = state.handoff.nextTask;
+      $("#blockersInput").value = state.handoff.blockers;
+      $("#handoffOutput").textContent = handoffPrompt();
+    }
+
+    function renderConsole() {
+      $("#consoleOutput").textContent = [
+        `Project: ${state.brief.appName}`,
+        `Framework: ${state.brief.framework}`,
+        `Ship target: ${state.brief.ship}`,
+        `Files: ${Object.keys(generated).join(", ")}`,
+        `Readiness: ${readiness()}%`,
+        `Highest priority: ${topFeatures().map((feature) => feature.title).join("; ") || "none"}`,
+        "",
+        "Suggested commands:",
+        state.qa.verifyCommands
+      ].join("\n");
+    }
+
+    function renderSnippets() {
+      const search = $("#snippetSearchInput").value.trim().toLowerCase();
+      const snippets = state.snippets.filter((snippet) => {
+        const haystack = `${snippet.title} ${snippet.tag} ${snippet.body}`.toLowerCase();
+        return !search || haystack.includes(search);
+      });
+      $("#snippetList").innerHTML = snippets.length ? snippets.map((snippet) => `
+        <article class="item">
+          <div class="item-top">
+            <div>
+              <div class="item-title">${esc(snippet.title)}</div>
+              <div class="item-meta"><span class="pill blue">${esc(snippet.tag)}</span></div>
+            </div>
+            <div class="row end">
+              <button class="tiny" data-copy-snippet="${snippet.id}">Copy</button>
+              <button class="tiny danger" data-remove-snippet="${snippet.id}">Remove</button>
+            </div>
+          </div>
+          <pre class="codebox">${esc(snippet.body)}</pre>
+        </article>
+      `).join("") : '<div class="empty">No snippets found.</div>';
+    }
+
+    function readiness() {
+      const values = Object.values(state.qa.checks);
+      const qa = values.filter(Boolean).length / values.length;
+      const brief = [state.brief.appName, state.brief.audience, state.brief.outcome, state.brief.workflow].filter(Boolean).length / 4;
+      const architecture = Math.min(1, state.architecture.entities.length / 3);
+      const screens = Math.min(1, state.screens.length / 3);
+      return Math.round((qa * 0.45 + brief * 0.2 + architecture * 0.15 + screens * 0.2) * 100);
+    }
+
+    function riskScore() {
+      let score = 2;
+      if (state.brief.data === "REST API" || state.brief.data === "GraphQL") score += 2;
+      if (state.brief.ship === "full stack") score += 2;
+      if (state.features.length > 8) score += 1;
+      if (!state.qa.checks.tests) score += 2;
+      if (!state.qa.checks.responsive) score += 1;
+      return Math.min(10, score);
+    }
+
+    function topFeatures() {
+      return state.features.slice().sort((a, b) => b.priority - a.priority).slice(0, 4);
+    }
+
+    function palette() {
+      return [state.design.accent, "#181a1f", state.design.surface, "#355f9e", "#98720e"];
+    }
+
+    function stateFlow() {
+      return state.architecture.entities.map((entity) => {
+        return `${entity.name}: input -> validate -> update store (${entity.persistence}) -> render subscribers`;
+      }).join("\n");
+    }
+
+    function routeMap() {
+      return state.screens.map((screen) => {
+        return `/${slug(screen.name)} -> ${screen.name} (${screen.layout})`;
+      }).join("\n");
+    }
+
+    function wireframeMarkup(layout) {
+      if (layout === "hero") {
+        return '<div class="wire hero"><div class="wire-block">Headline, value prop, primary action</div><div class="wire-block">Product visual</div></div><div class="wire dashboard"><div class="wire-block">Proof</div><div class="wire-block">Feature</div><div class="wire-block">Outcome</div></div>';
+      }
+      if (layout === "sidebar") {
+        return '<div class="wire sidebar"><div class="wire-block">Navigation</div><div class="wire-block">Workspace with toolbar, list, and details</div></div>';
+      }
+      if (layout === "form") {
+        return '<div class="wire form"><div class="wire-block">Form title</div><div class="wire-block">Field group</div><div class="wire-block">Validation and actions</div></div>';
+      }
+      return '<div class="wire dashboard"><div class="wire-block">Metric</div><div class="wire-block">Metric</div><div class="wire-block">Metric</div></div><div class="wire sidebar"><div class="wire-block">Filters</div><div class="wire-block">Data view and selected details</div></div>';
+    }
+
+    function componentCode(component) {
+      const props = component.props.split(",").map((item) => item.trim()).filter(Boolean);
+      const params = props.length ? `{ ${props.join(", ")} }` : "props";
+      if (state.brief.framework === "react" || state.brief.framework === "next") {
+        return `function ${component.name}(${params}) {\n  return (\n    <section className="component ${component.type}">\n      <header>${component.name}</header>\n      <p>${component.behavior}</p>\n    </section>\n  );\n}`;
+      }
+      return `function render${component.name}(${params}) {\n  return html\`\n    <section class="component ${component.type}">\n      <header>${component.name}</header>\n      <p>${component.behavior}</p>\n    </section>\n  \`;\n}`;
+    }
+
+    function generatedHtml() {
+      const appName = esc(state.brief.appName);
+      const featureItems = topFeatures().map((feature) => `<li><strong>${esc(feature.title)}</strong><span>${esc(feature.status)} priority ${feature.priority}</span></li>`).join("");
+      const screenCards = state.screens.map((screen) => `<article><h3>${esc(screen.name)}</h3><p>${esc(screen.layout)} layout</p></article>`).join("");
+      const componentCards = state.components.map((component) => `<article><h3>${esc(component.name)}</h3><p>${esc(component.behavior)}</p></article>`).join("");
+      return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${appName}</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="shell hero">
+    <nav>
+      <strong>${appName}</strong>
+      <div>
+        <a href="#screens">Screens</a>
+        <a href="#components">Components</a>
+        <a href="#qa">QA</a>
+      </div>
+    </nav>
+    <section>
+      <div>
+        <p class="eyebrow">${esc(state.brief.audience)}</p>
+        <h1>${esc(state.brief.outcome)}</h1>
+        <p>${esc(state.brief.workflow)}</p>
+        <button>Start workflow</button>
+      </div>
+      <div class="preview-card">
+        <span>Readiness</span>
+        <strong>${readiness()}%</strong>
+        <p>${esc(state.brief.tone)} interface</p>
+      </div>
+    </section>
+  </header>
+  <main class="shell">
+    <section class="grid">
+      ${featureItems}
+    </section>
+    <section id="screens">
+      <h2>Screens</h2>
+      <div class="cards">${screenCards}</div>
+    </section>
+    <section id="components">
+      <h2>Components</h2>
+      <div class="cards">${componentCards}</div>
+    </section>
+    <section id="qa">
+      <h2>Quality Gate</h2>
+      <p>${esc(state.qa.riskNotes)}</p>
+    </section>
+  </main>
+  <script src="app.js"><\/script>
+</body>
+</html>`;
+    }
+
+    function generatedCss() {
+      return `:root {
+  color-scheme: light;
+  --ink: #181a1f;
+  --muted: #64707d;
+  --line: #d8d1c3;
+  --accent: ${state.design.accent};
+  --surface: ${state.design.surface};
+  --panel: #ffffff;
+  --radius: ${state.design.radius}px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--surface); color: var(--ink); line-height: 1.5; }
+a { color: inherit; text-decoration: none; }
+button { border: 0; border-radius: var(--radius); background: var(--accent); color: #fff; min-height: 42px; padding: 0 16px; font-weight: 800; cursor: pointer; }
+.shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+.hero { min-height: 76vh; display: grid; align-content: start; gap: 48px; padding: 20px 0 48px; }
+nav { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+nav div { display: flex; gap: 18px; flex-wrap: wrap; color: var(--muted); }
+.hero section { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 0.45fr); gap: 28px; align-items: center; }
+h1 { font-size: clamp(36px, 6vw, 76px); line-height: 0.96; margin: 0 0 18px; letter-spacing: 0; }
+h2 { margin-top: 48px; }
+.eyebrow { color: var(--accent); font-weight: 900; text-transform: uppercase; font-size: 12px; }
+.preview-card, .cards article, .grid li { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 18px; box-shadow: 0 14px 34px rgba(24, 26, 31, 0.08); }
+.preview-card strong { display: block; font-size: 64px; line-height: 1; }
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 24px 0; list-style: none; }
+.grid li { display: grid; gap: 8px; }
+.grid span, .cards p, main section > p { color: var(--muted); }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 820px) {
+  .hero section, .grid, .cards { grid-template-columns: 1fr; }
+  nav { align-items: flex-start; flex-direction: column; }
+}`;
+    }
+
+    function generatedJs() {
+      const stateObject = {
+        appName: state.brief.appName,
+        features: state.features,
+        screens: state.screens,
+        qa: state.qa.checks
+      };
+      return `const appState = ${JSON.stringify(stateObject, null, 2)};
+
+const store = {
+  get(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+    catch { return fallback; }
+  },
+  set(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+};
+
+document.addEventListener("click", (event) => {
+  if (event.target.matches("button")) {
+    store.set("${slug(state.brief.appName)}:lastAction", { at: new Date().toISOString(), label: event.target.textContent.trim() });
+    event.target.textContent = "Workflow started";
+  }
+});
+
+console.log("${state.brief.appName} ready", appState);`;
+    }
+
+    function generatedReadme() {
+      return `# ${state.brief.appName}
+
+Audience: ${state.brief.audience}
+
+Outcome: ${state.brief.outcome}
+
+## Workflow
+${state.brief.workflow}
+
+## Constraints
+${state.brief.constraints}
+
+## Screens
+${state.screens.map((screen) => `- ${screen.name}: ${screen.layout}`).join("\n")}
+
+## Components
+${state.components.map((component) => `- ${component.name}: ${component.behavior}`).join("\n")}
+
+## Verification
+${state.qa.verifyCommands}
+
+## Risks
+${state.qa.riskNotes}`;
+    }
+
+    function generatedTests() {
+      if (state.generator.testDepth === "accessibility") {
+        return `import { test, expect } from "@playwright/test";
+
+test("primary page is keyboard reachable", async ({ page }) => {
+  await page.goto("./index.html");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await page.keyboard.press("Tab");
+  await expect(page.locator(":focus")).toBeVisible();
+});`;
+      }
+      if (state.generator.testDepth === "interaction") {
+        return `import { test, expect } from "@playwright/test";
+
+test("primary action responds", async ({ page }) => {
+  await page.goto("./index.html");
+  await page.getByRole("button", { name: /start workflow/i }).click();
+  await expect(page.getByRole("button")).toContainText("Workflow started");
+});`;
+      }
+      return `import { test, expect } from "@playwright/test";
+
+test("page renders", async ({ page }) => {
+  await page.goto("./index.html");
+  await expect(page).toHaveTitle(/${state.brief.appName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/);
+});`;
+    }
+
+    function generatedManifest() {
+      return JSON.stringify({
+        name: slug(state.brief.appName),
+        framework: state.brief.framework,
+        shipTarget: state.brief.ship,
+        data: state.brief.data,
+        generatedAt: new Date().toISOString(),
+        files: ["index.html", "styles.css", "app.js", "README.md", "tests/app.spec.js", "project.json"]
+      }, null, 2);
+    }
+
+    function generateFiles() {
+      return {
+        "index.html": generatedHtml(),
+        "styles.css": generatedCss(),
+        "app.js": generatedJs(),
+        "README.md": generatedReadme(),
+        "tests/app.spec.js": generatedTests(),
+        "project.json": generatedManifest()
+      };
+    }
+
+    function qaReport() {
+      const open = Object.entries(qaLabels)
+        .filter(([key]) => !state.qa.checks[key])
+        .map(([, label]) => `- ${label}`)
+        .join("\n") || "- none";
+      return `Readiness: ${readiness()}%
+Risk score: ${riskScore()}/10
+
+Open checks:
+${open}
+
+Risk notes:
+${state.qa.riskNotes}
+
+Verification:
+${state.qa.verifyCommands}`;
+    }
+
+    function handoffPrompt() {
+      return `Build or continue this web app.
+
+Project: ${state.brief.appName}
+Audience: ${state.brief.audience}
+Outcome: ${state.brief.outcome}
+Framework: ${state.brief.framework}
+Ship target: ${state.brief.ship}
+Data: ${state.brief.data}
+
+Core workflow:
+${state.brief.workflow}
+
+Constraints:
+${state.brief.constraints}
+
+Top features:
+${topFeatures().map((feature) => `- ${feature.title} (${feature.status}, priority ${feature.priority})`).join("\n")}
+
+Screens:
+${state.screens.map((screen) => `- ${screen.name}: ${screen.layout}`).join("\n")}
+
+Components:
+${state.components.map((component) => `- ${component.name}: ${component.behavior}`).join("\n")}
+
+Next task:
+${state.handoff.nextTask}
+
+Blockers:
+${state.handoff.blockers}
+
+Verification commands:
+${state.qa.verifyCommands}`;
+    }
+
+    function refreshPreview() {
+      const frame = $("#previewFrame");
+      if (!frame) return;
+      const html = generated["index.html"]
+        .replace('<link rel="stylesheet" href="styles.css">', `<style>${generated["styles.css"]}</style>`)
+        .replace('<script src="app.js"><\\/script>', `<script>${generated["app.js"].replaceAll("<\\/script>", "<\\\\/script>")}<\\/script>`);
+      frame.srcdoc = html;
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const area = document.createElement("textarea");
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+      toast("Copied.");
+    }
+
+    function downloadText(filename, text, type = "text/plain") {
+      const blob = new Blob([text], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function toast(message) {
+      const el = $("#toast");
+      el.textContent = message;
+      el.classList.add("show");
+      window.setTimeout(() => el.classList.remove("show"), 1800);
+    }
+
+    function applyPreset(kind) {
+      if (kind === "saas") {
+        state.brief.appName = "OpsPilot";
+        state.brief.audience = "operators managing repeatable business workflows";
+        state.brief.outcome = "spot priority work, resolve blockers, and ship daily improvements";
+        state.brief.tone = "technical dense";
+        state.design.layout = "dashboard";
+      }
+      if (kind === "tool") {
+        state.brief.appName = "BuildBench";
+        state.brief.audience = "developers turning rough ideas into local prototypes";
+        state.brief.outcome = "draft, preview, verify, and hand off a web app in one place";
+        state.brief.tone = "quiet professional";
+        state.design.layout = "sidebar";
+      }
+      if (kind === "dashboard") {
+        state.brief.appName = "SignalBoard";
+        state.brief.audience = "teams reviewing product and engineering health";
+        state.brief.outcome = "make status, risk, and next actions visible at a glance";
+        state.brief.tone = "clinical minimal";
+        state.design.layout = "dashboard";
+      }
+      render();
+    }
+
+    function wireEvents() {
+      $$(".nav button[data-view]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.activeView = button.dataset.view;
+          render();
+        });
+      });
+
+      $("#contrastBtn").addEventListener("click", () => {
+        state.highContrast = !state.highContrast;
+        render();
+      });
+
+      ["appName", "audience", "outcome", "workflow", "constraints", "tone", "data", "framework", "ship"].forEach((field) => {
+        const el = $("#" + field + "Input");
+        el.addEventListener("input", () => {
+          state.brief[field] = el.value;
+          render();
+        });
+      });
+
+      $("#quickSaasBtn").addEventListener("click", () => applyPreset("saas"));
+      $("#quickToolBtn").addEventListener("click", () => applyPreset("tool"));
+      $("#quickDashboardBtn").addEventListener("click", () => applyPreset("dashboard"));
+
+      $("#addFeatureBtn").addEventListener("click", () => {
+        const title = $("#featureInput").value.trim();
+        if (!title) return toast("Add a feature first.");
+        state.features.push({ id: id(), title, priority: 3, status: "should" });
+        $("#featureInput").value = "";
+        render();
+      });
+
+      $("#featureList").addEventListener("click", (event) => {
+        const remove = event.target.closest("[data-remove-feature]");
+        if (!remove) return;
+        state.features = state.features.filter((feature) => feature.id !== remove.dataset.removeFeature);
+        render();
+      });
+
+      $("#addScreenBtn").addEventListener("click", () => {
+        const name = $("#screenInput").value.trim();
+        if (!name) return toast("Add a screen first.");
+        state.screens.push({ id: id(), name, layout: state.design.layout });
+        $("#screenInput").value = "";
+        render();
+      });
+
+      $("#screenList").addEventListener("click", (event) => {
+        const remove = event.target.closest("[data-remove-screen]");
+        if (!remove) return;
+        state.screens = state.screens.filter((screen) => screen.id !== remove.dataset.removeScreen);
+        render();
+      });
+
+      $("#addEntityBtn").addEventListener("click", () => {
+        const name = $("#entityNameInput").value.trim();
+        const fields = $("#entityFieldsInput").value.trim();
+        if (!name || !fields) return toast("Add entity name and fields.");
+        state.architecture.entities.push({
+          id: id(),
+          name,
+          fields,
+          persistence: $("#entityPersistenceInput").value
+        });
+        $("#entityNameInput").value = "";
+        $("#entityFieldsInput").value = "";
+        render();
+      });
+
+      $("#entityList").addEventListener("click", (event) => {
+        const remove = event.target.closest("[data-remove-entity]");
+        if (!remove) return;
+        state.architecture.entities = state.architecture.entities.filter((entity) => entity.id !== remove.dataset.removeEntity);
+        render();
+      });
+
+      $("#layoutTabs").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-layout]");
+        if (!button) return;
+        state.design.layout = button.dataset.layout;
+        render();
+      });
+
+      ["accent", "surface", "radius", "density"].forEach((field) => {
+        $("#" + field + "Input").addEventListener("input", () => {
+          if (field === "density") state.density = $("#densityInput").value;
+          else state.design[field] = field === "radius" ? Number($("#radiusInput").value) : $("#" + field + "Input").value;
+          render();
+        });
+      });
+
+      $("#addComponentBtn").addEventListener("click", () => {
+        const name = $("#componentNameInput").value.trim();
+        if (!name) return toast("Add a component name.");
+        state.components.push({
+          id: id(),
+          name,
+          type: $("#componentTypeInput").value,
+          props: $("#componentPropsInput").value.trim(),
+          state: $("#componentStateInput").value,
+          behavior: $("#componentBehaviorInput").value.trim() || "Reusable interface block."
+        });
+        ["componentNameInput", "componentPropsInput", "componentBehaviorInput"].forEach((selector) => $("#" + selector).value = "");
+        render();
+      });
+
+      $("#componentList").addEventListener("click", (event) => {
+        const copy = event.target.closest("[data-copy-component]");
+        const remove = event.target.closest("[data-remove-component]");
+        if (copy) {
+          const component = state.components.find((item) => item.id === copy.dataset.copyComponent);
+          if (component) copyText(componentCode(component));
+        }
+        if (remove) {
+          state.components = state.components.filter((item) => item.id !== remove.dataset.removeComponent);
+          render();
+        }
+      });
+
+      $("#fileTabs").addEventListener("click", selectFileFromEvent);
+      $("#fileList").addEventListener("click", selectFileFromEvent);
+
+      function selectFileFromEvent(event) {
+        const target = event.target.closest("[data-file], [data-file-tab]");
+        if (!target) return;
+        state.selectedFile = target.dataset.file || target.dataset.fileTab;
+        render();
+      }
+
+      ["previewSize", "codeStyle", "testDepth"].forEach((field) => {
+        $("#" + field + "Input").addEventListener("input", () => {
+          if (field === "previewSize") state.previewWidth = Number($("#previewSizeInput").value);
+          if (field === "codeStyle") state.generator.codeStyle = $("#codeStyleInput").value;
+          if (field === "testDepth") state.generator.testDepth = $("#testDepthInput").value;
+          render();
+        });
+      });
+
+      $("#copyFileBtn").addEventListener("click", () => copyText(generated[state.selectedFile] || ""));
+      $("#refreshPreviewBtn").addEventListener("click", () => {
+        refreshPreview();
+        toast("Preview refreshed.");
+      });
+
+      $("#qaList").addEventListener("change", (event) => {
+        const input = event.target.closest("[data-qa]");
+        if (!input) return;
+        state.qa.checks[input.dataset.qa] = input.checked;
+        render();
+      });
+
+      $("#markCoreQaBtn").addEventListener("click", () => {
+        ["brief", "responsive", "empty", "persistence", "handoff"].forEach((key) => state.qa.checks[key] = true);
+        render();
+      });
+
+      ["riskNotes", "verifyCommands"].forEach((field) => {
+        $("#" + field + "Input").addEventListener("input", () => {
+          state.qa[field] = $("#" + field + "Input").value;
+          render();
+        });
+      });
+
+      ["nextTask", "blockers"].forEach((field) => {
+        $("#" + field + "Input").addEventListener("input", () => {
+          state.handoff[field] = $("#" + field + "Input").value;
+          render();
+        });
+      });
+
+      $("#copyPromptBtn").addEventListener("click", () => copyText(handoffPrompt()));
+      $("#copyReadmeBtn").addEventListener("click", () => copyText(generated["README.md"]));
+      $("#copyConsoleBtn").addEventListener("click", () => copyText($("#consoleOutput").textContent));
+      $("#copyProjectBtn").addEventListener("click", () => copyText(Object.entries(generated).map(([name, text]) => `--- ${name} ---\n${text}`).join("\n\n")));
+      $("#downloadFileBtn").addEventListener("click", () => downloadText(state.selectedFile, generated[state.selectedFile] || ""));
+
+      $("#exportStateBtn").addEventListener("click", () => downloadText("web-app-forge-state.json", JSON.stringify(state, null, 2), "application/json"));
+      $("#importStateBtn").addEventListener("click", () => {
+        $("#importModal").classList.remove("hidden");
+        $("#importTextInput").focus();
+      });
+      $("#cancelImportBtn").addEventListener("click", () => $("#importModal").classList.add("hidden"));
+      $("#applyImportBtn").addEventListener("click", () => {
+        try {
+          state = merge(clone(defaultState), JSON.parse($("#importTextInput").value));
+          $("#importTextInput").value = "";
+          $("#importModal").classList.add("hidden");
+          render();
+          toast("Imported.");
+        } catch {
+          toast("Invalid JSON.");
+        }
+      });
+
+      $("#resetDemoBtn").addEventListener("click", () => {
+        state = clone(defaultState);
+        render();
+        toast("Demo restored.");
+      });
+
+      $("#addSnippetBtn").addEventListener("click", () => {
+        const title = $("#snippetTitleInput").value.trim();
+        const body = $("#snippetBodyInput").value.trim();
+        if (!title || !body) return toast("Add snippet title and body.");
+        state.snippets.push({ id: id(), title, tag: $("#snippetTagInput").value.trim() || "general", body });
+        $("#snippetTitleInput").value = "";
+        $("#snippetTagInput").value = "";
+        $("#snippetBodyInput").value = "";
+        render();
+      });
+
+      $("#snippetSearchInput").addEventListener("input", renderSnippets);
+      $("#snippetList").addEventListener("click", (event) => {
+        const copy = event.target.closest("[data-copy-snippet]");
+        const remove = event.target.closest("[data-remove-snippet]");
+        if (copy) {
+          const snippet = state.snippets.find((item) => item.id === copy.dataset.copySnippet);
+          if (snippet) copyText(snippet.body);
+        }
+        if (remove) {
+          state.snippets = state.snippets.filter((item) => item.id !== remove.dataset.removeSnippet);
+          render();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.ctrlKey && event.key === "Enter") {
+          event.preventDefault();
+          copyText(handoffPrompt());
+        }
+        if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "p") {
+          event.preventDefault();
+          state.activeView = "generator";
+          render();
+        }
+      });
+    }
+
+    wireEvents();
+    render();
+  </script>
+</body>
+</html>

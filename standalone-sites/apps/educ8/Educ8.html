@@ -1,0 +1,3904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Educ8 — The Future of Teaching</title>
+<meta name="description" content="Educ8: All-in-one futuristic teacher toolkit. Gradebook, attendance, lesson planner, quizzes, whiteboard, and 20+ tools in one app.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBmMGZmIi8+PHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9IiM4YjVjZjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZjAwODgiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNCIgZmlsbD0iIzBhMGExOCIvPjx0ZXh0IHg9IjMyIiB5PSI0NCIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrIiBmb250LXNpemU9IjMwIiBmaWxsPSJ1cmwoI2cpIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iOTAwIj5FODwvdGV4dD48L3N2Zz4=">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   EDUC8 — CORE DESIGN SYSTEM (2080 Futuristic Aesthetic)
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --bg-void: #050510;
+  --bg-deep: #0a0a1a;
+  --bg-surface: #0f0f25;
+  --bg-elevated: #151535;
+  --bg-card: rgba(15, 15, 40, 0.7);
+  --bg-glass: rgba(15, 15, 40, 0.45);
+  --border-subtle: rgba(100, 120, 255, 0.12);
+  --border-glow: rgba(0, 240, 255, 0.3);
+  --text-primary: #e8eaff;
+  --text-secondary: #8b8db0;
+  --text-muted: #5a5c80;
+  --cyan: #00f0ff;
+  --cyan-dim: rgba(0, 240, 255, 0.15);
+  --purple: #8b5cf6;
+  --purple-dim: rgba(139, 92, 246, 0.15);
+  --pink: #ff0088;
+  --pink-dim: rgba(255, 0, 136, 0.15);
+  --green: #00ff88;
+  --green-dim: rgba(0, 255, 136, 0.15);
+  --orange: #ff8800;
+  --orange-dim: rgba(255, 136, 0, 0.15);
+  --red: #ff3355;
+  --red-dim: rgba(255, 51, 85, 0.15);
+  --yellow: #ffdd00;
+  --gradient-main: linear-gradient(135deg, #00f0ff, #8b5cf6, #ff0088);
+  --gradient-warm: linear-gradient(135deg, #ff0088, #ff8800, #ffdd00);
+  --gradient-cool: linear-gradient(135deg, #00f0ff, #00ff88, #8b5cf6);
+  --gradient-holo: linear-gradient(135deg, #00f0ff 0%, #8b5cf6 25%, #ff0088 50%, #ff8800 75%, #00ff88 100%);
+  --glass-bg: rgba(15, 15, 40, 0.55);
+  --glass-border: rgba(100, 120, 255, 0.15);
+  --glass-blur: 20px;
+  --shadow-glow-cyan: 0 0 30px rgba(0, 240, 255, 0.15), 0 0 60px rgba(0, 240, 255, 0.05);
+  --shadow-glow-purple: 0 0 30px rgba(139, 92, 246, 0.15), 0 0 60px rgba(139, 92, 246, 0.05);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --sidebar-width: 260px;
+  --header-height: 64px;
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--purple) var(--bg-deep);
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 3px; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg-void);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ═══════════════ PARTICLE CANVAS ═══════════════ */
+#particle-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ═══════════════ AURORA BACKGROUND ═══════════════ */
+.aurora-bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.aurora-bg::before, .aurora-bg::after {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.08;
+  animation: auroraFloat 20s ease-in-out infinite;
+}
+.aurora-bg::before {
+  top: -50%; left: -30%;
+  background: radial-gradient(ellipse, var(--cyan), transparent 70%);
+}
+.aurora-bg::after {
+  bottom: -50%; right: -30%;
+  background: radial-gradient(ellipse, var(--purple), transparent 70%);
+  animation-delay: -10s;
+  animation-direction: reverse;
+}
+@keyframes auroraFloat {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  33% { transform: translate(5%, -3%) rotate(5deg) scale(1.05); }
+  66% { transform: translate(-3%, 5%) rotate(-3deg) scale(0.95); }
+}
+
+/* ═══════════════ HEADER ═══════════════ */
+.app-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-height);
+  background: rgba(5, 5, 16, 0.85);
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  border-bottom: 1px solid var(--glass-border);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  transition: var(--transition-smooth);
+}
+.app-header.scrolled {
+  box-shadow: 0 4px 30px rgba(0,0,0,0.5), 0 0 1px var(--cyan);
+}
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.logo-icon {
+  width: 38px; height: 38px;
+  background: var(--gradient-main);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  font-size: 14px;
+  color: var(--bg-void);
+  position: relative;
+  overflow: hidden;
+  animation: logoPulse 4s ease-in-out infinite;
+}
+.logo-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%);
+  border-radius: inherit;
+}
+@keyframes logoPulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.4), 0 0 60px rgba(0, 240, 255, 0.15); }
+}
+.logo-text {
+  font-family: 'Orbitron', monospace;
+  font-size: 22px;
+  font-weight: 800;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+}
+.logo-tag {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-left: 4px;
+}
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-clock {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--cyan);
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  background: var(--cyan-dim);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: var(--radius-sm);
+}
+.header-btn {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: var(--transition-fast);
+}
+.header-btn:hover {
+  background: var(--purple-dim);
+  border-color: var(--purple);
+  color: var(--purple);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow-purple);
+}
+.mobile-menu-btn {
+  display: none;
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 20px;
+  align-items: center; justify-content: center;
+}
+
+/* ═══════════════ SIDEBAR ═══════════════ */
+.app-sidebar {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--header-height));
+  background: rgba(8, 8, 22, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid var(--glass-border);
+  z-index: 900;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 12px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sidebar-section {
+  margin-bottom: 8px;
+}
+.sidebar-section-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 12px 14px 8px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  border: 1px solid transparent;
+}
+.nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 3px; height: 100%;
+  background: var(--gradient-main);
+  border-radius: 0 3px 3px 0;
+  opacity: 0;
+  transform: scaleY(0);
+  transition: var(--transition-smooth);
+}
+.nav-item:hover {
+  background: rgba(139, 92, 246, 0.08);
+  color: var(--text-primary);
+  border-color: rgba(139, 92, 246, 0.1);
+}
+.nav-item.active {
+  background: rgba(0, 240, 255, 0.06);
+  color: var(--cyan);
+  border-color: rgba(0, 240, 255, 0.15);
+}
+.nav-item.active::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+.nav-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.nav-badge {
+  margin-left: auto;
+  background: var(--pink);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* ═══════════════ MAIN CONTENT ═══════════════ */
+.app-main {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--header-height);
+  min-height: calc(100vh - var(--header-height));
+  padding: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════ PAGE TRANSITION OVERLAY ═══════════════ */
+.page-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.transition-slice {
+  position: absolute;
+  width: 100%;
+  background: var(--bg-deep);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.transition-text {
+  font-family: 'Orbitron', monospace;
+  font-size: 48px;
+  font-weight: 900;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0;
+  transform: scale(0.5);
+  z-index: 2001;
+  pointer-events: none;
+  position: fixed;
+  top: 50%; left: 50%;
+  translate: -50% -50%;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  white-space: nowrap;
+}
+
+/* ═══════════════ SECTION PANELS ═══════════════ */
+.section-panel {
+  display: none;
+  animation: panelIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.section-panel.active {
+  display: block;
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(10px); }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+.section-header {
+  margin-bottom: 28px;
+}
+.section-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 28px;
+  font-weight: 800;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.section-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ═══════════════ GLASS CARD ═══════════════ */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.3);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.3);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.3), transparent);
+  opacity: 0;
+  transition: var(--transition-smooth);
+}
+.glass-card:hover::before { opacity: 1; }
+.glass-card:hover {
+  border-color: rgba(0, 240, 255, 0.2);
+  box-shadow: var(--shadow-glow-cyan);
+  transform: translateY(-2px);
+}
+.glass-card.no-hover:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--glass-border);
+}
+
+/* ═══════════════ STAT CARDS ═══════════════ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+  cursor: default;
+}
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.15;
+  transition: var(--transition-smooth);
+}
+.stat-card:hover { transform: translateY(-4px); }
+.stat-card:hover::after { opacity: 0.25; }
+.stat-card.cyan::after { background: var(--cyan); }
+.stat-card.purple::after { background: var(--purple); }
+.stat-card.pink::after { background: var(--pink); }
+.stat-card.green::after { background: var(--green); }
+.stat-card.orange::after { background: var(--orange); }
+.stat-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.stat-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.stat-card.cyan .stat-value { color: var(--cyan); }
+.stat-card.purple .stat-value { color: var(--purple); }
+.stat-card.pink .stat-value { color: var(--pink); }
+.stat-card.green .stat-value { color: var(--green); }
+.stat-card.orange .stat-value { color: var(--orange); }
+.stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+/* ═══════════════ BUTTONS ═══════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: var(--transition-fast);
+  text-transform: none;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+  opacity: 0;
+  transition: var(--transition-fast);
+}
+.btn:hover::after { opacity: 1; }
+.btn-primary {
+  background: var(--gradient-main);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.2);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 240, 255, 0.35);
+}
+.btn-secondary {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+.btn-secondary:hover {
+  border-color: var(--purple);
+  background: var(--purple-dim);
+  color: var(--purple);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-subtle);
+}
+.btn-ghost:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: var(--cyan-dim);
+}
+.btn-danger {
+  background: var(--red-dim);
+  color: var(--red);
+  border-color: rgba(255, 51, 85, 0.3);
+}
+.btn-danger:hover {
+  background: var(--red);
+  color: white;
+}
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+.btn-lg { padding: 14px 28px; font-size: 15px; }
+.btn-icon {
+  width: 36px; height: 36px;
+  padding: 0;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+}
+
+/* ═══════════════ FORM INPUTS ═══════════════ */
+.form-group {
+  margin-bottom: 18px;
+}
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(10, 10, 26, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  transition: var(--transition-fast);
+  outline: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px var(--cyan-dim), var(--shadow-glow-cyan);
+}
+.form-input::placeholder { color: var(--text-muted); }
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-select { cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b8db0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+.form-select option { background: var(--bg-deep); color: var(--text-primary); }
+
+/* ═══════════════ TABLES ═══════════════ */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.data-table th {
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  background: var(--bg-surface);
+  z-index: 1;
+}
+.data-table td {
+  padding: 12px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(100, 120, 255, 0.06);
+  transition: var(--transition-fast);
+}
+.data-table tr:hover td {
+  background: rgba(139, 92, 246, 0.04);
+}
+.data-table .grade-cell {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+/* ═══════════════ MODAL ═══════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 5000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  animation: modalBgIn 0.3s ease;
+}
+.modal-overlay.active { display: flex; }
+@keyframes modalBgIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  max-width: 560px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: modalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5), var(--shadow-glow-purple);
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.85) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+/* ═══════════════ TOAST NOTIFICATIONS ═══════════════ */
+.toast-container {
+  position: fixed;
+  top: calc(var(--header-height) + 16px);
+  right: 16px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  font-size: 13px;
+  color: var(--text-primary);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-card);
+  animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), toastOut 0.3s ease 3s forwards;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 280px;
+}
+.toast.success { border-left: 3px solid var(--green); }
+.toast.error { border-left: 3px solid var(--red); }
+.toast.info { border-left: 3px solid var(--cyan); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(100px) scale(0.8); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(100px); }
+}
+
+/* ═══════════════ GRID LAYOUTS ═══════════════ */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+.flex-row { display: flex; align-items: center; gap: 12px; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-wrap { flex-wrap: wrap; }
+.gap-sm { gap: 8px; }
+.gap-md { gap: 16px; }
+.gap-lg { gap: 24px; }
+.mb-sm { margin-bottom: 12px; }
+.mb-md { margin-bottom: 20px; }
+.mb-lg { margin-bottom: 32px; }
+
+/* ═══════════════ TAGS & BADGES ═══════════════ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.tag-cyan { background: var(--cyan-dim); color: var(--cyan); }
+.tag-purple { background: var(--purple-dim); color: var(--purple); }
+.tag-pink { background: var(--pink-dim); color: var(--pink); }
+.tag-green { background: var(--green-dim); color: var(--green); }
+.tag-orange { background: var(--orange-dim); color: var(--orange); }
+.tag-red { background: var(--red-dim); color: var(--red); }
+
+/* ═══════════════ PROGRESS BAR ═══════════════ */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-deep);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--gradient-main);
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 0;
+  width: 20px; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+  animation: progressShine 2s ease-in-out infinite;
+}
+@keyframes progressShine {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* ═══════════════ SPECIFIC SECTIONS ═══════════════ */
+
+/* Dashboard Activity Feed */
+.activity-feed { list-style: none; }
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(100, 120, 255, 0.06);
+  transition: var(--transition-fast);
+}
+.activity-item:hover { background: rgba(139, 92, 246, 0.03); padding-left: 8px; }
+.activity-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.activity-text { font-size: 13px; color: var(--text-secondary); }
+.activity-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* Timer Display */
+.timer-display {
+  font-family: 'Orbitron', monospace;
+  font-size: 80px;
+  font-weight: 900;
+  text-align: center;
+  padding: 40px;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 6px;
+  text-shadow: none;
+  position: relative;
+}
+.timer-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Whiteboard */
+#whiteboard-container {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
+#whiteboard {
+  display: block;
+  width: 100%;
+  cursor: crosshair;
+  background: #0d0d22;
+  border-radius: var(--radius-lg);
+}
+.wb-toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.wb-color {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.wb-color:hover, .wb-color.active { border-color: white; transform: scale(1.15); }
+
+/* Random Picker Wheel */
+.picker-wheel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+#picker-canvas {
+  border-radius: 50%;
+  box-shadow: 0 0 60px rgba(139, 92, 246, 0.2), 0 0 120px rgba(0, 240, 255, 0.1);
+  border: 3px solid var(--glass-border);
+}
+.picker-result {
+  font-family: 'Orbitron', monospace;
+  font-size: 28px;
+  font-weight: 800;
+  text-align: center;
+  min-height: 40px;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Seating Chart */
+.seating-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  padding: 24px;
+  min-height: 400px;
+}
+.seat {
+  aspect-ratio: 1;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: grab;
+  transition: var(--transition-fast);
+  padding: 8px;
+  text-align: center;
+  user-select: none;
+}
+.seat:hover {
+  border-color: var(--cyan);
+  background: var(--cyan-dim);
+  transform: scale(1.05);
+}
+.seat.dragging { opacity: 0.4; transform: scale(0.9); }
+.seat.empty { border-style: dashed; opacity: 0.4; }
+.seat-icon { font-size: 24px; margin-bottom: 4px; }
+
+/* Calendar */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-header-cell {
+  padding: 10px;
+  text-align: center;
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+.cal-cell {
+  aspect-ratio: 1;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  border: 1px solid transparent;
+}
+.cal-cell:hover { background: var(--purple-dim); border-color: var(--purple); }
+.cal-cell.today {
+  background: var(--cyan-dim);
+  border-color: var(--cyan);
+  color: var(--cyan);
+  font-weight: 700;
+}
+.cal-cell.other-month { opacity: 0.3; }
+.cal-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--pink);
+}
+
+/* Noise Meter */
+.noise-meter-visual {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  height: 200px;
+  padding: 20px;
+}
+.noise-bar {
+  width: 14px;
+  background: var(--gradient-main);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.1s ease;
+  min-height: 8px;
+}
+.noise-level-text {
+  font-family: 'Orbitron', monospace;
+  font-size: 48px;
+  font-weight: 900;
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* Quiz Maker */
+.quiz-question-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: var(--transition-smooth);
+}
+.quiz-question-card:hover {
+  border-color: var(--purple);
+}
+.quiz-option-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+.quiz-option-radio {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border-subtle);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+.quiz-option-radio.correct {
+  border-color: var(--green);
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green-dim);
+}
+
+/* Behavior Tracker */
+.behavior-student {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+  transition: var(--transition-fast);
+}
+.behavior-student:hover { border-color: var(--cyan); }
+.behavior-name { flex: 1; font-weight: 600; font-size: 14px; }
+.behavior-points {
+  font-family: 'Orbitron', monospace;
+  font-size: 22px;
+  font-weight: 800;
+  min-width: 50px;
+  text-align: center;
+}
+.behavior-btns { display: flex; gap: 6px; }
+.behavior-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition-fast);
+}
+.behavior-btn.plus { background: var(--green-dim); color: var(--green); }
+.behavior-btn.plus:hover { background: var(--green); color: white; }
+.behavior-btn.minus { background: var(--red-dim); color: var(--red); }
+.behavior-btn.minus:hover { background: var(--red); color: white; }
+
+/* Communication Log */
+.comm-entry {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+}
+.comm-icon {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.comm-content { flex: 1; }
+.comm-parent { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.comm-text { font-size: 13px; color: var(--text-secondary); }
+.comm-meta { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+/* Rubric Builder */
+.rubric-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.rubric-table th, .rubric-table td {
+  padding: 12px 16px;
+  border: 1px solid var(--border-subtle);
+  text-align: left;
+  font-size: 13px;
+}
+.rubric-table th {
+  background: var(--bg-elevated);
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+.rubric-table td {
+  background: var(--glass-bg);
+}
+.rubric-table td:focus-within {
+  box-shadow: inset 0 0 0 2px var(--cyan);
+}
+
+/* Resources Library */
+.resource-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  transition: var(--transition-smooth);
+  cursor: pointer;
+}
+.resource-card:hover {
+  border-color: var(--cyan);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow-cyan);
+}
+.resource-type {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.resource-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.resource-url {
+  font-size: 12px;
+  color: var(--cyan);
+  word-break: break-all;
+}
+
+/* AI Assistant */
+.ai-chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+}
+.ai-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ai-msg {
+  max-width: 80%;
+  padding: 14px 18px;
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  line-height: 1.6;
+  animation: msgIn 0.3s ease;
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ai-msg.user {
+  align-self: flex-end;
+  background: var(--purple-dim);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-bottom-right-radius: 4px;
+}
+.ai-msg.assistant {
+  align-self: flex-start;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-bottom-left-radius: 4px;
+}
+.ai-input-row {
+  display: flex;
+  gap: 10px;
+  padding: 16px;
+  border-top: 1px solid var(--glass-border);
+}
+.ai-input-row input { flex: 1; }
+
+/* Schedule Grid */
+.schedule-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(5, 1fr);
+  gap: 2px;
+}
+.schedule-time {
+  padding: 14px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.schedule-cell {
+  padding: 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  min-height: 60px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-size: 12px;
+}
+.schedule-cell:hover {
+  border-color: var(--cyan);
+  background: var(--cyan-dim);
+}
+.schedule-day-header {
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Lesson Plan Card */
+.lesson-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+.lesson-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 4px; height: 100%;
+  background: var(--gradient-main);
+  border-radius: 4px 0 0 4px;
+}
+.lesson-card:hover {
+  border-color: var(--purple);
+  transform: translateX(4px);
+}
+.lesson-title {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 6px;
+  padding-left: 12px;
+}
+.lesson-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding-left: 12px;
+  display: flex;
+  gap: 16px;
+}
+
+/* Report Generator */
+.report-preview {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  font-size: 14px;
+  line-height: 1.8;
+  max-height: 500px;
+  overflow-y: auto;
+}
+.report-preview h3 {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;
+  color: var(--cyan);
+  margin-bottom: 16px;
+}
+
+/* ═══════════════ FOOTER ═══════════════ */
+.app-footer {
+  margin-left: var(--sidebar-width);
+  padding: 32px 28px;
+  border-top: 1px solid var(--glass-border);
+  position: relative;
+  z-index: 1;
+}
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.footer-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;
+  font-weight: 800;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.footer-copy {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+.footer-link {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+.footer-link:hover { color: var(--cyan); }
+.footer-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+  margin: 20px 0;
+}
+.footer-bottom {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.footer-bottom .pulse-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  margin-right: 6px;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--green); }
+  50% { opacity: 0.4; box-shadow: 0 0 12px var(--green); }
+}
+
+/* ═══════════════ SCROLL REVEAL ANIMATIONS ═══════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.reveal-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+.stagger-1 { transition-delay: 0.05s; }
+.stagger-2 { transition-delay: 0.1s; }
+.stagger-3 { transition-delay: 0.15s; }
+.stagger-4 { transition-delay: 0.2s; }
+.stagger-5 { transition-delay: 0.25s; }
+
+/* ═══════════════ ANNOUNCEMENT CARDS ═══════════════ */
+.announcement-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.announcement-card.pinned::before {
+  content: '📌';
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 16px;
+}
+.announcement-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+.announcement-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.announcement-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+
+/* ═══════════════ SETTINGS ═══════════════ */
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(100, 120, 255, 0.06);
+}
+.settings-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.settings-info p { font-size: 12px; color: var(--text-muted); }
+.toggle-switch {
+  width: 48px; height: 26px;
+  background: var(--bg-deep);
+  border: 1px solid var(--border-subtle);
+  border-radius: 13px;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-fast);
+}
+.toggle-switch.active {
+  background: var(--cyan-dim);
+  border-color: var(--cyan);
+}
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+.toggle-switch.active::after {
+  transform: translateX(22px);
+  background: var(--cyan);
+}
+
+/* ═══════════════ EMPTY STATES ═══════════════ */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+.empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+.empty-text { font-size: 14px; margin-bottom: 20px; }
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media (max-width: 1024px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .app-sidebar {
+    transform: translateX(-100%);
+    width: 280px;
+  }
+  .app-sidebar.open {
+    transform: translateX(0);
+    box-shadow: 10px 0 40px rgba(0,0,0,0.5);
+  }
+  .app-main { margin-left: 0; }
+  .app-footer { margin-left: 0; }
+  .mobile-menu-btn { display: flex; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: 1fr; }
+  .timer-display { font-size: 48px; }
+  .section-title { font-size: 22px; }
+  .seating-grid { grid-template-columns: repeat(4, 1fr); }
+  .schedule-grid { grid-template-columns: 60px repeat(5, 1fr); }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .app-main { padding: 16px; }
+  .seating-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ BACKGROUND LAYERS ═══════════════ -->
+<div class="aurora-bg"></div>
+<canvas id="particle-canvas"></canvas>
+
+<!-- ═══════════════ PAGE TRANSITION OVERLAY ═══════════════ -->
+<div class="page-transition-overlay" id="pageTransition">
+  <div class="transition-slice" style="top:0; height:20%"></div>
+  <div class="transition-slice" style="top:20%; height:20%"></div>
+  <div class="transition-slice" style="top:40%; height:20%"></div>
+  <div class="transition-slice" style="top:60%; height:20%"></div>
+  <div class="transition-slice" style="top:80%; height:20%"></div>
+  <div class="transition-text" id="transitionText"></div>
+</div>
+
+<!-- ═══════════════ TOAST CONTAINER ═══════════════ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="app-header" id="appHeader">
+  <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+  <div class="header-logo" onclick="navigateTo('dashboard')">
+    <div class="logo-icon">E8</div>
+    <div>
+      <div class="logo-text">EDUC8</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-clock" id="headerClock">--:--:--</div>
+    <button class="header-btn" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
+    <button class="header-btn" onclick="exportAllData()" title="Export Data">💾</button>
+    <button class="header-btn" onclick="navigateTo('settings')" title="Settings">⚙</button>
+  </div>
+</header>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<nav class="app-sidebar" id="appSidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Command Center</div>
+    <div class="nav-item active" data-section="dashboard" onclick="navigateTo('dashboard')">
+      <span class="nav-icon">🏠</span> Dashboard
+    </div>
+    <div class="nav-item" data-section="calendar" onclick="navigateTo('calendar')">
+      <span class="nav-icon">📅</span> Calendar
+    </div>
+    <div class="nav-item" data-section="schedule" onclick="navigateTo('schedule')">
+      <span class="nav-icon">🕐</span> Schedule
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Academic</div>
+    <div class="nav-item" data-section="gradebook" onclick="navigateTo('gradebook')">
+      <span class="nav-icon">📊</span> Gradebook
+    </div>
+    <div class="nav-item" data-section="attendance" onclick="navigateTo('attendance')">
+      <span class="nav-icon">✅</span> Attendance
+    </div>
+    <div class="nav-item" data-section="lessons" onclick="navigateTo('lessons')">
+      <span class="nav-icon">📝</span> Lesson Planner
+    </div>
+    <div class="nav-item" data-section="assignments" onclick="navigateTo('assignments')">
+      <span class="nav-icon">📋</span> Assignments
+    </div>
+    <div class="nav-item" data-section="rubric" onclick="navigateTo('rubric')">
+      <span class="nav-icon">📐</span> Rubric Builder
+    </div>
+    <div class="nav-item" data-section="reports" onclick="navigateTo('reports')">
+      <span class="nav-icon">📄</span> Report Cards
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Classroom</div>
+    <div class="nav-item" data-section="timer" onclick="navigateTo('timer')">
+      <span class="nav-icon">⏱</span> Timer
+    </div>
+    <div class="nav-item" data-section="picker" onclick="navigateTo('picker')">
+      <span class="nav-icon">🎯</span> Random Picker
+    </div>
+    <div class="nav-item" data-section="seating" onclick="navigateTo('seating')">
+      <span class="nav-icon">💺</span> Seating Chart
+    </div>
+    <div class="nav-item" data-section="behavior" onclick="navigateTo('behavior')">
+      <span class="nav-icon">⭐</span> Behavior
+    </div>
+    <div class="nav-item" data-section="noise" onclick="navigateTo('noise')">
+      <span class="nav-icon">🔊</span> Noise Meter
+    </div>
+    <div class="nav-item" data-section="whiteboard" onclick="navigateTo('whiteboard')">
+      <span class="nav-icon">🖊</span> Whiteboard
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Communication</div>
+    <div class="nav-item" data-section="announcements" onclick="navigateTo('announcements')">
+      <span class="nav-icon">📢</span> Announcements
+    </div>
+    <div class="nav-item" data-section="comms" onclick="navigateTo('comms')">
+      <span class="nav-icon">💬</span> Parent Log
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Tools</div>
+    <div class="nav-item" data-section="quiz" onclick="navigateTo('quiz')">
+      <span class="nav-icon">❓</span> Quiz Maker
+    </div>
+    <div class="nav-item" data-section="resources" onclick="navigateTo('resources')">
+      <span class="nav-icon">📚</span> Resources
+    </div>
+    <div class="nav-item" data-section="ai" onclick="navigateTo('ai')">
+      <span class="nav-icon">🤖</span> AI Assistant
+    </div>
+    <div class="nav-item" data-section="settings" onclick="navigateTo('settings')">
+      <span class="nav-icon">⚙</span> Settings
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+<main class="app-main" id="appMain">
+
+  <!-- ────────── DASHBOARD ────────── -->
+  <div class="section-panel active" id="sec-dashboard">
+    <div class="section-header reveal">
+      <h1 class="section-title">Command Center</h1>
+      <p class="section-subtitle">Your teaching universe at a glance</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card cyan reveal stagger-1">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" id="dashTotalStudents">0</div>
+        <div class="stat-label">Total Students</div>
+      </div>
+      <div class="stat-card purple reveal stagger-2">
+        <div class="stat-icon">📊</div>
+        <div class="stat-value" id="dashAvgGrade">--</div>
+        <div class="stat-label">Class Average</div>
+      </div>
+      <div class="stat-card green reveal stagger-3">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value" id="dashAttendance">--</div>
+        <div class="stat-label">Attendance Rate</div>
+      </div>
+      <div class="stat-card pink reveal stagger-4">
+        <div class="stat-icon">📝</div>
+        <div class="stat-value" id="dashLessons">0</div>
+        <div class="stat-label">Lesson Plans</div>
+      </div>
+      <div class="stat-card orange reveal stagger-5">
+        <div class="stat-icon">📋</div>
+        <div class="stat-value" id="dashAssignments">0</div>
+        <div class="stat-label">Assignments</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="glass-card reveal">
+        <h3 style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--cyan);margin-bottom:16px;letter-spacing:1px;">QUICK ACTIONS</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <button class="btn btn-primary btn-sm" onclick="openAddStudentModal()">➕ Add Student</button>
+          <button class="btn btn-secondary btn-sm" onclick="navigateTo('attendance')">✅ Take Attendance</button>
+          <button class="btn btn-secondary btn-sm" onclick="navigateTo('timer')">⏱ Start Timer</button>
+          <button class="btn btn-secondary btn-sm" onclick="navigateTo('picker')">🎯 Random Pick</button>
+          <button class="btn btn-secondary btn-sm" onclick="navigateTo('whiteboard')">🖊 Whiteboard</button>
+          <button class="btn btn-ghost btn-sm" onclick="navigateTo('lessons')">📝 New Lesson</button>
+        </div>
+      </div>
+      <div class="glass-card reveal">
+        <h3 style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--cyan);margin-bottom:16px;letter-spacing:1px;">RECENT ACTIVITY</h3>
+        <ul class="activity-feed" id="activityFeed">
+          <li class="activity-item">
+            <div class="activity-dot" style="background:var(--cyan)"></div>
+            <div>
+              <div class="activity-text">Welcome to Educ8! Add your first student to get started.</div>
+              <div class="activity-time">Just now</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────── GRADEBOOK ────────── -->
+  <div class="section-panel" id="sec-gradebook">
+    <div class="section-header">
+      <h1 class="section-title">Gradebook</h1>
+      <p class="section-subtitle">Track and manage student grades</p>
+    </div>
+    <div class="flex-between mb-md">
+      <div class="flex-row">
+        <button class="btn btn-primary btn-sm" onclick="openAddStudentModal()">➕ Add Student</button>
+        <button class="btn btn-secondary btn-sm" onclick="openAddAssignmentColumnModal()">📝 Add Column</button>
+      </div>
+      <div class="flex-row">
+        <select class="form-select" id="gradeFilter" style="width:160px" onchange="renderGradebook()">
+          <option value="all">All Students</option>
+          <option value="atrisk">At Risk (&lt; 60%)</option>
+        </select>
+      </div>
+    </div>
+    <div class="glass-card no-hover" style="overflow-x:auto;padding:0">
+      <table class="data-table" id="gradebookTable">
+        <thead><tr><th>Student</th><th>Average</th></tr></thead>
+        <tbody id="gradebookBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="gradebookEmpty" style="display:none">
+      <div class="empty-icon">📊</div>
+      <div class="empty-text">No students yet. Add your first student to begin tracking grades.</div>
+      <button class="btn btn-primary" onclick="openAddStudentModal()">➕ Add Student</button>
+    </div>
+  </div>
+
+  <!-- ────────── ATTENDANCE ────────── -->
+  <div class="section-panel" id="sec-attendance">
+    <div class="section-header">
+      <h1 class="section-title">Attendance</h1>
+      <p class="section-subtitle">Daily attendance tracking</p>
+    </div>
+    <div class="flex-between mb-md">
+      <div class="flex-row">
+        <input type="date" class="form-input" id="attendanceDate" style="width:180px">
+        <button class="btn btn-primary btn-sm" onclick="markAllPresent()">✅ All Present</button>
+        <button class="btn btn-ghost btn-sm" onclick="markAllAbsent()">❌ All Absent</button>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="saveAttendance()">💾 Save</button>
+    </div>
+    <div id="attendanceList"></div>
+    <div class="empty-state" id="attendanceEmpty" style="display:none">
+      <div class="empty-icon">✅</div>
+      <div class="empty-text">Add students first to track attendance.</div>
+    </div>
+  </div>
+
+  <!-- ────────── LESSON PLANNER ────────── -->
+  <div class="section-panel" id="sec-lessons">
+    <div class="section-header">
+      <h1 class="section-title">Lesson Planner</h1>
+      <p class="section-subtitle">Design and organize your curriculum</p>
+    </div>
+    <div class="flex-between mb-md">
+      <button class="btn btn-primary btn-sm" onclick="openLessonModal()">➕ New Lesson Plan</button>
+      <select class="form-select" id="lessonFilter" style="width:160px" onchange="renderLessons()">
+        <option value="all">All Subjects</option>
+        <option value="Math">Math</option>
+        <option value="Science">Science</option>
+        <option value="English">English</option>
+        <option value="History">History</option>
+        <option value="Art">Art</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div id="lessonList"></div>
+    <div class="empty-state" id="lessonsEmpty" style="display:none">
+      <div class="empty-icon">📝</div>
+      <div class="empty-text">No lesson plans yet. Create your first one!</div>
+      <button class="btn btn-primary" onclick="openLessonModal()">➕ New Lesson Plan</button>
+    </div>
+  </div>
+
+  <!-- ────────── ASSIGNMENTS ────────── -->
+  <div class="section-panel" id="sec-assignments">
+    <div class="section-header">
+      <h1 class="section-title">Assignments</h1>
+      <p class="section-subtitle">Track and manage assignments and due dates</p>
+    </div>
+    <div class="flex-between mb-md">
+      <button class="btn btn-primary btn-sm" onclick="openAssignmentModal()">➕ New Assignment</button>
+    </div>
+    <div id="assignmentList"></div>
+    <div class="empty-state" id="assignmentsEmpty" style="display:none">
+      <div class="empty-icon">📋</div>
+      <div class="empty-text">No assignments yet.</div>
+      <button class="btn btn-primary" onclick="openAssignmentModal()">➕ New Assignment</button>
+    </div>
+  </div>
+
+  <!-- ────────── TIMER ────────── -->
+  <div class="section-panel" id="sec-timer">
+    <div class="section-header">
+      <h1 class="section-title">Timer & Stopwatch</h1>
+      <p class="section-subtitle">Precision time management for your classroom</p>
+    </div>
+    <div class="grid-2">
+      <div class="glass-card" style="text-align:center">
+        <h3 style="font-family:'Orbitron',monospace;font-size:12px;color:var(--cyan);margin-bottom:16px;letter-spacing:2px">COUNTDOWN TIMER</h3>
+        <div class="timer-display" id="countdownDisplay">05:00</div>
+        <div style="display:flex;justify-content:center;gap:8px;margin:16px 0">
+          <button class="btn btn-ghost btn-sm" onclick="setCountdown(60)">1m</button>
+          <button class="btn btn-ghost btn-sm" onclick="setCountdown(180)">3m</button>
+          <button class="btn btn-ghost btn-sm" onclick="setCountdown(300)">5m</button>
+          <button class="btn btn-ghost btn-sm" onclick="setCountdown(600)">10m</button>
+          <button class="btn btn-ghost btn-sm" onclick="setCountdown(900)">15m</button>
+          <button class="btn btn-ghost btn-sm" onclick="setCountdown(1800)">30m</button>
+        </div>
+        <div class="flex-row" style="justify-content:center;gap:8px;margin-bottom:12px">
+          <input type="number" class="form-input" id="customMinutes" placeholder="Min" style="width:70px;text-align:center" min="0">
+          <span style="color:var(--text-muted)">:</span>
+          <input type="number" class="form-input" id="customSeconds" placeholder="Sec" style="width:70px;text-align:center" min="0" max="59">
+          <button class="btn btn-ghost btn-sm" onclick="setCustomCountdown()">Set</button>
+        </div>
+        <div class="timer-controls">
+          <button class="btn btn-primary" id="countdownStartBtn" onclick="toggleCountdown()">▶ Start</button>
+          <button class="btn btn-secondary" onclick="resetCountdown()">↺ Reset</button>
+        </div>
+        <div class="progress-bar" style="margin-top:20px">
+          <div class="progress-fill" id="countdownProgress" style="width:100%"></div>
+        </div>
+      </div>
+      <div class="glass-card" style="text-align:center">
+        <h3 style="font-family:'Orbitron',monospace;font-size:12px;color:var(--purple);margin-bottom:16px;letter-spacing:2px">STOPWATCH</h3>
+        <div class="timer-display" id="stopwatchDisplay" style="background:var(--gradient-cool);-webkit-background-clip:text;background-clip:text;">00:00.00</div>
+        <div class="timer-controls">
+          <button class="btn btn-primary" id="stopwatchStartBtn" onclick="toggleStopwatch()">▶ Start</button>
+          <button class="btn btn-secondary" onclick="lapStopwatch()">🏁 Lap</button>
+          <button class="btn btn-ghost" onclick="resetStopwatch()">↺ Reset</button>
+        </div>
+        <div id="lapList" style="margin-top:16px;text-align:left;max-height:200px;overflow-y:auto"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────── RANDOM PICKER ────────── -->
+  <div class="section-panel" id="sec-picker">
+    <div class="section-header">
+      <h1 class="section-title">Random Picker</h1>
+      <p class="section-subtitle">Spin the wheel to select a student</p>
+    </div>
+    <div class="picker-wheel-container">
+      <canvas id="picker-canvas" width="400" height="400"></canvas>
+      <div class="picker-result" id="pickerResult">Spin the wheel!</div>
+      <div class="flex-row" style="justify-content:center">
+        <button class="btn btn-primary btn-lg" onclick="spinWheel()">🎯 Spin!</button>
+        <button class="btn btn-secondary" onclick="quickPick()">⚡ Quick Pick</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────── SEATING CHART ────────── -->
+  <div class="section-panel" id="sec-seating">
+    <div class="section-header">
+      <h1 class="section-title">Seating Chart</h1>
+      <p class="section-subtitle">Drag students to arrange seating</p>
+    </div>
+    <div class="flex-between mb-md">
+      <div class="flex-row">
+        <button class="btn btn-primary btn-sm" onclick="randomizeSeating()">🔀 Randomize</button>
+        <button class="btn btn-secondary btn-sm" onclick="clearSeating()">🗑 Clear</button>
+      </div>
+      <div class="flex-row">
+        <label class="form-label" style="margin:0">Rows:</label>
+        <select class="form-select" id="seatingRows" style="width:60px" onchange="renderSeating()">
+          <option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option>
+        </select>
+        <label class="form-label" style="margin:0">Cols:</label>
+        <select class="form-select" id="seatingCols" style="width:60px" onchange="renderSeating()">
+          <option value="4">4</option><option value="5">5</option><option value="6" selected>6</option><option value="7">7</option>
+        </select>
+      </div>
+    </div>
+    <div class="glass-card no-hover">
+      <div style="text-align:center;margin-bottom:16px">
+        <div style="display:inline-block;background:var(--purple-dim);border:1px solid var(--purple);border-radius:var(--radius-md);padding:8px 40px;font-family:'Orbitron',monospace;font-size:11px;color:var(--purple);letter-spacing:3px">FRONT OF CLASS</div>
+      </div>
+      <div class="seating-grid" id="seatingGrid"></div>
+    </div>
+  </div>
+
+  <!-- ────────── BEHAVIOR TRACKER ────────── -->
+  <div class="section-panel" id="sec-behavior">
+    <div class="section-header">
+      <h1 class="section-title">Behavior Tracker</h1>
+      <p class="section-subtitle">Manage student behavior points</p>
+    </div>
+    <div class="flex-between mb-md">
+      <button class="btn btn-secondary btn-sm" onclick="resetAllBehavior()">↺ Reset All Points</button>
+      <select class="form-select" id="behaviorSort" style="width:160px" onchange="renderBehavior()">
+        <option value="name">Sort by Name</option>
+        <option value="points-desc">Most Points</option>
+        <option value="points-asc">Fewest Points</option>
+      </select>
+    </div>
+    <div id="behaviorList"></div>
+    <div class="empty-state" id="behaviorEmpty" style="display:none">
+      <div class="empty-icon">⭐</div>
+      <div class="empty-text">Add students first to track behavior.</div>
+    </div>
+  </div>
+
+  <!-- ────────── NOISE METER ────────── -->
+  <div class="section-panel" id="sec-noise">
+    <div class="section-header">
+      <h1 class="section-title">Noise Meter</h1>
+      <p class="section-subtitle">Monitor classroom noise levels in real-time</p>
+    </div>
+    <div class="glass-card" style="text-align:center">
+      <div class="noise-meter-visual" id="noiseBars"></div>
+      <div class="noise-level-text" id="noiseLevel" style="color:var(--green)">0 dB</div>
+      <p style="color:var(--text-muted);font-size:12px;margin:8px 0 16px">Current noise classification: <span id="noiseClass" style="color:var(--green)">Silent</span></p>
+      <div class="progress-bar" style="height:12px;border-radius:6px;margin-bottom:16px">
+        <div class="progress-fill" id="noiseBar" style="width:0%;border-radius:6px"></div>
+      </div>
+      <button class="btn btn-primary btn-lg" id="noiseBtn" onclick="toggleNoiseMeter()">🎤 Start Listening</button>
+      <p style="color:var(--text-muted);font-size:11px;margin-top:12px">Requires microphone permission</p>
+    </div>
+  </div>
+
+  <!-- ────────── WHITEBOARD ────────── -->
+  <div class="section-panel" id="sec-whiteboard">
+    <div class="section-header">
+      <h1 class="section-title">Whiteboard</h1>
+      <p class="section-subtitle">Draw, annotate, and explain</p>
+    </div>
+    <div id="whiteboard-container">
+      <div class="wb-toolbar">
+        <div class="wb-color active" style="background:#ffffff" data-color="#ffffff"></div>
+        <div class="wb-color" style="background:#00f0ff" data-color="#00f0ff"></div>
+        <div class="wb-color" style="background:#8b5cf6" data-color="#8b5cf6"></div>
+        <div class="wb-color" style="background:#ff0088" data-color="#ff0088"></div>
+        <div class="wb-color" style="background:#00ff88" data-color="#00ff88"></div>
+        <div class="wb-color" style="background:#ff8800" data-color="#ff8800"></div>
+        <div class="wb-color" style="background:#ffdd00" data-color="#ffdd00"></div>
+        <div class="wb-color" style="background:#ff3355" data-color="#ff3355"></div>
+        <span style="color:var(--text-muted);margin:0 8px">│</span>
+        <label class="form-label" style="margin:0;font-size:11px">Size:</label>
+        <input type="range" id="wbSize" min="1" max="30" value="3" style="width:100px">
+        <span style="color:var(--text-muted);margin:0 8px">│</span>
+        <button class="btn btn-ghost btn-sm" id="wbEraser" onclick="toggleEraser()">🧽 Eraser</button>
+        <button class="btn btn-danger btn-sm" onclick="clearWhiteboard()">🗑 Clear</button>
+        <button class="btn btn-secondary btn-sm" onclick="downloadWhiteboard()">💾 Save</button>
+      </div>
+      <canvas id="whiteboard" width="1200" height="600"></canvas>
+    </div>
+  </div>
+
+  <!-- ────────── CALENDAR ────────── -->
+  <div class="section-panel" id="sec-calendar">
+    <div class="section-header">
+      <h1 class="section-title">Calendar</h1>
+      <p class="section-subtitle">Plan and view your month at a glance</p>
+    </div>
+    <div class="glass-card no-hover">
+      <div class="flex-between mb-md">
+        <button class="btn btn-ghost btn-sm" onclick="changeMonth(-1)">◀</button>
+        <h3 id="calMonthYear" style="font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:var(--cyan);letter-spacing:2px"></h3>
+        <button class="btn btn-ghost btn-sm" onclick="changeMonth(1)">▶</button>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+    <div class="glass-card" style="margin-top:20px">
+      <h3 style="font-family:'Orbitron',monospace;font-size:12px;color:var(--cyan);margin-bottom:16px;letter-spacing:2px">ADD EVENT</h3>
+      <div class="grid-3" style="grid-template-columns:1fr 1fr auto">
+        <div class="form-group" style="margin:0">
+          <input type="date" class="form-input" id="eventDate">
+        </div>
+        <div class="form-group" style="margin:0">
+          <input type="text" class="form-input" id="eventTitle" placeholder="Event title...">
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="addCalendarEvent()">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────── SCHEDULE ────────── -->
+  <div class="section-panel" id="sec-schedule">
+    <div class="section-header">
+      <h1 class="section-title">Weekly Schedule</h1>
+      <p class="section-subtitle">Plan your weekly class timetable</p>
+    </div>
+    <div class="glass-card no-hover" style="overflow-x:auto">
+      <div class="schedule-grid" id="scheduleGrid"></div>
+    </div>
+  </div>
+
+  <!-- ────────── RUBRIC BUILDER ────────── -->
+  <div class="section-panel" id="sec-rubric">
+    <div class="section-header">
+      <h1 class="section-title">Rubric Builder</h1>
+      <p class="section-subtitle">Create detailed grading rubrics</p>
+    </div>
+    <div class="flex-between mb-md">
+      <div class="flex-row">
+        <input type="text" class="form-input" id="rubricTitle" placeholder="Rubric title..." style="width:280px">
+        <button class="btn btn-primary btn-sm" onclick="addRubricRow()">➕ Add Criterion</button>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="saveRubric()">💾 Save Rubric</button>
+    </div>
+    <div class="glass-card no-hover" style="overflow-x:auto">
+      <table class="rubric-table" id="rubricTable">
+        <thead>
+          <tr>
+            <th style="width:160px">Criteria</th>
+            <th>Excellent (4)</th>
+            <th>Good (3)</th>
+            <th>Fair (2)</th>
+            <th>Poor (1)</th>
+            <th style="width:50px"></th>
+          </tr>
+        </thead>
+        <tbody id="rubricBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ────────── QUIZ MAKER ────────── -->
+  <div class="section-panel" id="sec-quiz">
+    <div class="section-header">
+      <h1 class="section-title">Quiz Maker</h1>
+      <p class="section-subtitle">Create multiple-choice quizzes</p>
+    </div>
+    <div class="flex-between mb-md">
+      <div class="flex-row">
+        <input type="text" class="form-input" id="quizTitle" placeholder="Quiz title..." style="width:280px">
+        <button class="btn btn-primary btn-sm" onclick="addQuizQuestion()">➕ Add Question</button>
+      </div>
+      <div class="flex-row">
+        <button class="btn btn-secondary btn-sm" onclick="saveQuiz()">💾 Save Quiz</button>
+        <button class="btn btn-ghost btn-sm" onclick="printQuiz()">🖨 Print</button>
+      </div>
+    </div>
+    <div id="quizQuestions"></div>
+    <div class="empty-state" id="quizEmpty">
+      <div class="empty-icon">❓</div>
+      <div class="empty-text">Add your first question to build a quiz.</div>
+    </div>
+  </div>
+
+  <!-- ────────── ANNOUNCEMENTS ────────── -->
+  <div class="section-panel" id="sec-announcements">
+    <div class="section-header">
+      <h1 class="section-title">Announcements</h1>
+      <p class="section-subtitle">Post announcements for your class</p>
+    </div>
+    <div class="glass-card mb-md">
+      <div class="form-group">
+        <input type="text" class="form-input" id="annTitle" placeholder="Announcement title...">
+      </div>
+      <div class="form-group">
+        <textarea class="form-textarea" id="annBody" placeholder="Write your announcement..." rows="3"></textarea>
+      </div>
+      <div class="flex-between">
+        <label style="font-size:13px;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="annPinned"> 📌 Pin this
+        </label>
+        <button class="btn btn-primary btn-sm" onclick="postAnnouncement()">📢 Post</button>
+      </div>
+    </div>
+    <div id="announcementList"></div>
+  </div>
+
+  <!-- ────────── PARENT COMMUNICATION LOG ────────── -->
+  <div class="section-panel" id="sec-comms">
+    <div class="section-header">
+      <h1 class="section-title">Parent Communication</h1>
+      <p class="section-subtitle">Track parent/guardian interactions</p>
+    </div>
+    <div class="glass-card mb-md">
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Parent/Guardian</label>
+          <input type="text" class="form-input" id="commParent" placeholder="Parent name...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Student</label>
+          <select class="form-select" id="commStudent"></select>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-select" id="commType">
+            <option value="📧">📧 Email</option>
+            <option value="📞">📞 Phone Call</option>
+            <option value="🤝">🤝 In-Person</option>
+            <option value="💬">💬 Message</option>
+            <option value="📋">📋 Conference</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="commDate">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" id="commNotes" placeholder="Communication notes..."></textarea>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="addCommEntry()">💬 Log Communication</button>
+    </div>
+    <div id="commList"></div>
+  </div>
+
+  <!-- ────────── REPORT CARDS ────────── -->
+  <div class="section-panel" id="sec-reports">
+    <div class="section-header">
+      <h1 class="section-title">Report Cards</h1>
+      <p class="section-subtitle">Generate student progress reports</p>
+    </div>
+    <div class="flex-between mb-md">
+      <select class="form-select" id="reportStudent" style="width:260px" onchange="generateReport()">
+        <option value="">Select a student...</option>
+      </select>
+      <button class="btn btn-secondary btn-sm" onclick="printReport()">🖨 Print Report</button>
+    </div>
+    <div class="report-preview" id="reportPreview">
+      <div class="empty-state">
+        <div class="empty-icon">📄</div>
+        <div class="empty-text">Select a student to generate their report card.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────── RESOURCES ────────── -->
+  <div class="section-panel" id="sec-resources">
+    <div class="section-header">
+      <h1 class="section-title">Resource Library</h1>
+      <p class="section-subtitle">Save and organize your teaching resources</p>
+    </div>
+    <div class="glass-card mb-md">
+      <div class="grid-3" style="grid-template-columns:1fr 1fr auto">
+        <input type="text" class="form-input" id="resTitle" placeholder="Resource title...">
+        <input type="url" class="form-input" id="resUrl" placeholder="URL (https://...)">
+        <div class="flex-row" style="gap:8px">
+          <select class="form-select" id="resType" style="width:100px">
+            <option value="📄">📄 Doc</option>
+            <option value="🎥">🎥 Video</option>
+            <option value="🔗">🔗 Link</option>
+            <option value="📖">📖 Book</option>
+            <option value="🎮">🎮 Game</option>
+            <option value="🧪">🧪 Lab</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="addResource()">Add</button>
+        </div>
+      </div>
+    </div>
+    <div class="grid-4" id="resourceGrid"></div>
+    <div class="empty-state" id="resourcesEmpty" style="display:none">
+      <div class="empty-icon">📚</div>
+      <div class="empty-text">No resources saved yet.</div>
+    </div>
+  </div>
+
+  <!-- ────────── AI ASSISTANT ────────── -->
+  <div class="section-panel" id="sec-ai">
+    <div class="section-header">
+      <h1 class="section-title">AI Teaching Assistant</h1>
+      <p class="section-subtitle">Get lesson ideas, explanations, and teaching tips</p>
+    </div>
+    <div class="glass-card no-hover ai-chat-container">
+      <div class="ai-messages" id="aiMessages">
+        <div class="ai-msg assistant">👋 Hello! I'm your AI teaching assistant. Ask me for lesson ideas, explanations, differentiation strategies, or anything else teaching-related! I work offline using built-in templates.</div>
+      </div>
+      <div class="ai-input-row">
+        <input type="text" class="form-input" id="aiInput" placeholder="Ask me anything about teaching..." onkeydown="if(event.key==='Enter')sendAiMessage()">
+        <button class="btn btn-primary" onclick="sendAiMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────── SETTINGS ────────── -->
+  <div class="section-panel" id="sec-settings">
+    <div class="section-header">
+      <h1 class="section-title">Settings</h1>
+      <p class="section-subtitle">Configure your Educ8 experience</p>
+    </div>
+    <div class="glass-card mb-md">
+      <h3 style="font-family:'Orbitron',monospace;font-size:12px;color:var(--cyan);margin-bottom:16px;letter-spacing:2px">GENERAL</h3>
+      <div class="settings-item">
+        <div class="settings-info">
+          <h4>Teacher Name</h4>
+          <p>Displayed on reports and exports</p>
+        </div>
+        <input type="text" class="form-input" id="settTeacherName" style="width:200px" placeholder="Your name" onchange="saveSettings()">
+      </div>
+      <div class="settings-item">
+        <div class="settings-info">
+          <h4>School Name</h4>
+          <p>Displayed on official documents</p>
+        </div>
+        <input type="text" class="form-input" id="settSchoolName" style="width:200px" placeholder="School name" onchange="saveSettings()">
+      </div>
+      <div class="settings-item">
+        <div class="settings-info">
+          <h4>Class/Section</h4>
+          <p>Your class identifier</p>
+        </div>
+        <input type="text" class="form-input" id="settClassName" style="width:200px" placeholder="e.g., Period 3 - Biology" onchange="saveSettings()">
+      </div>
+      <div class="settings-item">
+        <div class="settings-info">
+          <h4>Particle Effects</h4>
+          <p>Background particle animation</p>
+        </div>
+        <div class="toggle-switch active" id="toggleParticles" onclick="toggleSetting('particles')"></div>
+      </div>
+      <div class="settings-item">
+        <div class="settings-info">
+          <h4>Page Transitions</h4>
+          <p>Cinematic section transition animations</p>
+        </div>
+        <div class="toggle-switch active" id="toggleTransitions" onclick="toggleSetting('transitions')"></div>
+      </div>
+      <div class="settings-item">
+        <div class="settings-info">
+          <h4>Sound Effects</h4>
+          <p>Audio feedback on actions</p>
+        </div>
+        <div class="toggle-switch" id="toggleSounds" onclick="toggleSetting('sounds')"></div>
+      </div>
+    </div>
+    <div class="glass-card mb-md">
+      <h3 style="font-family:'Orbitron',monospace;font-size:12px;color:var(--cyan);margin-bottom:16px;letter-spacing:2px">DATA MANAGEMENT</h3>
+      <div class="flex-row flex-wrap" style="gap:10px">
+        <button class="btn btn-primary btn-sm" onclick="exportAllData()">💾 Export All Data (JSON)</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('importFile').click()">📂 Import Data</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importAllData(event)">
+        <button class="btn btn-danger btn-sm" onclick="if(confirm('⚠️ Delete ALL data? This cannot be undone!'))clearAllData()">🗑 Clear All Data</button>
+      </div>
+    </div>
+    <div class="glass-card">
+      <h3 style="font-family:'Orbitron',monospace;font-size:12px;color:var(--cyan);margin-bottom:16px;letter-spacing:2px">ABOUT</h3>
+      <p style="font-size:13px;color:var(--text-secondary)">
+        <strong style="color:var(--text-primary)">Educ8</strong> — The Future of Teaching<br>
+        Version 2080.9.17 · Single-file all-in-one teacher toolkit<br>
+        All data stored locally in your browser via LocalStorage.
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="app-footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <span class="footer-logo">EDUC8</span>
+      <span class="footer-copy">The Future of Teaching · v2080.9.17</span>
+    </div>
+    <div class="footer-links">
+      <span class="footer-link" onclick="navigateTo('settings')">Settings</span>
+      <span class="footer-link" onclick="exportAllData()">Export Data</span>
+      <span class="footer-link" onclick="navigateTo('ai')">AI Help</span>
+    </div>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-bottom">
+    <span class="pulse-dot"></span>
+    All systems operational · Data persisted locally · Zero cloud dependency
+  </div>
+</footer>
+
+<!-- ═══════════════ MODAL ═══════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- ═══════════════ JAVASCRIPT ENGINE ═══════════════ -->
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   EDUC8 — CORE APPLICATION ENGINE
+   ═══════════════════════════════════════════════════════════════ */
+
+// ── DATA STORE ──
+let appData = {
+  students: [],
+  gradeColumns: [],
+  grades: {},
+  attendance: {},
+  lessons: [],
+  assignments: [],
+  quizzes: [],
+  announcements: [],
+  commLog: [],
+  resources: [],
+  calendarEvents: [],
+  behavior: {},
+  schedule: {},
+  rubrics: [],
+  seatingArrangement: [],
+  settings: {
+    teacherName: '',
+    schoolName: '',
+    className: '',
+    particles: true,
+    transitions: true,
+    sounds: false
+  }
+};
+
+function loadData() {
+  try {
+    const d = localStorage.getItem('educ8_data');
+    if (d) appData = JSON.parse(d);
+  } catch(e) { console.warn('Data load error', e); }
+}
+function saveData() {
+  try { localStorage.setItem('educ8_data', JSON.stringify(appData)); } catch(e) { console.warn('Data save error', e); }
+}
+function exportAllData() {
+  const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `educ8_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(url);
+  showToast('Data exported successfully!', 'success');
+}
+function importAllData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      appData = JSON.parse(ev.target.result);
+      saveData();
+      showToast('Data imported successfully!', 'success');
+      renderAll();
+    } catch(err) { showToast('Invalid file format!', 'error'); }
+  };
+  reader.readAsText(file);
+}
+function clearAllData() {
+  localStorage.removeItem('educ8_data');
+  appData = { students:[], gradeColumns:[], grades:{}, attendance:{}, lessons:[], assignments:[], quizzes:[], announcements:[], commLog:[], resources:[], calendarEvents:[], behavior:{}, schedule:{}, rubrics:[], seatingArrangement:[], settings:{ teacherName:'', schoolName:'', className:'', particles:true, transitions:true, sounds:false } };
+  saveData();
+  renderAll();
+  showToast('All data cleared', 'info');
+}
+
+// ── TOAST ──
+function showToast(msg, type = 'info') {
+  const c = document.getElementById('toastContainer');
+  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ── MODAL ──
+function openModal(html) {
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+// ── NAVIGATION ──
+let currentSection = 'dashboard';
+const sectionNames = {
+  dashboard: 'Dashboard', gradebook: 'Gradebook', attendance: 'Attendance', lessons: 'Lessons',
+  assignments: 'Assignments', timer: 'Timer', picker: 'Picker', seating: 'Seating',
+  behavior: 'Behavior', noise: 'Noise', whiteboard: 'Whiteboard', calendar: 'Calendar',
+  schedule: 'Schedule', rubric: 'Rubric', quiz: 'Quiz', announcements: 'Announce',
+  comms: 'Comms', reports: 'Reports', resources: 'Resources', ai: 'AI', settings: 'Settings'
+};
+
+function navigateTo(section) {
+  if (section === currentSection) return;
+  const doSwitch = () => {
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const panel = document.getElementById(`sec-${section}`);
+    if (panel) {
+      panel.classList.add('active');
+      panel.style.animation = 'none';
+      panel.offsetHeight;
+      panel.style.animation = '';
+    }
+    const navItem = document.querySelector(`.nav-item[data-section="${section}"]`);
+    if (navItem) navItem.classList.add('active');
+    currentSection = section;
+    // Section-specific init
+    if (section === 'whiteboard') initWhiteboard();
+    if (section === 'calendar') renderCalendar();
+    if (section === 'schedule') renderSchedule();
+    if (section === 'seating') renderSeating();
+    if (section === 'picker') drawPickerWheel();
+    if (section === 'gradebook') renderGradebook();
+    if (section === 'attendance') renderAttendance();
+    if (section === 'behavior') renderBehavior();
+    if (section === 'lessons') renderLessons();
+    if (section === 'assignments') renderAssignments();
+    if (section === 'announcements') renderAnnouncements();
+    if (section === 'comms') renderComms();
+    if (section === 'reports') populateReportStudents();
+    if (section === 'resources') renderResources();
+    if (section === 'rubric') renderRubric();
+    if (section === 'quiz') renderQuiz();
+    triggerScrollReveal();
+    closeSidebarMobile();
+  };
+
+  if (appData.settings.transitions) {
+    playTransition(sectionNames[section] || section, doSwitch);
+  } else {
+    doSwitch();
+  }
+}
+
+// ── PAGE TRANSITION ──
+function playTransition(label, callback) {
+  const overlay = document.getElementById('pageTransition');
+  const slices = overlay.querySelectorAll('.transition-slice');
+  const textEl = document.getElementById('transitionText');
+  textEl.textContent = label;
+  overlay.style.pointerEvents = 'all';
+
+  // Animate slices in
+  slices.forEach((s, i) => {
+    s.style.transition = `transform 0.25s cubic-bezier(0.7, 0, 0.3, 1) ${i * 0.04}s`;
+    s.style.transformOrigin = 'left';
+    s.style.transform = 'scaleX(1)';
+  });
+  // Show text
+  setTimeout(() => {
+    textEl.style.transition = 'opacity 0.2s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    textEl.style.opacity = '1';
+    textEl.style.transform = 'scale(1)';
+  }, 200);
+  // Switch content
+  setTimeout(() => {
+    callback();
+  }, 450);
+  // Animate out
+  setTimeout(() => {
+    textEl.style.opacity = '0';
+    textEl.style.transform = 'scale(1.5)';
+    slices.forEach((s, i) => {
+      s.style.transition = `transform 0.25s cubic-bezier(0.7, 0, 0.3, 1) ${i * 0.04}s`;
+      s.style.transformOrigin = 'right';
+      s.style.transform = 'scaleX(0)';
+    });
+  }, 550);
+  setTimeout(() => {
+    overlay.style.pointerEvents = 'none';
+    slices.forEach(s => { s.style.transformOrigin = 'left'; });
+  }, 900);
+}
+
+// ── SIDEBAR TOGGLE ──
+function toggleSidebar() {
+  document.getElementById('appSidebar').classList.toggle('open');
+}
+function closeSidebarMobile() {
+  if (window.innerWidth <= 768) document.getElementById('appSidebar').classList.remove('open');
+}
+
+// ── FULLSCREEN ──
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+// ── CLOCK ──
+function updateClock() {
+  const now = new Date();
+  document.getElementById('headerClock').textContent = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+setInterval(updateClock, 1000);
+
+// ── SCROLL REVEAL ──
+function triggerScrollReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+    el.classList.remove('visible');
+    observer.observe(el);
+  });
+}
+
+// ── PARTICLE SYSTEM ──
+const particleCanvas = document.getElementById('particle-canvas');
+const pCtx = particleCanvas.getContext('2d');
+let particles = [];
+let animatingParticles = true;
+
+function resizeParticleCanvas() {
+  particleCanvas.width = window.innerWidth;
+  particleCanvas.height = window.innerHeight;
+}
+function initParticles() {
+  resizeParticleCanvas();
+  particles = [];
+  const count = Math.min(80, Math.floor(window.innerWidth * window.innerHeight / 15000));
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * particleCanvas.width,
+      y: Math.random() * particleCanvas.height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: Math.random() * 1.5 + 0.5,
+      hue: Math.random() * 60 + 170
+    });
+  }
+}
+function drawParticles() {
+  if (!animatingParticles || !appData.settings.particles) {
+    requestAnimationFrame(drawParticles);
+    return;
+  }
+  pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0) p.x = particleCanvas.width;
+    if (p.x > particleCanvas.width) p.x = 0;
+    if (p.y < 0) p.y = particleCanvas.height;
+    if (p.y > particleCanvas.height) p.y = 0;
+    pCtx.beginPath();
+    pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    pCtx.fillStyle = `hsla(${p.hue}, 80%, 70%, 0.6)`;
+    pCtx.fill();
+  });
+  // Draw connections
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 120) {
+        pCtx.beginPath();
+        pCtx.moveTo(particles[i].x, particles[i].y);
+        pCtx.lineTo(particles[j].x, particles[j].y);
+        pCtx.strokeStyle = `hsla(220, 80%, 60%, ${0.08 * (1 - dist/120)})`;
+        pCtx.lineWidth = 0.5;
+        pCtx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+window.addEventListener('resize', resizeParticleCanvas);
+initParticles();
+drawParticles();
+
+// ═══════════════ STUDENTS MANAGEMENT ═══════════════
+function openAddStudentModal() {
+  openModal(`
+    <div class="modal-title">Add Student</div>
+    <div class="form-group">
+      <label class="form-label">Student Name</label>
+      <input type="text" class="form-input" id="newStudentName" placeholder="Full name..." autofocus>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Student ID (optional)</label>
+      <input type="text" class="form-input" id="newStudentId" placeholder="ID number...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email (optional)</label>
+      <input type="email" class="form-input" id="newStudentEmail" placeholder="student@school.edu">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="addStudent()">Add Student</button>
+    </div>
+  `);
+  setTimeout(() => document.getElementById('newStudentName')?.focus(), 100);
+}
+function addStudent() {
+  const name = document.getElementById('newStudentName').value.trim();
+  if (!name) return showToast('Please enter a student name', 'error');
+  const id = document.getElementById('newStudentId').value.trim() || `S${Date.now().toString(36).toUpperCase()}`;
+  const email = document.getElementById('newStudentEmail').value.trim();
+  appData.students.push({ name, id, email, added: new Date().toISOString() });
+  appData.behavior[name] = appData.behavior[name] || 0;
+  saveData();
+  closeModal();
+  showToast(`${name} added!`, 'success');
+  addActivity(`Added student: ${name}`);
+  renderAll();
+}
+function removeStudent(idx) {
+  if (!confirm(`Remove ${appData.students[idx].name}?`)) return;
+  const name = appData.students[idx].name;
+  appData.students.splice(idx, 1);
+  delete appData.behavior[name];
+  saveData();
+  showToast(`${name} removed`, 'info');
+  renderAll();
+}
+
+// ═══════════════ GRADEBOOK ═══════════════
+function openAddAssignmentColumnModal() {
+  openModal(`
+    <div class="modal-title">Add Grade Column</div>
+    <div class="form-group">
+      <label class="form-label">Assignment Name</label>
+      <input type="text" class="form-input" id="newColName" placeholder="e.g., Quiz 1, Homework 3..." autofocus>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Points</label>
+      <input type="number" class="form-input" id="newColMax" value="100" min="1">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="addGradeColumn()">Add Column</button>
+    </div>
+  `);
+}
+function addGradeColumn() {
+  const name = document.getElementById('newColName').value.trim();
+  const max = parseInt(document.getElementById('newColMax').value) || 100;
+  if (!name) return showToast('Enter column name', 'error');
+  appData.gradeColumns.push({ name, max });
+  saveData();
+  closeModal();
+  showToast(`Column "${name}" added`, 'success');
+  renderGradebook();
+}
+function renderGradebook() {
+  const filter = document.getElementById('gradeFilter')?.value || 'all';
+  const table = document.getElementById('gradebookTable');
+  const body = document.getElementById('gradebookBody');
+  if (appData.students.length === 0) {
+    document.getElementById('gradebookEmpty').style.display = '';
+    table.closest('.glass-card').style.display = 'none';
+    return;
+  }
+  document.getElementById('gradebookEmpty').style.display = 'none';
+  table.closest('.glass-card').style.display = '';
+  // Build header
+  let headerHTML = '<tr><th>Student</th>';
+  appData.gradeColumns.forEach((c, ci) => {
+    headerHTML += `<th>${c.name}<br><span style="font-weight:400;font-size:9px;color:var(--text-muted)">/${c.max}</span></th>`;
+  });
+  headerHTML += '<th>Average</th><th></th></tr>';
+  table.querySelector('thead').innerHTML = headerHTML;
+  // Build body
+  let rowsHTML = '';
+  appData.students.forEach((s, si) => {
+    const grades = appData.gradeColumns.map((c, ci) => {
+      const key = `${si}_${ci}`;
+      return appData.grades[key] !== undefined ? appData.grades[key] : null;
+    });
+    const validGrades = grades.filter(g => g !== null);
+    let avg = '--';
+    let avgNum = 0;
+    if (validGrades.length > 0 && appData.gradeColumns.length > 0) {
+      let totalPct = 0;
+      let count = 0;
+      appData.gradeColumns.forEach((c, ci) => {
+        const key = `${si}_${ci}`;
+        if (appData.grades[key] !== undefined) {
+          totalPct += (appData.grades[key] / c.max) * 100;
+          count++;
+        }
+      });
+      avgNum = count > 0 ? totalPct / count : 0;
+      avg = avgNum.toFixed(1) + '%';
+    }
+    if (filter === 'atrisk' && (avgNum >= 60 || avg === '--')) return;
+    let color = 'var(--green)';
+    if (avgNum < 60) color = 'var(--red)';
+    else if (avgNum < 70) color = 'var(--orange)';
+    else if (avgNum < 80) color = 'var(--yellow)';
+    else if (avgNum < 90) color = 'var(--cyan)';
+
+    rowsHTML += `<tr><td style="font-weight:600">${s.name}</td>`;
+    appData.gradeColumns.forEach((c, ci) => {
+      const key = `${si}_${ci}`;
+      const val = appData.grades[key] !== undefined ? appData.grades[key] : '';
+      rowsHTML += `<td class="grade-cell"><input type="number" class="form-input" style="width:70px;padding:4px 8px;font-size:13px;text-align:center" value="${val}" min="0" max="${c.max}" onchange="updateGrade(${si},${ci},this.value)"></td>`;
+    });
+    rowsHTML += `<td class="grade-cell" style="color:${color};font-size:15px">${avg}</td>`;
+    rowsHTML += `<td><button class="btn btn-danger btn-sm btn-icon" onclick="removeStudent(${si})" title="Remove">✕</button></td>`;
+    rowsHTML += '</tr>';
+  });
+  body.innerHTML = rowsHTML;
+  updateDashboard();
+}
+function updateGrade(si, ci, val) {
+  const key = `${si}_${ci}`;
+  if (val === '' || val === null) { delete appData.grades[key]; }
+  else { appData.grades[key] = parseFloat(val); }
+  saveData();
+  renderGradebook();
+}
+
+// ═══════════════ ATTENDANCE ═══════════════
+function renderAttendance() {
+  const d = document.getElementById('attendanceDate');
+  if (!d.value) d.value = new Date().toISOString().slice(0, 10);
+  if (appData.students.length === 0) {
+    document.getElementById('attendanceEmpty').style.display = '';
+    document.getElementById('attendanceList').innerHTML = '';
+    return;
+  }
+  document.getElementById('attendanceEmpty').style.display = 'none';
+  const dateKey = d.value;
+  const records = appData.attendance[dateKey] || {};
+  let html = '';
+  appData.students.forEach((s, i) => {
+    const status = records[s.name] || 'unmarked';
+    const statusColors = { present: 'var(--green)', absent: 'var(--red)', late: 'var(--orange)', excused: 'var(--purple)', unmarked: 'var(--text-muted)' };
+    html += `
+      <div class="behavior-student" style="border-left:3px solid ${statusColors[status]}">
+        <span class="behavior-name">${s.name}</span>
+        <div class="flex-row gap-sm">
+          <button class="btn btn-sm ${status==='present'?'btn-primary':'btn-ghost'}" onclick="setAttendance('${s.name}','present')">✅ Present</button>
+          <button class="btn btn-sm ${status==='late'?'btn-primary':'btn-ghost'}" onclick="setAttendance('${s.name}','late')">⏰ Late</button>
+          <button class="btn btn-sm ${status==='absent'?'btn-danger':'btn-ghost'}" onclick="setAttendance('${s.name}','absent')">❌ Absent</button>
+          <button class="btn btn-sm ${status==='excused'?'btn-secondary':'btn-ghost'}" onclick="setAttendance('${s.name}','excused')">📋 Excused</button>
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('attendanceList').innerHTML = html;
+}
+function setAttendance(name, status) {
+  const dateKey = document.getElementById('attendanceDate').value;
+  if (!appData.attendance[dateKey]) appData.attendance[dateKey] = {};
+  appData.attendance[dateKey][name] = status;
+  saveData();
+  renderAttendance();
+}
+function markAllPresent() {
+  const dateKey = document.getElementById('attendanceDate').value;
+  appData.attendance[dateKey] = {};
+  appData.students.forEach(s => appData.attendance[dateKey][s.name] = 'present');
+  saveData();
+  renderAttendance();
+  showToast('All marked present', 'success');
+}
+function markAllAbsent() {
+  const dateKey = document.getElementById('attendanceDate').value;
+  appData.attendance[dateKey] = {};
+  appData.students.forEach(s => appData.attendance[dateKey][s.name] = 'absent');
+  saveData();
+  renderAttendance();
+}
+function saveAttendance() {
+  saveData();
+  addActivity('Attendance saved for ' + document.getElementById('attendanceDate').value);
+  showToast('Attendance saved!', 'success');
+  updateDashboard();
+}
+
+// ═══════════════ LESSONS ═══════════════
+function openLessonModal(editIdx) {
+  const isEdit = editIdx !== undefined;
+  const lesson = isEdit ? appData.lessons[editIdx] : {};
+  openModal(`
+    <div class="modal-title">${isEdit ? 'Edit' : 'New'} Lesson Plan</div>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input type="text" class="form-input" id="lessonTitle" value="${lesson.title||''}" placeholder="Lesson title...">
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label">Subject</label>
+        <select class="form-select" id="lessonSubject">
+          <option ${lesson.subject==='Math'?'selected':''}>Math</option>
+          <option ${lesson.subject==='Science'?'selected':''}>Science</option>
+          <option ${lesson.subject==='English'?'selected':''}>English</option>
+          <option ${lesson.subject==='History'?'selected':''}>History</option>
+          <option ${lesson.subject==='Art'?'selected':''}>Art</option>
+          <option ${lesson.subject==='Other'?'selected':''}>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input type="date" class="form-input" id="lessonDate" value="${lesson.date||new Date().toISOString().slice(0,10)}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Objective</label>
+      <textarea class="form-textarea" id="lessonObjective" placeholder="Students will be able to...">${lesson.objective||''}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Activities / Procedures</label>
+      <textarea class="form-textarea" id="lessonActivities" placeholder="Lesson activities..." rows="4">${lesson.activities||''}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Materials</label>
+      <input type="text" class="form-input" id="lessonMaterials" value="${lesson.materials||''}" placeholder="Textbook p.42, projector, worksheets...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Assessment</label>
+      <input type="text" class="form-input" id="lessonAssessment" value="${lesson.assessment||''}" placeholder="How will you assess?">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveLesson(${isEdit ? editIdx : -1})">${isEdit ? 'Update' : 'Create'}</button>
+    </div>
+  `);
+}
+function saveLesson(idx) {
+  const lesson = {
+    title: document.getElementById('lessonTitle').value.trim(),
+    subject: document.getElementById('lessonSubject').value,
+    date: document.getElementById('lessonDate').value,
+    objective: document.getElementById('lessonObjective').value.trim(),
+    activities: document.getElementById('lessonActivities').value.trim(),
+    materials: document.getElementById('lessonMaterials').value.trim(),
+    assessment: document.getElementById('lessonAssessment').value.trim(),
+    created: new Date().toISOString()
+  };
+  if (!lesson.title) return showToast('Enter a title', 'error');
+  if (idx >= 0) appData.lessons[idx] = lesson;
+  else appData.lessons.push(lesson);
+  saveData();
+  closeModal();
+  showToast('Lesson plan saved!', 'success');
+  addActivity(`Lesson plan: "${lesson.title}"`);
+  renderLessons();
+  updateDashboard();
+}
+function renderLessons() {
+  const filter = document.getElementById('lessonFilter')?.value || 'all';
+  const list = document.getElementById('lessonList');
+  let lessons = appData.lessons;
+  if (filter !== 'all') lessons = lessons.filter(l => l.subject === filter);
+  if (lessons.length === 0) {
+    document.getElementById('lessonsEmpty').style.display = '';
+    list.innerHTML = '';
+    return;
+  }
+  document.getElementById('lessonsEmpty').style.display = 'none';
+  const subjectColors = { Math: 'var(--cyan)', Science: 'var(--green)', English: 'var(--purple)', History: 'var(--orange)', Art: 'var(--pink)', Other: 'var(--text-secondary)' };
+  list.innerHTML = lessons.map((l, i) => {
+    const realIdx = appData.lessons.indexOf(l);
+    return `
+    <div class="lesson-card">
+      <div class="flex-between">
+        <div>
+          <div class="lesson-title">${l.title}</div>
+          <div class="lesson-meta">
+            <span class="tag" style="background:${subjectColors[l.subject]||'var(--text-muted)'}22;color:${subjectColors[l.subject]||'var(--text-muted)'}">${l.subject}</span>
+            <span>📅 ${l.date}</span>
+          </div>
+        </div>
+        <div class="flex-row gap-sm">
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="openLessonModal(${realIdx})" title="Edit">✏️</button>
+          <button class="btn btn-danger btn-sm btn-icon" onclick="deleteLesson(${realIdx})" title="Delete">✕</button>
+        </div>
+      </div>
+      ${l.objective ? `<p style="font-size:13px;color:var(--text-secondary);margin-top:10px;padding-left:12px"><strong>Objective:</strong> ${l.objective}</p>` : ''}
+    </div>`;
+  }).join('');
+}
+function deleteLesson(idx) {
+  if (!confirm('Delete this lesson plan?')) return;
+  appData.lessons.splice(idx, 1);
+  saveData();
+  renderLessons();
+  updateDashboard();
+  showToast('Lesson deleted', 'info');
+}
+
+// ═══════════════ ASSIGNMENTS ═══════════════
+function openAssignmentModal(editIdx) {
+  const isEdit = editIdx !== undefined;
+  const a = isEdit ? appData.assignments[editIdx] : {};
+  openModal(`
+    <div class="modal-title">${isEdit ? 'Edit' : 'New'} Assignment</div>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input type="text" class="form-input" id="asgTitle" value="${a.title||''}" placeholder="Assignment title...">
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label">Due Date</label>
+        <input type="date" class="form-input" id="asgDue" value="${a.due||''}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Subject</label>
+        <select class="form-select" id="asgSubject">
+          <option ${a.subject==='Math'?'selected':''}>Math</option>
+          <option ${a.subject==='Science'?'selected':''}>Science</option>
+          <option ${a.subject==='English'?'selected':''}>English</option>
+          <option ${a.subject==='History'?'selected':''}>History</option>
+          <option ${a.subject==='Other'?'selected':''}>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-textarea" id="asgDesc" placeholder="Assignment details...">${a.description||''}</textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAssignment(${isEdit ? editIdx : -1})">Save</button>
+    </div>
+  `);
+}
+function saveAssignment(idx) {
+  const a = {
+    title: document.getElementById('asgTitle').value.trim(),
+    due: document.getElementById('asgDue').value,
+    subject: document.getElementById('asgSubject').value,
+    description: document.getElementById('asgDesc').value.trim(),
+    created: new Date().toISOString(),
+    completed: false
+  };
+  if (!a.title) return showToast('Enter a title', 'error');
+  if (idx >= 0) { a.completed = appData.assignments[idx].completed; appData.assignments[idx] = a; }
+  else appData.assignments.push(a);
+  saveData();
+  closeModal();
+  showToast('Assignment saved!', 'success');
+  renderAssignments();
+  updateDashboard();
+}
+function renderAssignments() {
+  const list = document.getElementById('assignmentList');
+  if (appData.assignments.length === 0) {
+    document.getElementById('assignmentsEmpty').style.display = '';
+    list.innerHTML = '';
+    return;
+  }
+  document.getElementById('assignmentsEmpty').style.display = 'none';
+  list.innerHTML = appData.assignments.map((a, i) => {
+    const isOverdue = !a.completed && a.due && new Date(a.due) < new Date();
+    return `
+    <div class="lesson-card" style="opacity:${a.completed?'0.5':'1'}">
+      <div class="flex-between">
+        <div style="display:flex;align-items:center;gap:12px">
+          <input type="checkbox" ${a.completed?'checked':''} onchange="toggleAssignment(${i})" style="width:18px;height:18px;cursor:pointer">
+          <div>
+            <div class="lesson-title" style="${a.completed?'text-decoration:line-through':''}">${a.title}</div>
+            <div class="lesson-meta">
+              <span class="tag tag-${a.subject==='Math'?'cyan':a.subject==='Science'?'green':'purple'}">${a.subject}</span>
+              <span style="color:${isOverdue?'var(--red)':'var(--text-muted)'}">📅 ${a.due || 'No due date'} ${isOverdue?'⚠️ OVERDUE':''}</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex-row gap-sm">
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="openAssignmentModal(${i})" title="Edit">✏️</button>
+          <button class="btn btn-danger btn-sm btn-icon" onclick="deleteAssignment(${i})" title="Delete">✕</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function toggleAssignment(idx) {
+  appData.assignments[idx].completed = !appData.assignments[idx].completed;
+  saveData();
+  renderAssignments();
+}
+function deleteAssignment(idx) {
+  appData.assignments.splice(idx, 1);
+  saveData();
+  renderAssignments();
+  updateDashboard();
+}
+
+// ═══════════════ TIMER ═══════════════
+let countdownTotal = 300, countdownRemaining = 300, countdownRunning = false, countdownInterval = null;
+let stopwatchRunning = false, stopwatchTime = 0, stopwatchInterval = null, laps = [];
+
+function setCountdown(seconds) {
+  countdownTotal = seconds;
+  countdownRemaining = seconds;
+  countdownRunning = false;
+  clearInterval(countdownInterval);
+  document.getElementById('countdownStartBtn').innerHTML = '▶ Start';
+  updateCountdownDisplay();
+}
+function setCustomCountdown() {
+  const m = parseInt(document.getElementById('customMinutes').value) || 0;
+  const s = parseInt(document.getElementById('customSeconds').value) || 0;
+  if (m + s <= 0) return;
+  setCountdown(m * 60 + s);
+}
+function toggleCountdown() {
+  if (countdownRunning) {
+    clearInterval(countdownInterval);
+    countdownRunning = false;
+    document.getElementById('countdownStartBtn').innerHTML = '▶ Resume';
+  } else {
+    if (countdownRemaining <= 0) return;
+    countdownRunning = true;
+    document.getElementById('countdownStartBtn').innerHTML = '⏸ Pause';
+    countdownInterval = setInterval(() => {
+      countdownRemaining--;
+      updateCountdownDisplay();
+      if (countdownRemaining <= 0) {
+        clearInterval(countdownInterval);
+        countdownRunning = false;
+        document.getElementById('countdownStartBtn').innerHTML = '▶ Start';
+        showToast('⏰ Time\'s up!', 'info');
+        flashTimer();
+      }
+    }, 1000);
+  }
+}
+function resetCountdown() {
+  clearInterval(countdownInterval);
+  countdownRunning = false;
+  countdownRemaining = countdownTotal;
+  document.getElementById('countdownStartBtn').innerHTML = '▶ Start';
+  updateCountdownDisplay();
+}
+function updateCountdownDisplay() {
+  const m = Math.floor(countdownRemaining / 60);
+  const s = countdownRemaining % 60;
+  document.getElementById('countdownDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const pct = countdownTotal > 0 ? (countdownRemaining / countdownTotal) * 100 : 0;
+  document.getElementById('countdownProgress').style.width = pct + '%';
+}
+function flashTimer() {
+  const el = document.getElementById('countdownDisplay');
+  let flashes = 0;
+  const fi = setInterval(() => {
+    el.style.opacity = el.style.opacity === '0.2' ? '1' : '0.2';
+    flashes++;
+    if (flashes > 10) { clearInterval(fi); el.style.opacity = '1'; }
+  }, 300);
+}
+function toggleStopwatch() {
+  if (stopwatchRunning) {
+    clearInterval(stopwatchInterval);
+    stopwatchRunning = false;
+    document.getElementById('stopwatchStartBtn').innerHTML = '▶ Resume';
+  } else {
+    stopwatchRunning = true;
+    document.getElementById('stopwatchStartBtn').innerHTML = '⏸ Pause';
+    const start = Date.now() - stopwatchTime;
+    stopwatchInterval = setInterval(() => {
+      stopwatchTime = Date.now() - start;
+      updateStopwatchDisplay();
+    }, 10);
+  }
+}
+function resetStopwatch() {
+  clearInterval(stopwatchInterval);
+  stopwatchRunning = false;
+  stopwatchTime = 0;
+  laps = [];
+  document.getElementById('stopwatchStartBtn').innerHTML = '▶ Start';
+  updateStopwatchDisplay();
+  document.getElementById('lapList').innerHTML = '';
+}
+function lapStopwatch() {
+  if (!stopwatchRunning) return;
+  laps.push(stopwatchTime);
+  const lapDiv = document.getElementById('lapList');
+  lapDiv.innerHTML = laps.map((l, i) => {
+    const m = Math.floor(l / 60000);
+    const s = Math.floor((l % 60000) / 1000);
+    const ms = Math.floor((l % 1000) / 10);
+    return `<div style="padding:4px 8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-secondary);border-bottom:1px solid var(--border-subtle)">Lap ${i+1}: ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(ms).padStart(2,'0')}</div>`;
+  }).reverse().join('');
+}
+function updateStopwatchDisplay() {
+  const m = Math.floor(stopwatchTime / 60000);
+  const s = Math.floor((stopwatchTime % 60000) / 1000);
+  const ms = Math.floor((stopwatchTime % 1000) / 10);
+  document.getElementById('stopwatchDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(ms).padStart(2,'0')}`;
+}
+
+// ═══════════════ RANDOM PICKER ═══════════════
+let wheelAngle = 0, spinning = false;
+const wheelColors = ['#00f0ff','#8b5cf6','#ff0088','#00ff88','#ff8800','#ffdd00','#ff3355','#4488ff','#44ddaa','#dd44aa'];
+
+function drawPickerWheel() {
+  const canvas = document.getElementById('picker-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = 200, cy = 200, r = 180;
+  ctx.clearRect(0, 0, 400, 400);
+  const names = appData.students.map(s => s.name);
+  if (names.length === 0) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a1a3e';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,240,255,0.3)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = '#5a5c80';
+    ctx.font = '16px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText('Add students first', cx, cy);
+    return;
+  }
+  const sliceAngle = (Math.PI * 2) / names.length;
+  names.forEach((name, i) => {
+    const start = wheelAngle + i * sliceAngle;
+    const end = start + sliceAngle;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, start, end);
+    ctx.closePath();
+    ctx.fillStyle = wheelColors[i % wheelColors.length];
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    // Name
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(start + sliceAngle / 2);
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 11px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText(name.length > 12 ? name.slice(0,12)+'…' : name, r * 0.6, 4);
+    ctx.restore();
+  });
+  // Center circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+  ctx.fillStyle = '#0a0a1a';
+  ctx.fill();
+  ctx.strokeStyle = '#00f0ff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  // Arrow pointer
+  ctx.beginPath();
+  ctx.moveTo(cx + r + 10, cy);
+  ctx.lineTo(cx + r - 15, cy - 12);
+  ctx.lineTo(cx + r - 15, cy + 12);
+  ctx.closePath();
+  ctx.fillStyle = '#ff0088';
+  ctx.fill();
+}
+function spinWheel() {
+  if (spinning || appData.students.length === 0) return;
+  spinning = true;
+  const totalSpin = Math.random() * Math.PI * 10 + Math.PI * 15;
+  const duration = 4000;
+  const startAngle = wheelAngle;
+  const startTime = Date.now();
+  const animate = () => {
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 4);
+    wheelAngle = startAngle + totalSpin * eased;
+    drawPickerWheel();
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      spinning = false;
+      const normalizedAngle = ((wheelAngle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+      const sliceAngle = (Math.PI * 2) / appData.students.length;
+      const selectedIdx = Math.floor(((Math.PI * 2 - normalizedAngle) % (Math.PI * 2)) / sliceAngle) % appData.students.length;
+      document.getElementById('pickerResult').textContent = '🎉 ' + appData.students[selectedIdx].name + '!';
+    }
+  };
+  animate();
+}
+function quickPick() {
+  if (appData.students.length === 0) return showToast('Add students first', 'error');
+  const idx = Math.floor(Math.random() * appData.students.length);
+  document.getElementById('pickerResult').textContent = '⚡ ' + appData.students[idx].name + '!';
+  showToast(`Selected: ${appData.students[idx].name}`, 'info');
+}
+
+// ═══════════════ SEATING CHART ═══════════════
+let dragSeatIdx = null;
+function renderSeating() {
+  const rows = parseInt(document.getElementById('seatingRows').value);
+  const cols = parseInt(document.getElementById('seatingCols').value);
+  const grid = document.getElementById('seatingGrid');
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  const totalSeats = rows * cols;
+  if (appData.seatingArrangement.length !== totalSeats) {
+    appData.seatingArrangement = [];
+    for (let i = 0; i < totalSeats; i++) {
+      appData.seatingArrangement.push(appData.students[i]?.name || '');
+    }
+  }
+  grid.innerHTML = appData.seatingArrangement.map((name, i) => `
+    <div class="seat ${name ? '' : 'empty'}" draggable="true" data-idx="${i}"
+      ondragstart="dragSeatIdx=${i};this.classList.add('dragging')"
+      ondragend="this.classList.remove('dragging')"
+      ondragover="event.preventDefault()"
+      ondrop="dropSeat(${i})">
+      <span class="seat-icon">${name ? '🧑‍🎓' : '➕'}</span>
+      <span>${name || 'Empty'}</span>
+    </div>
+  `).join('');
+}
+function dropSeat(targetIdx) {
+  if (dragSeatIdx === null) return;
+  const temp = appData.seatingArrangement[dragSeatIdx];
+  appData.seatingArrangement[dragSeatIdx] = appData.seatingArrangement[targetIdx];
+  appData.seatingArrangement[targetIdx] = temp;
+  saveData();
+  renderSeating();
+}
+function randomizeSeating() {
+  const names = appData.students.map(s => s.name);
+  for (let i = names.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [names[i], names[j]] = [names[j], names[i]];
+  }
+  const rows = parseInt(document.getElementById('seatingRows').value);
+  const cols = parseInt(document.getElementById('seatingCols').value);
+  appData.seatingArrangement = [];
+  for (let i = 0; i < rows * cols; i++) {
+    appData.seatingArrangement.push(names[i] || '');
+  }
+  saveData();
+  renderSeating();
+  showToast('Seating randomized!', 'success');
+}
+function clearSeating() {
+  appData.seatingArrangement = [];
+  saveData();
+  renderSeating();
+}
+
+// ═══════════════ BEHAVIOR ═══════════════
+function renderBehavior() {
+  if (appData.students.length === 0) {
+    document.getElementById('behaviorEmpty').style.display = '';
+    document.getElementById('behaviorList').innerHTML = '';
+    return;
+  }
+  document.getElementById('behaviorEmpty').style.display = 'none';
+  const sort = document.getElementById('behaviorSort')?.value || 'name';
+  let students = [...appData.students];
+  if (sort === 'points-desc') students.sort((a, b) => (appData.behavior[b.name]||0) - (appData.behavior[a.name]||0));
+  else if (sort === 'points-asc') students.sort((a, b) => (appData.behavior[a.name]||0) - (appData.behavior[b.name]||0));
+  else students.sort((a, b) => a.name.localeCompare(b.name));
+
+  document.getElementById('behaviorList').innerHTML = students.map(s => {
+    const pts = appData.behavior[s.name] || 0;
+    const color = pts >= 5 ? 'var(--green)' : pts >= 0 ? 'var(--cyan)' : 'var(--red)';
+    return `
+    <div class="behavior-student">
+      <span style="font-size:24px">🧑‍🎓</span>
+      <span class="behavior-name">${s.name}</span>
+      <span class="behavior-points" style="color:${color}">${pts}</span>
+      <div class="behavior-btns">
+        <button class="behavior-btn plus" onclick="changeBehavior('${s.name}',1)">+</button>
+        <button class="behavior-btn minus" onclick="changeBehavior('${s.name}',-1)">−</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function changeBehavior(name, delta) {
+  appData.behavior[name] = (appData.behavior[name] || 0) + delta;
+  saveData();
+  renderBehavior();
+}
+function resetAllBehavior() {
+  if (!confirm('Reset all behavior points to 0?')) return;
+  appData.students.forEach(s => appData.behavior[s.name] = 0);
+  saveData();
+  renderBehavior();
+  showToast('All behavior points reset', 'info');
+}
+
+// ═══════════════ NOISE METER ═══════════════
+let noiseStream = null, noiseAnalyser = null, noiseAnimFrame = null;
+function initNoiseBars() {
+  const container = document.getElementById('noiseBars');
+  container.innerHTML = '';
+  for (let i = 0; i < 32; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'noise-bar';
+    bar.style.height = '8px';
+    container.appendChild(bar);
+  }
+}
+function toggleNoiseMeter() {
+  if (noiseStream) {
+    noiseStream.getTracks().forEach(t => t.stop());
+    noiseStream = null;
+    cancelAnimationFrame(noiseAnimFrame);
+    document.getElementById('noiseBtn').innerHTML = '🎤 Start Listening';
+    document.getElementById('noiseLevel').textContent = '0 dB';
+    document.getElementById('noiseClass').textContent = 'Silent';
+    document.getElementById('noiseBar').style.width = '0%';
+    initNoiseBars();
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    noiseStream = stream;
+    const audioCtx = new AudioContext();
+    const source = audioCtx.createMediaStreamSource(stream);
+    noiseAnalyser = audioCtx.createAnalyser();
+    noiseAnalyser.fftSize = 256;
+    source.connect(noiseAnalyser);
+    document.getElementById('noiseBtn').innerHTML = '🔇 Stop Listening';
+    updateNoise();
+  }).catch(() => showToast('Microphone access denied', 'error'));
+}
+function updateNoise() {
+  if (!noiseAnalyser) return;
+  const bufferLength = noiseAnalyser.frequencyBinCount;
+  const data = new Uint8Array(bufferLength);
+  noiseAnalyser.getByteFrequencyData(data);
+  const avg = data.reduce((a, b) => a + b, 0) / bufferLength;
+  const pct = Math.min(100, (avg / 128) * 100);
+  const db = Math.round(avg * 0.5);
+  document.getElementById('noiseLevel').textContent = db + ' dB';
+  document.getElementById('noiseBar').style.width = pct + '%';
+  let cls = 'Silent', clr = 'var(--green)';
+  if (db > 40) { cls = '🔴 TOO LOUD'; clr = 'var(--red)'; }
+  else if (db > 30) { cls = '🟡 Getting Loud'; clr = 'var(--orange)'; }
+  else if (db > 15) { cls = '🟢 Moderate'; clr = 'var(--yellow)'; }
+  else if (db > 5) { cls = '🟢 Quiet'; clr = 'var(--green)'; }
+  document.getElementById('noiseClass').textContent = cls;
+  document.getElementById('noiseClass').style.color = clr;
+  document.getElementById('noiseLevel').style.color = clr;
+  // Update bars
+  const bars = document.getElementById('noiseBars').children;
+  for (let i = 0; i < bars.length; i++) {
+    const val = data[i * Math.floor(bufferLength / bars.length)] || 0;
+    bars[i].style.height = Math.max(8, (val / 255) * 200) + 'px';
+  }
+  noiseAnimFrame = requestAnimationFrame(updateNoise);
+}
+
+// ═══════════════ WHITEBOARD ═══════════════
+let wbCtx = null, wbDrawing = false, wbColor = '#ffffff', wbEraser = false;
+function initWhiteboard() {
+  const canvas = document.getElementById('whiteboard');
+  if (!canvas) return;
+  wbCtx = canvas.getContext('2d');
+  canvas.width = canvas.parentElement.clientWidth;
+  canvas.height = 600;
+  wbCtx.fillStyle = '#0d0d22';
+  wbCtx.fillRect(0, 0, canvas.width, canvas.height);
+  // Colors
+  document.querySelectorAll('.wb-color').forEach(c => {
+    c.onclick = () => {
+      document.querySelectorAll('.wb-color').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+      wbColor = c.dataset.color;
+      wbEraser = false;
+      document.getElementById('wbEraser').classList.remove('btn-primary');
+      document.getElementById('wbEraser').classList.add('btn-ghost');
+    };
+  });
+  canvas.onmousedown = canvas.ontouchstart = (e) => { wbDrawing = true; wbDraw(e); };
+  canvas.onmouseup = canvas.ontouchend = () => { wbDrawing = false; wbCtx.beginPath(); };
+  canvas.onmousemove = canvas.ontouchmove = (e) => { if (wbDrawing) wbDraw(e); };
+}
+function wbDraw(e) {
+  e.preventDefault();
+  const canvas = document.getElementById('whiteboard');
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches ? e.touches[0] : e;
+  const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+  const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+  const size = document.getElementById('wbSize').value;
+  wbCtx.lineWidth = wbEraser ? size * 3 : size;
+  wbCtx.lineCap = 'round';
+  wbCtx.strokeStyle = wbEraser ? '#0d0d22' : wbColor;
+  wbCtx.lineTo(x, y);
+  wbCtx.stroke();
+  wbCtx.beginPath();
+  wbCtx.moveTo(x, y);
+}
+function toggleEraser() {
+  wbEraser = !wbEraser;
+  const btn = document.getElementById('wbEraser');
+  btn.classList.toggle('btn-primary', wbEraser);
+  btn.classList.toggle('btn-ghost', !wbEraser);
+}
+function clearWhiteboard() {
+  if (!wbCtx) return;
+  const canvas = document.getElementById('whiteboard');
+  wbCtx.fillStyle = '#0d0d22';
+  wbCtx.fillRect(0, 0, canvas.width, canvas.height);
+}
+function downloadWhiteboard() {
+  const canvas = document.getElementById('whiteboard');
+  const link = document.createElement('a');
+  link.download = 'whiteboard.png';
+  link.href = canvas.toDataURL();
+  link.click();
+  showToast('Whiteboard saved!', 'success');
+}
+
+// ═══════════════ CALENDAR ═══════════════
+let calMonth = new Date().getMonth(), calYear = new Date().getFullYear();
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date();
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calMonthYear').textContent = `${monthNames[calMonth]} ${calYear}`;
+  let html = ['SUN','MON','TUE','WED','THU','FRI','SAT'].map(d => `<div class="cal-header-cell">${d}</div>`).join('');
+  // Previous month days
+  const prevDays = new Date(calYear, calMonth, 0).getDate();
+  for (let i = firstDay - 1; i >= 0; i--) {
+    html += `<div class="cal-cell other-month">${prevDays - i}</div>`;
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear();
+    const hasEvent = appData.calendarEvents.some(e => e.date === dateStr);
+    html += `<div class="cal-cell ${isToday?'today':''}" onclick="viewCalDay('${dateStr}')">
+      ${d}${hasEvent?'<div class="cal-dot"></div>':''}
+    </div>`;
+  }
+  // Next month
+  const remaining = 42 - (firstDay + daysInMonth);
+  for (let i = 1; i <= remaining; i++) {
+    html += `<div class="cal-cell other-month">${i}</div>`;
+  }
+  grid.innerHTML = html;
+}
+function changeMonth(delta) {
+  calMonth += delta;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+function addCalendarEvent() {
+  const date = document.getElementById('eventDate').value;
+  const title = document.getElementById('eventTitle').value.trim();
+  if (!date || !title) return showToast('Fill in date and title', 'error');
+  appData.calendarEvents.push({ date, title });
+  saveData();
+  document.getElementById('eventTitle').value = '';
+  renderCalendar();
+  showToast('Event added!', 'success');
+}
+function viewCalDay(dateStr) {
+  const events = appData.calendarEvents.filter(e => e.date === dateStr);
+  if (events.length === 0) {
+    openModal(`<div class="modal-title">📅 ${dateStr}</div><p style="color:var(--text-muted)">No events for this day.</p>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Close</button></div>`);
+  } else {
+    openModal(`<div class="modal-title">📅 ${dateStr}</div>
+    ${events.map((e, i) => `<div class="flex-between" style="padding:8px 0;border-bottom:1px solid var(--border-subtle)">
+      <span>${e.title}</span>
+      <button class="btn btn-danger btn-sm btn-icon" onclick="deleteCalEvent(${appData.calendarEvents.indexOf(e)})">✕</button>
+    </div>`).join('')}
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Close</button></div>`);
+  }
+}
+function deleteCalEvent(idx) {
+  appData.calendarEvents.splice(idx, 1);
+  saveData();
+  closeModal();
+  renderCalendar();
+}
+
+// ═══════════════ SCHEDULE ═══════════════
+const schedDays = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+const schedTimes = ['8:00','9:00','10:00','11:00','12:00','1:00','2:00','3:00'];
+function renderSchedule() {
+  const grid = document.getElementById('scheduleGrid');
+  let html = '<div></div>' + schedDays.map(d => `<div class="schedule-day-header">${d}</div>`).join('');
+  schedTimes.forEach(time => {
+    html += `<div class="schedule-time">${time}</div>`;
+    schedDays.forEach(day => {
+      const key = `${day}_${time}`;
+      const val = appData.schedule[key] || '';
+      html += `<div class="schedule-cell" onclick="editScheduleCell('${key}')" title="Click to edit">${val}</div>`;
+    });
+  });
+  grid.innerHTML = html;
+}
+function editScheduleCell(key) {
+  const current = appData.schedule[key] || '';
+  openModal(`
+    <div class="modal-title">Edit Schedule</div>
+    <div class="form-group">
+      <label class="form-label">${key.replace('_',' at ')}</label>
+      <input type="text" class="form-input" id="schedInput" value="${current}" placeholder="Class name, room...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-danger btn-sm" onclick="appData.schedule['${key}']='';saveData();closeModal();renderSchedule()">Clear</button>
+      <button class="btn btn-primary" onclick="appData.schedule['${key}']=document.getElementById('schedInput').value;saveData();closeModal();renderSchedule()">Save</button>
+    </div>
+  `);
+}
+
+// ═══════════════ RUBRIC ═══════════════
+function renderRubric() {
+  const body = document.getElementById('rubricBody');
+  if (!appData.rubrics.length) {
+    body.innerHTML = '';
+    return;
+  }
+  body.innerHTML = appData.rubrics.map((r, i) => `
+    <tr>
+      <td><input type="text" class="form-input" value="${r.criteria}" onchange="appData.rubrics[${i}].criteria=this.value;saveData()" style="font-weight:600"></td>
+      <td><textarea class="form-textarea" style="min-height:40px" onchange="appData.rubrics[${i}].excellent=this.value;saveData()">${r.excellent||''}</textarea></td>
+      <td><textarea class="form-textarea" style="min-height:40px" onchange="appData.rubrics[${i}].good=this.value;saveData()">${r.good||''}</textarea></td>
+      <td><textarea class="form-textarea" style="min-height:40px" onchange="appData.rubrics[${i}].fair=this.value;saveData()">${r.fair||''}</textarea></td>
+      <td><textarea class="form-textarea" style="min-height:40px" onchange="appData.rubrics[${i}].poor=this.value;saveData()">${r.poor||''}</textarea></td>
+      <td><button class="btn btn-danger btn-sm btn-icon" onclick="appData.rubrics.splice(${i},1);saveData();renderRubric()">✕</button></td>
+    </tr>
+  `).join('');
+}
+function addRubricRow() {
+  appData.rubrics.push({ criteria: '', excellent: '', good: '', fair: '', poor: '' });
+  saveData();
+  renderRubric();
+}
+function saveRubric() {
+  saveData();
+  showToast('Rubric saved!', 'success');
+}
+
+// ═══════════════ QUIZ MAKER ═══════════════
+let quizQuestions = [];
+function renderQuiz() {
+  const container = document.getElementById('quizQuestions');
+  const empty = document.getElementById('quizEmpty');
+  if (quizQuestions.length === 0) {
+    empty.style.display = '';
+    container.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+  container.innerHTML = quizQuestions.map((q, qi) => `
+    <div class="quiz-question-card">
+      <div class="flex-between mb-sm">
+        <span style="font-family:'Orbitron',monospace;font-size:12px;color:var(--cyan)">Q${qi+1}</span>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="quizQuestions.splice(${qi},1);renderQuiz()">✕</button>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-input" value="${q.question}" placeholder="Question text..." onchange="quizQuestions[${qi}].question=this.value">
+      </div>
+      ${q.options.map((opt, oi) => `
+        <div class="quiz-option-row">
+          <div class="quiz-option-radio ${q.correct===oi?'correct':''}" onclick="quizQuestions[${qi}].correct=${oi};renderQuiz()" title="Mark as correct"></div>
+          <input type="text" class="form-input" value="${opt}" placeholder="Option ${oi+1}..." onchange="quizQuestions[${qi}].options[${oi}]=this.value" style="flex:1">
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+function addQuizQuestion() {
+  quizQuestions.push({ question: '', options: ['', '', '', ''], correct: 0 });
+  renderQuiz();
+}
+function saveQuiz() {
+  const title = document.getElementById('quizTitle').value.trim() || 'Untitled Quiz';
+  appData.quizzes.push({ title, questions: JSON.parse(JSON.stringify(quizQuestions)), created: new Date().toISOString() });
+  saveData();
+  showToast('Quiz saved!', 'success');
+}
+function printQuiz() {
+  const title = document.getElementById('quizTitle').value.trim() || 'Quiz';
+  let html = `<html><head><title>${title}</title><style>body{font-family:Arial,sans-serif;padding:40px;max-width:800px;margin:0 auto}h1{border-bottom:2px solid #333;padding-bottom:10px}.q{margin:24px 0}.q-text{font-weight:bold;margin-bottom:8px}.opt{padding:4px 0 4px 20px}@media print{body{padding:20px}}</style></head><body>`;
+  html += `<h1>${title}</h1><p>Name: _________________ Date: _________</p>`;
+  quizQuestions.forEach((q, i) => {
+    html += `<div class="q"><div class="q-text">${i+1}. ${q.question}</div>`;
+    q.options.forEach((opt, oi) => {
+      html += `<div class="opt">${String.fromCharCode(65+oi)}) ${opt}</div>`;
+    });
+    html += '</div>';
+  });
+  html += '</body></html>';
+  const w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+  w.print();
+}
+
+// ═══════════════ ANNOUNCEMENTS ═══════════════
+function postAnnouncement() {
+  const title = document.getElementById('annTitle').value.trim();
+  const body = document.getElementById('annBody').value.trim();
+  const pinned = document.getElementById('annPinned').checked;
+  if (!title) return showToast('Enter a title', 'error');
+  appData.announcements.unshift({ title, body, pinned, date: new Date().toISOString() });
+  saveData();
+  document.getElementById('annTitle').value = '';
+  document.getElementById('annBody').value = '';
+  document.getElementById('annPinned').checked = false;
+  renderAnnouncements();
+  showToast('Announcement posted!', 'success');
+}
+function renderAnnouncements() {
+  const sorted = [...appData.announcements].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+  document.getElementById('announcementList').innerHTML = sorted.map((a, i) => {
+    const realIdx = appData.announcements.indexOf(a);
+    return `
+    <div class="announcement-card ${a.pinned?'pinned':''}">
+      <div class="flex-between">
+        <div class="announcement-title">${a.title}</div>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="appData.announcements.splice(${realIdx},1);saveData();renderAnnouncements()">✕</button>
+      </div>
+      <div class="announcement-body">${a.body}</div>
+      <div class="announcement-date">${new Date(a.date).toLocaleDateString()} ${new Date(a.date).toLocaleTimeString()}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════ COMMUNICATION LOG ═══════════════
+function renderComms() {
+  // Populate student dropdown
+  const sel = document.getElementById('commStudent');
+  sel.innerHTML = '<option value="">Select student...</option>' + appData.students.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+  if (!document.getElementById('commDate').value) document.getElementById('commDate').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('commList').innerHTML = appData.commLog.map((c, i) => `
+    <div class="comm-entry">
+      <div class="comm-icon" style="background:var(--purple-dim);color:var(--purple)">${c.type}</div>
+      <div class="comm-content">
+        <div class="comm-parent">${c.parent} → ${c.student}</div>
+        <div class="comm-text">${c.notes}</div>
+        <div class="comm-meta">${c.date} · ${c.type}</div>
+      </div>
+      <button class="btn btn-danger btn-sm btn-icon" onclick="appData.commLog.splice(${i},1);saveData();renderComms()">✕</button>
+    </div>
+  `).join('');
+}
+function addCommEntry() {
+  const parent = document.getElementById('commParent').value.trim();
+  const student = document.getElementById('commStudent').value;
+  const type = document.getElementById('commType').value;
+  const date = document.getElementById('commDate').value;
+  const notes = document.getElementById('commNotes').value.trim();
+  if (!parent || !notes) return showToast('Fill in parent name and notes', 'error');
+  appData.commLog.unshift({ parent, student, type, date, notes });
+  saveData();
+  document.getElementById('commParent').value = '';
+  document.getElementById('commNotes').value = '';
+  renderComms();
+  showToast('Communication logged!', 'success');
+  addActivity(`Parent contact: ${parent}`);
+}
+
+// ═══════════════ REPORT CARDS ═══════════════
+function populateReportStudents() {
+  const sel = document.getElementById('reportStudent');
+  sel.innerHTML = '<option value="">Select a student...</option>' + appData.students.map((s, i) => `<option value="${i}">${s.name}</option>`).join('');
+}
+function generateReport() {
+  const idx = parseInt(document.getElementById('reportStudent').value);
+  if (isNaN(idx)) return;
+  const s = appData.students[idx];
+  const preview = document.getElementById('reportPreview');
+  let gradesHTML = '';
+  if (appData.gradeColumns.length > 0) {
+    gradesHTML = '<table style="width:100%;border-collapse:collapse;margin:16px 0">';
+    gradesHTML += '<tr><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border-subtle)">Assignment</th><th style="text-align:center;padding:8px;border-bottom:2px solid var(--border-subtle)">Score</th><th style="text-align:center;padding:8px;border-bottom:2px solid var(--border-subtle)">Max</th><th style="text-align:center;padding:8px;border-bottom:2px solid var(--border-subtle)">%</th></tr>';
+    appData.gradeColumns.forEach((c, ci) => {
+      const key = `${idx}_${ci}`;
+      const score = appData.grades[key];
+      const pct = score !== undefined ? ((score / c.max) * 100).toFixed(1) : 'N/A';
+      gradesHTML += `<tr><td style="padding:8px;border-bottom:1px solid var(--border-subtle)">${c.name}</td><td style="text-align:center;padding:8px;border-bottom:1px solid var(--border-subtle)">${score !== undefined ? score : '-'}</td><td style="text-align:center;padding:8px;border-bottom:1px solid var(--border-subtle)">${c.max}</td><td style="text-align:center;padding:8px;border-bottom:1px solid var(--border-subtle)">${pct}%</td></tr>`;
+    });
+    gradesHTML += '</table>';
+  }
+  // Calculate overall average
+  let totalPct = 0, gradedCount = 0;
+  appData.gradeColumns.forEach((c, ci) => {
+    const key = `${idx}_${ci}`;
+    if (appData.grades[key] !== undefined) {
+      totalPct += (appData.grades[key] / c.max) * 100;
+      gradedCount++;
+    }
+  });
+  const overallAvg = gradedCount > 0 ? (totalPct / gradedCount).toFixed(1) : 'N/A';
+  // Attendance
+  let presentDays = 0, totalDays = 0;
+  Object.keys(appData.attendance).forEach(date => {
+    if (appData.attendance[date][s.name]) {
+      totalDays++;
+      if (appData.attendance[date][s.name] === 'present' || appData.attendance[date][s.name] === 'late') presentDays++;
+    }
+  });
+  const attendPct = totalDays > 0 ? ((presentDays / totalDays) * 100).toFixed(1) : 'N/A';
+  const behaviorPts = appData.behavior[s.name] || 0;
+
+  preview.innerHTML = `
+    <h3>📄 STUDENT REPORT CARD</h3>
+    <p style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border-subtle)">
+      ${appData.settings.schoolName ? `<strong>${appData.settings.schoolName}</strong><br>` : ''}
+      ${appData.settings.className ? `Class: ${appData.settings.className}<br>` : ''}
+      ${appData.settings.teacherName ? `Teacher: ${appData.settings.teacherName}<br>` : ''}
+      Date Generated: ${new Date().toLocaleDateString()}
+    </p>
+    <p><strong>Student:</strong> ${s.name}</p>
+    <p><strong>ID:</strong> ${s.id}</p>
+    <p><strong>Overall Average:</strong> <span style="color:${parseFloat(overallAvg)>=70?'var(--green)':'var(--red)'}; font-weight:700; font-size:18px">${overallAvg}%</span></p>
+    <p><strong>Attendance Rate:</strong> ${attendPct}% (${presentDays}/${totalDays} days)</p>
+    <p><strong>Behavior Points:</strong> ${behaviorPts}</p>
+    <hr style="border:none;border-top:1px solid var(--border-subtle);margin:16px 0">
+    <h4 style="color:var(--cyan);margin-bottom:8px">Grade Breakdown</h4>
+    ${gradesHTML || '<p style="color:var(--text-muted)">No grades recorded yet.</p>'}
+  `;
+}
+function printReport() {
+  const content = document.getElementById('reportPreview').innerHTML;
+  const w = window.open('', '_blank');
+  w.document.write(`<html><head><title>Report Card</title><style>body{font-family:Arial,sans-serif;padding:40px;max-width:800px;margin:0 auto;color:#222}h3{color:#333}table{width:100%;border-collapse:collapse}th,td{padding:8px;border:1px solid #ddd;text-align:left}</style></head><body>${content}</body></html>`);
+  w.document.close();
+  w.print();
+}
+
+// ═══════════════ RESOURCES ═══════════════
+function addResource() {
+  const title = document.getElementById('resTitle').value.trim();
+  const url = document.getElementById('resUrl').value.trim();
+  const type = document.getElementById('resType').value;
+  if (!title) return showToast('Enter a resource title', 'error');
+  appData.resources.push({ title, url, type, added: new Date().toISOString() });
+  saveData();
+  document.getElementById('resTitle').value = '';
+  document.getElementById('resUrl').value = '';
+  renderResources();
+  showToast('Resource added!', 'success');
+}
+function renderResources() {
+  const grid = document.getElementById('resourceGrid');
+  const empty = document.getElementById('resourcesEmpty');
+  if (appData.resources.length === 0) {
+    empty.style.display = '';
+    grid.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+  grid.innerHTML = appData.resources.map((r, i) => `
+    <div class="resource-card" ${r.url ? `onclick="window.open('${r.url}','_blank')"` : ''}>
+      <div class="flex-between">
+        <div class="resource-type">${r.type}</div>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="event.stopPropagation();appData.resources.splice(${i},1);saveData();renderResources()">✕</button>
+      </div>
+      <div class="resource-title">${r.title}</div>
+      ${r.url ? `<div class="resource-url">${r.url}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ═══════════════ AI ASSISTANT ═══════════════
+const aiTemplates = {
+  'lesson': [
+    "Here's a lesson idea: Start with a **warm-up activity** (5 min) where students brainstorm in pairs. Then introduce the main concept with a **mini-lecture** (10 min), followed by **guided practice** (15 min) where students work through examples. Finish with an **exit ticket** (5 min) to check understanding.",
+    "Try a **flipped classroom** approach: Assign a short video for homework, then use class time for hands-on activities and discussion. Students who watched the video can help peers who didn't.",
+    "Consider a **project-based learning** activity where students work in groups to solve a real-world problem related to the topic. Give them roles: researcher, designer, presenter, and quality checker."
+  ],
+  'differentiation': [
+    "**Differentiation strategies:** 1) **Tiered assignments** — same concept, different complexity levels. 2) **Choice boards** — let students pick how they demonstrate learning. 3) **Flexible grouping** — group by readiness, interest, or learning style. 4) **Scaffolded notes** — provide partially completed notes for struggling learners.",
+    "Try **stations rotation**: Set up 3-4 stations with different activities targeting the same standard at different levels. Students rotate every 10-15 minutes."
+  ],
+  'engagement': [
+    "**Engagement boosters:** 🎮 Gamify with points/leaderboards, 🤝 Think-Pair-Share for every major question, 🎯 Set clear learning targets students can self-assess, ⏱ Use timers to create urgency, 🏆 Celebrate small wins publicly.",
+    "Try **Gallery Walks** — post student work around the room and have everyone walk around with sticky notes giving feedback. It gets students moving and thinking critically!"
+  ],
+  'assessment': [
+    "**Formative assessment ideas:** Exit tickets, mini-whiteboards, hand signals (thumbs up/down/sideways), quick polls, one-sentence summaries, 3-2-1 (3 things learned, 2 questions, 1 connection), peer teaching.",
+    "Use a **rubric** with clear criteria so students know exactly what's expected. Share it BEFORE the assignment so they can self-assess as they work."
+  ],
+  'management': [
+    "**Classroom management tips:** ✋ Establish clear routines from day one, 🔔 Use attention signals (count down, chime, call-and-response), 📋 Post and review expectations regularly, ⭐ Reward positive behavior more than punishing negative, 🤫 Use proximity — walk toward off-task students instead of calling them out.",
+    "Try the **2x10 strategy** for difficult students: Spend 2 minutes for 10 consecutive days having a personal conversation with them. Research shows this improves behavior by 85%."
+  ]
+};
+function sendAiMessage() {
+  const input = document.getElementById('aiInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const container = document.getElementById('aiMessages');
+  container.innerHTML += `<div class="ai-msg user">${msg}</div>`;
+  input.value = '';
+  // Simple keyword matching
+  const lower = msg.toLowerCase();
+  let response = '';
+  if (lower.includes('lesson') || lower.includes('plan') || lower.includes('idea') || lower.includes('teach')) {
+    response = aiTemplates.lesson[Math.floor(Math.random() * aiTemplates.lesson.length)];
+  } else if (lower.includes('differentiat') || lower.includes('scaffold') || lower.includes('struggling')) {
+    response = aiTemplates.differentiation[Math.floor(Math.random() * aiTemplates.differentiation.length)];
+  } else if (lower.includes('engag') || lower.includes('motivat') || lower.includes('boring') || lower.includes('fun')) {
+    response = aiTemplates.engagement[Math.floor(Math.random() * aiTemplates.engagement.length)];
+  } else if (lower.includes('assess') || lower.includes('grade') || lower.includes('test') || lower.includes('quiz')) {
+    response = aiTemplates.assessment[Math.floor(Math.random() * aiTemplates.assessment.length)];
+  } else if (lower.includes('manage') || lower.includes('behavior') || lower.includes('discipline') || lower.includes('disrupt')) {
+    response = aiTemplates.management[Math.floor(Math.random() * aiTemplates.management.length)];
+  } else {
+    const allResponses = Object.values(aiTemplates).flat();
+    response = "Great question! " + allResponses[Math.floor(Math.random() * allResponses.length)];
+  }
+  setTimeout(() => {
+    container.innerHTML += `<div class="ai-msg assistant">${response}</div>`;
+    container.scrollTop = container.scrollHeight;
+  }, 500 + Math.random() * 500);
+  container.scrollTop = container.scrollHeight;
+}
+
+// ═══════════════ SETTINGS ═══════════════
+function saveSettings() {
+  appData.settings.teacherName = document.getElementById('settTeacherName').value;
+  appData.settings.schoolName = document.getElementById('settSchoolName').value;
+  appData.settings.className = document.getElementById('settClassName').value;
+  saveData();
+}
+function loadSettingsUI() {
+  document.getElementById('settTeacherName').value = appData.settings.teacherName || '';
+  document.getElementById('settSchoolName').value = appData.settings.schoolName || '';
+  document.getElementById('settClassName').value = appData.settings.className || '';
+  document.getElementById('toggleParticles').classList.toggle('active', appData.settings.particles !== false);
+  document.getElementById('toggleTransitions').classList.toggle('active', appData.settings.transitions !== false);
+  document.getElementById('toggleSounds').classList.toggle('active', appData.settings.sounds === true);
+}
+function toggleSetting(key) {
+  appData.settings[key] = !appData.settings[key];
+  saveData();
+  loadSettingsUI();
+  if (key === 'particles') {
+    particleCanvas.style.display = appData.settings.particles ? '' : 'none';
+  }
+  showToast(`${key.charAt(0).toUpperCase() + key.slice(1)} ${appData.settings[key] ? 'enabled' : 'disabled'}`, 'info');
+}
+
+// ═══════════════ DASHBOARD UPDATER ═══════════════
+function updateDashboard() {
+  document.getElementById('dashTotalStudents').textContent = appData.students.length;
+  document.getElementById('dashLessons').textContent = appData.lessons.length;
+  document.getElementById('dashAssignments').textContent = appData.assignments.length;
+  // Calculate average grade
+  if (appData.students.length > 0 && appData.gradeColumns.length > 0) {
+    let totalAvg = 0, count = 0;
+    appData.students.forEach((s, si) => {
+      let stuTotal = 0, stuCount = 0;
+      appData.gradeColumns.forEach((c, ci) => {
+        const key = `${si}_${ci}`;
+        if (appData.grades[key] !== undefined) {
+          stuTotal += (appData.grades[key] / c.max) * 100;
+          stuCount++;
+        }
+      });
+      if (stuCount > 0) { totalAvg += stuTotal / stuCount; count++; }
+    });
+    document.getElementById('dashAvgGrade').textContent = count > 0 ? (totalAvg / count).toFixed(1) + '%' : '--';
+  }
+  // Attendance
+  const today = new Date().toISOString().slice(0, 10);
+  const todayAtt = appData.attendance[today];
+  if (todayAtt && appData.students.length > 0) {
+    const present = Object.values(todayAtt).filter(v => v === 'present' || v === 'late').length;
+    document.getElementById('dashAttendance').textContent = ((present / appData.students.length) * 100).toFixed(0) + '%';
+  }
+}
+
+// ═══════════════ ACTIVITY FEED ═══════════════
+function addActivity(text) {
+  const feed = document.getElementById('activityFeed');
+  const colors = ['var(--cyan)', 'var(--purple)', 'var(--pink)', 'var(--green)', 'var(--orange)'];
+  const item = document.createElement('li');
+  item.className = 'activity-item';
+  item.innerHTML = `
+    <div class="activity-dot" style="background:${colors[Math.floor(Math.random()*colors.length)]}"></div>
+    <div>
+      <div class="activity-text">${text}</div>
+      <div class="activity-time">${new Date().toLocaleTimeString()}</div>
+    </div>
+  `;
+  feed.insertBefore(item, feed.firstChild);
+  if (feed.children.length > 20) feed.removeChild(feed.lastChild);
+}
+
+// ═══════════════ RENDER ALL ═══════════════
+function renderAll() {
+  updateDashboard();
+  if (currentSection === 'gradebook') renderGradebook();
+  if (currentSection === 'attendance') renderAttendance();
+  if (currentSection === 'lessons') renderLessons();
+  if (currentSection === 'assignments') renderAssignments();
+  if (currentSection === 'behavior') renderBehavior();
+  if (currentSection === 'picker') drawPickerWheel();
+  if (currentSection === 'seating') renderSeating();
+  if (currentSection === 'calendar') renderCalendar();
+  if (currentSection === 'announcements') renderAnnouncements();
+  if (currentSection === 'comms') renderComms();
+  if (currentSection === 'resources') renderResources();
+  if (currentSection === 'rubric') renderRubric();
+  if (currentSection === 'reports') populateReportStudents();
+}
+
+// ═══════════════ HEADER SCROLL EFFECT ═══════════════
+window.addEventListener('scroll', () => {
+  document.getElementById('appHeader').classList.toggle('scrolled', window.scrollY > 10);
+});
+
+// ═══════════════ INIT ═══════════════
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  updateClock();
+  loadSettingsUI();
+  updateDashboard();
+  initNoiseBars();
+  renderCalendar();
+  document.getElementById('attendanceDate').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('commDate').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('eventDate').value = new Date().toISOString().slice(0, 10);
+  triggerScrollReveal();
+
+  // Keyboard shortcut
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+});
+</script>
+</body>
+</html>

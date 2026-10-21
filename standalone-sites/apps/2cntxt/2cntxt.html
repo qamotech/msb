@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Any File to AI Context Web App - Instantly convert your files into AI-ready text context.">
+    <meta name="theme-color" content="#0f172a">
+    <title>File2Context | AI Context Builder</title>
+    <!-- Inline SVG Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%233b82f6%22/><path d=%22M30 30 h40 v10 h-40 z M30 50 h40 v10 h-40 z M30 70 h20 v10 h-20 z%22 fill=%22white%22/></svg>">
+    
+    <!-- External parsers for comprehensive file support without server bloat -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <!-- OCR Support for Images -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+    <style>
+        :root {
+            --bg-base: #0f172a;
+            --bg-surface: #1e293b;
+            --bg-surface-hover: #334155;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --border-highlight: #60a5fa;
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+        
+        body {
+            background-color: var(--bg-base); color: var(--text-main);
+            min-height: 100vh; display: flex; flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0;} to { transform: translateX(0); opacity: 1;} }
+
+        .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        
+        /* Layout */
+        header { padding: 1.5rem; text-align: center; border-bottom: 1px solid var(--border-color); background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 10; }
+        header h1 { font-size: 2.2rem; font-weight: 800; background: linear-gradient(to right, #60a5fa, #a78bfa); -webkit-background-clip: text; color: transparent; margin-bottom: 0.25rem; }
+        header p { color: var(--text-muted); font-size: 1rem; }
+
+        main { flex: 1; max-width: 1400px; margin: 0 auto; padding: 2rem; width: 100%; display: grid; grid-template-columns: 380px 1fr; gap: 2rem; }
+        @media (max-width: 968px) { main { grid-template-columns: 1fr; } }
+
+        /* Dropzone */
+        .panel { background: var(--bg-surface); border-radius: var(--radius); border: 1px solid var(--border-color); padding: 1.5rem; display: flex; flex-direction: column; height: 100%; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .panel h2 { margin-bottom: 1rem; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between;}
+        
+        .dropzone {
+            border: 2px dashed var(--border-color); border-radius: var(--radius); padding: 2rem 1.5rem;
+            text-align: center; cursor: pointer; transition: var(--transition);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;
+            min-height: 180px; background: rgba(15, 23, 42, 0.3);
+        }
+        .dropzone:hover, .dropzone.dragover { border-color: var(--primary); background: rgba(59, 130, 246, 0.08); }
+        .dropzone.dragover { animation: pulseGlow 2s infinite; }
+        .dropzone svg { width: 40px; height: 40px; fill: var(--text-muted); transition: var(--transition); }
+        .dropzone:hover svg, .dropzone.dragover svg { fill: var(--primary); transform: translateY(-5px); }
+        .dropzone input[type="file"] { display: none; }
+
+        /* File List */
+        .file-list { margin-top: 1.25rem; max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 0.5rem; }
+        .file-list::-webkit-scrollbar { width: 6px; }
+        .file-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        .file-item {
+            background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); padding: 0.75rem;
+            border-radius: 8px; display: flex; justify-content: space-between; align-items: center;
+            animation: fadeIn 0.3s ease-out; transition: var(--transition);
+        }
+        .file-item:hover { border-color: var(--border-highlight); }
+        .file-info { display: flex; flex-direction: column; overflow: hidden; width: 100%; }
+        .file-name { font-weight: 500; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; display: flex; gap: 0.5rem;}
+        .file-status { display: inline-flex; align-items: center; font-size: 0.7rem; padding: 2px 6px; border-radius: 12px; background: var(--bg-surface-hover); }
+        .file-status.processed { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .remove-btn { background: none; border: none; color: #ef4444; cursor: pointer; padding: 0.4rem; transition: var(--transition); border-radius: 6px; flex-shrink: 0; }
+        .remove-btn:hover { background: rgba(239, 68, 68, 0.15); }
+
+        /* Settings & Controls */
+        .settings-card { background: rgba(15, 23, 42, 0.3); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-top: 1.25rem; }
+        .settings-card h3 { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; text-transform: uppercase; }
+        .controls { display: flex; flex-direction: column; gap: 0.75rem; }
+        .control-group { display: flex; align-items: flex-start; gap: 0.6rem; }
+        .control-group label { font-size: 0.85rem; color: var(--text-main); cursor: pointer; user-select: none; line-height: 1.4; }
+        .control-group label span { display: block; font-size: 0.75rem; color: var(--text-muted); }
+        input[type="checkbox"], input[type="radio"] { margin-top: 0.15rem; width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+        
+        select { background: var(--bg-surface-hover); color: var(--text-main); border: 1px solid var(--border-color); padding: 0.4rem; border-radius: 6px; outline: none; font-size: 0.85rem; width: 100%; margin-top: 0.5rem; cursor: pointer; }
+        select:focus { border-color: var(--primary); }
+
+        /* Output Area */
+        .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .stats { font-size: 0.8rem; font-weight: 500; color: var(--primary); background: rgba(59, 130, 246, 0.1); padding: 0.4rem 0.8rem; border-radius: 99px; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .progress-bar-container { width: 100%; height: 4px; background: var(--bg-base); border-radius: 2px; margin-bottom: 1rem; overflow: hidden; display: none; }
+        .progress-bar { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s ease; }
+        
+        textarea {
+            width: 100%; flex: 1; min-height: 500px; background: rgba(15, 23, 42, 0.6); color: #e2e8f0;
+            border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.25rem;
+            font-family: 'JetBrains Mono', 'Menlo', 'Courier New', monospace; font-size: 0.85rem; line-height: 1.6;
+            resize: none; outline: none; transition: var(--transition);
+        }
+        textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+        textarea::-webkit-scrollbar { width: 10px; }
+        textarea::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 5px; }
+        textarea::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.3); }
+
+        .actions { display: flex; gap: 1rem; margin-top: 1.25rem; }
+        button {
+            padding: 0.75rem 1rem; border: none; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer;
+            transition: var(--transition); display: flex; justify-content: center; align-items: center; gap: 0.5rem;
+        }
+        .btn-primary { background: var(--primary); color: white; flex: 1; }
+        .btn-primary:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-secondary { background: var(--bg-surface-hover); color: var(--text-main); border: 1px solid var(--border-color); flex: 1; }
+        .btn-secondary:hover:not(:disabled) { background: #475569; border-color: var(--border-highlight); }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .btn-danger:hover { background: #ef4444; color: white; }
+
+        /* Toast */
+        .toast-container { position: fixed; bottom: 2rem; right: 2rem; display: flex; flex-direction: column; gap: 0.5rem; z-index: 50; }
+        .toast {
+            background: var(--bg-surface); border-left: 4px solid var(--primary); padding: 1rem 1.5rem;
+            border-radius: 8px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; display: flex; align-items: center; gap: 0.75rem;
+            font-size: 0.9rem; font-weight: 500;
+        }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: #ef4444; }
+
+        /* Loading Overlay */
+        .loader { border: 2px solid rgba(255,255,255,0.2); border-top: 2px solid #fff; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .is-loading .loader { display: block; }
+        .is-loading .btn-text { display: none; }
+
+        /* Footer */
+        footer { padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border-color); background: var(--bg-base); }
+    </style>
+</head>
+<body>
+
+    <header class="animate-fade-in" style="animation-delay: 0s;">
+        <h1>File2Context</h1>
+        <p>Drop code, PDFs, docs, images, or text. Optimize instantly for AI limits.</p>
+    </header>
+
+    <main>
+        <!-- Input Panel -->
+        <div class="panel animate-fade-in" style="animation-delay: 0.1s;">
+            <h2>Source Files</h2>
+            <div class="dropzone" id="dropzone">
+                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                <div>
+                    <strong>Drag & drop files here</strong>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;">Code, PDFs, Word, TXT, Images (PNG/JPG)</div>
+                </div>
+                <input type="file" id="fileInput" multiple>
+            </div>
+            
+            <div class="file-list" id="fileList"></div>
+
+            <div class="settings-card">
+                <h3>Optimization Settings</h3>
+                <div class="controls">
+                    <div class="control-group">
+                        <input type="checkbox" id="minifyText" checked>
+                        <label for="minifyText">
+                            Minify Output
+                            <span>Strip duplicate newlines and trailing spaces to save tokens.</span>
+                        </label>
+                    </div>
+                    <div class="control-group">
+                        <input type="checkbox" id="wrapXml" checked>
+                        <label for="wrapXml">
+                            XML Wrapping
+                            <span>Wrap files in &lt;file name="..."&gt; tags (Best for Claude/Gemini).</span>
+                        </label>
+                    </div>
+                    
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color);">
+                        <label style="font-size: 0.85rem; color: var(--text-main); margin-bottom: 0.2rem; display: block;">Image Handling Strategy</label>
+                        <select id="imageMode">
+                            <option value="ocr">Extract Text (OCR via Tesseract)</option>
+                            <option value="base64">Embed as Base64 (Resize to 1024px for Vision LLMs)</option>
+                            <option value="ignore">Ignore Images</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: auto; padding-top: 1.5rem;">
+                <button class="btn-primary" id="processBtn" style="width: 100%;">
+                    <div class="loader"></div>
+                    <span class="btn-text">Generate AI Context</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="panel animate-fade-in" style="animation-delay: 0.2s;">
+            <div class="output-header">
+                <h2>Generated Context</h2>
+                <div class="stats" id="statsDisplay">0 files | ~0 tokens</div>
+            </div>
+            
+            <div class="progress-bar-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <textarea id="outputText" placeholder="AI context will appear here...&#10;&#10;Optimized and ready to be pasted into ChatGPT, Claude, Gemini, or Copilot."></textarea>
+            
+            <div class="actions">
+                <button class="btn-secondary" id="copyBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy to Clipboard
+                </button>
+                <button class="btn-secondary" id="downloadBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Save .txt
+                </button>
+                <button class="btn-danger" id="clearBtn" title="Clear All">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <footer>
+        Zero bloat. Fully client-side context generation. No data leaves your browser. Designed for GitHub Next & Codespaces.
+    </footer>
+
+    <script>
+        // --- State Management ---
+        const filesData = new Map(); // id -> { file, text, status }
+
+        // --- DOM Elements ---
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const processBtn = document.getElementById('processBtn');
+        const outputText = document.getElementById('outputText');
+        const copyBtn = document.getElementById('copyBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const statsDisplay = document.getElementById('statsDisplay');
+        const toastContainer = document.getElementById('toastContainer');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        
+        // Options
+        const optMinify = document.getElementById('minifyText');
+        const optWrapXml = document.getElementById('wrapXml');
+        const optImageMode = document.getElementById('imageMode');
+
+        // --- Helpers ---
+        const generateId = () => Math.random().toString(36).substring(2, 9);
+        const formatBytes = (bytes, decimals = 2) => {
+            if (bytes === 0) return '0 B';
+            const k = 1024; const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        };
+        const escapeHTML = (str) => str.replace(/[&<>'"]/g, tag => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'}[tag]));
+        
+        const showToast = (message, type = 'success') => {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icon = type === 'success' 
+                ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`
+                : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+            toast.innerHTML = `${icon} <span>${message}</span>`;
+            toastContainer.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) reverse forwards';
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        };
+
+        const updateProgress = (percent) => {
+            progressContainer.style.display = percent > 0 && percent < 100 ? 'block' : 'none';
+            progressBar.style.width = `${percent}%`;
+        };
+
+        // --- File UI Logic ---
+        const handleFiles = (newFiles) => {
+            Array.from(newFiles).forEach(file => {
+                const id = generateId();
+                filesData.set(id, { file, text: null, status: 'pending' });
+            });
+            renderFileList();
+            updateStats();
+        };
+
+        const removeFile = (id) => {
+            filesData.delete(id);
+            renderFileList();
+            updateStats();
+        };
+
+        const renderFileList = () => {
+            fileList.innerHTML = '';
+            filesData.forEach((data, id) => {
+                const el = document.createElement('div');
+                el.className = 'file-item';
+                const statusLabel = data.status === 'processed' ? '<span class="file-status processed">Processed</span>' : '<span class="file-status">Pending</span>';
+                
+                el.innerHTML = `
+                    <div class="file-info">
+                        <span class="file-name" title="${data.file.name}">${data.file.name}</span>
+                        <span class="file-meta">${formatBytes(data.file.size)} • ${data.file.type || 'unknown'} ${statusLabel}</span>
+                    </div>
+                    <button class="remove-btn" onclick="removeFile('${id}')" title="Remove file">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                `;
+                fileList.appendChild(el);
+            });
+        };
+
+        // --- Core Parsers ---
+        const readAsText = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result);
+            reader.onerror = e => reject(e);
+            reader.readAsText(file);
+        });
+
+        const readPdf = async (file) => {
+            if (!window.pdfjsLib) throw new Error("PDF.js not loaded");
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let fullText = "";
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += `[Page ${i}]\n${pageText}\n\n`;
+            }
+            return fullText;
+        };
+
+        const readDocx = async (file) => {
+            if (!window.mammoth) throw new Error("Mammoth.js not loaded");
+            const arrayBuffer = await file.arrayBuffer();
+            const result = await mammoth.extractRawText({ arrayBuffer });
+            return result.value;
+        };
+
+        // --- Image Handling (Canvas Base64 & Tesseract OCR) ---
+        const readImageBase64Optimized = async (file, maxSize = 1024) => {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => {
+                    let { width, height } = img;
+                    // Downscale if larger than max size to save tokens/memory
+                    if (width > maxSize || height > maxSize) {
+                        const ratio = Math.min(maxSize / width, maxSize / height);
+                        width = Math.round(width * ratio);
+                        height = Math.round(height * ratio);
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    // Compress to JPEG 0.7 for optimal size vs quality for LLM vision
+                    resolve(`data:image/jpeg;base64,${canvas.toDataURL('image/jpeg', 0.7).split(',')[1]}`);
+                };
+                img.onerror = reject;
+                img.src = URL.createObjectURL(file);
+            });
+        };
+
+        const performOCR = async (file) => {
+            if (!window.Tesseract) throw new Error("Tesseract.js not loaded");
+            showToast(`Running OCR on ${file.name}...`, 'success');
+            const result = await Tesseract.recognize(file, 'eng', {
+                logger: m => {
+                    if(m.status === 'recognizing text') {
+                        // Optional: can hook into progress bar here
+                    }
+                }
+            });
+            return `[EXTRACTED TEXT VIA OCR]\n${result.data.text}`;
+        };
+
+        // --- File Dispatcher ---
+        const extractContent = async (file) => {
+            const ext = file.name.split('.').pop().toLowerCase();
+            const type = file.type;
+            
+            try {
+                if (type.startsWith('image/')) {
+                    const mode = optImageMode.value;
+                    if (mode === 'ignore') return `[IMAGE FILE IGNORED: ${file.name}]`;
+                    if (mode === 'ocr') return await performOCR(file);
+                    if (mode === 'base64') return await readImageBase64Optimized(file);
+                } 
+                else if (ext === 'pdf' || type === 'application/pdf') {
+                    return await readPdf(file);
+                } 
+                else if (ext === 'docx' || type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                    return await readDocx(file);
+                } 
+                else {
+                    // Fallback to plain text reader for source code, txt, md, etc.
+                    return await readAsText(file);
+                }
+            } catch (err) {
+                console.error(`Error parsing ${file.name}:`, err);
+                return `[ERROR EXTRACTING CONTENT FROM ${file.name}: ${err.message}]`;
+            }
+        };
+
+        // --- Optimization / Minification ---
+        const minifyOutput = (text) => {
+            if (!optMinify.checked) return text;
+            return text
+                .replace(/\r\n/g, '\n')       // Normalize newlines
+                .replace(/[ \t]+$/gm, '')     // Remove trailing spaces per line
+                .replace(/\n{3,}/g, '\n\n')   // Collapse 3+ newlines into 2
+                .trim();
+        };
+
+        // --- Processing Engine ---
+        const processAllFiles = async () => {
+            if (filesData.size === 0) {
+                showToast("Please add files to process", "error");
+                return;
+            }
+
+            processBtn.classList.add('is-loading');
+            processBtn.disabled = true;
+            outputText.value = "Processing files... Please wait.";
+
+            let combinedOutput = "";
+            let processedCount = 0;
+            const totalFiles = filesData.size;
+            
+            updateProgress(5);
+
+            for (const [id, data] of filesData.entries()) {
+                // Only parse if not already processed successfully, OR if it's an image (since mode might have changed)
+                if (data.status === 'pending' || data.file.type.startsWith('image/')) {
+                    data.text = await extractContent(data.file);
+                    data.status = 'processed';
+                }
+                
+                let fileContent = minifyOutput(data.text);
+                
+                if (optWrapXml.checked) {
+                    const ext = data.file.name.split('.').pop().toLowerCase();
+                    const isBase64 = fileContent.startsWith('data:image/');
+                    
+                    if (isBase64) {
+                        combinedOutput += `<image name="${data.file.name}">\n${fileContent}\n</image>\n\n`;
+                    } else {
+                        combinedOutput += `<file name="${data.file.name}" type="${ext}">\n${fileContent}\n</file>\n\n`;
+                    }
+                } else {
+                    combinedOutput += `========== FILE: ${data.file.name} ==========\n${fileContent}\n\n`;
+                }
+
+                processedCount++;
+                updateProgress((processedCount / totalFiles) * 100);
+            }
+
+            // Final optimization pass across the entire glued payload
+            outputText.value = minifyOutput(combinedOutput);
+            renderFileList();
+            updateStats();
+            
+            setTimeout(() => {
+                updateProgress(0);
+                processBtn.classList.remove('is-loading');
+                processBtn.disabled = false;
+                showToast("Context optimized and generated successfully!");
+            }, 500);
+        };
+
+        const updateStats = () => {
+            const fileCount = filesData.size;
+            const textLen = outputText.value.length;
+            // Standard GPT token estimation (~4 chars per token)
+            const tokenEst = textLen > 0 ? Math.ceil(textLen / 4) : 0;
+            statsDisplay.textContent = `${fileCount} file${fileCount !== 1 ? 's' : ''} | ~${tokenEst.toLocaleString()} tokens`;
+        };
+
+        // --- Event Listeners ---
+        dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+        dropzone.addEventListener('dragleave', (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+        dropzone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+            fileInput.value = ''; // Reset input to allow re-selecting same file
+        });
+
+        processBtn.addEventListener('click', processAllFiles);
+        outputText.addEventListener('input', updateStats); // Allow manual edits to update token count
+
+        copyBtn.addEventListener('click', () => {
+            if (!outputText.value) return showToast("Nothing to copy!", "error");
+            navigator.clipboard.writeText(outputText.value).then(() => {
+                showToast("Context copied to clipboard!");
+            }).catch(() => {
+                outputText.select();
+                document.execCommand('copy');
+                showToast("Context copied to clipboard!");
+            });
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            if (!outputText.value) return showToast("Nothing to download!", "error");
+            const blob = new Blob([outputText.value], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ai-context-${new Date().toISOString().slice(0,10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast("File downloaded!");
+        });
+
+        clearBtn.addEventListener('click', () => {
+            filesData.clear();
+            renderFileList();
+            outputText.value = '';
+            updateStats();
+            updateProgress(0);
+            showToast("Workspace cleared.");
+        });
+
+        // Initialize state
+        updateStats();
+
+    </script>
+</body>
+</html>

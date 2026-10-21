@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'">
+<meta name="theme-color" content="#eef2ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101a15" media="(prefers-color-scheme: dark)">
+<title>Habit Grove — Grow a Tree for Every Habit</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 60V34' stroke='%236b4a2f' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='24' r='18' fill='%234f9d69'/%3E%3Ccircle cx='24' cy='18' r='4' fill='%23ff8fa3'/%3E%3Ccircle cx='40' cy='26' r='4' fill='%23ff8fa3'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#eef2ea; --card:#fbfcf9; --ink:#1d3327; --mute:#6b7d71; --line:#dbe3d6; --leaf:#4f9d69; --leaf2:#2f7a4d; --bark:#6b4a2f; --warn:#d98e32; --bad:#c9543f;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#101a15;--card:#16231c;--ink:#e3eee6;--mute:#8ea497;--line:#26382d;--leaf:#6cc28a;--leaf2:#4f9d69;--bark:#b08a63;color-scheme:dark}
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans)}
+body{padding:0 0 60px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 clamp(12px,3vw,28px)}
+header.top{display:flex;align-items:center;gap:14px;padding:20px 0 14px;flex-wrap:wrap}
+header.top h1{margin:0;font:italic 500 32px/1 var(--serif);letter-spacing:-.01em}
+header.top h1 b{font-style:normal;font-weight:700;color:var(--leaf2)}
+header.top .date{color:var(--mute);font-size:14px}
+header.top .sp{flex:1}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;transition:background .15s,border-color .15s,transform .1s}
+.btn:hover{border-color:var(--leaf)}
+.btn:active{transform:translateY(1px)}
+.btn.pri{background:var(--leaf2);border-color:var(--leaf2);color:#fff}
+.btn.pri:hover{background:var(--leaf)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--bad)}
+.btn.danger.armed{background:var(--bad);color:#fff;border-color:var(--bad)}
+.btn.sm{padding:5px 12px;font-size:13px}
+.scene{position:relative;border-radius:22px;overflow:hidden;height:clamp(260px,44vh,440px);box-shadow:0 20px 50px -30px rgba(20,50,30,.5);border:1px solid var(--line)}
+.scene canvas{display:block;width:100%;height:100%;cursor:pointer}
+.scene .cap{position:absolute;left:18px;top:14px;font:12px var(--mono);color:rgba(255,255,255,.9);text-shadow:0 1px 3px rgba(0,0,0,.35);pointer-events:none;letter-spacing:.04em}
+.scene .health{position:absolute;right:16px;top:12px;background:rgba(255,255,255,.82);color:#1d3327;border-radius:999px;padding:5px 12px;font:600 12.5px var(--sans);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);isolation:isolate}
+.grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;margin-top:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.card h2{margin:0 0 12px;font:600 20px var(--serif);display:flex;align-items:center;gap:10px}
+.card h2 small{font:13px var(--sans);color:var(--mute);margin-left:auto}
+.habit{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:10px 8px;border-radius:14px;cursor:pointer;border:1px solid transparent;transition:background .15s,border-color .15s}
+.habit:hover{background:color-mix(in srgb,var(--leaf) 7%,transparent)}
+.habit.sel{border-color:var(--line);background:color-mix(in srgb,var(--leaf) 9%,transparent)}
+.habit .em{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:color-mix(in srgb,var(--c) 18%,transparent)}
+.habit .nm{font-weight:600}
+.habit .meta{font-size:12.5px;color:var(--mute);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.week{display:flex;gap:3px}
+.week i{width:9px;height:9px;border-radius:3px;background:var(--line)}
+.week i.d{background:var(--c)}
+.week i.off{opacity:.35}
+.check{width:48px;height:48px;border-radius:50%;border:2px solid var(--c);background:transparent;display:grid;place-items:center;transition:background .2s,transform .15s}
+.check svg{width:22px;height:22px;stroke:var(--c);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:30;stroke-dashoffset:30;transition:stroke-dashoffset .3s}
+.check.on{background:var(--c)}
+.check.on svg{stroke:#fff;stroke-dashoffset:0}
+.check:hover{transform:scale(1.06)}
+.check.rest{border-style:dashed;opacity:.5}
+.empty{text-align:center;padding:14px 6px}
+.empty p{color:var(--mute);margin:4px 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stat{background:color-mix(in srgb,var(--c,var(--leaf)) 9%,transparent);border-radius:12px;padding:10px}
+.stat b{display:block;font:600 24px var(--serif)}
+.stat span{font-size:12px;color:var(--mute)}
+.heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,1fr);gap:3px;overflow-x:auto;padding-bottom:4px}
+.heat button{width:14px;height:14px;border-radius:3px;border:0;padding:0;background:var(--line)}
+.heat button.d{background:var(--c)}
+.heat button.off{opacity:.35}
+.heat button.today{box-shadow:0 0 0 2px var(--ink)}
+.heat button.fut{visibility:hidden}
+.heat button:hover{outline:2px solid var(--c);outline-offset:1px}
+.wkbars{display:flex;gap:5px;height:64px;align-items:flex-end}
+.wkbar{display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end;width:16px}
+.wkbar i{display:block;width:100%;border-radius:4px 4px 2px 2px;background:color-mix(in srgb,var(--c) 55%,transparent)}
+.wkbar.best i{background:var(--c)}
+.wkbar span{font-size:10px;color:var(--mute)}
+.yearwrap{overflow-x:auto;padding-bottom:4px}
+.yheat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,13px);grid-auto-columns:13px;gap:3px;width:max-content}
+.yheat i{border-radius:3px;background:var(--line)}
+.ymonths{display:grid;grid-auto-columns:13px;gap:3px;width:max-content;height:16px;font-size:10.5px;color:var(--mute)}
+.ymonths span{grid-row:1;white-space:nowrap}
+.yheat i.perfect{box-shadow:0 0 0 1.5px #e0b23a inset}
+.yheat i.none{background:transparent}
+.hlabels{display:flex;justify-content:space-between;font-size:11px;color:var(--mute);margin-top:4px}
+.form{display:grid;gap:12px}
+.form label{display:grid;gap:5px;font-size:13px;color:var(--mute)}
+.form input[type=text],.form textarea{border:1px solid var(--line);background:transparent;border-radius:10px;padding:9px 11px;outline:none}
+.form input[type=text]:focus,.form textarea:focus{border-color:var(--leaf)}
+.emojis,.colors,.days{display:flex;flex-wrap:wrap;gap:6px}
+.emojis button{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:transparent;font-size:18px}
+.emojis button.on{border-color:var(--ink);background:color-mix(in srgb,var(--leaf) 12%,transparent)}
+.colors button{width:28px;height:28px;border-radius:50%;border:3px solid transparent;background:var(--c);box-shadow:0 0 0 1px var(--line)}
+.colors button.on{border-color:var(--card);box-shadow:0 0 0 2px var(--ink)}
+.days button{width:38px;height:32px;border-radius:9px;border:1px solid var(--line);background:transparent;font-size:12.5px;font-weight:600}
+.days button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.note{width:100%;min-height:64px;resize:vertical}
+dialog{border:0;border-radius:20px;padding:22px;background:var(--card);color:var(--ink);width:min(460px,calc(100vw - 24px));box-shadow:0 30px 80px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(10,25,15,.45);backdrop-filter:blur(3px)}
+dialog h3{margin:0 0 14px;font:600 22px var(--serif)}
+#toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,12px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:30}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;align-items:center;color:var(--mute);font-size:13px}
+.foot .sp{flex:1}
+@media (max-width:820px){.grid{grid-template-columns:minmax(0,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}
+.card{min-width:0}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Habit <b>Grove</b></h1>
+    <span class="date" id="today"></span>
+    <span class="sp"></span>
+    <button class="btn pri" id="addBtn">+ Plant a habit</button>
+  </header>
+
+  <div class="scene" id="scene">
+    <canvas id="grove" aria-label="Your grove: one tree per habit. Click a tree to open it."></canvas>
+    <div class="cap" id="sceneCap"></div>
+    <div class="health" id="health" hidden></div>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Today <small id="todayCount"></small><button class="btn sm ghost" id="yearBtn" title="Your whole year across every habit" style="margin-left:8px">Year view</button></h2>
+      <div id="list"></div>
+    </section>
+    <section class="card" id="detail">
+      <h2 id="dTitle">Tree details</h2>
+      <div id="dBody"><p style="color:var(--mute);margin:0">Select a habit or click a tree to see its history.</p></div>
+    </section>
+  </div>
+
+  <div class="foot">
+    <span>Trees grow with every check-in, keep their leaves while your recent rate is healthy, and blossom on streaks of 5+ days.</span>
+    <span class="sp"></span>
+    <button class="btn sm" id="cardB" title="Save a 1200×630 image of your grove and streaks">📸 Share card</button>
+    <button class="btn sm ghost" id="exportB">Export</button>
+    <button class="btn sm ghost" id="importB">Import</button>
+    <input type="file" id="importF" accept=".json,application/json" hidden>
+  </div>
+</div>
+
+<dialog id="edit">
+  <form class="form" id="editForm" method="dialog">
+    <h3 id="editTitle">Plant a habit</h3>
+    <label>Name <input type="text" id="fName" maxlength="40" required placeholder="e.g. Read 20 minutes"></label>
+    <div><div style="font-size:13px;color:var(--mute);margin-bottom:5px">Icon</div><div class="emojis" id="fEmoji"></div></div>
+    <div><div style="font-size:13px;color:var(--mute);margin-bottom:5px">Blossom colour</div><div class="colors" id="fColor"></div></div>
+    <div><div style="font-size:13px;color:var(--mute);margin-bottom:5px">Scheduled days</div><div class="days" id="fDays"></div></div>
+    <div class="row" style="justify-content:flex-end;margin-top:6px">
+      <button type="button" class="btn ghost" id="cancelEdit">Cancel</button>
+      <button type="submit" class="btn pri" id="saveEdit">Plant</button>
+    </div>
+  </form>
+</dialog>
+<dialog id="year" aria-labelledby="yearTitle" style="width:min(940px,calc(100vw - 24px))">
+  <h3 id="yearTitle">A year in the grove</h3>
+  <div class="stats" id="yStats"></div>
+  <div class="yearwrap"><div class="ymonths" id="yMonths" aria-hidden="true"></div><div class="yheat" id="yHeat" role="img"></div></div>
+  <p style="color:var(--mute);font-size:13px;margin:10px 0 0">Each square is one day, shaded by the share of that day's scheduled habits you completed. A gold ring marks a perfect day.</p>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" id="yClose">Close</button></div>
+</dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const STORE = 'habitgrove.v1';
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+function el(tag, attrs = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v; else if (k === 'style') e.style.cssText = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const k of kids.flat()) if (k != null && k !== false) e.append(k);
+  return e;
+}
+
+/* ============ dates ============
+   Habits belong to the user's *local* calendar day (a 9 pm check-in in New York is still "today"),
+   so keys are built from local Y/M/D components — never toISOString(), which silently shifts to UTC. */
+const pad = n => String(n).padStart(2, '0');
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const dateOf = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (d, n) => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); return x; };
+const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+let TODAY = keyOf(new Date());
+
+/* ============ data ============ */
+const EMOJI = ['💧', '📚', '🚶', '🧘', '✍️', '🏃', '🥗', '😴', '🎸', '🧹', '💪', '🌱', '☀️', '🧠', '📵', '🍎', '🚴', '🎨', '💊', '🙏'];
+const COLORS = ['#ff8fa3', '#ffb347', '#ffd93d', '#9b8cff', '#5ec2ff', '#ff6b6b', '#f7a8ff', '#ffffff', '#ffa07a', '#c1ff72'];
+let D = { v: 1, habits: [] };
+function uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+function sanitize(d) {
+  if (!d || !Array.isArray(d.habits)) throw new Error('Not a Habit Grove file');
+  return { v: 1, habits: d.habits.slice(0, 40).map(h => {
+    const log = {}, notes = {};
+    if (h && h.log && typeof h.log === 'object') for (const k of Object.keys(h.log)) if (/^\d{4}-\d{2}-\d{2}$/.test(k) && h.log[k]) log[k] = 1;
+    if (h && h.notes && typeof h.notes === 'object') for (const k of Object.keys(h.notes)) if (/^\d{4}-\d{2}-\d{2}$/.test(k)) notes[k] = String(h.notes[k]).slice(0, 500);
+    return {
+      id: typeof h.id === 'string' && /^[\w-]{4,40}$/.test(h.id) ? h.id : uid(),
+      name: String(h.name || 'Habit').slice(0, 40), emoji: EMOJI.includes(h.emoji) ? h.emoji : '🌱',
+      color: /^#[0-9a-f]{6}$/i.test(h.color) ? h.color : COLORS[0],
+      days: Array.isArray(h.days) && h.days.length === 7 ? h.days.map(Boolean) : Array(7).fill(true),
+      created: /^\d{4}-\d{2}-\d{2}$/.test(h.created) ? h.created : TODAY, log, notes
+    };
+  }) };
+}
+function load() { try { const s = localStorage.getItem(STORE); if (s) D = sanitize(JSON.parse(s)); } catch (e) { D = { v: 1, habits: [] }; } }
+let saveT = 0;
+let warnedStorage = false;
+function save() { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(STORE, JSON.stringify(D)); } catch (e) { if (!warnedStorage) { warnedStorage = true; toast('Browser storage is unavailable — use Export to keep your data'); } } }, 200); }
+
+/* ============ stats ============ */
+const scheduled = (h, d) => h.days[d.getDay()];
+function stats(h) {
+  const today = dateOf(TODAY), created = dateOf(h.created);
+  let total = 0; for (const k in h.log) if (k <= TODAY) total++;
+  // current streak: walk back; today gets grace if not done yet
+  let streak = 0;
+  for (let d = today, n = 0; d >= created && n < 4000; d = addDays(d, -1), n++) {
+    if (!scheduled(h, d)) continue;
+    const k = keyOf(d);
+    if (h.log[k]) streak++; else if (k === TODAY) continue; else break;
+  }
+  // best streak
+  let best = 0, run = 0;
+  const first = Object.keys(h.log).sort()[0];
+  const start = first && first < h.created ? dateOf(first) : created;
+  for (let d = start, n = 0; d <= today && n < 4000; d = addDays(d, 1), n++) {
+    if (!scheduled(h, d)) continue;
+    if (h.log[keyOf(d)]) { run++; best = Math.max(best, run); } else if (keyOf(d) !== TODAY) run = 0;
+  }
+  const rate = days => {
+    let sch = 0, done = 0;
+    for (let i = 0; i < days; i++) {
+      const d = addDays(today, -i), k = keyOf(d);
+      if (d < start) break;
+      if (!scheduled(h, d)) continue;
+      if (k === TODAY && !h.log[k]) continue;
+      sch++; if (h.log[k]) done++;
+    }
+    return sch ? done / sch : 1;
+  };
+  return { total, streak, best, rate14: rate(14), rate30: rate(30), doneToday: !!h.log[TODAY], dueToday: scheduled(h, today) };
+}
+
+/* ============ PRNG ============ */
+function hashStr(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+/* ============ trees ============ */
+const MAXD = 9;
+const treeCache = new Map();
+function treeFor(h) {
+  let t = treeCache.get(h.id); if (t) return t;
+  const rnd = mulberry(hashStr(h.id));
+  const segs = [];
+  const lean = (rnd() - .5) * .25;
+  function branch(parent, depth, len, ang, w) {
+    const s = { parent, depth, len, ang, w, phase: rnd() * 6.283, leaves: [], x0: 0, y0: 0, x1: 0, y1: 0, a: 0 };
+    segs.push(s);
+    if (depth >= MAXD) return;
+    if (depth >= 2) for (let k = 0; k < 2; k++) s.leaves.push({ off: (rnd() - .5) * 2.2, r: .7 + rnd() * .6, keep: rnd(), bloom: rnd(), t: .55 + rnd() * .45 });
+    const n = depth < 3 && rnd() < .3 ? 3 : 2;
+    const spread = .38 + rnd() * .3;
+    for (let k = 0; k < n; k++) {
+      const a = n === 3 ? (k - 1) * spread * 1.1 : (k === 0 ? -1 : 1) * spread * (.75 + rnd() * .5);
+      branch(s, depth + 1, len * (.7 + rnd() * .14), a + (rnd() - .5) * .18 + (depth === 0 ? lean : 0), w * .7);
+    }
+  }
+  branch(null, 0, 1, lean * .4, 1);
+  t = { segs, rnd };
+  treeCache.set(h.id, t);
+  return t;
+}
+function growthOf(st) { return clamp(Math.log1p(st.total) / Math.log1p(150), 0, 1); }
+
+/* ============ seasons ============ */
+// Northern-hemisphere seasons from the local month; "#season=winter" previews another one.
+const SEASONS = ['winter', 'spring', 'summer', 'autumn'];
+const seasonOf = d => {
+  const o = /season=(\w+)/.exec(location.hash); if (o && SEASONS.includes(o[1])) return o[1];
+  const m = d.getMonth(); return m === 11 || m < 2 ? 'winter' : m < 5 ? 'spring' : m < 8 ? 'summer' : 'autumn';
+};
+let SEASON = seasonOf(new Date());
+const ambient = [];
+addEventListener('hashchange', () => { ambient.length = 0; render(); });
+
+/* ============ scene ============ */
+const cv = $('#grove'), ctx = cv.getContext('2d');
+let W = 0, H = 0, DPR = 1, raf = 0, tNow = 0;
+const view = new Map(); // habit id -> {g (animated growth), health, x}
+const particles = [];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+function resize() { const r = cv.getBoundingClientRect(); W = r.width; H = r.height; DPR = Math.min(devicePixelRatio || 1, 2); cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0); stars = null; loop(); }
+let stars = null;
+function skyFor(hour) {
+  // [top, bottom, groundFar, groundNear, isNight]
+  if (hour < 5 || hour >= 21) return ['#0b1526', '#20344f', '#1d3b2d', '#16301f', true];
+  if (hour < 8) return ['#f4b58a', '#b7d3ea', '#6d9a6a', '#4f8455', false];
+  if (hour < 17) return ['#9fd3f2', '#e3f4ee', '#8cc281', '#5fa362', false];
+  return ['#f08e6a', '#5a6fa6', '#56785a', '#3c6444', false];
+}
+function hills(y0, amp, freq, phase, color) {
+  ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(0, H);
+  for (let x = 0; x <= W + 10; x += 10) ctx.lineTo(x, y0 + Math.sin(x * freq + phase) * amp + Math.sin(x * freq * 2.3 + phase * 2) * amp * .35);
+  ctx.lineTo(W, H); ctx.closePath(); ctx.fill();
+}
+function groundY(x) { return H - 34 + Math.sin(x * .006 + 1.2) * 6; }
+function frame(ts) {
+  raf = 0; tNow = ts / 1000;
+  const hour = new Date().getHours();
+  let [top, bot, far, near, night] = skyFor(hour);
+  if (SEASON === 'winter') { far = mix(far, '#e9eff3', night ? .45 : .75); near = mix(near, '#f6f9fb', night ? .5 : .82); }
+  else if (SEASON === 'autumn') { far = mix(far, '#a8843f', .3); near = mix(near, '#8f7433', .22); }
+  else if (SEASON === 'spring') { near = mix(near, '#7cc46a', .25); }
+  const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, top); g.addColorStop(1, bot);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  if (night) {
+    if (!stars) { const r = mulberry(7); stars = Array.from({ length: 90 }, () => [r() * W, r() * H * .6, r() * 1.4 + .3, r() * 6]); }
+    for (const [x, y, s, p] of stars) { ctx.globalAlpha = .4 + .5 * Math.abs(Math.sin(tNow * .6 + p)); ctx.fillStyle = '#fff'; ctx.fillRect(x, y, s, s); }
+    ctx.globalAlpha = 1; ctx.fillStyle = '#f5f1d8'; ctx.beginPath(); ctx.arc(W * .82, H * .2, 16, 0, 7); ctx.fill();
+    ctx.fillStyle = top; ctx.beginPath(); ctx.arc(W * .82 + 7, H * .2 - 4, 14, 0, 7); ctx.fill();
+  } else {
+    const sx = W * (.12 + .76 * clamp((hour - 6) / 13, 0, 1)), sy = H * (.42 - .28 * Math.sin(Math.PI * clamp((hour - 6) / 13, 0, 1)));
+    const sg = ctx.createRadialGradient(sx, sy, 4, sx, sy, 60); sg.addColorStop(0, 'rgba(255,245,210,.95)'); sg.addColorStop(.3, 'rgba(255,230,170,.45)'); sg.addColorStop(1, 'rgba(255,230,170,0)');
+    ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(sx, sy, 60, 0, 7); ctx.fill();
+  }
+  hills(H * .62, 14, .004, .5, far);
+  hills(H - 30, 6, .006, 1.2, near);
+
+  const hs = D.habits, n = hs.length;
+  let anyMoving = false;
+  if (!n) {
+    ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.font = 'italic 20px ' + getComputedStyle(document.body).getPropertyValue('--serif');
+    ctx.textAlign = 'center'; ctx.fillText('An empty meadow. Plant your first habit.', W / 2, H * .45); ctx.textAlign = 'left';
+  }
+  const slot = W / Math.max(n, 1), scaleBase = Math.min((H - 70) / 3.6, slot * .42, 95);
+  hs.forEach((h, i) => {
+    const st = statsCache.get(h.id) || stats(h);
+    let v = view.get(h.id); if (!v) { v = { g: 0, health: st.rate14 }; view.set(h.id, v); }
+    const target = growthOf(st);
+    if (reduce.matches) { v.g = target; v.health = st.rate14; }
+    else { v.g += (target - v.g) * .06; v.health += (st.rate14 - v.health) * .06; }
+    if (Math.abs(target - v.g) > .001 || Math.abs(st.rate14 - v.health) > .002) anyMoving = true;
+    const x = slot * (i + .5), y = groundY(x);
+    v.x = x; v.y = y;
+    drawTree(h, st, v, x, y, scaleBase * (.35 + .65 * Math.sqrt(v.g)), night);
+    // label
+    ctx.font = '600 12px ' + getComputedStyle(document.body).getPropertyValue('--sans'); ctx.textAlign = 'center';
+    const label = `${h.emoji} ${h.name}`, lw = Math.min(slot - 8, ctx.measureText(label).width + 16);
+    ctx.fillStyle = h.id === selected ? 'rgba(255,255,255,.95)' : 'rgba(255,255,255,.7)';
+    roundRect(x - lw / 2, H - 24, lw, 19, 9); ctx.fill();
+    ctx.fillStyle = '#1d3327'; ctx.save(); ctx.beginPath(); ctx.rect(x - lw / 2 + 4, H - 26, lw - 8, 24); ctx.clip(); ctx.fillText(label, x, H - 10); ctx.restore();
+    ctx.textAlign = 'left';
+  });
+  // ambient seasonal particles: snow, drifting leaves, spring petals, summer-night fireflies
+  if (!reduce.matches) {
+    const kind = SEASON === 'winter' ? 'snow' : SEASON === 'autumn' ? 'leaf' : SEASON === 'spring' ? 'petal' : night ? 'fly' : null;
+    const cap = kind === 'snow' ? 70 : kind === 'fly' ? 18 : 14;
+    if (kind && ambient.length < cap && Math.random() < (kind === 'snow' ? .5 : .08)) {
+      ambient.push(kind === 'fly' ? { k: kind, x: Math.random() * W, y: H * (.45 + Math.random() * .4), ph: Math.random() * 6, t: 0, life: 6 + Math.random() * 6 }
+        : { k: kind, x: Math.random() * W * 1.2 - W * .1, y: -8, vx: (Math.random() - .3) * (kind === 'snow' ? .4 : .9), vy: kind === 'snow' ? .4 + Math.random() * .6 : .5 + Math.random() * .5, rot: Math.random() * 6, vr: (Math.random() - .5) * .08, r: kind === 'snow' ? 1 + Math.random() * 2 : 2.5 + Math.random() * 2, c: kind === 'leaf' ? ['#d9822b', '#c4532d', '#e0b23a'][Math.floor(Math.random() * 3)] : '#ffc2d1', t: 0, life: 30 });
+    }
+    for (let i = ambient.length - 1; i >= 0; i--) {
+      const a = ambient[i]; a.t += 1 / 60;
+      if (a.k === 'fly') {
+        a.x += Math.sin(tNow * .7 + a.ph) * .4; a.y += Math.cos(tNow * .9 + a.ph * 2) * .25;
+        const glow = Math.max(0, Math.sin(a.t * 2.2 + a.ph)) * Math.min(1, (a.life - a.t) / 2);
+        ctx.fillStyle = `rgba(255,236,140,${glow})`; ctx.beginPath(); ctx.arc(a.x, a.y, 1.8, 0, 7); ctx.fill();
+        ctx.fillStyle = `rgba(255,236,140,${glow * .25})`; ctx.beginPath(); ctx.arc(a.x, a.y, 6, 0, 7); ctx.fill();
+      } else {
+        a.x += a.vx + Math.sin(tNow + a.rot) * (a.k === 'snow' ? .25 : .6); a.y += a.vy; a.rot += a.vr;
+        ctx.fillStyle = a.k === 'snow' ? 'rgba(255,255,255,.9)' : a.c;
+        ctx.beginPath(); if (a.k === 'snow') ctx.arc(a.x, a.y, a.r, 0, 7); else ctx.ellipse(a.x, a.y, a.r, a.r * .5, a.rot, 0, 7); ctx.fill();
+      }
+      if (a.t > a.life || a.y > groundY(a.x) + 4) ambient.splice(i, 1);
+    }
+  }
+  // particles (sparkles and falling petals)
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i]; p.t += 1 / 60; p.x += p.vx; p.y += p.vy; p.vy += p.gy; p.vx *= .99;
+    if (p.t > p.life) { particles.splice(i, 1); continue; }
+    ctx.globalAlpha = 1 - p.t / p.life; ctx.fillStyle = p.c;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  const animating = !reduce.matches;
+  if ((animating || anyMoving || particles.length) && !document.hidden) loop();
+}
+function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+function mix(a, b, t) {
+  const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+  const c = s => Math.round(((pa >> s) & 255) * (1 - t) + ((pb >> s) & 255) * t);
+  return `rgb(${c(16)},${c(8)},${c(0)})`;
+}
+function drawTree(h, st, v, bx, by, scale, night) {
+  const { segs } = treeFor(h), G = 1 + v.g * (MAXD - .2), health = clamp(v.health, 0, 1);
+  const wind = reduce.matches ? 0 : 1, tsec = tNow;
+  const bark = night ? '#3e2c1d' : '#6b4a2f';
+  // leaves shade from autumn gold (neglected) to deep green (healthy)
+  const leafC = mix('#c49a4a', night ? '#2f6e47' : '#3f9a5d', clamp((health - .15) / .6, 0, 1));
+  ctx.lineCap = 'round';
+  // shadow
+  ctx.fillStyle = 'rgba(0,0,0,.14)'; ctx.beginPath(); ctx.ellipse(bx, by + 2, scale * (.3 + v.g * .9), 5, 0, 0, 7); ctx.fill();
+  const leaves = [], blooms = [];
+  for (const s of segs) {
+    const f = clamp(G - s.depth, 0, 1); if (f <= 0) { s.vis = 0; continue; }
+    s.vis = f;
+    const sway = wind * Math.sin(tsec * .9 + s.phase + bx * .01) * .018 * (s.depth + 1);
+    if (!s.parent) { s.x0 = bx; s.y0 = by; s.a = -Math.PI / 2 + s.ang + sway * .3; }
+    else { s.x0 = s.parent.x1; s.y0 = s.parent.y1; s.a = s.parent.a + s.ang + sway; }
+    const L = s.len * scale * f;
+    s.x1 = s.x0 + Math.cos(s.a) * L; s.y1 = s.y0 + Math.sin(s.a) * L;
+    const w = Math.max(.7, s.w * scale * .16 * (.45 + .55 * v.g));
+    ctx.strokeStyle = bark; ctx.lineWidth = w;
+    ctx.beginPath(); ctx.moveTo(s.x0, s.y0); ctx.lineTo(s.x1, s.y1); ctx.stroke();
+    if (f >= .6 && s.depth >= Math.floor(G) - 3) {
+      for (const lf of s.leaves) {
+        // winter thins every canopy (the grove sleeps), independent of habit health
+        if (lf.keep > (health * 1.05 + .05) * (SEASON === 'winter' ? .4 : 1)) continue;
+        const ax = s.x0 + (s.x1 - s.x0) * lf.t, ay = s.y0 + (s.y1 - s.y0) * lf.t;
+        leaves.push([ax, ay, s.a + lf.off, lf.r * scale * .09 * (.6 + .4 * f), SEASON === 'autumn' ? (lf.bloom > .72 ? 2 : lf.bloom > .45 ? 1 : 0) : 0]);
+        if (st.streak >= 5 && lf.bloom < clamp((st.streak - 4) / 26, .08, .55)) blooms.push([ax + Math.cos(s.a + lf.off) * 3, ay + Math.sin(s.a + lf.off) * 3, lf.r * scale * .045 + 1.2, st.streak >= 21 && lf.bloom < .12]);
+      }
+    }
+  }
+  const leafCols = [leafC, '#d9822b', '#c4532d'];
+  for (let ci = 0; ci < 3; ci++) {
+    ctx.fillStyle = leafCols[ci]; ctx.beginPath();
+    for (const [x, y, a, r, c] of leaves) if (c === ci) { ctx.moveTo(x + Math.cos(a) * r * 2, y + Math.sin(a) * r * 2); ctx.ellipse(x + Math.cos(a) * r, y + Math.sin(a) * r, r, r * .55, a, 0, 7); }
+    ctx.fill();
+  }
+  ctx.fillStyle = '#ffffff'; ctx.globalAlpha = .25;
+  for (const [x, y, a, r] of leaves) { ctx.beginPath(); ctx.ellipse(x + Math.cos(a) * r * 1.1, y + Math.sin(a) * r * 1.1 - r * .2, r * .45, r * .2, a, 0, 7); ctx.fill(); }
+  ctx.globalAlpha = 1;
+  for (const [x, y, r, fruit] of blooms) {
+    if (fruit) { ctx.fillStyle = h.color; ctx.beginPath(); ctx.arc(x, y + r, r * 1.6, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.beginPath(); ctx.arc(x - r * .5, y + r * .5, r * .5, 0, 7); ctx.fill(); }
+    else { ctx.fillStyle = h.color; for (let k = 0; k < 5; k++) { const a = k * 1.2566; ctx.beginPath(); ctx.arc(x + Math.cos(a) * r, y + Math.sin(a) * r, r * .75, 0, 7); ctx.fill(); } ctx.fillStyle = '#fff4b8'; ctx.beginPath(); ctx.arc(x, y, r * .55, 0, 7); ctx.fill(); }
+  }
+  if (h.id === selected) { ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.setLineDash([3, 4]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(bx, by + 2, scale * (.35 + v.g * .9) + 6, 8, 0, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
+}
+function loop() { if (!raf && !document.hidden) raf = requestAnimationFrame(frame); }
+document.addEventListener('visibilitychange', () => { if (!document.hidden) loop(); });
+new ResizeObserver(resize).observe(cv);
+cv.addEventListener('click', e => {
+  const r = cv.getBoundingClientRect(), x = e.clientX - r.left;
+  const n = D.habits.length; if (!n) return openEdit();
+  const i = clamp(Math.floor(x / (W / n)), 0, n - 1);
+  select(D.habits[i].id);
+});
+function burst(h, good) {
+  const v = view.get(h.id); if (!v || reduce.matches) return;
+  const top = v.y - 60 - v.g * 120;
+  for (let k = 0; k < (good ? 26 : 14); k++) {
+    particles.push(good
+      ? { x: v.x + (Math.random() - .5) * 60, y: top + Math.random() * 60, vx: (Math.random() - .5) * 1.6, vy: -Math.random() * 2 - .5, gy: .05, r: 1.5 + Math.random() * 2.5, c: Math.random() < .5 ? h.color : '#fff6c9', t: 0, life: 1.2 + Math.random() * .6 }
+      : { x: v.x + (Math.random() - .5) * 70, y: top + Math.random() * 70, vx: (Math.random() - .5) * .8, vy: .2 + Math.random() * .4, gy: .01, r: 2 + Math.random() * 2, c: '#c49a4a', t: 0, life: 2 + Math.random() });
+  }
+  loop();
+}
+
+/* ============ list ============ */
+const statsCache = new Map();
+function refreshStats() { statsCache.clear(); for (const h of D.habits) statsCache.set(h.id, stats(h)); }
+let selected = null;
+function render() {
+  refreshStats();
+  const now = new Date();
+  $('#today').textContent = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+  const list = $('#list');
+  if (!D.habits.length) {
+    list.replaceChildren(el('div', { class: 'empty' },
+      el('p', {}, 'Every habit becomes a tree. Pick a seed to start — or plant a demo grove to see how trees grow.'),
+      el('div', { class: 'chips' }, ...[['Drink water', '💧'], ['Read 20 min', '📚'], ['Walk', '🚶'], ['Meditate', '🧘'], ['Journal', '✍️'], ['Sleep by 11', '😴']].map(([n, e], k) =>
+        el('button', { class: 'btn sm', onclick: () => addHabit({ name: n, emoji: e, color: COLORS[k % COLORS.length] }) }, `${e} ${n}`))),
+      el('div', { style: 'margin-top:16px' }, el('button', { class: 'btn pri', onclick: demo }, '🌳 Plant a demo grove'))));
+  } else {
+    list.replaceChildren(...D.habits.map(h => habitRow(h)));
+  }
+  const due = D.habits.filter(h => statsCache.get(h.id).dueToday), done = due.filter(h => statsCache.get(h.id).doneToday);
+  $('#todayCount').textContent = D.habits.length ? `${done.length} / ${due.length} done` : '';
+  const hEl = $('#health');
+  if (D.habits.length) {
+    const avg = D.habits.reduce((a, h) => a + statsCache.get(h.id).rate14, 0) / D.habits.length;
+    hEl.hidden = false; hEl.textContent = `Grove health ${Math.round(avg * 100)}%`;
+  } else hEl.hidden = true;
+  const hour = now.getHours();
+  SEASON = seasonOf(now);
+  $('#sceneCap').textContent = `${SEASON} · ` + (hour < 5 || hour >= 21 ? 'night, the grove rests' : hour < 8 ? 'dawn' : hour < 17 ? 'daylight' : 'dusk');
+  renderDetail();
+  loop();
+}
+function habitRow(h) {
+  const st = statsCache.get(h.id), today = dateOf(TODAY);
+  const week = el('span', { class: 'week', 'aria-hidden': 'true' });
+  for (let i = 6; i >= 0; i--) { const d = addDays(today, -i); week.append(el('i', { class: (h.log[keyOf(d)] ? 'd' : '') + (scheduled(h, d) ? '' : ' off'), title: d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric' }) })); }
+  const chk = el('button', { class: 'check' + (st.doneToday ? ' on' : '') + (st.dueToday ? '' : ' rest'), 'aria-pressed': st.doneToday, 'aria-label': `${st.doneToday ? 'Undo' : 'Complete'} ${h.name} for today`, title: st.dueToday ? '' : 'Not scheduled today — you can still log it' });
+  chk.append(new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>', 'image/svg+xml').documentElement);
+  chk.addEventListener('click', e => { e.stopPropagation(); toggle(h, TODAY); });
+  const row = el('div', { class: 'habit' + (h.id === selected ? ' sel' : ''), style: `--c:${h.color}`, role: 'button', tabindex: 0, 'aria-label': `${h.name}: open details`, onclick: () => select(h.id), onkeydown: e => { if (e.key === 'Enter') select(h.id); } },
+    el('span', { class: 'em' }, h.emoji),
+    el('div', {}, el('div', { class: 'nm' }, h.name), el('div', { class: 'meta' }, week, el('span', {}, st.streak ? `🔥 ${st.streak}` : 'no streak yet'), el('span', {}, `${Math.round(st.rate14 * 100)}%`))),
+    chk);
+  return row;
+}
+function toggle(h, k) {
+  const was = !!h.log[k];
+  if (was) delete h.log[k]; else h.log[k] = 1;
+  save(); render();
+  const st = statsCache.get(h.id);
+  if (!was) {
+    burst(h, true);
+    if (k === TODAY) {
+      const msg = st.streak && st.streak % 7 === 0 ? `🌸 ${st.streak}-day streak! Your ${h.name} tree is in full bloom.` : st.streak >= 5 ? `🔥 ${st.streak} days — blossoms are opening` : `${h.emoji} Watered. ${st.total} check-ins total.`;
+      toast(msg);
+    }
+  } else burst(h, false);
+}
+function select(id) { selected = selected === id ? null : id; render(); if (selected && innerWidth < 820) $('#detail').scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' }); }
+
+/* ============ detail ============ */
+function renderDetail() {
+  const h = D.habits.find(x => x.id === selected);
+  if (!h) { $('#dTitle').textContent = 'Tree details'; $('#dBody').replaceChildren(el('p', { style: 'color:var(--mute);margin:0' }, D.habits.length ? 'Select a habit or click a tree to see its history.' : 'Nothing planted yet.')); return; }
+  const st = statsCache.get(h.id);
+  $('#dTitle').replaceChildren(el('span', {}, h.emoji), el('span', {}, h.name), el('small', {}, h.days.every(Boolean) ? 'every day' : h.days.map((on, i) => on ? DOW[i] : null).filter(Boolean).join(' ')));
+  const stage = st.total === 0 ? 'Seed' : st.total < 5 ? 'Sprout' : st.total < 20 ? 'Sapling' : st.total < 60 ? 'Young tree' : st.total < 120 ? 'Mature tree' : 'Ancient tree';
+  const statsBox = el('div', { class: 'stats', style: `--c:${h.color}` },
+    el('div', { class: 'stat' }, el('b', {}, String(st.streak)), el('span', {}, 'current streak')),
+    el('div', { class: 'stat' }, el('b', {}, String(st.best)), el('span', {}, 'best streak')),
+    el('div', { class: 'stat' }, el('b', {}, Math.round(st.rate30 * 100) + '%'), el('span', {}, '30-day rate')),
+    el('div', { class: 'stat' }, el('b', {}, String(st.total)), el('span', {}, stage)));
+  // heatmap: 26 weeks ending this week
+  const today = dateOf(TODAY), end = addDays(today, 6 - today.getDay()), start = addDays(end, -26 * 7 + 1);
+  const heat = el('div', { class: 'heat', style: `--c:${h.color}`, role: 'grid', 'aria-label': 'Last 26 weeks. Click a day to toggle it.' });
+  for (let d = start; d <= end; d = addDays(d, 1)) {
+    const k = keyOf(d), fut = k > TODAY;
+    const b = el('button', { class: (h.log[k] ? 'd' : '') + (scheduled(h, d) ? '' : ' off') + (k === TODAY ? ' today' : '') + (fut ? ' fut' : ''), title: `${d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}${h.log[k] ? ' ✓' : ''}${h.notes[k] ? ' — ' + h.notes[k] : ''}`, 'aria-label': `${d.toDateString()} ${h.log[k] ? 'done' : 'not done'}`, tabindex: fut ? -1 : 0 });
+    if (!fut) b.addEventListener('click', () => toggle(h, k));
+    heat.append(b);
+  }
+  const note = el('textarea', { class: 'note', placeholder: 'A note for today (optional)…', maxlength: 500, 'aria-label': 'Note for today' });
+  note.value = h.notes[TODAY] || '';
+  note.addEventListener('input', () => { if (note.value.trim()) h.notes[TODAY] = note.value.slice(0, 500); else delete h.notes[TODAY]; save(); });
+  const del = el('button', { class: 'btn sm danger', onclick: () => {
+    if (!del.classList.contains('armed')) { del.classList.add('armed'); del.textContent = 'Tap again to uproot'; setTimeout(() => { del.classList.remove('armed'); del.textContent = 'Uproot'; }, 3000); return; }
+    D.habits = D.habits.filter(x => x.id !== h.id); treeCache.delete(h.id); view.delete(h.id); selected = null; save(); render(); toast(`${h.name} uprooted`);
+  } }, 'Uproot');
+  const moveL = el('button', { class: 'btn sm ghost', 'aria-label': 'Move tree left', onclick: () => move(h, -1) }, '←');
+  const moveR = el('button', { class: 'btn sm ghost', 'aria-label': 'Move tree right', onclick: () => move(h, 1) }, '→');
+  requestAnimationFrame(() => { heat.scrollLeft = heat.scrollWidth; }); // narrow screens: open on "today"
+  // weekday rhythm over the last 12 weeks
+  const wk = Array.from({ length: 7 }, () => ({ s: 0, d: 0 })), since = dateOf(h.created);
+  for (let i = 0; i < 84; i++) {
+    const d = addDays(today, -i), k = keyOf(d); if (d < since && !h.log[k]) break;
+    if (!scheduled(h, d) || (k === TODAY && !h.log[k])) continue;
+    wk[d.getDay()].s++; if (h.log[k]) wk[d.getDay()].d++;
+  }
+  const rates = wk.map(w => w.s ? w.d / w.s : null), valid = rates.filter(r => r !== null);
+  const bestI = valid.length ? rates.indexOf(Math.max(...valid)) : -1, worstI = valid.length > 1 ? rates.indexOf(Math.min(...valid)) : -1;
+  const bars = el('div', { class: 'wkbars', style: `--c:${h.color}`, role: 'img', 'aria-label': 'Completion by weekday: ' + rates.map((r, i) => `${DOW[i]} ${r === null ? 'n/a' : Math.round(r * 100) + '%'}`).join(', ') },
+    ...rates.map((r, i) => el('div', { class: 'wkbar' + (i === bestI ? ' best' : '') }, el('i', { style: `height:${r === null ? 0 : Math.max(4, r * 100)}%` }), el('span', {}, DOW[i]))));
+  const insight = valid.length < 3 ? 'Keep going — weekday patterns appear after a couple of weeks.'
+    : bestI === worstI || rates[bestI] - rates[worstI] < .15 ? 'Remarkably steady across the week.'
+    : `Strongest on ${['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays'][bestI]} (${Math.round(rates[bestI] * 100)}%), weakest on ${['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays'][worstI]} (${Math.round(rates[worstI] * 100)}%). A reminder on that day could help.`;
+  $('#dBody').replaceChildren(statsBox, heat,
+    el('div', { class: 'hlabels' }, el('span', {}, start.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })), el('span', {}, 'click any day to fix history'), el('span', {}, 'today')),
+    el('div', { style: 'display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin-top:14px' }, bars, el('p', { style: 'margin:0;font-size:13px;color:var(--mute)' }, insight)),
+    el('div', { style: 'margin-top:14px' }, note),
+    el('div', { class: 'row', style: 'margin-top:10px' }, el('button', { class: 'btn sm', onclick: () => openEdit(h) }, 'Edit'), moveL, moveR, el('span', { style: 'flex:1' }), del));
+}
+function move(h, d) { const i = D.habits.indexOf(h), j = i + d; if (j < 0 || j >= D.habits.length) return; D.habits.splice(i, 1); D.habits.splice(j, 0, h); save(); render(); }
+
+/* ============ edit dialog ============ */
+let editing = null, form = {};
+function openEdit(h) {
+  editing = h || null;
+  form = h ? { name: h.name, emoji: h.emoji, color: h.color, days: [...h.days] } : { name: '', emoji: EMOJI[D.habits.length % EMOJI.length], color: COLORS[D.habits.length % COLORS.length], days: Array(7).fill(true) };
+  $('#editTitle').textContent = h ? 'Tend your habit' : 'Plant a habit'; $('#saveEdit').textContent = h ? 'Save' : 'Plant';
+  $('#fName').value = form.name;
+  drawForm(); $('#edit').showModal(); $('#fName').focus();
+}
+function drawForm() {
+  $('#fEmoji').replaceChildren(...EMOJI.map(e => el('button', { type: 'button', class: e === form.emoji ? 'on' : '', 'aria-pressed': e === form.emoji, 'aria-label': 'Icon ' + e, onclick: () => { form.emoji = e; drawForm(); } }, e)));
+  $('#fColor').replaceChildren(...COLORS.map(c => el('button', { type: 'button', class: c === form.color ? 'on' : '', style: `--c:${c}`, 'aria-pressed': c === form.color, 'aria-label': 'Colour ' + c, onclick: () => { form.color = c; drawForm(); } })));
+  $('#fDays').replaceChildren(...DOW.map((d, i) => el('button', { type: 'button', class: form.days[i] ? 'on' : '', 'aria-pressed': form.days[i], onclick: () => { form.days[i] = !form.days[i]; if (!form.days.some(Boolean)) form.days[i] = true; drawForm(); } }, d)));
+}
+$('#editForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = $('#fName').value.trim().slice(0, 40); if (!name) { $('#fName').focus(); return; }
+  if (editing) { Object.assign(editing, { name, emoji: form.emoji, color: form.color, days: form.days }); toast('Saved'); }
+  else addHabit({ name, emoji: form.emoji, color: form.color, days: form.days }, true);
+  $('#edit').close(); save(); render();
+});
+$('#cancelEdit').addEventListener('click', () => $('#edit').close());
+$('#addBtn').addEventListener('click', () => openEdit());
+function addHabit(o, quiet) {
+  if (D.habits.length >= 40) return toast('The grove is full (40 trees)');
+  const h = { id: uid(), name: o.name, emoji: o.emoji, color: o.color, days: o.days || Array(7).fill(true), created: TODAY, log: {}, notes: {} };
+  D.habits.push(h); selected = h.id; save(); render();
+  if (!quiet) toast(`${h.emoji} ${h.name} planted`); else toast(`${h.emoji} ${h.name} planted`);
+}
+function demo() {
+  const specs = [['Drink water', '💧', '#5ec2ff', .92, 140], ['Read 20 min', '📚', '#ff8fa3', .75, 90], ['Walk', '🚶', '#ffb347', .55, 60], ['Meditate', '🧘', '#9b8cff', .85, 30], ['Guitar', '🎸', '#ff6b6b', .3, 45]];
+  const today = dateOf(TODAY);
+  for (const [name, emoji, color, p, days] of specs) {
+    const h = { id: uid(), name, emoji, color, days: name === 'Guitar' ? [false, true, false, true, false, true, false] : Array(7).fill(true), created: keyOf(addDays(today, -days)), log: {}, notes: {} };
+    let hot = Math.random() < .5;
+    for (let i = days; i >= 1; i--) { if (Math.random() < .08) hot = !hot; if (Math.random() < (hot ? Math.min(.99, p + .1) : p * .7)) h.log[keyOf(addDays(today, -i))] = 1; }
+    for (let i = 1; i <= 8 && p > .8; i++) h.log[keyOf(addDays(today, -i))] = 1;
+    D.habits.push(h);
+  }
+  save(); render(); toast('Demo grove planted — try checking things off');
+}
+
+/* ============ year view ============ */
+function openYear() {
+  if (!D.habits.length) return toast('Plant a habit first');
+  const today = dateOf(TODAY), end = addDays(today, 6 - today.getDay()), start = addDays(end, -53 * 7 + 1);
+  const box = $('#yHeat'), cells = []; let perfect = 0, total = 0, active = 0, run = 0, bestRun = 0, bestDay = null, bestN = -1;
+  const monthCols = [];
+  for (let d = start, col = 0, k = 0; d <= end; d = addDays(d, 1), k++) {
+    if (k % 7 === 0 && d.getDate() <= 7) monthCols.push([Math.floor(k / 7), d.toLocaleDateString(undefined, { month: 'short' })]);
+    const key = keyOf(d);
+    if (key > TODAY) { cells.push(el('i', { class: 'none' })); continue; }
+    const due = D.habits.filter(h => key >= h.created && scheduled(h, d)), done = D.habits.filter(h => h.log[key]);
+    total += done.length; if (done.length) active++;
+    if (done.length > bestN) { bestN = done.length; bestDay = d; }
+    const frac = due.length ? Math.min(1, done.filter(h => due.includes(h)).length / due.length) : (done.length ? 1 : 0);
+    const isPerfect = due.length > 0 && due.every(h => h.log[key]);
+    if (isPerfect) { perfect++; run++; bestRun = Math.max(bestRun, run); } else if (key !== TODAY) run = 0;
+    cells.push(el('i', { class: isPerfect ? 'perfect' : '', style: frac ? `background:color-mix(in srgb,var(--leaf) ${Math.round(18 + frac * 82)}%,var(--line))` : '', title: `${d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}: ${done.length}/${due.length} habits${isPerfect ? ' · perfect day' : ''}` }));
+    void col;
+  }
+  box.replaceChildren(...cells);
+  box.setAttribute('aria-label', `Last 53 weeks: ${total} check-ins, ${perfect} perfect days`);
+  $('#yMonths').replaceChildren(...monthCols.map(([c, n]) => el('span', { style: `grid-column:${c + 1}` }, n)));
+  $('#yStats').replaceChildren(
+    el('div', { class: 'stat' }, el('b', {}, total.toLocaleString()), el('span', {}, 'check-ins this year')),
+    el('div', { class: 'stat' }, el('b', {}, String(perfect)), el('span', {}, 'perfect days')),
+    el('div', { class: 'stat' }, el('b', {}, String(bestRun)), el('span', {}, 'longest perfect run')),
+    el('div', { class: 'stat' }, el('b', {}, String(active)), el('span', {}, bestDay && bestN > 0 ? `active days · best ${bestDay.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}` : 'active days')));
+  $('#year').showModal();
+  requestAnimationFrame(() => { const w = $('.yearwrap'); w.scrollLeft = w.scrollWidth; });
+}
+$('#yearBtn').addEventListener('click', openYear);
+$('#yClose').addEventListener('click', () => $('#year').close());
+
+/* ============ import / export ============ */
+function download(name, blob) { const a = el('a', { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
+$('#cardB').addEventListener('click', () => {
+  if (!D.habits.length) return toast('Plant a habit first');
+  const Wc = 1200, Hc = 630, c = document.createElement('canvas'); c.width = Wc; c.height = Hc;
+  const x = c.getContext('2d'), serif = getComputedStyle(document.body).getPropertyValue('--serif'), sans = getComputedStyle(document.body).getPropertyValue('--sans');
+  // live grove scene, cover-fit into the left 760px
+  const sw = cv.width, sh = cv.height, k = Math.max(760 / sw, Hc / sh), dw = sw * k, dh = sh * k;
+  x.save(); x.beginPath(); x.rect(0, 0, 760, Hc); x.clip(); x.drawImage(cv, (760 - dw) / 2, Hc - dh, dw, dh); x.restore();
+  // stats panel
+  x.fillStyle = '#fbfcf9'; x.fillRect(760, 0, Wc - 760, Hc);
+  x.fillStyle = '#1d3327'; x.font = `italic 500 44px ${serif}`; x.fillText('Habit', 800, 92); x.font = `700 44px ${serif}`; x.fillStyle = '#2f7a4d'; x.fillText('Grove', 912, 92);
+  x.fillStyle = '#6b7d71'; x.font = `16px ${sans}`; x.fillText(new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) + ' · ' + SEASON, 800, 122);
+  const rows = D.habits.map(h => ({ h, st: statsCache.get(h.id) || stats(h) })).sort((a, b) => b.st.streak - a.st.streak).slice(0, 6);
+  rows.forEach(({ h, st }, i) => {
+    const y = 180 + i * 62;
+    x.fillStyle = h.color; x.beginPath(); x.arc(814, y - 6, 16, 0, 7); x.fill();
+    x.font = `20px ${sans}`; x.textAlign = 'center'; x.fillText(h.emoji, 814, y + 1); x.textAlign = 'left';
+    x.fillStyle = '#1d3327'; x.font = `600 19px ${sans}`; x.fillText(h.name.slice(0, 22), 842, y - 4);
+    x.fillStyle = '#6b7d71'; x.font = `14px ${sans}`; x.fillText(`${st.streak ? '🔥 ' + st.streak + '-day streak' : 'growing'} · ${Math.round(st.rate30 * 100)}% · ${st.total} check-ins`, 842, y + 16);
+  });
+  const avg = D.habits.reduce((a, h) => a + (statsCache.get(h.id) || stats(h)).rate14, 0) / D.habits.length;
+  x.fillStyle = '#2f7a4d'; x.font = `600 18px ${sans}`; x.fillText(`Grove health ${Math.round(avg * 100)}%`, 800, Hc - 36);
+  c.toBlob(b => { if (b) { download(`habit-grove-${TODAY}.png`, b); toast('Share card saved'); } }, 'image/png');
+});
+$('#exportB').addEventListener('click', () => download(`habit-grove-${TODAY}.json`, new Blob([JSON.stringify(D, null, 1)], { type: 'application/json' })));
+$('#importB').addEventListener('click', () => $('#importF').click());
+$('#importF').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return; if (f.size > 5e6) return toast('File too large');
+  try { D = sanitize(JSON.parse(await f.text())); treeCache.clear(); view.clear(); selected = null; save(); render(); toast(`Imported ${D.habits.length} habits`); }
+  catch (err) { toast('Import failed: ' + err.message); }
+});
+
+/* ============ misc ============ */
+let toastT = 0;
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600); }
+// roll over at local midnight
+const dayTimer = setInterval(() => { const k = keyOf(new Date()); if (k !== TODAY) { TODAY = k; render(); } }, 30000);
+addEventListener('pagehide', () => clearInterval(dayTimer));
+addEventListener('keydown', e => {
+  if (e.target.matches('input,textarea') || $('#edit').open || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === 'n') { e.preventDefault(); openEdit(); }
+  else if (/^[1-9]$/.test(e.key)) { const h = D.habits[+e.key - 1]; if (h) toggle(h, TODAY); }
+});
+reduce.addEventListener('change', loop);
+
+load(); render();
+</script>
+</body>
+</html>

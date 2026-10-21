@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'">
+<meta name="theme-color" content="#0c0d10">
+<title>Six-Pack — Launcher</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c0d10'/%3E%3Cg fill='%23ffb547'%3E%3Crect x='10' y='12' width='12' height='16' rx='3'/%3E%3Crect x='26' y='12' width='12' height='16' rx='3' fill='%23ff5a1f'/%3E%3Crect x='42' y='12' width='12' height='16' rx='3' fill='%23c6f432'/%3E%3Crect x='10' y='36' width='12' height='16' rx='3' fill='%23e63b2e'/%3E%3Crect x='26' y='36' width='12' height='16' rx='3' fill='%234f9d69'/%3E%3Crect x='42' y='36' width='12' height='16' rx='3' fill='%23c9a45c'/%3E%3C/g%3E%3C/svg%3E">
+<style>
+:root{--bg:#0c0d10;--card:#14161b;--line:#23262e;--ink:#eceae4;--mute:#8d9099;--sans:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,sans-serif;--serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans)}
+main{max-width:1180px;margin:0 auto;padding:44px clamp(14px,3vw,32px) 60px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px}
+h1{margin:0;font:400 clamp(40px,6vw,64px)/.95 var(--serif);letter-spacing:-.02em}
+h1 em{font-style:italic;color:#ffb547}
+header p{margin:10px 0 0;color:var(--mute);max-width:520px}
+.stamp{font:11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+a.card{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .25s;isolation:isolate}
+a.card:hover,a.card:focus-visible{transform:translateY(-4px);border-color:var(--c);box-shadow:0 22px 50px -26px var(--c);outline:none}
+a.card canvas{display:block;width:100%;height:170px;background:#000}
+.body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.body h2{margin:0;font:600 22px var(--sans);letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+.body h2 i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.body p{margin:0;color:#b8bac1;font-size:14px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:10px}
+.tags span{font:11px var(--mono);color:var(--mute);border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+.open{font:600 12px var(--mono);color:var(--c);letter-spacing:.06em;margin-top:6px}
+footer{margin-top:30px;color:var(--mute);font-size:13px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>Six<em>-</em>Pack</h1>
+      <p>Six single-file web apps built in one sitting. Each runs offline straight from this folder, with no installs, no servers, and no tracking.</p>
+    </div>
+    <span class="stamp">Built 30 Sep 2026</span>
+  </header>
+  <div class="grid" id="grid"></div>
+  <footer>Tip: every app saves its state in this browser, and each one has export buttons for taking your work elsewhere.</footer>
+</main>
+<script>
+'use strict';
+const APPS = [
+  { f: 'Orrery.html', n: 'Orrery', c: '#ffb547', d: 'An n-body gravity sandbox. Slingshot planets, watch galaxies collide, trace comet tails, and run time backwards with a symplectic integrator.', t: ['physics', '9 scenes', 'habitable zones', 'share links'], p: 'orbit' },
+  { f: 'Pulsewerk.html', n: 'Pulsewerk', c: '#ff5a1f', d: 'An 8-voice synthesized drum machine with a 303-style acid bass. Supports polyrhythms, Euclidean fills, kits and song chains, and exports to WAV and MIDI.', t: ['web audio', 'ratchets', 'MIDI export', 'undo'], p: 'steps' },
+  { f: 'Regex-Forge.html', n: 'Regex Forge', c: '#c6f432', d: 'A regular-expression workbench. It explains patterns in plain English, draws railroad diagrams, generates matching examples, runs unit tests, and exports code in 7 languages.', t: ['dev tool', 'sandboxed worker', 'railroad diagrams', 'split + v flag'], p: 'regex' },
+  { f: 'Tessera.html', n: 'Tessera', c: '#e63b2e', d: 'A generative pattern studio with Truchet, hex, weave, maze and halftone tiles. It can turn photos into patterns and exports SVG, seamless tiles and wallpapers.', t: ['generative art', 'SVG', 'photo → pattern', 'colour harmony'], p: 'tiles' },
+  { f: 'Habit-Grove.html', n: 'Habit Grove', c: '#4f9d69', d: 'A habit tracker where every habit grows a tree. Trees grow with check-ins, keep their leaves while your rate is healthy, blossom on streaks, and follow the real seasons.', t: ['productivity', 'procedural trees', 'year view'], p: 'tree' },
+  { f: 'Cartograph.html', n: 'Cartograph', c: '#c9a45c', d: 'A procedural fantasy-map generator with rivers from drainage simulation, A* roads, rival realms with natural borders, a named gazetteer, and pins and notes, in parchment, atlas and topo styles.', t: ['worldbuilding', 'political realms', 'D&D ready'], p: 'map' }
+];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const grid = document.getElementById('grid'), previews = [];
+for (const a of APPS) {
+  const card = document.createElement('a'); card.className = 'card'; card.href = a.f; card.style.setProperty('--c', a.c);
+  card.setAttribute('aria-label', `Open ${a.n}: ${a.d}`);
+  const cv = document.createElement('canvas'); cv.setAttribute('aria-hidden', 'true');
+  const body = document.createElement('div'); body.className = 'body';
+  const h = document.createElement('h2'); const sw = document.createElement('i'); h.append(sw, a.n);
+  const p = document.createElement('p'); p.textContent = a.d;
+  const tags = document.createElement('div'); tags.className = 'tags'; for (const t of a.t) { const s = document.createElement('span'); s.textContent = t; tags.append(s); }
+  const open = document.createElement('div'); open.className = 'open'; open.textContent = `Open ${a.f} →`;
+  body.append(h, p, tags, open); card.append(cv, body); grid.append(card);
+  previews.push({ cv, ctx: cv.getContext('2d'), kind: a.p, color: a.c, seed: Math.random() * 1000 });
+}
+function size() { for (const v of previews) { const r = v.cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2); v.cv.width = r.width * d; v.cv.height = r.height * d; v.w = r.width; v.h = r.height; v.ctx.setTransform(d, 0, 0, d, 0, 0); } }
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const DRAW = {
+  orbit(x, w, h, t) {
+    x.fillStyle = '#05060a'; x.fillRect(0, 0, w, h);
+    const cx = w / 2, cy = h / 2;
+    for (let k = 0; k < 40; k++) { x.fillStyle = `rgba(255,255,255,${.2 + (k % 5) / 10})`; x.fillRect((k * 97) % w, (k * 57) % h, 1, 1); }
+    const g = x.createRadialGradient(cx, cy, 2, cx, cy, 30); g.addColorStop(0, 'rgba(255,200,100,.9)'); g.addColorStop(1, 'rgba(255,200,100,0)'); x.fillStyle = g; x.beginPath(); x.arc(cx, cy, 30, 0, 7); x.fill();
+    x.fillStyle = '#fff8e6'; x.beginPath(); x.arc(cx, cy, 6, 0, 7); x.fill();
+    [[40, .9, '#6fd3ff'], [62, .55, '#ff6f91'], [90, .32, '#e8b27a'], [120, .2, '#9dff8a']].forEach(([r, s, c]) => {
+      x.strokeStyle = 'rgba(255,255,255,.08)'; x.beginPath(); x.ellipse(cx, cy, r * 1.2, r * .62, 0, 0, 7); x.stroke();
+      const a = t * s; x.fillStyle = c; x.beginPath(); x.arc(cx + Math.cos(a) * r * 1.2, cy + Math.sin(a) * r * .62, 3.2, 0, 7); x.fill();
+    });
+  },
+  steps(x, w, h, t) {
+    x.fillStyle = '#1c1a17'; x.fillRect(0, 0, w, h);
+    const cols = 16, rows = 5, gw = (w - 40) / cols, gh = (h - 50) / rows, ph = Math.floor(t * 4) % cols;
+    const pat = ['1000100010001000', '0000100000001000', '0010001000100010', '0000000100000001', '1001001000100100'];
+    const cs = ['#ff5a1f', '#ffb400', '#12a36b', '#8a5cff', '#2e6bff'];
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const on = pat[r][c] === '1', hit = on && c === ph;
+      x.fillStyle = on ? cs[r] : 'rgba(255,255,255,.07)'; x.globalAlpha = hit ? 1 : on ? .75 : 1;
+      x.fillRect(20 + c * gw + 2, 16 + r * gh + 2, gw - 4, gh - 4);
+      if (c === ph) { x.globalAlpha = 1; x.strokeStyle = '#fff'; x.lineWidth = 1; x.strokeRect(20 + c * gw + 1.5, 16 + r * gh + 1.5, gw - 3, gh - 3); }
+    }
+    x.globalAlpha = 1; x.strokeStyle = '#ff5a1f'; x.lineWidth = 1.6; x.beginPath();
+    for (let i = 0; i <= w; i += 3) { const y = h - 18 + Math.sin(i * .09 + t * 8) * 6 * Math.exp(-((i / w + t * .5) % 1) * 3); i ? x.lineTo(i, y) : x.moveTo(i, y); }
+    x.stroke();
+  },
+  regex(x, w, h, t) {
+    x.fillStyle = '#0e1012'; x.fillRect(0, 0, w, h);
+    x.font = '600 17px ' + getComputedStyle(document.body).getPropertyValue('--mono');
+    const toks = [['(?<y>', '#4fd6ff'], ['\\d', '#b69cff'], ['{4}', '#ff6fae'], [')', '#4fd6ff'], ['-', '#e4e7ea'], ['[01]', '#ffc24b'], ['\\d', '#b69cff']];
+    let px = 20; for (const [s, c] of toks) { x.fillStyle = c; x.fillText(s, px, 42); px += x.measureText(s).width; }
+    x.font = '14px ' + getComputedStyle(document.body).getPropertyValue('--mono');
+    const lines = ['shipped 2024-03-15 ok', 'returned 2024-13-01', 'refund on 2025-07-04'], k = Math.floor(t * .8) % 3;
+    lines.forEach((l, i) => {
+      const y = 82 + i * 26, m = l.search(/\d{4}-[01]\d/);
+      if (m >= 0 && !l.includes('-13-')) { const bx = 20 + x.measureText(l.slice(0, m)).width, bw = x.measureText(l.slice(m, m + 7)).width; x.fillStyle = i === k ? 'rgba(198,244,50,.45)' : 'rgba(198,244,50,.2)'; x.fillRect(bx - 2, y - 14, bw + 4, 19); }
+      x.fillStyle = '#c8ced4'; x.fillText(l, 20, y);
+    });
+  },
+  tiles(x, w, h, t, v) {
+    const s = 26, cols = Math.ceil(w / s), rows = Math.ceil(h / s), r = mulberry(7);
+    x.fillStyle = '#f2ebdc'; x.fillRect(0, 0, w, h); x.strokeStyle = '#1b1b1b'; x.lineWidth = 3.4; x.lineCap = 'round';
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+      let o = r() < .5 ? 0 : 1;
+      if (!reduce && Math.sin(t * .8 + i * .7 + j * .4) > .92) o ^= 1;
+      const X = i * s, Y = j * s;
+      x.strokeStyle = (i + j + o) % 7 === 0 ? '#e63b2e' : '#1b1b1b';
+      x.beginPath();
+      if (o) { x.arc(X, Y, s / 2, 0, Math.PI / 2); x.moveTo(X + s / 2, Y + s); x.arc(X + s, Y + s, s / 2, Math.PI, Math.PI * 1.5); }
+      else { x.arc(X + s, Y, s / 2, Math.PI / 2, Math.PI); x.moveTo(X + s / 2, Y); x.moveTo(X, Y + s / 2); x.arc(X, Y + s, s / 2, Math.PI * 1.5, Math.PI * 2); }
+      x.stroke();
+    }
+    void v;
+  },
+  tree(x, w, h, t) {
+    const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#9fd3f2'); g.addColorStop(1, '#e3f4ee'); x.fillStyle = g; x.fillRect(0, 0, w, h);
+    x.fillStyle = '#8cc281'; x.fillRect(0, h - 26, w, 26);
+    const r = mulberry(11), leaves = [];
+    const br = (px, py, a, len, d) => {
+      const sway = reduce ? 0 : Math.sin(t * 1.3 + d) * .03 * d;
+      const nx = px + Math.cos(a + sway) * len, ny = py + Math.sin(a + sway) * len;
+      x.strokeStyle = '#6b4a2f'; x.lineWidth = Math.max(1, 7 - d * 1.2); x.beginPath(); x.moveTo(px, py); x.lineTo(nx, ny); x.stroke();
+      if (d >= 6) { leaves.push([nx, ny]); return; }
+      br(nx, ny, a - .35 - r() * .25, len * .74, d + 1); br(nx, ny, a + .35 + r() * .25, len * .74, d + 1);
+    };
+    x.lineCap = 'round';
+    [[w * .3, 30], [w * .7, 24]].forEach(([bx, L]) => br(bx, h - 24, -Math.PI / 2, L, 0));
+    for (const [lx, ly] of leaves) { x.fillStyle = '#3f9a5d'; x.beginPath(); x.arc(lx, ly, 5, 0, 7); x.fill(); }
+    leaves.forEach(([lx, ly], i) => { if (i % 5 === 0) { x.fillStyle = i % 10 ? '#ff8fa3' : '#9b8cff'; x.beginPath(); x.arc(lx + 2, ly - 2, 3, 0, 7); x.fill(); } });
+  },
+  map(x, w, h, t, v) {
+    if (!v.img) {
+      const img = x.createImageData(Math.ceil(w), Math.ceil(h)), r = mulberry(3), N = 6, pts = Array.from({ length: N }, () => [r() * w, r() * h, 30 + r() * 50]);
+      for (let j = 0; j < img.height; j++) for (let i = 0; i < img.width; i++) {
+        let e = -.55; for (const [px, py, rad] of pts) e += Math.exp(-((i - px) ** 2 + (j - py) ** 2) / (rad * rad * 2)) * .8;
+        e += Math.sin(i * .09) * Math.cos(j * .11) * .08 + Math.sin(i * .031 + j * .027) * .1;
+        const o = (j * img.width + i) * 4;
+        if (e > 0) { const k = Math.min(1, e * 1.5); img.data[o] = 232 - k * 50; img.data[o + 1] = 214 - k * 50; img.data[o + 2] = 168 - k * 60; }
+        else { img.data[o] = 214; img.data[o + 1] = 196; img.data[o + 2] = 150; }
+        img.data[o + 3] = 255;
+      }
+      v.img = img;
+    }
+    x.putImageData(v.img, 0, 0);
+    x.strokeStyle = 'rgba(59,42,26,.9)'; x.lineWidth = 1.2; x.strokeRect(5, 5, w - 10, h - 10);
+    const pulse = reduce ? 0 : (t % 1.6) / 1.6;
+    x.strokeStyle = `rgba(138,44,29,${1 - pulse})`; x.beginPath(); x.arc(w * .52, h * .48, 5 + pulse * 16, 0, 7); x.stroke();
+    x.fillStyle = '#8a2c1d'; x.beginPath(); x.arc(w * .52, h * .48, 3.5, 0, 7); x.fill();
+    x.fillStyle = '#3b2a1a'; x.font = 'italic 600 13px ' + getComputedStyle(document.body).getPropertyValue('--serif'); x.fillText('Silothorpe', w * .52 + 8, h * .48 + 4);
+  }
+};
+let raf = 0;
+function frame(ts) {
+  raf = 0; const t = ts / 1000;
+  for (const v of previews) { if (!v.w) continue; v.ctx.save(); DRAW[v.kind](v.ctx, v.w, v.h, t, v); v.ctx.restore(); }
+  if (!reduce && !document.hidden) raf = requestAnimationFrame(frame);
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden && !raf && !reduce) raf = requestAnimationFrame(frame); });
+let rq = 0;
+new ResizeObserver(() => { if (!rq) rq = requestAnimationFrame(() => { rq = 0; size(); for (const v of previews) v.img = null; if (!raf) raf = requestAnimationFrame(frame); }); }).observe(grid);
+</script>
+</body>
+</html>

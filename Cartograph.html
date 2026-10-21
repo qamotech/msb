@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'">
+<meta name="theme-color" content="#0f1e24">
+<title>Cartograph — Fantasy Map Generator</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23e8d6a8'/%3E%3Cpath d='M10 44c8-14 14-4 20-16s14-10 24-6v28H10z' fill='%237fa36b'/%3E%3Cpath d='M32 8l4 10-4-3-4 3z' fill='%238a2c1d'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0f1e24; --bg2:#15282f; --bg3:#1c333b; --line:#2a4650; --ink:#efe6d2; --mute:#98a9a6; --brass:#c9a45c; --brass2:#e5c47f; --red:#c65a45;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:13.5px/1.45 var(--sans)}
+body{display:grid;grid-template-columns:300px 1fr;height:100vh;overflow:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--brass2);outline-offset:2px}
+aside{background:var(--bg2);border-right:1px solid var(--line);overflow-y:auto;scrollbar-width:thin;padding:0 0 20px}
+.mast{padding:20px 18px 14px;border-bottom:1px solid var(--line)}
+.mast h1{margin:0;font:400 30px/1 var(--serif);letter-spacing:.02em}
+.mast h1 em{color:var(--brass2)}
+.mast p{margin:6px 0 0;color:var(--mute);font:italic 13px var(--serif)}
+.sec{padding:14px 18px 6px}
+.sec h2{margin:0 0 10px;font:600 10.5px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--brass)}
+.ctl{display:grid;grid-template-columns:88px 1fr 38px;gap:8px;align-items:center;margin:7px 0}
+.ctl label{color:#c9d2cf;font-size:12.5px}
+.ctl output{font:12px var(--mono);text-align:right;color:var(--brass2)}
+.ctl select,.ctl input[type=number]{grid-column:2/4;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+input[type=range]{width:100%;accent-color:var(--brass)}
+.styles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.styles button{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 4px;font:12px var(--serif)}
+.styles button i{display:block;height:26px;border-radius:6px;margin-bottom:5px}
+.styles button.on{border-color:var(--brass2);box-shadow:0 0 0 1px var(--brass2) inset}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+.chk{display:flex;gap:8px;align-items:center;font-size:12.5px;color:#c9d2cf;cursor:pointer}
+.chk input{accent-color:var(--brass);width:15px;height:15px}
+.btn{background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-weight:600;font-size:13px;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--brass)}
+.btn.pri{background:var(--brass);color:#1b1408;border-color:var(--brass)}
+.btn.pri:hover{background:var(--brass2)}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+.hint{color:var(--mute);font-size:12px;margin:8px 0 0}
+main{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#23363c,#0b1519 70%)}
+#view{display:block;width:100%;height:100%;cursor:grab;touch-action:none}
+#view.drag{cursor:grabbing}
+.hud{position:absolute;left:14px;bottom:14px;background:rgba(15,30,36,.82);border:1px solid var(--line);border-radius:10px;padding:7px 11px;font:12px var(--mono);color:#d8dfdc;pointer-events:none;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);isolation:isolate;min-width:220px}
+.hud b{color:var(--brass2);font-weight:500}
+.zoom{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;gap:6px}
+.zoom button{width:36px;height:36px;border-radius:10px;background:rgba(15,30,36,.85);border:1px solid var(--line);font-size:18px}
+#busy{position:absolute;inset:0;display:grid;place-items:center;background:rgba(11,21,25,.55);font:italic 20px var(--serif);color:var(--brass2);pointer-events:none;transition:opacity .2s}
+#busy[hidden]{display:none}
+.gaz{display:grid;gap:2px;max-height:300px;overflow-y:auto;scrollbar-width:thin;margin:0 -6px}
+.gaz button{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:baseline;text-align:left;background:none;border:1px solid transparent;border-radius:8px;padding:6px 6px}
+.gaz button:hover,.gaz button.on{border-color:var(--line);background:var(--bg3)}
+.gaz b{font:600 13.5px var(--serif);color:var(--ink)}
+.gaz small{display:block;color:var(--mute);font-size:11.5px;line-height:1.35}
+.gaz i{font-style:normal;color:var(--brass2);text-align:center}
+.gaz span.pop{font:11px var(--mono);color:var(--mute)}
+#pinMode.on{background:var(--brass);color:#1b1408;border-color:var(--brass)}
+#view.pinning{cursor:crosshair}
+.pinrow{display:grid;grid-template-columns:18px 1fr 26px;gap:6px;align-items:center;padding:3px 6px}
+.pinrow input{background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:5px 7px;font-size:12.5px;min-width:0}
+.pinrow button{background:none;border:0;color:var(--mute);font-size:15px;padding:0}
+.pinrow button:hover{color:var(--red)}
+.pinrow .go{color:var(--red);font-size:14px}
+.legend{display:grid;grid-template-columns:14px 1fr;gap:4px 8px;font-size:12px;color:#c9d2cf;align-items:center}
+.legend i{width:14px;height:10px;border-radius:2px}
+#toast{position:fixed;left:calc(50% + 150px);top:16px;transform:translate(-50%,-10px);background:var(--brass);color:#1b1408;padding:8px 14px;border-radius:9px;font-weight:600;opacity:0;transition:.2s;pointer-events:none;z-index:9}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#menu{display:none}
+@media (max-width:760px){
+  body{grid-template-columns:1fr}
+  aside{position:fixed;inset:0 auto 0 0;width:min(320px,88vw);z-index:6;transform:translateX(-102%);transition:transform .25s;box-shadow:10px 0 40px rgba(0,0,0,.5)}
+  aside.open{transform:none}
+  #menu{display:block;position:fixed;left:12px;top:12px;z-index:7}
+  #toast{left:50%}
+  .hud{min-width:0;right:62px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<aside id="side" aria-label="Map controls">
+  <div class="mast"><h1>Carto<em>graph</em></h1><p>Worlds surveyed by noise, drained by rivers, named by chance.</p></div>
+  <div class="sec">
+    <div class="row"><button class="btn pri" id="newWorld" style="flex:1">⟳ New world</button><button class="btn" id="rename" title="Keep the land, re-roll every name">Rename</button></div>
+    <div class="ctl" style="margin-top:12px"><label for="seed">Seed</label><input type="number" id="seed" min="0" max="999999999"></div>
+  </div>
+  <div class="sec">
+    <h2>Land</h2>
+    <div class="ctl"><label for="shape">Shape</label><select id="shape"><option value="continent">Continent</option><option value="archipelago">Archipelago</option><option value="island">Great island</option><option value="twin">Twin isles</option><option value="inland">Inland sea</option><option value="wild">Untamed</option></select></div>
+    <div class="ctl"><label for="water">Water</label><input type="range" id="water" min="0.2" max="0.85" step="0.01"><output id="waterO"></output></div>
+    <div class="ctl"><label for="rough">Roughness</label><input type="range" id="rough" min="0.35" max="0.7" step="0.01"><output id="roughO"></output></div>
+    <div class="ctl"><label for="peaks">Mountains</label><input type="range" id="peaks" min="0" max="1" step="0.01"><output id="peaksO"></output></div>
+    <div class="ctl"><label for="wet">Climate</label><input type="range" id="wet" min="-0.4" max="0.4" step="0.01"><output id="wetO"></output></div>
+  </div>
+  <div class="sec">
+    <h2>Civilization</h2>
+    <div class="ctl"><label for="cities">Settlements</label><input type="range" id="cities" min="0" max="40" step="1"><output id="citiesO"></output></div>
+    <div class="ctl"><label for="rivers">Rivers</label><input type="range" id="rivers" min="0" max="1" step="0.01"><output id="riversO"></output></div>
+  </div>
+  <div class="sec">
+    <h2>Style</h2>
+    <div class="styles" id="styles">
+      <button data-v="parchment"><i style="background:linear-gradient(135deg,#e8d6a8,#c9ad76)"></i>Parchment</button>
+      <button data-v="atlas"><i style="background:linear-gradient(135deg,#2f6b94 0 40%,#a8c97f 40% 70%,#8c8a7c 70%)"></i>Atlas</button>
+      <button data-v="topo"><i style="background:repeating-radial-gradient(circle at 30% 60%,#f4efe2 0 4px,#b98e5c 4px 5px)"></i>Topo</button>
+    </div>
+    <div class="checks" style="margin-top:12px">
+      <label class="chk"><input type="checkbox" id="oLabels"> Labels</label>
+      <label class="chk"><input type="checkbox" id="oRoads"> Roads</label>
+      <label class="chk"><input type="checkbox" id="oRivers"> Rivers</label>
+      <label class="chk"><input type="checkbox" id="oGrid"> Graticule</label>
+      <label class="chk"><input type="checkbox" id="oGlyphs"> Symbols</label>
+      <label class="chk"><input type="checkbox" id="oFrame"> Frame</label>
+      <label class="chk"><input type="checkbox" id="oRealms"> Realms</label>
+    </div>
+  </div>
+  <div class="sec">
+    <h2>Export</h2>
+    <div class="row"><button class="btn" id="png">PNG</button><button class="btn" id="png2">Poster PNG ×2</button><button class="btn" id="link">Copy link</button></div>
+    <p class="hint">Drag to pan, scroll or pinch to zoom, <kbd>N</kbd> new world, <kbd>F</kbd> fit.</p>
+  </div>
+  <div class="sec">
+    <h2>Journey planner</h2>
+    <div class="ctl"><label for="jFrom">From</label><select id="jFrom" aria-label="Journey start"></select></div>
+    <div class="ctl"><label for="jTo">To</label><select id="jTo" aria-label="Journey destination"></select></div>
+    <div class="row"><button class="btn pri" id="jGo" style="flex:1">Plot route</button><button class="btn" id="jClear">Clear</button></div>
+    <p class="hint" id="jOut" aria-live="polite">Routes follow roads where they can, avoid peaks and ford rivers reluctantly. Different landmasses mean a sea voyage.</p>
+  </div>
+  <div class="sec">
+    <h2>Pins &amp; notes</h2>
+    <button class="btn" id="pinMode" aria-pressed="false" style="width:100%">📍 Drop pins on the map</button>
+    <div id="pins" class="gaz" style="margin-top:8px"></div>
+  </div>
+  <div class="sec">
+    <h2>Gazetteer</h2>
+    <div id="gaz" class="gaz"></div>
+  </div>
+  <div class="sec">
+    <h2>Legend</h2>
+    <div class="legend" id="legend"></div>
+  </div>
+</aside>
+<main>
+  <canvas id="view" aria-label="Generated fantasy map"></canvas>
+  <div class="hud" id="hud">Hover the map to survey it</div>
+  <div class="zoom"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zfit" aria-label="Fit map" style="font-size:13px">⤢</button></div>
+  <div id="busy">Surveying the realm…</div>
+</main>
+<button class="btn" id="menu" aria-controls="side" aria-expanded="false">☰ Map</button>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+const STORE = 'cartograph.v1';
+
+/* ================= parameters ================= */
+const DEF = { seed: 1847, shape: 'continent', water: .55, rough: .52, peaks: .55, wet: 0, cities: 18, rivers: .5, style: 'parchment', labels: true, roads: true, riversOn: true, grid: false, glyphs: true, frame: true, realms: true };
+let P = { ...DEF };
+function sanitize(o) {
+  const q = { ...DEF }; if (!o || typeof o !== 'object') return q;
+  for (const [k, a, b] of [['seed', 0, 999999999], ['water', .2, .85], ['rough', .35, .7], ['peaks', 0, 1], ['wet', -.4, .4], ['cities', 0, 40], ['rivers', 0, 1]]) if (Number.isFinite(+o[k])) q[k] = clamp(+o[k], a, b);
+  if (['continent', 'archipelago', 'island', 'twin', 'inland', 'wild'].includes(o.shape)) q.shape = o.shape;
+  if (['parchment', 'atlas', 'topo'].includes(o.style)) q.style = o.style;
+  for (const k of ['labels', 'roads', 'riversOn', 'grid', 'glyphs', 'frame', 'realms']) if (typeof o[k] === 'boolean') q[k] = o[k];
+  return q;
+}
+
+/* ================= randomness & noise ================= */
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function perlin(seed) {
+  const rnd = mulberry(seed), p = new Uint8Array(512), a = Array.from({ length: 256 }, (_, i) => i);
+  for (let i = 255; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  for (let i = 0; i < 512; i++) p[i] = a[i & 255];
+  const fade = t => t * t * t * (t * (t * 6 - 15) + 10);
+  const grad = (h, x, y) => { switch (h & 7) { case 0: return x + y; case 1: return -x + y; case 2: return x - y; case 3: return -x - y; case 4: return x; case 5: return -x; case 6: return y; default: return -y; } };
+  return (x, y) => {
+    const xf = Math.floor(x), yf = Math.floor(y), X = xf & 255, Y = yf & 255; x -= xf; y -= yf;
+    const u = fade(x), v = fade(y), A = p[X] + Y, B = p[X + 1] + Y;
+    return lerp(lerp(grad(p[A], x, y), grad(p[B], x - 1, y), u), lerp(grad(p[A + 1], x, y - 1), grad(p[B + 1], x - 1, y - 1), u), v) * .7;
+  };
+}
+function fbmOf(n, oct, gain) { return (x, y) => { let s = 0, a = 1, f = 1, t = 0; for (let o = 0; o < oct; o++) { s += a * n(x * f + o * 17.3, y * f - o * 9.1); t += a; a *= gain; f *= 2.03; } return s / t; }; }
+
+/* ================= names ================= */
+const TOWN = { pre: ['ash', 'bar', 'bel', 'bram', 'cal', 'cor', 'dun', 'eld', 'fal', 'fen', 'gil', 'glen', 'hal', 'hol', 'ith', 'kel', 'lan', 'lor', 'mar', 'mor', 'nor', 'oak', 'ost', 'pen', 'quel', 'ros', 'sil', 'stan', 'tor', 'ul', 'vor', 'wyn', 'wil', 'har', 'brin', 'thorn', 'ever', 'red', 'black', 'grey', 'lin'],
+  mid: ['', '', '', 'a', 'e', 'i', 'o', 'en', 'er', 'il', 'an', 'ing', 'ley'],
+  suf: ['dor', 'ford', 'mere', 'wick', 'gard', 'hollow', 'reach', 'stead', 'vale', 'crest', 'haven', 'shire', 'mouth', 'bury', 'ton', 'well', 'moor', 'fell', 'watch', 'bridge', 'holm', 'by', 'thorpe', 'keep', 'march', 'wood', 'hold', 'port', 'field'] };
+const HIGH = { pre: ['ae', 'ela', 'ith', 'lor', 'sil', 'tha', 'val', 'nym', 'cel', 'ery', 'mor', 'ar', 'eld', 'gal', 'fae', 'oro', 'the', 'ulu', 'ka', 'zan', 'vey', 'ist', 'ny', 'qua'],
+  mid: ['', 'a', 'e', 'i', 'o', 'ra', 'la', 'ne', 'ri', 'the', 'ma'],
+  suf: ['ria', 'dor', 'mora', 'wen', 'nor', 'thas', 'lia', 'ndel', 'rion', 'vas', 'mere', 'anor', 'ethe', 'orien', 'ssa', 'ron', 'ia', 'ea', 'goth', 'lund'] };
+function namer(seed) {
+  const r = mulberry(seed), pick = a => a[Math.floor(r() * a.length)], used = new Set();
+  const make = set => { for (let k = 0; k < 20; k++) { let s = pick(set.pre) + pick(set.mid) + pick(set.suf); s = s.replace(/(.)\1\1/g, '$1$1'); if (s.length < 4 || s.length > 12 || used.has(s)) continue; used.add(s); return s[0].toUpperCase() + s.slice(1); } return 'Nameless'; };
+  return { town: () => make(TOWN), high: () => make(HIGH), r, pick };
+}
+
+/* ================= world generation ================= */
+const GW = 600, GH = 400, N = GW * GH;
+let world = null;
+function generate() {
+  const t0 = performance.now(), seed = P.seed | 0;
+  const n1 = perlin(seed), n2 = perlin(seed + 101), n3 = perlin(seed + 202), n4 = perlin(seed + 303), n5 = perlin(seed + 404);
+  const base = fbmOf(n1, 6, P.rough), warpA = fbmOf(n2, 3, .5), warpB = fbmOf(n3, 3, .5), moistN = fbmOf(n4, 4, .55);
+  const ridgeN = (x, y) => { let s = 0, a = 1, f = 1, t = 0; for (let o = 0; o < 4; o++) { const v = 1 - Math.abs(n5(x * f, y * f) * 1.4); s += a * v * v; t += a; a *= .5; f *= 2.1; } return s / t; };
+  const h = new Float32Array(N), m = new Float32Array(N);
+  const rnd = mulberry(seed ^ 0xabcdef);
+  const blobs = P.shape === 'twin' ? [[-.5 + rnd() * .08, -.05 + rnd() * .1], [.5 - rnd() * .08, .05 - rnd() * .1]] : null;
+  const asp = GH / GW;
+  for (let y = 0; y < GH; y++) {
+    for (let x = 0; x < GW; x++) {
+      const nx = x / GW * 2 - 1, ny = (y / GH * 2 - 1) * asp;
+      const wx = nx + .38 * warpA(nx * 1.6 + 5.2, ny * 1.6 + 1.3), wy = ny + .38 * warpB(nx * 1.6 - 2.7, ny * 1.6 + 7.9);
+      const freq = P.shape === 'archipelago' ? 4.2 : 2.1;
+      let v = base(wx * freq, wy * freq);
+      const r = ridgeN(wx * 2.3 + 3.3, wy * 2.3 - 1.1);
+      v += (r - .55) * .55 * P.peaks * smooth(-.05, .25, v);
+      const d = Math.hypot(nx, ny / asp * .72);
+      let f = 0;
+      switch (P.shape) {
+        case 'continent': f = .32 - Math.pow(d, 2.2) * .62; break;
+        case 'archipelago': f = .05 - Math.pow(d, 3) * .5; break;
+        case 'island': f = .45 - Math.pow(d, 1.6) * .95; break;
+        case 'twin': f = Math.max(...blobs.map(([bx, by]) => .45 - Math.pow(Math.hypot(nx - bx, (ny - by * asp) / asp * .72), 1.6) * 2.5)); break;
+        case 'inland': f = -.35 + Math.min(1, Math.abs(d - .55) * -2.2 + 1) * .5 - Math.pow(Math.max(0, d - .95), 2) * 2 + (d < .38 ? -.35 : 0); break;
+        case 'wild': f = .1 - Math.pow(d, 4) * .4; break;
+      }
+      // soft edge so the frame is always sea
+      const ex = Math.min(x, GW - 1 - x) / GW, ey = Math.min(y, GH - 1 - y) / GH;
+      f -= (1 - smooth(0, .06, Math.min(ex, ey))) * .6;
+      const i = y * GW + x;
+      h[i] = v + f;
+      m[i] = clamp(moistN(nx * 2.4 + 9, ny * 2.4 - 3) * .9 + .5 + P.wet, 0, 1);
+    }
+  }
+  // sea level by quantile → water fraction stays predictable
+  const sample = []; for (let i = 0; i < N; i += 37) sample.push(h[i]); sample.sort((a, b) => a - b);
+  // island-ish shapes need extra water or their pieces fuse into one landmass
+  const SHAPE_WATER = { continent: 0, archipelago: .2, island: .1, twin: .15, inland: 0, wild: .04 };
+  const sea = sample[Math.floor(clamp(P.water + SHAPE_WATER[P.shape], .1, .93) * sample.length)];
+  let hmax = -Infinity, hmin = Infinity; for (let i = 0; i < N; i++) { if (h[i] > hmax) hmax = h[i]; if (h[i] < hmin) hmin = h[i]; }
+  // normalised elevation e∈[0,1] above sea; depth d∈[0,1] below
+  const e = new Float32Array(N), land = new Uint8Array(N);
+  for (let i = 0; i < N; i++) { if (h[i] >= sea) { land[i] = 1; e[i] = Math.pow((h[i] - sea) / (hmax - sea), .85); } else e[i] = -(sea - h[i]) / (sea - hmin); }
+  // coastal moisture boost + rain shadow-ish (moisture falls with altitude)
+  const distSea = bfsDist(land, 1), distLand = bfsDist(land, 0);
+  for (let i = 0; i < N; i++) if (land[i]) m[i] = clamp(m[i] + .25 * Math.exp(-distSea[i] / 18) - e[i] * .25, 0, 1);
+
+  // priority-flood drainage: every land cell gets a downstream receiver
+  const filled = Float32Array.from(e), recv = new Int32Array(N).fill(-1), order = new Int32Array(N), vis = new Uint8Array(N);
+  const heap = new Heap(N); let oc = 0;
+  for (let i = 0; i < N; i++) { const x = i % GW, y = (i / GW) | 0; if (!land[i] || x === 0 || y === 0 || x === GW - 1 || y === GH - 1) { vis[i] = 1; heap.push(e[i], i); } }
+  const NB = [-1, 1, -GW, GW, -GW - 1, -GW + 1, GW - 1, GW + 1];
+  while (heap.n) {
+    const c = heap.pop(); order[oc++] = c;
+    const cx = c % GW;
+    for (let k = 0; k < 8; k++) {
+      const nb = c + NB[k]; if (nb < 0 || nb >= N) continue;
+      const nx = nb % GW; if (Math.abs(nx - cx) > 1 || vis[nb]) continue;
+      vis[nb] = 1; filled[nb] = Math.max(e[nb], filled[c] + 1e-6); recv[nb] = c; heap.push(filled[nb], nb);
+    }
+  }
+  const acc = new Float32Array(N);
+  for (let i = 0; i < N; i++) acc[i] = land[i] ? .4 + m[i] * 1.2 : 0;
+  for (let k = oc - 1; k >= 0; k--) { const c = order[k]; if (land[c] && recv[c] >= 0) acc[recv[c]] += acc[c]; }
+  // biomes
+  const biome = new Uint8Array(N);
+  for (let i = 0; i < N; i++) biome[i] = land[i] ? biomeOf(e[i], m[i], distSea[i]) : 0;
+  // slope (for cities & roads)
+  const slope = new Float32Array(N);
+  for (let y = 1; y < GH - 1; y++) for (let x = 1; x < GW - 1; x++) { const i = y * GW + x; slope[i] = Math.hypot(e[i + 1] - e[i - 1], e[i + GW] - e[i - GW]); }
+  world = { e, m, land, distSea, distLand, recv, acc, biome, slope, seed };
+  world.riverT = lerp(900, 55, P.rivers);
+  world.rivers = traceRivers(world);
+  world.comps = components(world);
+  placeNames(world);
+  world.ms = performance.now() - t0;
+}
+class Heap {
+  constructor(n) { this.k = new Float32Array(n); this.v = new Int32Array(n); this.n = 0; }
+  push(key, val) { let i = this.n++; const K = this.k, V = this.v; while (i > 0) { const p = (i - 1) >> 1; if (K[p] <= key) break; K[i] = K[p]; V[i] = V[p]; i = p; } K[i] = key; V[i] = val; }
+  pop() { const K = this.k, V = this.v, top = V[0], key = K[--this.n], val = V[this.n]; let i = 0; for (;;) { let l = 2 * i + 1; if (l >= this.n) break; const r = l + 1; if (r < this.n && K[r] < K[l]) l = r; if (K[l] >= key) break; K[i] = K[l]; V[i] = V[l]; i = l; } K[i] = key; V[i] = val; return top; }
+}
+function bfsDist(land, target) {
+  // distance (4-neighbour) from each cell of type `target` to the nearest cell of the other type
+  const d = new Float32Array(N).fill(1e9), q = new Int32Array(N); let qh = 0, qt = 0;
+  for (let i = 0; i < N; i++) { if (land[i] !== target) { d[i] = 0; q[qt++] = i; } }
+  while (qh < qt) { const c = q[qh++], x = c % GW; for (const nb of [c - 1, c + 1, c - GW, c + GW]) { if (nb < 0 || nb >= N || Math.abs((nb % GW) - x) > 1) continue; if (d[nb] > d[c] + 1) { d[nb] = d[c] + 1; q[qt++] = nb; } } }
+  return d;
+}
+const BIOMES = [
+  ['Sea', '#2f6b94'], ['Beach', '#e3d5a3'], ['Scorched desert', '#d8c28c'], ['Grassland', '#a8c97f'], ['Temperate forest', '#6ea35d'], ['Rainforest', '#3f8a4f'],
+  ['Shrubland', '#b3b58a'], ['Taiga', '#7f9f84'], ['Tundra', '#b9bda4'], ['Bare rock', '#9a968a'], ['Snow', '#f2f4f5'], ['Savanna', '#c8c47f'], ['Marsh', '#7aa08e']
+];
+function biomeOf(e, m, ds) {
+  if (e < .025 && ds < 3) return 1;
+  if (e > .78) return m > .3 ? 10 : 9;
+  if (e > .58) return m < .3 ? 9 : m < .6 ? 8 : 7;
+  if (e > .3) return m < .2 ? 2 : m < .45 ? 6 : m < .8 ? 4 : 5;
+  if (m > .88 && e < .08) return 12;
+  return m < .18 ? 2 : m < .38 ? 11 : m < .7 ? 3 + (m > .55 ? 1 : 0) : 5;
+}
+function traceRivers(W) {
+  const { land, acc, recv } = W, T = W.riverT, isR = new Uint8Array(N), kids = new Uint8Array(N);
+  if (P.rivers <= 0) return [];
+  for (let i = 0; i < N; i++) if (land[i] && acc[i] > T) isR[i] = 1;
+  for (let i = 0; i < N; i++) if (isR[i] && recv[i] >= 0) kids[recv[i]]++;
+  const done = new Uint8Array(N), out = [];
+  for (let i = 0; i < N; i++) {
+    if (!isR[i] || kids[i]) continue;
+    const pts = []; let c = i;
+    while (c >= 0) {
+      pts.push(c % GW + .5, ((c / GW) | 0) + .5, Math.sqrt(acc[c]));
+      if (!land[c] || done[c]) break;
+      done[c] = 1; c = recv[c];
+    }
+    if (pts.length >= 3 * 6) out.push(pts);
+  }
+  return out;
+}
+function components(W) {
+  const id = new Int32Array(N).fill(-1), comps = [];
+  for (let s = 0; s < N; s++) {
+    if (!W.land[s] || id[s] >= 0) continue;
+    const q = [s]; id[s] = comps.length; let size = 0, best = s;
+    while (q.length) { const c = q.pop(); size++; if (W.distSea[c] > W.distSea[best]) best = c; const x = c % GW; for (const nb of [c - 1, c + 1, c - GW, c + GW]) { if (nb < 0 || nb >= N || Math.abs((nb % GW) - x) > 1 || !W.land[nb] || id[nb] >= 0) continue; id[nb] = comps.length; q.push(nb); } }
+    comps.push({ size, pole: best });
+  }
+  W.compId = id;
+  return comps;
+}
+
+/* ---------- settlements, roads, names ---------- */
+function placeNames(W) {
+  const nm = namer(W.seed * 7 + nameSalt);
+  const { e, land, acc, distSea, slope, biome } = W;
+  const cand = [];
+  for (let y = 4; y < GH - 4; y += 2) for (let x = 4; x < GW - 4; x += 2) {
+    const i = y * GW + x; if (!land[i] || e[i] > .62 || biome[i] === 10) continue;
+    let s = 0;
+    s += acc[i] > W.riverT * .6 ? 1.3 : acc[i] > W.riverT * .25 ? .5 : 0;
+    s += distSea[i] <= 2 ? 1.1 : distSea[i] < 6 ? .4 : 0;
+    s += (1 - clamp(slope[i] * 40, 0, 1)) * .8;
+    s += [0, .2, .05, .9, .7, .5, .45, .4, .2, 0, 0, .6, .3][biome[i]];
+    s -= e[i] * .8;
+    s += nm.r() * .45;
+    cand.push([s, x, y, i]);
+  }
+  cand.sort((a, b) => b[0] - a[0]);
+  let landCells = 0; for (let i = 0; i < N; i += 1) landCells += land[i];
+  const minD = Math.max(14, Math.sqrt(landCells / Math.max(1, P.cities)) * .62);
+  const cities = [];
+  for (const [s, x, y, i] of cand) {
+    if (cities.length >= P.cities) break;
+    if (cities.some(c => Math.hypot(c.x - x, c.y - y) < minD)) continue;
+    cities.push({ x, y, i, s, coastal: distSea[i] <= 3, comp: W.compId[i], name: nm.town() });
+  }
+  cities.forEach((c, k) => c.rank = k === 0 ? 'capital' : k < Math.max(2, cities.length * .3) ? 'city' : 'town');
+  // gazetteer lore — derived from the site itself so descriptions stay truthful to the terrain
+  const GOODS = { 1: ['salt', 'pearls', 'smoked fish'], 2: ['glass', 'spices', 'camels'], 3: ['wool', 'grain', 'horses'], 4: ['timber', 'honey', 'cider'], 5: ['dyes', 'cacao', 'medicines'], 6: ['goats', 'wine', 'olive oil'], 7: ['furs', 'pine tar', 'amber'], 8: ['ivory', 'furs', 'reindeer'], 9: ['iron', 'copper', 'slate'], 11: ['cattle', 'hides', 'millet'], 12: ['eels', 'reeds', 'peat'] };
+  const TRAITS = ['whose bells ring at every tide', 'ruled by a council of guildmasters', 'famed for its autumn fair', 'where the old kings are buried', 'home to a notorious thieves\' market', 'built on the ruins of an older city', 'with walls that have never fallen', 'where every door is painted blue', 'known for its stubborn, proud folk', 'watched over by a crumbling tower', 'with an observatory older than the realm', 'where pilgrims come to bathe', 'that pays tribute to no one', 'rebuilt twice after great fires'];
+  for (const c of cities) {
+    const i = c.i, riv = acc[i] > W.riverT * .6, b = biome[i];
+    const kind = c.coastal && riv ? 'estuary port' : c.coastal ? 'harbour' : riv ? 'river town' : e[i] > .4 ? 'highland hold' : 'market town';
+    const goods = GOODS[b] || ['grain', 'timber', 'stone'];
+    c.pop = Math.round((c.rank === 'capital' ? 40000 + nm.r() * 90000 : c.rank === 'city' ? 8000 + nm.r() * 30000 : 400 + nm.r() * 6000) / 50) * 50;
+    c.kind = c.rank === 'capital' ? 'seat of the crown' : kind;
+    c.desc = `${/^[aeiou]/i.test(kind) ? 'An' : 'A'} ${kind} in the ${BIOMES[b][0].toLowerCase()}, trading in ${goods[Math.floor(nm.r() * goods.length)]} — ${TRAITS[Math.floor(nm.r() * TRAITS.length)]}.`;
+  }
+  W.cities = cities;
+  W.roads = buildRoads(W);
+  // realm + landmass names
+  const comps = W.comps.map((c, k) => ({ ...c, k })).sort((a, b) => b.size - a.size);
+  W.realm = nm.high();
+  buildRealms(W, nm);
+  W.landLabels = [];
+  comps.forEach((c, idx) => {
+    if (c.size < N * .012 || idx > 6) return;
+    const x = c.pole % GW, y = (c.pole / GW) | 0;
+    const name = idx === 0 ? W.realm : nm.r() < .5 ? 'Isle of ' + nm.high() : nm.high() + (c.size < N * .03 ? ' Isle' : '');
+    W.landLabels.push({ x, y, name, big: idx === 0, size: c.size });
+  });
+  // seas: ocean cells farthest from land
+  W.seaLabels = [];
+  const seaCand = [];
+  for (let y = 10; y < GH - 10; y += 3) for (let x = 20; x < GW - 20; x += 3) { const i = y * GW + x; if (!land[i] && W.distLand[i] > 14) seaCand.push([W.distLand[i], x, y]); }
+  seaCand.sort((a, b) => b[0] - a[0]);
+  const seaNames = [() => 'The ' + nm.high() + ' Sea', () => 'Sea of ' + nm.high(), () => nm.high() + ' Ocean', () => 'The ' + ['Sundering', 'Silent', 'Grey', 'Shining', 'Hollow', 'Drowned', 'Glass', 'Western', 'Amber'][Math.floor(nm.r() * 9)] + ' Sea', () => 'Bay of ' + nm.town()];
+  for (const [d, x, y] of seaCand) {
+    if (W.seaLabels.length >= 3) break;
+    if (W.seaLabels.some(s => Math.hypot(s.x - x, s.y - y) < 120)) continue;
+    W.seaLabels.push({ x, y, name: seaNames[Math.floor(nm.r() * seaNames.length)](), d });
+  }
+  // mountain range: highest peak
+  let pk = 0; for (let i = 0; i < N; i++) if (e[i] > e[pk]) pk = i;
+  W.peak = e[pk] > .6 ? { x: pk % GW, y: (pk / GW) | 0, name: 'The ' + nm.high() + ' ' + ['Peaks', 'Spires', 'Teeth', 'Crown', 'Mountains', 'Heights'][Math.floor(nm.r() * 6)] } : null;
+  W.year = 300 + Math.floor(nm.r() * 900);
+  W.subtitle = ['Being a True Map of the Realm', 'As Surveyed by the Guild of Cartographers', 'Drawn from the Accounts of Travellers', 'With All Its Rivers, Roads & Holdfasts'][Math.floor(nm.r() * 4)];
+}
+/* ---------- political realms ----------
+   Seats (capital + leading cities) expand outward over land by multi-source Dijkstra.
+   Steep slopes, high ground and rivers cost extra, so borders settle on ridges and rivers
+   the way real frontiers do. Islands nobody reaches stay unclaimed "wildlands". */
+const REALM_COLORS = ['#b8432e', '#2f6f9f', '#5e8a3a', '#8a5aa8', '#c28a1e', '#2b8a83', '#9a4a6a'];
+function buildRealms(W, nm) {
+  const seats = W.cities.filter(c => c.rank !== 'town').slice(0, clamp(Math.round(W.cities.length / 4) + 1, 2, 7));
+  W.region = null; W.realms = [];
+  if (seats.length < 2) { W.cities.forEach(c => c.realm = null); return; }
+  const region = new Int8Array(N).fill(-1), dist = new Float32Array(N).fill(Infinity), heap = new Heap(N * 4);
+  seats.forEach((s, k) => { dist[s.i] = 0; region[s.i] = k; heap.push(0, s.i); });
+  while (heap.n) {
+    const c = heap.pop(), x = c % GW, dc = dist[c];
+    for (const nb of [c - 1, c + 1, c - GW, c + GW]) {
+      if (nb < 0 || nb >= N || Math.abs((nb % GW) - x) > 1 || !W.land[nb]) continue;
+      const nd = dc + 1 + W.slope[nb] * 45 + W.e[nb] * 2.5 + (W.acc[nb] > W.riverT ? 7 : 0);
+      if (nd < dist[nb]) { dist[nb] = nd; region[nb] = region[c]; heap.push(nd, nb); }
+    }
+    if (heap.n > heap.k.length - 8) break;
+  }
+  const titles = [n => `Duchy of ${n}`, n => `The ${n} Marches`, n => `Principality of ${n}`, n => `Free Province of ${n}`, n => `Earldom of ${n}`, n => `The ${n} Reach`];
+  const t0 = Math.floor(nm.r() * titles.length); // cycle titles so no two realms share one
+  W.realms = seats.map((s, k) => ({ seat: s, color: REALM_COLORS[k % REALM_COLORS.length], name: k === 0 ? `Crownlands of ${W.realm}` : titles[(t0 + k) % titles.length](nm.high()), cells: 0, sx: 0, sy: 0 }));
+  for (let i = 0; i < N; i++) { const r = region[i]; if (r >= 0) { const R = W.realms[r]; R.cells++; R.sx += i % GW; R.sy += (i / GW) | 0; } }
+  // label anchor: the region cell nearest its centroid (a centroid can fall in a bay)
+  for (const [k, R] of W.realms.entries()) {
+    const mx = R.sx / Math.max(1, R.cells), my = R.sy / Math.max(1, R.cells); let best = R.seat.i, bd = Infinity;
+    for (let i = 0; i < N; i += 3) if (region[i] === k) { const d = (i % GW - mx) ** 2 + (((i / GW) | 0) - my) ** 2; if (d < bd) { bd = d; best = i; } }
+    R.lx = best % GW; R.ly = (best / GW) | 0;
+  }
+  W.region = region;
+  W.cities.forEach(c => { const r = region[c.i]; c.realm = r >= 0 ? W.realms[r] : null; });
+}
+function drawRealms(x, S, phase) {
+  const W = world; if (!W.region || !P.realms) return;
+  if (phase === 'tint') {
+    const img = new ImageData(GW, GH), d = img.data, a = P.style === 'atlas' ? 60 : P.style === 'topo' ? 34 : 42;
+    const rgb = W.realms.map(R => hex2rgb(R.color));
+    for (let i = 0; i < N; i++) { const r = W.region[i]; if (r < 0) continue; const o = i * 4, [cr, cg, cb] = rgb[r]; d[o] = cr; d[o + 1] = cg; d[o + 2] = cb; d[o + 3] = a; }
+    const tc = document.createElement('canvas'); tc.width = GW; tc.height = GH; tc.getContext('2d').putImageData(img, 0, 0);
+    x.save(); x.imageSmoothingEnabled = true; x.drawImage(tc, 0, 0, GW * S, GH * S); x.restore();
+    return;
+  }
+  // borders: only where all four corners are land, so coastlines aren't double-inked
+  const interior = i => W.land[i] && W.land[i + 1] && W.land[i + GW] && W.land[i + GW + 1];
+  x.save(); x.lineCap = 'round';
+  for (let k = 0; k < W.realms.length; k++) {
+    const f = new Float32Array(N); for (let i = 0; i < N; i++) f[i] = W.region[i] === k ? 1 : 0;
+    const p = marching(f, .5, S, interior);
+    x.strokeStyle = P.style === 'atlas' ? 'rgba(255,255,255,.55)' : 'rgba(250,240,215,.6)'; x.lineWidth = 3.2 * S / 2.5; x.setLineDash([]); x.stroke(p);
+    x.strokeStyle = W.realms[k].color; x.lineWidth = 1.4 * S / 2.5; x.setLineDash([5 * S / 2.5, 2.5 * S / 2.5, 1 * S / 2.5, 2.5 * S / 2.5]); x.stroke(p);
+  }
+  x.restore();
+}
+function buildRoads(W) {
+  const cs = W.cities; if (cs.length < 2) return [];
+  // Prim's MST on straight-line distance, restricted to same landmass; plus sea lanes between coastal ports
+  const F = 3, cw = Math.ceil(GW / F), ch = Math.ceil(GH / F);
+  const cost = new Float32Array(cw * ch);
+  for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) {
+    const i = Math.min(GH - 1, y * F) * GW + Math.min(GW - 1, x * F);
+    cost[y * cw + x] = W.land[i] ? 1 + W.slope[i] * 60 + W.e[i] * 2 + (W.acc[i] > W.riverT ? 3 : 0) : Infinity;
+  }
+  const inT = new Set([0]), edges = [];
+  while (inT.size < cs.length) {
+    let best = null;
+    for (const a of inT) for (let b = 0; b < cs.length; b++) {
+      if (inT.has(b)) continue;
+      const d = Math.hypot(cs[a].x - cs[b].x, cs[a].y - cs[b].y) * (cs[a].comp === cs[b].comp ? 1 : 2.5);
+      if (!best || d < best[0]) best = [d, a, b];
+    }
+    inT.add(best[2]); edges.push([best[1], best[2]]);
+  }
+  const roads = [];
+  for (const [a, b] of edges) {
+    const A = cs[a], B = cs[b];
+    if (A.comp === B.comp) { const path = astar(cost, cw, ch, Math.round(A.x / F), Math.round(A.y / F), Math.round(B.x / F), Math.round(B.y / F)); if (path) { roads.push({ sea: false, pts: chaikin(path.map(([x, y]) => [x * F + .5, y * F + .5]), 2) }); continue; } }
+    if (A.coastal && B.coastal) roads.push({ sea: true, pts: [[A.x, A.y], [B.x, B.y]] });
+  }
+  return roads;
+}
+function astar(cost, w, h, sx, sy, tx, ty) {
+  const n = w * h, g = new Float32Array(n).fill(Infinity), from = new Int32Array(n).fill(-1), closed = new Uint8Array(n), heap = new Heap(n * 4);
+  const s = sy * w + sx, t = ty * w + tx; if (!isFinite(cost[s]) || !isFinite(cost[t])) return null;
+  g[s] = 0; heap.push(Math.hypot(tx - sx, ty - sy), s);
+  const D = [[1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1], [1, 1, 1.414], [1, -1, 1.414], [-1, 1, 1.414], [-1, -1, 1.414]];
+  let steps = 0;
+  while (heap.n && steps++ < n * 3) {
+    const c = heap.pop(); if (closed[c]) continue; closed[c] = 1;
+    if (c === t) break;
+    const cx = c % w, cy = (c / w) | 0;
+    for (const [dx, dy, dl] of D) {
+      const x = cx + dx, y = cy + dy; if (x < 0 || y < 0 || x >= w || y >= h) continue;
+      const nb = y * w + x; if (closed[nb] || !isFinite(cost[nb])) continue;
+      const ng = g[c] + dl * (cost[c] + cost[nb]) * .5;
+      if (ng < g[nb]) { g[nb] = ng; from[nb] = c; heap.push(ng + Math.hypot(tx - x, ty - y), nb); }
+    }
+    if (heap.n > heap.k.length - 10) break;
+  }
+  if (from[t] < 0) return null;
+  const path = []; for (let c = t; c >= 0; c = from[c]) path.push([c % w, (c / w) | 0]);
+  return path.reverse();
+}
+function chaikin(pts, it) {
+  for (let k = 0; k < it; k++) {
+    const o = [pts[0]];
+    for (let i = 0; i < pts.length - 1; i++) { const [ax, ay] = pts[i], [bx, by] = pts[i + 1]; o.push([ax * .75 + bx * .25, ay * .75 + by * .25], [ax * .25 + bx * .75, ay * .25 + by * .75]); }
+    o.push(pts[pts.length - 1]); pts = o;
+  }
+  return pts;
+}
+let nameSalt = 0;
+
+/* ================= baking the map ================= */
+const STY = {
+  parchment: { paper: [232, 214, 168], ink: '#3b2a1a', sea: [214, 196, 150], label: '#3b2a1a', halo: 'rgba(232,214,168,.9)', road: '#7a4b2a', river: '#4d6a7a', city: '#8a2c1d' },
+  atlas: { ink: '#1f2a30', label: '#1b252a', halo: 'rgba(255,255,255,.75)', road: '#8a3b2a', river: '#3f7fb0', city: '#1b1b1b' },
+  topo: { paper: [246, 241, 228], ink: '#5c4630', label: '#2e2419', halo: 'rgba(246,241,228,.9)', road: '#2b2b2b', river: '#3a78b5', city: '#b3261e' }
+};
+function hex2rgb(h) { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+const BIO_RGB = BIOMES.map(b => hex2rgb(b[1]));
+function terrainImage() {
+  const W = world, img = new ImageData(GW, GH), d = img.data, st = P.style, rnd = mulberry(W.seed + 5);
+  const L = [-.6, -.6, .55], ll = Math.hypot(...L);
+  for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++) {
+    const i = y * GW + x, o = i * 4, e = W.e[i];
+    const ex = W.e[Math.min(i + 1, N - 1)] - W.e[Math.max(i - 1, 0)], ey = W.e[Math.min(i + GW, N - 1)] - W.e[Math.max(i - GW, 0)];
+    const nz = 1 / 18, nl = Math.hypot(ex, ey, nz), shade = (-(ex * L[0] + ey * L[1]) + nz * L[2]) / (nl * ll);
+    let r, g, b;
+    if (st === 'atlas') {
+      if (W.land[i]) {
+        [r, g, b] = BIO_RGB[W.biome[i]];
+        const k = .72 + .55 * (shade - .45); r *= k; g *= k; b *= k;
+      } else {
+        const dep = clamp(-e, 0, 1), t = Math.pow(dep, .5), near = Math.exp(-W.distLand[i] / 5);
+        r = lerp(116, 22, t) + near * 30; g = lerp(178, 64, t) + near * 25; b = lerp(206, 112, t) + near * 15;
+      }
+    } else if (st === 'parchment') {
+      const grain = (rnd() - .5) * 10, blot = Math.sin(x * .021 + y * .013) * 4 + Math.sin(x * .007 - y * .019) * 6;
+      if (W.land[i]) {
+        [r, g, b] = STY.parchment.paper;
+        const k = 1 + (shade - .5) * .35 * smooth(.05, .4, e);
+        r = r * k + grain + blot; g = g * k + grain + blot; b = b * k + grain * .8 + blot;
+        if (W.biome[i] === 4 || W.biome[i] === 5 || W.biome[i] === 7) { r -= 10; g -= 4; b -= 16; }
+      } else {
+        [r, g, b] = STY.parchment.sea;
+        const near = Math.exp(-W.distLand[i] / 10) * 10;
+        r += grain - near * .2; g += grain + near * .3; b += grain + near;
+      }
+    } else {
+      if (W.land[i]) {
+        const t = clamp(e, 0, 1);
+        r = lerp(236, 196, t); g = lerp(232, 170, t); b = lerp(210, 130, t);
+        if (t > .8) { r = 245; g = 243; b = 238; }
+        const k = 1 + (shade - .5) * .18; r *= k; g *= k; b *= k;
+      } else {
+        const t = clamp(-e, 0, 1); r = lerp(208, 150, t); g = lerp(230, 190, t); b = lerp(240, 222, t);
+      }
+    }
+    d[o] = r; d[o + 1] = g; d[o + 2] = b; d[o + 3] = 255;
+  }
+  return img;
+}
+function marching(field, level, s, filter) {
+  const p = new Path2D();
+  for (let y = 0; y < GH - 1; y++) for (let x = 0; x < GW - 1; x++) {
+    const i = y * GW + x, a = field[i], b = field[i + 1], c = field[i + GW + 1], dd = field[i + GW];
+    const k = (a > level ? 8 : 0) | (b > level ? 4 : 0) | (c > level ? 2 : 0) | (dd > level ? 1 : 0);
+    if (k === 0 || k === 15) continue;
+    if (filter && !filter(i)) continue;
+    const t = (u, v) => (level - u) / (v - u);
+    const T = [x + t(a, b), y], R = [x + 1, y + t(b, c)], B = [x + t(dd, c), y + 1], Lf = [x, y + t(a, dd)];
+    const seg = (P1, P2) => { p.moveTo((P1[0] + .5) * s, (P1[1] + .5) * s); p.lineTo((P2[0] + .5) * s, (P2[1] + .5) * s); };
+    switch (k) {
+      case 1: case 14: seg(Lf, B); break; case 2: case 13: seg(B, R); break; case 3: case 12: seg(Lf, R); break;
+      case 4: case 11: seg(T, R); break; case 5: seg(Lf, T); seg(B, R); break; case 6: case 9: seg(T, B); break;
+      case 7: case 8: seg(Lf, T); break; case 10: seg(T, R); seg(Lf, B); break;
+    }
+  }
+  return p;
+}
+function bake(scale) {
+  const W = world, st = STY[P.style], c = document.createElement('canvas');
+  c.width = GW * scale; c.height = GH * scale;
+  const x = c.getContext('2d');
+  const tc = document.createElement('canvas'); tc.width = GW; tc.height = GH; tc.getContext('2d').putImageData(terrainImage(), 0, 0);
+  x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; x.drawImage(tc, 0, 0, c.width, c.height);
+  const S = scale, lw = v => v * S / 2.5;
+  const landF = new Float32Array(N); for (let i = 0; i < N; i++) landF[i] = W.land[i] ? 1 : 0;
+  x.lineJoin = 'round'; x.lineCap = 'round';
+
+  // sea ripples & bathymetry
+  if (P.style === 'parchment') {
+    x.strokeStyle = 'rgba(59,42,26,.35)';
+    for (const [lv, wdt] of [[3, .9], [6, .7], [10, .55], [15, .45]]) { x.lineWidth = lw(wdt); x.stroke(marching(W.distLand, lv, S)); }
+  } else if (P.style === 'topo') {
+    x.strokeStyle = 'rgba(58,120,181,.45)'; x.lineWidth = lw(.7);
+    for (const lv of [-.08, -.2, -.4, -.65]) x.stroke(marching(W.e, lv, S));
+  } else {
+    x.strokeStyle = 'rgba(255,255,255,.22)'; x.lineWidth = lw(.8); x.stroke(marching(W.distLand, 2.5, S));
+  }
+  // topo contours
+  if (P.style === 'topo') {
+    for (let k = 1; k <= 18; k++) { const lv = k * .05; x.strokeStyle = k % 5 === 0 ? 'rgba(92,70,48,.85)' : 'rgba(92,70,48,.42)'; x.lineWidth = lw(k % 5 === 0 ? 1.3 : .65); x.stroke(marching(W.e, lv, S)); }
+  }
+  drawRealms(x, S, 'tint');
+  // coastline
+  x.strokeStyle = st.ink; x.lineWidth = lw(P.style === 'parchment' ? 2.2 : 1.3);
+  const coast = marching(landF, .5, S); x.stroke(coast);
+  // rivers
+  if (P.riversOn) {
+    x.strokeStyle = st.river;
+    for (const r of W.rivers) {
+      const pts = []; for (let k = 0; k < r.length; k += 3) pts.push([r[k], r[k + 1], r[k + 2]]);
+      const sm = chaikin(pts.map(p => [p[0], p[1]]), 2);
+      for (let k = 1; k < sm.length; k++) {
+        const src = pts[Math.min(pts.length - 1, Math.floor(k / sm.length * pts.length))][2];
+        x.lineWidth = lw(clamp(.5 + Math.sqrt(src) * .09, .6, 3.4));
+        x.beginPath(); x.moveTo(sm[k - 1][0] * S, sm[k - 1][1] * S); x.lineTo(sm[k][0] * S, sm[k][1] * S); x.stroke();
+      }
+    }
+  }
+  // symbols
+  if (P.glyphs && P.style !== 'topo') drawGlyphs(x, S);
+  drawRealms(x, S, 'borders');
+  // roads
+  if (P.roads) {
+    for (const r of W.roads) {
+      x.strokeStyle = r.sea ? (P.style === 'atlas' ? 'rgba(255,255,255,.55)' : 'rgba(59,42,26,.45)') : st.road;
+      x.lineWidth = lw(r.sea ? .9 : 1.1); x.setLineDash(r.sea ? [lw(4), lw(5)] : [lw(3.5), lw(2.2)]);
+      x.beginPath(); r.pts.forEach(([px, py], k) => k ? x.lineTo(px * S, py * S) : x.moveTo(px * S, py * S)); x.stroke();
+    }
+    x.setLineDash([]);
+  }
+  // graticule
+  if (P.grid) {
+    x.strokeStyle = P.style === 'atlas' ? 'rgba(255,255,255,.25)' : 'rgba(59,42,26,.22)'; x.lineWidth = lw(.6);
+    for (let gx = 50; gx < GW; gx += 50) { x.beginPath(); x.moveTo(gx * S, 0); x.lineTo(gx * S, c.height); x.stroke(); }
+    for (let gy = 50; gy < GH; gy += 50) { x.beginPath(); x.moveTo(0, gy * S); x.lineTo(c.width, gy * S); x.stroke(); }
+  }
+  // cities
+  for (const cty of W.cities) drawCity(x, cty, S);
+  if (P.labels) drawLabels(x, S);
+  drawCompass(x, S); drawScale(x, S);
+  if (P.frame) drawFrame(x, S);
+  return c;
+}
+function drawGlyphs(x, S) {
+  const W = world, st = STY[P.style], r = mulberry(W.seed + 77), marks = [];
+  const lw = v => v * S / 2.5;
+  for (let gy = 6; gy < GH - 4; gy += 7) for (let gx = 4; gx < GW - 4; gx += 9) {
+    const px = gx + (r() - .5) * 6, py = gy + (r() - .5) * 5, i = Math.round(py) * GW + Math.round(px);
+    if (!W.land[i]) continue;
+    const e = W.e[i], b = W.biome[i];
+    if (e > .5 && r() < .9) marks.push({ t: 'mtn', px, py, s: 3 + e * 6 });
+    else if ((b === 4 || b === 5 || b === 7) && r() < .55) { for (let k = 0; k < 2 + (b === 5 ? 1 : 0); k++) marks.push({ t: b === 7 ? 'pine' : 'tree', px: px + (r() - .5) * 7, py: py + (r() - .5) * 4, s: 2 + r() * 1.2 }); }
+    else if (e > .38 && r() < .45) marks.push({ t: 'hill', px, py, s: 3 + e * 3 });
+    else if (b === 12 && r() < .6) marks.push({ t: 'marsh', px, py, s: 2.5 });
+    else if (b === 2 && r() < .25) marks.push({ t: 'dune', px, py, s: 3 });
+  }
+  marks.sort((a, b) => a.py - b.py);
+  const paper = P.style === 'parchment' ? 'rgb(232,214,168)' : null;
+  x.strokeStyle = P.style === 'atlas' ? 'rgba(31,42,48,.7)' : st.ink;
+  for (const m of marks) {
+    const X = m.px * S, Y = m.py * S, s = m.s * S;
+    x.lineWidth = lw(.9);
+    x.beginPath();
+    if (m.t === 'mtn') {
+      x.moveTo(X - s, Y); x.lineTo(X - s * .15, Y - s * 1.25); x.lineTo(X + s * .25, Y - s * .55); x.lineTo(X + s * .45, Y - s * .9); x.lineTo(X + s, Y);
+      if (paper) { x.fillStyle = paper; x.fill(); }
+      else { x.fillStyle = 'rgba(255,255,255,.25)'; x.fill(); }
+      x.stroke();
+      x.beginPath(); x.lineWidth = lw(.5);
+      for (let k = 1; k <= 3; k++) { const t = k / 4; x.moveTo(X - s * .15 + s * .5 * t, Y - s * 1.25 + s * 1.05 * t); x.lineTo(X - s * .15 + s * .5 * t + s * .12, Y - s * .1); }
+      if (m.s > 7) { x.moveTo(X - s * .45, Y - s * .7); x.lineTo(X - s * .15, Y - s * 1.25); x.lineTo(X + s * .02, Y - s * .9); }
+      x.stroke();
+    } else if (m.t === 'hill') {
+      x.arc(X, Y, s * .8, Math.PI * 1.1, Math.PI * 1.9); x.stroke();
+    } else if (m.t === 'tree') {
+      x.arc(X, Y - s * .9, s * .6, 0, Math.PI * 2);
+      x.fillStyle = paper || 'rgba(40,90,50,.55)'; x.fill(); x.stroke();
+      x.beginPath(); x.moveTo(X, Y - s * .3); x.lineTo(X, Y + s * .2); x.stroke();
+    } else if (m.t === 'pine') {
+      x.moveTo(X, Y - s * 1.6); x.lineTo(X - s * .55, Y); x.lineTo(X + s * .55, Y); x.closePath();
+      x.fillStyle = paper || 'rgba(40,80,60,.55)'; x.fill(); x.stroke();
+    } else if (m.t === 'marsh') {
+      for (let k = -1; k <= 1; k++) { x.moveTo(X + k * s * .5, Y); x.lineTo(X + k * s * .7, Y - s * .8); }
+      x.moveTo(X - s, Y); x.lineTo(X + s, Y); x.stroke();
+    } else if (m.t === 'dune') {
+      x.moveTo(X - s, Y); x.quadraticCurveTo(X - s * .3, Y - s * .8, X + s * .2, Y); x.stroke();
+    }
+  }
+}
+function drawCity(x, c, S) {
+  const st = STY[P.style], X = (c.x + .5) * S, Y = (c.y + .5) * S, k = S / 2.5;
+  x.lineWidth = 1.2 * k;
+  if (c.rank === 'capital') {
+    x.fillStyle = st.city; x.beginPath();
+    for (let j = 0; j < 10; j++) { const a = -Math.PI / 2 + j * Math.PI / 5, r = (j % 2 ? 3 : 7) * k; x.lineTo(X + Math.cos(a) * r, Y + Math.sin(a) * r); }
+    x.closePath(); x.fill(); x.strokeStyle = P.style === 'atlas' ? '#fff' : st.halo; x.stroke();
+  } else if (c.rank === 'city') {
+    x.fillStyle = P.style === 'atlas' ? '#fff' : st.halo; x.strokeStyle = st.city; x.lineWidth = 1.6 * k;
+    x.beginPath(); x.arc(X, Y, 4 * k, 0, 7); x.fill(); x.stroke();
+    x.fillStyle = st.city; x.beginPath(); x.arc(X, Y, 1.8 * k, 0, 7); x.fill();
+  } else {
+    x.fillStyle = st.city; x.strokeStyle = P.style === 'atlas' ? '#fff' : st.halo;
+    x.beginPath(); x.arc(X, Y, 2.3 * k, 0, 7); x.fill(); x.stroke();
+  }
+}
+function drawLabels(x, S) {
+  const W = world, st = STY[P.style], boxes = [], k = S / 2.5;
+  const serif = getComputedStyle(document.body).getPropertyValue('--serif');
+  const place = (text, X, Y, font, opts = {}) => {
+    x.font = font; const sp = opts.spacing || 0;
+    if ('letterSpacing' in x) x.letterSpacing = sp + 'px';
+    const w = x.measureText(text).width, h = parseFloat(font.match(/(\d+(\.\d+)?)px/)[1]);
+    const g = (opts.gap ?? 7) * k;
+    const cands = opts.fixed ? [[0, 0]] : opts.center ? [[0, 0], [0, -h * 1.2], [0, h * 1.2], [-w * .25, 0], [w * .25, 0]]
+      : [[w / 2 + g, h * .35], [-(w / 2 + g), h * .35], [0, -(g + 2 * k)], [0, g + h * .8], [w / 2 + g, -h * .5], [-(w / 2 + g), -h * .5]];
+    for (const [dx, dy] of cands) {
+      const bx = X + dx - w / 2, by = Y + dy - h * .8, box = [bx - 1, by - 1, bx + w + 1, by + h + 1];
+      if (bx < 4 || by < 4 || bx + w > x.canvas.width - 4 || by + h > x.canvas.height - 4) continue;
+      if (!opts.fixed && boxes.some(b => !(box[2] < b[0] || box[0] > b[2] || box[3] < b[1] || box[1] > b[3]))) continue;
+      boxes.push(box);
+      x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+      if (opts.halo !== false) { x.strokeStyle = st.halo; x.lineWidth = 3.2 * k; x.lineJoin = 'round'; x.strokeText(text, X + dx, Y + dy); }
+      x.fillStyle = opts.color || st.label; x.fillText(text, X + dx, Y + dy);
+      if ('letterSpacing' in x) x.letterSpacing = '0px';
+      return true;
+    }
+    if ('letterSpacing' in x) x.letterSpacing = '0px';
+    return false;
+  };
+  // city icon boxes reserved first
+  for (const c of W.cities) { const X = (c.x + .5) * S, Y = (c.y + .5) * S, r = (c.rank === 'capital' ? 5 : 3.5) * k; boxes.push([X - r, Y - r, X + r, Y + r]); }
+  for (const l of W.landLabels) place(l.big ? l.name.toUpperCase() : l.name, (l.x + .5) * S, (l.y + .5) * S, `${l.big ? 600 : 500} ${(l.big ? 22 : 13) * k}px ${serif}`, { center: true, spacing: (l.big ? 9 : 3) * k, color: P.style === 'atlas' ? 'rgba(27,37,42,.78)' : 'rgba(59,42,26,.78)' });
+  for (const c of W.cities) place(c.name, (c.x + .5) * S, (c.y + .5) * S, `${c.rank === 'capital' ? '700 ' + 13 * k : c.rank === 'city' ? '600 ' + 11 * k : '400 ' + 9.5 * k}px ${serif}`, { gap: c.rank === 'capital' ? 9 : c.rank === 'city' ? 6 : 4.5 });
+  if (P.realms && W.region) for (const R of W.realms) place(R.name.toUpperCase(), (R.lx + .5) * S, (R.ly + .5) * S + 14 * k, `italic 600 ${9.5 * k}px ${serif}`, { center: true, spacing: 3 * k, color: R.color });
+  for (const s of W.seaLabels) place(s.name, (s.x + .5) * S, (s.y + .5) * S, `italic 400 ${14 * k}px ${serif}`, { center: true, spacing: 4 * k, halo: false, color: P.style === 'atlas' ? 'rgba(230,242,250,.85)' : P.style === 'topo' ? 'rgba(40,90,140,.8)' : 'rgba(59,42,26,.6)' });
+  if (W.peak) place(W.peak.name, (W.peak.x + .5) * S, (W.peak.y + .5) * S + 16 * k, `italic 600 ${10.5 * k}px ${serif}`, { center: true, spacing: 2 * k });
+  // title cartouche
+  const title = W.realm.toUpperCase(), tx = x.canvas.width / 2, ty = 34 * k;
+  x.font = `600 ${20 * k}px ${serif}`; if ('letterSpacing' in x) x.letterSpacing = 10 * k + 'px';
+  const tw = x.measureText(title).width;
+  x.font = `italic ${10 * k}px ${serif}`; if ('letterSpacing' in x) x.letterSpacing = '1px';
+  const sub = `${W.subtitle} · Year ${W.year}`, sw = x.measureText(sub).width;
+  const bw = Math.max(tw, sw) + 44 * k, bh = 46 * k;
+  x.fillStyle = P.style === 'atlas' ? 'rgba(250,247,238,.9)' : P.style === 'topo' ? 'rgba(246,241,228,.95)' : 'rgba(236,220,178,.95)';
+  x.strokeStyle = st.ink; x.lineWidth = 1.2 * k;
+  x.fillRect(tx - bw / 2, ty - 26 * k, bw, bh); x.strokeRect(tx - bw / 2, ty - 26 * k, bw, bh); x.strokeRect(tx - bw / 2 + 3 * k, ty - 23 * k, bw - 6 * k, bh - 6 * k);
+  x.textAlign = 'center'; x.fillStyle = st.ink;
+  x.font = `600 ${20 * k}px ${serif}`; if ('letterSpacing' in x) x.letterSpacing = 10 * k + 'px'; x.fillText(title, tx + 5 * k, ty);
+  x.font = `italic ${10 * k}px ${serif}`; if ('letterSpacing' in x) x.letterSpacing = '1px'; x.fillText(sub, tx, ty + 14 * k);
+  if ('letterSpacing' in x) x.letterSpacing = '0px';
+}
+function drawCompass(x, S) {
+  const W = world, k = S / 2.5, st = STY[P.style];
+  // find the most open sea corner
+  const corners = [[GW - 60, GH - 70], [60, GH - 70], [GW - 60, 80], [60, 80]];
+  let best = corners[0], bs = -1;
+  for (const [cx, cy] of corners) { let s = 0; for (let dy = -20; dy <= 20; dy += 5) for (let dx = -20; dx <= 20; dx += 5) s += W.land[(cy + dy) * GW + cx + dx] ? 0 : 1; if (s > bs) { bs = s; best = [cx, cy]; } }
+  const X = best[0] * S, Y = best[1] * S, R = 26 * k;
+  x.save(); x.translate(X, Y);
+  x.strokeStyle = st.ink; x.lineWidth = .8 * k;
+  x.beginPath(); x.arc(0, 0, R * 1.05, 0, 7); x.stroke(); x.beginPath(); x.arc(0, 0, R * .92, 0, 7); x.stroke();
+  for (let j = 0; j < 8; j++) {
+    const a = j * Math.PI / 4 - Math.PI / 2, len = j % 2 ? R * .6 : R * 1.25, wd = j % 2 ? R * .1 : R * .16;
+    x.save(); x.rotate(a);
+    x.beginPath(); x.moveTo(0, 0); x.lineTo(len, 0); x.lineTo(0, wd); x.closePath(); x.fillStyle = st.ink; x.fill();
+    x.beginPath(); x.moveTo(0, 0); x.lineTo(len, 0); x.lineTo(0, -wd); x.closePath(); x.fillStyle = P.style === 'atlas' ? '#fff' : st.halo; x.fill(); x.stroke();
+    x.restore();
+  }
+  x.fillStyle = st.city; x.font = `700 ${12 * k}px ${getComputedStyle(document.body).getPropertyValue('--serif')}`; x.textAlign = 'center'; x.fillText('N', 0, -R * 1.35);
+  x.restore();
+}
+function drawScale(x, S) {
+  const k = S / 2.5, st = STY[P.style], X = 24 * S / 2.5 + 18 * k, Y = x.canvas.height - 26 * k, seg = 25 * S;
+  x.strokeStyle = st.ink; x.lineWidth = 1 * k;
+  for (let j = 0; j < 4; j++) { x.fillStyle = j % 2 ? (P.style === 'atlas' ? '#fff' : st.halo) : st.ink; x.fillRect(X + j * seg / 2, Y, seg / 2, 5 * k); x.strokeRect(X + j * seg / 2, Y, seg / 2, 5 * k); }
+  x.fillStyle = st.label; x.font = `italic ${9.5 * k}px ${getComputedStyle(document.body).getPropertyValue('--serif')}`; x.textAlign = 'center';
+  ['0', '50', '100 leagues'].forEach((t, j) => { x.strokeStyle = st.halo; x.lineWidth = 3 * k; x.strokeText(t, X + j * seg, Y - 4 * k); x.fillText(t, X + j * seg, Y - 4 * k); });
+}
+function drawFrame(x, S) {
+  const k = S / 2.5, w = x.canvas.width, h = x.canvas.height, st = STY[P.style];
+  x.strokeStyle = st.ink; x.lineWidth = 3 * k; x.strokeRect(6 * k, 6 * k, w - 12 * k, h - 12 * k);
+  x.lineWidth = 1 * k; x.strokeRect(11 * k, 11 * k, w - 22 * k, h - 22 * k);
+  // tick marks
+  x.lineWidth = 1 * k;
+  for (let gx = 25; gx < GW; gx += 25) { const X = gx * S; x.beginPath(); x.moveTo(X, 6 * k); x.lineTo(X, 11 * k); x.moveTo(X, h - 6 * k); x.lineTo(X, h - 11 * k); x.stroke(); }
+  for (let gy = 25; gy < GH; gy += 25) { const Y = gy * S; x.beginPath(); x.moveTo(6 * k, Y); x.lineTo(11 * k, Y); x.moveTo(w - 6 * k, Y); x.lineTo(w - 11 * k, Y); x.stroke(); }
+}
+
+/* ================= view ================= */
+const view = $('#view'), vctx = view.getContext('2d');
+let VW = 0, VH = 0, DPR = 1, mapCanvas = null, cam = { x: GW / 2, y: GH / 2, z: 1 }, BAKE = 2.5;
+function fit() { if (!VW) return; cam.z = Math.min(VW / GW, VH / GH) * .94; cam.x = GW / 2; cam.y = GH / 2; draw(); }
+function resizeView() { const r = view.getBoundingClientRect(); VW = r.width; VH = r.height; DPR = Math.min(devicePixelRatio || 1, 2); view.width = VW * DPR; view.height = VH * DPR; fit(); }
+function draw() {
+  vctx.setTransform(1, 0, 0, 1, 0, 0); vctx.clearRect(0, 0, view.width, view.height);
+  if (!mapCanvas) return;
+  vctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  const sx = VW / 2 - cam.x * cam.z, sy = VH / 2 - cam.y * cam.z;
+  vctx.shadowColor = 'rgba(0,0,0,.55)'; vctx.shadowBlur = 30; vctx.shadowOffsetY = 10;
+  vctx.fillStyle = '#000'; vctx.fillRect(sx, sy, GW * cam.z, GH * cam.z);
+  vctx.shadowColor = 'transparent';
+  vctx.imageSmoothingEnabled = true; vctx.imageSmoothingQuality = 'high';
+  vctx.drawImage(mapCanvas, sx, sy, GW * cam.z, GH * cam.z);
+  drawJourney(vctx, sx, sy, cam.z, 1);
+  drawPins(vctx, sx, sy, cam.z, 1);
+  if (focus) drawFocus(sx, sy);
+}
+/* ---- journey planner ----
+   A* over a 3× downsampled cost grid. Road cells cost 0.7 vs ~1.2+ open ground, so routes
+   prefer roads without taking absurd detours to stay on them.
+   Scale: the bar shows 25 grid cells = 50 leagues, i.e. 1 cell = 2 leagues. */
+let journey = null;
+function journeyGrid() {
+  const W = world; if (W._jgrid) return W._jgrid;
+  const F = 3, cw = Math.ceil(GW / F), ch = Math.ceil(GH / F), cost = new Float32Array(cw * ch);
+  for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) {
+    const i = Math.min(GH - 1, y * F) * GW + Math.min(GW - 1, x * F);
+    cost[y * cw + x] = W.land[i] ? 1 + W.slope[i] * 60 + W.e[i] * 2.5 + (W.acc[i] > W.riverT ? 4 : 0) : Infinity;
+  }
+  for (const r of W.roads) if (!r.sea) for (const [px, py] of r.pts) { const k = Math.round(py / F) * cw + Math.round(px / F); if (k >= 0 && k < cost.length && isFinite(cost[k])) cost[k] = Math.min(cost[k], .7); }
+  return (W._jgrid = { F, cw, ch, cost });
+}
+function plotJourney(a, b) {
+  const W = world, A = W.cities[a], B = W.cities[b];
+  if (!A || !B || a === b) return toast('Pick two different settlements');
+  const g = journeyGrid();
+  let pts = null, sea = false, terrain = 1;
+  if (A.comp === B.comp) {
+    const path = astar(g.cost, g.cw, g.ch, Math.round(A.x / g.F), Math.round(A.y / g.F), Math.round(B.x / g.F), Math.round(B.y / g.F));
+    if (path) {
+      pts = chaikin(path.map(([x, y]) => [x * g.F + .5, y * g.F + .5]), 2);
+      terrain = path.reduce((s, [x, y]) => s + Math.min(6, g.cost[y * g.cw + x]), 0) / path.length;
+    }
+  }
+  if (!pts) { sea = true; pts = [[A.x + .5, A.y + .5], [B.x + .5, B.y + .5]]; }
+  let len = 0; for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]);
+  const leagues = Math.round(len * 2), slow = clamp(terrain / 1.2, .8, 3);
+  const days = v => { const d = leagues / v; return d < 1 ? `${Math.max(1, Math.round(d * 12))} h` : `${d.toFixed(d < 10 ? 1 : 0)} days`; };
+  journey = { pts, sea, A, B };
+  $('#jOut').textContent = sea
+    ? `${A.name} → ${B.name}: ${leagues} leagues by sea (different landmasses). ≈ ${days(40)} under sail${A.coastal && B.coastal ? '' : ' — plus overland legs to the nearest ports'}.`
+    : `${A.name} → ${B.name}: ${leagues} leagues${slow > 1.6 ? ' through rough country' : slow < 1 ? ' mostly by road' : ''}. On foot ≈ ${days(8 / slow)}, on horseback ≈ ${days(16 / slow)}.`;
+  const cx = (A.x + B.x) / 2, cy = (A.y + B.y) / 2, span = Math.max(Math.abs(A.x - B.x), Math.abs(A.y - B.y), 40);
+  cam.x = cx; cam.y = cy; cam.z = clamp(Math.min(VW, VH) * .8 / span, Math.min(VW / GW, VH / GH) * .9, 12);
+  focus = null; draw();
+}
+function drawJourney(c, ox, oy, z, k) {
+  if (!journey) return;
+  const { pts, sea, A, B } = journey;
+  c.save(); c.lineJoin = 'round'; c.lineCap = 'round';
+  const path = () => { c.beginPath(); pts.forEach(([x, y], i) => i ? c.lineTo(ox + x * z, oy + y * z) : c.moveTo(ox + x * z, oy + y * z)); };
+  path(); c.strokeStyle = 'rgba(250,240,215,.85)'; c.lineWidth = 6 * k; c.stroke();
+  path(); c.strokeStyle = sea ? '#2f6f9f' : '#b8432e'; c.lineWidth = 3 * k; c.setLineDash(sea ? [9 * k, 7 * k] : [12 * k, 5 * k]); c.stroke();
+  c.setLineDash([]);
+  for (const [p, col] of [[A, '#5e8a3a'], [B, '#b8432e']]) { c.fillStyle = col; c.strokeStyle = '#fff'; c.lineWidth = 2 * k; c.beginPath(); c.arc(ox + (p.x + .5) * z, oy + (p.y + .5) * z, 6 * k, 0, 7); c.fill(); c.stroke(); }
+  c.restore();
+}
+function fillJourneySelects() {
+  for (const id of ['#jFrom', '#jTo']) {
+    const s = $(id); s.replaceChildren(...world.cities.map((c, i) => { const o = document.createElement('option'); o.value = i; o.textContent = (c.rank === 'capital' ? '★ ' : '') + c.name; return o; }));
+  }
+  if (world.cities.length > 1) $('#jTo').value = '1';
+  journey = null; $('#jOut').textContent = world.cities.length > 1 ? 'Pick two settlements and plot a route.' : 'Need at least two settlements.';
+}
+$('#jGo').addEventListener('click', () => plotJourney(+$('#jFrom').value, +$('#jTo').value));
+$('#jClear').addEventListener('click', () => { journey = null; draw(); $('#jOut').textContent = 'Route cleared.'; });
+/* ---- pins (saved per world: seed + shape) ---- */
+const PIN_STORE = 'cartograph.pins.v1';
+let allPins = {}, pinMode = false;
+try { const s = JSON.parse(localStorage.getItem(PIN_STORE) || '{}'); if (s && typeof s === 'object') allPins = s; } catch (e) { allPins = {}; }
+const worldKey = () => `${P.seed}|${P.shape}`;
+function pins() {
+  const raw = allPins[worldKey()];
+  return Array.isArray(raw) ? raw.filter(p => p && Number.isFinite(p.x) && Number.isFinite(p.y)).slice(0, 100) : [];
+}
+function savePins(list) { allPins[worldKey()] = list; try { localStorage.setItem(PIN_STORE, JSON.stringify(allPins)); } catch (e) { /* storage unavailable */ } }
+function drawPins(c, ox, oy, z, k) {
+  const list = pins(); if (!list.length) return;
+  const serif = getComputedStyle(document.body).getPropertyValue('--serif');
+  c.save(); c.textAlign = 'left'; c.font = `600 ${12 * k}px ${serif}`;
+  for (const p of list) {
+    const X = ox + p.x * z, Y = oy + p.y * z;
+    c.fillStyle = '#c65a45'; c.strokeStyle = '#2b1a10'; c.lineWidth = 1.2 * k;
+    c.beginPath(); c.moveTo(X, Y); c.bezierCurveTo(X - 7 * k, Y - 10 * k, X - 7 * k, Y - 20 * k, X, Y - 20 * k); c.bezierCurveTo(X + 7 * k, Y - 20 * k, X + 7 * k, Y - 10 * k, X, Y); c.fill(); c.stroke();
+    c.fillStyle = '#f4e7c8'; c.beginPath(); c.arc(X, Y - 14 * k, 2.6 * k, 0, 7); c.fill();
+    if (p.label) { c.lineWidth = 3 * k; c.strokeStyle = 'rgba(244,231,200,.95)'; c.strokeText(p.label, X + 9 * k, Y - 10 * k); c.fillStyle = '#2b1a10'; c.fillText(p.label, X + 9 * k, Y - 10 * k); }
+  }
+  c.restore();
+}
+function renderPins() {
+  const list = pins(), box = $('#pins');
+  if (!list.length) { box.textContent = pinMode ? 'Click anywhere on the map to drop a pin.' : 'No pins on this world yet.'; box.style.cssText = 'margin-top:8px;color:var(--mute);font-size:12px;display:block'; return; }
+  box.style.cssText = 'margin-top:8px';
+  box.replaceChildren(...list.map((p, k) => {
+    const row = document.createElement('div'); row.className = 'pinrow';
+    const go = document.createElement('button'); go.className = 'go'; go.textContent = '📍'; go.title = 'Fly to pin'; go.setAttribute('aria-label', 'Fly to ' + (p.label || 'pin'));
+    go.addEventListener('click', () => flyTo({ x: p.x - .5, y: p.y - .5, name: p.label || 'Pin', kind: 'your note', pop: 0, desc: p.label || '' }, true));
+    const inp = document.createElement('input'); inp.value = p.label || ''; inp.maxLength = 40; inp.placeholder = 'Name this place…'; inp.setAttribute('aria-label', 'Pin label');
+    inp.addEventListener('input', () => { const l = pins(); if (l[k]) { l[k].label = inp.value.slice(0, 40); savePins(l); draw(); } });
+    const del = document.createElement('button'); del.textContent = '×'; del.setAttribute('aria-label', 'Delete pin');
+    del.addEventListener('click', () => { const l = pins(); l.splice(k, 1); savePins(l); renderPins(); draw(); });
+    row.append(go, inp, del); return row;
+  }));
+}
+$('#pinMode').addEventListener('click', () => {
+  pinMode = !pinMode; $('#pinMode').classList.toggle('on', pinMode); $('#pinMode').setAttribute('aria-pressed', pinMode);
+  $('#pinMode').textContent = pinMode ? '✓ Done dropping pins' : '📍 Drop pins on the map';
+  view.classList.toggle('pinning', pinMode); renderPins();
+  if (pinMode && innerWidth < 760) { $('#side').classList.remove('open'); $('#menu').setAttribute('aria-expanded', false); }
+});
+/* ---- gazetteer focus ---- */
+let focus = null, flyRaf = 0;
+function drawFocus(sx, sy) {
+  const c = focus.city, X = sx + (c.x + .5) * cam.z, Y = sy + (c.y + .5) * cam.z, age = (performance.now() - focus.t0) / 1000;
+  const pulse = reduceMotion.matches ? 0 : (age % 1.4) / 1.4;
+  vctx.strokeStyle = `rgba(229,196,127,${1 - pulse})`; vctx.lineWidth = 2;
+  vctx.beginPath(); vctx.arc(X, Y, 10 + pulse * 22, 0, 7); vctx.stroke();
+  // info card
+  const serif = getComputedStyle(document.body).getPropertyValue('--serif'), pad = 10, w = Math.min(280, VW - 24);
+  vctx.font = `italic 12px ${serif}`;
+  const words = c.desc.split(' '), lines = []; let line = '';
+  for (const wd of words) { const t = line ? line + ' ' + wd : wd; if (vctx.measureText(t).width > w - pad * 2) { lines.push(line); line = wd; } else line = t; }
+  lines.push(line);
+  const h = 44 + lines.length * 16;
+  let bx = X + 18, by = Y - h / 2;
+  if (VW < 560) { bx = (VW - w) / 2; by = Y + 28 + h < VH - 70 ? Y + 28 : Y - 28 - h; }
+  else if (bx + w > VW - 12) bx = X - 18 - w;
+  bx = clamp(bx, 12, VW - w - 12); by = clamp(by, 12, VH - h - 12);
+  vctx.fillStyle = 'rgba(15,30,36,.92)'; vctx.strokeStyle = '#c9a45c'; vctx.lineWidth = 1;
+  vctx.beginPath(); vctx.roundRect ? vctx.roundRect(bx, by, w, h, 10) : vctx.rect(bx, by, w, h); vctx.fill(); vctx.stroke();
+  vctx.fillStyle = '#e5c47f'; vctx.font = `600 16px ${serif}`; vctx.textAlign = 'left'; vctx.fillText(c.name, bx + pad, by + 22);
+  vctx.fillStyle = '#98a9a6'; vctx.font = `11px ${getComputedStyle(document.body).getPropertyValue('--mono')}`;
+  vctx.fillText(c.pop ? `${c.kind} · pop. ${c.pop.toLocaleString()}` : c.kind, bx + pad, by + 37);
+  vctx.fillStyle = '#efe6d2'; vctx.font = `italic 12px ${serif}`;
+  lines.forEach((l, k) => vctx.fillText(l, bx + pad, by + 56 + k * 16));
+}
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+function flyTo(c) {
+  focus = { city: c, t0: performance.now() };
+  const from = { ...cam }, to = { x: c.x, y: c.y, z: Math.max(cam.z, Math.min(VW / GW, VH / GH) * 3) }, t0 = performance.now(), dur = reduceMotion.matches ? 1 : 700;
+  cancelAnimationFrame(flyRaf);
+  const step = now => {
+    const k = clamp((now - t0) / dur, 0, 1), e = 1 - Math.pow(1 - k, 3);
+    cam.x = lerp(from.x, to.x, e); cam.y = lerp(from.y, to.y, e); cam.z = from.z * Math.pow(to.z / from.z, e);
+    draw();
+    if (k < 1 || (focus && now - focus.t0 < 6000 && !reduceMotion.matches)) flyRaf = requestAnimationFrame(step);
+  };
+  flyRaf = requestAnimationFrame(step);
+  $$('#gaz button').forEach(b => b.classList.toggle('on', b.dataset.i === String(world.cities.indexOf(c))));
+  if (innerWidth < 760) { $('#side').classList.remove('open'); $('#menu').setAttribute('aria-expanded', false); }
+}
+function renderGazetteer() {
+  const box = $('#gaz');
+  if (!world.cities.length) { box.textContent = 'No settlements yet — raise the Settlements slider.'; return; }
+  box.replaceChildren(...world.cities.map((c, k) => {
+    const b = document.createElement('button'); b.dataset.i = k;
+    const icon = document.createElement('i'); icon.textContent = c.rank === 'capital' ? '★' : c.rank === 'city' ? '◉' : '•';
+    const mid = document.createElement('span'); const nb = document.createElement('b'); nb.textContent = c.name; const sm = document.createElement('small'); sm.textContent = c.kind + (c.realm ? ' · ' + c.realm.name : ''); mid.append(nb, sm);
+    const pop = document.createElement('span'); pop.className = 'pop'; pop.textContent = c.pop >= 1000 ? Math.round(c.pop / 1000) + 'k' : c.pop;
+    b.append(icon, mid, pop); b.title = c.desc;
+    b.addEventListener('click', () => flyTo(c));
+    return b;
+  }));
+}
+let drawQ = 0; const drawSoon = () => { if (!drawQ) drawQ = requestAnimationFrame(() => { drawQ = 0; draw(); }); };
+function zoomAt(px, py, f) {
+  const wx = (px - VW / 2) / cam.z + cam.x, wy = (py - VH / 2) / cam.z + cam.y;
+  cam.z = clamp(cam.z * f, Math.min(VW / GW, VH / GH) * .5, 12);
+  cam.x = wx - (px - VW / 2) / cam.z; cam.y = wy - (py - VH / 2) / cam.z; drawSoon();
+}
+view.addEventListener('wheel', e => { e.preventDefault(); zoomAt(e.offsetX, e.offsetY, Math.exp(-e.deltaY * .0015)); }, { passive: false });
+const ptrs = new Map(); let drag = null;
+view.addEventListener('pointerdown', e => { view.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.offsetX, e.offsetY]); view.classList.add('drag');
+  if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; drag = { pinch: true, d0: Math.hypot(a[0] - b[0], a[1] - b[1]), z0: cam.z }; }
+  else drag = { x: e.offsetX, y: e.offsetY, cx: cam.x, cy: cam.y }; });
+view.addEventListener('pointermove', e => {
+  if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, [e.offsetX, e.offsetY]);
+  if (drag && drag.pinch && ptrs.size === 2) { const [a, b] = [...ptrs.values()]; const d = Math.hypot(a[0] - b[0], a[1] - b[1]); zoomAt((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (drag.z0 * d / drag.d0) / cam.z); }
+  else if (drag && !drag.pinch) { cam.x = drag.cx - (e.offsetX - drag.x) / cam.z; cam.y = drag.cy - (e.offsetY - drag.y) / cam.z; drawSoon(); }
+  hover(e.offsetX, e.offsetY);
+}, { passive: true });
+const endPtr = e => {
+  // a click (no real drag) selects the nearest settlement, or dismisses the card
+  if (e.type === 'pointerup' && drag && !drag.pinch && Math.hypot(e.offsetX - drag.x, e.offsetY - drag.y) < 4 && world) {
+    const gx = (e.offsetX - VW / 2) / cam.z + cam.x, gy = (e.offsetY - VH / 2) / cam.z + cam.y;
+    if (pinMode) {
+      if (gx >= 0 && gy >= 0 && gx < GW && gy < GH) {
+        const l = pins(); if (l.length >= 100) { toast('100 pins is the limit'); }
+        else { l.push({ x: +gx.toFixed(2), y: +gy.toFixed(2), label: '' }); savePins(l); renderPins(); draw(); const ins = $$('#pins input'); if (ins.length && innerWidth >= 760) ins[ins.length - 1].focus(); toast('Pin dropped — name it in the sidebar'); }
+      }
+      ptrs.delete(e.pointerId); if (!ptrs.size) { drag = null; view.classList.remove('drag'); }
+      return;
+    }
+    let best = null, bd = 12 / cam.z;
+    for (const c of world.cities) { const d = Math.hypot(c.x + .5 - gx, c.y + .5 - gy); if (d < bd) { bd = d; best = c; } }
+    if (best) flyTo(best); else if (focus) { focus = null; $$('#gaz button').forEach(b => b.classList.remove('on')); draw(); }
+  }
+  ptrs.delete(e.pointerId); if (!ptrs.size) { drag = null; view.classList.remove('drag'); }
+};
+view.addEventListener('pointerup', endPtr); view.addEventListener('pointercancel', endPtr);
+let hoverQ = 0, hoverP = null;
+function hover(px, py) { hoverP = [px, py]; if (!hoverQ) hoverQ = requestAnimationFrame(() => { hoverQ = 0; survey(...hoverP); }); }
+function survey(px, py) {
+  if (!world) return;
+  const gx = Math.floor((px - VW / 2) / cam.z + cam.x), gy = Math.floor((py - VH / 2) / cam.z + cam.y);
+  const hud = $('#hud');
+  if (gx < 0 || gy < 0 || gx >= GW || gy >= GH) { hud.textContent = 'Hover the map to survey it'; return; }
+  const i = gy * GW + gx, e = world.e[i];
+  let near = null, nd = Infinity; for (const c of world.cities) { const d = Math.hypot(c.x - gx, c.y - gy); if (d < nd) { nd = d; near = c; } }
+  const lat = ((GH / 2 - gy) / GH * 60 + 30).toFixed(1), lon = ((gx - GW / 2) / GW * 90).toFixed(1);
+  const parts = [['', `${Math.abs(lat)}°${lat >= 0 ? 'N' : 'S'} ${Math.abs(lon)}°${lon >= 0 ? 'E' : 'W'}`], ['\n', world.land[i] ? BIOMES[world.biome[i]][0] : (world.distLand[i] < 4 ? 'Coastal waters' : 'Open sea')],
+    ['  ', world.land[i] ? `${Math.round(e * 4200)} m` : `depth ${Math.round(-e * 3800)} m`]];
+  if (near) parts.push(['\n', `${Math.round(nd * 2)} leagues from `], ['', near.name]);
+  if (world.land[i] && world.acc[i] > world.riverT) parts.push(['\n', 'on a river']);
+  if (world.region && world.land[i]) parts.push(['\n', world.region[i] >= 0 ? world.realms[world.region[i]].name : 'Unclaimed wilds']);
+  hud.replaceChildren(...parts.flatMap(([pre, v], k) => [pre, k === 0 || k === parts.length - 1 && near ? Object.assign(document.createElement('b'), { textContent: v }) : v]));
+  hud.style.whiteSpace = 'pre';
+}
+$('#zin').addEventListener('click', () => zoomAt(VW / 2, VH / 2, 1.35));
+$('#zout').addEventListener('click', () => zoomAt(VW / 2, VH / 2, 1 / 1.35));
+$('#zfit').addEventListener('click', fit);
+new ResizeObserver(() => { const q = requestAnimationFrame(resizeView); void q; }).observe(view);
+
+/* ================= orchestration ================= */
+let busyT = 0;
+function regenerate(full = true) {
+  $('#busy').hidden = false;
+  clearTimeout(busyT);
+  busyT = setTimeout(() => {
+    try {
+      if (full || !world) { generate(); focus = null; }
+      mapCanvas = bake(BAKE); fillJourneySelects(); draw(); legend(); renderGazetteer(); renderPins();
+      const hud = $('#hud'); hud.textContent = `Surveyed in ${Math.round(world.ms)} ms · ${world.cities.length} settlements · ${world.rivers.length} rivers`;
+    } catch (err) { console.error(err); toast('Survey failed: ' + err.message); }
+    $('#busy').hidden = true; save();
+  }, 30);
+}
+function legend() {
+  const used = new Set(); for (let i = 0; i < N; i += 13) if (world.land[i]) used.add(world.biome[i]);
+  const rows = [];
+  if (P.style === 'atlas') [...used].sort((a, b) => a - b).forEach(b => rows.push([BIOMES[b][1], BIOMES[b][0]]));
+  if (P.realms && world.region) for (const R of world.realms) rows.push([R.color, R.name]);
+  rows.push([STY[P.style].city, '★ capital · ● city · • town'], [STY[P.style].river, 'Rivers'], [STY[P.style].road, 'Roads · sea lanes dashed']);
+  $('#legend').replaceChildren(...rows.flatMap(([c, t]) => { const i = document.createElement('i'); i.style.background = c; const s = document.createElement('span'); s.textContent = t; return [i, s]; }));
+}
+const RANGES = [['water', v => Math.round(v * 100) + '%'], ['rough', v => v.toFixed(2)], ['peaks', v => Math.round(v * 100) + '%'], ['wet', v => (v > 0 ? '+' : '') + Math.round(v * 100)], ['cities', v => v], ['rivers', v => Math.round(v * 100) + '%']];
+for (const [k, f] of RANGES) {
+  const inp = $('#' + k);
+  inp.addEventListener('input', () => { P[k] = +inp.value; $('#' + k + 'O').textContent = f(P[k]); });
+  inp.addEventListener('change', () => regenerate(true));
+}
+$('#shape').addEventListener('change', e => { P.shape = e.target.value; regenerate(true); });
+$('#seed').addEventListener('change', e => { P.seed = clamp(parseInt(e.target.value) || 0, 0, 999999999); regenerate(true); });
+$$('#styles button').forEach(b => b.addEventListener('click', () => { P.style = b.dataset.v; syncUI(); regenerate(false); }));
+for (const [id, k] of [['oLabels', 'labels'], ['oRoads', 'roads'], ['oRivers', 'riversOn'], ['oGrid', 'grid'], ['oGlyphs', 'glyphs'], ['oFrame', 'frame'], ['oRealms', 'realms']]) $('#' + id).addEventListener('change', e => { P[k] = e.target.checked; regenerate(false); });
+$('#newWorld').addEventListener('click', () => { P.seed = Math.floor(Math.random() * 999999999); nameSalt = 0; syncUI(); regenerate(true); });
+$('#rename').addEventListener('click', () => { nameSalt++; $('#busy').hidden = false; setTimeout(() => { placeNames(world); world._jgrid = null; focus = null; mapCanvas = bake(BAKE); fillJourneySelects(); draw(); renderGazetteer(); $('#busy').hidden = true; toast('The scribes have renamed the realm: ' + world.realm); }, 20); });
+function syncUI() {
+  $('#seed').value = P.seed; $('#shape').value = P.shape;
+  for (const [k, f] of RANGES) { $('#' + k).value = P[k]; $('#' + k + 'O').textContent = f(P[k]); }
+  $$('#styles button').forEach(b => { b.classList.toggle('on', b.dataset.v === P.style); b.setAttribute('aria-pressed', b.dataset.v === P.style); });
+  $('#oLabels').checked = P.labels; $('#oRoads').checked = P.roads; $('#oRivers').checked = P.riversOn; $('#oGrid').checked = P.grid; $('#oGlyphs').checked = P.glyphs; $('#oFrame').checked = P.frame; $('#oRealms').checked = P.realms;
+}
+let saveT = 0;
+function save() { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(STORE, JSON.stringify(P)); } catch (e) { /* storage unavailable */ } }, 300); }
+function download(name, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
+function exportPng(scale) {
+  $('#busy').hidden = false;
+  setTimeout(() => {
+    const src = scale === BAKE ? mapCanvas : bake(scale);
+    // copy so pins land on the export without being baked into the on-screen map
+    const c = document.createElement('canvas'); c.width = src.width; c.height = src.height;
+    const x = c.getContext('2d'); x.drawImage(src, 0, 0); drawJourney(x, 0, 0, scale, scale / 2.5); drawPins(x, 0, 0, scale, scale / 2.5);
+    c.toBlob(b => { $('#busy').hidden = true; if (b) { download(`${world.realm.toLowerCase()}-${P.seed}.png`, b); toast(`Saved ${c.width}×${c.height} map`); } });
+  }, 20);
+}
+$('#png').addEventListener('click', () => exportPng(BAKE));
+$('#png2').addEventListener('click', () => exportPng(5));
+$('#link').addEventListener('click', async () => { const h = '#m=' + btoa(JSON.stringify(P)); history.replaceState(null, '', h); try { await navigator.clipboard.writeText(location.href); toast('Link copied'); } catch (e) { toast('Link is in the address bar'); } });
+$('#menu').addEventListener('click', () => { const o = $('#side').classList.toggle('open'); $('#menu').setAttribute('aria-expanded', o); });
+let toastT = 0;
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600); }
+addEventListener('keydown', e => {
+  if (e.target.matches('input,select') || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === 'n' || e.key === 'N') $('#newWorld').click();
+  else if (e.key === 'f' || e.key === 'F') fit();
+  else if (e.key === '+' || e.key === '=') zoomAt(VW / 2, VH / 2, 1.35);
+  else if (e.key === '-') zoomAt(VW / 2, VH / 2, 1 / 1.35);
+});
+
+/* boot */
+try { const s = localStorage.getItem(STORE); if (s) P = sanitize(JSON.parse(s)); } catch (e) { P = { ...DEF }; }
+if (location.hash.startsWith('#m=')) { try { P = sanitize(JSON.parse(atob(location.hash.slice(3)))); } catch (e) { toast('Could not read map link'); } }
+syncUI(); resizeView(); regenerate(true);
+</script>
+</body>
+</html>
