@@ -25,9 +25,8 @@ Dozens of self-contained HTML apps at the repo root and in three collections:
 
 ### 🛠️ Supporting folders
 - `context-hub/` — AI context hub (`CONTEXT.md`, manifests, notes, tools)
-- `AXIOM_CODE_AI_WORKSPACE/` — Axiom code workspace app
 - `scripts/` — Python/Node/PowerShell build, audit, and evolution-runner scripts
-- `repo-documentation/` — extra docs
+- `repo-documentation/` — CYBER-COUNT CALCUN8R v4.2 app package (index.html + favicon.svg + badge)
 - `AGENTS.md` / `CLAUDE.md` — workspace conventions for AI assistants working in this repo
 
 > Note: duplicate copies across `N8DEV/`, `standalone-sites/`, and `standalone-sites/apps/` are being consolidated — canonical copies live where a portal/launcher links to them; `launch.html` files in `apps/<name>/` redirect to the canonical file.
@@ -62,7 +61,6 @@ N8DEV/Dev/                        Dev tools + builders
 N8DEV/Kids/                       Kids' apps
 standalone-sites/                 Flat apps + apps/<name>/launch.html redirects
 context-hub/                      AI context hub
-AXIOM_CODE_AI_WORKSPACE/          Axiom workspace app
 scripts/                          Build/audit helper scripts
 AGENTS.md                         Repo house rules (AI assistants read first)
 ```
