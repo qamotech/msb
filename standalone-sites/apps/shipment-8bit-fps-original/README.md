@@ -1,8 +1,9 @@
-# React Artifact
+# Shipment 8-bit (original React build)
 
-Open [launch.html](launch.html). Original compatibility URL: `standalone-sites/shipment-8bit-fps-original.html`.
-
-The source file here and its original path are NTFS hard links to the same bytes. In-place edits update both; editors that replace a file atomically can break that relationship. Check `os.path.samefile` after editing or refresh the link deliberately. Do not open the source through the new folder URL: relative resources and file-mode browser storage belong to the original URL.
+Open [launch.html](launch.html). Canonical app: `N8DEV/Arcade/Shipment-8Bit.html`
+(the Arcade-hub copy — same game plus a fullscreen toggle and favicon).
+The old duplicate copies under `standalone-sites/` were removed in the
+msb streamline (cycle 5); this folder now holds the redirect stub only.
 
 External hosts found in source: fonts.googleapis.com, reactjs.org, tailwindcss.com.
 

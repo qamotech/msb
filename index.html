@@ -187,17 +187,22 @@
     }
 
     /* ---------- COSMIC BACKDROP ---------- */
+    /* CYCLE 12: #msbAppShell is a legacy prototype block whose styles were never
+       shipped — its scripts still run harmlessly, so hide (not delete) it.
+       #msb-main-legacy is the empty duplicate shell main (min-height reserves
+       ~800px of dead space; its #msb-workspace div is only ever filled by the
+       console-invoked dev persistence panel). */
+    #msbAppShell,
+    #msb-main-legacy {
+      display: none !important;
+    }
+
     .msb-cosmos {
       position: fixed;
       inset: 0;
       z-index: var(--z-bg);
       overflow: hidden;
       pointer-events: none;
-      background-image: url('images/science_doodles_bg_1788837375272.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
       opacity: 0.38;
       filter: brightness(0.9) contrast(1.15);
     }
@@ -2054,7 +2059,6 @@
     }
   </style>
 <link rel="stylesheet" href="accessibility.css"/>
-<script src="assets/site.js" defer></script>
 </head>
 
 <body class="msb-classroom">
@@ -2082,9 +2086,7 @@
           <span class="msb-control-btn-label">Menu</span>
         </button>
         <div aria-label="The Magic School Bus Virtual Classroom" class="msb-brand">
-          <img decoding="async"  alt="Magic School Bus Icon" class="msb-brand-logo" onmouseout="this.style.transform='none'"
-            onmouseover="this.style.transform='scale(1.12) rotate(3deg)'" src="assets/Futuristic_Magic_School_Bus.ico"
-            style="width: 48px; height: 48px; object-fit: contain; border-radius: 12px; filter: drop-shadow(0 2px 10px rgba(255, 216, 61, 0.5)); flex-shrink: 0; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); cursor: pointer;" />
+          <span class="msb-brand-logo" aria-hidden="true" style="width:48px;height:48px;display:inline-flex;align-items:center;justify-content:center;font-size:2rem;background:rgba(255,216,61,.12);border:1px solid rgba(255,216,61,.35);border-radius:12px;flex-shrink:0;">ð</span>
           <div class="msb-brand-copy">
             <span class="msb-brand-kicker">Field Trip Control</span>
             <span class="msb-brand-title">Magic School Bus Virtual Classroom</span>
@@ -2210,17 +2212,17 @@
             Terminals</span>
         </div>
         <nav aria-label="Field Trips" class="msb-nav msb-satellite-nav" style="display: grid; gap: 4px;">
-          <a class="msb-nav-button" href="msb-galactic-lab.html" title="Galactic Science Lab (React 3D)">
+          <a class="msb-nav-button" href="modules/msb-galactic-lab.html" title="Galactic Science Lab (React 3D)">
             <span aria-hidden="true" class="msb-nav-icon" style="font-size: 1.1rem;">🪐</span>
             <span class="msb-nav-label">Galactic Lab</span>
             <span class="msb-nav-badge" style="background:#48d8ea;color:#071126;">Lab</span>
           </a>
-          <a class="msb-nav-button" href="electricity-overview.html" title="Electricity Adventures (Overcharge)">
+          <a class="msb-nav-button" href="modules/electricity-overview.html" title="Electricity Adventures (Overcharge)">
             <span aria-hidden="true" class="msb-nav-icon" style="font-size: 1.1rem;">⚡</span>
             <span class="msb-nav-label">Electricity Lab</span>
             <span class="msb-nav-badge" style="background:#ffc956;color:#071126;">Physics</span>
           </a>
-          <a class="msb-nav-button" href="electricity-overview.html" title="Electricity Video Lab">
+          <a class="msb-nav-button" href="modules/electricity-overview.html" title="Electricity Video Lab">
             <span aria-hidden="true" class="msb-nav-icon" style="font-size: 1.1rem;">🎬</span>
             <span class="msb-nav-label">Video Theater</span>
             <span class="msb-nav-badge" style="background:#59a8ff;color:#071126;">Media</span>
@@ -2230,38 +2232,23 @@
             <span class="msb-nav-label">The Frizz Files</span>
             <span class="msb-nav-badge" style="background:#8b73df;color:#fff;">5E</span>
           </a>
-          <a class="msb-nav-button" href="frizz-worksheet-generator.html"
+          <a class="msb-nav-button" href="modules/frizz-worksheet-generator.html"
             title="FrizzWorksheetz Generator &amp; Tracing Studio">
             <span aria-hidden="true" class="msb-nav-icon" style="font-size: 1.1rem;">📝</span>
             <span class="msb-nav-label">Worksheet Studio</span>
             <span class="msb-nav-badge" style="background:#ffd83d;color:#071126;">Print</span>
           </a>
-          <a class="msb-nav-button" href="msb-v3-liz-enhanced.html" title="Liz Mascot &amp; Interactive Audio Suite">
-            <span aria-hidden="true" class="msb-nav-icon" style="font-size: 1.1rem;">🦎</span>
-            <span class="msb-nav-label">Liz Mascot Suite</span>
-            <span class="msb-nav-badge" style="background:#55bd6f;color:#071126;">AI</span>
-          </a>
-          <a class="msb-nav-button" href="frizzle-educator-hub.html" title="The Frizzle Hub: Educator Portal">
+          <a class="msb-nav-button" href="modules/frizzle-educator-hub.html" title="The Frizzle Hub: Educator Portal">
             <span aria-hidden="true" class="msb-nav-icon" style="font-size: 1.1rem;">🎓</span>
             <span class="msb-nav-label">Frizzle Hub</span>
             <span class="msb-nav-badge" style="background:#59cfff;color:#071126;">Hub</span>
           </a>
-          <a class="msb-nav-button" href="msb-science-club-kit.html" title="Science Club Field Kit &amp; Award Station">
-            <span aria-hidden="true" class="msb-nav-icon" style="font-size: 1.1rem;">🎒</span>
-            <span class="msb-nav-label">Science Club Kit</span>
-            <span class="msb-nav-badge" style="background:#ff9f1c;color:#071126;">Kit</span>
-          </a>
-          <a class="msb-nav-button" href="msb-classic-classroom.html" title="Classic Bus Classroom &amp; Seating">
+          <a class="msb-nav-button" href="modules/msb-classic-classroom.html" title="Classic Bus Classroom &amp; Seating">
             <span aria-hidden="true" class="msb-nav-icon" style="font-size: 1.1rem;">🏫</span>
             <span class="msb-nav-label">Classic Classroom</span>
             <span class="msb-nav-badge" style="background:#ffd83d;color:#071126;">Grid</span>
           </a>
-          <a class="msb-nav-button" href="msb-v3-curriculum-lab.html" title="V3 Curriculum &amp; Lab Portal">
-            <span aria-hidden="true" class="msb-nav-icon" style="font-size: 1.1rem;">🔬</span>
-            <span class="msb-nav-label">V3 Lab Portal</span>
-            <span class="msb-nav-badge" style="background:#48d8ea;color:#071126;">Lab</span>
-          </a>
-          <a class="msb-nav-button" href="MSB_Science_Packets_Complete.html" title="Science Lab Packet Generator">
+          <a class="msb-nav-button" href="modules/MSB_Science_Packets_Complete.html" title="Science Lab Packet Generator">
             <span aria-hidden="true" class="msb-nav-icon" style="font-size: 1.1rem;">🏛️</span>
             <span class="msb-nav-label">Science Packets</span>
             <span class="msb-nav-badge" style="background:#df4051;color:#fff;">Arch</span>
@@ -2779,7 +2766,7 @@
                     <span class="msb-stop-tag">Astrophysics</span>
                   </div>
                   <div class="msb-stop-card-actions">
-                    <a class="msb-stop-btn-board" href="msb-galactic-lab.html" target="_blank">🚀 Board Bus</a>
+                    <a class="msb-stop-btn-board" href="modules/msb-galactic-lab.html" target="_blank">🚀 Board Bus</a>
                     <button class="msb-stop-btn-preview"
                       onclick="openBusStopModal('msb-galactic-lab.html', 'Galactic Science Lab', '🪐', 'React &amp; Tailwind powered planetary physics and astronomy simulation.', ['Interactive 3D planetary physics', 'Galactic flight simulator', 'Full React SPA architecture'])">👁️
                       Preview</button>
@@ -2804,7 +2791,7 @@
                     <span class="msb-stop-tag">Quiz Engine</span>
                   </div>
                   <div class="msb-stop-card-actions">
-                    <a class="msb-stop-btn-board" href="electricity-overview.html" target="_blank">🚀 Board
+                    <a class="msb-stop-btn-board" href="modules/electricity-overview.html" target="_blank">🚀 Board
                       Bus</a>
                     <button class="msb-stop-btn-preview"
                       onclick="openBusStopModal('electricity-overview.html', 'Electricity Adventures: Overcharge', '⚡', 'High-voltage electric circuit exploration with lightning visual effects and quiz arcade.', ['Interactive circuit canvas', 'Overcharge lightning effects', '8-part question battery'])">👁️
@@ -2829,7 +2816,7 @@
                     <span class="msb-stop-tag">Electricity</span>
                   </div>
                   <div class="msb-stop-card-actions">
-                    <a class="msb-stop-btn-board" href="electricity-overview.html" target="_blank">🚀 Board Bus</a>
+                    <a class="msb-stop-btn-board" href="modules/electricity-overview.html" target="_blank">🚀 Board Bus</a>
                     <button class="msb-stop-btn-preview"
                       onclick="openBusStopModal('electricity-overview.html', 'Electricity Video Screening Theater', '🎬', 'Dedicated screening room for Magic School Bus electricity science experiments.', ['Curated video selection', 'Station checkpoints', 'Instant embed player'])">👁️
                       Preview</button>
@@ -2878,34 +2865,9 @@
                     <span class="msb-stop-tag">Print Ready</span>
                   </div>
                   <div class="msb-stop-card-actions">
-                    <a class="msb-stop-btn-board" href="frizz-worksheet-generator.html" target="_blank">🚀 Board Bus</a>
+                    <a class="msb-stop-btn-board" href="modules/frizz-worksheet-generator.html" target="_blank">🚀 Board Bus</a>
                     <button class="msb-stop-btn-preview"
                       onclick="openBusStopModal('frizz-worksheet-generator.html', 'FrizzWorksheetz Generator &amp; Print Studio', '📝', 'Generate print-perfect student science worksheets with dotted handwriting tracing and vocabulary keys.', ['Custom prompt builder', 'Handwriting tracing typography', 'Instant 1-click print formatting'])">👁️
-                      Preview</button>
-                  </div>
-                </article>
-                <!-- Card 6: Liz Mascot & Audio Suite -->
-                <article class="msb-stop-card" data-cat="portals"
-                  data-tags="liz mascot audio sound soundboard quiz v3 enhanced interactive"
-                  style="--card-accent: #55bd6f;">
-                  <div class="msb-stop-card-head">
-                    <div class="msb-stop-card-icon">🦎</div>
-                    <span class="msb-stop-card-badge"
-                      style="color: #55bd6f; border-color: rgba(85,189,111,0.3); background: rgba(85,189,111,0.1);">AI
-                      &amp; Audio</span>
-                  </div>
-                  <h3 class="msb-stop-card-title">Liz Mascot &amp; Interactive Audio Suite</h3>
-                  <p class="msb-stop-card-desc">Enhanced classroom featuring Liz the Lizard assistant speech balloons,
-                    retro science audio effects, and modal tools.</p>
-                  <div class="msb-stop-card-tags">
-                    <span class="msb-stop-tag">Liz Assistant</span>
-                    <span class="msb-stop-tag">SFX Engine</span>
-                    <span class="msb-stop-tag">8 Enhancements</span>
-                  </div>
-                  <div class="msb-stop-card-actions">
-                    <a class="msb-stop-btn-board" href="msb-v3-liz-enhanced.html" target="_blank">🚀 Board Bus</a>
-                    <button class="msb-stop-btn-preview"
-                      onclick="openBusStopModal('msb-v3-liz-enhanced.html', 'Liz Mascot &amp; Interactive Audio Suite', '🦎', 'Upgraded virtual bus with Liz mascot reactions, custom synth sound effects, and interactive student modals.', ['Interactive Liz mascot speech', 'Built-in sound effect generator', 'Enhanced student dashboard'])">👁️
                       Preview</button>
                   </div>
                 </article>
@@ -2928,34 +2890,9 @@
                     <span class="msb-stop-tag">Tailwind UI</span>
                   </div>
                   <div class="msb-stop-card-actions">
-                    <a class="msb-stop-btn-board" href="frizzle-educator-hub.html" target="_blank">🚀 Board Bus</a>
+                    <a class="msb-stop-btn-board" href="modules/frizzle-educator-hub.html" target="_blank">🚀 Board Bus</a>
                     <button class="msb-stop-btn-preview"
                       onclick="openBusStopModal('frizzle-educator-hub.html', 'The Frizzle Hub: Educator Portal', '🎓', 'Curated educator dashboard for Magic School Bus science curriculum mapping and resource planning.', ['STEM lesson plan finder', 'Video library index', 'Dark/Light responsive theme'])">👁️
-                      Preview</button>
-                  </div>
-                </article>
-                <!-- Card 8: Science Club Field Kit -->
-                <article class="msb-stop-card" data-cat="portals"
-                  data-tags="science club teacher kit badges certificates printable awards"
-                  style="--card-accent: #ff9f1c;">
-                  <div class="msb-stop-card-head">
-                    <div class="msb-stop-card-icon">🎒</div>
-                    <span class="msb-stop-card-badge"
-                      style="color: #ff9f1c; border-color: rgba(255,159,28,0.3); background: rgba(255,159,28,0.1);">Teacher
-                      Kit</span>
-                  </div>
-                  <h3 class="msb-stop-card-title">Science Club Field Kit &amp; Awards</h3>
-                  <p class="msb-stop-card-desc">Quick-access field kit with student badge awards, experiment checklists,
-                    and printable certificates.</p>
-                  <div class="msb-stop-card-tags">
-                    <span class="msb-stop-tag">Badge Awards</span>
-                    <span class="msb-stop-tag">Checklists</span>
-                    <span class="msb-stop-tag">Printable Kits</span>
-                  </div>
-                  <div class="msb-stop-card-actions">
-                    <a class="msb-stop-btn-board" href="msb-science-club-kit.html" target="_blank">🚀 Board Bus</a>
-                    <button class="msb-stop-btn-preview"
-                      onclick="openBusStopModal('msb-science-club-kit.html', 'Science Club Field Kit &amp; Awards', '🎒', 'Printable science award certificates, student reward badges, and field kit checklists.', ['Printable award generator', 'Experiment checklist manager', 'Classroom badge store'])">👁️
                       Preview</button>
                   </div>
                 </article>
@@ -2977,33 +2914,9 @@
                     <span class="msb-stop-tag">Lightweight</span>
                   </div>
                   <div class="msb-stop-card-actions">
-                    <a class="msb-stop-btn-board" href="msb-classic-classroom.html" target="_blank">🚀 Board Bus</a>
+                    <a class="msb-stop-btn-board" href="modules/msb-classic-classroom.html" target="_blank">🚀 Board Bus</a>
                     <button class="msb-stop-btn-preview"
                       onclick="openBusStopModal('msb-classic-classroom.html', 'Classic Bus Classroom &amp; Seating', '🏫', 'Single-page lightweight classroom with bus cabin seating chart and student roster management.', ['Interactive seat arrangement', 'Quick worksheet distributor', 'Lightweight standalone engine'])">👁️
-                      Preview</button>
-                  </div>
-                </article>
-                <!-- Card 10: V3 Curriculum & Lab Portal -->
-                <article class="msb-stop-card" data-cat="labs"
-                  data-tags="v3 curriculum lab portal science benches student grading" style="--card-accent: #48d8ea;">
-                  <div class="msb-stop-card-head">
-                    <div class="msb-stop-card-icon">🔬</div>
-                    <span class="msb-stop-card-badge"
-                      style="color: #48d8ea; border-color: rgba(72,216,234,0.3); background: rgba(72,216,234,0.1);">Lab
-                      Portal</span>
-                  </div>
-                  <h3 class="msb-stop-card-title">V3 Curriculum &amp; Science Lab Portal</h3>
-                  <p class="msb-stop-card-desc">Streamlined V3 edition combining science experiment benches, student
-                    portals, and grading consoles.</p>
-                  <div class="msb-stop-card-tags">
-                    <span class="msb-stop-tag">Experiment Lab</span>
-                    <span class="msb-stop-tag">Curriculum Portal</span>
-                    <span class="msb-stop-tag">Student Login</span>
-                  </div>
-                  <div class="msb-stop-card-actions">
-                    <a class="msb-stop-btn-board" href="msb-v3-curriculum-lab.html" target="_blank">🚀 Board Bus</a>
-                    <button class="msb-stop-btn-preview"
-                      onclick="openBusStopModal('msb-v3-curriculum-lab.html', 'V3 Curriculum &amp; Science Lab Portal', '🔬', 'Integrated virtual science lab with experiment benches, student PIN logins, and teacher grading.', ['Virtual experiment benches', 'PIN-based student portal', 'Integrated curriculum tracks'])">👁️
                       Preview</button>
                   </div>
                 </article>
@@ -3024,7 +2937,7 @@
                     <span class="msb-stop-tag">Reference</span>
                   </div>
                   <div class="msb-stop-card-actions">
-                    <a class="msb-stop-btn-board" href="MSB_Science_Packets_Complete.html" target="_blank">🚀 Board Bus</a>
+                    <a class="msb-stop-btn-board" href="modules/MSB_Science_Packets_Complete.html" target="_blank">🚀 Board Bus</a>
                     <button class="msb-stop-btn-preview"
                       onclick="openBusStopModal('MSB_Science_Packets_Complete.html', 'Science Lab Packet Generator', '🏛️', 'Create, edit, export and print science investigation packets.', ['13 editable science scenarios', 'Printable student lab packets', 'Import and export custom scenarios'])">👁️
                       Preview</button>
@@ -8930,9 +8843,6 @@
               <button class="msb-doc-tab-btn" data-tab="videos" onclick="switchDocTab('videos')">
                 <span>🎬</span> Video Time Markers &amp; Trims
               </button>
-              <button class="msb-doc-tab-btn" data-tab="vault" onclick="switchDocTab('vault')">
-                <span>📥</span> Downloadable File Vault
-              </button>
             </nav>
             <!-- PANEL 1: COMPLETE LAB GUIDE -->
             <div class="msb-doc-panel active" id="msb-doc-panel-guide">
@@ -9196,7 +9106,7 @@
                 <h2 style="margin:0 0 16px; color:#fff; display:flex; align-items:center; gap:8px;"><span>📖</span>
                   Class 1 Core Science Vocabulary Flashcards</h2>
                 <p style="color:var(--text-soft); margin-bottom:20px;">Master terms from
-                  <code>documents/CMSB Class 1 DOCS.txt</code> with interactive flashcards.</p>
+                  the Class 1 vocabulary set with interactive flashcards.</p>
                 <div class="msb-vocab-grid">
                   <div class="msb-vocab-card" onclick="this.style.borderColor = 'var(--science-cyan)'">
                     <div class="msb-vocab-term"><span>⚡ STATIC</span><span
@@ -9243,7 +9153,7 @@
                 <h2 style="margin:0 0 16px; color:#fff; display:flex; align-items:center; gap:8px;"><span>🎬</span>
                   Magic School Bus Video Screening Time Trims</h2>
                 <p style="color:var(--text-soft); margin-bottom:20px;">Curated lesson timestamps from
-                  <code>documents/Magic School Bus Vids.txt</code> for focused classroom screening.</p>
+                  the curated video list for focused classroom screening.</p>
                 <div style="display:grid; gap:16px;">
                   <div
                     style="padding:18px; background:rgba(7,17,38,0.85); border:1px solid rgba(89,168,255,0.3); border-radius:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
@@ -9257,7 +9167,7 @@
                       <span class="msb-badge"
                         style="background:#59a8ff;color:#071126;font-size:0.85rem;padding:6px 12px;">⏱️ 06:00 –
                         14:03</span>
-                      <a class="msb-button msb-button-primary msb-button-small" href="electricity-overview.html">🎬
+                      <a class="msb-button msb-button-primary msb-button-small" href="modules/electricity-overview.html">🎬
                         Open Video Theater</a>
                     </div>
                   </div>
@@ -9273,63 +9183,9 @@
                       <span class="msb-badge"
                         style="background:#ffc956;color:#071126;font-size:0.85rem;padding:6px 12px;">⚡ Full Lab
                         Episode</span>
-                      <a class="msb-button msb-button-primary msb-button-small" href="electricity-overview.html">⚡
+                      <a class="msb-button msb-button-primary msb-button-small" href="modules/electricity-overview.html">⚡
                         Launch Circuit Lab</a>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- PANEL 5: DOWNLOADABLE FILE VAULT -->
-            <div class="msb-doc-panel" id="msb-doc-panel-vault">
-              <div class="msb-doc-card">
-                <h2 style="margin:0 0 16px; color:#fff; display:flex; align-items:center; gap:8px;"><span>📥</span>
-                  Native Classroom Document Files Vault</h2>
-                <p style="color:var(--text-soft); margin-bottom:20px;">Download the original formatted Microsoft Word
-                  (.docx) documents and text archives directly to your computer.</p>
-                <div class="msb-download-grid">
-                  <div class="msb-download-card">
-                    <div>
-                      <strong style="color:#fff; font-size:0.95rem; display:block;">Electricity Lab Complete</strong>
-                      <span style="color:var(--text-muted); font-size:0.75rem;">DOCX • 503 KB • Full 4-Station
-                        Guide</span>
-                    </div>
-                    <a class="msb-button msb-button-primary msb-button-small" download=""
-                      href="documents/Magic_School_Bus_Electricity_Lab_Complete.docx">📥 Download</a>
-                  </div>
-                  <div class="msb-download-card">
-                    <div>
-                      <strong style="color:#fff; font-size:0.95rem; display:block;">Electricity Lab Guide
-                        (Styled)</strong>
-                      <span style="color:var(--text-muted); font-size:0.75rem;">DOCX • 402 KB • Classroom Styled</span>
-                    </div>
-                    <a class="msb-button msb-button-primary msb-button-small" download=""
-                      href="documents/Magic School Bus Electricity Lab Guide - Styled.docx">📥 Download</a>
-                  </div>
-                  <div class="msb-download-card">
-                    <div>
-                      <strong style="color:#fff; font-size:0.95rem; display:block;">Electricity Lab
-                        Instructions</strong>
-                      <span style="color:var(--text-muted); font-size:0.75rem;">DOCX • 8.4 KB • Student Steps</span>
-                    </div>
-                    <a class="msb-button msb-button-primary msb-button-small" download=""
-                      href="documents/Magic School Bus Electricity Lab Instructions.docx">📥 Download</a>
-                  </div>
-                  <div class="msb-download-card">
-                    <div>
-                      <strong style="color:#fff; font-size:0.95rem; display:block;">CMSB Class 1 DOCS</strong>
-                      <span style="color:var(--text-muted); font-size:0.75rem;">TXT • 127 B • Science Vocabulary</span>
-                    </div>
-                    <a class="msb-button msb-button-secondary msb-button-small" download=""
-                      href="documents/CMSB Class 1 DOCS.txt">📥 Download</a>
-                  </div>
-                  <div class="msb-download-card">
-                    <div>
-                      <strong style="color:#fff; font-size:0.95rem; display:block;">Magic School Bus Vids</strong>
-                      <span style="color:var(--text-muted); font-size:0.75rem;">TXT • 191 B • Video Time Trims</span>
-                    </div>
-                    <a class="msb-button msb-button-secondary msb-button-small" download=""
-                      href="documents/Magic School Bus Vids.txt">📥 Download</a>
                   </div>
                 </div>
               </div>
@@ -9406,7 +9262,7 @@
       </section>
     </div>
   </div>
-  <main class="msb-main" id="msb-main" id="msb-main_2">
+  <main class="msb-main" id="msb-main-legacy">
     <div class="msb-workspace" id="msb-workspace">
     </div>
   </main>
@@ -15169,7 +15025,7 @@
   
 
     <!-- Global Fullscreen Toggle -->
-    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;right:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
     
 
 <script id="msb-unified-menu-logic">
@@ -15219,7 +15075,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<script src="assets/classroom.js" defer></script>
 </body>
 
 </html>
