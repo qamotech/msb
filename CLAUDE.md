@@ -28,7 +28,7 @@ workspace map, agent ground rules). For a specific topic run
 `notes/`; never commit its contents anywhere.
 
 ## Known subfolders (top-level, non-exhaustive)
-`1POLY/`, `AIWS/`, `AXIOM_CODE_AI_WORKSPACE/`, `Aether/`, `Clark MSB/`, `Codex/`,
+`1POLY/`, `AIWS/`, `Aether/`, `Clark MSB/`, `Codex/`,
 `N8DEV/`, `context-hub/`, `n8sheetz-inspector/`, `n8sheetz-readability-inspector/`,
 `omni-architect-os/`, `scripts/`, `workflows/`
 

@@ -21,7 +21,7 @@ tree by default — scope to the relevant subfolder first.
    round-trips.
 
 ## Known subfolders (top-level, non-exhaustive)
-`1POLY/`, `AIWS/`, `AXIOM_CODE_AI_WORKSPACE/`, `Aether/`, `Clark MSB/`, `Codex/`,
+`1POLY/`, `AIWS/`, `Aether/`, `Clark MSB/`, `Codex/`,
 `N8DEV/`, `context-hub/`, `n8sheetz-inspector/`, `n8sheetz-readability-inspector/`,
 `omni-architect-os/`, `scratch/`, `scripts/`, `work/`, `workflows/`
 
