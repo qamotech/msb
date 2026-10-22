@@ -1,3 +1,0 @@
-Qamelot Favicon
-
-<link rel="icon" type="image/x-icon" href="https://qamotech.github.io/DevDashboard/favicon.ico">
