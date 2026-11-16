@@ -1,0 +1,3 @@
+[submodule "standalone-sites/ob3d"]
+	path = standalone-sites/ob3d
+	url = https://github.com/qamotech/ob3d.git
