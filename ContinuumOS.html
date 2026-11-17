@@ -681,7 +681,7 @@
         <div class="brand-sub">
           <span class="pulse-live">Active Daemon: 10m Cadence</span>
           <span>&bull;</span>
-          <span>26 Repositories Connected</span>
+          <span>45 Repositories Connected</span>
           <span>&bull;</span>
           <span>Zero-Dependency Web Standards</span>
         </div>
@@ -704,7 +704,7 @@
 <nav class="nav-tabs">
   <div class="nav-tabs-inner">
     <button class="nav-tab-btn active" data-view="workbench">
-      🛠️ Code Workbench &amp; Auditor <span class="tab-badge" id="tabBadgeAuditor">26 Repos</span>
+      🛠️ Code Workbench &amp; Auditor <span class="tab-badge" id="tabBadgeAuditor">45 Repos</span>
     </button>
     <button class="nav-tab-btn" data-view="sandbox">
       🧪 Live Sandbox &amp; Telemetry HUD
@@ -724,14 +724,14 @@
     <div class="metric-card">
       <div class="metric-icon-box" style="color:var(--cy); background:rgba(6,182,212,0.1)">📦</div>
       <div>
-        <div class="metric-val" style="color:var(--cy)" id="metricTotalApps">26</div>
+        <div class="metric-val" style="color:var(--cy)" id="metricTotalApps">45</div>
         <div class="metric-lbl">Total Connected Repos</div>
       </div>
     </div>
     <div class="metric-card">
       <div class="metric-icon-box" style="color:var(--grn-bright); background:rgba(16,185,129,0.1)">🌐</div>
       <div>
-        <div class="metric-val" style="color:var(--grn-bright)">25</div>
+        <div class="metric-val" style="color:var(--grn-bright)">41</div>
         <div class="metric-lbl">Live GitHub Pages Apps</div>
       </div>
     </div>
@@ -894,7 +894,7 @@
           ♾️ Mathematical Scheduler &amp; Rate-Limit Budget Calculator
         </h2>
         <p style="font-size:13px; color:#cbd5e1; max-width:850px">
-          Determine the mathematically optimal cadence to continuously audit, optimize, and refactor all 26 repositories indefinitely without hitting GitHub API limits (5,000 req/hr) or AI model token caps.
+          Determine the mathematically optimal cadence to continuously audit, optimize, and refactor all 45 repositories indefinitely without hitting GitHub API limits (5,000 req/hr) or AI model token caps.
         </p>
       </div>
 
@@ -911,7 +911,7 @@
         </div>
         <div class="calc-field">
           <label class="calc-label">Total Repositories In Scope:</label>
-          <input type="number" class="calc-input" id="calcRepoCount" value="26" min="1" max="100" oninput="calculateOptimalSchedule()">
+          <input type="number" class="calc-input" id="calcRepoCount" value="45" min="1" max="100" oninput="calculateOptimalSchedule()">
         </div>
         <div class="calc-field">
           <label class="calc-label">Modification Depth:</label>
@@ -1008,7 +1008,7 @@
 <div id="toast"></div>
 
 <script>
-// === REPOSITORY PORTFOLIO REGISTRY (26 REPOS - NPP & MSB EXCLUDED) ===
+// === REPOSITORY PORTFOLIO REGISTRY (26-REPO WORKING SUBSET - NPP & MSB EXCLUDED; FLEET TOTALS: 45 REPOS / 41 LIVE SITES) ===
 const REPO_REGISTRY = [
   { name: "kidhub", title: "KidHub — Creative Art Studio & Brushes", icon: "🎨", liveUrl: "https://qamotech.github.io/kidhub/", cat: "Creative" },
   { name: "calc", title: "Beverage Lot Inventory Counter", icon: "🥫", liveUrl: "https://qamotech.github.io/calc/", cat: "Business" },
@@ -1416,7 +1416,7 @@ function clearSandbox() {
 // === MATHEMATICAL SCHEDULER & RATE LIMIT CALCULATOR ===
 function calculateOptimalSchedule() {
   const tier = document.getElementById("calcAiTier").value;
-  const repoCount = parseInt(document.getElementById("calcRepoCount").value) || 26;
+  const repoCount = parseInt(document.getElementById("calcRepoCount").value) || 45;
   const depth = document.getElementById("calcModDepth").value;
 
   let intervalMin = 10;
@@ -1611,10 +1611,10 @@ document.getElementById("localFileInput").addEventListener("change", (e) => {
 
 // Full Workspace Audit runner
 function runAutomatedAudit() {
-  showToast("⚡ Running full audit across all 26 repositories...");
+  showToast("⚡ Running full audit across all 45 repositories...");
   setTimeout(() => {
     document.getElementById("metricAvgScore").textContent = "98%";
-    showToast("✓ Full workspace audit complete: 26/26 verified!");
+    showToast("✓ Full workspace audit complete: 45/45 verified!");
   }, 1000);
 }
 

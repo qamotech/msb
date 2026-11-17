@@ -571,9 +571,9 @@
       <div>
         <h1>QamoTech // Global Web Matrix &amp; Live Sites</h1>
         <div class="sub-tagline">
-          <span class="status-pulse">41 Live Cloud Applications</span>
+          <span class="status-pulse"><span id="hdrLive">41</span> Live Cloud Applications</span>
           <span>&bull;</span>
-          <span>41 Open GitHub Repositories</span>
+          <span><span id="hdrRepos">41</span> Open GitHub Repositories</span>
           <span>&bull;</span>
           <span>100% SVG Favicon Verified</span>
         </div>
@@ -609,7 +609,7 @@
     <div class="stat-card">
       <div class="stat-icon" style="color:var(--cy); background:rgba(56,189,248,0.1)">📦</div>
       <div>
-        <div class="stat-val" style="color:var(--cy)">41</div>
+        <div class="stat-val" style="color:var(--cy)" id="statRepos">41</div>
         <div class="stat-lbl">Documented Repositories</div>
       </div>
     </div>
@@ -637,7 +637,7 @@
         ContinuumOS // Web App Evolution &amp; Continuous Optimization Engine
       </h3>
       <p style="font-size:13px; color:#cbd5e1; max-width:820px">
-        Continuously upgrades, benchmarks, and optimizes all 41 connected single-file web apps on an active 10-minute autonomous cadence. Features live standards auditing (web-app-standards.md), DOM/layout telemetry HUD, 1-click deterministic patcher, and infinite modification scheduling.
+        Continuously upgrades, benchmarks, and optimizes all <span id="bannerApps">41</span> connected single-file web apps on an active 10-minute autonomous cadence. Features live standards auditing (web-app-standards.md), DOM/layout telemetry HUD, 1-click deterministic patcher, and infinite modification scheduling.
       </p>
       <div class="bm-steps">
         <span class="bm-pill">🔍 <b>Live Standards Auditor</b></span>
@@ -666,8 +666,8 @@
       </p>
       <div class="bm-steps">
         <span class="bm-pill">📁 Folder: <b>QamoTech GitHub Sites</b></span>
-        <span class="bm-pill">🟢 <b>41 Live Apps</b></span>
-        <span class="bm-pill">📦 <b>41 Repositories</b></span>
+        <span class="bm-pill">🟢 <b><span id="pillLive">41</span> Live Apps</b></span>
+        <span class="bm-pill">📦 <b><span id="pillRepos">41</span> Repositories</b></span>
         <span class="bm-pill">Shortcut: <code>Ctrl+Shift+O</code> &rarr; <code>Import bookmarks</code></span>
       </div>
     </div>
@@ -1128,6 +1128,30 @@ const SITES_DATA = [
     tags: ["Launcher", "App Hub", "PWA"]
   }
 ];
+
+// === AUTO-COUNTS ===
+// Every displayed total on this page is computed from SITES_DATA at load,
+// so adding or removing a site entry updates all counts automatically.
+function updateCounts() {
+  const total = SITES_DATA.length;
+  const live = SITES_DATA.filter(s => !!s.ghPageUrl).length;
+  const byCat = c => SITES_DATA.filter(s => (s.cat || []).includes(c)).length;
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('hdrLive', live);
+  set('hdrRepos', total);
+  set('statLive', live);
+  set('statRepos', total);
+  set('bannerApps', total);
+  set('pillLive', live);
+  set('pillRepos', total);
+  set('countAll', total);
+  set('countLive', live);
+  set('countCreative', byCat('creative'));
+  set('countAi', byCat('ai'));
+  set('countGames', byCat('games'));
+  set('countBusiness', byCat('business'));
+}
+updateCounts();
 
 let activeCategory = 'all';
 let searchQuery = '';
