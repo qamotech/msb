@@ -1,0 +1,3247 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Magic Bus Science Club — Teacher Kit</title>
+<meta content="A complete single-file teacher kit: 10 Magic School Bus–inspired science experiments, roster, planner, attendance, printables and quizzes for 8–10 kids." name="description"/>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='16' width='56' height='26' rx='8' fill='%23F5B301' stroke='%232A2438' stroke-width='3'/%3E%3Crect x='10' y='22' width='10' height='8' rx='2' fill='%23BEE7FF'/%3E%3Crect x='24' y='22' width='10' height='8' rx='2' fill='%23BEE7FF'/%3E%3Crect x='38' y='22' width='10' height='8' rx='2' fill='%23BEE7FF'/%3E%3Crect x='4' y='32' width='56' height='5' fill='%235B2A86'/%3E%3Ccircle cx='18' cy='44' r='7' fill='%232A2438'/%3E%3Ccircle cx='46' cy='44' r='7' fill='%232A2438'/%3E%3C/svg%3E" rel="apple-touch-icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bus:#F5B301; --bus-dark:#D99A00; --purple:#5B2A86; --purple-dark:#3E1B5E;
+  --teal:#0E9594; --coral:#E4572E; --sky:#4FA8E0; --pink:#D4527A;
+  --cream:#FFF9EC; --ink:#2A2438; --muted:#6E6A7C; --card:#fff; --line:#EFE3CC;
+  --radius:16px; --shadow:0 4px 14px rgba(42,36,56,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Nunito','Trebuchet MS',Verdana,sans-serif;color:var(--ink);
+  background:var(--cream) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Ccircle cx='10' cy='10' r='1.6' fill='%23F5B301' fill-opacity='.3'/%3E%3Ccircle cx='40' cy='34' r='1.6' fill='%235B2A86' fill-opacity='.18'/%3E%3Cpath d='M28 44l1.2 2.6 2.6 1.2-2.6 1.2L28 51.6l-1.2-2.6-2.6-1.2 2.6-1.2z' fill='%230E9594' fill-opacity='.16'/%3E%3C/svg%3E");
+  min-height:100vh;display:flex;flex-direction:column;
+}
+h1,h2,h3,h4,.brand-title,.btn,nav.tabs button{font-family:'Fredoka','Trebuchet MS',Verdana,sans-serif}
+svg.icon{width:1.15em;height:1.15em;vertical-align:-.2em}
+
+/* ---------- Header ---------- */
+header.top{
+  background:linear-gradient(120deg,var(--purple-dark),var(--purple) 55%,#7B3FB0);
+  color:#fff;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  border-bottom:5px solid var(--bus);
+}
+header.top .buslogo{flex:0 0 auto;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3))}
+.brand-title{font-size:1.45rem;font-weight:700;letter-spacing:.3px;line-height:1.1}
+.brand-sub{font-size:.8rem;opacity:.85;font-weight:600}
+.class-chip{
+  margin-left:auto;background:rgba(255,255,255,.14);border:1.5px dashed rgba(255,255,255,.5);
+  padding:7px 14px;border-radius:999px;font-size:.85rem;font-weight:700;display:flex;gap:8px;align-items:center;
+}
+.class-chip b{color:var(--bus)}
+
+/* ---------- Tabs ---------- */
+nav.tabs{
+  position:sticky;top:0;z-index:50;background:var(--cream);display:flex;gap:8px;
+  padding:10px 16px;overflow-x:auto;border-bottom:2px solid var(--line);scrollbar-width:thin;
+}
+nav.tabs button{
+  border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;
+  padding:8px 16px;font-size:.92rem;font-weight:600;cursor:pointer;white-space:nowrap;
+  display:flex;align-items:center;gap:7px;transition:all .15s;
+}
+nav.tabs button:hover{border-color:var(--bus);transform:translateY(-1px)}
+nav.tabs button.active{background:var(--purple);color:#fff;border-color:var(--purple-dark)}
+nav.tabs button.active svg{color:var(--bus)}
+
+/* ---------- Layout ---------- */
+main{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:24px 18px 60px}
+footer{
+  text-align:center;padding:22px 16px;color:var(--muted);font-size:.82rem;border-top:2px solid var(--line);
+}
+footer .motto{font-family:'Fredoka';color:var(--purple);font-size:1rem;margin-bottom:6px}
+footer button{background:none;border:none;color:var(--coral);cursor:pointer;font-weight:700;text-decoration:underline;font-size:.82rem}
+
+/* ---------- Cards & grids ---------- */
+.card{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.grid{display:grid;gap:16px}
+.grid.cols-2{grid-template-columns:repeat(2,1fr)}
+.grid.cols-3{grid-template-columns:repeat(3,1fr)}
+.grid.cols-4{grid-template-columns:repeat(4,1fr)}
+.section-title{display:flex;align-items:center;gap:10px;font-size:1.35rem;color:var(--purple);margin:26px 0 14px}
+.section-title svg{color:var(--bus-dark)}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+.mt{margin-top:14px}.mb{margin-bottom:14px}
+
+/* ---------- Hero ---------- */
+.hero{
+  background:linear-gradient(135deg,#fff 0%,#FFF3D6 100%);border:2px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:26px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;
+}
+.hero-art{flex:0 0 300px;max-width:100%}
+.hero-art svg{width:100%;height:auto}
+.hero-text{flex:1;min-width:240px}
+.hero-text h1{font-size:1.9rem;color:var(--purple);line-height:1.15}
+.hero-text p{margin:10px 0 16px;color:var(--muted);font-weight:600}
+.road{height:10px;background:repeating-linear-gradient(90deg,var(--purple) 0 26px,transparent 26px 44px);border-radius:99px;opacity:.15;margin:22px 0}
+
+/* ---------- Stats ---------- */
+.stat{background:#fff;border:2px solid var(--line);border-radius:var(--radius);padding:16px;text-align:center;box-shadow:var(--shadow)}
+.stat .num{font-family:'Fredoka';font-size:2rem;font-weight:700;color:var(--purple)}
+.stat .lbl{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.stat svg{color:var(--bus-dark);font-size:1.4rem}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;border:none;border-radius:12px;cursor:pointer;
+  padding:10px 18px;font-size:.95rem;font-weight:600;transition:all .15s;text-decoration:none;
+}
+.btn-primary{background:var(--bus);color:var(--ink);box-shadow:0 3px 0 var(--bus-dark)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--bus-dark)}
+.btn-purple{background:var(--purple);color:#fff;box-shadow:0 3px 0 var(--purple-dark)}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--purple-dark)}
+.btn-ghost{background:#fff;border:2px solid var(--line);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--purple)}
+.btn-danger{background:#fff;border:2px solid #F3C1B0;color:var(--coral)}
+.btn-sm{padding:6px 12px;font-size:.82rem;border-radius:10px}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ---------- Badges & chips ---------- */
+.chip{display:inline-flex;align-items:center;gap:6px;background:#F4EEFB;color:var(--purple);border-radius:999px;padding:4px 12px;font-size:.78rem;font-weight:800}
+.chip.teal{background:#E2F4F4;color:var(--teal)}
+.chip.coral{background:#FCE9E2;color:var(--coral)}
+.chip.gold{background:#FFF3D6;color:#8a6400}
+.done-badge{position:absolute;top:12px;right:12px;background:var(--teal);color:#fff;border-radius:999px;padding:4px 10px;font-size:.72rem;font-weight:800;display:flex;gap:5px;align-items:center}
+
+/* ---------- Experiment cards ---------- */
+.exp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.exp-card{position:relative;background:#fff;border:2px solid var(--line);border-radius:var(--radius);padding:18px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow)}
+.exp-card:hover{transform:translateY(-4px);border-color:var(--bus);box-shadow:0 10px 22px rgba(42,36,56,.14)}
+.exp-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#fff;margin-bottom:12px}
+.exp-icon svg{width:28px;height:28px}
+.exp-card h3{font-size:1.08rem;color:var(--ink);margin-bottom:4px}
+.exp-card .ep{font-size:.78rem;color:var(--muted);font-weight:700;margin-bottom:10px}
+.exp-meta{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- Detail ---------- */
+.detail-head{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.detail-head .exp-icon{width:64px;height:64px;font-size:2rem}
+.detail-head h2{font-size:1.6rem;color:var(--purple)}
+.detail-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+ol.steps{counter-reset:step;list-style:none;display:flex;flex-direction:column;gap:12px}
+ol.steps li{position:relative;padding-left:52px;line-height:1.5}
+ol.steps li::before{
+  counter-increment:step;content:counter(step);position:absolute;left:0;top:0;
+  width:34px;height:34px;border-radius:50%;background:var(--bus);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;border:2px solid var(--bus-dark);
+}
+ul.tick{list-style:none;display:flex;flex-direction:column;gap:8px}
+ul.tick li{padding-left:26px;position:relative;line-height:1.45}
+ul.tick li::before{content:"✦";position:absolute;left:2px;color:var(--bus-dark)}
+ul.safety li::before{content:"⚠";color:var(--coral)}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:10px;cursor:pointer;transition:background .12s}
+.chk:hover{background:#FBF6EA}
+.chk input{margin-top:3px;accent-color:var(--purple);width:16px;height:16px;cursor:pointer}
+.chk.done .chk-t{text-decoration:line-through;color:var(--muted)}
+.chk .qty{margin-left:auto;font-size:.75rem;font-weight:800;color:var(--purple);background:#F4EEFB;border-radius:8px;padding:2px 8px;white-space:nowrap}
+.science-box{background:linear-gradient(135deg,#F4EEFB,#E9F6F6);border:2px dashed var(--purple);border-radius:var(--radius);padding:18px;line-height:1.6}
+.science-box h4{color:var(--purple);margin-bottom:8px;display:flex;gap:8px;align-items:center}
+
+/* ---------- Tables ---------- */
+table.tbl{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}
+table.tbl th{background:var(--purple);color:#fff;text-align:left;padding:10px 12px;font-size:.82rem;letter-spacing:.4px}
+table.tbl td{padding:10px 12px;border-bottom:1px solid var(--line);font-size:.92rem;vertical-align:middle}
+table.tbl tr:last-child td{border-bottom:none}
+select,input[type=text],input[type=date],input[type=number],textarea{
+  font-family:inherit;font-size:.92rem;padding:8px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);width:100%;
+}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--purple)}
+textarea{resize:vertical;min-height:90px}
+label.flabel{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);display:block;margin-bottom:5px}
+
+/* ---------- Roster / attendance ---------- */
+.roster-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border:2px solid var(--line);border-radius:12px;background:#fff}
+.roster-row .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;color:#fff;flex:0 0 auto}
+.att-pill{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 14px;cursor:pointer;font-weight:800;font-size:.8rem}
+.att-pill.present{background:#E2F4F4;border-color:var(--teal);color:var(--teal)}
+.att-pill.absent{background:#FCE9E2;border-color:var(--coral);color:var(--coral)}
+.team-col{border-radius:var(--radius);padding:16px;color:#fff;min-height:140px}
+.team-col h4{font-size:1.1rem;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+.team-col ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.team-col li{background:rgba(255,255,255,.18);border-radius:8px;padding:6px 10px;font-weight:700}
+
+/* ---------- Progress ---------- */
+.progress{height:16px;background:#EFE8F6;border-radius:99px;overflow:hidden;border:2px solid #E2D6F0}
+.progress>div{height:100%;background:linear-gradient(90deg,var(--bus),var(--coral));border-radius:99px;transition:width .4s}
+
+/* ---------- Quiz ---------- */
+.quiz-card{max-width:640px;margin:0 auto}
+.quiz-q{font-size:1.25rem;color:var(--purple);margin:14px 0 18px;line-height:1.4}
+.quiz-opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:13px 16px;margin-bottom:10px;cursor:pointer;font-size:1rem;font-weight:700;font-family:inherit;transition:all .12s}
+.quiz-opt:hover{border-color:var(--bus);transform:translateX(4px)}
+.quiz-opt.correct{background:#E2F4F4;border-color:var(--teal);color:var(--teal)}
+.quiz-opt.wrong{background:#FCE9E2;border-color:var(--coral);color:var(--coral)}
+.quiz-opt:disabled{cursor:default;transform:none}
+.stars{font-size:2.4rem;letter-spacing:6px;color:var(--bus);text-align:center;text-shadow:0 2px 0 var(--bus-dark)}
+.quiz-dots{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.quiz-dots span{width:10px;height:10px;border-radius:50%;background:#E2D6F0}
+.quiz-dots span.on{background:var(--purple)}
+
+/* ---------- Printables ---------- */
+.print-card{display:flex;flex-direction:column;gap:8px}
+.print-card .thumb{height:86px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:#fff;margin-bottom:4px}
+
+/* ---------- Toast ---------- */
+#toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-weight:700;
+  opacity:0;transition:all .3s;z-index:200;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.3);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- Print engine ---------- */
+#print-root{display:none}
+@media print{
+  body.print-doc>*:not(#print-root){display:none !important}
+  body.print-doc #print-root{display:block}
+  body.print-doc{background:#fff}
+}
+.print-sheet{font-family:Georgia,'Times New Roman',serif;color:#111;padding:10px;max-width:750px;margin:0 auto}
+.ps-head{display:flex;align-items:center;gap:14px;border-bottom:3px double #333;padding-bottom:10px;margin-bottom:10px}
+.ps-head h1{font-family:Georgia,serif;font-size:1.4rem}
+.ps-head p{font-size:.85rem;color:#444}
+.ps-name{display:flex;justify-content:space-between;gap:20px;margin:12px 0 18px;font-size:.95rem}
+.wline{display:inline-block;width:230px;border-bottom:1.5px solid #333;height:14px}
+.wline.short{width:120px}
+.print-sheet h2{font-size:1.1rem;margin:18px 0 8px;border-bottom:1px solid #999;padding-bottom:4px}
+.print-sheet p,.print-sheet li{font-size:.95rem;line-height:1.55}
+.print-sheet ol,.print-sheet ul{padding-left:22px}
+.draw-box{border:1.5px solid #333;border-radius:8px;height:170px;margin:8px 0 4px}
+.write-lines{margin:10px 0}
+.write-lines .ln{border-bottom:1.5px solid #555;height:26px}
+.mc-opt{display:flex;gap:10px;align-items:center;margin:6px 0 6px 14px}
+.mc-opt .bubble{width:16px;height:16px;border:1.5px solid #333;border-radius:50%;flex:0 0 auto}
+.q-block{margin-bottom:16px;page-break-inside:avoid}
+.cert{border:6px double #5B2A86;border-radius:14px;padding:40px 30px;text-align:center;margin-top:20px}
+.cert h1{font-size:1.9rem;color:#5B2A86;margin:10px 0}
+.cert .cname{font-size:2rem;font-family:'Fredoka',Georgia,serif;border-bottom:2px solid #333;display:inline-block;padding:0 30px 4px;margin:14px 0}
+.cert .sig{display:flex;justify-content:space-around;margin-top:46px}
+.cert .sig div{border-top:1.5px solid #333;padding-top:6px;width:200px;font-size:.85rem}
+.badge-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.badge-item{border:2.5px dashed #5B2A86;border-radius:12px;padding:14px;text-align:center;page-break-inside:avoid}
+.badge-item .bname{font-size:1.2rem;font-weight:700;border-bottom:1.5px solid #333;display:inline-block;min-width:150px;padding:0 10px;margin-top:8px}
+.key-line{font-size:.7rem;color:#888;margin-top:24px;border-top:1px dotted #999;padding-top:6px}
+.shop-group{page-break-inside:avoid;margin-bottom:14px}
+.shop-group h3{font-size:1rem;background:#eee;padding:5px 10px;border-radius:6px;margin-bottom:6px}
+.shop-group li{list-style:none;padding-left:6px}
+.shop-group li::before{content:"☐ ";font-size:1.05rem}
+.tear{border-top:2px dashed #333;margin:34px 0 6px;padding-top:4px;font-size:.75rem;color:#555;text-align:center;letter-spacing:2px}
+
+/* ---------- Responsive ---------- */
+@media(max-width:860px){
+  .grid.cols-4{grid-template-columns:repeat(2,1fr)}
+  .grid.cols-3{grid-template-columns:repeat(2,1fr)}
+  .hero-art{flex-basis:220px}
+}
+@media(max-width:600px){
+  .grid.cols-2,.grid.cols-3,.grid.cols-4{grid-template-columns:1fr}
+  .hero{padding:18px}
+  .hero-text h1{font-size:1.5rem}
+  .class-chip{margin-left:0}
+  main{padding:16px 12px 50px}
+}
+</style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+<header class="top">
+<span class="buslogo" id="headerBus"></span>
+<div>
+<div class="brand-title">Magic Bus Science Club</div>
+<div class="brand-sub">After-School Lab Kit · Grades 2–4 · Inspired by The Magic School Bus</div>
+</div>
+<div class="class-chip" id="classChip"></div>
+</header>
+<nav aria-label="Main navigation" class="tabs" id="tabs"></nav>
+<main aria-live="polite" id="app"></main>
+<footer>
+<div class="motto">“Take chances, make mistakes, get messy!” — Ms. Frizzle</div>
+<p>All class data is saved privately in this browser (localStorage). Nothing leaves this file.</p>
+<p class="mt"><button data-action="reset-all">Reset all saved data</button></p>
+</footer>
+<div id="print-root"></div>
+<div id="toast" role="status"></div>
+<script>
+/* ============================================================
+   ICONS & SVG MEDIA (all hand-built, zero external assets)
+============================================================ */
+const ICONS = {
+  germ:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5.5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="10.4" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="13.8" cy="13.6" r="1" fill="currentColor" stroke="none"/></svg>',
+  planet:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><ellipse cx="12" cy="12" rx="10" ry="3.2" transform="rotate(-20 12 12)"/></svg>',
+  droplet:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.2 6 7.6 6 10.5a6 6 0 1 1-12 0C6 10.6 8.5 7.2 12 3z"/><path d="M9.5 13.5a2.5 2.5 0 0 0 2 2.7"/></svg>',
+  layers:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 7l8-3.5L20 7l-8 3.5z"/><path d="M4 12l8 3.5L20 12"/><path d="M4 17l8 3.5L20 17"/></svg>',
+  web:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="2.2"/><circle cx="5" cy="6" r="1.7"/><circle cx="19" cy="6" r="1.7"/><circle cx="5" cy="18" r="1.7"/><circle cx="19" cy="18" r="1.7"/><path d="M10.4 10.4L6.4 7.3M13.6 10.4l4-3.1M10.4 13.6l-4 3.1M13.6 13.6l4 3.1"/></svg>',
+  ramp:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19h18"/><path d="M3 19L15 7"/><circle cx="17.6" cy="10.4" r="2.2"/></svg>',
+  sprout:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21v-8"/><path d="M12 13c0-3.5-2.8-5.5-7-5.5 0 3.5 2.8 5.5 7 5.5z"/><path d="M12 11c0-3 2.4-4.8 6-4.8 0 3-2.4 4.8-6 4.8z"/></svg>',
+  bolt:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M13 2L5 13h5l-1 9 8-11h-5z"/></svg>',
+  sound:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h3l4 4V6l-4 4z"/><path d="M15 9a4 4 0 0 1 0 6M17.5 6.5a8 8 0 0 1 0 11"/></svg>',
+  volcano:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20L10 8h4l6 12z"/><path d="M10 8c.7 1.2 3.3 1.2 4 0"/><path d="M12 5V3M9 4.5L8 3M15 4.5L16 3"/></svg>',
+  flask:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3h4M10 3v5L4.5 18a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 8V3"/><path d="M7.5 14h9"/></svg>',
+  clipboard:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4a3 3 0 0 1 6 0"/><path d="M9 10h6M9 14h6M9 18h4"/></svg>',
+  kids:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><path d="M3.5 19c.5-3 2.8-4.5 5.5-4.5s5.5 1.5 6 4.5"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.6c2.6.2 4.5 1.7 5 4.4"/></svg>',
+  printer:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8V3h10v5"/><rect x="4" y="8" width="16" height="8" rx="2"/><rect x="7" y="13" width="10" height="7"/><circle cx="17" cy="11" r=".9" fill="currentColor" stroke="none"/></svg>',
+  star:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6L3.2 9.4l6.1-.8z"/></svg>',
+  check:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>',
+  calendar:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>',
+  cart:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/><path d="M3 4h2l2.5 11h10L21 8H7"/></svg>',
+  home:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>',
+  bus:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="11" rx="3"/><path d="M3 12h18M8 5v4M12 5v4M16 5v4"/><circle cx="8" cy="18" r="1.8"/><circle cx="16" cy="18" r="1.8"/></svg>'
+};
+
+function busSVG(h){
+  h = h || 44;
+  return `<svg width="${h*1.55}" height="${h}" viewBox="0 0 96 62" fill="none" aria-hidden="true">
+    <path d="M6 44c-4-8 2-14 8-12" stroke="#BEE7FF" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+    <rect x="12" y="10" width="72" height="34" rx="10" fill="#F5B301" stroke="#2A2438" stroke-width="3.5"/>
+    <rect x="20" y="17" width="13" height="10" rx="3" fill="#BEE7FF" stroke="#2A2438" stroke-width="2.5"/>
+    <rect x="38" y="17" width="13" height="10" rx="3" fill="#BEE7FF" stroke="#2A2438" stroke-width="2.5"/>
+    <rect x="56" y="17" width="13" height="10" rx="3" fill="#BEE7FF" stroke="#2A2438" stroke-width="2.5"/>
+    <rect x="12" y="32" width="72" height="6" fill="#5B2A86"/>
+    <circle cx="88" cy="24" r="3" fill="#FFF3D6" stroke="#2A2438" stroke-width="2"/>
+    <circle cx="30" cy="46" r="9" fill="#2A2438"/><circle cx="30" cy="46" r="3.6" fill="#FFF9EC"/>
+    <circle cx="68" cy="46" r="9" fill="#2A2438"/><circle cx="68" cy="46" r="3.6" fill="#FFF9EC"/>
+    <path d="M84 4l1.4 3 3 1.4-3 1.4L84 12.8l-1.4-3-3-1.4 3-1.4z" fill="#F5B301"/>
+  </svg>`;
+}
+
+function heroBusSVG(){
+  return `<svg viewBox="0 0 340 200" role="img" aria-label="A cheerful yellow science bus with magic swirls">
+    <defs><path id="st4" d="M0,-9 L2.3,-2.3 L9,0 L2.3,2.3 L0,9 L-2.3,2.3 L-9,0 L-2.3,-2.3 Z"/></defs>
+    <circle cx="60" cy="40" r="26" fill="#E9F6F6"/><circle cx="290" cy="150" r="34" fill="#F4EEFB"/>
+    <path d="M18 150c-14-18 4-34 16-24" stroke="#0E9594" stroke-width="5" fill="none" stroke-linecap="round" opacity=".55"/>
+    <path d="M312 60c16-8 10-26-2-24" stroke="#E4572E" stroke-width="5" fill="none" stroke-linecap="round" opacity=".5"/>
+    <rect x="42" y="62" width="238" height="64" rx="17" fill="#F5B301" stroke="#2A2438" stroke-width="4.5"/>
+    <path d="M280 78h22a16 16 0 0 1 16 16v32h-38z" fill="#F5B301" stroke="#2A2438" stroke-width="4.5"/>
+    <rect x="58" y="74" width="40" height="25" rx="7" fill="#BEE7FF" stroke="#2A2438" stroke-width="3.5"/>
+    <rect x="112" y="74" width="40" height="25" rx="7" fill="#BEE7FF" stroke="#2A2438" stroke-width="3.5"/>
+    <rect x="166" y="74" width="40" height="25" rx="7" fill="#BEE7FF" stroke="#2A2438" stroke-width="3.5"/>
+    <rect x="220" y="74" width="40" height="25" rx="7" fill="#BEE7FF" stroke="#2A2438" stroke-width="3.5"/>
+    <rect x="288" y="82" width="22" height="17" rx="5" fill="#BEE7FF" stroke="#2A2438" stroke-width="3"/>
+    <rect x="42" y="103" width="276" height="11" fill="#5B2A86"/>
+    <rect x="314" y="118" width="12" height="8" rx="4" fill="#C9C2D4" stroke="#2A2438" stroke-width="2.5"/>
+    <circle cx="322" cy="97" r="5" fill="#FFF3D6" stroke="#2A2438" stroke-width="3"/>
+    <circle cx="98" cy="134" r="18" fill="#2A2438"/><circle cx="98" cy="134" r="7.5" fill="#FFF9EC"/>
+    <circle cx="242" cy="134" r="18" fill="#2A2438"/><circle cx="242" cy="134" r="7.5" fill="#FFF9EC"/>
+    <rect x="150" y="120" width="46" height="14" rx="7" fill="#5B2A86"/>
+    <text x="173" y="131" text-anchor="middle" font-family="Verdana" font-size="9" font-weight="bold" fill="#F5B301">SCIENCE</text>
+    <use href="#st4" x="40" y="30" fill="#F5B301"/><use href="#st4" x="300" y="30" fill="#E4572E" transform="scale(1.2)"/>
+    <use href="#st4" x="272" y="170" fill="#0E9594"/><use href="#st4" x="20" y="110" fill="#5B2A86" transform="scale(.8)"/>
+    <use href="#st4" x="170" y="26" fill="#D4527A" transform="scale(.9)"/>
+  </svg>`;
+}
+
+/* ============================================================
+   CURRICULUM DATA — 20 complete lesson plans (scaled for 10 kids)
+   Weeks 11 (Bubble & Surface Tension) & 15 (Fossil Dig) were swapped in
+   2026-11-04 — the original Rainbow/Density topics were already covered
+   per Nathan; those entries are kept as drafts in
+   msb-clubkit16/drafts-11-15-HELD.js
+============================================================ */
+/* Data note (2026-11-05): Weeks 1-7, 9, 10, 12-16 SIMPLIFIED per Nathan — fewer
+   materials per lab; full-materials version kept in the build folder
+   (msb-science-club-kit.FULL-v16-backup.html). Weeks 8 & 11 unchanged (already taught). */
+const EXPERIMENTS = [
+ {
+  "id": "germs",
+  "week": 1,
+  "title": "Glitter Germ Outbreak",
+  "episode": "Inside Ralphie",
+  "topic": "Germs & the Immune System",
+  "duration": "45–60 min",
+  "color": "#0E9594",
+  "icon": "germ",
+  "tagline": "Watch 'germs' spread across the whole room — then discover why soap is a superhero.",
+  "objectives": [
+   "Demonstrate how germs spread through contact",
+   "Compare rinsing with water vs. washing with soap",
+   "Explain how the immune system defends the body"
+  ],
+  "materials": [
+   {
+    "item": "Fine glitter",
+    "qty": "1 shaker"
+   },
+   {
+    "item": "Hypoallergenic hand lotion",
+    "qty": "1 bottle"
+   },
+   {
+    "item": "Liquid hand soap",
+    "qty": "1 bottle"
+   },
+   {
+    "item": "Paper towels",
+    "qty": "1 roll"
+   },
+   {
+    "item": "Sink access or washing-up bowls",
+    "qty": "2 stations"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Set up two washing stations before class",
+   "Pre-fill the glitter shaker and test the sprinkle",
+   "Print one worksheet per student",
+   "Optional: cue up the episode “Inside Ralphie” (25 min) as the hook"
+  ],
+  "steps": [
+   "Rub a pea-sized blob of lotion on each child's hands.",
+   "Sprinkle glitter on everyone's hands. Announce: “The glitter is GERMS!”",
+   "Let everyone play, shake hands, and high-five for 5 minutes. Then FREEZE — inspect hands, desks, and door handles. Where did the germs travel?",
+   "Team A washes with water only. Team B washes with soap for 20 seconds (sing a favorite chorus twice).",
+   "Compare hands under a bright light. Which team won the germ battle?",
+   "Discuss: Ralphie's body fought germs with white blood cells. How do we help that army?"
+  ],
+  "science": "Germs — bacteria and viruses — hitch rides on our hands and jump to everything we touch. Water alone slides over the skin's natural oils where germs hide, but soap molecules are double agents: one end grabs oil, the other grabs water, so they pry germs loose and rinse them down the drain. Inside the body, white blood cells patrol like the Bus cruising Ralphie's bloodstream, gobbling up invaders.",
+  "questions": [
+   "Where did the most glitter end up? Why there?",
+   "Why didn't water alone remove the germs?",
+   "Name three moments every day when you should wash your hands.",
+   "What is your immune system doing while you sleep?"
+  ],
+  "safety": [
+   "Glitter is for hands, not mouths — supervise closely.",
+   "Check for lotion sensitivities; use hypoallergenic lotion.",
+   "Wipe surfaces after class, or the glitter lives forever."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw a map of the classroom. Mark an X everywhere your glitter “germs” traveled."
+   },
+   {
+    "type": "mc",
+    "prompt": "Soap removes germs because it…",
+    "choices": [
+     "is colorful",
+     "grabs both oil and water",
+     "smells nice"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "You should wash your hands for at least…",
+    "choices": [
+     "2 seconds",
+     "20 seconds",
+     "2 minutes"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "Name two places germs love to hide in our classroom."
+   }
+  ],
+  "quiz": [
+   {
+    "q": "What does soap do to germs?",
+    "choices": [
+     "Feeds them lunch",
+     "Grabs them so water can rinse them away",
+     "Scares them away with bubbles"
+    ],
+    "a": 1
+   },
+   {
+    "q": "How do germs mostly spread in a classroom?",
+    "choices": [
+     "Through touching people and objects",
+     "Through the ceiling tiles",
+     "By thinking about them"
+    ],
+    "a": 0
+   },
+   {
+    "q": "Which cells fight germs inside your body?",
+    "choices": [
+     "Red blood cells",
+     "White blood cells",
+     "Hair cells"
+    ],
+    "a": 1
+   }
+  ]
+ },
+ {
+  "id": "space",
+  "week": 2,
+  "title": "Pocket Solar System",
+  "episode": "Gets Lost in Space",
+  "topic": "Planets & Scale Distance",
+  "duration": "50–60 min",
+  "color": "#5B2A86",
+  "icon": "planet",
+  "tagline": "Unroll a whole roll of toilet paper to see just how EMPTY space really is.",
+  "objectives": [
+   "Order the eight planets from the Sun",
+   "Model planetary distances to scale",
+   "Describe gravity as the force keeping planets in orbit"
+  ],
+  "materials": [
+   {
+    "item": "Toilet paper rolls (100-sheet)",
+    "qty": "5 rolls (1 per pair)"
+   },
+   {
+    "item": "Printed planet label cards",
+    "qty": "5 sets of 8"
+   },
+   {
+    "item": "Markers",
+    "qty": "10"
+   },
+   {
+    "item": "Painter's tape",
+    "qty": "1 roll"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Print and cut planet cards",
+   "Test-unroll one roll and mark the 'Sun' end with tape",
+   "Scout a space at least 25 meters long"
+  ],
+  "steps": [
+   "Place the “Sun” at one end of the hallway. Ask: how far apart are the planets? Write down the guesses.",
+   "Pairs unroll the roll one square at a time — each square is 10 million miles of space!",
+   "Tape planets at their squares: Mercury 1, Venus 2, Earth 2.5, Mars 4, Jupiter 13, Saturn 24, Uranus 49, Neptune 76.",
+   "Everyone walks the solar system from the Sun to Neptune. Shout each planet as you pass it!",
+   "Back inside, play Orbit Walk: kids circle a “Sun” chair while you call out planet facts.",
+   "Discuss: what fills the space between planets? (Almost nothing!)"
+  ],
+  "science": "You can't shrink space onto a poster honestly — the gaps are gigantic. If the Sun were a beach ball, Earth would be a peppercorn 26 paces away, and Neptune nearly half a mile out! Gravity is the invisible rope: the Sun's pull keeps every planet circling instead of drifting off, exactly like the Bus orbiting in the episode.",
+  "questions": [
+   "Which surprised you more — how close the rocky planets are, or how far Neptune is?",
+   "Why can't a normal poster show planet sizes AND distances to scale?",
+   "What would happen to Earth if the Sun's gravity switched off?",
+   "Why do inner planets zoom around the Sun faster than outer ones?"
+  ],
+  "safety": [
+   "Set hallway rules: walking feet only, TP stays off the floor once placed.",
+   "Keep the roll away from stairs and door swings."
+  ],
+  "worksheet": [
+   {
+    "type": "short",
+    "prompt": "List the planets in order from the Sun."
+   },
+   {
+    "type": "mc",
+    "prompt": "Each square of toilet paper stood for…",
+    "choices": [
+     "10 miles",
+     "10 million miles",
+     "10 feet"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "The force that keeps planets orbiting the Sun is…",
+    "choices": [
+     "magnetism",
+     "friction",
+     "gravity"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "draw",
+    "prompt": "Draw your favorite planet and write one fact about it."
+   }
+  ],
+  "quiz": [
+   {
+    "q": "Which is the biggest planet in our solar system?",
+    "choices": [
+     "Mars",
+     "Jupiter",
+     "Earth"
+    ],
+    "a": 1
+   },
+   {
+    "q": "Which planet do we live on?",
+    "choices": [
+     "Third from the Sun",
+     "Fifth from the Sun",
+     "The sideways one"
+    ],
+    "a": 0
+   },
+   {
+    "q": "What keeps the planets moving around the Sun?",
+    "choices": [
+     "Solar wind",
+     "Gravity",
+     "Rocket engines"
+    ],
+    "a": 1
+   }
+  ]
+ },
+ {
+  "id": "water",
+  "week": 3,
+  "title": "Water Cycle in a Bag",
+  "episode": "Wet All Over",
+  "topic": "Evaporation, Condensation & Precipitation",
+  "duration": "40 min + daily observation",
+  "color": "#4FA8E0",
+  "icon": "droplet",
+  "tagline": "Build a tiny weather world on your window and watch it rain on command.",
+  "objectives": [
+   "Identify the four stages of the water cycle",
+   "Observe evaporation and condensation in a closed system",
+   "Connect the Sun's energy to moving water"
+  ],
+  "materials": [
+   {
+    "item": "Quart-size zip bags",
+    "qty": "10"
+   },
+   {
+    "item": "Water",
+    "qty": "1 pitcher"
+   },
+   {
+    "item": "Blue food coloring",
+    "qty": "1 bottle"
+   },
+   {
+    "item": "Permanent markers",
+    "qty": "10"
+   },
+   {
+    "item": "Clear packing tape",
+    "qty": "1 roll"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Test one bag the day before so you know what kids will see",
+   "Pre-fill the pitcher with tinted water",
+   "Reserve window space"
+  ],
+  "steps": [
+   "Each student draws a sun at the top of their bag and waves at the bottom.",
+   "Add ¼ cup of blue water, squeeze out extra air, and seal TIGHT.",
+   "Tape bags to a sunny window. Make predictions: what will we see in an hour? Tomorrow?",
+   "Observe after class: droplets form up top (condensation), then streak down (precipitation) into the “sea” (collection).",
+   "Check the predictions: who guessed droplets would form on top? What surprised you?",
+   "Check bags daily all week and log changes in science journals."
+  ],
+  "science": "The Sun heats the water, turning it into invisible vapor that rises — evaporation. Near the cooler top of the bag, vapor turns back into liquid droplets — condensation, the same trick that builds clouds. When droplets grow heavy, they run and fall — precipitation — and pool below for collection. Then the whole wheel spins again, powered by sunshine, just like the class's wild ride through the clouds.",
+  "questions": [
+   "Where did the droplets at the top of the bag come from?",
+   "What job does the Sun do in the water cycle?",
+   "How is the bag like a real cloud? How is it different?",
+   "Where does the water in your cup go if you leave the lid off?"
+  ],
+  "safety": [
+   "Seal bags completely; tape over the zip for extra insurance.",
+   "No drinking experiment water. Wipe spills immediately — slippery!"
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw and label the water cycle: evaporation, condensation, precipitation, collection."
+   },
+   {
+    "type": "mc",
+    "prompt": "The Sun's heat turns liquid water into…",
+    "choices": [
+     "ice",
+     "water vapor",
+     "juice"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "Droplets forming on the cool top of the bag is called…",
+    "choices": [
+     "condensation",
+     "evaporation",
+     "collection"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "short",
+    "prompt": "Describe one change you saw in your bag after one day."
+   }
+  ],
+  "quiz": [
+   {
+    "q": "When the Sun heats water and it rises as vapor, that's called…",
+    "choices": [
+     "precipitation",
+     "evaporation",
+     "condensation"
+    ],
+    "a": 1
+   },
+   {
+    "q": "Water vapor cooling into droplets forms…",
+    "choices": [
+     "clouds",
+     "rivers",
+     "hail"
+    ],
+    "a": 0
+   },
+   {
+    "q": "Rain, snow, and hail are all forms of…",
+    "choices": [
+     "collection",
+     "condensation",
+     "precipitation"
+    ],
+    "a": 2
+   }
+  ]
+ },
+ {
+  "id": "rocks",
+  "week": 4,
+  "title": "Starburst Rock Cycle",
+  "episode": "Inside the Earth",
+  "topic": "The Rock Cycle",
+  "duration": "50 min",
+  "color": "#B5651D",
+  "icon": "layers",
+  "tagline": "Squish, press, and melt candy to travel through the entire rock cycle — then eat the evidence.",
+  "objectives": [
+   "Model sedimentary, metamorphic, and igneous rock formation",
+   "Explain how heat and pressure change rocks",
+   "Sequence the rock cycle"
+  ],
+  "materials": [
+   {
+    "item": "Starburst candies, 3 colors",
+    "qty": "30 (3 per student)"
+   },
+   {
+    "item": "Wax paper squares",
+    "qty": "10"
+   },
+   {
+    "item": "Zip bags (snack size)",
+    "qty": "10"
+   },
+   {
+    "item": "Mugs of warm water OR microwave (teacher only)",
+    "qty": "2 mugs"
+   },
+   {
+    "item": "Paper plates",
+    "qty": "10"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Check every student's food allergies and get snack approval",
+   "Pre-cut wax paper squares",
+   "Teacher pre-chops the candies into bits (or tears them by hand) before class",
+   "Warm the water mugs just before class"
+  ],
+  "steps": [
+   "Wash hands! Unwrap 3 candies — the teacher already chopped them into bits. These are sediments (weathered rock pieces).",
+   "Pile the bits on wax paper and press firmly — congratulations, sedimentary rock! Peel it apart and look at the layers.",
+   "Now squeeze and roll the pieces hard in warm hands for 2 minutes — heat + pressure make a metamorphic rock. Notice the swirls!",
+   "Teacher step: seal candies in a zip bag and dunk in warm water (or microwave 10 seconds) until gooey — melted rock, magma!",
+   "Let it cool and harden — igneous rock! Compare all three stages side by side.",
+   "Taste test approved? Eat the igneous rock while discussing the cycle."
+  ],
+  "science": "Rocks never sit still. Wind and water break them into sediments; layers of sediment get pressed and glued into sedimentary rock. Buried deep, heat and pressure (no melting!) twist it into metamorphic rock. Melt it fully and you get magma, which cools into igneous rock — ready to be weathered all over again. The candy lets kids feel each transformation that normally takes millions of years.",
+  "questions": [
+   "Which stage needed the most pressure? Which needed heat?",
+   "Where in the Earth would each stage happen?",
+   "How are the candy 'sediments' like real sand and pebbles?",
+   "Could an igneous rock ever become sedimentary? How?"
+  ],
+  "safety": [
+   "ALLERGY CHECK before buying candy; have a non-food modeling-clay alternative ready.",
+   "Only the teacher handles warm water / microwave steps.",
+   "Hands washed before and after — we are scientists AND snackers."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw the rock cycle as a circle with arrows: sediments → sedimentary → metamorphic → magma → igneous."
+   },
+   {
+    "type": "mc",
+    "prompt": "Pressing sediments together makes…",
+    "choices": [
+     "igneous rock",
+     "sedimentary rock",
+     "magma"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "Heat and pressure without melting makes…",
+    "choices": [
+     "metamorphic rock",
+     "sedimentary rock",
+     "lava"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "short",
+    "prompt": "Describe how your candy changed at each stage."
+   }
+  ],
+  "quiz": [
+   {
+    "q": "Squeezing sediments together forms which rock type?",
+    "choices": [
+     "Igneous",
+     "Sedimentary",
+     "Metamorphic"
+    ],
+    "a": 1
+   },
+   {
+    "q": "Heat + pressure (but no melting) makes…",
+    "choices": [
+     "metamorphic rock",
+     "sedimentary rock",
+     "soil"
+    ],
+    "a": 0
+   },
+   {
+    "q": "Melted rock that cools and hardens becomes…",
+    "choices": [
+     "sedimentary",
+     "metamorphic",
+     "igneous"
+    ],
+    "a": 2
+   }
+  ]
+ },
+ {
+  "id": "foodweb",
+  "week": 5,
+  "title": "The Web of Life Game",
+  "episode": "Gets Eaten",
+  "topic": "Food Chains & Food Webs",
+  "duration": "45 min",
+  "color": "#3D8B37",
+  "icon": "web",
+  "tagline": "A ball of yarn reveals what happens when ONE species disappears.",
+  "objectives": [
+   "Distinguish producers, consumers, and decomposers",
+   "Build a food web from organism cards",
+   "Predict the effect of removing one species"
+  ],
+  "materials": [
+   {
+    "item": "Ball of yarn",
+    "qty": "1 large"
+   },
+   {
+    "item": "Organism role cards (sun, grass, flower, bee, grasshopper, frog, snake, hawk, bear, mushroom)",
+    "qty": "10 cards"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Print the organism cards",
+   "Clear a circle of floor space",
+   "Wind the yarn ball loosely so it unspools fast"
+  ],
+  "steps": [
+   "Each student holds up an organism card and stands in the circle. Read your role aloud!",
+   "The Sun starts with the yarn. Pass it to something you give energy to (a plant). That plant passes to something that eats it… keep going until everyone is connected.",
+   "Admire the web! Every strand is energy moving from the Sun outward.",
+   "Disaster drill: one organism “disappears” (a drought kills the grass!). That student drops their yarn and tugs it — everyone who feels the tug is affected. Keep tugging until the web collapses.",
+   "Rebuild the web with a different species removed. Compare.",
+   "Wrap-up: name the organism whose disappearance would tug YOUR strand the hardest — and why."
+  ],
+  "science": "Every food chain starts with the Sun. Producers (plants) catch sunlight and turn it into food; consumers eat plants or each other; decomposers like mushrooms recycle the leftovers into soil. A food web is all the chains tangled together — which is why removing ONE thread tugs on everyone, exactly what the class discovered when the Bus shrank into the food chain.",
+  "questions": [
+   "Who felt the tug when the grass disappeared? Were you surprised?",
+   "Which organism had the most connections?",
+   "Where does ALL the energy in the web originally come from?",
+   "What job do decomposers do that nobody else can?"
+  ],
+  "safety": [
+   "Yarn goes around hands, never necks or fingers wound tight.",
+   "Keep the circle wide so passes are gentle tosses."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw a food chain with 3 levels. Label the producer and the consumers."
+   },
+   {
+    "type": "mc",
+    "prompt": "Plants are called producers because they…",
+    "choices": [
+     "make their own food from sunlight",
+     "own factories",
+     "eat meat"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "mc",
+    "prompt": "A mushroom is a…",
+    "choices": [
+     "producer",
+     "consumer",
+     "decomposer"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "short",
+    "prompt": "What happens to a food web if one species disappears? Use your yarn game to explain."
+   }
+  ],
+  "quiz": [
+   {
+    "q": "In every food chain, the energy starts from…",
+    "choices": [
+     "the soil",
+     "the Sun",
+     "water"
+    ],
+    "a": 1
+   },
+   {
+    "q": "An animal that eats only plants is a…",
+    "choices": [
+     "herbivore",
+     "carnivore",
+     "decomposer"
+    ],
+    "a": 0
+   },
+   {
+    "q": "When one species vanished from our yarn web, the others…",
+    "choices": [
+     "felt nothing",
+     "felt the tug too",
+     "grew bigger"
+    ],
+    "a": 1
+   }
+  ]
+ },
+ {
+  "id": "forces",
+  "week": 6,
+  "title": "Friction Speedway",
+  "episode": "Plays Ball",
+  "topic": "Forces & Friction",
+  "duration": "50–60 min",
+  "color": "#E4572E",
+  "icon": "ramp",
+  "tagline": "Race toy cars across five surfaces and measure the invisible force that slows everything down.",
+  "objectives": [
+   "Define friction as a force that opposes motion",
+   "Run a fair test by changing one variable at a time",
+   "Measure, record, and graph results"
+  ],
+  "materials": [
+   {
+    "item": "Toy cars (same size/weight)",
+    "qty": "3"
+   },
+   {
+    "item": "Ramps (cardboard or foam board)",
+    "qty": "3"
+   },
+   {
+    "item": "Books to prop ramps",
+    "qty": "9"
+   },
+   {
+    "item": "Surface strips: sandpaper, foil, bubble wrap, towel, wax paper",
+    "qty": "5 strips (1 shared set)"
+   },
+   {
+    "item": "Measuring tapes",
+    "qty": "3"
+   },
+   {
+    "item": "Painter's tape (start/finish lines)",
+    "qty": "1 roll"
+   },
+   {
+    "item": "Printed worksheets (recording table + bar graph)",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Build and test one ramp station the day before",
+   "Tape start lines at the top of each ramp",
+   "Have surface strips ready to swap on and off the ramps"
+  ],
+  "steps": [
+   "Predict: which surface will send the car farthest past the ramp? Everyone commits to a prediction on their worksheet.",
+   "Fair test rules: same car, same ramp height, release — never push!",
+   "Teams rotate through the 3 ramps: clip or lay a surface strip on your ramp, release the car, measure how far it rolls past the ramp, record it. Swap strips between rounds until every surface is tested.",
+   "Repeat each surface twice and average the distances.",
+   "Fill in the bar graph: surfaces on the bottom, distance up the side.",
+   "Discuss: which surface won? Which stopped the car fastest? What invisible force did that?"
+  ],
+  "science": "A force is a push or a pull. Gravity pulls the car down the ramp; friction pushes back against the slide. Rough surfaces like sandpaper grab the wheels with lots of friction and stop the car fast; slick wax paper barely grabs at all. It's the same force that let the baseball team play on a frictionless field in the episode — with hilarious results.",
+  "questions": [
+   "Why did we use the same car and ramp height every time?",
+   "Which surface had the most friction? How do you know?",
+   "Where do you WANT lots of friction in real life? (Shoes! Brakes!)",
+   "Where do you want LESS friction? (Ice rinks! Slides!)"
+  ],
+  "safety": [
+   "Cars stay on the floor — no throwing.",
+   "Walk between stations; tape down loose surface edges."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Record your results: write each surface and the distance the car rolled, then color the bar graph."
+   },
+   {
+    "type": "mc",
+    "prompt": "Friction is a force that…",
+    "choices": [
+     "speeds things up",
+     "slows moving things down",
+     "makes things float"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "The roughest surface usually has…",
+    "choices": [
+     "the least friction",
+     "the most friction",
+     "no friction"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "Why was it important to use the same car every time?"
+   }
+  ],
+  "quiz": [
+   {
+    "q": "The force that slows a rolling car is called…",
+    "choices": [
+     "gravity",
+     "friction",
+     "magnetism"
+    ],
+    "a": 1
+   },
+   {
+    "q": "Which surface has the MOST friction?",
+    "choices": [
+     "wax paper",
+     "sandpaper",
+     "foil"
+    ],
+    "a": 1
+   },
+   {
+    "q": "A push or a pull is called a…",
+    "choices": [
+     "force",
+     "friction",
+     "footprint"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "plants",
+  "week": 7,
+  "title": "Bean Sprout Greenhouse",
+  "episode": "Goes to Seed",
+  "topic": "Germination & Plant Life Cycle",
+  "duration": "40 min + 1 week of observation",
+  "color": "#5DA832",
+  "icon": "sprout",
+  "tagline": "Turn the window into a greenhouse and watch baby plants wake up.",
+  "objectives": [
+   "Identify what a seed needs to germinate",
+   "Observe and measure root and shoot growth over a week",
+   "Sequence the plant life cycle"
+  ],
+  "materials": [
+   {
+    "item": "Dried beans (pinto or lima)",
+    "qty": "20 (2 per student)"
+   },
+   {
+    "item": "Quart zip bags",
+    "qty": "10"
+   },
+   {
+    "item": "Paper towels",
+    "qty": "1 roll"
+   },
+   {
+    "item": "Water + spray bottle",
+    "qty": "1 each"
+   },
+   {
+    "item": "Markers",
+    "qty": "10"
+   },
+   {
+    "item": "Printed worksheets (growth chart)",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Soak beans overnight for faster sprouting",
+   "Test one bag 3 days ahead so you can show a 'future' sprout",
+   "Reserve window space"
+  ],
+  "steps": [
+   "Examine a dry bean and a soaked bean. What's different? Where is the baby plant hiding?",
+   "Fold a damp paper towel into the bag, slide 2 beans against the plastic so you can see them, and seal.",
+   "Write your name and the date on the bag with a marker; stand the bags upright in a box by the sunny window.",
+   "Predict: which appears first — root or shoot? Write it down.",
+   "Observe each session for a week: measure the root with a ruler, draw what you see on the growth chart.",
+   "Graduation day: measure your tallest sprout, record the final height, and report your results like a scientist!"
+  ],
+  "science": "A seed is a suitcase plant: a baby root and shoot packed with lunch. Water soaks through the seed coat and wakes the embryo — germination. The root races out first to anchor and drink; then the shoot climbs toward light, unfurls leaves, and starts photosynthesis — making food from sunlight, air, and water. The bags make the whole underground show visible, no shrinking required.",
+  "questions": [
+   "Why did the root grow before the shoot?",
+   "Did the beans need soil to sprout? What did they need?",
+   "What will the plant need AFTER it runs out of seed-food?",
+   "Where have you seen seeds travel in nature?"
+  ],
+  "safety": [
+   "Raw beans are for science, not snacking.",
+   "Check bags for mold after a week; toss any fuzzy ones sealed."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw your bean on Day 1 and again on Day 7. Label the root and the shoot."
+   },
+   {
+    "type": "mc",
+    "prompt": "A seed needs what to germinate?",
+    "choices": [
+     "soil and sun",
+     "water and warmth",
+     "pizza"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "The first part to grow out of a seed is the…",
+    "choices": [
+     "flower",
+     "leaf",
+     "root"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "short",
+    "prompt": "How tall was your sprout on the last day? What changed most?"
+   }
+  ],
+  "quiz": [
+   {
+    "q": "What does a seed need to start sprouting?",
+    "choices": [
+     "Water and warmth",
+     "Darkness and cookies",
+     "Soil and songs"
+    ],
+    "a": 0
+   },
+   {
+    "q": "Which part of the plant grows first?",
+    "choices": [
+     "The flower",
+     "The root",
+     "The leaf"
+    ],
+    "a": 1
+   },
+   {
+    "q": "Once it has leaves, a plant makes food using…",
+    "choices": [
+     "sunlight",
+     "sand",
+     "static"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "static",
+  "week": 8,
+  "title": "Static Electricity Lab",
+  "episode": "Gets Charged",
+  "topic": "Static Electricity & Charges",
+  "duration": "50 min",
+  "color": "#D4527A",
+  "icon": "bolt",
+  "tagline": "Bend water, levitate tissue paper, and race cans — all without touching anything.",
+  "objectives": [
+   "Explain that rubbing moves electrons between materials",
+   "Observe attraction between opposite charges",
+   "Connect static discharge to lightning"
+  ],
+  "materials": [
+   {
+    "item": "Balloons",
+    "qty": "12 (2 spares)"
+   },
+   {
+    "item": "Wool fabric squares or sweaters",
+    "qty": "10"
+   },
+   {
+    "item": "Tissue paper torn into bits",
+    "qty": "1 pile"
+   },
+   {
+    "item": "Salt & pepper mixed on paper plates",
+    "qty": "10 plates"
+   },
+   {
+    "item": "Empty aluminum cans",
+    "qty": "5"
+   },
+   {
+    "item": "String",
+    "qty": "1 roll"
+   },
+   {
+    "item": "Sink with a thin stream of water",
+    "qty": "1"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Blow up balloons ahead of time",
+   "Mix salt & pepper plates",
+   "Test the faucet: you need a thin, steady stream"
+  ],
+  "steps": [
+   "Charge up: rub a balloon on hair or wool for 10 seconds. You just stole electrons!",
+   "Hair-raiser: hold the balloon near (not on!) a partner's hair and lift slowly.",
+   "Butterfly lift: hover the balloon over tissue bits and watch them jump up.",
+   "Pepper thief: hold the charged balloon over the salt & pepper — the lighter pepper leaps away from the salt!",
+   "Water bender: bring the balloon near a thin stream of water and watch it bend sideways.",
+   "Can races: pairs pull a rolling can across the table using only a charged balloon. First to the finish line wins!"
+  ],
+  "science": "Rubbing the balloon on hair scrapes tiny particles called electrons onto the balloon, giving it a negative charge. Opposites attract: the negatively charged balloon tugs on the positive side of hair, pepper, and even water molecules — enough to bend a stream! When built-up charge finally jumps (that little zap, or a giant one in a storm cloud), that's static discharge — lightning is just the sky rubbing its balloon.",
+  "questions": [
+   "Which trick surprised you most? Why?",
+   "Why did the pepper jump before the salt?",
+   "Where did the balloon's 'power' come from?",
+   "How is a lightning bolt like the zap from a doorknob?"
+  ],
+  "safety": [
+   "Latex allergy check; use mylar-free alternatives or assign balloon handlers.",
+   "Balloons stay away from faces; pick up popped pieces immediately.",
+   "Keep charged balloons away from electronics."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw the balloon bending the stream of water. Label the negative charge on the balloon."
+   },
+   {
+    "type": "mc",
+    "prompt": "Rubbing the balloon on hair moves tiny particles called…",
+    "choices": [
+     "protons",
+     "electrons",
+     "crumbs"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "Opposite charges…",
+    "choices": [
+     "attract",
+     "repel",
+     "ignore each other"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "short",
+    "prompt": "Describe one thing the charged balloon could do and why."
+   }
+  ],
+  "quiz": [
+   {
+    "q": "Rubbing a balloon on your hair moves which tiny particles?",
+    "choices": [
+     "Electrons",
+     "Sand grains",
+     "Water drops"
+    ],
+    "a": 0
+   },
+   {
+    "q": "Opposite charges…",
+    "choices": [
+     "push apart",
+     "attract each other",
+     "make sparks"
+    ],
+    "a": 1
+   },
+   {
+    "q": "A giant static discharge in a storm cloud is…",
+    "choices": [
+     "rain",
+     "lightning",
+     "fog"
+    ],
+    "a": 1
+   }
+  ]
+ },
+ {
+  "id": "volcano",
+  "week": 9,
+  "title": "Volcano Eruption Lab",
+  "episode": "Blows Its Top",
+  "topic": "Chemical Reactions & Volcanoes",
+  "duration": "50–60 min",
+  "color": "#C1272D",
+  "icon": "volcano",
+  "tagline": "Build a volcano, mix the magic powders, and make the mountain blow its top — safely!",
+  "objectives": [
+   "Explain that mixing baking soda and vinegar creates a gas (a chemical reaction)",
+   "Name the parts of a volcano: magma chamber, vent, crater, and lava",
+   "Predict how the eruption changes when one ingredient changes"
+  ],
+  "materials": [
+   {
+    "item": "Small plastic cups (the magma chamber)",
+    "qty": "5 (1 per pair)"
+   },
+   {
+    "item": "Modeling clay or salt dough",
+    "qty": "5 baseball-size lumps"
+   },
+   {
+    "item": "Baking trays (lava catchers)",
+    "qty": "5"
+   },
+   {
+    "item": "Baking soda",
+    "qty": "1 large box"
+   },
+   {
+    "item": "White vinegar",
+    "qty": "1 large bottle"
+   },
+   {
+    "item": "Dish soap",
+    "qty": "1 bottle"
+   },
+   {
+    "item": "Red & yellow food coloring",
+    "qty": "1 set"
+   },
+   {
+    "item": "Measuring cups",
+    "qty": "5"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "If using salt dough, mix it ahead: 2 cups flour + 1 cup salt + 1 cup water per batch",
+   "Measure the vinegar into cups ahead so pairs can pour safely; grab 5 kitchen tablespoons for the baking soda",
+   "Cover the tables — this is the messiest week of the semester",
+   "Cue up the episode “Blows Its Top” (25 min) as the hook"
+  ],
+  "steps": [
+   "Build the mountain: mold clay or dough around the cup on the tray, leaving the cup's mouth open as the crater. The cup inside is the magma chamber.",
+   "Into the crater drop 3 spoonfuls of baking soda, a squirt of dish soap, and 4 drops of red + 2 drops of yellow coloring.",
+   "Predict on your worksheet: how tall will the eruption be? What will the 'lava' look like?",
+   "ERUPTION! Pour in ½ cup of vinegar, step back one giant step, and watch the mountain blow its top.",
+   "Talk it through: bubbles of gas built the pressure, the foam pushed up the vent and poured out as lava — just like the island volcano in the episode.",
+   "Round 2 — scientist's choice: change ONE thing (more vinegar? warmer vinegar? no soap?) and erupt again. Compare the two eruptions."
+  ],
+  "science": "Vinegar is an acid and baking soda is a base. When they meet, a chemical reaction makes a brand-new gas: carbon dioxide. The gas bubbles need room — fast! — so they shove the liquid up and out of the crater. Dish soap traps the gas in foam so the 'lava' oozes thick and slow, and food coloring makes it look fiery. Real volcanoes work the same way: gases dissolved in melted rock (magma) build pressure underground until the mountain can't hold them, and the magma bursts out the vent as lava.",
+  "questions": [
+   "What gas did our reaction make? How do you know a gas was made at all?",
+   "Which volcano part did the cup stand for? The hole at the top?",
+   "How did changing one ingredient change Round 2's eruption?",
+   "Why do real volcanoes sometimes ooze slowly and sometimes explode?"
+  ],
+  "safety": [
+   "Eruption rule: pour, then one giant step back — faces never over the crater.",
+   "Vinegar stings eyes: no eye-rubbing with lava hands; rinse with clean water if splashed.",
+   "Food coloring stains — aprons or smocks on before anyone pours.",
+   "Nobody tastes the lava, even though it's kitchen ingredients."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw your volcano and label: magma chamber, vent, crater, lava."
+   },
+   {
+    "type": "mc",
+    "prompt": "Baking soda + vinegar makes a gas called…",
+    "choices": [
+     "oxygen",
+     "carbon dioxide",
+     "helium"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "This is a chemical reaction because…",
+    "choices": [
+     "it got warm",
+     "a new substance (gas) formed",
+     "it changed color"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "What did you change in Round 2, and what happened?"
+   }
+  ],
+  "quiz": [
+   {
+    "q": "What gas makes the volcano erupt?",
+    "choices": [
+     "Carbon dioxide",
+     "Oxygen",
+     "Steam"
+    ],
+    "a": 0
+   },
+   {
+    "q": "The opening at the top of a volcano is called the…",
+    "choices": [
+     "vent",
+     "crater",
+     "chamber"
+    ],
+    "a": 1
+   },
+   {
+    "q": "Melted rock UNDER the ground is called…",
+    "choices": [
+     "lava",
+     "magma",
+     "ash"
+    ],
+    "a": 1
+   }
+  ]
+ },
+ {
+  "id": "body",
+  "week": 10,
+  "title": "The Body's Framework",
+  "episode": "Flexes Its Muscles",
+  "topic": "Bones, Joints & Muscles",
+  "duration": "50 min",
+  "color": "#5D6D7E",
+  "icon": "kids",
+  "tagline": "X-ray your own hand, then build a string-and-straw robot hand that actually grips!",
+  "objectives": [
+   "Explain the skeleton's three jobs: support, protection, and movement",
+   "Find hinge and ball-and-socket joints on their own bodies",
+   "Model how tendons pull fingers closed, like strings on a puppet"
+  ],
+  "materials": [
+   {
+    "item": "Black construction paper (X-ray film)",
+    "qty": "10 sheets"
+   },
+   {
+    "item": "White crayons or chalk sticks",
+    "qty": "10"
+   },
+   {
+    "item": "Cardstock hand templates",
+    "qty": "10"
+   },
+   {
+    "item": "Drinking straws",
+    "qty": "50 (5 per hand)"
+   },
+   {
+    "item": "String or yarn",
+    "qty": "1 ball"
+   },
+   {
+    "item": "Tape",
+    "qty": "1 roll"
+   },
+   {
+    "item": "Scissors",
+    "qty": "10 pairs"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Pre-cut straws into 1-inch segments (50 pieces) unless you want cutting practice built in",
+   "Build one demo robot hand so kids see the goal",
+   "Crumple 5 scrap-paper balls for the gripping tests",
+   "Print hand templates on cardstock — regular paper tears at the straws"
+  ],
+  "steps": [
+   "X-ray time: trace your real hand on black paper, then draw the bones inside with white crayon. Count the bones you can see in one hand!",
+   "Joint hunt: bend your elbow (a hinge, like a door). Swing your whole arm in a circle (shoulder = ball-and-socket). Wiggle your fingers and count the joints.",
+   "Build the robot hand: tape straw segments along each finger of the cardstock hand — these are the finger bones.",
+   "Thread one long string through each finger's straws, down the palm, and tie a loop at the wrist end. The string is a tendon.",
+   "Pull the strings gently — the fingers curl! Use your robot hand to pick up a crumpled paper ball.",
+   "Compare: what can your real hand do that the model can't? (Twist? Pinch tiny things?) What's doing the pulling in a real hand?"
+  ],
+  "science": "Your skeleton is a living frame of about 206 bones with three big jobs: it holds you up (support), wraps your squishy organs in armor like the skull and ribs (protection), and gives muscles something to pull on (movement). Where two bones meet is a joint — hinges bend one way like your elbow, ball-and-sockets swing in circles like your shoulder. Muscles can't push; they can only pull. They yank on bones using tough cords called tendons — exactly the strings on your robot hand. When the class flexed through the body in the episode, every move was muscles pulling, never pushing.",
+  "questions": [
+   "Which bones protect your brain? Your heart and lungs?",
+   "Point to a hinge joint and a ball-and-socket joint on your body.",
+   "Why do the strings pass through straws instead of just lying on top?",
+   "What would happen to your hand if it had bones but no joints?"
+  ],
+  "safety": [
+   "Scissor rules: blades closed when walking, cut only the straws and paper.",
+   "String stays on hands and wrists — never around necks.",
+   "Collect cut straw pieces at cleanup; they roll everywhere."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw a skeleton hand. Circle one joint and label it 'hinge' or 'ball-and-socket'."
+   },
+   {
+    "type": "mc",
+    "prompt": "Tendons connect…",
+    "choices": [
+     "bone to bone",
+     "muscle to bone",
+     "skin to bone"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "Your skull's most important job is…",
+    "choices": [
+     "hearing",
+     "protecting your brain",
+     "smelling"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "Name two joints in your body and what each one lets you do."
+   }
+  ],
+  "quiz": [
+   {
+    "q": "About how many bones does a grown-up skeleton have?",
+    "choices": [
+     "206",
+     "56",
+     "1,000"
+    ],
+    "a": 0
+   },
+   {
+    "q": "Muscles move your bones by…",
+    "choices": [
+     "pushing them",
+     "pulling them with tendons",
+     "blowing on them"
+    ],
+    "a": 1
+   },
+   {
+    "q": "Your elbow works like which joint?",
+    "choices": [
+     "A ball-and-socket",
+     "A hinge, like a door",
+     "A zipper"
+    ],
+    "a": 1
+   }
+  ]
+ },
+ {
+  "id": "bubbles",
+  "week": 11,
+  "title": "Bubble & Surface Tension Lab",
+  "episode": "Wet All Over",
+  "topic": "Surface Tension & Soap Films",
+  "duration": "50 min",
+  "color": "#00ACC1",
+  "icon": "droplet",
+  "tagline": "Race pepper across the water, build wands of every shape, and hunt the answer: can you blow a SQUARE bubble?",
+  "objectives": [
+   "Explain surface tension as water's stretchy surface 'skin'",
+   "Compare bubble recipes and measure which one makes the longest-lasting bubbles",
+   "Discover that a bubble floating in the air is always a sphere, whatever shape the wand is"
+  ],
+  "materials": [
+   {
+    "item": "Dish soap",
+    "qty": "1 bottle"
+   },
+   {
+    "item": "Glycerin OR corn syrup (bubble strengthener)",
+    "qty": "1 bottle"
+   },
+   {
+    "item": "Water",
+    "qty": "1 jug (about 1 gallon)"
+   },
+   {
+    "item": "Measuring cups & spoons",
+    "qty": "5 sets"
+   },
+   {
+    "item": "Mixing bowls or jugs",
+    "qty": "5"
+   },
+   {
+    "item": "Straws (each scientist gets their own)",
+    "qty": "20"
+   },
+   {
+    "item": "Pipe cleaners (wand building)",
+    "qty": "20"
+   },
+   {
+    "item": "String (giant wand loops + cube frames)",
+    "qty": "1 ball"
+   },
+   {
+    "item": "Shallow trays or baking sheets",
+    "qty": "10"
+   },
+   {
+    "item": "Ground black pepper",
+    "qty": "1 shaker"
+   },
+   {
+    "item": "Food coloring (optional bubble tinting)",
+    "qty": "1 set"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Mix the 'pro batch' the night before: 6 cups water + 1 cup dish soap + ¼ cup glycerin — rested solution makes the strongest bubbles",
+   "Bend one example wand of each shape (circle, square, triangle, star) so builders can copy them",
+   "Build the giant wand ahead: two straws threaded on a long string loop, tied off",
+   "Plan for outdoors or a wipeable floor — bubble day is a slippery day"
+  ],
+  "steps": [
+   "Pepper race! Fill a tray with water and sprinkle pepper so it floats on the surface 'skin.' Touch the center with a straw tip dipped in dish soap — ZOOM! The pepper races to the edges.",
+   "Recipe lab: each team mixes a labeled cup — Team A: water + soap only. Team B: plus 1 spoon of glycerin. Team C: plus 1 spoon of corn syrup.",
+   "Wand workshop: twist pipe cleaners into circle, square, triangle, and star wands. Dip, lift, and blow gently.",
+   "The big question: blow through the SQUARE wand and catch the bubble — what shape is it in the air? Test every wand shape and record the result on the worksheet.",
+   "Longest-lasting bubble contest: one bubble per recipe while the teacher times it. Which recipe wins? Check the class tally.",
+   "Finale: the giant string wand, outdoors or over the big tray — one enormous bubble while the whole class counts its seconds out loud."
+  ],
+  "science": "Water molecules hold on to each other tightly, and at the surface that pull makes an invisible stretchy skin — surface tension — strong enough to float pepper flakes and even water-strider bugs. Soap loosens the grip: where the soapy straw touches, the skin suddenly weakens, and the stronger skin around it yanks the pepper away. That's the race! A bubble is a sandwich of soap, water, and soap wrapped around air, and the film always pulls itself into the shape with the least surface — a sphere — no matter what shape the wand is. That's why a square bubble refuses to exist in the air (though the flat film inside a square wand, and the tiny film-cube inside a cube frame, come close!). Glycerin or corn syrup slows the water draining and evaporating out of the film, so those bubbles live longer.",
+  "questions": [
+   "Why did the pepper race AWAY from the soap instead of toward it?",
+   "Which recipe made the longest-lasting bubbles? What was different about it?",
+   "Why is a free-floating bubble always round, even from a star wand?",
+   "Where else does surface tension show up? (Raindrops! Water striders! A cup filled just past the brim!)"
+  ],
+  "safety": [
+   "Bubble solution on the floor is SLIPPERY — walking feet only, and wipe spills right away.",
+   "Straws are for blowing only, never sipping, and nobody shares a straw.",
+   "Soap in eyes stings: hands stay away from faces until wash-up time."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw the pepper race: the pepper before the soap touch, and after. Add arrows showing which way the pepper zoomed."
+   },
+   {
+    "type": "mc",
+    "prompt": "Surface tension is…",
+    "choices": [
+     "water's stretchy surface 'skin'",
+     "a kind of soap",
+     "the color of bubbles"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "mc",
+    "prompt": "A bubble blown from a square wand comes out…",
+    "choices": [
+     "square",
+     "round (a sphere)",
+     "triangle"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "Which recipe won your longest-bubble test? Write the recipe and how many seconds it lasted."
+   }
+  ],
+  "quiz": [
+   {
+    "q": "Why does the pepper race away from a soapy straw?",
+    "choices": [
+     "The soap breaks the surface tension and the water's skin pulls the pepper away",
+     "The pepper is scared of soap",
+     "The soap makes the water hotter"
+    ],
+    "a": 0
+   },
+   {
+    "q": "What shape is a bubble floating in the air, from ANY wand?",
+    "choices": [
+     "The wand's shape",
+     "A cube",
+     "A sphere (round)"
+    ],
+    "a": 2
+   },
+   {
+    "q": "Glycerin or corn syrup in the mix makes bubbles…",
+    "choices": [
+     "last longer",
+     "turn square",
+     "pop the instant they form"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "tornado",
+  "week": 12,
+  "title": "Tornado in a Bottle",
+  "episode": "Kicks Up a Storm",
+  "topic": "Weather & Vortex Motion",
+  "duration": "45–50 min",
+  "color": "#2E86C1",
+  "icon": "droplet",
+  "tagline": "Trap a twister in a bottle, race vortex speeds, and learn why storm air spins.",
+  "objectives": [
+   "Describe a vortex as fluid spiraling around a hollow center",
+   "Observe that a swirling bottle drains far faster than a glugging one — and explain why",
+   "Connect the bottle vortex to how real tornadoes form, plus storm safety"
+  ],
+  "materials": [
+   {
+    "item": "Clear 2-liter bottles in taped pairs (or with tornado-tube connectors)",
+    "qty": "5 sets (1 per pair)"
+   },
+   {
+    "item": "Water",
+    "qty": "1 bucket or pitcher"
+   },
+   {
+    "item": "Dish soap",
+    "qty": "1 bottle (1 drop per bottle)"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Build and leak-test all 5 bottle pairs the day before — tape the joints twice",
+   "Fill pairs about ⅔ full with one drop of soap each; lay towels under the flipping zone",
+   "Practice the swirl-flip yourself: flip, then move the top bottle in a quick circle"
+  ],
+  "steps": [
+   "Trial 1 — no spin: flip the bottle pair and count the seconds out loud together. Glug, glug, glug — air and water fight for the same doorway.",
+   "Trial 2 — SPIN: flip and swirl! A funnel tornado appears and the water whooshes down. Count this one too. How much faster?",
+   "Sketch your funnel: is it wide or skinny? Where does the water spin fastest — near the top or the bottom?",
+   "Vortex races: pairs compete for the widest funnel and the longest-lasting funnel. Sketch your best one.",
+   "Experiment: does a faster swirl change the funnel? Does warmer water? Test one change and record it.",
+   "Storm talk: connect the bottle to the real thing — and learn where the safest place is in a real tornado."
+  ],
+  "science": "A vortex is fluid — water or air — spiraling around a center. Spinning throws the water outward against the bottle walls, opening a hollow straw of air down the middle. Now water can flow down the OUTSIDE while air escapes up the CENTER: no more glugging traffic jam, so the bottle drains in seconds. Real tornadoes are air vortices born in thunderstorms, when warm, wet air rising meets cool, dry air and the column starts to rotate — the same spin physics, at sky size, which is why the class's storm-chasing ride got so wild.",
+  "questions": [
+   "Why did the swirling bottle drain so much faster than the glugging one?",
+   "Where is the funnel widest — top or bottom? Where does debris spin fastest?",
+   "What two kinds of air meet to build a real tornado?",
+   "Where is the safest place to be in a real tornado, and why?"
+  ],
+  "safety": [
+   "Water WILL spill: bottles stay over the towels or tray zone, walking feet.",
+   "Bottles are never swung or thrown — a full 2-liter bottle is heavy.",
+   "Storm safety is the serious minute: lowest floor, small inside room, away from windows."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw your vortex. Label the funnel and the hollow air core in the middle."
+   },
+   {
+    "type": "mc",
+    "prompt": "The swirling bottle drained faster because…",
+    "choices": [
+     "the water got lighter",
+     "air and water could trade places smoothly through the vortex",
+     "the bottle got bigger"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "A real tornado forms inside a…",
+    "choices": [
+     "snowstorm",
+     "thunderstorm",
+     "hurricane only"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "Describe the safest place to be during a real tornado and why."
+   }
+  ],
+  "quiz": [
+   {
+    "q": "A vortex is…",
+    "choices": [
+     "a kind of cloud",
+     "fluid spiraling around a hollow center",
+     "a measuring tool"
+    ],
+    "a": 1
+   },
+   {
+    "q": "In our race, the spinning bottle drained…",
+    "choices": [
+     "slower",
+     "at the same speed",
+     "much faster"
+    ],
+    "a": 2
+   },
+   {
+    "q": "Tornadoes are born when spinning air forms inside a…",
+    "choices": [
+     "thunderstorm",
+     "rainbow",
+     "fog bank"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "soundlab",
+  "week": 13,
+  "title": "Sound Waves Lab",
+  "episode": "In the Haunted House",
+  "topic": "Sound, Vibration & Pitch",
+  "duration": "50 min",
+  "color": "#117A65",
+  "icon": "sound",
+  "tagline": "See sound shake rice off a drum, then phone a friend across the room — no batteries, just string!",
+  "objectives": [
+   "Explain that sound is made by vibrations and travels through matter",
+   "Make vibrations visible with a rice-topped drum",
+   "Test how string tightness changes a cup telephone, and how band size changes pitch"
+  ],
+  "materials": [
+   {
+    "item": "Paper or plastic cups",
+    "qty": "20 (2 per student)"
+   },
+   {
+    "item": "Cotton string, not waxed",
+    "qty": "1 ball (cut into 10 × 15-ft lengths)"
+   },
+   {
+    "item": "Paperclips (string anchors)",
+    "qty": "20"
+   },
+   {
+    "item": "Bowls + plastic wrap (drums)",
+    "qty": "5 sets"
+   },
+   {
+    "item": "Dry rice (drum sprinkles)",
+    "qty": "1 small bag"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Poke one hole in the bottom of each cup (teacher job, use a nail) before class",
+   "Cut the 15-ft strings and tie a paperclip anchor at each end",
+   "Test one cup-phone pair down the hallway so you know the range works"
+  ],
+  "steps": [
+   "See sound: stretch plastic wrap over a bowl, sprinkle rice on top, and tap the side. The rice DANCES — your tap made the wrap vibrate, just like the haunted house's spooky sounds were all vibrations.",
+   "Feel sound: hum with your fingertips on your throat. That buzz is your vocal cords vibrating!",
+   "Build cup telephones: thread the string through both cups and anchor with paperclips.",
+   "The test: pairs stretch out with the string TIGHT and whisper. Now let the string go SLACK and whisper again. Record which was clearer — and by how much.",
+   "Pitch hunt: hum the lowest note you can, then the highest. Feel your throat buzz faster on the high note — faster vibration means higher pitch!",
+   "Wave wrap-up: vibrations push air molecules in waves, molecule to molecule, all the way to an ear (or a cup!)."
+  ],
+  "science": "Every sound starts with a vibration — something shaking back and forth fast. The vibration bumps into air molecules, they bump the next ones, and the traveling bump is a sound wave. Sound also races through solids: a tight string is a molecule highway, which is why the cup phone works tight and fails slack — a loose string swallows the vibrations before they arrive. Pitch is vibration speed: fast vibrations (like your throat buzzing on a high note) sound high; slow vibrations sound low. The episode's 'ghosts' were just vibrations with good costumes.",
+  "questions": [
+   "Why did the tight string carry whispers better than the slack one?",
+   "Could two astronauts shout to each other on the Moon, where there's no air? Why not?",
+   "What vibrates inside your throat when you hum?",
+   "Name two ways to make a rubber-band guitar play higher."
+  ],
+  "safety": [
+   "String goes between cups and hands only — never around necks.",
+   "Whisper-level voices for phone tests: scientists protect their ears."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw the sound's trip: vibrating cup → string → second cup → ear. Label where the vibration travels."
+   },
+   {
+    "type": "mc",
+    "prompt": "Sound is made by…",
+    "choices": [
+     "vibrations",
+     "light",
+     "magnetism"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "mc",
+    "prompt": "Faster vibrations make a…",
+    "choices": [
+     "lower pitch",
+     "higher pitch",
+     "louder color"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "How did the dancing rice prove sound is vibration?"
+   }
+  ],
+  "quiz": [
+   {
+    "q": "All sound begins with…",
+    "choices": [
+     "a vibration",
+     "a flash of light",
+     "a magnet"
+    ],
+    "a": 0
+   },
+   {
+    "q": "Our cup phone worked best when the string was…",
+    "choices": [
+     "slack and wavy",
+     "tight and straight",
+     "wet"
+    ],
+    "a": 1
+   },
+   {
+    "q": "A thin, tight rubber band plays a ___ pitch than a fat, loose one.",
+    "choices": [
+     "higher",
+     "lower",
+     "silent"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "magnets",
+  "week": 14,
+  "title": "Magnet Hunt & Maze",
+  "episode": "Magnet Power",
+  "topic": "Magnetism, Poles & Strength",
+  "duration": "50 min",
+  "color": "#B7950B",
+  "icon": "bolt",
+  "tagline": "Race a paperclip through a maze with an invisible force, then crown the strongest magnet in the room!",
+  "objectives": [
+   "Show that magnets attract iron and steel — but not every material, and not every metal",
+   "Discover that like poles repel and opposite poles attract",
+   "Measure magnet strength fairly by counting paperclips held in a chain"
+  ],
+  "materials": [
+   {
+    "item": "Bar or horseshoe magnets",
+    "qty": "10 (mixed sizes if possible)"
+   },
+   {
+    "item": "Paperclips",
+    "qty": "100+"
+   },
+   {
+    "item": "Testing trays: coin, wood stick, plastic piece, aluminum foil ball, iron nail, eraser",
+    "qty": "5 trays"
+   },
+   {
+    "item": "Cardboard maze boards with printed courses",
+    "qty": "5"
+   },
+   {
+    "item": "Printed worksheets (prediction chart + bar graph)",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Print or draw 5 maze courses on cardstock and tape them to the cardboard boards",
+   "Sort one test tray per pair and count the paperclips into cups of 25",
+   "Inspect magnets for chips — a chipped magnet still works but shed shards are sharp"
+  ],
+  "steps": [
+   "The Hunt: predict first! Mark each tray object 'will stick' or 'won't stick' on your chart, then test them all with a magnet. (Big surprise hiding in that tray: not every metal sticks!)",
+   "Pole play: bring two magnets slowly together. Flip one around and try again. One way pulls together — the other way PUSHES apart. You just found the two poles.",
+   "Strength trials: hang paperclips in a chain from your magnet, one by one, until the chain drops. Count, record, and bar-graph it. Try the biggest magnet — is bigger always stronger?",
+   "Maze racing: rest a paperclip on top of the maze board and drive it with a magnet UNDERNEATH the board. Invisible force steering! Pairs race the course.",
+   "Field hunt: hover your magnet near (not on!) classroom things — a door frame, a chair leg, the whiteboard. Which ones secretly contain iron?",
+   "Wrap-up sort: from memory, sort your tray into 'sticks' and 'won't stick' — no testing! Then check yourselves."
+  ],
+  "science": "A magnet's pull works on iron, steel, and a few other metals — but not on wood, plastic, or even every metal: aluminum and most coins barely notice it. Every magnet has two poles, north and south. Opposite poles attract; like poles repel, pushing apart without ever touching — proof that the magnet's invisible field takes up space around it, strongest right at the poles. Strength isn't about size alone: what the magnet is made of matters more. And the biggest magnet of all is Earth itself, which is why compass needles point north.",
+  "questions": [
+   "Which tray object surprised you most? What does that tell you about 'metal' vs 'magnetic'?",
+   "How can a magnet push something it never touches?",
+   "Why did the paperclip chain finally fall?",
+   "Did the biggest magnet win the strength test? Was the test fair?"
+  ],
+  "safety": [
+   "Strong magnets SNAP together — keep fingertips out of the pinch zone.",
+   "Magnets stay away from phones, tablets, and cards: fields can scramble them.",
+   "Small paperclips are counted out and counted back in. None go in mouths."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw your maze course and the path your paperclip traveled."
+   },
+   {
+    "type": "mc",
+    "prompt": "Which of these will a magnet attract?",
+    "choices": [
+     "a wooden stick",
+     "an iron nail",
+     "a plastic cup"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "Two north poles pushed together will…",
+    "choices": [
+     "attract",
+     "repel (push apart)",
+     "stick forever"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "How many paperclips did your strongest magnet hold? How did you keep the test fair?"
+   }
+  ],
+  "quiz": [
+   {
+    "q": "Magnets attract which metal?",
+    "choices": [
+     "Aluminum",
+     "Iron and steel",
+     "Every metal"
+    ],
+    "a": 1
+   },
+   {
+    "q": "Like poles (north + north)…",
+    "choices": [
+     "attract",
+     "repel",
+     "melt"
+    ],
+    "a": 1
+   },
+   {
+    "q": "A magnet's field is strongest at…",
+    "choices": [
+     "the middle",
+     "the poles",
+     "the label"
+    ],
+    "a": 1
+   }
+  ]
+ },
+ {
+  "id": "fossils",
+  "week": 15,
+  "title": "Fossil Dig Lab",
+  "episode": "The Busasaurus",
+  "topic": "Fossils & Paleontology",
+  "duration": "55–60 min",
+  "color": "#8D6E63",
+  "icon": "layers",
+  "tagline": "Pour plaster fossils, then grab a brush and excavate your own dig site — gently, like a real paleontologist!",
+  "objectives": [
+   "Explain what a fossil is and how buried remains become stone traces over time",
+   "Make a plaster cast fossil, and tell the difference between a mold and a cast",
+   "Excavate a buried fossil carefully and identify it using a fossil ID card"
+  ],
+  "materials": [
+   {
+    "item": "Plaster of Paris",
+    "qty": "1 bag (5 lb)"
+   },
+   {
+    "item": "Mixing cups + stir sticks (teacher mixes the batches)",
+    "qty": "10 each"
+   },
+   {
+    "item": "Water",
+    "qty": "1 jug"
+   },
+   {
+    "item": "Small dinosaur toys + real shells (mold makers)",
+    "qty": "12 assorted"
+   },
+   {
+    "item": "Petroleum jelly (mold release — teacher applies)",
+    "qty": "1 small tub"
+   },
+   {
+    "item": "Sand tubs or deep trays (dig sites)",
+    "qty": "5"
+   },
+   {
+    "item": "Soft paintbrushes (excavation tools)",
+    "qty": "10"
+   },
+   {
+    "item": "Printed fossil ID cards",
+    "qty": "2 sets"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Pre-make 10 plaster casts the day before and bury them in the sand tubs — those are the dig-site fossils, because today's fresh casts won't be diggable yet",
+   "Test one mold first: jelly a toy or shell lightly, press into mixed plaster, lift out after about 15 minutes",
+   "Work over the trays and set out a 'plaster trash' bowl — plaster NEVER goes down the sink",
+   "Print and cut the fossil ID cards (shell, fern leaf, spiral shell, dino tooth, footprint, fish)"
+  ],
+  "steps": [
+   "Fossil talk: a fossil is a trace of a living thing preserved in rock. Today everyone is a paleontologist, like the crew time-tripping with the dinosaurs in “The Busasaurus.”",
+   "Mold making: pick a dino toy or shell. With the teacher's help, press it into a cup of mixed plaster — the dent it leaves is the MOLD — then lift the toy out carefully.",
+   "Cast pouring: pour fresh plaster into your mold and smooth the top. While it sets (about 30 minutes), head for the dig sites!",
+   "Excavation: at the sand tubs, brush — never yank! — the sand away from a buried cast until you can lift it free, exactly like real fossil hunters protecting fragile finds.",
+   "ID station: match your excavated fossil to the ID cards. What living thing made this shape? Draw it on your worksheet.",
+   "The reveal: pop today's fresh casts out of their molds. You made a CAST fossil — the same two steps (mold, then cast) that nature performs in stone!"
+  ],
+  "science": "When a plant or animal dies and is buried quickly by mud or sand, the soft parts rot away, but the hard parts — shells, bones, teeth — can last. More sediment piles on top and slowly squeezes into rock. Groundwater can dissolve the original shell, leaving a hollow mold, and minerals may later fill that mold and harden into a cast: a stone copy of the living thing. That is exactly the two steps in this lab — pressing the toy made a mold, and pouring the plaster made a cast. Real fossils take thousands to millions of years and are found in layered sedimentary rock, which is why paleontologists dig layer by layer and brush gently: one careless yank can destroy a clue that waited a hundred million years.",
+  "questions": [
+   "What is the difference between a mold fossil and a cast fossil?",
+   "Why do we find fossils in layered (sedimentary) rock, but not in cooled lava rock?",
+   "Why do paleontologists use brushes instead of big shovels at a dig?",
+   "Which parts of an animal are most likely to become fossils — and which parts almost never do?"
+  ],
+  "safety": [
+   "Dry plaster powder is TEACHER-ONLY: no scooping, shaking, or blowing plaster dust — it irritates lungs and eyes.",
+   "Plaster NEVER goes in the sink — it hardens inside pipes! All plaster waste goes in the trash bowl.",
+   "Wash hands after plaster and sand play; casts must be fully dry before they go home."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw the fossil you excavated and label it with its ID-card name."
+   },
+   {
+    "type": "mc",
+    "prompt": "A cast fossil forms when…",
+    "choices": [
+     "minerals fill a hollow mold and harden",
+     "a dinosaur steps in mud today",
+     "paint dries on a rock"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "mc",
+    "prompt": "Paleontologists brush fossils gently because…",
+    "choices": [
+     "the brush is magic",
+     "fossils are fragile and break easily",
+     "sand is dangerous"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "Tell the story of a fossil: how did a living shell become stone? Use the words 'buried,' 'mold,' and 'cast.'"
+   }
+  ],
+  "quiz": [
+   {
+    "q": "A fossil is…",
+    "choices": [
+     "any old rock",
+     "a preserved trace of a living thing from long ago",
+     "a baby dinosaur"
+    ],
+    "a": 1
+   },
+   {
+    "q": "In our lab, the dent left by the toy was the ___ and the plaster copy was the ___.",
+    "choices": [
+     "cast … mold",
+     "mold … cast",
+     "fossil … rock"
+    ],
+    "a": 1
+   },
+   {
+    "q": "Why must plaster never go down the sink?",
+    "choices": [
+     "It turns the water blue",
+     "It hardens inside the pipes and blocks them",
+     "It makes the water sparkle"
+    ],
+    "a": 1
+   }
+  ]
+ },
+ {
+  "id": "machines",
+  "week": 16,
+  "title": "Simple Machines Build",
+  "episode": "Under Construction",
+  "topic": "Simple Machines: Levers, Pulleys & Ramps",
+  "duration": "55–60 min",
+  "color": "#935116",
+  "icon": "ramp",
+  "tagline": "Out-lift a stack of books with one finger, hoist treasure with a pulley, and roll to victory — three challenge stations!",
+  "objectives": [
+   "Identify levers, pulleys, and inclined planes hiding in everyday tools",
+   "Show that moving a lever's fulcrum closer to the load makes lifting easier",
+   "Compare lifting straight up with using a pulley and a ramp, and name the trade: less force, more distance"
+  ],
+  "materials": [
+   {
+    "item": "Rulers or paint-stir sticks (lever arms)",
+    "qty": "10"
+   },
+   {
+    "item": "Blocks or thick erasers (fulcrums)",
+    "qty": "10"
+   },
+   {
+    "item": "Books or beanbags (loads)",
+    "qty": "10 loads"
+   },
+   {
+    "item": "String",
+    "qty": "1 ball"
+   },
+   {
+    "item": "Empty thread spools or toy pulleys",
+    "qty": "5"
+   },
+   {
+    "item": "Ramp boards + toy cars or cans to roll",
+    "qty": "5 sets"
+   },
+   {
+    "item": "Printed worksheets + station challenge cards",
+    "qty": "10 copies each"
+   }
+  ],
+  "prep": [
+   "Set up the three stations before class: Lever Lab, Pulley Lab (rig spools over a chair back or bar), Ramp Lab",
+   "Tape fulcrum-position marks (1, 2, 3) along each ruler",
+   "Test the pulley rig with the heaviest load yourself — anchors must not slip"
+  ],
+  "steps": [
+   "Station rotation — Lever Lab: slide a ruler under a stack of books, resting on the fulcrum block. Try lifting with the fulcrum far away, then close to the books. One position lets you lift with ONE FINGER!",
+   "Station rotation — Pulley Lab: hoist the beanbag bucket straight up by hand and feel the pull. Now run the string over the spool pulley and hoist again. Same load — but the pull feels easier, and your own body weight helps.",
+   "Station rotation — Ramp Lab: lift the can straight up onto the step. Now roll it up the ramp board. Longer trip — but whose arm is happier?",
+   "Inventors' circle: each pair presents one real-world tool that uses their station's machine — seesaws, flagpoles, wheelchair ramps, blinds, cranes…",
+   "Finale challenge — move the 'boulder' (the heaviest book stack) across the room using any TWO machines together. No carrying it by hand!",
+   "Wrap-up: every machine charged the same price — less force, paid for with more distance or a changed direction."
+  ],
+  "science": "Simple machines never create energy from nothing — they make deals. A lever trades distance for force: park the fulcrum (the pivot) close to a heavy load and a small push on the long end lifts it, though the load only rises a little. A pulley changes the direction of your pull — down instead of up, so your own weight helps — and extra pulleys share the load across more rope. An inclined plane spreads one big lift into a long, gentle climb. Wheels, wedges, and screws are the same family of deals, which is how a class with sticks and string can out-lift a boulder, just like the Bus's building-site adventures.",
+  "questions": [
+   "Why was the long ramp easier but slower than lifting straight up?",
+   "Where should the fulcrum go to lift the heaviest load? Why?",
+   "Where do pulleys work in your house right now? (Blinds! Flagpoles!)",
+   "Every machine makes a trade. What did YOUR favorite machine trade?"
+  ],
+  "safety": [
+   "Loads stay LOW: nothing is lifted above waist height or over anyone's feet.",
+   "Pulley anchors are teacher-checked only; nobody hangs from the rigs.",
+   "Fingers out from under lever loads before the lift — pinch points are real.",
+   "Walking feet between stations; ramps and sticks live on tables, not floors."
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw a lever and label: load, fulcrum, and where the push (effort) goes."
+   },
+   {
+    "type": "mc",
+    "prompt": "To lift a heavier load with a lever, slide the fulcrum…",
+    "choices": [
+     "far from the load",
+     "closer to the load",
+     "off the ruler"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "A ramp makes lifting easier by trading…",
+    "choices": [
+     "less force for a longer distance",
+     "magic for luck",
+     "weight for color"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "short",
+    "prompt": "Which station was your favorite machine, and what trade does it make?"
+   }
+  ],
+  "quiz": [
+   {
+    "q": "Simple machines trade ___ for ___ .",
+    "choices": [
+     "force … distance",
+     "money … toys",
+     "speed … color"
+    ],
+    "a": 0
+   },
+   {
+    "q": "The pivot point of a lever is called the…",
+    "choices": [
+     "fulcrum",
+     "axle",
+     "wedge"
+    ],
+    "a": 0
+   },
+   {
+    "q": "Which of these is a pulley at work?",
+    "choices": [
+     "A seesaw",
+     "A flagpole rope",
+     "A wheelchair ramp"
+    ],
+    "a": 1
+   }
+  ]
+ },
+ {
+  "id": "rocket",
+  "week": 17,
+  "title": "Balloon Rocket Lab",
+  "episode": "Gets Lost in Space",
+  "topic": "Newton's Third Law: Action & Reaction",
+  "duration": "30 min",
+  "color": "#884EA0",
+  "icon": "star",
+  "tagline": "Air goes BACK — the rocket goes FORWARD!",
+  "objectives": [
+   "See that pushing air one way pushes the balloon the other way",
+   "Measure how balloon size and air amount change the flight distance",
+   "Connect the balloon rocket to how real rockets launch"
+  ],
+  "materials": [
+   {
+    "item": "Balloons",
+    "qty": "12 (2 spares)"
+   },
+   {
+    "item": "String or fishing line (the launch track)",
+    "qty": "1 ball — one long line across the room"
+   },
+   {
+    "item": "Drinking straws",
+    "qty": "10"
+   },
+   {
+    "item": "Tape",
+    "qty": "1 roll"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "String the launch line wall-to-wall or between two chairs BEFORE class and pull it drum-tight — a saggy line makes slow rockets",
+   "Thread a test straw and fly one balloon yourself so the tape trick is proven",
+   "Tape small distance markers on the floor under the line (start, halfway, finish)"
+  ],
+  "steps": [
+   "Predict: a balloon taped to a straw on a string — what happens when the air rushes out? Everyone commits on the worksheet.",
+   "Rig up: thread the string through your straw. Blow up your balloon BIG and pinch the neck shut — do NOT tie it!",
+   "Tape the balloon to the straw, air-end facing the start line. Crew ready? 3… 2… 1… RELEASE THE PINCH!",
+   "Measure: how far did your rocket fly — past halfway? All the way? Mark it on your worksheet's launch chart.",
+   "Test flight 2 — half-full balloon: same rocket, half the air. Fly it and compare distances. What changed?",
+   "Test flight 3 — the rematch: blow it up as big as you dare. Then debrief: which direction did the air push? Which direction did the rocket go?"
+  ],
+  "science": "A balloon rocket flies on Newton's Third Law: for every action there is an equal and opposite reaction. The balloon squeezes its air out the back — that's the action. The air pushes the balloon forward — that's the reaction, and it's strong enough to zoom the rocket the whole length of the room. Real rockets work exactly the same way, just with burning fuel blasting exhaust down instead of stretchy rubber squeezing air out. More air and a bigger squeeze mean a bigger push — which is why your fullest balloon flew farthest.",
+  "questions": [
+   "Which way did the air go? Which way did the rocket go?",
+   "Why did the half-full balloon stop sooner?",
+   "What would happen with TWO balloons taped on the same straw?",
+   "Real rockets carry their own air supply — why do they need to? (Space has no air to breathe… or to burn fuel with!)"
+  ],
+  "safety": [
+   "Check for latex allergies before balloons come out — swap in a foil balloon for anyone sensitive",
+   "Popped balloon scraps are a choking hazard for little ones: every scrap gets picked up the second it pops",
+   "The launch line is head-height for seated kids — duck or walk around it, never through it",
+   "Scientists pinch and hold their own balloons — no letting go mid-inflate near anyone's face"
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw your rocket mid-flight. Use arrows to show which way the AIR goes and which way the ROCKET goes."
+   },
+   {
+    "type": "mc",
+    "prompt": "The balloon rocket moved forward because…",
+    "choices": [
+     "the string pulled it",
+     "the escaping air pushed it forward",
+     "the straw is magic"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "In Newton's Third Law, every action has…",
+    "choices": [
+     "a snack break",
+     "an equal and opposite reaction",
+     "a bigger balloon"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "My fullest balloon flew farthest because ___"
+   }
+  ],
+  "quiz": [
+   {
+    "q": "A balloon rocket flies because…",
+    "choices": [
+     "the string is slippery",
+     "air rushing out the back pushes it forward",
+     "balloons like to travel"
+    ],
+    "a": 1
+   },
+   {
+    "q": "Newton's Third Law says every action has an equal and opposite…",
+    "choices": [
+     "nap",
+     "reaction",
+     "balloon"
+    ],
+    "a": 1
+   },
+   {
+    "q": "Your half-full balloon stopped early because…",
+    "choices": [
+     "it ran out of push — less air means less reaction",
+     "the straw got tired",
+     "the string ended"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "melt",
+  "week": 18,
+  "title": "The Great Melt Race",
+  "episode": "In the Arctic",
+  "topic": "Heat Transfer & Insulation",
+  "duration": "35 min",
+  "color": "#5499C7",
+  "icon": "droplet",
+  "tagline": "Three cubes enter. One cube survives. Slow the melt!",
+  "objectives": [
+   "Run a fair race between wrapped and unwrapped ice cubes (same size, same spot = fair test)",
+   "Discover that heat always moves from warm things toward cold things",
+   "Explain how insulators slow heat down — and design a wrap that wins"
+  ],
+  "materials": [
+   {
+    "item": "Ice cubes, all the same size",
+    "qty": "1 bag (3 per pair, plus spares)"
+   },
+   {
+    "item": "Cups or small bowls",
+    "qty": "15 (3 per pair)"
+   },
+   {
+    "item": "Wrapper set: foil squares + plastic wrap + cloth scraps",
+    "qty": "5 sets (1 per pair)"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Freeze (or buy) cubes all the SAME size — a fair race needs identical cubes; keep them in the freezer until the second the race starts",
+   "Pre-cut the foil, plastic wrap, and cloth into wrap-size squares",
+   "Line up 3 labeled cups per pair: CONTROL (no wrap), FOIL, CLOTH"
+  ],
+  "steps": [
+   "Predict: three identical ice cubes — one naked, one in foil, one in cloth. Which melts FIRST? Which lasts LONGEST? Commit on the worksheet.",
+   "Race setup: cubes go in the cups at the same moment (teacher calls the drop!). Wrap cube 2 in foil, cube 3 in cloth. Cube 1 races bare — it's the control.",
+   "Observe every 5 minutes: peek, rank the cubes (biggest = winning), and log the melt chart. NO touching — warm hands are cheating, that's heat transfer too!",
+   "Call the race: which cube melted first? Which wrap protected best? Was your prediction right?",
+   "Championship round: each pair gets ONE new cube and may design ANY wrap from the wrapper set — layers, combos, air pockets, anything. Whose cube survives longest?",
+   "Debrief: why did the winning wrap work? Where else do people use insulation? (Coats! Coolers! The walls of your house!)"
+  ],
+  "science": "Heat is a traveler: it always moves from warm places to cold places, never the other way around. Your ice cube isn't 'making cold' — the warm room air is delivering heat into it, and that heat is what melts it. An insulator is any material that slows heat's journey down. Cloth traps tiny pockets of still air, and still air is a terrible heat-mover, so a cloth-wrapped cube stays frozen long after the bare cube has turned into a puddle. The very same trick keeps your body heat in under a winter coat and keeps drinks cold inside a cooler.",
+  "questions": [
+   "Why did every pair need cubes the exact same size for the race to be fair?",
+   "Did the foil surprise you? Foil is metal — and metal MOVES heat fast. When did it help, and when did it not?",
+   "Why is a puffy coat warmer than a thin tight one? (Hint: trapped air!)",
+   "Name three places insulation is working right now in this building."
+  ],
+  "safety": [
+   "Race ice is for racing, not snacking — hands have touched wrappers, wrappers have touched tables",
+   "Melt water is a slip hazard: puddles get wiped the moment a cup tips",
+   "Frozen cubes straight from the freezer can stick to wet fingers — handle cubes dry or by the cup"
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw the three race cups at the START and at the FINISH. Which cube shrank the most?"
+   },
+   {
+    "type": "mc",
+    "prompt": "Heat always travels…",
+    "choices": [
+     "from cold to warm",
+     "from warm to cold",
+     "only upward"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "An insulator's job is to…",
+    "choices": [
+     "make things cold",
+     "slow heat down",
+     "melt ice faster"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "My championship wrap design was ___ and it worked/didn't work because ___"
+   }
+  ],
+  "quiz": [
+   {
+    "q": "Heat always moves…",
+    "choices": [
+     "from cold things to warm things",
+     "from warm things to cold things",
+     "in circles"
+    ],
+    "a": 1
+   },
+   {
+    "q": "A cloth wrap protects an ice cube because…",
+    "choices": [
+     "cloth is cold",
+     "it traps still air, which slows heat down",
+     "the cube can't see the sun"
+    ],
+    "a": 1
+   },
+   {
+    "q": "The bare, unwrapped cube in the race is called the…",
+    "choices": [
+     "winner",
+     "control — the one we compare everything against",
+     "snack"
+    ],
+    "a": 1
+   }
+  ]
+ },
+ {
+  "id": "bridge",
+  "week": 19,
+  "title": "Paper Bridge Challenge",
+  "episode": "Under Construction",
+  "topic": "Structure & Strength — Shape Makes Weak Things Strong",
+  "duration": "40 min",
+  "color": "#1F618D",
+  "icon": "layers",
+  "tagline": "Same paper. New shape. Super strength.",
+  "objectives": [
+   "Test one sheet of paper four ways — flat, accordion, channel, and twin tubes — and measure how many pennies each shape holds",
+   "Run a fair test: same book stacks, same gap, pennies in the same spot — only the SHAPE changes",
+   "Explain corrugation and why tubes are strong, and spot both tricks in real bridges and buildings"
+  ],
+  "materials": [
+   {
+    "item": "Plain paper",
+    "qty": "30 sheets"
+   },
+   {
+    "item": "Book stacks (bridge supports — classroom books)",
+    "qty": "2 stacks, same height"
+   },
+   {
+    "item": "Pennies / coins (the load — class pile)",
+    "qty": "200"
+   },
+   {
+    "item": "Pencils (rolling tools for the tubes)",
+    "qty": "5"
+   },
+   {
+    "item": "Tape",
+    "qty": "1 roll"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Build the demo span first: two book stacks the SAME height, one hand-span apart (thumb tip to pinky tip), and test a flat sheet yourself so the collapse moment is proven",
+   "Count the penny pile out into cups so loading is fast and the count-back at the end is easy",
+   "Pre-fold one Accordion and one Channel as show-models — creases are the whole trick, and a good demo fold saves five confused minutes"
+  ],
+  "steps": [
+   "Predict: can folding ONE sheet of paper make it hold real weight? Every scientist commits to a winner on the worksheet — Flat, Accordion, Channel, or Twin Tubes.",
+   "Set the fair test: two book stacks one hand-span apart. Same books + same gap for EVERY test, and pennies land in the middle, ONE at a time, counted out loud.",
+   "CONTROL — Flat Sheet: no folds, laid straight across. Load it until it collapses and record the pennies. That's the number to beat.",
+   "DESIGN 1 — 🪭 The Accordion: fold a short edge up a finger-width, flip, fold again, repeat to the end. Open the zigzag fan across the gap and load it.",
+   "DESIGN 2 — 🛶 The Channel: fold both LONG edges up a finger-width, crease hard, fold up once more so the walls stand tall. Lay it across with walls pointing UP like a tray, and load it.",
+   "DESIGN 3 — 🌀 The Twin Tubes: roll a half-sheet tightly around a pencil, slide the pencil out, tape it shut; roll a second tube. Lay both side-by-side across the gap with a flat half-sheet on top as the road, and load the middle.",
+   "Crown the winner: compare all four counts, check predictions, and post the CLASS RECORD (most pennies + design). Then the rematch question: how would YOU fold a sheet to beat the record?"
+  ],
+  "science": "A flat sheet fails because all the weight bends ONE spot — the middle sags and everything crashes. Folds fix that. Every ridge in the Accordion is a tiny wall, and walls carry load down instead of sagging: that's corrugation, the same zigzag hiding inside cardboard and on tin roofs. The Channel's tall folded edges are walls too. Tubes win for a different reason — the curve spreads the force all the way around the circle, so there's no weak flat spot to cave in. Real engineers build bridges, towers, and bike frames out of exactly these tricks: zigzags, triangles, and tubes. Shape IS strength.",
+  "questions": [
+   "Why did we use the same books and the same gap every time? (Fair test!)",
+   "Where do you see corrugation — zigzag strength — in real life?",
+   "Which design surprised you the most? Why?",
+   "How would YOU fold a sheet to beat the class record?"
+  ],
+  "safety": [
+   "Coins are counted OUT and counted BACK IN — none in mouths, ever",
+   "Fingers stay OUT from under the load zone — bridges collapse suddenly",
+   "The pencil is a rolling tool only — no poking, no sword fights"
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw your strongest bridge across the two book stacks. Label the shape trick it uses (zigzag walls, tall walls, or tubes)."
+   },
+   {
+    "type": "mc",
+    "prompt": "A folded sheet is stronger because…",
+    "choices": [
+     "folding makes the paper heavier",
+     "the folds spread the load and stop the paper bending in one spot",
+     "folding adds glue to the paper"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "The zigzag trick engineers use is called…",
+    "choices": [
+     "decoration",
+     "corrugation",
+     "levitation"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "Results: Flat ___ pennies • Accordion ___ pennies • Channel ___ pennies • Twin Tubes ___ pennies. The strongest design was ___ because ___"
+   }
+  ],
+  "quiz": [
+   {
+    "q": "A folded sheet is stronger because…",
+    "choices": [
+     "folding makes the paper heavier",
+     "the folds spread the load and stop bending in one spot",
+     "folding makes the paper thicker glue"
+    ],
+    "a": 1
+   },
+   {
+    "q": "The zigzag trick engineers use is called…",
+    "choices": [
+     "decoration",
+     "corrugation",
+     "levitation"
+    ],
+    "a": 1
+   },
+   {
+    "q": "A fair test changes…",
+    "choices": [
+     "everything at once, to save time",
+     "nothing at all",
+     "ONE thing at a time"
+    ],
+    "a": 2
+   }
+  ]
+ },
+ {
+  "id": "lemon",
+  "week": 20,
+  "title": "Lemon Battery Lab",
+  "episode": "Gets Charged",
+  "topic": "Chemical Energy to Electricity: Electrodes, Electrolytes & Circuits",
+  "duration": "40 min",
+  "color": "#F39C12",
+  "icon": "flask",
+  "tagline": "Fruit + two metals = REAL electricity.",
+  "objectives": [
+   "Build a lemon cell and name its parts: copper penny (positive +), zinc screw (negative −), lemon juice (electrolyte)",
+   "Chain lemon cells in SERIES to light an LED, and explain why series adds each cell's voltage",
+   "Explain where the electricity comes from — a chemical reaction between the two metals and the acid, not power stored in the lemon"
+  ],
+  "materials": [
+   {
+    "item": "Lemons",
+    "qty": "20 (4 per pair — chain of 3–4 + a spare)"
+   },
+   {
+    "item": "Copper pennies (clean & shiny — 1 per lemon)",
+    "qty": "20"
+   },
+   {
+    "item": "Zinc-plated screws, 3/4 inch (1 per lemon)",
+    "qty": "20"
+   },
+   {
+    "item": "Red LEDs",
+    "qty": "6 (5 pairs + 1 spare)"
+   },
+   {
+    "item": "Alligator clip leads",
+    "qty": "20 (4 per chain)"
+   },
+   {
+    "item": "Butter knife (TEACHER ONLY — penny slots)",
+    "qty": "1"
+   },
+   {
+    "item": "Multimeter (optional — teacher demo)",
+    "qty": "1"
+   },
+   {
+    "item": "Paper towels",
+    "qty": "1 roll"
+   },
+   {
+    "item": "Printed worksheets",
+    "qty": "10 copies"
+   }
+  ],
+  "prep": [
+   "Shine the pennies: a quick rub (or a 5-minute vinegar-and-salt soak, rinsed and dried) — dull pennies make weak cells",
+   "Build the teacher chain FIRST (4 lemons) and prove the LED lights in your hand before class — and test your spare LED",
+   "Tray per pair: 4 lemons, 4 pennies, 4 screws, 4 clip leads, 1 LED. Pre-cut nothing — the penny slits are a teacher job at build time"
+  ],
+  "steps": [
+   "Predict: how many lemons will it take to light the LED — 1, 2, 3, or 4+? Every pair commits on the worksheet.",
+   "Build ONE cell: roll a lemon firmly on the table to break up the juice pockets inside (don't burst the skin). Teacher cuts a small slit; push a penny in halfway so half sticks out.",
+   "Push a zinc screw in about 2 inches from the penny — DEEP (the screws are short) — and never touching the penny. Touching = short circuit = dead cell.",
+   "Test one lemon: clip the LED across the penny (+) and screw (−). It stays dark — one cell only makes about 0.9 volts and the LED needs about 2. That's not failure, that's the discovery!",
+   "Chain in SERIES: clip a lead from lemon 1's penny to lemon 2's screw, lemon 2's penny to lemon 3's screw, and so on. Each lemon ADDS its push.",
+   "Connect the LED across the two free ends: LONG leg (+) to the last lemon's penny side, SHORT leg (−) to the first lemon's screw side. Dark room, cupped hands… IT LIGHTS! 💡 (Dark? Flip the LED — legs backwards is fix #1.)",
+   "Verdict: count the lemons in your winning chain. If a multimeter is handy, measure the chain and compare with 0.9 volts × lemons used. Record everything on the worksheet."
+  ],
+  "science": "A battery is two DIFFERENT metals plus an acid. The lemon juice (the electrolyte) attacks the zinc screw: zinc atoms give up their electrons, the electrons pile up, and that makes the screw the NEGATIVE terminal. The copper penny side happily accepts electrons — it's the POSITIVE terminal. Clip on a wire and the electrons FLOW from zinc, through the wire and the LED, over to copper — and that flow is electric current! The lemon doesn't store electricity like a piggy bank; the metals and acid MAKE it, fresh, and the cell slowly dies as the zinc gets used up. One cell pushes about 0.9 volts. Chaining cells in series stacks the pushes — 0.9 + 0.9 + 0.9 — until the LED's 2-volt door swings open. And the screw? A galvanized nail is just steel wearing a zinc coat — Nathan's screws wear the same coat, so they do the same job.",
+  "questions": [
+   "Where does the electricity actually come from — the lemon, or the two metals?",
+   "Why did ONE lemon fail but a chain of four work?",
+   "What would happen if both electrodes were copper pennies?",
+   "How is a lemon battery like an AA battery — and how is it different?"
+  ],
+  "safety": [
+   "Experiment lemons are NEVER eaten afterward — metal dissolves into the juice. They go straight in the trash",
+   "The knife is a TEACHER-ONLY tool — penny slits are cut by the grown-up, every time",
+   "Wash hands after handling the metals and juice",
+   "Lemon power runs LEDs and multimeters ONLY — never wall outlets, never real electronics"
+  ],
+  "worksheet": [
+   {
+    "type": "draw",
+    "prompt": "Draw your winning lemon chain and the LED. Label the penny (+) and the screw (−) on one lemon."
+   },
+   {
+    "type": "mc",
+    "prompt": "The zinc screw is the…",
+    "choices": [
+     "positive (+) terminal",
+     "negative (−) terminal",
+     "electrolyte"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "mc",
+    "prompt": "Chaining lemons in series adds…",
+    "choices": [
+     "lemons' flavor",
+     "each cell's voltage",
+     "nothing — it just looks cool"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "short",
+    "prompt": "Our chain used ___ lemons. The LED was (dark / dim / bright) because ___"
+   }
+  ],
+  "quiz": [
+   {
+    "q": "The zinc screw is the…",
+    "choices": [
+     "positive (+) terminal",
+     "negative (−) terminal",
+     "electrolyte"
+    ],
+    "a": 1
+   },
+   {
+    "q": "The lemon juice's job is to be the…",
+    "choices": [
+     "battery case",
+     "electrolyte that drives the reaction",
+     "light bulb"
+    ],
+    "a": 1
+   },
+   {
+    "q": "If the penny and the screw touch inside the lemon, you get…",
+    "choices": [
+     "double power",
+     "a short circuit — no power",
+     "a louder lemon"
+    ],
+    "a": 1
+   }
+  ]
+ }
+];
+
+/* ============================================================
+   APP LAYER — rebuilt 2026-11-04 (the original tail of this file
+   was lost before the Oct 15 Drive upload: the script ended
+   mid-string in Week 8's quiz and the whole app layer was gone.
+   Rebuilt to the contract in this file's own CSS + markup:
+   tabs, hero, exp cards, detail, quiz, printables, localStorage
+   progress keyed by lab id. No TTS voices, per Nathan's rule.)
+============================================================ */
+const STORE_KEY = "msb_science_club_v1";
+const $app = document.getElementById('app');
+const $tabs = document.getElementById('tabs');
+const $chip = document.getElementById('classChip');
+const $toast = document.getElementById('toast');
+
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function labById(id){ return EXPERIMENTS.find(e => e.id === id); }
+
+function loadState(){
+  let s = { done:{}, mats:{}, quizBest:{} };
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) {
+      const p = JSON.parse(raw);
+      if (p && typeof p === 'object') {
+        if (p.done) s.done = p.done;
+        if (p.mats) s.mats = p.mats;
+        if (p.quizBest) s.quizBest = p.quizBest;
+        // tolerate a flat legacy shape: { "<labId>": true, ... }
+        EXPERIMENTS.forEach(e => { if (p[e.id] === true && !s.done[e.id]) s.done[e.id] = true; });
+      }
+    }
+  } catch(e) { /* fresh start */ }
+  return s;
+}
+let S = loadState();
+function save(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch(e){} }
+
+let toastTimer = null;
+function toast(msg){
+  $toast.textContent = msg;
+  $toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => $toast.classList.remove('show'), 2200);
+}
+
+let view = 'home';           // home | labs | detail | quiz | run | print
+let currentLab = null;
+let quizRun = null;
+
+function doneCount(){ return EXPERIMENTS.filter(e => S.done[e.id]).length; }
+function totalMaterials(){ return EXPERIMENTS.reduce((n, e) => n + e.materials.length, 0); }
+
+function renderChip(){
+  $chip.innerHTML = ICONS.star + '<span><b>' + doneCount() + '</b> / ' + EXPERIMENTS.length + ' labs done</span>';
+}
+
+const TABS = [
+  { k:'home',  icon:'home',    label:'Home' },
+  { k:'labs',  icon:'flask',   label:'Labs' },
+  { k:'quiz',  icon:'star',    label:'Quizzes' },
+  { k:'print', icon:'printer', label:'Printables' }
+];
+function tabFor(v){ return v === 'detail' ? 'labs' : (v === 'run' ? 'quiz' : v); }
+function renderTabs(){
+  $tabs.innerHTML = TABS.map(t =>
+    '<button data-action="tab" data-view="' + t.k + '" class="' + (tabFor(view) === t.k ? 'active' : '') + '">' + ICONS[t.icon] + esc(t.label) + '</button>'
+  ).join('');
+}
+
+function go(v, labId){
+  view = v;
+  if (labId) currentLab = labId;
+  render();
+  window.scrollTo({ top: 0 });
+}
+
+function render(){
+  renderTabs(); renderChip();
+  if (view === 'home') $app.innerHTML = vHome();
+  else if (view === 'labs') $app.innerHTML = vLabs();
+  else if (view === 'detail') $app.innerHTML = vDetail(labById(currentLab) || EXPERIMENTS[0]);
+  else if (view === 'quiz') $app.innerHTML = vQuizPicker();
+  else if (view === 'run') $app.innerHTML = vQuizRun();
+  else if (view === 'print') $app.innerHTML = vPrint();
+}
+
+/* ---------------- Home ---------------- */
+function vHome(){
+  const next = EXPERIMENTS.find(e => !S.done[e.id]);
+  const pct = Math.round(doneCount() / EXPERIMENTS.length * 100);
+  return '' +
+  '<div class="hero"><div class="hero-art">' + heroBusSVG() + '</div>' +
+    '<div class="hero-text"><h1>All aboard for ' + EXPERIMENTS.length + ' weeks of messy science!</h1>' +
+    '<p>One hands-on lab per week for 10 young scientists — materials, prep, steps, the real science, a worksheet, and a quiz for every single stop on the route.</p>' +
+    '<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary" data-action="tab" data-view="labs">' + ICONS.flask + ' Browse the Labs</button>' +
+    '<button class="btn btn-purple" data-action="tab" data-view="quiz">' + ICONS.star + ' Take a Quiz</button></div></div></div>' +
+  '<div class="road"></div>' +
+  '<div class="grid cols-4">' +
+    '<div class="stat">' + ICONS.clipboard + '<div class="num">' + EXPERIMENTS.length + '</div><div class="lbl">Weekly Labs</div></div>' +
+    '<div class="stat">' + ICONS.check + '<div class="num">' + doneCount() + '</div><div class="lbl">Completed</div></div>' +
+    '<div class="stat">' + ICONS.cart + '<div class="num">' + totalMaterials() + '</div><div class="lbl">Supply Items</div></div>' +
+    '<div class="stat">' + ICONS.kids + '<div class="num">10</div><div class="lbl">Scientists</div></div>' +
+  '</div>' +
+  '<div class="card mt"><h3 style="color:var(--purple);margin-bottom:10px">Semester progress</h3>' +
+    '<div class="progress"><div style="width:' + pct + '%"></div></div>' +
+    '<p class="small muted mt">' + doneCount() + ' of ' + EXPERIMENTS.length + ' labs complete (' + pct + '%). Progress saves on this device automatically.</p></div>' +
+  (next ? '<div class="card mt"><div class="detail-head"><div class="exp-icon" style="background:' + next.color + '">' + ICONS[next.icon] + '</div>' +
+    '<div><span class="chip gold">NEXT STOP · WEEK ' + next.week + '</span><h2 style="color:var(--purple);margin-top:6px">' + esc(next.title) + '</h2>' +
+    '<p class="muted" style="font-weight:600">' + esc(next.tagline) + '</p>' +
+    '<div class="detail-actions"><button class="btn btn-primary" data-action="open" data-id="' + next.id + '">Open this lab</button></div></div></div></div>' : '') +
+  '<h2 class="section-title">' + ICONS.calendar + ' The whole route</h2>' +
+  '<div class="exp-grid">' + EXPERIMENTS.map(expCard).join('') + '</div>';
+}
+
+function expCard(e){
+  return '<div class="exp-card" data-action="open" data-id="' + e.id + '">' +
+    (S.done[e.id] ? '<span class="done-badge">' + ICONS.check + ' Done</span>' : '') +
+    '<div class="exp-icon" style="background:' + e.color + '">' + ICONS[e.icon] + '</div>' +
+    '<span class="chip">WEEK ' + e.week + '</span>' +
+    '<h3 style="margin-top:8px">' + esc(e.title) + '</h3>' +
+    '<div class="ep">“' + esc(e.episode) + '” · ' + esc(e.topic) + '</div>' +
+    '<div class="exp-meta"><span class="chip teal">' + esc(e.duration) + '</span>' +
+    (S.quizBest[e.id] != null ? '<span class="chip gold">' + ICONS.star + ' Best: ' + S.quizBest[e.id] + '/3</span>' : '') +
+    '</div></div>';
+}
+
+/* ---------------- Labs picker ---------------- */
+function vLabs(){
+  return '<h2 class="section-title">' + ICONS.flask + ' Lab Picker — ' + EXPERIMENTS.length + ' weeks</h2>' +
+    '<p class="muted mb" style="font-weight:600">Tap any lab for the full lesson: objectives, materials checklist, prep, steps, science, safety, worksheet, and quiz.</p>' +
+    '<div class="exp-grid">' + EXPERIMENTS.map(expCard).join('') + '</div>';
+}
+
+/* ---------------- Lab detail ---------------- */
+function vDetail(e){
+  const mats = S.mats[e.id] || {};
+  return '<button class="btn btn-ghost btn-sm mb" data-action="tab" data-view="labs">← All labs</button>' +
+  '<div class="card"><div class="detail-head"><div class="exp-icon" style="background:' + e.color + '">' + ICONS[e.icon] + '</div>' +
+    '<div style="flex:1;min-width:240px"><span class="chip gold">WEEK ' + e.week + '</span> <span class="chip teal">“' + esc(e.episode) + '”</span>' +
+    '<h2>' + esc(e.title) + '</h2><p class="muted" style="font-weight:700">' + esc(e.topic) + ' · ' + esc(e.duration) + '</p>' +
+    '<p class="mt" style="line-height:1.5">' + esc(e.tagline) + '</p>' +
+    '<div class="detail-actions">' +
+      '<button class="btn ' + (S.done[e.id] ? 'btn-ghost' : 'btn-primary') + '" data-action="toggle-done" data-id="' + e.id + '">' + ICONS.check + (S.done[e.id] ? ' Completed — tap to undo' : ' Mark lab complete') + '</button>' +
+      '<button class="btn btn-purple" data-action="start-quiz" data-id="' + e.id + '">' + ICONS.star + ' Take the quiz</button>' +
+      '<button class="btn btn-ghost" data-action="print-worksheet" data-id="' + e.id + '">' + ICONS.printer + ' Print worksheet</button>' +
+    '</div></div></div></div>' +
+  '<div class="grid cols-2 mt">' +
+    '<div class="card"><h3 class="mb" style="color:var(--purple)">' + ICONS.star + ' Objectives</h3><ul class="tick">' + e.objectives.map(o => '<li>' + esc(o) + '</li>').join('') + '</ul></div>' +
+    '<div class="card"><h3 class="mb" style="color:var(--purple)">' + ICONS.cart + ' Materials (10 kids)</h3>' +
+      e.materials.map((m, i) => '<label class="chk' + (mats[i] ? ' done' : '') + '"><input type="checkbox" data-action-change="mat" data-id="' + e.id + '" data-idx="' + i + '"' + (mats[i] ? ' checked' : '') + '><span class="chk-t">' + esc(m.item) + '</span><span class="qty">' + esc(m.qty) + '</span></label>').join('') + '</div>' +
+    '<div class="card"><h3 class="mb" style="color:var(--purple)">' + ICONS.clipboard + ' Before class — prep</h3><ul class="tick">' + e.prep.map(o => '<li>' + esc(o) + '</li>').join('') + '</ul></div>' +
+    '<div class="card"><h3 class="mb" style="color:var(--coral)">Safety first</h3><ul class="tick safety">' + e.safety.map(o => '<li>' + esc(o) + '</li>').join('') + '</ul></div>' +
+  '</div>' +
+  '<div class="card mt"><h3 class="mb" style="color:var(--purple)">Run the lab</h3><ol class="steps">' + e.steps.map(s => '<li>' + esc(s) + '</li>').join('') + '</ol></div>' +
+  '<div class="science-box mt"><h4>' + ICONS.flask + ' The science (teacher script)</h4><p>' + esc(e.science) + '</p></div>' +
+  '<div class="grid cols-2 mt">' +
+    '<div class="card"><h3 class="mb" style="color:var(--purple)">Discussion questions</h3><ul class="tick">' + e.questions.map(o => '<li>' + esc(o) + '</li>').join('') + '</ul></div>' +
+    '<div class="card"><h3 class="mb" style="color:var(--purple)">Worksheet preview</h3>' + e.worksheet.map(w =>
+        '<p style="margin-bottom:10px;line-height:1.45"><span class="chip">' + esc(w.type.toUpperCase()) + '</span> ' + esc(w.prompt) +
+        (w.choices ? '<br><span class="small muted">Choices: ' + w.choices.map(esc).join(' · ') + ' — <b>Answer: ' + esc(w.choices[w.answer]) + '</b></span>' : '') + '</p>').join('') +
+      '<button class="btn btn-ghost btn-sm" data-action="print-worksheet" data-id="' + e.id + '">' + ICONS.printer + ' Print class set</button></div>' +
+  '</div>';
+}
+
+/* ---------------- Quiz ---------------- */
+function vQuizPicker(){
+  return '<h2 class="section-title">' + ICONS.star + ' Quiz Garage — pick a lab</h2>' +
+    '<p class="muted mb" style="font-weight:600">Three questions per lab. Best scores save on this device.</p>' +
+    '<div class="exp-grid">' + EXPERIMENTS.map(expCard).join('') + '</div>';
+}
+
+function startQuiz(id){
+  quizRun = { id: id, idx: 0, score: 0, locked: false };
+  view = 'run'; render();
+}
+
+function vQuizRun(){
+  const e = labById(quizRun.id);
+  if (quizRun.idx >= e.quiz.length) {
+    const best = Math.max(S.quizBest[e.id] || 0, quizRun.score);
+    const stars = quizRun.score === 3 ? '★★★' : quizRun.score === 2 ? '★★☆' : quizRun.score === 1 ? '★☆☆' : '☆☆☆';
+    return '<div class="card quiz-card" style="text-align:center"><span class="chip gold">WEEK ' + e.week + ' QUIZ COMPLETE</span>' +
+      '<div class="stars mt">' + stars + '</div>' +
+      '<h2 style="color:var(--purple)">' + quizRun.score + ' / ' + e.quiz.length + ' correct!</h2>' +
+      '<p class="muted mt" style="font-weight:700">' + (quizRun.score === 3 ? 'Perfect ride, scientist!' : quizRun.score === 2 ? 'Great driving — one more lap gets all three!' : 'Good start — re-run the lab and try again!') + '</p>' +
+      '<p class="small muted">Best score for this lab: ' + best + ' / ' + e.quiz.length + '</p>' +
+      '<div class="detail-actions" style="justify-content:center"><button class="btn btn-primary" data-action="start-quiz" data-id="' + e.id + '">Retry quiz</button>' +
+      '<button class="btn btn-ghost" data-action="open" data-id="' + e.id + '">Back to the lab</button>' +
+      '<button class="btn btn-purple" data-action="tab" data-view="quiz">All quizzes</button></div></div>';
+  }
+  const q = e.quiz[quizRun.idx];
+  return '<div class="card quiz-card"><span class="chip">WEEK ' + e.week + ' · ' + esc(e.title.toUpperCase()) + '</span>' +
+    '<div class="quiz-dots">' + e.quiz.map((_, i) => '<span class="' + (i <= quizRun.idx ? 'on' : '') + '"></span>').join('') + '</div>' +
+    '<div class="quiz-q">' + (quizRun.idx + 1) + '. ' + esc(q.q) + '</div>' +
+    q.choices.map((c, i) => '<button class="quiz-opt" data-action="answer" data-idx="' + i + '">' + esc(c) + '</button>').join('') +
+    '<p class="small muted">Score so far: ' + quizRun.score + '</p></div>';
+}
+
+function answerQuiz(btn, idx){
+  if (quizRun.locked) return;
+  quizRun.locked = true;
+  const e = labById(quizRun.id);
+  const q = e.quiz[quizRun.idx];
+  const opts = $app.querySelectorAll('.quiz-opt');
+  opts.forEach((o, i) => {
+    o.disabled = true;
+    if (i === q.a) o.classList.add('correct');
+    else if (i === idx) o.classList.add('wrong');
+  });
+  if (idx === q.a) quizRun.score++;
+  setTimeout(() => {
+    quizRun.idx++; quizRun.locked = false;
+    if (quizRun.idx >= e.quiz.length) {
+      S.quizBest[e.id] = Math.max(S.quizBest[e.id] || 0, quizRun.score);
+      save();
+      if (quizRun.score === 3) toast('Perfect quiz for Week ' + e.week + '! ⭐');
+    }
+    render();
+  }, 850);
+}
+
+/* ---------------- Printables ---------------- */
+function vPrint(){
+  return '<h2 class="section-title">' + ICONS.printer + ' Printables</h2>' +
+  '<p class="muted mb" style="font-weight:600">Print a worksheet for any week (10 copies = the whole class), the master shopping list, or a finisher certificate.</p>' +
+  '<div class="grid cols-3">' +
+    EXPERIMENTS.map(e => '<div class="card print-card"><div class="thumb" style="background:' + e.color + '">' + ICONS[e.icon] + '</div>' +
+      '<b>Week ' + e.week + ' — ' + esc(e.title) + '</b><span class="small muted">Student worksheet</span>' +
+      '<button class="btn btn-primary btn-sm" data-action="print-worksheet" data-id="' + e.id + '">' + ICONS.printer + ' Print worksheet</button></div>').join('') +
+    '<div class="card print-card"><div class="thumb" style="background:var(--purple)">' + ICONS.cart + '</div>' +
+      '<b>Master Shopping List</b><span class="small muted">All ' + EXPERIMENTS.length + ' weeks, grouped</span>' +
+      '<button class="btn btn-purple btn-sm" data-action="print-shopping">' + ICONS.printer + ' Print list</button></div>' +
+    '<div class="card print-card"><div class="thumb" style="background:var(--teal)">' + ICONS.star + '</div>' +
+      '<b>Science Club Certificate</b><span class="small muted">For finishers of all ' + EXPERIMENTS.length + ' labs</span>' +
+      '<button class="btn btn-purple btn-sm" data-action="print-cert">' + ICONS.printer + ' Print certificate</button></div>' +
+  '</div>';
+}
+
+function printDoc(html){
+  const root = document.getElementById('print-root');
+  root.innerHTML = html;
+  document.body.classList.add('print-doc');
+  const cleanup = () => { document.body.classList.remove('print-doc'); root.innerHTML = ''; window.removeEventListener('afterprint', cleanup); };
+  window.addEventListener('afterprint', cleanup);
+  setTimeout(() => window.print(), 60);
+  setTimeout(cleanup, 4000);
+}
+
+function worksheetSheet(e){
+  const items = e.worksheet.map((w, i) => {
+    let body = '';
+    if (w.type === 'draw') body = '<div class="draw-box"></div>';
+    else if (w.type === 'mc') body = w.choices.map(c => '<div class="mc-opt"><span class="bubble"></span><span>' + esc(c) + '</span></div>').join('');
+    else body = '<div class="write-lines"><div class="ln"></div><div class="ln"></div></div>';
+    return '<div class="q-block"><p><b>' + (i + 1) + '.</b> ' + esc(w.prompt) + '</p>' + body + '</div>';
+  }).join('');
+  const key = e.worksheet.map((w, i) => w.choices ? (i + 1) + ': ' + w.choices[w.answer] : null).filter(Boolean).join(' · ');
+  return '<div class="print-sheet"><div class="ps-head">' + busSVG(56) + '<div><h1>Week ' + e.week + ': ' + esc(e.title) + '</h1><p>Magic Bus Science Club · ' + esc(e.topic) + ' · Episode: “' + esc(e.episode) + '”</p></div></div>' +
+    '<div class="ps-name"><span>Name: <span class="wline"></span></span><span>Date: <span class="wline short"></span></span></div>' +
+    items + '<p class="key-line">Teacher key — ' + esc(key) + '</p></div>';
+}
+
+function shoppingSheet(){
+  return '<div class="print-sheet"><div class="ps-head">' + busSVG(56) + '<div><h1>Master Shopping List</h1><p>Magic Bus Science Club · All ' + EXPERIMENTS.length + ' weeks · Scaled for 10 kids</p></div></div>' +
+    EXPERIMENTS.map(e => '<div class="shop-group"><h3>Week ' + e.week + ' — ' + esc(e.title) + '</h3><ul>' +
+      e.materials.map(m => '<li>' + esc(m.item) + ' — <b>' + esc(m.qty) + '</b></li>').join('') + '</ul></div>').join('') + '</div>';
+}
+
+function certSheet(){
+  return '<div class="print-sheet"><div class="cert"><p>🚌 MAGIC BUS SCIENCE CLUB 🚌</p><h1>Certificate of Science</h1>' +
+    '<p>This certifies that</p><div class="cname">&nbsp;</div>' +
+    '<p>has completed all ' + EXPERIMENTS.length + ' field-trip labs of the Magic Bus Science Club — taking chances, making mistakes, and getting gloriously messy in the name of science.</p>' +
+    '<div class="sig"><div>Ms. Frizzle (Teacher)</div><div>Date</div></div></div></div>';
+}
+
+/* ---------------- Events ---------------- */
+document.addEventListener('click', (ev) => {
+  const el = ev.target.closest('[data-action]');
+  if (!el) return;
+  const a = el.getAttribute('data-action');
+  const id = el.getAttribute('data-id');
+  if (a === 'tab') go(el.getAttribute('data-view'));
+  else if (a === 'open') go('detail', id);
+  else if (a === 'toggle-done') {
+    S.done[id] = !S.done[id]; if (!S.done[id]) delete S.done[id];
+    save(); render();
+    toast(S.done[id] ? 'Week ' + labById(id).week + ' marked complete! 🎉' : 'Completion undone');
+  }
+  else if (a === 'start-quiz') startQuiz(id);
+  else if (a === 'answer') answerQuiz(el, parseInt(el.getAttribute('data-idx'), 10));
+  else if (a === 'print-worksheet') printDoc(worksheetSheet(labById(id)));
+  else if (a === 'print-shopping') printDoc(shoppingSheet());
+  else if (a === 'print-cert') printDoc(certSheet());
+  else if (a === 'reset-all') {
+    if (confirm('Reset ALL saved club data on this device (progress, checklists, quiz scores)?')) {
+      S = { done:{}, mats:{}, quizBest:{} }; save(); render(); toast('All saved data reset');
+    }
+  }
+});
+document.addEventListener('change', (ev) => {
+  const el = ev.target.closest('[data-action-change="mat"]');
+  if (!el) return;
+  const id = el.getAttribute('data-id'), idx = el.getAttribute('data-idx');
+  if (!S.mats[id]) S.mats[id] = {};
+  if (el.checked) S.mats[id][idx] = true; else delete S.mats[id][idx];
+  save();
+  el.closest('.chk').classList.toggle('done', el.checked);
+});
+
+/* ---------------- Init ---------------- */
+document.getElementById('headerBus').innerHTML = busSVG(54);
+render();
+
+</script><audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio><audio controls="True"><source src="audio/placeholder.mp3" type="audio/mpeg"/>Your browser does not support the audio element.</audio>
+    <!-- Global Fullscreen Toggle -->
+    <button id="global-fs-btn" style="position:fixed;bottom:20px;left:20px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#333;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:grid;place-items:center;" aria-label="Toggle Fullscreen" onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}">⛶</button>
+    
+</body></html>
